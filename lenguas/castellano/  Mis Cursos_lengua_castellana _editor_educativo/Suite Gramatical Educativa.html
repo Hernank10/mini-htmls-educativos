@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Suite Gramatical Educativa</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body {
+      background: #f8f9fa;
+    }
+    .card {
+      border-radius: 1rem;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+    .nav-link {
+      cursor: pointer;
+    }
+    .hidden {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+  <div class="container-fluid">
+    <a class="navbar-brand fw-bold" href="#">Suite Gramatical Educativa</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav ms-auto">
+        <li class="nav-item"><a class="nav-link" onclick="showSection('teoria')">Teoría</a></li>
+        <li class="nav-item"><a class="nav-link" onclick="showSection('ejercicios')">Ejercicios</a></li>
+        <li class="nav-item"><a class="nav-link" onclick="showSection('estadisticas')">Estadísticas</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<div class="container my-4">
+  <!-- Sección de teoría -->
+  <div id="teoria" class="section">
+    <div class="card p-4">
+      <h3 class="text-primary">Modificadores locativos del sustantivo sin determinación</h3>
+      <p>
+        Los modificadores locativos son sintagmas preposicionales que indican un lugar o una localización respecto al sustantivo.
+        Sin embargo, no todos los sustantivos pueden ser modificados locativamente si carecen de determinación.
+      </p>
+      <p><strong>Ejemplo agramatical:</strong> *Tengo coche en el garaje.<br>
+      <strong>Ejemplo gramatical:</strong> Tengo <em>un coche</em> en el garaje.</p>
+      <p>Los sustantivos contables sin determinante denotan propiedades, no entidades. Por ello, no pueden ser argumentos de predicación secundaria (Espinal y McNally, 2007).</p>
+      <p><strong>Ejemplo correcto con predicativo:</strong> Es catedrático en la Complutense.</p>
+      <p>El modificador locativo en estos casos indica el ámbito institucional o el espacio de la actividad profesional.</p>
+      <p><strong>Resumen:</strong> Un sustantivo escueto sólo puede admitir un modificador locativo si funciona como predicativo, no como objeto directo.</p>
+    </div>
+  </div>
+
+  <!-- Sección de ejercicios -->
+  <div id="ejercicios" class="section hidden">
+    <div class="card p-4">
+      <h3 class="text-success">Ejercicios prácticos</h3>
+      <p>Selecciona la opción correcta en cada caso:</p>
+      <div id="quiz"></div>
+      <button class="btn btn-primary mt-3" onclick="checkAnswers()">Verificar respuestas</button>
+      <div id="resultado" class="mt-3 fw-bold"></div>
+    </div>
+  </div>
+
+  <!-- Sección de estadísticas -->
+  <div id="estadisticas" class="section hidden">
+    <div class="card p-4">
+      <h3 class="text-info">Estadísticas del usuario</h3>
+      <p>Total de ejercicios realizados: <span id="total">0</span></p>
+      <p>Ejercicios correctos: <span id="correctos">0</span></p>
+      <p>Efectividad: <span id="efectividad">0%</span></p>
+    </div>
+  </div>
+</div>
+
+<script>
+// Control de secciones
+function showSection(id) {
+  document.querySelectorAll('.section').forEach(s => s.classList.add('hidden'));
+  document.getElementById(id).classList.remove('hidden');
+}
+
+// Ejercicios
+const ejercicios = [
+  { pregunta: "¿Cuál es correcta?", opciones: ["Tengo coche en el garaje.", "Tengo un coche en el garaje."], correcta: 1 },
+  { pregunta: "¿Cuál tiene modificador locativo aceptable?", opciones: ["Es catedrático en la Complutense.", "Es catedrático de la vida."], correcta: 0 },
+  { pregunta: "¿Cuál es agramatical?", opciones: ["Tengo el coche en el garaje.", "Tengo coche en el garaje."], correcta: 1 },
+  { pregunta: "El modificador locativo expresa...", opciones: ["Lugar", "Cantidad"], correcta: 0 },
+  { pregunta: "Los sustantivos contables sin determinación denotan...", opciones: ["Propiedades", "Entidades"], correcta: 0 },
+  { pregunta: "El asterisco * indica...", opciones: ["Gramaticalidad", "Agramaticalidad"], correcta: 1 },
+  { pregunta: "‘Es profesor en Harvard’ es...", opciones: ["Correcta", "Incorrecta"], correcta: 0 },
+  { pregunta: "‘Tengo amigos en Madrid’ es...", opciones: ["Correcta", "Incorrecta"], correcta: 0 },
+  { pregunta: "‘Tengo amigo en Madrid’ es...", opciones: ["Correcta", "Incorrecta"], correcta: 1 },
+  { pregunta: "Los nombres escuetos predicativos admiten...", opciones: ["Modificadores locativos", "Determinantes dobles"], correcta: 0 }
+];
+
+let correctas = 0;
+let total = 0;
+
+function generarEjercicios() {
+  const quiz = document.getElementById('quiz');
+  quiz.innerHTML = '';
+  ejercicios.forEach((e, i) => {
+    quiz.innerHTML += `
+      <div class="mb-3">
+        <p><strong>${i + 1}. ${e.pregunta}</strong></p>
+        ${e.opciones.map((op, j) =>
+          `<div class="form-check">
+            <input class="form-check-input" type="radio" name="q${i}" value="${j}">
+            <label class="form-check-label">${op}</label>
+          </div>`
+        ).join('')}
+      </div>
+    `;
+  });
+}
+
+function checkAnswers() {
+  total += ejercicios.length;
+  let aciertos = 0;
+  ejercicios.forEach((e, i) => {
+    const seleccion = document.querySelector(`input[name="q${i}"]:checked`);
+    if (seleccion && parseInt(seleccion.value) === e.correcta) aciertos++;
+  });
+  correctas += aciertos;
+  document.getElementById('resultado').innerText = `Respuestas correctas: ${aciertos} de ${ejercicios.length}`;
+  document.getElementById('total').innerText = total;
+  document.getElementById('correctos').innerText = correctas;
+  document.getElementById('efectividad').innerText = Math.round((correctas / total) * 100) + '%';
+}
+
+window.onload = generarEjercicios;
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

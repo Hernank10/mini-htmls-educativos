@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Maestro de Castellano - Aprende Gramática</title>
+    
+    <!-- Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/responsive.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top shadow">
+        <div class="container">
+            <a class="navbar-brand fw-bold" href="#">
+                <i class="bi bi-book me-2"></i>Maestro de Castellano
+            </a>
+            
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#" data-tab="lessons">
+                            <i class="bi bi-journals me-1"></i>Lecciones
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" data-tab="practice">
+                            <i class="bi bi-pencil-square me-1"></i>Práctica
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" data-tab="stats">
+                            <i class="bi bi-graph-up me-1"></i>Estadísticas
+                        </a>
+                    </li>
+                </ul>
+                
+                <div class="d-flex align-items-center">
+                    <div class="form-check form-switch me-3">
+                        <input class="form-check-input" type="checkbox" id="theme-toggle">
+                        <label class="form-check-label text-white" for="theme-toggle">
+                            <i class="bi bi-moon-stars"></i>
+                        </label>
+                    </div>
+                    <div class="dropdown">
+                        <button class="btn btn-outline-light btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                            <i class="bi bi-person-circle me-1"></i>Usuario
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="#" id="reset-progress">
+                                <i class="bi bi-arrow-clockwise me-2"></i>Reiniciar Progreso
+                            </a></li>
+                            <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#helpModal">
+                                <i class="bi bi-question-circle me-2"></i>Ayuda
+                            </a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="container-fluid p-0">
+        <!-- Loading Screen -->
+        <div id="loading-screen" class="d-flex justify-content-center align-items-center min-vh-100">
+            <div class="text-center">
+                <div class="spinner-border text-primary mb-3" role="status"></div>
+                <p>Cargando Maestro de Castellano...</p>
+            </div>
+        </div>
+
+        <!-- Lessons Tab -->
+        <div id="lessons-tab" class="tab-content active">
+            <div class="hero-section bg-primary text-white py-5">
+                <div class="container py-5">
+                    <div class="row align-items-center">
+                        <div class="col-lg-6">
+                            <h1 class="display-4 fw-bold mb-4">Domina la Gramática Española</h1>
+                            <p class="lead mb-4">Aprende con lecciones interactivas y ejercicios prácticos</p>
+                            <div class="row text-center">
+                                <div class="col-4">
+                                    <div class="border rounded p-3 bg-white bg-opacity-10">
+                                        <h3 class="fw-bold mb-0" id="total-lessons">0</h3>
+                                        <small>Lecciones</small>
+                                    </div>
+                                </div>
+                                <div class="col-4">
+                                    <div class="border rounded p-3 bg-white bg-opacity-10">
+                                        <h3 class="fw-bold mb-0" id="total-exercises">0</h3>
+                                        <small>Ejercicios</small>
+                                    </div>
+                                </div>
+                                <div class="col-4">
+                                    <div class="border rounded p-3 bg-white bg-opacity-10">
+                                        <h3 class="fw-bold mb-0" id="completed-lessons">0%</h3>
+                                        <small>Completado</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 text-center">
+                            <i class="bi bi-journal-text display-1 opacity-75"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="container py-5">
+                <div class="row mb-4">
+                    <div class="col-12">
+                        <h2 class="text-center mb-3">Lecciones Disponibles</h2>
+                        <p class="text-center text-muted">Selecciona una lección para comenzar a aprender</p>
+                        
+                        <!-- Filter Buttons -->
+                        <div class="text-center mb-4">
+                            <div class="btn-group" role="group">
+                                <input type="radio" class="btn-check" name="level-filter" id="filter-all" checked>
+                                <label class="btn btn-outline-primary" for="filter-all">Todos</label>
+                                
+                                <input type="radio" class="btn-check" name="level-filter" id="filter-basic">
+                                <label class="btn btn-outline-primary" for="filter-basic">Básico</label>
+                                
+                                <input type="radio" class="btn-check" name="level-filter" id="filter-intermediate">
+                                <label class="btn btn-outline-primary" for="filter-intermediate">Intermedio</label>
+                                
+                                <input type="radio" class="btn-check" name="level-filter" id="filter-advanced">
+                                <label class="btn btn-outline-primary" for="filter-advanced">Avanzado</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Lessons Grid -->
+                <div id="lessons-grid" class="row g-4">
+                    <!-- Lessons will be loaded here dynamically -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Practice Tab -->
+        <div id="practice-tab" class="tab-content">
+            <div class="container py-5">
+                <div class="row">
+                    <div class="col-12 text-center mb-4">
+                        <h2>Práctica Interactiva</h2>
+                        <p class="text-muted">Mejora tus habilidades con ejercicios prácticos</p>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <!-- Lesson Info Panel -->
+                    <div class="col-lg-4 mb-4">
+                        <div class="card h-100">
+                            <div class="card-header bg-primary text-white">
+                                <h5 class="card-title mb-0">
+                                    <i class="bi bi-info-circle me-2"></i>Información de la Lección
+                                </h5>
+                            </div>
+                            <div class="card-body">
+                                <div id="lesson-info-content">
+                                    <div class="text-center text-muted">
+                                        <i class="bi bi-journal-text display-4 mb-3"></i>
+                                        <p>Selecciona una lección para ver la información</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Exercise Panel -->
+                    <div class="col-lg-8">
+                        <div class="card">
+                            <div class="card-header bg-success text-white d-flex justify-content-between align-items-center">
+                                <h5 class="card-title mb-0">
+                                    <i class="bi bi-pencil-square me-2"></i>
+                                    <span id="exercise-title">Ejercicio Actual</span>
+                                </h5>
+                                <div class="progress-container" style="width: 200px;">
+                                    <div class="progress">
+                                        <div id="exercise-progress" class="progress-bar" style="width: 0%"></div>
+                                    </div>
+                                    <small id="exercise-counter" class="text-white">0/0</small>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <!-- Exercise Content -->
+                                <div id="exercise-content">
+                                    <div class="text-center py-5">
+                                        <i class="bi bi-arrow-left-circle display-1 text-muted mb-3"></i>
+                                        <h5 class="text-muted">Selecciona una lección para comenzar</h5>
+                                        <p class="text-muted">Ve a la pestaña "Lecciones" y elige una lección para practicar</p>
+                                    </div>
+                                </div>
+
+                                <!-- Answer Area -->
+                                <div id="answer-area" class="mt-4" style="display: none;">
+                                    <!-- Dynamic content based on exercise type -->
+                                </div>
+
+                                <!-- Result Area -->
+                                <div id="result-area" class="mt-4"></div>
+
+                                <!-- Navigation -->
+                                <div id="exercise-navigation" class="d-flex justify-content-between mt-4" style="display: none !important;">
+                                    <button id="prev-exercise" class="btn btn-outline-secondary">
+                                        <i class="bi bi-arrow-left me-1"></i>Anterior
+                                    </button>
+                                    <button id="check-answer" class="btn btn-primary">
+                                        <i class="bi bi-check-circle me-1"></i>Verificar Respuesta
+                                    </button>
+                                    <button id="next-exercise" class="btn btn-outline-primary">
+                                        Siguiente<i class="bi bi-arrow-right ms-1"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Statistics Tab -->
+        <div id="stats-tab" class="tab-content">
+            <div class="container py-5">
+                <div class="row mb-4">
+                    <div class="col-12 text-center">
+                        <h2>Tu Progreso</h2>
+                        <p class="text-muted">Sigue tu evolución y identifica áreas de mejora</p>
+                    </div>
+                </div>
+
+                <!-- Overall Stats -->
+                <div class="row mb-5">
+                    <div class="col-md-3 mb-3">
+                        <div class="card text-center">
+                            <div class="card-body">
+                                <i class="bi bi-journals display-4 text-primary mb-3"></i>
+                                <h3 id="stats-lessons-completed" class="text-primary">0</h3>
+                                <p class="text-muted mb-0">Lecciones Completadas</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <div class="card text-center">
+                            <div class="card-body">
+                                <i class="bi bi-check-circle display-4 text-success mb-3"></i>
+                                <h3 id="stats-exercises-completed" class="text-success">0</h3>
+                                <p class="text-muted mb-0">Ejercicios Realizados</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <div class="card text-center">
+                            <div class="card-body">
+                                <i class="bi bi-graph-up display-4 text-info mb-3"></i>
+                                <h3 id="stats-accuracy" class="text-info">0%</h3>
+                                <p class="text-muted mb-0">Precisión General</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <div class="card text-center">
+                            <div class="card-body">
+                                <i class="bi bi-clock display-4 text-warning mb-3"></i>
+                                <h3 id="stats-time-spent" class="text-warning">0m</h3>
+                                <p class="text-muted mb-0">Tiempo de Práctica</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Progress Chart -->
+                <div class="row">
+                    <div class="col-lg-8 mb-4">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="card-title mb-0">Progreso por Lección</h5>
+                            </div>
+                            <div class="card-body">
+                                <div id="progress-chart">
+                                    <!-- Progress bars will be generated here -->
+                                    <div class="text-center text-muted py-4">
+                                        <i class="bi bi-bar-chart display-4"></i>
+                                        <p>Comienza a practicar para ver tu progreso</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-4">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="card-title mb-0">Áreas de Mejora</h5>
+                            </div>
+                            <div class="card-body">
+                                <div id="improvement-areas">
+                                    <div class="text-center text-muted py-4">
+                                        <i class="bi bi-lightbulb display-4"></i>
+                                        <p>Los temas que necesitas practicar aparecerán aquí</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Lesson Detail Modal -->
+    <div class="modal fade" id="lessonModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title" id="lessonModalTitle">Detalles de la Lección</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body" id="lessonModalBody">
+                    <!-- Content will be loaded dynamically -->
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    <button type="button" class="btn btn-primary" id="startPracticeBtn">
+                        <i class="bi bi-play-circle me-2"></i>Comenzar Práctica
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Help Modal -->
+    <div class="modal fade" id="helpModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Ayuda - Maestro de Castellano</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <h6>📚 Cómo usar la aplicación:</h6>
+                    <ul>
+                        <li><strong>Lecciones:</strong> Explora las lecciones organizadas por nivel de dificultad</li>
+                        <li><strong>Práctica:</strong> Resuelve ejercicios interactivos con retroalimentación inmediata</li>
+                        <li><strong>Estadísticas:</strong> Revisa tu progreso y áreas de mejora</li>
+                    </ul>
+                    
+                    <h6>🎯 Tipos de ejercicios:</h6>
+                    <ul>
+                        <li><strong>Opción múltiple:</strong> Selecciona las respuestas correctas</li>
+                        <li><strong>Completar:</strong> Llena los espacios en blanco</li>
+                        <li><strong>Conjugación:</strong> Practica verbos en diferentes tiempos</li>
+                    </ul>
+                    
+                    <h6>💡 Consejos:</h6>
+                    <ul>
+                        <li>Practica regularmente para mejor retención</li>
+                        <li>Revisa las explicaciones cuando cometas errores</li>
+                        <li>Comienza con lecciones básicas y avanza gradualmente</li>
+                    </ul>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Entendido</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div class="toast-container position-fixed top-0 end-0 p-3">
+        <div id="liveToast" class="toast" role="alert">
+            <div class="toast-header">
+                <i class="bi bi-info-circle me-2 text-primary"></i>
+                <strong class="me-auto">Notificación</strong>
+                <button type="button" class="btn-close" data-bs-dismiss="toast"></button>
+            </div>
+            <div class="toast-body" id="toast-message">
+                <!-- Message will appear here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/database.js"></script>
+    <script src="js/lessons.js"></script>
+    <script src="js/practice.js"></script>
+    <script src="js/stats.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>

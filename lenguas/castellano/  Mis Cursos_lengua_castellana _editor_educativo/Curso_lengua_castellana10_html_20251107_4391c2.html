@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Práctica de Voz Activa y Pasiva - Consejos Django</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <style>
+        .consejo-card {
+            transition: transform 0.3s;
+        }
+        .consejo-card:hover {
+            transform: translateY(-5px);
+        }
+        .nav-link.active {
+            font-weight: bold;
+        }
+        .correct-answer {
+            background-color: #d4edda;
+            border-left: 4px solid #28a745;
+        }
+        .incorrect-answer {
+            background-color: #f8d7da;
+            border-left: 4px solid #dc3545;
+        }
+        .practice-section {
+            display: none;
+        }
+        .practice-section.active {
+            display: block;
+        }
+        .progress {
+            height: 10px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container">
+            <a class="navbar-brand" href="#">
+                <i class="bi bi-code-slash"></i> Práctica Django
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#" data-section="introduccion">Introducción</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" data-section="practicar-activa">Voz Activa</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" data-section="practicar-pasiva">Voz Pasiva</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" data-section="convertir-activa-pasiva">Activa → Pasiva</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" data-section="convertir-pasiva-activa">Pasiva → Activa</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" data-section="traducir-ingles">Traducir</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" data-section="consejos">Todos los Consejos</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Introducción -->
+    <section id="introduccion" class="practice-section active container mt-4">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <h1 class="card-title">Práctica de Voz Activa y Pasiva</h1>
+                        <p class="lead">Esta página te ayudará a practicar la conversión entre voz activa y pasiva, así como la traducción al inglés de consejos de programación en Django.</p>
+                        
+                        <div class="row mt-4">
+                            <div class="col-md-4 mb-3">
+                                <div class="card h-100">
+                                    <div class="card-body text-center">
+                                        <i class="bi bi-mic text-primary fs-1"></i>
+                                        <h5 class="card-title">Voz Activa</h5>
+                                        <p class="card-text">Practica escribiendo correctamente los consejos en voz activa.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <div class="card h-100">
+                                    <div class="card-body text-center">
+                                        <i class="bi bi-mic-mute text-success fs-1"></i>
+                                        <h5 class="card-title">Voz Pasiva</h5>
+                                        <p class="card-text">Practica escribiendo correctamente los consejos en voz pasiva.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <div class="card h-100">
+                                    <div class="card-body text-center">
+                                        <i class="bi bi-translate text-warning fs-1"></i>
+                                        <h5 class="card-title">Traducción</h5>
+                                        <p class="card-text">Practica traduciendo los consejos al inglés.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="alert alert-info mt-4">
+                            <h4><i class="bi bi-info-circle"></i> Instrucciones</h4>
+                            <ul>
+                                <li>Selecciona una sección del menú para comenzar a practicar</li>
+                                <li>Escribe tu respuesta en el campo correspondiente</li>
+                                <li>Haz clic en "Verificar" para comprobar tu respuesta</li>
+                                <li>Usa "Siguiente" para pasar al siguiente ejercicio</li>
+                                <li>Tu progreso se guardará durante la sesión</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Practicar Voz Activa -->
+    <section id="practicar-activa" class="practice-section container mt-4">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header bg-primary text-white">
+                        <h2 class="mb-0"><i class="bi bi-mic"></i> Practicar Voz Activa</h2>
+                    </div>
+                    <div class="card-body">
+                        <p class="card-text">Se mostrará un consejo en voz activa. Debes escribirlo correctamente en el cuadro de texto.</p>
+                        
+                        <div class="mb-3">
+                            <div class="progress mb-3">
+                                <div id="progress-activa" class="progress-bar" role="progressbar" style="width: 0%"></div>
+                            </div>
+                            <div id="consejo-activa" class="alert alert-secondary fs-5"></div>
+                            <label for="respuesta-activa" class="form-label">Escribe el consejo en voz activa:</label>
+                            <input type="text" class="form-control form-control-lg" id="respuesta-activa" placeholder="Escribe aquí...">
+                        </div>
+                        <button class="btn btn-primary" onclick="verificarActiva()">Verificar</button>
+                        <button class="btn btn-outline-secondary" onclick="siguienteActiva()">Siguiente Consejo</button>
+                        <div id="resultado-activa" class="mt-3"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Practicar Voz Pasiva -->
+    <section id="practicar-pasiva" class="practice-section container mt-4">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header bg-success text-white">
+                        <h2 class="mb-0"><i class="bi bi-mic-mute"></i> Practicar Voz Pasiva</h2>
+                    </div>
+                    <div class="card-body">
+                        <p class="card-text">Se mostrará un consejo en voz pasiva. Debes escribirlo correctamente en el cuadro de texto.</p>
+                        
+                        <div class="mb-3">
+                            <div class="progress mb-3">
+                                <div id="progress-pasiva" class="progress-bar bg-success" role="progressbar" style="width: 0%"></div>
+                            </div>
+                            <div id="consejo-pasiva" class="alert alert-secondary fs-5"></div>
+                            <label for="respuesta-pasiva" class="form-label">Escribe el consejo en voz pasiva:</label>
+                            <input type="text" class="form-control form-control-lg" id="respuesta-pasiva" placeholder="Escribe aquí...">
+                        </div>
+                        <button class="btn btn-success" onclick="verificarPasiva()">Verificar</button>
+                        <button class="btn btn-outline-secondary" onclick="siguientePasiva()">Siguiente Consejo</button>
+                        <div id="resultado-pasiva" class="mt-3"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Convertir de Activa a Pasiva -->
+    <section id="convertir-activa-pasiva" class="practice-section container mt-4">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header bg-warning text-dark">
+                        <h2 class="mb-0"><i class="bi bi-arrow-right"></i> Convertir de Voz Activa a Pasiva</h2>
+                    </div>
+                    <div class="card-body">
+                        <p class="card-text">Se mostrará un consejo en voz activa. Debes convertirlo a voz pasiva y escribirlo en el cuadro de texto.</p>
+                        
+                        <div class="mb-3">
+                            <div class="progress mb-3">
+                                <div id="progress-activa-pasiva" class="progress-bar bg-warning" role="progressbar" style="width: 0%"></div>
+                            </div>
+                            <div id="consejo-activa-pasiva" class="alert alert-secondary fs-5"></div>
+                            <label for="respuesta-activa-pasiva" class="form-label">Escribe el consejo en voz pasiva:</label>
+                            <input type="text" class="form-control form-control-lg" id="respuesta-activa-pasiva" placeholder="Escribe aquí...">
+                        </div>
+                        <button class="btn btn-warning" onclick="verificarActivaAPasiva()">Verificar</button>
+                        <button class="btn btn-outline-secondary" onclick="siguienteActivaAPasiva()">Siguiente Consejo</button>
+                        <div id="resultado-activa-pasiva" class="mt-3"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Convertir de Pasiva a Activa -->
+    <section id="convertir-pasiva-activa" class="practice-section container mt-4">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header bg-info text-white">
+                        <h2 class="mb-0"><i class="bi bi-arrow-left"></i> Convertir de Voz Pasiva a Activa</h2>
+                    </div>
+                    <div class="card-body">
+                        <p class="card-text">Se mostrará un consejo en voz pasiva. Debes convertirlo a voz activa y escribirlo en el cuadro de texto.</p>
+                        
+                        <div class="mb-3">
+                            <div class="progress mb-3">
+                                <div id="progress-pasiva-activa" class="progress-bar bg-info" role="progressbar" style="width: 0%"></div>
+                            </div>
+                            <div id="consejo-pasiva-activa" class="alert alert-secondary fs-5"></div>
+                            <label for="respuesta-pasiva-activa" class="form-label">Escribe el consejo en voz activa:</label>
+                            <input type="text" class="form-control form-control-lg" id="respuesta-pasiva-activa" placeholder="Escribe aquí...">
+                        </div>
+                        <button class="btn btn-info" onclick="verificarPasivaAActiva()">Verificar</button>
+                        <button class="btn btn-outline-secondary" onclick="siguientePasivaAActiva()">Siguiente Consejo</button>
+                        <div id="resultado-pasiva-activa" class="mt-3"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Traducir al Inglés -->
+    <section id="traducir-ingles" class="practice-section container mt-4">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header bg-dark text-white">
+                        <h2 class="mb-0"><i class="bi bi-translate"></i> Traducir Consejos al Inglés</h2>
+                    </div>
+                    <div class="card-body">
+                        <p class="card-text">Se mostrará un consejo en español (voz activa). Debes traducirlo al inglés y escribirlo en el cuadro de texto.</p>
+                        
+                        <div class="mb-3">
+                            <div class="progress mb-3">
+                                <div id="progress-traducir" class="progress-bar bg-dark" role="progressbar" style="width: 0%"></div>
+                            </div>
+                            <div id="consejo-traducir" class="alert alert-secondary fs-5"></div>
+                            <label for="respuesta-traducir" class="form-label">Escribe la traducción al inglés:</label>
+                            <input type="text" class="form-control form-control-lg" id="respuesta-traducir" placeholder="Escribe aquí...">
+                        </div>
+                        <button class="btn btn-dark" onclick="verificarTraduccion()">Verificar</button>
+                        <button class="btn btn-outline-secondary" onclick="siguienteTraduccion()">Siguiente Consejo</button>
+                        <div id="resultado-traducir" class="mt-3"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Todos los Consejos -->
+    <section id="consejos" class="practice-section container mt-4">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header bg-secondary text-white">
+                        <h2 class="mb-0"><i class="bi bi-list-ul"></i> Todos los Consejos</h2>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h4 class="text-primary">Voz Activa</h4>
+                                <div id="lista-activa" class="list-group"></div>
+                            </div>
+                            <div class="col-md-6">
+                                <h4 class="text-success">Voz Pasiva</h4>
+                                <div id="lista-pasiva" class="list-group"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-light text-center text-muted py-4 mt-5">
+        <div class="container">
+            <p>Página educativa para practicar voz activa y pasiva con consejos de Django</p>
+            <p>Desarrollado con Bootstrap 5</p>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- JavaScript personalizado -->
+    <script>
+        // Datos de los consejos
+        const consejosActiva = [
+            "Instala Django correctamente usando `pip install django`.",
+            "Crea un entorno virtual con `python -m venv myenv`.",
+            "Usa Django Admin para gestionar datos.",
+            "Sigue el principio DRY (Don't Repeat Yourself).",
+            "Controla versiones de tu proyecto con Git.",
+            "Documenta tu código con comentarios claros y docstrings.",
+            "Configura correctamente tu proyecto en `settings.py`.",
+            "Protege contraseñas y claves usando `.env`.",
+            "Gestiona la base de datos con `makemigrations` y `migrate`.",
+            "Escribe tests con `unittest` o `pytest`."
+        ];
+
+        const consejosPasiva = [
+            "Django debe ser instalado correctamente usando `pip install django`.",
+            "Un entorno virtual debe ser creado con `python -m venv myenv`.",
+            "El panel de administración de Django debe ser aprovechado para gestionar datos.",
+            "El principio DRY (Don't Repeat Yourself) debe ser seguido.",
+            "Git debe ser usado para controlar versiones del proyecto.",
+            "El código debe ser documentado con comentarios claros y docstrings.",
+            "El archivo `settings.py` debe ser configurado correctamente.",
+            "Las variables sensibles deben ser protegidas usando `.env`.",
+            "Las migraciones deben ser manejadas con `makemigrations` y `migrate`.",
+            "El código debe ser probado usando `unittest` o `pytest`."
+        ];
+
+        const consejosIngles = [
+            "Install Django correctly using `pip install django`.",
+            "Create a virtual environment with `python -m venv myenv`.",
+            "Use Django Admin to manage data.",
+            "Follow the DRY (Don't Repeat Yourself) principle.",
+            "Control project versions with Git.",
+            "Document your code with clear comments and docstrings.",
+            "Configure your project correctly in `settings.py`.",
+            "Protect passwords and keys using `.env`.",
+            "Manage the database with `makemigrations` and `migrate`.",
+            "Write tests with `unittest` or `pytest`."
+        ];
+
+        // Variables para llevar el índice actual de cada sección
+        let indiceActiva = 0;
+        let indicePasiva = 0;
+        let indiceActivaAPasiva = 0;
+        let indicePasivaAActiva = 0;
+        let indiceTraduccion = 0;
+
+        // Variables para el progreso
+        let progresoActiva = 0;
+        let progresoPasiva = 0;
+        let progresoActivaAPasiva = 0;
+        let progresoPasivaAActiva = 0;
+        let progresoTraduccion = 0;
+
+        // Inicializar la página
+        document.addEventListener('DOMContentLoaded', function() {
+            // Inicializar listas de consejos
+            actualizarListaConsejos();
+            
+            // Mostrar el primer consejo en cada sección
+            siguienteActiva();
+            siguientePasiva();
+            siguienteActivaAPasiva();
+            siguientePasivaAActiva();
+            siguienteTraduccion();
+            
+            // Configurar navegación
+            configurarNavegacion();
+        });
+
+        // Función para configurar la navegación entre secciones
+        function configurarNavegacion() {
+            const navLinks = document.querySelectorAll('.nav-link');
+            navLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const targetSection = this.getAttribute('data-section');
+                    
+                    // Actualizar clase activa en navegación
+                    navLinks.forEach(nl => nl.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    // Mostrar sección correspondiente
+                    const sections = document.querySelectorAll('.practice-section');
+                    sections.forEach(section => {
+                        section.classList.remove('active');
+                        if (section.id === targetSection) {
+                            section.classList.add('active');
+                        }
+                    });
+                });
+            });
+        }
+
+        // Función para actualizar la lista de consejos
+        function actualizarListaConsejos() {
+            const listaActiva = document.getElementById('lista-activa');
+            const listaPasiva = document.getElementById('lista-pasiva');
+            
+            listaActiva.innerHTML = '';
+            listaPasiva.innerHTML = '';
+            
+            consejosActiva.forEach(consejo => {
+                const item = document.createElement('div');
+                item.className = 'list-group-item';
+                item.textContent = consejo;
+                listaActiva.appendChild(item);
+            });
+            
+            consejosPasiva.forEach(consejo => {
+                const item = document.createElement('div');
+                item.className = 'list-group-item';
+                item.textContent = consejo;
+                listaPasiva.appendChild(item);
+            });
+        }
+
+        // Función para obtener un índice aleatorio
+        function obtenerIndiceAleatorio() {
+            return Math.floor(Math.random() * consejosActiva.length);
+        }
+
+        // Funciones para la sección de voz activa
+        function verificarActiva() {
+            const respuesta = document.getElementById('respuesta-activa').value;
+            const correcta = consejosActiva[indiceActiva];
+            const resultado = document.getElementById('resultado-activa');
+            
+            if (respuesta.trim() === correcta) {
+                resultado.innerHTML = '<div class="alert alert-success">¡Correcto! Bien hecho.</div>';
+                progresoActiva = Math.min(progresoActiva + 10, 100);
+            } else {
+                resultado.innerHTML = `<div class="alert alert-danger">Incorrecto. La respuesta correcta es: <strong>${correcta}</strong></div>`;
+            }
+            
+            actualizarProgreso('progress-activa', progresoActiva);
+        }
+
+        function siguienteActiva() {
+            indiceActiva = obtenerIndiceAleatorio();
+            document.getElementById('consejo-activa').textContent = consejosActiva[indiceActiva];
+            document.getElementById('respuesta-activa').value = '';
+            document.getElementById('resultado-activa').innerHTML = '';
+        }
+
+        // Funciones para la sección de voz pasiva
+        function verificarPasiva() {
+            const respuesta = document.getElementById('respuesta-pasiva').value;
+            const correcta = consejosPasiva[indicePasiva];
+            const resultado = document.getElementById('resultado-pasiva');
+            
+            if (respuesta.trim() === correcta) {
+                resultado.innerHTML = '<div class="alert alert-success">¡Correcto! Bien hecho.</div>';
+                progresoPasiva = Math.min(progresoPasiva + 10, 100);
+            } else {
+                resultado.innerHTML = `<div class="alert alert-danger">Incorrecto. La respuesta correcta es: <strong>${correcta}</strong></div>`;
+            }
+            
+            actualizarProgreso('progress-pasiva', progresoPasiva);
+        }
+
+        function siguientePasiva() {
+            indicePasiva = obtenerIndiceAleatorio();
+            document.getElementById('consejo-pasiva').textContent = consejosPasiva[indicePasiva];
+            document.getElementById('respuesta-pasiva').value = '';
+            document.getElementById('resultado-pasiva').innerHTML = '';
+        }
+
+        // Funciones para la sección de convertir de activa a pasiva
+        function verificarActivaAPasiva() {
+            const respuesta = document.getElementById('respuesta-activa-pasiva').value;
+            const correcta = consejosPasiva[indiceActivaAPasiva];
+            const resultado = document.getElementById('resultado-activa-pasiva');
+            
+            if (respuesta.trim() === correcta) {
+                resultado.innerHTML = '<div class="alert alert-success">¡Correcto! Bien hecho.</div>';
+                progresoActivaAPasiva = Math.min(progresoActivaAPasiva + 10, 100);
+            } else {
+                resultado.innerHTML = `<div class="alert alert-danger">Incorrecto. La respuesta correcta es: <strong>${correcta}</strong></div>`;
+            }
+            
+            actualizarProgreso('progress-activa-pasiva', progresoActivaAPasiva);
+        }
+
+        function siguienteActivaAPasiva() {
+            indiceActivaAPasiva = obtenerIndiceAleatorio();
+            document.getElementById('consejo-activa-pasiva').textContent = consejosActiva[indiceActivaAPasiva];
+            document.getElementById('respuesta-activa-pasiva').value = '';
+            document.getElementById('resultado-activa-pasiva').innerHTML = '';
+        }
+
+        // Funciones para la sección de convertir de pasiva a activa
+        function verificarPasivaAActiva() {
+            const respuesta = document.getElementById('respuesta-pasiva-activa').value;
+            const correcta = consejosActiva[indicePasivaAActiva];
+            const resultado = document.getElementById('resultado-pasiva-activa');
+            
+            if (respuesta.trim() === correcta) {
+                resultado.innerHTML = '<div class="alert alert-success">¡Correcto! Bien hecho.</div>';
+                progresoPasivaAActiva = Math.min(progresoPasivaAActiva + 10, 100);
+            } else {
+                resultado.innerHTML = `<div class="alert alert-danger">Incorrecto. La respuesta correcta es: <strong>${correcta}</strong></div>`;
+            }
+            
+            actualizarProgreso('progress-pasiva-activa', progresoPasivaAActiva);
+        }
+
+        function siguientePasivaAActiva() {
+            indicePasivaAActiva = obtenerIndiceAleatorio();
+            document.getElementById('consejo-pasiva-activa').textContent = consejosPasiva[indicePasivaAActiva];
+            document.getElementById('respuesta-pasiva-activa').value = '';
+            document.getElementById('resultado-pasiva-activa').innerHTML = '';
+        }
+
+        // Funciones para la sección de traducción
+        function verificarTraduccion() {
+            const respuesta = document.getElementById('respuesta-traducir').value;
+            const correcta = consejosIngles[indiceTraduccion];
+            const resultado = document.getElementById('resultado-traducir');
+            
+            if (respuesta.trim() === correcta) {
+                resultado.innerHTML = '<div class="alert alert-success">¡Correcto! Bien hecho.</div>';
+                progresoTraduccion = Math.min(progresoTraduccion + 10, 100);
+            } else {
+                resultado.innerHTML = `<div class="alert alert-danger">Incorrecto. La respuesta correcta es: <strong>${correcta}</strong></div>`;
+            }
+            
+            actualizarProgreso('progress-traducir', progresoTraduccion);
+        }
+
+        function siguienteTraduccion() {
+            indiceTraduccion = obtenerIndiceAleatorio();
+            document.getElementById('consejo-traducir').textContent = consejosActiva[indiceTraduccion];
+            document.getElementById('respuesta-traducir').value = '';
+            document.getElementById('resultado-traducir').innerHTML = '';
+        }
+
+        // Función para actualizar la barra de progreso
+        function actualizarProgreso(id, progreso) {
+            const progressBar = document.getElementById(id);
+            progressBar.style.width = `${progreso}%`;
+            progressBar.setAttribute('aria-valuenow', progreso);
+        }
+    </script>
+</body>
+</html>

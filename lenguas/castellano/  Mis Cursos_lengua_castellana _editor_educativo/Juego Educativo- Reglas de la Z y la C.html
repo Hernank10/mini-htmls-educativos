@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Juego Educativo: Reglas de la Z y la C</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body {
+      background-color: #f9fafb;
+      font-family: 'Segoe UI', sans-serif;
+    }
+    .card {
+      border-radius: 20px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+    .nav-link.active {
+      background-color: #198754 !important;
+      color: white !important;
+      border-radius: 10px;
+    }
+    textarea {
+      resize: none;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container py-4">
+  <h1 class="text-center mb-4 text-success">🌟 Juego Educativo: Uso de la Z y la C 🌟</h1>
+
+  <!-- Navegación -->
+  <ul class="nav nav-tabs mb-3" id="myTab" role="tablist">
+    <li class="nav-item" role="presentation">
+      <button class="nav-link active" id="reglas-tab" data-bs-toggle="tab" data-bs-target="#reglas" type="button" role="tab">🧠 Aprender Reglas</button>
+    </li>
+    <li class="nav-item" role="presentation">
+      <button class="nav-link" id="frases-tab" data-bs-toggle="tab" data-bs-target="#frases" type="button" role="tab">✍️ Practicar Frases</button>
+    </li>
+    <li class="nav-item" role="presentation">
+      <button class="nav-link" id="juego-tab" data-bs-toggle="tab" data-bs-target="#juego" type="button" role="tab">🏆 Jugar con Puntuación</button>
+    </li>
+  </ul>
+
+  <div class="tab-content">
+
+    <!-- SECCIÓN 1: APRENDER REGLAS -->
+    <div class="tab-pane fade show active" id="reglas" role="tabpanel">
+      <div class="card p-4">
+        <h4 class="text-primary">🧠 Reglas del uso de la letra Z y C</h4>
+        <p>Lee y escribe las siguientes reglas ortográficas:</p>
+
+        <ol id="listaReglas"></ol>
+        <textarea id="respuestaRegla" class="form-control mt-2" rows="3" placeholder="Escribe aquí la regla que recuerdes..."></textarea>
+        <button class="btn btn-success mt-2" onclick="verificarRegla()">Verificar</button>
+        <p id="resultadoRegla" class="mt-3 fw-bold"></p>
+      </div>
+    </div>
+
+    <!-- SECCIÓN 2: PRACTICAR FRASES -->
+    <div class="tab-pane fade" id="frases" role="tabpanel">
+      <div class="card p-4">
+        <h4 class="text-primary">✍️ Inventa frases con palabras que usen la letra Z</h4>
+        <p>Ejemplo: <em>El golpazo fue tan fuerte que dejó una cicatriz.</em></p>
+
+        <p><strong>Palabra actual:</strong> <span id="palabraActual" class="text-danger fw-bold"></span></p>
+        <textarea id="fraseUsuario" class="form-control" rows="3" placeholder="Escribe tu frase aquí..."></textarea>
+        <button class="btn btn-success mt-2" onclick="evaluarFrase()">Enviar frase</button>
+        <p id="resultadoFrase" class="mt-3 fw-bold"></p>
+      </div>
+    </div>
+
+    <!-- SECCIÓN 3: JUEGO CON PUNTUACIÓN -->
+    <div class="tab-pane fade" id="juego" role="tabpanel">
+      <div class="card p-4">
+        <h4 class="text-primary">🏆 Juego de Palabras con Puntuación</h4>
+        <p>Gana puntos por rapidez, creatividad y precisión.</p>
+
+        <p><strong>Palabra:</strong> <span id="palabraJuego" class="text-danger fw-bold"></span></p>
+        <textarea id="fraseJuego" class="form-control" rows="3" placeholder="Escribe una frase con la palabra mostrada..."></textarea>
+        <button class="btn btn-primary mt-2" onclick="jugar()">Enviar</button>
+        <p id="mensajeJuego" class="mt-3 fw-bold"></p>
+        <h5 class="mt-4">Puntuación total: <span id="puntuacionTotal" class="text-success">0</span> puntos</h5>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  // --- Datos del juego ---
+  const reglas = [
+    "Se escriben con Z los sustantivos abstractos terminados en -ez, -eza (belleza, rapidez).",
+    "Los adjetivos terminados en -az y -oz se escriben con Z (audaz, feroz).",
+    "Los sustantivos derivados de verbos terminados en -zar cambian la Z por C antes de e (empezar → empecé).",
+    "Los aumentativos terminados en -azo, -aza se escriben con Z (golpazo, manaza).",
+    "Los patronímicos terminados en -ez indican descendencia (Fernández, López).",
+    "Se escriben con Z los sustantivos terminados en -azgo (hallazgo, almirantazgo).",
+    "Los adjetivos terminados en -izo, -iza se escriben con Z (mendigo → mendigazo).",
+    "Los verbos terminados en -zar cambian la z por c delante de e (utilizar → utilicé).",
+    "Los verbos terminados en -ecer, -acer, -ocer se escriben con C (conocer, crecer, nacer)."
+  ];
+
+  const palabras = ["cicatriz", "suspicaz", "alabanza", "golpazo", "almirantazgo", "entereza", "analizar", "armazón", "criazón"];
+  let indiceRegla = 0;
+  let puntuacion = 0;
+
+  // --- Inicialización ---
+  document.getElementById("listaReglas").innerHTML = reglas.map(r => `<li>${r}</li>`).join("");
+  nuevaPalabra();
+
+  // --- Funciones ---
+  function verificarRegla() {
+    const respuesta = document.getElementById("respuestaRegla").value.toLowerCase();
+    const correcta = reglas.some(r => respuesta.includes(r.split(" ")[0].toLowerCase()));
+    document.getElementById("resultadoRegla").textContent = correcta ? "✅ ¡Muy bien! Has recordado una regla correctamente." : "❌ Intenta recordar mejor la regla.";
+  }
+
+  function nuevaPalabra() {
+    const aleatoria = palabras[Math.floor(Math.random() * palabras.length)];
+    document.getElementById("palabraActual").textContent = aleatoria;
+    document.getElementById("palabraJuego").textContent = aleatoria;
+  }
+
+  function evaluarFrase() {
+    const frase = document.getElementById("fraseUsuario").value.toLowerCase();
+    const palabra = document.getElementById("palabraActual").textContent;
+    document.getElementById("resultadoFrase").textContent = frase.includes(palabra)
+      ? "✅ ¡Excelente! Has usado correctamente la palabra."
+      : "⚠️ No usaste la palabra correctamente.";
+    nuevaPalabra();
+    document.getElementById("fraseUsuario").value = "";
+  }
+
+  function jugar() {
+    const inicio = performance.now();
+    const frase = document.getElementById("fraseJuego").value.toLowerCase();
+    const palabra = document.getElementById("palabraJuego").textContent.toLowerCase();
+
+    let puntos = 0;
+    if (frase.includes(palabra)) puntos += 10; // uso correcto
+    if (frase.length > 50) puntos += 5; // frase larga
+    const duracion = (performance.now() - inicio) / 1000;
+    if (duracion < 10) puntos += 3; // rapidez
+
+    puntuacion += puntos;
+    document.getElementById("puntuacionTotal").textContent = puntuacion;
+    document.getElementById("mensajeJuego").textContent = `Ganaste ${puntos} puntos esta ronda.`;
+    document.getElementById("fraseJuego").value = "";
+    nuevaPalabra();
+  }
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

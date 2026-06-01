@@ -1,0 +1,387 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <title>Práctica del Gerundio — Web Pedagógica</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body { padding-top: 70px; }
+    .gerund { text-decoration: underline; font-weight: 600; }
+    pre { white-space: pre-wrap; }
+    .category-list { max-height: 320px; overflow:auto; }
+    .exam-timer { font-size: 1.2rem; font-weight:700; }
+    .highlight-incorrect { background: #ffe6e6; }
+  </style>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="#">GerundioLab</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navMenu">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item"><a class="nav-link active" href="#learn">Aprender</a></li>
+        <li class="nav-item"><a class="nav-link" href="#practice">Practicar</a></li>
+        <li class="nav-item"><a class="nav-link" href="#exam">Examen cronometrado</a></li>
+        <li class="nav-item"><a class="nav-link" href="#museum">Museo/Títulos</a></li>
+        <li class="nav-item"><a class="nav-link" href="#bilingual">Bilingüe</a></li>
+      </ul>
+      <div class="d-flex">
+        <button class="btn btn-light me-2" id="downloadBtn">Descargar ejemplos</button>
+        <button class="btn btn-outline-light" id="resetBtn">Restaurar datos</button>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<div class="container">
+  <section id="learn" class="mb-5">
+    <div class="row">
+      <div class="col-lg-4">
+        <h4>Categorías</h4>
+        <div class="list-group category-list" id="categoryList"></div>
+        <div class="mt-3">
+          <button class="btn btn-primary btn-sm" id="addCategoryBtn">Añadir categoría</button>
+        </div>
+      </div>
+      <div class="col-lg-8">
+        <h4 id="catTitle">Selecciona una categoría</h4>
+        <div class="card mb-3">
+          <div class="card-body">
+            <div id="examplesArea" style="min-height:200px;"></div>
+          </div>
+        </div>
+        <div class="d-flex gap-2">
+          <button class="btn btn-success" id="copyExampleBtn">Copiar al portapapeles</button>
+          <button class="btn btn-secondary" id="shuffleBtn">Mezclar ejemplos</button>
+          <button class="btn btn-outline-primary" id="openPractice">Ir a Practicar</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="practice" class="mb-5">
+    <h3>Practica y crea</h3>
+    <div class="row">
+      <div class="col-md-6">
+        <label class="form-label">Ejemplo (selección o pega tu propio):</label>
+        <textarea id="selectedExample" class="form-control" rows="6"></textarea>
+        <div class="form-text">Se subrayarán automáticamente los gerundios al previsualizar.</div>
+        <div class="mt-2">
+          <button class="btn btn-primary me-2" id="previewBtn">Previsualizar</button>
+          <button class="btn btn-success" id="saveNewBtn">Guardar como nuevo ejemplo</button>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <label class="form-label">Previsualización:</label>
+        <div class="border rounded p-3" id="previewArea" style="min-height:160px;"></div>
+        <div class="form-text mt-2">Subraya el gerundio con <code>_gerundio_</code> o usa el botón "Previsualizar".</div>
+      </div>
+    </div>
+
+    <hr>
+    <h5>Tu banco de ejemplos</h5>
+    <div id="userExamplesArea" class="mb-3"></div>
+  </section>
+
+  <section id="exam" class="mb-5">
+    <h3>Examen cronometrado</h3>
+    <div class="row">
+      <div class="col-md-4">
+        <label>Selecciona categoría:</label>
+        <select id="examCategory" class="form-select mb-2"></select>
+        <label>Preguntas:</label>
+        <input type="number" id="examCount" class="form-control mb-2" value="10" min="1" max="50">
+        <label>Tiempo por pregunta (segundos):</label>
+        <input type="number" id="timePerQ" class="form-control mb-2" value="30" min="5">
+        <button class="btn btn-danger mt-2" id="startExamBtn">Iniciar examen</button>
+      </div>
+      <div class="col-md-8" id="examPanel" style="display:none;">
+        <div class="d-flex justify-content-between align-items-center mb-2">
+          <div id="examProgress">Pregunta 1 / 10</div>
+          <div class="exam-timer text-danger" id="examTimer">00:30</div>
+        </div>
+        <div class="card mb-2"><div class="card-body" id="examQuestion"></div></div>
+        <textarea id="examAnswer" class="form-control" rows="3" placeholder="Escribe tu respuesta (subraya el gerundio con _gerundio_)"></textarea>
+        <div class="mt-2">
+          <button class="btn btn-primary" id="submitAnswerBtn">Enviar respuesta</button>
+          <button class="btn btn-secondary" id="skipBtn">Saltar</button>
+        </div>
+        <div id="examResults" class="mt-3"></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="museum" class="mb-5">
+    <h3>Museo y títulos</h3>
+    <p>Genera y prueba títulos de obras con gerundios. Ejemplo: <em>Napoleón entrando a Rusia</em></p>
+    <div class="row mb-3">
+      <div class="col-md-6">
+        <label class="form-label">Escribe la frase titular:</label>
+        <input id="museumInput" class="form-control" placeholder="Ej: Napoleón entrando a Rusia">
+      </div>
+      <div class="col-md-6">
+        <label class="form-label">Previsualización:</label>
+        <div id="museumPreview" class="border rounded p-3"></div>
+      </div>
+    </div>
+    <div>
+      <button class="btn btn-success" id="museumSaveBtn">Guardar título</button>
+      <button class="btn btn-outline-secondary" id="museumSuggestBtn">Sugerir título aleatorio</button>
+    </div>
+    <hr>
+    <h5>Títulos guardados</h5>
+    <div id="museumTitlesArea"></div>
+  </section>
+
+  <section id="bilingual" class="mb-5">
+    <h3>Bilingüe (ES ↔ EN)</h3>
+    <p>Compara ejemplos en español e inglés. (Traducciones aproximadas.)</p>
+    <div class="row">
+      <div class="col-md-6">
+        <label>Ejemplo (ES):</label>
+        <textarea id="b_es" class="form-control" rows="4">María llegó corriendo.</textarea>
+      </div>
+      <div class="col-md-6">
+        <label>Traducción (EN):</label>
+        <textarea id="b_en" class="form-control" rows="4">Maria arrived running.</textarea>
+      </div>
+    </div>
+    <div class="mt-2">
+      <button class="btn btn-primary" id="swapLang">Intercambiar</button>
+      <button class="btn btn-success" id="autoTranslate">Autocompletar (sugerir)</button>
+    </div>
+  </section>
+
+  <footer class="text-muted py-4">
+    <div class="container">GerundioLab &mdash; Página pedagógica de práctica. Datos guardados en localStorage.</div>
+  </footer>
+</div>
+
+<script>
+// Data inicial (ejemplos abreviados por razones prácticas)
+const initialData = {
+  "Instantaneidad": [
+    "Estoy leyendo un libro fascinante.",
+    "Te estoy buscando en la estación.",
+    "Estoy preparando una ensalada.",
+    "Estamos llegando al aeropuerto.",
+    "Estoy escribiendo una carta urgente."
+  ],
+  "Duración": [
+    "Estoy viviendo en Barcelona.",
+    "Estoy trabajando en una empresa internacional.",
+    "Estoy estudiando medicina.",
+    "Estoy investigando sobre energías renovables.",
+    "Estoy construyendo una cabaña en el bosque."
+  ],
+  "Repetición": [
+    "Estoy disparando flechas al blanco.",
+    "Estoy golpeando la puerta.",
+    "Estoy aplaudiendo en el concierto.",
+    "Estoy martillando clavos en la madera.",
+    "Estoy barriendo el patio."
+  ],
+  "Percepción": [
+    "Vi a mi hermano bailando en la fiesta.",
+    "Oí a un perro ladrando en la noche.",
+    "Encontré a María escribiendo poemas.",
+    "Descubrí a Pedro durmiendo en clase.",
+    "Vi al jardinero podando los árboles."
+  ],
+  "Simultaneidad y modo": [
+    "Jaime entra al salón cantando.",
+    "Marta cruzó la calle corriendo.",
+    "Luis salió de casa silbando.",
+    "El niño bajó la escalera saltando.",
+    "El gato se acercó maullando."
+  ],
+  "Causa": [
+    "El soldado, viendo que era su hermano, bajó el arma.",
+    "El profesor, recordando su primera clase, sonrió.",
+    "El conductor, percibiendo el peligro, frenó bruscamente.",
+    "La madre, oyendo el llanto de su bebé, corrió a la cuna.",
+    "El científico, descubriendo un error, repitió el experimento."
+  ],
+  "Concesión/Condición": [
+    "Estudiando tanto, aún fallé en el examen.",
+    "Siendo tan tarde, no había taxis disponibles.",
+    "Habiendo terminado la tarea, salimos a jugar.",
+    "Estando cansado, continuó trabajando.",
+    "Lloviendo fuerte, no salimos de casa."
+  ]
+};
+
+// Utilities
+function saveState(state){ localStorage.setItem('gerundio_data', JSON.stringify(state)); }
+function loadState(){ const s = localStorage.getItem('gerundio_data'); return s ? JSON.parse(s) : JSON.parse(JSON.stringify(initialData)); }
+let data = loadState();
+
+// Render categories
+const categoryList = document.getElementById('categoryList');
+const examCategory = document.getElementById('examCategory');
+function renderCategories(){ categoryList.innerHTML = ''; examCategory.innerHTML = '';
+  Object.keys(data).forEach(cat =>{
+    const a = document.createElement('button');
+    a.className = 'list-group-item list-group-item-action';
+    a.innerText = cat + ' ('+data[cat].length+')';
+    a.onclick = ()=> showCategory(cat);
+    categoryList.appendChild(a);
+
+    const opt = document.createElement('option'); opt.value = cat; opt.textContent = cat; examCategory.appendChild(opt);
+  });
+}
+
+// Show category
+const examplesArea = document.getElementById('examplesArea');
+const catTitle = document.getElementById('catTitle');
+let currentCategory = null;
+function showCategory(cat){ currentCategory = cat; catTitle.innerText = 'Categoría: '+cat; renderExamples(cat); }
+function renderExamples(cat){ examplesArea.innerHTML = '';
+  data[cat].forEach((ex, i)=>{
+    const p = document.createElement('p'); p.innerHTML = highlightGerund(ex);
+    examplesArea.appendChild(p);
+  });
+}
+
+// Highlight gerundios (wrap in span. Accept -ando -iendo -yendo)
+function highlightGerund(text){ return text.replace(/\b(\w+(?:ando|iendo|yendo))\b/gi, '<span class="gerund">$1</span>'); }
+
+// Copy example
+document.getElementById('copyExampleBtn').onclick = ()=>{
+  const txt = examplesArea.innerText.trim(); if(!txt) return alert('Selecciona una categoría primero.');
+  navigator.clipboard.writeText(txt).then(()=> alert('Ejemplos copiados al portapapeles'));
+}
+
+// Shuffle
+document.getElementById('shuffleBtn').onclick = ()=>{
+  if(!currentCategory) return alert('Selecciona una categoría.');
+  data[currentCategory] = data[currentCategory].sort(()=> Math.random()-0.5);
+  saveState(data); renderExamples(currentCategory);
+}
+
+// Add category
+document.getElementById('addCategoryBtn').onclick = ()=>{
+  const name = prompt('Nombre de la nueva categoría:');
+  if(!name) return;
+  if(data[name]) return alert('Ya existe esa categoría.');
+  data[name]=[]; saveState(data); renderCategories();
+}
+
+// Practice: preview and save
+const selectedExample = document.getElementById('selectedExample');
+const previewArea = document.getElementById('previewArea');
+document.getElementById('previewBtn').onclick = ()=>{
+  const t = selectedExample.value.trim(); if(!t) return alert('Escribe o pega un ejemplo.');
+  previewArea.innerHTML = renderPreview(t);
+};
+function renderPreview(text){ // allow underscore _gerund_
+  let s = text.replace(/_(\w+(?:ando|iendo|yendo))_/gi, '<span class="gerund">$1</span>');
+  s = highlightGerund(s); return s;
+}
+
+// Save new example
+function refreshUserExamples(){ const area = document.getElementById('userExamplesArea'); area.innerHTML='';
+  Object.keys(data).forEach(cat =>{
+    data[cat].forEach((ex,i)=>{
+      // user examples area shows all
+      const div = document.createElement('div'); div.className='border rounded p-2 mb-1';
+      div.innerHTML = '<strong>'+cat+'</strong>: '+highlightGerund(ex)+
+        ' <button class="btn btn-sm btn-outline-danger ms-2" onclick="deleteExample(\''+cat+'\','+i+')">Eliminar</button>';
+      area.appendChild(div);
+    });
+  });
+}
+window.deleteExample = function(cat,i){ if(!confirm('Eliminar este ejemplo?')) return; data[cat].splice(i,1); saveState(data); renderCategories(); if(currentCategory) renderExamples(currentCategory); refreshUserExamples(); }
+
+document.getElementById('saveNewBtn').onclick = ()=>{
+  const txt = selectedExample.value.trim(); if(!txt) return alert('Escribe algo.');
+  const cat = currentCategory || prompt('¿A qué categoría quieres añadirlo? (escribe el nombre)');
+  if(!cat) return;
+  if(!data[cat]) data[cat]=[];
+  data[cat].push(txt);
+  saveState(data); renderCategories(); renderExamples(cat); refreshUserExamples(); alert('Ejemplo guardado.');
+}
+
+// Initial render
+renderCategories(); refreshUserExamples();
+
+// Open practice
+document.getElementById('openPractice').onclick = ()=>{ location.hash = '#practice'; }
+
+// Download examples
+document.getElementById('downloadBtn').onclick = ()=>{
+  const blob = new Blob([JSON.stringify(data, null, 2)], {type:'application/json'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a'); a.href=url; a.download='gerundio_ejemplos.json'; a.click(); URL.revokeObjectURL(url);
+}
+
+// Reset
+document.getElementById('resetBtn').onclick = ()=>{ if(confirm('Restaurar datos iniciales y borrar tus cambios?')){ localStorage.removeItem('gerundio_data'); data = loadState(); renderCategories(); renderExamples(Object.keys(data)[0]); refreshUserExamples(); alert('Restaurado.'); }}
+
+// Museum titles
+const museumPreview = document.getElementById('museumPreview');
+document.getElementById('museumInput').oninput = function(){ museumPreview.innerHTML = highlightGerund(this.value); }
+const museumTitlesArea = document.getElementById('museumTitlesArea');
+document.getElementById('museumSaveBtn').onclick = ()=>{
+  const t = document.getElementById('museumInput').value.trim(); if(!t) return alert('Escribe un título.');
+  let arr = JSON.parse(localStorage.getItem('museum_titles')||'[]'); arr.push(t); localStorage.setItem('museum_titles', JSON.stringify(arr)); renderMuseumTitles(); }
+
+document.getElementById('museumSuggestBtn').onclick = ()=>{
+  const cats = Object.keys(data); const cat = cats[Math.floor(Math.random()*cats.length)]; const ex = data[cat][Math.floor(Math.random()*data[cat].length)]; document.getElementById('museumInput').value = ex; museumPreview.innerHTML = highlightGerund(ex);
+}
+function renderMuseumTitles(){ museumTitlesArea.innerHTML=''; const arr = JSON.parse(localStorage.getItem('museum_titles')||'[]'); arr.forEach((t,i)=>{ const div = document.createElement('div'); div.className='p-2 border rounded mb-1'; div.innerHTML = highlightGerund(t)+' <button class="btn btn-sm btn-outline-danger ms-2" onclick="deleteMuseum('+i+')">Eliminar</button>'; museumTitlesArea.appendChild(div); }); }
+window.deleteMuseum = function(i){ const arr = JSON.parse(localStorage.getItem('museum_titles')||'[]'); arr.splice(i,1); localStorage.setItem('museum_titles', JSON.stringify(arr)); renderMuseumTitles(); }
+renderMuseumTitles();
+
+// Bilingual (basic suggestions)
+document.getElementById('swapLang').onclick = ()=>{
+  const t = document.getElementById('b_es').value; document.getElementById('b_es').value = document.getElementById('b_en').value; document.getElementById('b_en').value = t;
+}
+document.getElementById('autoTranslate').onclick = ()=>{
+  const es = document.getElementById('b_es').value.trim(); if(!es) return alert('Escribe un ejemplo en español.');
+  // naive mapping: estoy -> i am, estoy + gerund -> i am gerund-ing
+  const suggestion = es.replace(/Estoy\s+/i, 'I am ').replace(/estoy\s+/i,'I am ').replace(/\b(E|e)stoy\b/,'I am').replace(/\b([A-Za-zÁÉÍÓÚáéíóúñÑ]+)ando\b/g, (m)=>m.replace(/ando$/,'ing')).replace(/\b([A-Za-zÁÉÍÓÚáéíóúñÑ]+)iendo\b/g, (m)=>m.replace(/iendo$/,'ing'));
+  document.getElementById('b_en').value = suggestion;
+}
+
+// Exam logic
+let examState = null;
+function startExam(){ const cat = examCategory.value; const count = parseInt(document.getElementById('examCount').value)||10; const perQ = parseInt(document.getElementById('timePerQ').value)||30; const pool = data[cat] ? data[cat].slice() : [];
+  if(pool.length===0){ return alert('No hay ejemplos en esa categoría.'); }
+  // create questions
+  const questions = [];
+  for(let i=0;i<count;i++){ const q = pool[Math.floor(Math.random()*pool.length)]; questions.push(q); }
+  examState = {cat,count,perQ,questions,current:0,score:0,answers:[]};
+  document.getElementById('examPanel').style.display='block'; document.getElementById('examResults').innerHTML='';
+  loadExamQuestion();
+}
+
+function loadExamQuestion(){ if(!examState) return; const i = examState.current; document.getElementById('examProgress').innerText = `Pregunta ${i+1} / ${examState.count}`; document.getElementById('examQuestion').innerHTML = highlightGerund(examState.questions[i]); document.getElementById('examAnswer').value='';
+  // timer
+  let time = examState.perQ; updateTimer(time);
+  clearInterval(window._examTimer);
+  window._examTimer = setInterval(()=>{ time--; if(time<=0){ clearInterval(window._examTimer); submitAnswer(true); } updateTimer(time); },1000);
+}
+function updateTimer(t){ const el = document.getElementById('examTimer'); el.innerText = '00:'+String(t).padStart(2,'0'); }
+
+function submitAnswer(timeout=false){ clearInterval(window._examTimer); const ans = document.getElementById('examAnswer').value.trim(); const q = examState.questions[examState.current]; const hasGerund = /\b\w+(ando|iendo|yendo)\b/i.test(ans);
+  // simple scoring: must include a gerund and relate to q (naive: check any shared word)
+  const shared = ans.split(/\W+/).filter(Boolean).map(s=>s.toLowerCase()).filter(s=> q.toLowerCase().includes(s));
+  const correct = hasGerund && shared.length>0 && !timeout;
+  examState.answers.push({q,ans,correct}); if(correct) examState.score++;
+  // next
+  examState.current++;
+  if(examState.current>=examState.count){ finishExam(); } else { loadExamQuestion(); }
+}
+document.getElementById('startExamBtn').onclick = startExam; document.getElementById('submitAnswerBtn').onclick = ()=>submitAnswer(false); document.getElementById('skipBtn').onclick = ()=>{ submitAnswer(true); }
+
+function finishExam(){ document.getElementById('examPanel').style.display='none'; let html = `<h5>Resultados: ${examState.score} / ${examState.count}</h5>`; examState.answers.forEach((a,idx)=>{ html += `<div class="border rounded p-2 mb-1 ${a.correct? '':'highlight-incorrect'}"><strong>Pregunta ${idx+1}</strong>: ${highlightGerund(a.q)}<br/><em>Respuesta:</em> ${renderPreview(a.ans) }<br/><small>Correcta: ${a.correct? 'Sí':'No'}</small></div>`; }); document.getElementById('examResults').innerHTML = html; examState=null; }
+
+</script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

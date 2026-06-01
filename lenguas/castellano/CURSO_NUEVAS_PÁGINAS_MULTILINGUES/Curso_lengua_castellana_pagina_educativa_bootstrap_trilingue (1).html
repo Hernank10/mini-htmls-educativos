@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Página Educativa Trilingüe – Griego / Español / Inglés</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <style>
+    body { background: #f5f8ff; }
+    .card { border-radius: 1rem; }
+    .concepto { font-weight: bold; font-size: 1.15rem; }
+    .footer { margin-top: 2rem; padding: 1.5rem; text-align: center; color: #6c757d; }
+    /* Canvas handwriting styles */
+    .draw-area { border: 2px dashed #cfe2ff; border-radius: 8px; background: #fff; }
+    #handwritingCanvas { touch-action: none; width:100%; height:320px; }
+    .btn-small { padding: .25rem .5rem; font-size: .9rem; }
+    .overlay-target { opacity: 0.12; pointer-events: none; font-size: 72px; transform: translateY(10px); }
+  </style>
+</head>
+<body>
+  <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="#">Academia Trilingüe</a>
+      <div class="collapse navbar-collapse">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item"><a class="nav-link" href="#">Inicio</a></li>
+          <li class="nav-item"><a class="nav-link" href="#">Conceptos</a></li>
+          <li class="nav-item"><a class="nav-link" href="#">Practicar</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container mt-4">
+    <h1 class="text-center mb-4">Aprendizaje Trilingüe Griego – Español – Inglés</h1>
+
+    <div class="row g-3">
+      <!-- Panel de Estudio -->
+      <div class="col-lg-6">
+        <div class="card shadow p-4 mb-3">
+          <h4>Estudio del Concepto</h4>
+          <label class="mt-3">Griego (letra / palabra):</label>
+          <input type="text" id="greek" class="form-control" placeholder="λόγος" />
+
+          <label class="mt-3">Transliteración:</label>
+          <input type="text" id="translit" class="form-control" placeholder="logos" />
+
+          <div class="row mt-3">
+            <div class="col">
+              <label>Español:</label>
+              <input type="text" id="spanish" class="form-control" placeholder="razón" />
+            </div>
+            <div class="col">
+              <label>Inglés:</label>
+              <input type="text" id="english" class="form-control" placeholder="reason" />
+            </div>
+          </div>
+
+          <button class="btn btn-primary mt-3 w-100" onclick="guardarConcepto()">Guardar concepto</button>
+          <div class="form-text mt-2">Los conceptos se guardan localmente en el navegador (localStorage).</div>
+        </div>
+
+        <!-- Ejercicio Activo -->
+        <div class="card shadow p-4 mb-3">
+          <h4>Ejercicio Activo</h4>
+          <p>Escribe frases en español e inglés usando el concepto.</p>
+
+          <textarea id="frase_es" class="form-control mt-2" placeholder="El logos guía el pensamiento filosófico."></textarea>
+          <textarea id="frase_en" class="form-control mt-2" placeholder="Reason guides philosophical inquiry."></textarea>
+
+          <div class="d-grid gap-2 mt-3">
+            <button class="btn btn-success" onclick="guardarFrases()">Guardar frases</button>
+            <button class="btn btn-outline-secondary" onclick="sugerirEjemplo()">Sugerir ejemplo</button>
+          </div>
+        </div>
+
+        <!-- Estadísticas -->
+        <div class="card shadow p-4">
+          <h4>Progreso</h4>
+          <div id="stats"></div>
+          <div class="mt-2 d-flex gap-2">
+            <button class="btn btn-outline-primary btn-small" onclick="mostrarStats()">Actualizar estadísticas</button>
+            <button class="btn btn-outline-danger btn-small" onclick="resetearDatos()">Reiniciar datos</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Panel de Escritura Manuscrita -->
+      <div class="col-lg-6">
+        <div class="card shadow p-4 mb-3">
+          <h4>Práctica de Escritura Manuscrita (Canvas)</h4>
+          <p>Practica la caligrafía de la palabra griega o su transliteración. Disponible para lápiz/ratón/táctil.</p>
+
+          <div class="draw-area position-relative mb-2">
+            <!-- overlay target (faint) -->
+            <div id="overlayTarget" class="overlay-target text-center w-100">λόγος</div>
+            <canvas id="handwritingCanvas"></canvas>
+          </div>
+
+          <div class="d-flex gap-2 mb-2">
+            <button class="btn btn-outline-secondary btn-small" onclick="clearCanvas()">Borrar</button>
+            <button class="btn btn-outline-secondary btn-small" onclick="undoStroke()">Deshacer</button>
+            <button class="btn btn-outline-primary btn-small" onclick="saveCanvasImage()">Descargar PNG</button>
+            <button class="btn btn-outline-success btn-small" onclick="saveStrokes()">Guardar trazos</button>
+            <button class="btn btn-outline-info btn-small" onclick="loadStrokes()">Cargar trazos</button>
+          </div>
+
+          <div class="form-text">Consejo: escribe primero con la transliteración (logos) y luego intenta la forma griega si la conoces.</div>
+
+        </div>
+
+        <!-- Panel de ayuda y últimas frases -->
+        <div class="card shadow p-4">
+          <h5>Últimas frases guardadas</h5>
+          <div id="recentList" style="min-height:120px; max-height:240px; overflow:auto;"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer">© 2025 Plataforma Educativa Multilingüe — Practica responsablemente. Datos en localStorage.</div>
+  </div>
+
+  <script>
+    // ---------- Gestión de datos (localStorage) ----------
+    let data = JSON.parse(localStorage.getItem("trilingue") || "{}");
+
+    function guardarConcepto(){
+      const g = document.getElementById('greek').value.trim();
+      const t = document.getElementById('translit').value.trim();
+      const s = document.getElementById('spanish').value.trim();
+      const e = document.getElementById('english').value.trim();
+      if(!g || !t || !s || !e){ alert('Completa todos los campos.'); return; }
+      data[g] = { translit: t, es: s, en: e, frases: data[g] ? data[g].frases || [] : [] };
+      localStorage.setItem('trilingue', JSON.stringify(data));
+      alert('Concepto guardado.');
+      actualizarRecent();
+    }
+
+    function guardarFrases(){
+      const g = document.getElementById('greek').value.trim();
+      if(!g || !data[g]){ alert('Debes guardar primero el concepto o seleccionarlo.'); return; }
+      const fe = document.getElementById('frase_es').value.trim();
+      const fn = document.getElementById('frase_en').value.trim();
+      data[g].frases.push({ es: fe, en: fn, ts: new Date().toISOString() });
+      localStorage.setItem('trilingue', JSON.stringify(data));
+      document.getElementById('frase_es').value=''; document.getElementById('frase_en').value='';
+      alert('Frases guardadas.');
+      actualizarRecent();
+    }
+
+    function sugerirEjemplo(){
+      // sugerencia simple a modo de ayuda
+      const t = document.getElementById('translit').value.trim() || document.getElementById('greek').value.trim();
+      if(!t) return alert('Cargue o escriba el concepto primero.');
+      document.getElementById('frase_es').value = `El ${t} guía el pensamiento filosófico.`;
+      document.getElementById('frase_en').value = `${t.charAt(0).toUpperCase()+t.slice(1)} guides philosophical inquiry.`;
+    }
+
+    function mostrarStats(){
+      let total = Object.keys(data).length;
+      let frases = 0;
+      for(const k in data) frases += (data[k].frases || []).length;
+      document.getElementById('stats').innerHTML = `
+        <p><strong>Conceptos guardados:</strong> ${total}</p>
+        <p><strong>Frases creadas:</strong> ${frases}</p>`;
+    }
+
+    function resetearDatos(){
+      if(!confirm('¿Reiniciar todos los datos guardados localmente?')) return;
+      localStorage.removeItem('trilingue'); data = {}; mostrarStats(); actualizarRecent(); alert('Datos reiniciados.');
+    }
+
+    function actualizarRecent(){
+      const recent = document.getElementById('recentList'); recent.innerHTML='';
+      const keys = Object.keys(data).reverse();
+      for(let g of keys.slice(0,20)){
+        const item = document.createElement('div');
+        item.className='mb-2';
+        item.innerHTML = `<strong>${g}</strong> — ${data[g].translit} <br><small>${data[g].es} / ${data[g].en}</small>`;
+        recent.appendChild(item);
+      }
+    }
+
+    // Inicializar UI
+    mostrarStats(); actualizarRecent();
+
+    // ---------- Canvas handwriting logic ----------
+    const canvas = document.getElementById('handwritingCanvas');
+    const overlay = document.getElementById('overlayTarget');
+    // ajustar resolución para pantalla y devicePixelRatio
+    function fitCanvas(){
+      const rect = canvas.getBoundingClientRect();
+      canvas.width = rect.width * window.devicePixelRatio;
+      canvas.height = rect.height * window.devicePixelRatio;
+      canvas.style.width = rect.width + 'px';
+      canvas.style.height = rect.height + 'px';
+      ctx.setTransform(window.devicePixelRatio,0,0,window.devicePixelRatio,0,0);
+      redrawAll();
+    }
+    window.addEventListener('resize', fitCanvas);
+
+    const ctx = canvas.getContext('2d');
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
+    ctx.lineWidth = 6;
+    ctx.strokeStyle = '#0b5ed7';
+
+    let drawing = false;
+    let strokes = []; // array de trazos; cada trazo = array de puntos {x,y}
+    let currentStroke = null;
+
+    function pointerDown(e){
+      drawing = true;
+      currentStroke = [];
+      const p = getPoint(e);
+      currentStroke.push(p);
+      strokes.push(currentStroke);
+      redrawAll();
+    }
+    function pointerMove(e){
+      if(!drawing) return;
+      const p = getPoint(e);
+      currentStroke.push(p);
+      drawStrokeSegment(currentStroke);
+    }
+    function pointerUp(e){
+      drawing = false;
+      currentStroke = null;
+    }
+    function getPoint(e){
+      const rect = canvas.getBoundingClientRect();
+      const clientX = (e.touches ? e.touches[0].clientX : e.clientX);
+      const clientY = (e.touches ? e.touches[0].clientY : e.clientY);
+      return { x: (clientX - rect.left), y: (clientY - rect.top) };
+    }
+
+    function drawStrokeSegment(stroke){
+      if(stroke.length < 2) return;
+      const a = stroke[stroke.length-2];
+      const b = stroke[stroke.length-1];
+      ctx.beginPath();
+      ctx.moveTo(a.x, a.y);
+      ctx.lineTo(b.x, b.y);
+      ctx.stroke();
+    }
+
+    function redrawAll(){
+      // fondo blanco
+      ctx.fillStyle = '#ffffff'; ctx.fillRect(0,0,canvas.width,canvas.height);
+      // dibujar overlay target (emulado) — no es parte del canvas real; lo dejamos visual en DOM
+      // dibujar todos los strokes
+      ctx.lineWidth = 6; ctx.strokeStyle = '#0b5ed7';
+      for(const stroke of strokes){
+        if(stroke.length<2) continue;
+        ctx.beginPath(); ctx.moveTo(stroke[0].x, stroke[0].y);
+        for(let i=1;i<stroke.length;i++){ ctx.lineTo(stroke[i].x, stroke[i].y); }
+        ctx.stroke();
+      }
+    }
+
+    // Operaciones: clear, undo, save image, save/load strokes
+    function clearCanvas(){ strokes = []; redrawAll(); }
+    function undoStroke(){ strokes.pop(); redrawAll(); }
+
+    function saveCanvasImage(){
+      // convertir a PNG y descargar
+      const dataURL = canvas.toDataURL('image/png');
+      const a = document.createElement('a'); a.href = dataURL; a.download = 'handwriting.png'; a.click();
+    }
+
+    function saveStrokes(){
+      const key = 'hand_strokes_' + (document.getElementById('translit').value || document.getElementById('greek').value || 'concept');
+      localStorage.setItem(key, JSON.stringify(strokes));
+      alert('Trazos guardados ('+key+').');
+    }
+
+    function loadStrokes(){
+      const key = 'hand_strokes_' + (document.getElementById('translit').value || document.getElementById('greek').value || 'concept');
+      const json = localStorage.getItem(key);
+      if(!json){ return alert('No se encontraron trazos guardados para este concepto.'); }
+      try{ strokes = JSON.parse(json); redrawAll(); alert('Trazos cargados.'); }catch(e){ alert('Error al cargar trazos.'); }
+    }
+
+    // Iniciar listeners
+    canvas.addEventListener('pointerdown', pointerDown);
+    canvas.addEventListener('pointermove', pointerMove);
+    canvas.addEventListener('pointerup', pointerUp);
+    canvas.addEventListener('pointercancel', pointerUp);
+    canvas.addEventListener('touchstart', function(e){ e.preventDefault(); }, {passive:false});
+
+    // Ajuste inicial
+    // esperar un tick para que el canvas tenga tamaño
+    setTimeout(()=>{ fitCanvas(); }, 50);
+
+    // Reducido: actualizar overlay text según input
+    document.getElementById('greek').addEventListener('input', function(e){ overlay.innerText = this.value || 'λόγος'; });
+    document.getElementById('translit').addEventListener('input', function(e){ if(!document.getElementById('greek').value) overlay.innerText = this.value || 'logos'; });
+
+    // Guardar también el canvas al cambiar de concepto (opcional)
+    window.addEventListener('beforeunload', function(){ localStorage.setItem('trilingue', JSON.stringify(data)); });
+
+  </script>
+
+</body>
+</html>

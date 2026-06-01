@@ -1,0 +1,691 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LinguaLearn - Plataforma Educativa Multilingüe</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
+    <style>
+        :root {
+            --primary-color: #3498db;
+            --secondary-color: #2c3e50;
+            --accent-color: #e74c3c;
+            --light-color: #ecf0f1;
+            --success-color: #2ecc71;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8f9fa;
+            color: #333;
+        }
+        
+        .navbar-brand {
+            font-weight: bold;
+            font-size: 1.5rem;
+        }
+        
+        .language-card {
+            transition: transform 0.3s, box-shadow 0.3s;
+            cursor: pointer;
+            height: 100%;
+        }
+        
+        .language-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+        
+        .language-icon {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+        }
+        
+        .feature-icon {
+            font-size: 1.5rem;
+            color: var(--primary-color);
+            margin-right: 10px;
+        }
+        
+        .practice-area {
+            background-color: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            margin-bottom: 20px;
+        }
+        
+        .flashcard {
+            perspective: 1000px;
+            height: 200px;
+            cursor: pointer;
+        }
+        
+        .flashcard-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+        }
+        
+        .flashcard.flipped .flashcard-inner {
+            transform: rotateY(180deg);
+        }
+        
+        .flashcard-front, .flashcard-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            border-radius: 10px;
+            padding: 20px;
+        }
+        
+        .flashcard-front {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        .flashcard-back {
+            background-color: var(--secondary-color);
+            color: white;
+            transform: rotateY(180deg);
+        }
+        
+        .progress-section {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            border-radius: 10px;
+            padding: 20px;
+        }
+        
+        .btn-language {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            margin: 5px;
+        }
+        
+        .btn-language:hover {
+            background-color: var(--secondary-color);
+            color: white;
+        }
+        
+        .btn-language.active {
+            background-color: var(--accent-color);
+        }
+        
+        .language-display {
+            font-size: 2rem;
+            text-align: center;
+            margin: 20px 0;
+        }
+        
+        footer {
+            background-color: var(--secondary-color);
+            color: white;
+        }
+        
+        .result-correct {
+            color: var(--success-color);
+            font-weight: bold;
+        }
+        
+        .result-incorrect {
+            color: var(--accent-color);
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand" href="#"><i class="bi bi-translate me-2"></i>LinguaLearn</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#inicio">Inicio</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#aprender">Aprender</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#practicar">Practicar</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#progreso">Progreso</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="inicio" class="py-5 text-center">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 mx-auto">
+                    <h1 class="display-4 mb-4">Aprende Idiomas con Tecnología</h1>
+                    <p class="lead mb-4">Una plataforma educativa interactiva para aprender chino, ruso, inglés, árabe y más, utilizando métodos modernos y efectivos.</p>
+                    <a href="#aprender" class="btn btn-primary btn-lg">Comenzar a Aprender</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Language Selection -->
+    <section id="aprender" class="py-5 bg-light">
+        <div class="container">
+            <h2 class="text-center mb-5">Selecciona un Idioma para Aprender</h2>
+            <div class="row">
+                <div class="col-md-3 mb-4">
+                    <div class="card language-card text-center" data-language="chinese">
+                        <div class="card-body">
+                            <div class="language-icon">人</div>
+                            <h5 class="card-title">Chino</h5>
+                            <p class="card-text">Aprende caracteres chinos, pinyin y pronunciación.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 mb-4">
+                    <div class="card language-card text-center" data-language="russian">
+                        <div class="card-body">
+                            <div class="language-icon">А</div>
+                            <h5 class="card-title">Ruso</h5>
+                            <p class="card-text">Domina el alfabeto cirílico y el vocabulario ruso.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 mb-4">
+                    <div class="card language-card text-center" data-language="english">
+                        <div class="card-body">
+                            <div class="language-icon">A</div>
+                            <h5 class="card-title">Inglés</h5>
+                            <p class="card-text">Mejora tu vocabulario y pronunciación en inglés.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 mb-4">
+                    <div class="card language-card text-center" data-language="arabic">
+                        <div class="card-body">
+                            <div class="language-icon">ا</div>
+                            <h5 class="card-title">Árabe</h5>
+                            <p class="card-text">Aprende el alfabeto árabe y su escritura única.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Practice Section -->
+    <section id="practicar" class="py-5">
+        <div class="container">
+            <h2 class="text-center mb-5">Práctica Interactiva</h2>
+            
+            <!-- Language Selection Buttons -->
+            <div class="text-center mb-4">
+                <button class="btn btn-language active" data-language="chinese">Chino</button>
+                <button class="btn btn-language" data-language="russian">Ruso</button>
+                <button class="btn btn-language" data-language="english">Inglés</button>
+                <button class="btn btn-language" data-language="arabic">Árabe</button>
+            </div>
+            
+            <!-- Current Language Display -->
+            <div class="language-display" id="current-language">
+                人 - Chino
+            </div>
+            
+            <!-- Practice Methods -->
+            <div class="row">
+                <!-- Flashcards -->
+                <div class="col-md-6">
+                    <div class="practice-area">
+                        <h4><i class="bi bi-card-text feature-icon"></i> Flashcards</h4>
+                        <p>Practica con tarjetas interactivas para memorizar vocabulario.</p>
+                        <div class="flashcard mb-3" id="flashcard">
+                            <div class="flashcard-inner">
+                                <div class="flashcard-front">
+                                    <h3 id="flashcard-front">人</h3>
+                                </div>
+                                <div class="flashcard-back">
+                                    <h4 id="flashcard-pinyin">rén</h4>
+                                    <p id="flashcard-meaning">persona</p>
+                                </div>
+                            </div>
+                        </div>
+                        <button class="btn btn-outline-primary w-100" id="next-flashcard">Siguiente Flashcard</button>
+                    </div>
+                </div>
+                
+                <!-- Writing Practice -->
+                <div class="col-md-6">
+                    <div class="practice-area">
+                        <h4><i class="bi bi-pencil feature-icon"></i> Práctica de Escritura</h4>
+                        <p>Mejora tu habilidad para escribir en el idioma seleccionado.</p>
+                        <div class="mb-3">
+                            <p id="writing-prompt">Escribe el carácter/palabra para: <strong>persona</strong></p>
+                            <input type="text" class="form-control" id="writing-input" placeholder="Tu respuesta...">
+                        </div>
+                        <button class="btn btn-outline-primary w-100 mb-2" id="check-writing">Verificar</button>
+                        <div id="writing-result"></div>
+                        <button class="btn btn-outline-secondary w-100 mt-2" id="next-writing">Siguiente Ejercicio</button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="row mt-4">
+                <!-- Text to Pronunciation -->
+                <div class="col-md-6">
+                    <div class="practice-area">
+                        <h4><i class="bi bi-mic feature-icon"></i> Texto a Pronunciación</h4>
+                        <p>Convierte texto a su pronunciación para practicar lectura.</p>
+                        <div class="mb-3">
+                            <input type="text" class="form-control" id="text-input" placeholder="Ingresa texto...">
+                        </div>
+                        <button class="btn btn-outline-primary w-100 mb-2" id="convert-text">Convertir</button>
+                        <div class="alert alert-info" id="pronunciation-result" style="display:none;">
+                            <strong>Pronunciación:</strong> <span id="pronunciation-text"></span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Text Analysis -->
+                <div class="col-md-6">
+                    <div class="practice-area">
+                        <h4><i class="bi bi-graph-up feature-icon"></i> Análisis de Texto</h4>
+                        <p>Analiza texto para identificar patrones y frecuencia de caracteres/palabras.</p>
+                        <div class="mb-3">
+                            <textarea class="form-control" id="analysis-input" rows="3" placeholder="Ingresa texto para analizar..."></textarea>
+                        </div>
+                        <button class="btn btn-outline-primary w-100 mb-2" id="analyze-text">Analizar</button>
+                        <div class="alert alert-info" id="analysis-result" style="display:none;">
+                            <strong>Análisis:</strong> 
+                            <div id="analysis-text"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Progress Section -->
+    <section id="progreso" class="py-5 progress-section">
+        <div class="container">
+            <h2 class="text-center mb-4 text-white">Tu Progreso de Aprendizaje</h2>
+            <div class="row">
+                <div class="col-md-6 mb-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">Idiomas en Progreso</h5>
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    Chino
+                                    <span class="badge bg-primary rounded-pill">65%</span>
+                                </li>
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    Ruso
+                                    <span class="badge bg-primary rounded-pill">40%</span>
+                                </li>
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    Inglés
+                                    <span class="badge bg-primary rounded-pill">85%</span>
+                                </li>
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    Árabe
+                                    <span class="badge bg-primary rounded-pill">25%</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 mb-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">Logros Recientes</h5>
+                            <div class="list-group">
+                                <a href="#" class="list-group-item list-group-item-action">
+                                    <div class="d-flex w-100 justify-content-between">
+                                        <h6 class="mb-1">50 Flashcards completadas</h6>
+                                        <small>Hoy</small>
+                                    </div>
+                                    <p class="mb-1">Has completado 50 flashcards en chino.</p>
+                                </a>
+                                <a href="#" class="list-group-item list-group-item-action">
+                                    <div class="d-flex w-100 justify-content-between">
+                                        <h6 class="mb-1">Escritura perfecta</h6>
+                                        <small>Ayer</small>
+                                    </div>
+                                    <p class="mb-1">10 respuestas correctas consecutivas en práctica de escritura.</p>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="py-4">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <p>&copy; 2023 LinguaLearn. Todos los derechos reservados.</p>
+                </div>
+                <div class="col-md-6 text-end">
+                    <a href="#" class="text-white me-3"><i class="bi bi-facebook"></i></a>
+                    <a href="#" class="text-white me-3"><i class="bi bi-twitter"></i></a>
+                    <a href="#" class="text-white"><i class="bi bi-instagram"></i></a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Custom JavaScript -->
+    <script>
+        // Datos de los idiomas
+        const languages = {
+            chinese: {
+                name: "Chino",
+                symbol: "人",
+                flashcards: [
+                    { front: "人", pinyin: "rén", meaning: "persona" },
+                    { front: "山", pinyin: "shān", meaning: "montaña" },
+                    { front: "水", pinyin: "shuǐ", meaning: "agua" },
+                    { front: "火", pinyin: "huǒ", meaning: "fuego" },
+                    { front: "木", pinyin: "mù", meaning: "madera" }
+                ],
+                writing: [
+                    { prompt: "persona", answer: "人" },
+                    { prompt: "montaña", answer: "山" },
+                    { prompt: "agua", answer: "水" },
+                    { prompt: "fuego", answer: "火" },
+                    { prompt: "madera", answer: "木" }
+                ],
+                pronunciation: {
+                    "人": "rén",
+                    "山": "shān",
+                    "水": "shuǐ",
+                    "火": "huǒ",
+                    "木": "mù"
+                }
+            },
+            russian: {
+                name: "Ruso",
+                symbol: "А",
+                flashcards: [
+                    { front: "А", pronunciation: "a", meaning: "como la 'a' en 'casa'" },
+                    { front: "Б", pronunciation: "b", meaning: "como la 'b' en 'barca'" },
+                    { front: "В", pronunciation: "v", meaning: "como la 'v' en 'vaca'" },
+                    { front: "Г", pronunciation: "g", meaning: "como la 'g' en 'gato'" },
+                    { front: "Д", pronunciation: "d", meaning: "como la 'd' en 'dedo'" }
+                ],
+                writing: [
+                    { prompt: "a", answer: "А" },
+                    { prompt: "b", answer: "Б" },
+                    { prompt: "v", answer: "В" },
+                    { prompt: "g", answer: "Г" },
+                    { prompt: "d", answer: "Д" }
+                ],
+                pronunciation: {
+                    "А": "a",
+                    "Б": "b",
+                    "В": "v",
+                    "Г": "g",
+                    "Д": "d"
+                }
+            },
+            english: {
+                name: "Inglés",
+                symbol: "A",
+                flashcards: [
+                    { front: "hello", pronunciation: "hé-lou", meaning: "hola" },
+                    { front: "apple", pronunciation: "á-pul", meaning: "manzana" },
+                    { front: "book", pronunciation: "buk", meaning: "libro" },
+                    { front: "cat", pronunciation: "kat", meaning: "gato" },
+                    { front: "dog", pronunciation: "dog", meaning: "perro" }
+                ],
+                writing: [
+                    { prompt: "hola", answer: "hello" },
+                    { prompt: "manzana", answer: "apple" },
+                    { prompt: "libro", answer: "book" },
+                    { prompt: "gato", answer: "cat" },
+                    { prompt: "perro", answer: "dog" }
+                ],
+                pronunciation: {
+                    "hello": "hé-lou",
+                    "apple": "á-pul",
+                    "book": "buk",
+                    "cat": "kat",
+                    "dog": "dog"
+                }
+            },
+            arabic: {
+                name: "Árabe",
+                symbol: "ا",
+                flashcards: [
+                    { front: "ا", pronunciation: "alif", meaning: "primera letra del alfabeto árabe" },
+                    { front: "ب", pronunciation: "ba", meaning: "como la 'b' en 'barca'" },
+                    { front: "ت", pronunciation: "ta", meaning: "como la 't' en 'taza'" },
+                    { front: "ث", pronunciation: "tha", meaning: "como la 'th' en 'think'" },
+                    { front: "ج", pronunciation: "jim", meaning: "como la 'j' en 'jirafa'" }
+                ],
+                writing: [
+                    { prompt: "alif", answer: "ا" },
+                    { prompt: "ba", answer: "ب" },
+                    { prompt: "ta", answer: "ت" },
+                    { prompt: "tha", answer: "ث" },
+                    { prompt: "jim", answer: "ج" }
+                ],
+                pronunciation: {
+                    "ا": "alif",
+                    "ب": "ba",
+                    "ت": "ta",
+                    "ث": "tha",
+                    "ج": "jim"
+                }
+            }
+        };
+
+        // Estado de la aplicación
+        let currentLanguage = 'chinese';
+        let currentFlashcardIndex = 0;
+        let currentWritingIndex = 0;
+
+        // Inicialización
+        document.addEventListener('DOMContentLoaded', function() {
+            // Configurar event listeners para los botones de idioma
+            document.querySelectorAll('.btn-language').forEach(button => {
+                button.addEventListener('click', function() {
+                    // Remover clase activa de todos los botones
+                    document.querySelectorAll('.btn-language').forEach(btn => {
+                        btn.classList.remove('active');
+                    });
+                    // Agregar clase activa al botón clickeado
+                    this.classList.add('active');
+                    // Cambiar idioma actual
+                    currentLanguage = this.getAttribute('data-language');
+                    updateLanguageDisplay();
+                    resetPractice();
+                });
+            });
+
+            // Configurar event listeners para las tarjetas de idioma
+            document.querySelectorAll('.language-card').forEach(card => {
+                card.addEventListener('click', function() {
+                    currentLanguage = this.getAttribute('data-language');
+                    updateLanguageButtons();
+                    updateLanguageDisplay();
+                    resetPractice();
+                    // Desplazar a la sección de práctica
+                    document.getElementById('practicar').scrollIntoView({ behavior: 'smooth' });
+                });
+            });
+
+            // Configurar evento para voltear flashcard
+            document.getElementById('flashcard').addEventListener('click', function() {
+                this.classList.toggle('flipped');
+            });
+
+            // Configurar evento para siguiente flashcard
+            document.getElementById('next-flashcard').addEventListener('click', nextFlashcard);
+
+            // Configurar evento para verificar escritura
+            document.getElementById('check-writing').addEventListener('click', checkWriting);
+
+            // Configurar evento para siguiente ejercicio de escritura
+            document.getElementById('next-writing').addEventListener('click', nextWriting);
+
+            // Configurar evento para convertir texto
+            document.getElementById('convert-text').addEventListener('click', convertText);
+
+            // Configurar evento para analizar texto
+            document.getElementById('analyze-text').addEventListener('click', analyzeText);
+
+            // Inicializar la interfaz
+            updateLanguageDisplay();
+            updateFlashcard();
+            updateWritingPrompt();
+        });
+
+        // Actualizar la visualización del idioma actual
+        function updateLanguageDisplay() {
+            const language = languages[currentLanguage];
+            document.getElementById('current-language').textContent = `${language.symbol} - ${language.name}`;
+        }
+
+        // Actualizar los botones de idioma activos
+        function updateLanguageButtons() {
+            document.querySelectorAll('.btn-language').forEach(button => {
+                button.classList.remove('active');
+                if (button.getAttribute('data-language') === currentLanguage) {
+                    button.classList.add('active');
+                }
+            });
+        }
+
+        // Reiniciar la práctica al cambiar de idioma
+        function resetPractice() {
+            currentFlashcardIndex = 0;
+            currentWritingIndex = 0;
+            updateFlashcard();
+            updateWritingPrompt();
+            document.getElementById('writing-result').innerHTML = '';
+            document.getElementById('pronunciation-result').style.display = 'none';
+            document.getElementById('analysis-result').style.display = 'none';
+        }
+
+        // Actualizar la flashcard actual
+        function updateFlashcard() {
+            const language = languages[currentLanguage];
+            const flashcard = language.flashcards[currentFlashcardIndex];
+            
+            document.getElementById('flashcard').classList.remove('flipped');
+            document.getElementById('flashcard-front').textContent = flashcard.front;
+            
+            if (flashcard.pinyin) {
+                document.getElementById('flashcard-pinyin').textContent = flashcard.pinyin;
+            } else {
+                document.getElementById('flashcard-pinyin').textContent = flashcard.pronunciation;
+            }
+            
+            document.getElementById('flashcard-meaning').textContent = flashcard.meaning;
+        }
+
+        // Ir a la siguiente flashcard
+        function nextFlashcard() {
+            const language = languages[currentLanguage];
+            currentFlashcardIndex = (currentFlashcardIndex + 1) % language.flashcards.length;
+            updateFlashcard();
+        }
+
+        // Actualizar el prompt de escritura
+        function updateWritingPrompt() {
+            const language = languages[currentLanguage];
+            const writing = language.writing[currentWritingIndex];
+            document.getElementById('writing-prompt').innerHTML = `Escribe el carácter/palabra para: <strong>${writing.prompt}</strong>`;
+            document.getElementById('writing-input').value = '';
+            document.getElementById('writing-result').innerHTML = '';
+        }
+
+        // Verificar la respuesta de escritura
+        function checkWriting() {
+            const language = languages[currentLanguage];
+            const writing = language.writing[currentWritingIndex];
+            const userAnswer = document.getElementById('writing-input').value.trim();
+            const resultDiv = document.getElementById('writing-result');
+            
+            if (userAnswer === writing.answer) {
+                resultDiv.innerHTML = '<p class="result-correct">¡Correcto! Bien hecho.</p>';
+            } else {
+                resultDiv.innerHTML = `<p class="result-incorrect">Incorrecto. La respuesta correcta es: ${writing.answer}</p>`;
+            }
+        }
+
+        // Ir al siguiente ejercicio de escritura
+        function nextWriting() {
+            const language = languages[currentLanguage];
+            currentWritingIndex = (currentWritingIndex + 1) % language.writing.length;
+            updateWritingPrompt();
+        }
+
+        // Convertir texto a pronunciación
+        function convertText() {
+            const text = document.getElementById('text-input').value;
+            const language = languages[currentLanguage];
+            const pronunciationMap = language.pronunciation;
+            
+            let result = '';
+            for (let char of text) {
+                if (pronunciationMap[char]) {
+                    result += pronunciationMap[char] + ' ';
+                } else {
+                    result += char + ' ';
+                }
+            }
+            
+            document.getElementById('pronunciation-text').textContent = result.trim();
+            document.getElementById('pronunciation-result').style.display = 'block';
+        }
+
+        // Analizar texto
+        function analyzeText() {
+            const text = document.getElementById('analysis-input').value;
+            const frequency = {};
+            
+            for (let char of text) {
+                if (char !== ' ') {
+                    frequency[char] = (frequency[char] || 0) + 1;
+                }
+            }
+            
+            let result = '<ul class="list-group mt-2">';
+            for (let char in frequency) {
+                result += `<li class="list-group-item d-flex justify-content-between align-items-center">${char} <span class="badge bg-primary rounded-pill">${frequency[char]}</span></li>`;
+            }
+            result += '</ul>';
+            
+            document.getElementById('analysis-text').innerHTML = result;
+            document.getElementById('analysis-result').style.display = 'block';
+        }
+    </script>
+</body>
+</html>

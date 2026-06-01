@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>Ingenierías Colombia · 100 conceptos básicos</title>
+  <style>
+    /* ----- VARIABLES CSS: paleta ingeniería (azul, gris, acento naranja) ----- */
+    :root {
+      --fondo: #f5f7fb;
+      --texto: #1a2b3c;
+      --azul-ingenieria: #1e5f8e;
+      --gris-tecnico: #5c6e7a;
+      --naranja-proyecto: #e67e22;
+      --acierto: #2c7a4d;
+      --fallo: #c0392b;
+      --sombra: rgba(30, 50, 70, 0.06);
+      --card-bg: #ffffff;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: var(--fondo);
+      color: var(--texto);
+      font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
+      line-height: 1.5;
+      padding: 1rem;
+    }
+
+    .app-container {
+      max-width: 1300px;
+      margin: 0 auto;
+      background: var(--card-bg);
+      border-radius: 2rem;
+      box-shadow: 0 12px 28px var(--sombra);
+      overflow: hidden;
+      border: 1px solid #e2e8f0;
+    }
+
+    header {
+      background: #ecf3f9;
+      padding: 1.2rem 2rem;
+      border-bottom: 3px solid var(--azul-ingenieria);
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 1rem;
+    }
+    h1 {
+      font-size: 1.7rem;
+      font-weight: 600;
+      color: #1e5f8e;
+      letter-spacing: -0.2px;
+    }
+    h1 small {
+      font-size: 0.7rem;
+      font-weight: normal;
+      color: #5c7a8e;
+    }
+
+    nav {
+      display: flex;
+      gap: 0.5rem;
+      background: #e2eaf1;
+      padding: 0.6rem 2rem;
+      border-bottom: 1px solid #d0dbe6;
+      flex-wrap: wrap;
+    }
+    .nav-btn {
+      background: transparent;
+      border: none;
+      font-size: 0.95rem;
+      padding: 0.5rem 1.2rem;
+      border-radius: 40px;
+      cursor: pointer;
+      font-weight: 500;
+      transition: all 0.2s;
+      color: #1e5f8e;
+    }
+    .nav-btn.active {
+      background-color: var(--azul-ingenieria);
+      color: white;
+    }
+    .nav-btn:hover:not(.active) {
+      background-color: #d0dfea;
+    }
+
+    .view {
+      display: none;
+      padding: 2rem;
+      animation: fade 0.2s ease;
+    }
+    .active-view { display: block; }
+    @keyframes fade { from { opacity: 0; transform: translateY(5px);} to { opacity: 1; transform: translateY(0);} }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+    .stat-card {
+      background: var(--fondo);
+      border-radius: 1.5rem;
+      padding: 1rem;
+      text-align: center;
+      border-left: 6px solid var(--naranja-proyecto);
+      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    }
+    .stat-number {
+      font-size: 2.2rem;
+      font-weight: 700;
+      color: var(--azul-ingenieria);
+    }
+    .progress-bar-bg {
+      background: #e2e8f0;
+      border-radius: 40px;
+      height: 12px;
+      overflow: hidden;
+      margin: 0.8rem 0;
+    }
+    .progress-fill {
+      background: var(--azul-ingenieria);
+      width: 0%;
+      height: 100%;
+      transition: width 0.2s;
+    }
+
+    .conceptos-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+      gap: 1rem;
+      max-height: 65vh;
+      overflow-y: auto;
+      padding-right: 0.3rem;
+    }
+    .concepto-item {
+      background: white;
+      border-radius: 1.2rem;
+      padding: 0.8rem 1rem;
+      border-left: 5px solid var(--gris-tecnico);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+    .concepto-titulo {
+      font-weight: 700;
+      color: #1e5f8e;
+    }
+    .concepto-desc {
+      font-size: 0.85rem;
+      color: #3c5a70;
+      margin-top: 6px;
+      border-top: 1px solid #eef2f6;
+      padding-top: 6px;
+    }
+    .badge-progreso {
+      font-size: 0.7rem;
+      background: #eef2f6;
+      border-radius: 20px;
+      padding: 2px 10px;
+      display: inline-block;
+      margin-top: 8px;
+    }
+
+    /* práctica */
+    .flashcard {
+      background: #ffffff;
+      border-radius: 2rem;
+      padding: 1.8rem;
+      text-align: center;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+      border: 1px solid #e2e8f0;
+      max-width: 750px;
+      margin: 0 auto;
+    }
+    .pregunta {
+      font-size: 1.4rem;
+      font-weight: 500;
+      margin-bottom: 1.8rem;
+      background: #ecf3f9;
+      padding: 1.2rem;
+      border-radius: 1.5rem;
+    }
+    .respuesta-oculta {
+      background: #f1f5f7;
+      border-radius: 1.2rem;
+      padding: 1rem;
+      margin: 1rem 0;
+      display: none;
+    }
+    .palabras-baraja {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 0.6rem;
+      margin: 1.5rem 0;
+    }
+    .palabra-btn {
+      background: var(--azul-ingenieria);
+      color: white;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 2rem;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: 0.1s;
+    }
+    .orden-actual {
+      background: #f8fafc;
+      border-radius: 1rem;
+      padding: 1rem;
+      min-height: 80px;
+      margin: 1rem 0;
+      text-align: left;
+      border: 1px dashed #cbd5e1;
+    }
+    .btn {
+      background: #e2e8f0;
+      border: none;
+      padding: 0.6rem 1.5rem;
+      border-radius: 3rem;
+      font-weight: 600;
+      margin: 0.3rem;
+      cursor: pointer;
+      font-family: inherit;
+    }
+    .btn-primary { background: var(--azul-ingenieria); color: white; }
+    .btn-acierto { background: var(--acierto); color: white; }
+    .btn-fallo { background: var(--fallo); color: white; }
+    .modo-selector { display: flex; justify-content: center; gap: 0.8rem; margin-bottom: 1.5rem; flex-wrap: wrap; }
+    footer {
+      text-align: center;
+      padding: 1rem;
+      font-size: 0.75rem;
+      border-top: 1px solid #e2e8f0;
+      background: #f8fafc;
+    }
+    @media (max-width: 680px) {
+      .view { padding: 1rem; }
+      .pregunta { font-size: 1rem; }
+    }
+  </style>
+</head>
+<body>
+<div class="app-container">
+  <header>
+    <h1>⚙️ Ingenierías Colombia <small>100 conceptos básicos para ingeniería</small></h1>
+    <div style="font-size:0.8rem;">🏗️ Civil · 🏭 Industrial · ⚡ Eléctrica · 🤖 Electrónica · 💻 Sistemas · 🧪 Química · 🌿 Ambiental</div>
+  </header>
+  <nav>
+    <button class="nav-btn active" data-view="dashboard">📊 Panel</button>
+    <button class="nav-btn" data-view="listado">📚 Compendio</button>
+    <button class="nav-btn" data-view="practica">🃏 Práctica</button>
+  </nav>
+
+  <section id="dashboard" class="view active-view">
+    <div class="stats-grid" id="statsContainer"></div>
+    <div class="card" style="background:white; border-radius:1.6rem; padding:1.2rem;">
+      <h3>📈 Progreso en conceptos de ingeniería</h3>
+      <div class="progress-bar-bg"><div class="progress-fill" id="globalProgressFill"></div></div>
+      <p id="globalProgressText"></p>
+      <button id="resetProgresoBtn" class="btn" style="background:#cbd5e1;">🔄 Reiniciar progreso</button>
+    </div>
+  </section>
+
+  <section id="listado" class="view">
+    <input type="text" id="filtroListado" placeholder="🔍 Buscar concepto o definición..." style="width:100%; padding:10px; margin-bottom:15px; border-radius:40px; border:1px solid #cbd5e1;">
+    <div id="conceptosListadoContainer" class="conceptos-grid"></div>
+  </section>
+
+  <section id="practica" class="view">
+    <div class="modo-selector">
+      <button id="modoConceptoDef" class="btn btn-primary">📖 Concepto → Definición</button>
+      <button id="modoDefConcepto" class="btn">🔄 Definición → Concepto</button>
+      <button id="modoOrdenar" class="btn">🧩 Ordenar definición</button>
+    </div>
+    <div id="practicaContainer"></div>
+  </section>
+  <footer>Progreso guardado localmente · Ejercicio interactivo de ordenar definición · Base para fundamentos de ingeniería</footer>
+</div>
+
+<script>
+  // --------------------------------------------------------------
+  // 100 CONCEPTOS BÁSICOS DE INGENIERÍA (enfoque Colombia)
+  // Incluye fundamentos de varias ramas: civil, industrial, eléctrica, sistemas, etc.
+  // --------------------------------------------------------------
+  const conceptosData = [
+    [1, "Ingeniería", "Aplicación de principios científicos y matemáticos para resolver problemas prácticos mediante el diseño, construcción y operación de sistemas, estructuras y procesos."],
+    [2, "Sistema", "Conjunto de elementos interrelacionados que funcionan como un todo para lograr un objetivo común."],
+    [3, "Modelo matemático", "Representación abstracta de un sistema real mediante ecuaciones y relaciones lógicas."],
+    [4, "Variable", "Característica o magnitud que puede cambiar o tomar diferentes valores en un sistema o experimento."],
+    [5, "Parámetro", "Valor constante que define las características de un sistema o modelo."],
+    [6, "Optimización", "Proceso de encontrar la mejor solución posible bajo restricciones dadas, maximizando o minimizando una función objetivo."],
+    [7, "Simulación", "Imitación del comportamiento de un sistema real a lo largo del tiempo usando un modelo computacional."],
+    [8, "Resistencia de materiales", "Capacidad de un material o estructura de soportar cargas sin fallar."],
+    [9, "Esfuerzo (σ)", "Fuerza interna por unidad de área que soporta un material: σ = F/A."],
+    [10, "Deformación unitaria (ε)", "Cambio relativo de longitud de un material bajo carga: ε = ΔL/L."],
+    [11, "Ley de Hooke", "Relación lineal entre esfuerzo y deformación en el rango elástico: σ = E·ε (E = módulo de elasticidad)."],
+    [12, "Carga axial", "Fuerza aplicada a lo largo del eje longitudinal de un elemento (tracción o compresión)."],
+    [13, "Flexión", "Solicitación que produce curvatura en una viga debido a momentos flectores."],
+    [14, "Torsión", "Solicitación que ocurre cuando un par de fuerzas (torque) actúa sobre un eje, produciendo giro."],
+    [15, "Corte (cortante)", "Fuerza perpendicular al eje de un elemento que tiende a seccionarlo."],
+    [16, "Viga", "Elemento estructural horizontal que resiste cargas principalmente por flexión."],
+    [17, "Columna", "Elemento vertical de soporte sometido principalmente a compresión."],
+    [18, "Cimentación", "Parte de la estructura que transmite las cargas al suelo."],
+    [19, "Diagrama de cuerpo libre", "Representación gráfica de un cuerpo aislado con todas las fuerzas que actúan sobre él."],
+    [20, "Equilibrio estático", "Condición donde la suma de fuerzas y la suma de momentos sobre un cuerpo son cero."],
+    [21, "Carga viva", "Carga temporal o variable sobre una estructura (personas, vehículos, mobiliario)."],
+    [22, "Carga muerta", "Carga permanente debida al peso propio de la estructura y elementos fijos."],
+    [23, "Factor de seguridad", "Relación entre la resistencia real de un material y la carga de servicio, para prevenir fallas."],
+    [24, "Material compuesto", "Material formado por la combinación de dos o más materiales con propiedades distintas (fibra de vidrio, concreto armado)."],
+    [25, "Hormigón armado", "Material compuesto por concreto y acero de refuerzo, muy usado en construcción colombiana."],
+    [26, "Acero estructural", "Acero laminado con propiedades mecánicas específicas para uso en estructuras."],
+    [27, "Topografía", "Ciencia que estudia la medición y representación de la superficie terrestre."],
+    [28, "Nivelación", "Procedimiento para determinar diferencias de altura entre puntos."],
+    [29, "Plano topográfico", "Representación a escala de un terreno con curvas de nivel y detalles."],
+    [30, "Geotecnia", "Rama de la ingeniería civil que estudia el comportamiento del suelo y rocas."],
+    [31, "Hidrología", "Estudio de la distribución, circulación y propiedades del agua en la Tierra."],
+    [32, "Caudal", "Volumen de fluido que pasa por una sección por unidad de tiempo (m³/s)."],
+    [33, "Presión hidrostática", "Presión ejercida por un fluido en reposo debido a su peso: P = ρ·g·h."],
+    [34, "Teorema de Bernoulli", "Principio de conservación de energía en fluidos ideales: presión + energía cinética + energía potencial constante."],
+    [35, "Número de Reynolds", "Parámetro adimensional que indica si un flujo es laminar o turbulento."],
+    [36, "Sistema de unidades", "Conjunto de unidades de medida estandarizadas (SI, inglés)."],
+    [37, "Magnitud escalar", "Cantidad que solo tiene magnitud (masa, temperatura, tiempo)."],
+    [38, "Magnitud vectorial", "Cantidad que tiene magnitud, dirección y sentido (fuerza, velocidad, campo eléctrico)."],
+    [39, "Leyes de Newton", "Principios fundamentales de la mecánica: inercia, F=ma, acción-reacción."],
+    [40, "Trabajo mecánico", "Transferencia de energía por medio de una fuerza: W = F·d·cosθ."],
+    [41, "Energía", "Capacidad de un sistema para realizar trabajo."],
+    [42, "Potencia", "Tasa de transferencia de energía o trabajo por unidad de tiempo (vatios)."],
+    [43, "Eficiencia", "Relación entre la salida útil y la entrada total de un sistema (0-1 o %)."],
+    [44, "Proceso termodinámico", "Transformación de un sistema desde un estado inicial a otro mediante intercambio de calor y trabajo."],
+    [45, "Ciclo termodinámico", "Secuencia de procesos que devuelve un sistema a su estado inicial."],
+    [46, "Ley cero de la termodinámica", "Si dos sistemas están en equilibrio térmico con un tercero, están en equilibrio entre sí."],
+    [47, "Primera ley de la termodinámica", "Conservación de la energía: ΔU = Q - W."],
+    [48, "Segunda ley de la termodinámica", "La entropía del universo aumenta; el calor fluye de mayor a menor temperatura."],
+    [49, "Entropía", "Medida del desorden o irreversibilidad de un sistema."],
+    [50, "Corriente eléctrica", "Flujo ordenado de cargas eléctricas a través de un conductor."],
+    [51, "Voltaje (diferencia de potencial)", "Energía por unidad de carga que impulsa la corriente."],
+    [52, "Resistencia eléctrica", "Oposición al flujo de corriente; ley de Ohm: V = I·R."],
+    [53, "Circuito eléctrico", "Trayectoria cerrada por donde circula corriente."],
+    [54, "Ley de Kirchhoff de tensiones", "Suma de voltajes en una malla cerrada es cero."],
+    [55, "Ley de Kirchhoff de corrientes", "Suma de corrientes que entran a un nodo es igual a la suma de salientes."],
+    [56, "Potencia eléctrica", "Producto de voltaje por corriente: P = V·I (vatios)."],
+    [57, "Corriente alterna (AC)", "Corriente que cambia de dirección periódicamente, usada en redes eléctricas."],
+    [58, "Corriente directa (DC)", "Corriente que fluye en una sola dirección (baterías)."],
+    [59, "Transformador", "Dispositivo que cambia niveles de voltaje en AC mediante inducción electromagnética."],
+    [60, "Motor eléctrico", "Máquina que convierte energía eléctrica en energía mecánica rotacional."],
+    [61, "Generador eléctrico", "Máquina que convierte energía mecánica en energía eléctrica."],
+    [62, "Sistema de control", "Conjunto de dispositivos que regulan el comportamiento de un sistema para alcanzar un objetivo."],
+    [63, "Realimentación (feedback)", "Señal de salida que se compara con la referencia para ajustar el control."],
+    [64, "Señal", "Función que transporta información sobre fenómenos físicos."],
+    [65, "Sensor", "Dispositivo que detecta cambios en el entorno y produce una señal eléctrica."],
+    [66, "Actuador", "Dispositivo que convierte una señal de control en acción física (motor, válvula)."],
+    [67, "Microcontrolador", "Circuito integrado programable que controla sistemas electrónicos."],
+    [68, "Algoritmo", "Secuencia finita de pasos lógicos para resolver un problema."],
+    [69, "Programación", "Proceso de escribir instrucciones para que una computadora ejecute tareas."],
+    [70, "Base de datos", "Colección organizada de datos almacenados y accesibles electrónicamente."],
+    [71, "Red de computadoras", "Conjunto de dispositivos interconectados que comparten recursos."],
+    [72, "Protocolo", "Conjunto de reglas que rigen la comunicación entre sistemas."],
+    [73, "Seguridad informática", "Protección de sistemas y datos contra amenazas cibernéticas."],
+    [74, "Producción", "Transformación de insumos en bienes o servicios mediante procesos."],
+    [75, "Productividad", "Relación entre la cantidad de productos obtenidos y los recursos utilizados."],
+    [76, "Cadena de suministro", "Red de entidades involucradas en la producción y distribución de un producto."],
+    [77, "Logística", "Gestión del flujo de materiales, información y dinero desde origen hasta destino."],
+    [78, "Inventario", "Conjunto de bienes almacenados para uso futuro o venta."],
+    [79, "Control de calidad", "Procesos para asegurar que un producto cumpla con especificaciones."],
+    [80, "Costos fijos", "Costos que no varían con el nivel de producción (arriendo, seguros)."],
+    [81, "Costos variables", "Costos que cambian proporcionalmente con la producción (materia prima, mano de obra directa)."],
+    [82, "Punto de equilibrio", "Nivel de ventas donde los ingresos totales igualan a los costos totales."],
+    [83, "Diagrama de flujo", "Representación gráfica de un proceso o algoritmo."],
+    [84, "Gestión de proyectos", "Aplicación de conocimientos, herramientas y técnicas para cumplir objetivos de un proyecto."],
+    [85, "Diagrama de Gantt", "Herramienta visual que muestra la programación de tareas a lo largo del tiempo."],
+    [86, "Ruta crítica", "Secuencia de actividades que determina la duración mínima de un proyecto."],
+    [87, "Mantenimiento industrial", "Acciones para conservar o restaurar equipos a un estado operativo."],
+    [88, "Energía renovable", "Fuentes de energía que se regeneran naturalmente (solar, eólica, hidráulica)."],
+    [89, "Impacto ambiental", "Efecto que una actividad humana produce sobre el medio ambiente."],
+    [90, "Estudio de impacto ambiental", "Evaluación de posibles efectos ambientales de un proyecto."],
+    [91, "Tratamiento de aguas", "Procesos para eliminar contaminantes y hacer el agua apta para consumo o vertimiento."],
+    [92, "Residuos sólidos", "Materiales desechados que requieren gestión adecuada (reciclaje, disposición final)."],
+    [93, "Norma técnica colombiana (NTC)", "Documento establecido por ICONTEC que especifica requisitos para productos o servicios."],
+    [94, "Reglamento colombiano de construcción sismo resistente (NSR-10)", "Norma obligatoria para edificaciones en Colombia."],
+    [95, "Código Eléctrico Nacional (NTC 2050)", "Norma que regula instalaciones eléctricas en Colombia."],
+    [96, "Ética profesional del ingeniero", "Conjunto de principios que rigen el ejercicio de la ingeniería con responsabilidad social."],
+    [97, "Sociedad Colombiana de Ingenieros (SCI)", "Entidad que agrupa a ingenieros colombianos y promueve el desarrollo profesional."],
+    [98, "COPNIA", "Consejo Profesional de Ingeniería, Arquitectura y Afines, regula la profesión en Colombia."],
+    [99, "Tarjeta profesional", "Documento que acredita a un ingeniero para ejercer legalmente en Colombia."],
+    [100, "Innovación en ingeniería", "Creación o mejora de productos, procesos o servicios mediante aplicación de conocimiento técnico."]
+  ];
+
+  // --------------------- LOCALSTORAGE Y PROGRESO -------------------------
+  let progreso = {};
+  const STORAGE_KEY = "ingenieriasColombiaProgreso";
+
+  function cargarProgreso() {
+    const guardado = localStorage.getItem(STORAGE_KEY);
+    if (guardado) progreso = JSON.parse(guardado);
+    else {
+      progreso = {};
+      for (let i = 1; i <= 100; i++) progreso[i] = { aciertos: 0, fallos: 0 };
+    }
+  }
+  function guardarProgreso() { localStorage.setItem(STORAGE_KEY, JSON.stringify(progreso)); }
+  function registrarResultado(id, acierto) {
+    if (!progreso[id]) progreso[id] = { aciertos: 0, fallos: 0 };
+    if (acierto) progreso[id].aciertos += 1;
+    else progreso[id].fallos += 1;
+    guardarProgreso();
+    renderDashboard();
+    renderListado(document.getElementById("filtroListado")?.value || "");
+    if (window.currentCardId === id && document.getElementById("infoProgresoCard")) {
+      document.getElementById("infoProgresoCard").innerHTML = `📊 Concepto ${id} · ✅ ${progreso[id].aciertos} aciertos · ❌ ${progreso[id].fallos} fallos`;
+    }
+  }
+
+  function renderDashboard() {
+    let totalAciertos = 0, totalFallos = 0, conceptosConAcierto = 0;
+    for (let i = 1; i <= 100; i++) {
+      const p = progreso[i] || { aciertos: 0, fallos: 0 };
+      totalAciertos += p.aciertos;
+      totalFallos += p.fallos;
+      if (p.aciertos > 0) conceptosConAcierto++;
+    }
+    const porcentaje = (conceptosConAcierto / 100) * 100;
+    document.getElementById("globalProgressFill").style.width = `${porcentaje}%`;
+    document.getElementById("globalProgressText").innerHTML = `${conceptosConAcierto} de 100 conceptos con al menos 1 acierto (${Math.round(porcentaje)}%).`;
+    document.getElementById("statsContainer").innerHTML = `
+      <div class="stat-card"><div class="stat-number">${totalAciertos}</div>✅ Aciertos totales</div>
+      <div class="stat-card"><div class="stat-number">${totalFallos}</div>❌ Fallos</div>
+      <div class="stat-card"><div class="stat-number">${conceptosConAcierto}</div>📘 Conceptos dominados</div>
+      <div class="stat-card"><div class="stat-number">${Math.round((totalAciertos/(totalAciertos+totalFallos+0.001))*100)}%</div>📊 Tasa éxito</div>
+    `;
+  }
+
+  function renderListado(filtro = "") {
+    const container = document.getElementById("conceptosListadoContainer");
+    container.innerHTML = "";
+    const filtroLower = filtro.toLowerCase();
+    for (let c of conceptosData) {
+      const [id, nombre, definicion] = c;
+      const prog = progreso[id] || { aciertos: 0, fallos: 0 };
+      if (filtro && !nombre.toLowerCase().includes(filtroLower) && !definicion.toLowerCase().includes(filtroLower)) continue;
+      const div = document.createElement("div");
+      div.className = "concepto-item";
+      div.innerHTML = `<div class="concepto-titulo">${id}. ${nombre}</div>
+                       <div class="concepto-desc">⚙️ ${definicion.substring(0, 150)}${definicion.length > 150 ? '…' : ''}</div>
+                       <span class="badge-progreso">✅ ${prog.aciertos} aciertos · ❌ ${prog.fallos} fallos</span>`;
+      container.appendChild(div);
+    }
+  }
+
+  // --------------------- PRÁCTICA: TRES MODOS -------------------------
+  let currentMode = "concepto_def";
+  let cardsArray = [];
+  let currentCardIndex = 0;
+  let currentCardId = null;
+  // variables modo ordenar
+  let currentOrdenarPalabras = [];
+  let shuffledPalabras = [];
+  let selectedOrder = [];
+  let ordenarRespuestaCorrecta = "";
+
+  const practicaDiv = document.getElementById("practicaContainer");
+
+  function construirCards() {
+    cardsArray = conceptosData.map(item => {
+      const [id, concepto, definicion] = item;
+      if (currentMode === "concepto_def") {
+        return { id, pregunta: `⚙️ Concepto: ${concepto}`, respuestaCorrecta: definicion };
+      } else if (currentMode === "def_concepto") {
+        let defCorta = definicion.length > 130 ? definicion.substring(0, 127) + "…" : definicion;
+        return { id, pregunta: `✍️ Definición: "${defCorta}"`, respuestaCorrecta: concepto };
+      } else {
+        return { id, concepto, definicion };
+      }
+    });
+  }
+
+  // Flashcard normal
+  function renderFlashcardNormal() {
+    if (!cardsArray.length) return;
+    const card = cardsArray[currentCardIndex];
+    currentCardId = card.id;
+    practicaDiv.innerHTML = `
+      <div class="flashcard">
+        <div class="pregunta">${card.pregunta}</div>
+        <button id="mostrarRespuestaBtn" class="btn">📖 Mostrar respuesta</button>
+        <div id="respuestaDiv" class="respuesta-oculta"><strong>Respuesta:</strong><br>${card.respuestaCorrecta}</div>
+        <div style="margin-top:1rem;">
+          <button id="aciertoBtn" class="btn btn-acierto" disabled>✅ Acierto</button>
+          <button id="falloBtn" class="btn btn-fallo" disabled>❌ Fallo</button>
+        </div>
+        <button id="siguienteCardBtn" class="btn" style="margin-top:1rem;">⏩ Siguiente</button>
+        <p id="infoProgresoCard" style="margin-top:0.8rem;">📊 ${currentMode === "concepto_def" ? "Concepto" : "Definición"} ${card.id} · ✅ ${progreso[card.id]?.aciertos||0} aciertos · ❌ ${progreso[card.id]?.fallos||0} fallos</p>
+      </div>
+    `;
+    document.getElementById("mostrarRespuestaBtn").onclick = () => {
+      const respDiv = document.getElementById("respuestaDiv");
+      if (respDiv.style.display !== "block") {
+        respDiv.style.display = "block";
+        document.getElementById("aciertoBtn").disabled = false;
+        document.getElementById("falloBtn").disabled = false;
+      }
+    };
+    document.getElementById("aciertoBtn").onclick = () => { registrarResultado(currentCardId, true); siguienteNormal(); };
+    document.getElementById("falloBtn").onclick = () => { registrarResultado(currentCardId, false); siguienteNormal(); };
+    document.getElementById("siguienteCardBtn").onclick = () => siguienteNormal();
+  }
+
+  function siguienteNormal() {
+    currentCardIndex = (currentCardIndex + 1) % cardsArray.length;
+    renderFlashcardNormal();
+  }
+
+  // Modo ordenar
+  function inicializarOrdenar() {
+    const card = cardsArray[currentCardIndex];
+    currentCardId = card.id;
+    const definicionOriginal = card.definicion;
+    ordenarRespuestaCorrecta = definicionOriginal;
+    let palabras = definicionOriginal.split(/\s+/).filter(p => p.length > 0);
+    currentOrdenarPalabras = [...palabras];
+    shuffledPalabras = [...palabras];
+    for (let i = shuffledPalabras.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [shuffledPalabras[i], shuffledPalabras[j]] = [shuffledPalabras[j], shuffledPalabras[i]];
+    }
+    selectedOrder = [];
+    renderOrdenarUI();
+  }
+
+  function renderOrdenarUI() {
+    const card = cardsArray[currentCardIndex];
+    const prog = progreso[currentCardId] || { aciertos:0, fallos:0 };
+    let palabrasHTML = shuffledPalabras.map(p => `<button class="palabra-btn" data-palabra="${p.replace(/"/g, '&quot;')}">${p}</button>`).join('');
+    let ordenHTML = selectedOrder.map(p => `<span style="background:#f1f5f7; padding:0.2rem 0.6rem; margin:0.2rem; border-radius:1rem;">${p}</span>`).join(' ');
+    if (ordenHTML === "") ordenHTML = "<em>Haz clic en las palabras en el orden correcto...</em>";
+    practicaDiv.innerHTML = `
+      <div class="flashcard">
+        <h3>🧩 Ordena la definición de:</h3>
+        <div class="pregunta" style="background:#ecf3f9;">📌 ${card.concepto}</div>
+        <div class="orden-actual"><strong>Tu orden actual:</strong><br> ${ordenHTML}</div>
+        <div class="palabras-baraja" id="palabrasBaraja">${palabrasHTML}</div>
+        <div>
+          <button id="resetOrdenBtn" class="btn" style="background:#cbd5e1;">🔁 Reiniciar orden</button>
+          <button id="comprobarOrdenBtn" class="btn btn-primary">✓ Comprobar</button>
+        </div>
+        <button id="siguienteOrdenBtn" class="btn" style="margin-top:1rem;">⏩ Siguiente concepto</button>
+        <p id="infoProgresoCard">✅ ${prog.aciertos} aciertos · ❌ ${prog.fallos} fallos</p>
+        <div id="feedbackOrden" style="margin-top:0.8rem; font-weight:bold;"></div>
+      </div>
+    `;
+    document.querySelectorAll(".palabra-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const palabra = btn.getAttribute("data-palabra");
+        const idx = shuffledPalabras.indexOf(palabra);
+        if (idx !== -1) {
+          shuffledPalabras.splice(idx, 1);
+          selectedOrder.push(palabra);
+          renderOrdenarUI();
+        }
+      });
+    });
+    document.getElementById("resetOrdenBtn").onclick = () => {
+      shuffledPalabras = [...currentOrdenarPalabras];
+      for (let i = shuffledPalabras.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [shuffledPalabras[i], shuffledPalabras[j]] = [shuffledPalabras[j], shuffledPalabras[i]];
+      }
+      selectedOrder = [];
+      renderOrdenarUI();
+    };
+    document.getElementById("comprobarOrdenBtn").onclick = () => {
+      const ordenUsuario = selectedOrder.join(" ");
+      if (ordenUsuario === ordenarRespuestaCorrecta) {
+        document.getElementById("feedbackOrden").innerHTML = "<span style='color:#2c7a4d'>✅ ¡Correcto! Definición ordenada correctamente.</span>";
+        registrarResultado(currentCardId, true);
+        setTimeout(() => siguienteOrdenar(), 1200);
+      } else {
+        document.getElementById("feedbackOrden").innerHTML = `<span style='color:#c0392b'>❌ Incorrecto. La definición correcta es: "${ordenarRespuestaCorrecta}"</span>`;
+        registrarResultado(currentCardId, false);
+        setTimeout(() => siguienteOrdenar(), 2000);
+      }
+      document.getElementById("comprobarOrdenBtn").disabled = true;
+      document.querySelectorAll(".palabra-btn").forEach(b => b.style.pointerEvents = "none");
+      setTimeout(() => {
+        if (document.getElementById("comprobarOrdenBtn")) document.getElementById("comprobarOrdenBtn").disabled = false;
+        document.querySelectorAll(".palabra-btn").forEach(b => b.style.pointerEvents = "auto");
+      }, 2000);
+    };
+    document.getElementById("siguienteOrdenBtn").onclick = () => siguienteOrdenar();
+  }
+
+  function siguienteOrdenar() {
+    currentCardIndex = (currentCardIndex + 1) % cardsArray.length;
+    inicializarOrdenar();
+  }
+
+  function setMode(mode) {
+    currentMode = mode;
+    construirCards();
+    currentCardIndex = 0;
+    if (mode === "ordenar") inicializarOrdenar();
+    else renderFlashcardNormal();
+  }
+
+  // Navegación y eventos
+  function initUI() {
+    document.querySelectorAll(".nav-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const viewId = btn.getAttribute("data-view");
+        document.querySelectorAll(".view").forEach(v => v.classList.remove("active-view"));
+        document.getElementById(viewId).classList.add("active-view");
+        document.querySelectorAll(".nav-btn").forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+        if (viewId === "listado") renderListado(document.getElementById("filtroListado").value);
+        if (viewId === "dashboard") renderDashboard();
+        if (viewId === "practica") setMode(currentMode);
+      });
+    });
+    document.getElementById("modoConceptoDef").addEventListener("click", () => {
+      currentMode = "concepto_def";
+      setMode("concepto_def");
+      document.getElementById("modoConceptoDef").classList.add("btn-primary");
+      document.getElementById("modoDefConcepto").classList.remove("btn-primary");
+      document.getElementById("modoOrdenar").classList.remove("btn-primary");
+    });
+    document.getElementById("modoDefConcepto").addEventListener("click", () => {
+      currentMode = "def_concepto";
+      setMode("def_concepto");
+      document.getElementById("modoDefConcepto").classList.add("btn-primary");
+      document.getElementById("modoConceptoDef").classList.remove("btn-primary");
+      document.getElementById("modoOrdenar").classList.remove("btn-primary");
+    });
+    document.getElementById("modoOrdenar").addEventListener("click", () => {
+      currentMode = "ordenar";
+      setMode("ordenar");
+      document.getElementById("modoOrdenar").classList.add("btn-primary");
+      document.getElementById("modoConceptoDef").classList.remove("btn-primary");
+      document.getElementById("modoDefConcepto").classList.remove("btn-primary");
+    });
+    document.getElementById("resetProgresoBtn").addEventListener("click", () => {
+      if (confirm("¿Reiniciar todo el progreso? Se perderán aciertos y fallos.")) {
+        for (let i = 1; i <= 100; i++) progreso[i] = { aciertos: 0, fallos: 0 };
+        guardarProgreso();
+        renderDashboard();
+        renderListado(document.getElementById("filtroListado")?.value || "");
+        if (currentMode === "ordenar") inicializarOrdenar();
+        else if (currentMode !== "ordenar") renderFlashcardNormal();
+      }
+    });
+    document.getElementById("filtroListado").addEventListener("input", (e) => renderListado(e.target.value));
+  }
+
+  window.addEventListener("DOMContentLoaded", () => {
+    cargarProgreso();
+    construirCards();
+    setMode("concepto_def");
+    renderDashboard();
+    renderListado();
+    initUI();
+  });
+</script>
+</body>
+</html>

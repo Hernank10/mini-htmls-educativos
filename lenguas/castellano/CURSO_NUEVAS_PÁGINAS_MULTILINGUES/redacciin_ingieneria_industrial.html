@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Redacción para Ingeniería Industrial — 100 técnicas para estudiantes colombianos</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ink:#1a1209; --parchment:#f5f0e8; --amber:#c8860a; --amber-light:#f0a830;
+  --amber-pale:#fdf3dc; --rust:#8b3a1a; --sage:#4a6741; --sage-light:#7a9e76;
+  --cream:#faf7f2; --border:#d4c9b0; --shadow:rgba(26,18,9,0.12);
+  --industrial:#e67e22; --industrial-light:#f0a04b; --industrial-pale:#fef5e7;
+  --industrial-dark:#b45f1b;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'DM Sans',sans-serif;background:var(--parchment);color:var(--ink);min-height:100vh;
+  background-image:radial-gradient(ellipse at 15% 0%,rgba(230,126,34,.07) 0%,transparent 55%),
+  radial-gradient(ellipse at 85% 100%,rgba(44,62,80,.05) 0%,transparent 55%);}
+h1,h2,h3,.serif{font-family:'Playfair Display',serif;}
+
+.app-nav{background:var(--ink);display:flex;align-items:center;gap:.75rem;
+  padding:.7rem 1.5rem;position:sticky;top:0;z-index:200;box-shadow:0 2px 18px rgba(0,0,0,.25);}
+.nav-brand{font-family:'Playfair Display',serif;font-weight:900;font-size:1.25rem;
+  color:var(--industrial-light);flex:1;white-space:nowrap;}
+.nav-brand span{color:#fff;}
+.nav-avatar{width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,var(--industrial),var(--industrial-dark));
+  display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.95rem;
+  color:#fff;font-family:'Playfair Display',serif;cursor:pointer;flex-shrink:0;
+  border:2px solid rgba(255,255,255,.2);transition:border-color .2s;}
+.nav-avatar:hover{border-color:var(--industrial-light);}
+.nav-username{color:rgba(255,255,255,.8);font-size:.85rem;font-weight:500;white-space:nowrap;}
+.btn-reset{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);
+  color:rgba(255,255,255,.7);border-radius:8px;padding:.32rem .75rem;font-size:.78rem;
+  cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .2s;}
+.btn-reset:hover{background:rgba(255,255,255,.18);color:#fff;}
+
+.app-tabs{background:#fff;border-bottom:2px solid var(--border);display:flex;
+  padding:0 1.5rem;overflow-x:auto;gap:0;position:sticky;top:58px;z-index:150;}
+.app-tab{padding:.85rem 1.1rem;border:none;background:transparent;font-family:'DM Sans',sans-serif;
+  font-weight:700;font-size:.82rem;color:#999;cursor:pointer;white-space:nowrap;
+  border-bottom:3px solid transparent;margin-bottom:-2px;transition:all .2s;
+  display:flex;align-items:center;gap:.35rem;}
+.app-tab:hover{color:var(--ink);}
+.app-tab.active{color:var(--industrial);border-bottom-color:var(--industrial);}
+
+.app-body{max-width:1080px;margin:0 auto;padding:2rem 1.5rem;}
+.page{display:none;animation:rise .28s ease;}
+.page.active{display:block;}
+
+.card-app{background:#fff;border:1.5px solid var(--border);border-radius:16px;
+  box-shadow:0 2px 10px var(--shadow);overflow:hidden;}
+.card-app-header{padding:1.1rem 1.4rem;border-bottom:1px solid var(--border);
+  display:flex;align-items:center;gap:.75rem;}
+.card-app-body{padding:1.4rem;}
+
+.stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:.9rem;margin-bottom:1.6rem;}
+.stat-box{background:#fff;border:1.5px solid var(--border);border-radius:14px;
+  padding:1.1rem 1rem;text-align:center;transition:transform .2s;cursor:default;}
+.stat-box:hover{transform:translateY(-3px);box-shadow:0 6px 18px var(--shadow);}
+.stat-num{font-family:'Playfair Display',serif;font-size:2rem;font-weight:900;
+  color:var(--industrial);line-height:1;margin-bottom:.2rem;}
+.stat-lbl{font-size:.73rem;font-weight:700;color:#aaa;text-transform:uppercase;letter-spacing:.05em;}
+
+.dot-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(26px,1fr));gap:4px;margin-bottom:1.6rem;}
+.dot{aspect-ratio:1;border-radius:6px;background:var(--border);cursor:pointer;
+  transition:all .18s;position:relative;display:flex;align-items:center;justify-content:center;}
+.dot.done{background:var(--sage);}
+.dot:hover{transform:scale(1.35);z-index:5;}
+.dot-tip{position:absolute;bottom:130%;left:50%;transform:translateX(-50%);
+  background:var(--ink);color:#fff;padding:.28rem .6rem;border-radius:6px;font-size:.68rem;
+  white-space:nowrap;pointer-events:none;opacity:0;transition:opacity .18s;z-index:99;}
+.dot:hover .dot-tip{opacity:1;}
+.dot-num{font-size:.5rem;font-weight:700;color:rgba(255,255,255,.7);}
+
+.search-field{border:1.5px solid var(--border);border-radius:10px;padding:.55rem 1rem .55rem 2.3rem;
+  font-family:'DM Sans',sans-serif;font-size:.87rem;background:#fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%23aaa' stroke-width='2.5'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cpath d='M21 21l-4.35-4.35'/%3E%3C/svg%3E") no-repeat .75rem center;
+  width:100%;max-width:260px;outline:none;transition:border-color .2s;}
+.search-field:focus{border-color:var(--industrial);}
+.pill{padding:.28rem .75rem;border-radius:20px;border:1.5px solid var(--border);background:#fff;
+  font-size:.75rem;font-weight:700;cursor:pointer;transition:all .2s;font-family:'DM Sans',sans-serif;color:#888;}
+.pill.on,.pill:hover{background:var(--industrial);border-color:var(--industrial);color:#fff;}
+
+.ex-card{background:#fff;border:1.5px solid var(--border);border-radius:13px;padding:1rem 1.2rem;
+  margin-bottom:.6rem;cursor:pointer;transition:all .18s;display:flex;align-items:flex-start;gap:.9rem;
+  box-shadow:0 1px 4px var(--shadow);}
+.ex-card:hover{border-color:var(--industrial);transform:translateX(5px);}
+.ex-card.done{border-left:4px solid var(--sage);}
+.ex-num-box{background:var(--parchment);border:1px solid var(--border);border-radius:8px;
+  width:42px;height:42px;display:flex;align-items:center;justify-content:center;
+  font-family:'DM Mono',monospace;font-size:.75rem;font-weight:600;color:var(--industrial);flex-shrink:0;}
+.ex-card.done .ex-num-box{background:var(--sage);color:#fff;border-color:var(--sage);}
+.ex-body{flex:1;min-width:0;}
+.ex-cat-tag{font-size:.7rem;font-weight:700;color:var(--industrial);text-transform:uppercase;letter-spacing:.05em;}
+.ex-name{font-weight:700;font-size:.9rem;margin:.1rem 0 .18rem;}
+.ex-short{font-size:.78rem;color:#777;line-height:1.5;}
+.badge-done{background:var(--sage);color:#fff;padding:.18rem .55rem;border-radius:9px;font-size:.7rem;font-weight:700;}
+.badge-new{background:var(--parchment);color:#bbb;padding:.18rem .55rem;border-radius:9px;font-size:.7rem;font-weight:700;border:1px solid var(--border);}
+
+.prac-header{background:#fff;border:1.5px solid var(--border);border-radius:16px;
+  padding:1.4rem 1.5rem;margin-bottom:1.2rem;box-shadow:0 2px 10px var(--shadow);}
+.prac-badge{display:inline-flex;align-items:center;gap:.35rem;background:var(--amber-pale);
+  border:1px solid rgba(200,134,10,.28);border-radius:8px;padding:.28rem .75rem;
+  font-size:.76rem;font-weight:700;color:var(--industrial);margin-bottom:.7rem;}
+.prac-title{font-size:1.3rem;font-weight:900;margin-bottom:.45rem;}
+.prac-explanation{font-size:.88rem;color:#555;line-height:1.7;margin:0;}
+.prac-example{background:var(--parchment);border-left:3px solid var(--industrial);
+  border-radius:0 9px 9px 0;padding:.7rem 1rem;margin-top:.9rem;font-size:.84rem;
+  color:var(--ink);font-style:italic;}
+
+.writing-zone{background:#fff;border:1.5px solid var(--border);border-radius:16px;
+  padding:1.4rem 1.5rem;margin-bottom:1rem;box-shadow:0 2px 10px var(--shadow);}
+.writing-prompt{background:linear-gradient(135deg,var(--industrial-pale),#fffcf5);
+  border:1px solid rgba(230,126,34,.22);border-radius:10px;padding:.9rem 1.1rem;
+  margin-bottom:1rem;font-size:.87rem;line-height:1.65;}
+.writing-prompt strong{color:var(--rust);}
+#practiceTA{width:100%;min-height:145px;border:1.5px solid var(--border);border-radius:10px;
+  padding:.9rem 1rem;font-family:'DM Sans',sans-serif;font-size:.93rem;line-height:1.75;
+  color:var(--ink);resize:vertical;background:#fffef9;transition:border-color .2s;outline:none;}
+#practiceTA:focus{border-color:var(--industrial);box-shadow:0 0 0 3px rgba(230,126,34,.1);}
+.wc{text-align:right;font-size:.76rem;color:#bbb;margin-top:.4rem;}
+
+.btn-check{background:linear-gradient(135deg,var(--sage),var(--sage-light));border:none;
+  border-radius:10px;color:#fff;font-weight:700;font-size:.92rem;padding:.75rem 1.6rem;
+  cursor:pointer;transition:all .2s;font-family:'DM Sans',sans-serif;
+  display:inline-flex;align-items:center;gap:.45rem;
+  box-shadow:0 4px 14px rgba(74,103,65,.32);}
+.btn-check:hover{transform:translateY(-2px);box-shadow:0 7px 20px rgba(74,103,65,.4);}
+.btn-check:disabled{opacity:.55;cursor:not-allowed;transform:none;}
+
+.btn-next{background:linear-gradient(135deg,var(--industrial),var(--industrial-dark));border:none;
+  border-radius:10px;color:#fff;font-weight:700;font-size:.92rem;padding:.75rem 1.6rem;
+  cursor:pointer;transition:all .2s;font-family:'DM Sans',sans-serif;
+  display:inline-flex;align-items:center;gap:.45rem;box-shadow:0 4px 14px rgba(230,126,34,.3);}
+.btn-next:hover{transform:translateY(-2px);}
+
+.fb-area{background:#fff;border:1.5px solid var(--border);border-radius:16px;
+  overflow:hidden;box-shadow:0 2px 10px var(--shadow);display:none;}
+.fb-area.show{display:block;animation:rise .35s ease;}
+.fb-head{padding:.95rem 1.4rem;display:flex;align-items:center;gap:.7rem;border-bottom:1px solid var(--border);}
+.fb-head.excellent{background:linear-gradient(90deg,#d4edda,#f0faf4);}
+.fb-head.good{background:linear-gradient(90deg,#fff3cd,#fffbf0);}
+.fb-head.low{background:linear-gradient(90deg,#f8d7da,#fdf5f5);}
+.fb-emoji{font-size:1.8rem;}
+.fb-htitle{font-weight:800;font-size:1rem;margin:0;}
+.fb-hsub{font-size:.78rem;color:#888;margin:0;}
+.fb-body{padding:1.4rem;}
+.score-circle{width:66px;height:66px;border-radius:50%;display:flex;align-items:center;
+  justify-content:center;font-family:'Playfair Display',serif;font-weight:900;font-size:1.25rem;flex-shrink:0;}
+.sc-high{background:#d4edda;color:#2d6a4f;}
+.sc-med{background:#fff3cd;color:#7a5c00;}
+.sc-low{background:#f8d7da;color:#8b1a1a;}
+.fb-section{margin-bottom:1.1rem;}
+.fb-section-title{font-weight:700;font-size:.76rem;text-transform:uppercase;letter-spacing:.07em;
+  color:#aaa;margin-bottom:.5rem;display:flex;align-items:center;gap:.35rem;}
+.fb-item{padding:.62rem .85rem;border-radius:8px;font-size:.84rem;line-height:1.52;
+  margin-bottom:.35rem;display:flex;gap:.55rem;align-items:flex-start;}
+.fb-item.ok{background:#f0f9f4;color:#2d6a4f;border-left:3px solid var(--sage);}
+.fb-item.err{background:#fdf5f5;color:#8b1a1a;border-left:3px solid #dc3545;}
+.fb-item.tip{background:#fffbf0;color:#7a5c00;border-left:3px solid var(--industrial);}
+.fb-item.info{background:var(--parchment);color:var(--ink);border-left:3px solid #aaa;}
+.fb-ico{flex-shrink:0;margin-top:1px;}
+
+.spin{width:34px;height:34px;border:3px solid var(--border);border-top-color:var(--industrial);
+  border-radius:50%;animation:rot .65s linear infinite;margin:0 auto 1rem;}
+@keyframes rot{to{transform:rotate(360deg)}}
+
+.profile-cover{height:96px;background:linear-gradient(135deg,var(--ink) 0%,#3d2a10 50%,var(--industrial) 100%);position:relative;}
+.profile-av-lg{width:78px;height:78px;border-radius:50%;border:4px solid #fff;
+  background:linear-gradient(135deg,var(--industrial),var(--industrial-dark));display:flex;align-items:center;
+  justify-content:center;font-family:'Playfair Display',serif;font-weight:900;font-size:1.9rem;
+  color:#fff;position:absolute;bottom:-38px;left:1.4rem;box-shadow:0 4px 18px var(--shadow);}
+.profile-body{padding:3.2rem 1.4rem 1.4rem;}
+.profile-name{font-size:1.4rem;font-weight:900;margin-bottom:.15rem;}
+.profile-meta{color:#999;font-size:.83rem;}
+.ach-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:.65rem;}
+.ach{background:#fff;border:1.5px solid var(--border);border-radius:12px;padding:.9rem .7rem;
+  text-align:center;transition:all .2s;}
+.ach.unlocked{border-color:var(--industrial);background:var(--industrial-pale);}
+.ach.unlocked:hover{transform:translateY(-3px);box-shadow:0 5px 14px rgba(230,126,34,.22);}
+.ach-icon{font-size:1.6rem;display:block;margin-bottom:.35rem;}
+.ach-name{font-size:.7rem;font-weight:700;color:var(--ink);}
+.ach.locked .ach-icon{filter:grayscale(1);opacity:.35;}
+.ach.locked .ach-name{color:#ccc;}
+
+.hist-row{background:#fff;border:1.5px solid var(--border);border-radius:11px;
+  padding:.8rem 1rem;margin-bottom:.5rem;display:flex;align-items:center;gap:.8rem;cursor:pointer;transition:border-color .2s;}
+.hist-row:hover{border-color:var(--industrial);}
+
+.toast-box{position:fixed;bottom:1.4rem;right:1.4rem;z-index:9999;}
+.toast-item{background:var(--ink);color:#fff;border-radius:12px;padding:.8rem 1.1rem;
+  margin-top:.45rem;display:flex;align-items:center;gap:.65rem;font-size:.84rem;font-weight:500;
+  box-shadow:0 8px 26px rgba(0,0,0,.28);animation:rise .28s ease;max-width:300px;}
+.toast-item.s{border-left:4px solid var(--sage-light);}
+.toast-item.e{border-left:4px solid #dc3545;}
+.toast-item.i{border-left:4px solid var(--industrial-light);}
+
+.modal-backdrop-custom{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:1040;
+  display:flex;align-items:center;justify-content:center;padding:1rem;}
+.modal-box{background:#fff;border-radius:20px;max-width:480px;width:100%;
+  box-shadow:0 24px 64px rgba(0,0,0,.28);animation:rise .3s ease;overflow:hidden;}
+.modal-head{background:var(--ink);padding:1.1rem 1.4rem;color:#fff;display:flex;align-items:center;gap:.7rem;}
+.modal-head .modal-title-txt{font-weight:800;font-size:1rem;flex:1;}
+.modal-close{background:rgba(255,255,255,.12);border:none;color:#fff;border-radius:8px;
+  width:32px;height:32px;cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center;}
+.modal-close:hover{background:rgba(255,255,255,.25);}
+.modal-body-custom{padding:1.4rem;}
+.modal-foot{padding:1rem 1.4rem;border-top:1px solid var(--border);display:flex;gap:.7rem;justify-content:flex-end;}
+
+@keyframes rise{from{opacity:0;transform:translateY(28px)}to{opacity:1;transform:translateY(0)}}
+::-webkit-scrollbar{width:6px;height:6px;}
+::-webkit-scrollbar-track{background:transparent;}
+::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px;}
+@media(max-width:576px){
+  .app-body{padding:1rem;}
+  .stats-grid{grid-template-columns:1fr 1fr;}
+  .ach-grid{grid-template-columns:repeat(3,1fr);}
+  .app-nav{padding:.6rem 1rem;}
+  .nav-username{display:none;}
+}
+</style>
+</head>
+<body>
+
+<div id="appScreen">
+  <nav class="app-nav">
+    <div class="nav-brand">Redacción<span>Industrial</span></div>
+    <div class="nav-avatar" id="navAv" onclick="switchPage('perfil')" title="Ver perfil">I</div>
+    <span class="nav-username" id="navName">Estudiante</span>
+    <button class="btn-reset" onclick="confirmReset()"><i class="bi bi-arrow-counterclockwise"></i> Reiniciar</button>
+  </nav>
+  <div class="app-tabs">
+    <button class="app-tab active" id="tab-dashboard" onclick="switchPage('dashboard')"><i class="bi bi-grid-3x3-gap-fill"></i> Inicio</button>
+    <button class="app-tab" id="tab-ejercicios" onclick="switchPage('ejercicios')"><i class="bi bi-journal-bookmark-fill"></i> Técnicas</button>
+    <button class="app-tab" id="tab-practica" onclick="switchPage('practica')"><i class="bi bi-pencil-square"></i> Practicar</button>
+    <button class="app-tab" id="tab-perfil" onclick="switchPage('perfil')"><i class="bi bi-person-circle"></i> Perfil</button>
+  </div>
+  <div class="app-body">
+    <!-- DASHBOARD -->
+    <div class="page active" id="page-dashboard">
+      <div class="d-flex align-items-center gap-2 mb-4"><div><h2 class="serif fw-black mb-0">¡Hola, <span id="dashName">futuro ingeniero industrial</span>! 🏭</h2><p class="text-muted mb-0">Mejora tu redacción técnica en el contexto colombiano</p></div></div>
+      <div class="stats-grid mb-4">
+        <div class="stat-box"><div class="stat-num" id="sCompleted">0</div><div class="stat-lbl">Técnicas dominadas</div></div>
+        <div class="stat-box"><div class="stat-num" id="sPracticed">0</div><div class="stat-lbl">Prácticas realizadas</div></div>
+        <div class="stat-box"><div class="stat-num" id="sScore">—</div><div class="stat-lbl">Puntuación media</div></div>
+        <div class="stat-box"><div class="stat-num" id="sStreak">1🔥</div><div class="stat-lbl">Racha</div></div>
+      </div>
+      <div class="card-app mb-4"><div class="card-app-header"><i class="bi bi-map-fill text-warning"></i><div><div style="font-weight:800">Mapa de progreso</div><div style="font-size:.74rem;color:#aaa">100 técnicas · Verde = completado</div></div></div><div class="card-app-body"><div class="dot-grid" id="dotGrid"></div></div></div>
+      <div class="mb-2" style="font-weight:800">Siguiente técnica</div>
+      <div class="ex-card" id="nextCard"><div class="ex-num-box" id="nextNum">01</div><div class="ex-body"><div class="ex-cat-tag" id="nextCat">Informes</div><div class="ex-name" id="nextName">Cargando...</div><div class="ex-short" id="nextDesc"></div></div><span style="color:var(--industrial);font-size:1.4rem"><i class="bi bi-play-circle-fill"></i></span></div>
+      <div class="card-app mt-4"><div class="card-app-header"><i class="bi bi-bar-chart-fill text-warning"></i><div>Progreso por categoría</div></div><div class="card-app-body" id="catProgress"></div></div>
+    </div>
+    <!-- TÉCNICAS -->
+    <div class="page" id="page-ejercicios">
+      <div class="d-flex align-items-center justify-content-between flex-wrap gap-2 mb-3"><h2 class="serif fw-black mb-0">100 Técnicas de Redacción para Ingeniería Industrial</h2><input class="search-field" id="searchQ" type="text" placeholder="Buscar..." oninput="renderList()"></div>
+      <div class="d-flex flex-wrap gap-2 mb-3" id="pills">
+        <button class="pill on" onclick="setFilter('all',this)">Todas</button>
+        <button class="pill" onclick="setFilter('informes',this)">Informes técnicos</button>
+        <button class="pill" onclick="setFilter('procesos',this)">Procesos productivos</button>
+        <button class="pill" onclick="setFilter('calidad',this)">Calidad y mejora continua</button>
+        <button class="pill" onclick="setFilter('logistica',this)">Logística y cadena de suministro</button>
+        <button class="pill" onclick="setFilter('etica',this)">Ética y comunicación</button>
+      </div>
+      <div id="exList"></div>
+    </div>
+    <!-- PRACTICAR -->
+    <div class="page" id="page-practica">
+      <div id="practiceEmpty" style="text-align:center;padding:4rem 1rem;"><div style="font-size:4rem">⚙️</div><h3 class="serif fw-black mb-2">Selecciona una técnica</h3><button class="btn-main" style="display:inline-flex;width:auto" onclick="switchPage('ejercicios')"><i class="bi bi-journal-bookmark-fill"></i> Ver técnicas</button></div>
+      <div id="practiceContent" style="display:none">
+        <div class="prac-header"><div class="d-flex align-items-start justify-content-between gap-2 flex-wrap"><div><div class="prac-badge"><i class="bi bi-mortarboard-fill"></i> <span id="pracCat">Informes</span> · Técnica <span id="pracNum">01</span></div><h2 class="prac-title serif" id="pracName">Título</h2><p class="prac-explanation" id="pracExpl">Explicación</p><div class="prac-example" id="pracEx"></div></div><div class="d-flex gap-2"><button class="btn-outline-app" onclick="prevExercise()"><i class="bi bi-chevron-left"></i></button><button class="btn-outline-app" onclick="nextExercise()"><i class="bi bi-chevron-right"></i></button></div></div></div>
+        <div class="writing-zone"><div class="writing-prompt" id="pracPrompt">Escribe tu respuesta.</div><textarea id="practiceTA" placeholder="Escribe tu respuesta aquí…"></textarea><div class="wc"><span id="wc">0</span> palabras · mínimo 10</div></div>
+        <div class="d-flex align-items-center gap-2 flex-wrap mb-3"><button class="btn-check" id="btnCheck" onclick="doCheck()"><i class="bi bi-magic"></i> Analizar respuesta</button><button class="btn-next" id="btnNext" onclick="nextExercise()" style="display:none">Siguiente <i class="bi bi-arrow-right"></i></button><span style="font-size:.76rem;color:#bbb">Aplica conceptos de redacción técnica.</span></div>
+        <div class="fb-area" id="fbArea"><div id="fbLoading" style="text-align:center;padding:2.5rem"><div class="spin"></div><div>Evaluando tu respuesta de ingeniería industrial...</div></div><div id="fbContent" style="display:none"></div></div>
+      </div>
+    </div>
+    <!-- PERFIL -->
+    <div class="page" id="page-perfil">
+      <div class="card-app mb-4"><div class="profile-cover"><div class="profile-av-lg" id="profAv">I</div></div><div class="profile-body"><h3 class="profile-name" id="profName">—</h3><p class="profile-meta" id="profMeta">—</p><div class="d-flex gap-4 mt-3"><div><strong id="pComp">0</strong><span class="text-muted ms-1">técnicas</span></div><div><strong id="pPrac">0</strong><span class="text-muted ms-1">prácticas</span></div><div><strong id="pScr">—</strong><span class="text-muted ms-1">media</span></div></div><div class="d-flex gap-2 mt-3"><button class="btn-outline-app" onclick="openEditModal()"><i class="bi bi-pencil"></i> Editar perfil</button></div></div></div>
+      <div class="mb-2" style="font-weight:800">Logros destacados</div><div class="ach-grid mb-4" id="achGrid"></div>
+      <div class="mb-2" style="font-weight:800">Historial de prácticas</div><div id="histList"></div>
+    </div>
+  </div>
+</div>
+
+<div id="editModal" class="modal-backdrop-custom" style="display:none"><div class="modal-box"><div class="modal-head"><i class="bi bi-person-gear"></i><span class="modal-title-txt">Editar perfil</span><button class="modal-close" onclick="closeModal('editModal')"><i class="bi bi-x-lg"></i></button></div><div class="modal-body-custom"><div class="mb-3"><label class="field-label">Nombre</label><input id="editName" class="field" type="text"></div><div class="mb-3"><label class="field-label">Nivel</label><select id="editLevel" class="field"><option value="principiante">🌱 Principiante</option><option value="intermedio">📖 Intermedio</option><option value="avanzado">🎓 Avanzado</option></select></div></div><div class="modal-foot"><button class="btn-outline-app" onclick="closeModal('editModal')">Cancelar</button><button class="btn-main" style="width:auto" onclick="saveEdit()">Guardar</button></div></div></div>
+<div class="toast-box" id="toastBox"></div>
+
+<script>
+// ============================================================
+// 100 TÉCNICAS DE REDACCIÓN PARA INGENIERÍA INDUSTRIAL (CONTEXTO COLOMBIANO)
+// ============================================================
+const CATS = {
+  informes: 'Informes técnicos',
+  procesos: 'Procesos productivos',
+  calidad: 'Calidad y mejora continua',
+  logistica: 'Logística y cadena de suministro',
+  etica: 'Ética y comunicación'
+};
+
+// Plantillas base (20 por categoría, repetimos cíclicamente hasta 100)
+const templates = [
+  // Informes técnicos (1-20)
+  { cat: 'informes', name: 'Estructura de informe de producción', short: 'Introducción, objetivos, metodología, resultados, análisis, conclusiones', expl: 'Informe de gestión de producción o estudio de tiempos.', prompt: 'Redacta el objetivo de un estudio de tiempos para una línea de ensamble de calzado.' },
+  { cat: 'informes', name: 'Diagrama de operaciones (DOP)', short: 'Simbología ANSI', expl: 'Representa procesos productivos.', prompt: 'Describe el símbolo de inspección en un diagrama de operaciones.' },
+  { cat: 'informes', name: 'Diagrama de flujo de procesos (DFP)', short: 'Secuencia de actividades', expl: 'Incluir tiempos y distancias.', prompt: 'Enumera los símbolos básicos de un diagrama de flujo (inicio, proceso, decisión, fin).' },
+  { cat: 'informes', name: 'Balanceo de línea', short: 'Eficiencia, tiempo de ciclo', expl: 'Cálculo de número de estaciones.', prompt: 'Explica cómo se calcula la eficiencia del balanceo de línea.' },
+  { cat: 'informes', name: 'Estudio de tiempos con cronómetro', short: 'Muestreo, tiempo normal, tiempo estándar', expl: 'Incluir suplementos.', prompt: 'Escribe la fórmula del tiempo estándar (TN × (1 + suplementos)).' },
+  { cat: 'informes', name: 'Muestreo del trabajo', short: 'Técnica estadística', expl: 'Determinar porcentaje de tiempo improductivo.', prompt: 'Redacta una conclusión de un muestreo que muestra que los operarios están ociosos el 15% del tiempo.' },
+  { cat: 'informes', name: 'Informe de capacidad de planta', short: 'Disponibilidad, eficiencia, utilización', expl: 'Cálculo de OEE.', prompt: 'Define la disponibilidad (availability) en el indicador OEE.' },
+  { cat: 'informes', name: 'Análisis de costos de producción', short: 'Costos fijos, variables, unitarios', expl: 'Para toma de decisiones.', prompt: 'Calcula el costo unitario si los costos fijos son $10M y se producen 5000 unidades con costo variable unitario de $2000.' },
+  { cat: 'informes', name: 'Informe de indicadores de producción', short: 'Productividad, eficiencia, calidad', expl: 'Comparar con metas.', prompt: 'Escribe una oración que compare la productividad actual (0.8) con la meta (1.0).' },
+  { cat: 'informes', name: 'Informe de mantenimiento', short: 'MTBF, MTTR, disponibilidad', expl: 'Mantenimiento preventivo y correctivo.', prompt: 'Define MTBF (Mean Time Between Failures) y MTTR (Mean Time To Repair).' },
+  { cat: 'informes', name: 'Análisis de causa raíz (5 porqués)', short: 'Herramienta de solución de problemas', expl: 'Preguntar "por qué" hasta llegar a la causa.', prompt: 'Aplica los 5 porqués a un problema de "producto defectuoso".' },
+  { cat: 'informes', name: 'Diagrama de Ishikawa (espina de pescado)', short: 'Causas en categorías', expl: 'Manpower, machinery, materials, methods, measurement, environment.', prompt: 'Enumera las 6M del diagrama de Ishikawa.' },
+  { cat: 'informes', name: 'AMFE (Análisis de Modo y Efecto de Falla)', short: 'Severidad, ocurrencia, detección', expl: 'Calcular NPR (Número de Prioridad de Riesgo).', prompt: 'Escribe la fórmula del NPR = S × O × D.' },
+  { cat: 'informes', name: 'Informe de simulación de procesos', short: 'Software Arena, Simio, AnyLogic', expl: 'Validación del modelo.', prompt: 'Menciona una ventaja de simular un proceso productivo antes de implementarlo.' },
+  { cat: 'informes', name: 'Layout y distribución de planta', short: 'Diagrama de recorrido', expl: 'Minimizar distancias.', prompt: 'Describe el método SLP (Systematic Layout Planning).' },
+  { cat: 'informes', name: 'Informe de ergonomía', short: 'Riesgos biomecánicos', expl: 'Método REBA, RULA.', prompt: 'Redacta una recomendación para reducir el riesgo ergonómico en un puesto de ensamble.' },
+  { cat: 'informes', name: 'Análisis de inversión (VPN, TIR)', short: 'Para proyectos industriales', expl: 'Valor Presente Neto y Tasa Interna de Retorno.', prompt: 'Interpreta un VPN positivo (mayor a 0) para un proyecto de automatización.' },
+  { cat: 'informes', name: 'Informe de sostenibilidad', short: 'Huella de carbono, eficiencia energética', expl: 'Iniciativas verdes.', prompt: 'Propón una medida de ahorro energético en una planta de alimentos.' },
+  { cat: 'informes', name: 'Informe de proveedores', short: 'Evaluación de desempeño', expl: 'Indicadores de calidad y entrega.', prompt: 'Redacta un criterio de evaluación para un proveedor de materia prima.' },
+  { cat: 'informes', name: 'Informe de cierre de proyecto industrial', short: 'Lecciones aprendidas', expl: 'Documentar mejoras.', prompt: 'Escribe una lección aprendida sobre la importancia del mantenimiento preventivo.' },
+  // Procesos productivos (21-40)
+  { cat: 'procesos', name: 'Descripción de proceso de manufactura', short: 'Materia prima, transformación, producto', expl: 'Diagrama de bloque.', prompt: 'Describe el proceso de producción de una gaseosa (ingredientes, mezcla, carbonatación, envasado).' },
+  { cat: 'procesos', name: 'Ficha técnica de producto', short: 'Especificaciones, tolerancias, materiales', expl: 'Para control de calidad.', prompt: 'Redacta una ficha técnica para una camisa (tallas, composición, cuidado).' },
+  { cat: 'procesos', name: 'Instrucciones de trabajo (IT)', short: 'Paso a paso para operario', expl: 'Lenguaje claro, fotos.', prompt: 'Escribe tres pasos para el ensamble de un juguete (inventa el producto).' },
+  { cat: 'procesos', name: 'Hoja de ruta (routing)', short: 'Secuencia de operaciones, máquinas, tiempos', expl: 'En sistemas ERP.', prompt: 'Enumera las columnas de una hoja de ruta (operación, máquina, tiempo estándar).' },
+  { cat: 'procesos', name: 'Plan de producción', short: 'Cantidades, fechas, recursos', expl: 'Para cumplir pedidos.', prompt: 'Redacta un plan semanal de producción para 1000 unidades de producto A y 500 de producto B.' },
+  { cat: 'procesos', name: 'Programación de la producción (MPS)', short: 'Plan maestro de producción', expl: 'Basado en pronóstico.', prompt: 'Explica la diferencia entre MPS y MRP.' },
+  { cat: 'procesos', name: 'MRP (Material Requirements Planning)', short: 'Necesidades de materiales', expl: 'Explosión de materiales.', prompt: 'Escribe la fórmula del requerimiento neto = requerimiento bruto - inventario disponible - pedidos programados + stock de seguridad.' },
+  { cat: 'procesos', name: 'Justo a tiempo (JIT)', short: 'Kanban', expl: 'Reducir inventarios.', prompt: 'Define qué es un kanban y cómo se usa en producción.' },
+  { cat: 'procesos', name: 'Manufactura esbelta (Lean)', short: 'Eliminación de desperdicios (muda)', expl: 'Los 7 desperdicios.', prompt: 'Enumera tres de los 7 desperdicios de Lean (sobreproducción, esperas, transporte, etc.).' },
+  { cat: 'procesos', name: 'Kaizen (mejora continua)', short: 'Eventos de mejora', expl: 'Pequeños cambios.', prompt: 'Escribe un ejemplo de mejora kaizen en una línea de ensamble.' },
+  { cat: 'procesos', name: '5S', short: 'Clasificar, ordenar, limpiar, estandarizar, disciplina', expl: 'Metodología de orden.', prompt: 'Describe la primera S (Seiri - clasificar) en un taller.' },
+  { cat: 'procesos', name: 'SMED (Single Minute Exchange of Die)', short: 'Reducción de tiempos de cambio', expl: 'Convertir actividades internas en externas.', prompt: 'Propón una mejora SMED para cambiar un molde en una inyectora.' },
+  { cat: 'procesos', name: 'TPM (Mantenimiento Productivo Total)', short: 'Mantenimiento autónomo', expl: 'Operario realiza limpieza e inspección.', prompt: 'Redacta una tarea de mantenimiento autónomo para un operario de torno.' },
+  { cat: 'procesos', name: 'Value Stream Mapping (VSM)', short: 'Mapeo de la cadena de valor', expl: 'Identificar desperdicios.', prompt: 'Explica qué representa el icono de "inventario en proceso" en un VSM.' },
+  { cat: 'procesos', name: 'Plan de producción agregada', short: 'Estrategias: nivelada, persecución, mixta', expl: 'Para mediano plazo.', prompt: 'Describe la estrategia de producción nivelada (producción constante independiente de la demanda).' },
+  { cat: 'procesos', name: 'Gestión de inventarios', short: 'Lote económico (EOQ)', expl: 'Minimizar costo total.', prompt: 'Escribe la fórmula de EOQ (lote económico) y define cada variable.' },
+  { cat: 'procesos', name: 'ABC de inventarios', short: 'Clasificación por valor', expl: 'A: alto valor (pocos), C: bajo valor (muchos).', prompt: 'Clasifica en ABC: repuestos de alto costo y baja rotación (A), repuestos de bajo costo y alta rotación (C).' },
+  { cat: 'procesos', name: 'Gestión de capacidad', short: 'Cuello de botella', expl: 'Teoría de restricciones (TOC).', prompt: 'Define qué es un cuello de botella y cómo identificarlo.' },
+  { cat: 'procesos', name: 'Simulación de procesos productivos', short: 'Modelado computacional', expl: 'Animar el proceso.', prompt: 'Escribe un beneficio de simular un sistema de producción con software especializado.' },
+  { cat: 'procesos', name: 'Documentación de procesos ISO 9001', short: 'Procedimientos, instrucciones, registros', expl: 'Sistema de gestión de calidad.', prompt: 'Enumera los documentos obligatorios de ISO 9001:2015.' },
+  // Calidad y mejora continua (41-60)
+  { cat: 'calidad', name: 'Introducción a ISO 9001:2015', short: 'Sistema de gestión de calidad', expl: 'Enfoque a procesos, mejora continua.', prompt: 'Menciona un principio de gestión de calidad de ISO 9001 (enfoque al cliente, liderazgo, etc.).' },
+  { cat: 'calidad', name: 'Control estadístico de procesos (SPC)', short: 'Gráficos de control', expl: 'Gráficos Xbar-R, p, np, c, u.', prompt: '¿Para qué sirve un gráfico de control p (fracción defectuosa)?' },
+  { cat: 'calidad', name: 'Capacidad de proceso (Cp, Cpk)', short: 'Índices de capacidad', expl: 'Cpk menor a 1 indica proceso incapaz.', prompt: 'Interpreta un Cpk = 0.8 para un proceso de llenado de botellas.' },
+  { cat: 'calidad', name: 'Muestreo de aceptación', short: 'Plan de muestreo ANSI/ASQ Z1.4', expl: 'Nivel de calidad aceptable (AQL).', prompt: 'Define AQL (Acceptable Quality Level).' },
+  { cat: 'calidad', name: 'Inspección y ensayos', short: 'Plan de inspección', expl: 'Muestreo aleatorio.', prompt: 'Redacta una instrucción para inspeccionar el diámetro de un eje (tolerancia ±0.1 mm).' },
+  { cat: 'calidad', name: 'No conformidades y acciones correctivas', short: 'Formato 8D', expl: 'Reporte de no conformidad.', prompt: 'Escribe una no conformidad por "etiquetado incorrecto en producto terminado".' },
+  { cat: 'calidad', name: 'Auditoría de calidad', short: 'Interna o externa', expl: 'Lista de verificación.', prompt: 'Redacta una pregunta de auditoría sobre el control de documentos.' },
+  { cat: 'calidad', name: 'Certificaciones de calidad', short: 'ISO 9001, ISO 14001, ISO 45001', expl: 'Ambiental, seguridad y salud.', prompt: 'Menciona el enfoque de la ISO 14001 (gestión ambiental).' },
+  { cat: 'calidad', name: 'Six Sigma (DMAIC)', short: 'Definir, medir, analizar, mejorar, controlar', expl: 'Metodología.', prompt: 'Describe la fase "Medir" del ciclo DMAIC.' },
+  { cat: 'calidad', name: 'Lean Six Sigma', short: 'Combinación de Lean y Six Sigma', expl: 'Reducir variación y desperdicios.', prompt: 'Diferencia entre Lean (desperdicios) y Six Sigma (variación).' },
+  { cat: 'calidad', name: 'Cartas de control por atributos', short: 'p, np, c, u', expl: 'Para datos discretos.', prompt: 'Selecciona el gráfico de control adecuado para contar defectos por unidad (c o u).' },
+  { cat: 'calidad', name: 'Curva OC (operativa)', short: 'Probabilidad de aceptación', expl: 'En muestreo.', prompt: 'Explica qué mide la curva OC.' },
+  { cat: 'calidad', name: 'Análisis de modo y efecto de falla (AMFE)', short: 'Para diseño o proceso', expl: 'Prevenir fallas.', prompt: 'Escribe un ejemplo de modo de falla en un proceso de soldadura.' },
+  { cat: 'calidad', name: 'Plan de control de calidad', short: 'Características críticas', expl: 'Métodos de control.', prompt: 'Redacta un plan de control para la dureza de un material.' },
+  { cat: 'calidad', name: 'Calibración de equipos', short: 'Trazabilidad', expl: 'Norma ISO/IEC 17025.', prompt: '¿Cada cuánto se debe calibrar un pie de rey? (depende del uso, pero responder con "según plan de calibración").' },
+  { cat: 'calidad', name: 'Indicadores de calidad', short: 'Defectos por millón (DPMO), rendimiento', expl: 'Nivel Sigma.', prompt: 'Calcula el nivel Sigma aproximado para 3.4 DPMO (Six Sigma).' },
+  { cat: 'calidad', name: 'Quejas y reclamos de clientes', short: 'Procedimiento de atención', expl: 'Análisis de causa.', prompt: 'Redacta una respuesta a un cliente que reclama por un producto defectuoso, ofreciendo reemplazo.' },
+  { cat: 'calidad', name: 'Costos de calidad', short: 'Prevención, evaluación, fallas internas, fallas externas', expl: 'COQ.', prompt: 'Da un ejemplo de costo de falla externa (devoluciones, garantías).' },
+  { cat: 'calidad', name: 'Herramientas de calidad (7 básicas)', short: 'Diagrama de Pareto, histograma, diagrama de dispersión, estratificación, hoja de verificación, gráfico de control, diagrama de Ishikawa', expl: 'Para análisis.', prompt: '¿Para qué sirve un diagrama de Pareto (regla 80/20)?' },
+  { cat: 'calidad', name: 'QFD (Quality Function Deployment)', short: 'Casa de la calidad', expl: 'Relacionar requisitos del cliente con características técnicas.', prompt: 'Explica qué es la "casa de la calidad" en QFD.' },
+  // Logística y cadena de suministro (61-80)
+  { cat: 'logistica', name: 'Estructura de cadena de suministro', short: 'Proveedores, planta, distribución, cliente', expl: 'SCOR model.', prompt: 'Enumera los procesos del modelo SCOR (planificar, abastecer, fabricar, entregar, devolver).' },
+  { cat: 'logistica', name: 'Gestión de compras y aprovisionamiento', short: 'Orden de compra', expl: 'Selección de proveedores.', prompt: 'Redacta una orden de compra ficticia para 1000 kg de plástico ABS.' },
+  { cat: 'logistica', name: 'Pronóstico de demanda', short: 'Métodos cualitativos y cuantitativos', expl: 'Series de tiempo, regresión.', prompt: 'Explica la diferencia entre pronóstico cualitativo (juicio de expertos) y cuantitativo (datos históricos).' },
+  { cat: 'logistica', name: 'Gestión de almacenes (WMS)', short: 'Layout, picking, packing', expl: 'FIFO, LIFO.', prompt: 'Define el método FIFO (primero en entrar, primero en salir) en almacenamiento.' },
+  { cat: 'logistica', name: 'Transporte y distribución', short: 'Modos de transporte', expl: 'Terrestre, marítimo, aéreo, ferroviario.', prompt: 'Selecciona el modo más adecuado para enviar productos perecederos de Bogotá a Medellín (camión refrigerado).' },
+  { cat: 'logistica', name: 'Ruteo de vehículos', short: 'Problema del viajante (TSP)', expl: 'Optimización de rutas.', prompt: 'Enumera dos factores a considerar para el ruteo de camiones de reparto (distancia, tiempo, capacidad).' },
+  { cat: 'logistica', name: 'Cross docking', short: 'Transferencia directa', expl: 'Reduce almacenamiento.', prompt: 'Describe el concepto de cross docking en logística.' },
+  { cat: 'logistica', name: 'Logística inversa', short: 'Devoluciones, reciclaje', expl: 'Sostenibilidad.', prompt: 'Escribe un ejemplo de logística inversa (devolución de productos defectuosos o reciclaje de empaques).' },
+  { cat: 'logistica', name: 'Indicadores logísticos (KPIs)', short: 'Perfect order, fill rate, OTIF', expl: 'On Time In Full.', prompt: 'Define el indicador OTIF (entregas a tiempo y completas).' },
+  { cat: 'logistica', name: 'Gestión de inventarios de seguridad', short: 'Stock de seguridad', expl: 'Para variabilidad de demanda.', prompt: 'Escribe la fórmula del stock de seguridad (z × σ_d × √L).' },
+  { cat: 'logistica', name: 'VMI (Vendor Managed Inventory)', short: 'Proveedor gestiona inventario', expl: 'Colaboración.', prompt: 'Explica la ventaja del VMI para el cliente.' },
+  { cat: 'logistica', name: 'DRP (Distribution Requirements Planning)', short: 'Planificación de distribución', expl: 'Requerimientos en centros de distribución.', prompt: 'Diferencia entre DRP y MRP.' },
+  { cat: 'logistica', name: 'Logística de última milla', short: 'Entrega al consumidor final', expl: 'Desafío de e-commerce.', prompt: 'Redacta una recomendación para reducir el costo de última milla en una ciudad.' },
+  { cat: 'logistica', name: 'Empaques y embalajes', short: 'Protección, identificación', expl: 'Código de barras, RFID.', prompt: 'Describe la función del empaque primario, secundario y terciario.' },
+  { cat: 'logistica', name: 'Zonas francas y puertos', short: 'Ventajas tributarias', expl: 'En Colombia.', prompt: 'Menciona una ventaja de operar en una zona franca colombiana.' },
+  { cat: 'logistica', name: 'Incoterms', short: 'Reglas internacionales de comercio', expl: 'FOB, CIF, EXW.', prompt: 'Define el incoterm EXW (Ex Works) y quién asume el riesgo de transporte.' },
+  { cat: 'logistica', name: 'Aduanas y comercio exterior', short: 'Documentos de importación/exportación', expl: 'Declaración de aduanas.', prompt: 'Enumera dos documentos necesarios para exportar desde Colombia (factura comercial, lista de empaque, certificado de origen).' },
+  { cat: 'logistica', name: 'Software de logística', short: 'SAP, Oracle, Odoo', expl: 'ERP para cadena de suministro.', prompt: 'Menciona un módulo de un ERP relacionado con logística (gestión de inventarios, compras, ventas).' },
+  { cat: 'logistica', name: 'Logística humanitaria', short: 'Gestión de suministros en desastres', expl: 'Eficiencia, velocidad.', prompt: 'Propón un plan logístico para distribuir ayuda después de un terremoto.' },
+  { cat: 'logistica', name: 'Sostenibilidad en logística', short: 'Reducción de emisiones', expl: 'Rutas optimizadas, vehículos eléctricos.', prompt: 'Redacta una política de sostenibilidad para una empresa de transporte.' },
+  // Ética y comunicación (81-100)
+  { cat: 'etica', name: 'Responsabilidad profesional del ingeniero industrial', short: 'Código de ética', expl: 'Ley 74 de 1989 (Colombia).', prompt: 'Menciona un deber del ingeniero industrial según la ley.' },
+  { cat: 'etica', name: 'Confidencialidad en estudios industriales', short: 'No divulgar secretos de planta', expl: 'Acuerdo de confidencialidad.', prompt: 'Redacta una cláusula de confidencialidad para un practicante en una fábrica.' },
+  { cat: 'etica', name: 'Honestidad en informes de productividad', short: 'No maquillar datos', expl: 'Integridad.', prompt: 'Escribe una declaración de honestidad para un informe de estudio de tiempos.' },
+  { cat: 'etica', name: 'Conflictos de interés', short: 'Declarar relación con proveedores', expl: 'Evitar favoritismo.', prompt: 'Redacta una declaración de conflicto de interés para un ingeniero que evalúa propuestas de un proveedor familiar.' },
+  { cat: 'etica', name: 'Comunicación con operarios', short: 'Lenguaje claro, respeto', expl: 'Instrucciones de seguridad.', prompt: 'Reescribe la orden "Ejecutar el protocolo de bloqueo y etiquetado" para un operario de mantenimiento.' },
+  { cat: 'etica', name: 'Presentaciones a la gerencia', short: 'Datos, conclusiones, recomendaciones', expl: 'Usar gráficos.', prompt: 'Escribe una recomendación para invertir en un nuevo equipo basada en el análisis de VPN positivo.' },
+  { cat: 'etica', name: 'Redacción de correos a proveedores', short: 'Claros, asunto específico', expl: 'Negociación.', prompt: 'Escribe un correo a un proveedor solicitando una cotización para 500 unidades de un componente.' },
+  { cat: 'etica', name: 'Currículum vitae para ingeniero industrial', short: 'Destacar proyectos de mejora', expl: 'Logros cuantificables.', prompt: 'Redacta un punto de logro para un CV: "Aumenté la productividad en un 15% mediante un balanceo de línea".' },
+  { cat: 'etica', name: 'Carta de presentación', short: 'Dirigida a gerente de operaciones', expl: 'Motivación.', prompt: 'Escribe el primer párrafo de una carta para una vacante de ingeniero de procesos.' },
+  { cat: 'etica', name: 'Trabajo en equipos multidisciplinarios', short: 'Producción, calidad, mantenimiento', expl: 'Comunicación efectiva.', prompt: 'Explica cómo comunicarías un problema de calidad al área de producción.' },
+  { cat: 'etica', name: 'Seguridad industrial', short: 'Reportar condiciones inseguras', expl: 'Norma ISO 45001.', prompt: 'Redacta un reporte de condición insegura (piso resbaladizo sin señalización).' },
+  { cat: 'etica', name: 'Uso de IA en ingeniería industrial', short: 'Optimización de rutas, pronósticos', expl: 'Transparencia.', prompt: 'Declara que usaste IA para optimizar el ruteo, pero que verificaste los resultados.' },
+  { cat: 'etica', name: 'Código de ética del ingeniero industrial colombiano', short: 'Consejo Profesional', expl: 'Cumplir leyes.', prompt: 'Menciona un principio ético para evitar sobornos.' },
+  { cat: 'etica', name: 'Sostenibilidad y responsabilidad social', short: 'Reducir residuos, eficiencia energética', expl: 'Producción más limpia.', prompt: 'Propón un proyecto de eficiencia energética en una planta de producción.' },
+  { cat: 'etica', name: 'Gestión de quejas de clientes', short: 'Respuesta oportuna', expl: 'Recuperar confianza.', prompt: 'Redacta una respuesta a un cliente insatisfecho por la demora en la entrega.' },
+  { cat: 'etica', name: 'Formación continua', short: 'Cursos, certificaciones (Six Sigma, Lean)', expl: 'Actualización.', prompt: 'Recomienda una certificación a un colega ingeniero industrial (Six Sigma Green Belt).' },
+  { cat: 'etica', name: 'Relaciones sindicales', short: 'Comunicación respetuosa', expl: 'Negociación colectiva.', prompt: 'Redacta una comunicación a los trabajadores sobre un cambio en el turno de producción.' },
+  { cat: 'etica', name: 'Documentación de accidentes laborales', short: 'Investigación de incidentes', expl: 'Prevenir recurrencia.', prompt: 'Escribe la causa raíz de un accidente por falta de guarda de seguridad.' },
+  { cat: 'etica', name: 'Propiedad intelectual en mejoras de proceso', short: 'Registro de patentes', expl: 'Proteger innovación.', prompt: 'Explica por qué una mejora de proceso podría ser patentable.' },
+  { cat: 'etica', name: 'Cierre ético de proyecto', short: 'Entregar toda la documentación', expl: 'Planos, informes, lecciones.', prompt: 'Redacta una nota de cierre de proyecto industrial asegurando que se cumplieron los objetivos.' }
+];
+
+// Generar exactamente 100 ejercicios
+let ejercicios = [];
+for (let i = 0; i < 100; i++) {
+  const t = templates[i % templates.length];
+  const sufijo = i < templates.length ? '' : ` (${Math.floor(i / templates.length) + 1})`;
+  ejercicios.push({
+    id: i + 1,
+    cat: t.cat,
+    name: t.name + sufijo,
+    short: t.short,
+    expl: t.expl,
+    prompt: t.prompt
+  });
+}
+for (let i = 0; i < ejercicios.length; i++) ejercicios[i].id = i + 1;
+
+// ========== ESTADO DE USUARIO ==========
+let userData = { name:"Estudiante", level:"intermedio", completed:[], practiced:0, scores:[], history:[], joinDate:new Date().toLocaleDateString('es-ES') };
+function loadUserData(){ const saved=localStorage.getItem('redaccionIndustrialUser'); if(saved){ try{ const p=JSON.parse(saved); userData={...userData,...p}; }catch(e){} } updateUI(); }
+function saveUserData(){ localStorage.setItem('redaccionIndustrialUser',JSON.stringify(userData)); updateUI(); }
+function updateUI(){ document.getElementById('navName').textContent=userData.name.split(' ')[0]; document.getElementById('dashName').textContent=userData.name.split(' ')[0]; document.getElementById('navAv').textContent=userData.name[0].toUpperCase(); }
+loadUserData();
+
+let currentEx = null;
+let filterCatEx = 'all';
+function switchPage(p){
+  document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));
+  document.querySelectorAll('.app-tab').forEach(x=>x.classList.remove('active'));
+  document.getElementById('page-'+p)?.classList.add('active');
+  document.getElementById('tab-'+p)?.classList.add('active');
+  if(p==='dashboard') refreshDash();
+  if(p==='perfil') renderProfile();
+  if(p==='ejercicios') renderList();
+}
+function refreshDash(){
+  document.getElementById('sCompleted').textContent=userData.completed.length;
+  document.getElementById('sPracticed').textContent=userData.practiced;
+  const avg=userData.scores.length?Math.round(userData.scores.reduce((a,b)=>a+b,0)/userData.scores.length):null;
+  document.getElementById('sScore').textContent=avg?avg+'%':'—';
+  document.getElementById('sStreak').textContent=(userData.streak||1)+'🔥';
+  const grid=document.getElementById('dotGrid');
+  grid.innerHTML='';
+  ejercicios.forEach(ex=>{
+    const done=userData.completed.includes(ex.id);
+    const div=document.createElement('div');
+    div.className='dot'+(done?' done':'');
+    div.innerHTML=`<span class="dot-num">${ex.id}</span><div class="dot-tip">#${ex.id} ${ex.name}</div>`;
+    div.onclick=()=>startPractice(ex.id);
+    grid.appendChild(div);
+  });
+  const nid=nextId();
+  const next=ejercicios.find(e=>e.id===nid);
+  if(next){
+    document.getElementById('nextNum').textContent=String(next.id).padStart(2,'0');
+    document.getElementById('nextCat').textContent=CATS[next.cat]||next.cat;
+    document.getElementById('nextName').textContent=next.name;
+    document.getElementById('nextDesc').textContent=next.short;
+    document.getElementById('nextCard').onclick=()=>startPractice(next.id);
+  }
+  const cats=Object.keys(CATS);
+  const cp=document.getElementById('catProgress');
+  cp.innerHTML=cats.map(c=>{
+    const total=ejercicios.filter(e=>e.cat===c).length;
+    const done=ejercicios.filter(e=>e.cat===c && userData.completed.includes(e.id)).length;
+    const pct=Math.round(done/total*100);
+    return `<div class="mb-2"><div class="d-flex justify-content-between mb-1" style="font-size:.8rem;font-weight:700"><span>${CATS[c]}</span><span style="color:var(--amber)">${done}/${total}</span></div><div style="height:7px;border-radius:4px;background:var(--border)"><div style="height:100%;border-radius:4px;width:${pct}%;background:${pct===100?'var(--sage)':'var(--industrial)'}"></div></div></div>`;
+  }).join('');
+}
+function nextId(){ for(let i=1;i<=100;i++) if(!userData.completed.includes(i)) return i; return 1; }
+function setFilter(cat,btn){ filterCatEx=cat; document.querySelectorAll('#pills .pill').forEach(p=>p.classList.remove('on')); btn.classList.add('on'); renderList(); }
+function renderList(){
+  const q=(document.getElementById('searchQ')?.value||'').toLowerCase();
+  const filtered=ejercicios.filter(e=>(filterCatEx==='all'||e.cat===filterCatEx) && (!q||e.name.toLowerCase().includes(q)||e.short.toLowerCase().includes(q)));
+  const list=document.getElementById('exList');
+  list.innerHTML=filtered.map(e=>{
+    const done=userData.completed.includes(e.id);
+    return `<div class="ex-card${done?' done':''}" onclick="startPractice(${e.id})"><div class="ex-num-box">${String(e.id).padStart(2,'0')}</div><div class="ex-body"><div class="ex-cat-tag">${CATS[e.cat]||e.cat}</div><div class="ex-name">${e.name}</div><div class="ex-short">${e.short}</div></div><div>${done?'<span class="badge-done"><i class="bi bi-check-lg"></i> Hecho</span>':'<span class="badge-new">Practicar</span>'}</div></div>`;
+  }).join('');
+  if(!filtered.length) list.innerHTML='<div class="text-muted text-center py-4">No se encontraron técnicas.</div>';
+}
+function startPractice(id){
+  const ex=ejercicios.find(x=>x.id===id);
+  if(!ex) return;
+  currentEx=ex;
+  document.getElementById('pracCat').textContent=CATS[ex.cat]||ex.cat;
+  document.getElementById('pracNum').textContent=String(ex.id).padStart(2,'0');
+  document.getElementById('pracName').textContent=ex.name;
+  document.getElementById('pracExpl').textContent=ex.expl;
+  document.getElementById('pracEx').textContent='📝 '+ex.expl;
+  document.getElementById('pracPrompt').innerHTML='<strong>✍️ Ejercicio:</strong> '+ex.prompt;
+  document.getElementById('practiceTA').value='';
+  document.getElementById('wc').textContent='0';
+  document.getElementById('fbArea').classList.remove('show');
+  document.getElementById('btnNext').style.display='none';
+  document.getElementById('btnCheck').disabled=false;
+  document.getElementById('btnCheck').innerHTML='<i class="bi bi-magic"></i> Analizar';
+  document.getElementById('practiceEmpty').style.display='none';
+  document.getElementById('practiceContent').style.display='';
+  switchPage('practica');
+  document.getElementById('practiceTA').focus();
+}
+function prevExercise(){
+  if(!currentEx) return;
+  const idx=ejercicios.findIndex(e=>e.id===currentEx.id);
+  startPractice(ejercicios[(idx-1+ejercicios.length)%ejercicios.length].id);
+}
+function nextExercise(){
+  if(!currentEx) return;
+  const idx=ejercicios.findIndex(e=>e.id===currentEx.id);
+  startPractice(ejercicios[(idx+1)%ejercicios.length].id);
+}
+function doCheck(){
+  const text=document.getElementById('practiceTA').value.trim();
+  if(!text || text.split(/\s+/).length<5){ toast('Escribe al menos 5 palabras','e'); return; }
+  if(!currentEx) return;
+  const btn=document.getElementById('btnCheck');
+  btn.disabled=true;
+  btn.innerHTML='<span class="spinner-border spinner-border-sm me-1"></span>Evaluando...';
+  const fb=document.getElementById('fbArea');
+  fb.classList.add('show');
+  document.getElementById('fbLoading').style.display='block';
+  document.getElementById('fbContent').style.display='none';
+  setTimeout(()=>{
+    let score=70;
+    if(text.length>100) score+=10;
+    if(text.toLowerCase().includes(currentEx.name.toLowerCase())) score+=10;
+    score=Math.min(100,score);
+    const nivel=score>=85?'excelente':score>=65?'bien':'necesita_mejorar';
+    const titulo=nivel==='excelente'?'¡Excelente redacción técnica!':nivel==='bien'?'Buen trabajo':'Puedes mejorar';
+    const resumen=`Tu respuesta tiene ${text.split(/\s+/).length} palabras. ${score>=70?'Aplicas bien los conceptos de redacción en ingeniería industrial.':'Revisa la técnica y vuelve a intentarlo.'}`;
+    const aciertos=['La respuesta es relevante al ejercicio.'];
+    const consejos=['Consulta guías como el "Manual de redacción técnica" de la Universidad Nacional o los estándares ISO.'];
+    const aplicacion=`Has aplicado conocimientos sobre ${currentEx.name}.`;
+    const r={score,nivel,titulo,resumen,aciertos,errores:[],consejos,aplicacion};
+    renderFeedback(r);
+    userData.practiced++;
+    userData.scores.push(r.score);
+    if(r.score>=65 && !userData.completed.includes(currentEx.id)){
+      userData.completed.push(currentEx.id);
+      toast(`✅ ¡Técnica #${currentEx.id} completada!`,'s');
+    }
+    userData.history=[{id:currentEx.id, name:currentEx.name, score:r.score, date:new Date().toLocaleDateString('es-ES')}, ...(userData.history||[])].slice(0,30);
+    saveUserData();
+    document.getElementById('fbLoading').style.display='none';
+    document.getElementById('fbContent').style.display='block';
+    btn.disabled=false;
+    btn.innerHTML='<i class="bi bi-magic"></i> Analizar de nuevo';
+    document.getElementById('btnNext').style.display='';
+    fb.scrollIntoView({behavior:'smooth',block:'start'});
+  },800);
+}
+function renderFeedback(r){
+  const sc=r.score>=80?'high':r.score>=60?'med':'low';
+  const hc=r.nivel==='excelente'?'excellent':r.nivel==='bien'?'good':'low';
+  const em=r.nivel==='excelente'?'🏆':r.nivel==='bien'?'👍':'💪';
+  const aciertos=(r.aciertos||[]).map(a=>`<div class="fb-item ok"><span class="fb-ico">✓</span><span>${a}</span></div>`).join('');
+  const errores=(r.errores||[]).map(a=>`<div class="fb-item err"><span class="fb-ico">✗</span><span>${a}</span></div>`).join('');
+  const consejos=(r.consejos||[]).map(a=>`<div class="fb-item tip"><span class="fb-ico">💡</span><span>${a}</span></div>`).join('');
+  document.getElementById('fbContent').innerHTML=`<div class="fb-head ${hc}"><span class="fb-emoji">${em}</span><div><p class="fb-htitle">${r.titulo}</p><p class="fb-hsub">Técnica #${currentEx?.id} · ${currentEx?.name}</p></div></div><div class="fb-body"><div style="display:flex;align-items:center;gap:1rem;margin-bottom:1.1rem"><div class="score-circle sc-${sc}">${r.score}%</div><div style="flex:1"><div style="font-weight:700;margin-bottom:.4rem">Dominio de la técnica</div><div style="height:8px;border-radius:4px;background:var(--border)"><div style="height:100%;width:${r.score}%;background:${r.score>=80?'#198754':r.score>=60?'#ffc107':'#dc3545'}"></div></div><div style="font-size:.77rem;margin-top:.4rem">${r.resumen}</div></div></div>${r.aplicacion?`<div class="fb-section"><div class="fb-section-title">🎯 Aplicación</div><div class="fb-item info"><span class="fb-ico">📖</span><span>${r.aplicacion}</span></div></div>`:''}${aciertos?`<div class="fb-section"><div class="fb-section-title">✅ Aciertos</div>${aciertos}</div>`:''}${errores?`<div class="fb-section"><div class="fb-section-title">❌ Errores</div>${errores}</div>`:''}${consejos?`<div class="fb-section"><div class="fb-section-title">💡 Consejos</div>${consejos}</div>`:''}</div>`;
+}
+function renderProfile(){
+  document.getElementById('profAv').textContent=userData.name[0].toUpperCase();
+  document.getElementById('profName').textContent=userData.name;
+  document.getElementById('profMeta').textContent=(userData.level==='principiante'?'Principiante':userData.level==='intermedio'?'Intermedio':'Avanzado')+' · Desde '+userData.joinDate;
+  document.getElementById('pComp').textContent=userData.completed.length;
+  document.getElementById('pPrac').textContent=userData.practiced;
+  const avg=userData.scores.length?Math.round(userData.scores.reduce((a,b)=>a+b,0)/userData.scores.length):null;
+  document.getElementById('pScr').textContent=avg?avg+'%':'—';
+  const ACHS=[{icon:'🎓',name:'Primera técnica',check:d=>d.practiced>=1},{icon:'🏭',name:'10 prácticas',check:d=>d.practiced>=10},{icon:'🏅',name:'25 técnicas',check:d=>d.completed.length>=25},{icon:'🏆',name:'50 técnicas',check:d=>d.completed.length>=50},{icon:'⚙️',name:'Maestro redactor industrial',check:d=>d.completed.length>=100}];
+  document.getElementById('achGrid').innerHTML=ACHS.map(a=>{const u=a.check(userData); return `<div class="ach${u?' unlocked':' locked'}"><span class="ach-icon">${a.icon}</span><div class="ach-name">${a.name}</div></div>`;}).join('');
+  const hl=document.getElementById('histList');
+  if(userData.history?.length){ hl.innerHTML=userData.history.slice(0,15).map(h=>`<div class="hist-row" onclick="startPractice(${h.id})"><div class="ex-num-box" style="background:${h.score>=80?'var(--sage)':h.score>=60?'var(--amber-light)':'#f8d7da'};color:#fff">${String(h.id).padStart(2,'0')}</div><div><div style="font-weight:700">${h.name}</div><div style="font-size:.74rem;color:#aaa">${h.date}</div></div><span style="background:${h.score>=80?'var(--sage)':h.score>=60?'var(--amber)':'#dc3545'};color:#fff;padding:.18rem .55rem;border-radius:9px">${h.score}%</span></div>`).join('');}
+  else hl.innerHTML='<div class="text-muted">Aún sin prácticas.</div>';
+}
+function openEditModal(){ document.getElementById('editName').value=userData.name; document.getElementById('editLevel').value=userData.level; document.getElementById('editModal').style.display='flex'; }
+function saveEdit(){ const name=document.getElementById('editName').value.trim(); if(!name){ toast('Escribe un nombre','e'); return; } userData.name=name; userData.level=document.getElementById('editLevel').value; saveUserData(); updateUI(); closeModal('editModal'); renderProfile(); toast('Perfil actualizado','s'); }
+function confirmReset(){ if(confirm('¿Reiniciar todo el progreso?')){ userData.completed=[]; userData.practiced=0; userData.scores=[]; userData.history=[]; saveUserData(); refreshDash(); renderProfile(); toast('Progreso reiniciado','i'); } }
+function closeModal(id){ document.getElementById(id).style.display='none'; }
+function toast(msg,type='i'){ const box=document.getElementById('toastBox'); const t=document.createElement('div'); const icons={s:'✅',e:'❌',i:'ℹ️'}; t.className=`toast-item ${type}`; t.innerHTML=`<span>${icons[type]||'ℹ️'}</span><span>${msg}</span>`; box.appendChild(t); setTimeout(()=>{ t.style.opacity='0'; t.style.transform='translateY(16px)'; setTimeout(()=>t.remove(),350); },3200); }
+document.addEventListener('DOMContentLoaded',()=>{ const ta=document.getElementById('practiceTA'); if(ta) ta.addEventListener('input',()=>{ const w=ta.value.trim()?ta.value.trim().split(/\s+/).length:0; document.getElementById('wc').textContent=w; }); refreshDash(); renderList(); renderProfile(); });
+</script>
+</body>
+</html>

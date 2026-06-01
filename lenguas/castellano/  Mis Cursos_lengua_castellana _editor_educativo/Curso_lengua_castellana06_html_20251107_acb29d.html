@@ -1,0 +1,993 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Juegos Lingüísticos Educativos</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #4e9af1;
+            --secondary: #1e3c72;
+            --accent: #d9534f;
+            --success: #5cb85c;
+            --warning: #f0ad4e;
+            --light-blue: #cfe2f3;
+            --dark-blue: #2a5298;
+        }
+        
+        body {
+            background-color: #f8f9fa;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        .navbar-brand {
+            font-weight: bold;
+            color: var(--secondary) !important;
+        }
+        
+        .hero-section {
+            background: linear-gradient(135deg, var(--light-blue), var(--primary));
+            color: white;
+            padding: 80px 0;
+            border-radius: 0 0 30px 30px;
+            margin-bottom: 40px;
+        }
+        
+        .game-card {
+            border: none;
+            border-radius: 15px;
+            transition: transform 0.3s, box-shadow 0.3s;
+            margin-bottom: 25px;
+            height: 100%;
+        }
+        
+        .game-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+        
+        .game-card .card-body {
+            padding: 25px;
+        }
+        
+        .game-icon {
+            font-size: 3rem;
+            color: var(--primary);
+            margin-bottom: 15px;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary);
+            border-color: var(--primary);
+        }
+        
+        .btn-primary:hover {
+            background-color: var(--dark-blue);
+            border-color: var(--dark-blue);
+        }
+        
+        .game-area {
+            background-color: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            margin-bottom: 30px;
+        }
+        
+        .game-title {
+            color: var(--secondary);
+            border-bottom: 2px solid var(--light-blue);
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .word-box {
+            display: inline-block;
+            background-color: var(--light-blue);
+            padding: 8px 15px;
+            margin: 5px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        
+        .word-box:hover {
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        .option-btn {
+            width: 100%;
+            margin-bottom: 10px;
+            text-align: left;
+        }
+        
+        .correct {
+            background-color: var(--success) !important;
+            color: white;
+        }
+        
+        .incorrect {
+            background-color: var(--accent) !important;
+            color: white;
+        }
+        
+        .stats-card {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        .stats-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: var(--primary);
+        }
+        
+        .timer {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--accent);
+        }
+        
+        .result-alert {
+            display: none;
+        }
+        
+        footer {
+            background-color: var(--secondary);
+            color: white;
+            padding: 30px 0;
+            margin-top: 50px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
+        <div class="container">
+            <a class="navbar-brand" href="#">
+                <i class="fas fa-language me-2"></i>Juegos Lingüísticos
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#inicio">Inicio</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#juegos">Juegos</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#estadisticas">Estadísticas</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#acerca">Acerca de</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="inicio" class="hero-section">
+        <div class="container text-center">
+            <h1 class="display-4 fw-bold mb-4">Juegos Lingüísticos Educativos</h1>
+            <p class="lead mb-4">Mejora tus habilidades lingüísticas de forma divertida con nuestros juegos interactivos</p>
+            <a href="#juegos" class="btn btn-light btn-lg px-4">Comenzar a Jugar</a>
+        </div>
+    </section>
+
+    <!-- Games Section -->
+    <section id="juegos" class="py-5">
+        <div class="container">
+            <h2 class="text-center mb-5">Nuestros Juegos Educativos</h2>
+            
+            <div class="row">
+                <!-- Crucigrama -->
+                <div class="col-md-6 col-lg-4">
+                    <div class="card game-card">
+                        <div class="card-body text-center">
+                            <div class="game-icon">
+                                <i class="fas fa-puzzle-piece"></i>
+                            </div>
+                            <h5 class="card-title">Crucigrama</h5>
+                            <p class="card-text">Encuentra sinónimos y antónimos para completar el crucigrama.</p>
+                            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#crucigramaModal">Jugar</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Sopa de Letras -->
+                <div class="col-md-6 col-lg-4">
+                    <div class="card game-card">
+                        <div class="card-body text-center">
+                            <div class="game-icon">
+                                <i class="fas fa-search"></i>
+                            </div>
+                            <h5 class="card-title">Sopa de Letras</h5>
+                            <p class="card-text">Encuentra verbos irregulares en la sopa de letras.</p>
+                            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#sopaModal">Jugar</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Verdadero o Falso -->
+                <div class="col-md-6 col-lg-4">
+                    <div class="card game-card">
+                        <div class="card-body text-center">
+                            <div class="game-icon">
+                                <i class="fas fa-check-circle"></i>
+                            </div>
+                            <h5 class="card-title">Verdadero o Falso</h5>
+                            <p class="card-text">Responde preguntas sobre reglas gramaticales.</p>
+                            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#vfModal">Jugar</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Ordenar Oración -->
+                <div class="col-md-6 col-lg-4">
+                    <div class="card game-card">
+                        <div class="card-body text-center">
+                            <div class="game-icon">
+                                <i class="fas fa-sort-alpha-down"></i>
+                            </div>
+                            <h5 class="card-title">Ordenar Oración</h5>
+                            <p class="card-text">Ordena palabras para formar oraciones correctas.</p>
+                            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#ordenarModal">Jugar</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Corregir Error -->
+                <div class="col-md-6 col-lg-4">
+                    <div class="card game-card">
+                        <div class="card-body text-center">
+                            <div class="game-icon">
+                                <i class="fas fa-exclamation-triangle"></i>
+                            </div>
+                            <h5 class="card-title">Corregir Error</h5>
+                            <p class="card-text">Identifica y corrige errores gramaticales en oraciones.</p>
+                            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#errorModal">Jugar</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Completa la Palabra -->
+                <div class="col-md-6 col-lg-4">
+                    <div class="card game-card">
+                        <div class="card-body text-center">
+                            <div class="game-icon">
+                                <i class="fas fa-pen"></i>
+                            </div>
+                            <h5 class="card-title">Completa la Palabra</h5>
+                            <p class="card-text">Selecciona la palabra correcta para completar la oración.</p>
+                            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#completarModal">Jugar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Statistics Section -->
+    <section id="estadisticas" class="py-5 bg-light">
+        <div class="container">
+            <h2 class="text-center mb-5">Tus Estadísticas</h2>
+            
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="stats-card">
+                        <i class="fas fa-star fa-2x mb-3" style="color: var(--warning);"></i>
+                        <h4>Estrellas</h4>
+                        <div class="stats-number" id="stars-count">0</div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="stats-card">
+                        <i class="fas fa-trophy fa-2x mb-3" style="color: var(--primary);"></i>
+                        <h4>Puntos</h4>
+                        <div class="stats-number" id="points-count">0</div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="stats-card">
+                        <i class="fas fa-gamepad fa-2x mb-3" style="color: var(--success);"></i>
+                        <h4>Juegos Completados</h4>
+                        <div class="stats-number" id="games-count">0</div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="stats-card">
+                        <i class="fas fa-medal fa-2x mb-3" style="color: var(--accent);"></i>
+                        <h4>Nivel</h4>
+                        <div class="stats-number" id="level-count">1</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="acerca" class="py-5">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-6">
+                    <h2 class="mb-4">Acerca de los Juegos Lingüísticos</h2>
+                    <p class="lead">Nuestra plataforma educativa está diseñada para ayudar a estudiantes de todas las edades a mejorar sus habilidades lingüísticas de manera divertida e interactiva.</p>
+                    <p>Cada juego está cuidadosamente diseñado para abordar aspectos específicos del lenguaje español, desde vocabulario y gramática hasta ortografía y comprensión.</p>
+                    <p>Los juegos son perfectos para uso en el aula o para practicar en casa, adaptándose a diferentes niveles de habilidad.</p>
+                </div>
+                <div class="col-lg-6">
+                    <img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80" alt="Estudiantes aprendiendo" class="img-fluid rounded shadow">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <h5>Juegos Lingüísticos Educativos</h5>
+                    <p>Una plataforma para aprender español de forma divertida.</p>
+                </div>
+                <div class="col-md-3">
+                    <h5>Enlaces</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="#inicio" class="text-light">Inicio</a></li>
+                        <li><a href="#juegos" class="text-light">Juegos</a></li>
+                        <li><a href="#estadisticas" class="text-light">Estadísticas</a></li>
+                        <li><a href="#acerca" class="text-light">Acerca de</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-3">
+                    <h5>Contacto</h5>
+                    <ul class="list-unstyled">
+                        <li><i class="fas fa-envelope me-2"></i>info@juegoslinguisticos.com</li>
+                        <li><i class="fas fa-phone me-2"></i>+34 123 456 789</li>
+                    </ul>
+                </div>
+            </div>
+            <hr class="my-4 bg-light">
+            <div class="text-center">
+                <p>&copy; 2023 Juegos Lingüísticos Educativos. Todos los derechos reservados.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Game Modals -->
+
+    <!-- Crucigrama Modal -->
+    <div class="modal fade" id="crucigramaModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Crucigrama de Sinónimos y Antónimos</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="game-area">
+                        <h4 class="game-title" id="crucigrama-word">Palabra: <span id="current-word">feliz</span></h4>
+                        <p>Encuentra un <span id="word-type">sinónimo</span> de la palabra mostrada.</p>
+                        <div class="mb-3">
+                            <label for="crucigrama-answer" class="form-label">Tu respuesta:</label>
+                            <input type="text" class="form-control" id="crucigrama-answer">
+                        </div>
+                        <div class="alert alert-info">
+                            Intentos restantes: <span id="crucigrama-attempts">3</span>
+                        </div>
+                        <div class="alert result-alert" id="crucigrama-result"></div>
+                        <div class="d-flex gap-2">
+                            <button class="btn btn-primary" id="check-crucigrama">Comprobar</button>
+                            <button class="btn btn-outline-secondary" id="new-crucigrama">Nueva Palabra</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sopa de Letras Modal -->
+    <div class="modal fade" id="sopaModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Sopa de Letras - Verbos Irregulares</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="game-area">
+                        <h4 class="game-title">Encuentra los verbos irregulares</h4>
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <p class="mb-0">Tiempo restante: <span class="timer" id="sopa-timer">60</span>s</p>
+                            <p class="mb-0">Encontrados: <span id="sopa-found">0</span>/3</p>
+                        </div>
+                        <div class="sopa-container mb-3" id="sopa-container">
+                            <!-- Sopa de letras se generará aquí -->
+                        </div>
+                        <div class="mb-3">
+                            <label for="sopa-answer" class="form-label">Verbo encontrado:</label>
+                            <input type="text" class="form-control" id="sopa-answer">
+                        </div>
+                        <div class="alert result-alert" id="sopa-result"></div>
+                        <div class="d-flex gap-2">
+                            <button class="btn btn-primary" id="check-sopa">Comprobar</button>
+                            <button class="btn btn-outline-secondary" id="new-sopa">Nueva Sopa</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Verdadero o Falso Modal -->
+    <div class="modal fade" id="vfModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Verdadero o Falso - Reglas Gramaticales</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="game-area">
+                        <h4 class="game-title">Indica si la afirmación es verdadera o falsa</h4>
+                        <div class="mb-4">
+                            <p id="vf-question">Los sustantivos propios se escriben con mayúscula.</p>
+                        </div>
+                        <div class="alert alert-info mb-3">
+                            Pregunta <span id="vf-current">1</span> de <span id="vf-total">4</span>
+                        </div>
+                        <div class="d-flex gap-2 mb-3">
+                            <button class="btn btn-success btn-lg flex-fill" id="vf-true">Verdadero</button>
+                            <button class="btn btn-danger btn-lg flex-fill" id="vf-false">Falso</button>
+                        </div>
+                        <div class="alert result-alert" id="vf-result"></div>
+                        <div class="d-flex gap-2">
+                            <button class="btn btn-outline-secondary" id="new-vf">Nuevo Juego</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Ordenar Oración Modal -->
+    <div class="modal fade" id="ordenarModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Ordenar la Oración</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="game-area">
+                        <h4 class="game-title">Ordena las palabras para formar una oración correcta</h4>
+                        <p class="mb-3">Palabras desordenadas:</p>
+                        <div id="ordenar-words" class="mb-4">
+                            <!-- Palabras desordenadas se mostrarán aquí -->
+                        </div>
+                        <p class="mb-2">Tu oración:</p>
+                        <div class="border rounded p-3 mb-3 min-height-50" id="ordenar-sentence">
+                            <span class="text-muted">Arrastra las palabras aquí o haz clic en ellas</span>
+                        </div>
+                        <div class="alert result-alert" id="ordenar-result"></div>
+                        <div class="d-flex gap-2">
+                            <button class="btn btn-primary" id="check-ordenar">Comprobar</button>
+                            <button class="btn btn-outline-secondary" id="new-ordenar">Nueva Oración</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Corregir Error Modal -->
+    <div class="modal fade" id="errorModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Corrige el Error</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="game-area">
+                        <h4 class="game-title">Corrige el error gramatical en la siguiente oración</h4>
+                        <div class="mb-4">
+                            <p class="lead" id="error-sentence">Ellos cantan muy bueno.</p>
+                        </div>
+                        <div class="mb-3">
+                            <label for="error-answer" class="form-label">Escribe la oración corregida:</label>
+                            <input type="text" class="form-control" id="error-answer">
+                        </div>
+                        <div class="alert result-alert" id="error-result"></div>
+                        <div class="d-flex gap-2">
+                            <button class="btn btn-primary" id="check-error">Comprobar</button>
+                            <button class="btn btn-outline-secondary" id="new-error">Nuevo Error</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Completa la Palabra Modal -->
+    <div class="modal fade" id="completarModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Completa la Palabra</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="game-area">
+                        <h4 class="game-title">Selecciona la palabra correcta para completar la oración</h4>
+                        <div class="mb-4">
+                            <p class="lead" id="completar-sentence">El cielo es ____.</p>
+                        </div>
+                        <div id="completar-options" class="mb-3">
+                            <!-- Opciones se generarán aquí -->
+                        </div>
+                        <div class="alert result-alert" id="completar-result"></div>
+                        <div class="d-flex gap-2">
+                            <button class="btn btn-primary" id="check-completar">Comprobar</button>
+                            <button class="btn btn-outline-secondary" id="new-completar">Nuevo Ejercicio</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Base de datos de juegos
+        const gameData = {
+            sinonimos: {
+                "feliz": ["alegre", "contento", "gozoso"],
+                "triste": ["afligido", "apenado", "melancólico"],
+                "rápido": ["veloz", "ágil", "ligero"],
+                "lento": ["pausado", "despacio", "tardío"],
+                "grande": ["enorme", "vasto", "amplio"]
+            },
+            antonimos: {
+                "alto": ["bajo", "chaparro"],
+                "blanco": ["negro", "oscuro"],
+                "amor": ["odio", "desprecio"],
+                "ganar": ["perder", "fracasar"],
+                "comenzar": ["terminar", "finalizar"]
+            },
+            verbosIrregulares: [
+                "ser", "ir", "tener", "hacer", "decir", 
+                "ver", "poder", "querer", "saber", "poner"
+            ],
+            reglasGramaticales: [
+                { pregunta: "Los sustantivos propios se escriben con mayúscula", respuesta: true },
+                { pregunta: "El verbo 'haber' se conjuga como 'ha' en pasado", respuesta: false },
+                { pregunta: "La palabra 'bíceps' es plural", respuesta: true },
+                { pregunta: "Se escribe 'echo' de echar con h", respuesta: false }
+            ],
+            oracionesDesordenadas: [
+                { oracion: "El perro corre en el parque", palabras: ["corre", "en", "El", "parque", "el", "perro"] },
+                { oracion: "Los niños juegan en el jardín", palabras: ["juegan", "Los", "niños", "en", "el", "jardín"] },
+                { oracion: "Mi hermana estudia matemáticas", palabras: ["estudia", "Mi", "hermana", "matemáticas"] }
+            ],
+            erroresGramaticales: [
+                { error: "Ellos cantan muy bueno", correccion: "Ellos cantan muy bien" },
+                { error: "La agua está fría", correccion: "El agua está fría" },
+                { error: "Habían muchas personas", correccion: "Había muchas personas" },
+                { error: "Me se cayó el vaso", correccion: "Se me cayó el vaso" }
+            ],
+            completarPalabra: [
+                { oracion: "El cielo es ____.", opciones: ["azul", "azules", "azulada"], correcta: "azul" },
+                { oracion: "Las flores son muy ____.", opciones: ["bonita", "bonitas", "bonito"], correcta: "bonitas" },
+                { oracion: "Tengo que ____ mi tarea.", opciones: ["hacer", "hace", "haciendo"], correcta: "hacer" },
+                { oracion: "Ella ____ un libro interesante.", opciones: ["leyó", "leído", "leído"], correcta: "leyó" }
+            ]
+        };
+
+        // Variables globales del juego
+        let playerStats = {
+            points: 0,
+            stars: 0,
+            gamesCompleted: 0,
+            level: 1
+        };
+
+        // Cargar estadísticas desde localStorage
+        function loadStats() {
+            const savedStats = localStorage.getItem('linguisticGamesStats');
+            if (savedStats) {
+                playerStats = JSON.parse(savedStats);
+                updateStatsDisplay();
+            }
+        }
+
+        // Guardar estadísticas en localStorage
+        function saveStats() {
+            localStorage.setItem('linguisticGamesStats', JSON.stringify(playerStats));
+            updateStatsDisplay();
+        }
+
+        // Actualizar la visualización de estadísticas
+        function updateStatsDisplay() {
+            document.getElementById('points-count').textContent = playerStats.points;
+            document.getElementById('stars-count').textContent = playerStats.stars;
+            document.getElementById('games-count').textContent = playerStats.gamesCompleted;
+            document.getElementById('level-count').textContent = playerStats.level;
+        }
+
+        // Mostrar resultado
+        function showResult(elementId, message, isSuccess) {
+            const resultElement = document.getElementById(elementId);
+            resultElement.textContent = message;
+            resultElement.className = `alert result-alert ${isSuccess ? 'alert-success' : 'alert-danger'}`;
+            resultElement.style.display = 'block';
+            
+            if (isSuccess) {
+                playerStats.points += 2;
+                playerStats.stars += 1;
+                playerStats.gamesCompleted += 1;
+                
+                // Subir de nivel cada 5 juegos completados
+                if (playerStats.gamesCompleted % 5 === 0) {
+                    playerStats.level += 1;
+                }
+                
+                saveStats();
+            }
+        }
+
+        // Juego: Crucigrama
+        let currentCrucigramaWord = '';
+        let currentCrucigramaType = '';
+        let crucigramaAttempts = 3;
+
+        function newCrucigrama() {
+            const sinonimosKeys = Object.keys(gameData.sinonimos);
+            const antonimosKeys = Object.keys(gameData.antonimos);
+            const allKeys = sinonimosKeys.concat(antonimosKeys);
+            
+            currentCrucigramaWord = allKeys[Math.floor(Math.random() * allKeys.length)];
+            currentCrucigramaType = sinonimosKeys.includes(currentCrucigramaWord) ? 'sinónimo' : 'antónimo';
+            
+            document.getElementById('current-word').textContent = currentCrucigramaWord;
+            document.getElementById('word-type').textContent = currentCrucigramaType;
+            document.getElementById('crucigrama-answer').value = '';
+            document.getElementById('crucigrama-attempts').textContent = '3';
+            document.getElementById('crucigrama-result').style.display = 'none';
+            crucigramaAttempts = 3;
+        }
+
+        function checkCrucigrama() {
+            const answer = document.getElementById('crucigrama-answer').value.trim().toLowerCase();
+            const correctAnswers = currentCrucigramaType === 'sinónimo' 
+                ? gameData.sinonimos[currentCrucigramaWord] 
+                : gameData.antonimos[currentCrucigramaWord];
+            
+            if (correctAnswers.includes(answer)) {
+                showResult('crucigrama-result', `¡Correcto! "${answer}" es un ${currentCrucigramaType} de "${currentCrucigramaWord}".`, true);
+                setTimeout(() => {
+                    document.getElementById('crucigramaModal').querySelector('.btn-close').click();
+                }, 2000);
+            } else {
+                crucigramaAttempts--;
+                document.getElementById('crucigrama-attempts').textContent = crucigramaAttempts;
+                
+                if (crucigramaAttempts <= 0) {
+                    showResult('crucigrama-result', `¡Agotaste tus intentos! Las opciones válidas eran: ${correctAnswers.join(', ')}.`, false);
+                    setTimeout(() => {
+                        newCrucigrama();
+                    }, 3000);
+                } else {
+                    showResult('crucigrama-result', `Incorrecto. Te quedan ${crucigramaAttempts} intentos.`, false);
+                }
+            }
+        }
+
+        // Juego: Sopa de Letras
+        let sopaVerbos = [];
+        let sopaEncontrados = [];
+        let sopaTimer;
+        let sopaTimeLeft = 60;
+
+        function generateSopa() {
+            // Seleccionar 3 verbos aleatorios
+            sopaVerbos = [];
+            const availableVerbs = [...gameData.verbosIrregulares];
+            for (let i = 0; i < 3; i++) {
+                const randomIndex = Math.floor(Math.random() * availableVerbs.length);
+                sopaVerbos.push(availableVerbs[randomIndex]);
+                availableVerbs.splice(randomIndex, 1);
+            }
+            
+            sopaEncontrados = [];
+            document.getElementById('sopa-found').textContent = '0';
+            document.getElementById('sopa-timer').textContent = '60';
+            document.getElementById('sopa-answer').value = '';
+            document.getElementById('sopa-result').style.display = 'none';
+            
+            // Crear tablero de sopa de letras (simplificado para este ejemplo)
+            const sopaContainer = document.getElementById('sopa-container');
+            sopaContainer.innerHTML = '';
+            
+            // Para este ejemplo, solo mostraremos los verbos a encontrar
+            const verbosList = document.createElement('div');
+            verbosList.className = 'alert alert-info';
+            verbosList.innerHTML = `<strong>Verbos a encontrar:</strong> ${sopaVerbos.join(', ')}`;
+            sopaContainer.appendChild(verbosList);
+            
+            // Iniciar temporizador
+            sopaTimeLeft = 60;
+            clearInterval(sopaTimer);
+            sopaTimer = setInterval(() => {
+                sopaTimeLeft--;
+                document.getElementById('sopa-timer').textContent = sopaTimeLeft;
+                
+                if (sopaTimeLeft <= 0) {
+                    clearInterval(sopaTimer);
+                    showResult('sopa-result', '¡Tiempo agotado!', false);
+                }
+            }, 1000);
+        }
+
+        function checkSopa() {
+            const answer = document.getElementById('sopa-answer').value.trim().toLowerCase();
+            
+            if (sopaVerbos.includes(answer) && !sopaEncontrados.includes(answer)) {
+                sopaEncontrados.push(answer);
+                document.getElementById('sopa-found').textContent = sopaEncontrados.length;
+                document.getElementById('sopa-answer').value = '';
+                
+                if (sopaEncontrados.length === sopaVerbos.length) {
+                    clearInterval(sopaTimer);
+                    showResult('sopa-result', `¡Felicidades! Encontraste todos los verbos con ${sopaTimeLeft} segundos restantes.`, true);
+                    setTimeout(() => {
+                        document.getElementById('sopaModal').querySelector('.btn-close').click();
+                    }, 2000);
+                } else {
+                    showResult('sopa-result', `¡Correcto! Has encontrado "${answer}".`, true);
+                }
+            } else if (sopaEncontrados.includes(answer)) {
+                showResult('sopa-result', 'Ya encontraste ese verbo.', false);
+            } else {
+                showResult('sopa-result', 'Verbo no encontrado o incorrecto.', false);
+            }
+        }
+
+        // Juego: Verdadero o Falso
+        let vfPreguntas = [];
+        let vfPreguntaActual = 0;
+        let vfPuntaje = 0;
+
+        function newVf() {
+            vfPreguntas = [...gameData.reglasGramaticales].sort(() => Math.random() - 0.5).slice(0, 4);
+            vfPreguntaActual = 0;
+            vfPuntaje = 0;
+            document.getElementById('vf-result').style.display = 'none';
+            showVfQuestion();
+        }
+
+        function showVfQuestion() {
+            if (vfPreguntaActual < vfPreguntas.length) {
+                document.getElementById('vf-question').textContent = vfPreguntas[vfPreguntaActual].pregunta;
+                document.getElementById('vf-current').textContent = vfPreguntaActual + 1;
+                document.getElementById('vf-total').textContent = vfPreguntas.length;
+            } else {
+                // Juego terminado
+                const porcentaje = Math.round((vfPuntaje / vfPreguntas.length) * 100);
+                showResult('vf-result', `Juego completado! Obtuviste ${vfPuntaje} de ${vfPreguntas.length} correctas (${porcentaje}%).`, true);
+                
+                // Actualizar estadísticas
+                playerStats.points += vfPuntaje * 2;
+                playerStats.stars += Math.floor(vfPuntaje / 2);
+                playerStats.gamesCompleted += 1;
+                saveStats();
+            }
+        }
+
+        function checkVf(respuesta) {
+            const correcta = vfPreguntas[vfPreguntaActual].respuesta;
+            
+            if (respuesta === correcta) {
+                vfPuntaje++;
+                showResult('vf-result', '¡Correcto!', true);
+            } else {
+                showResult('vf-result', 'Incorrecto.', false);
+            }
+            
+            vfPreguntaActual++;
+            setTimeout(() => {
+                document.getElementById('vf-result').style.display = 'none';
+                showVfQuestion();
+            }, 1500);
+        }
+
+        // Juego: Ordenar Oración
+        let ordenarData = {};
+
+        function newOrdenar() {
+            ordenarData = gameData.oracionesDesordenadas[Math.floor(Math.random() * gameData.oracionesDesordenadas.length)];
+            
+            // Mezclar las palabras
+            const palabrasMezcladas = [...ordenarData.palabras].sort(() => Math.random() - 0.5);
+            
+            const wordsContainer = document.getElementById('ordenar-words');
+            wordsContainer.innerHTML = '';
+            
+            palabrasMezcladas.forEach(palabra => {
+                const wordBox = document.createElement('span');
+                wordBox.className = 'word-box';
+                wordBox.textContent = palabra;
+                wordBox.addEventListener('click', () => addWordToSentence(palabra, wordBox));
+                wordsContainer.appendChild(wordBox);
+            });
+            
+            document.getElementById('ordenar-sentence').innerHTML = '<span class="text-muted">Arrastra las palabras aquí o haz clic en ellas</span>';
+            document.getElementById('ordenar-result').style.display = 'none';
+        }
+
+        function addWordToSentence(palabra, element) {
+            const sentenceContainer = document.getElementById('ordenar-sentence');
+            
+            // Eliminar el texto de placeholder si existe
+            if (sentenceContainer.querySelector('.text-muted')) {
+                sentenceContainer.innerHTML = '';
+            }
+            
+            // Agregar la palabra a la oración
+            const wordSpan = document.createElement('span');
+            wordSpan.className = 'word-box me-2';
+            wordSpan.textContent = palabra;
+            sentenceContainer.appendChild(wordSpan);
+            
+            // Deshabilitar la palabra en el contenedor de palabras
+            element.style.display = 'none';
+        }
+
+        function checkOrdenar() {
+            const sentenceContainer = document.getElementById('ordenar-sentence');
+            const words = Array.from(sentenceContainer.querySelectorAll('.word-box'));
+            const userSentence = words.map(word => word.textContent).join(' ');
+            
+            if (userSentence === ordenarData.oracion) {
+                showResult('ordenar-result', '¡Correcto! Has formado la oración correctamente.', true);
+                setTimeout(() => {
+                    document.getElementById('ordenarModal').querySelector('.btn-close').click();
+                }, 2000);
+            } else {
+                showResult('ordenar-result', `Incorrecto. La oración correcta es: "${ordenarData.oracion}".`, false);
+            }
+        }
+
+        // Juego: Corregir Error
+        let errorData = {};
+
+        function newError() {
+            errorData = gameData.erroresGramaticales[Math.floor(Math.random() * gameData.erroresGramaticales.length)];
+            document.getElementById('error-sentence').textContent = errorData.error;
+            document.getElementById('error-answer').value = '';
+            document.getElementById('error-result').style.display = 'none';
+        }
+
+        function checkError() {
+            const answer = document.getElementById('error-answer').value.trim();
+            
+            if (answer === errorData.correccion) {
+                showResult('error-result', '¡Correcto! Has corregido el error adecuadamente.', true);
+                setTimeout(() => {
+                    document.getElementById('errorModal').querySelector('.btn-close').click();
+                }, 2000);
+            } else {
+                showResult('error-result', `Incorrecto. La corrección adecuada es: "${errorData.correccion}".`, false);
+            }
+        }
+
+        // Juego: Completa la Palabra
+        let completarData = {};
+
+        function newCompletar() {
+            completarData = gameData.completarPalabra[Math.floor(Math.random() * gameData.completarPalabra.length)];
+            document.getElementById('completar-sentence').textContent = completarData.oracion;
+            
+            const optionsContainer = document.getElementById('completar-options');
+            optionsContainer.innerHTML = '';
+            
+            // Mezclar las opciones
+            const opcionesMezcladas = [...completarData.opciones].sort(() => Math.random() - 0.5);
+            
+            opcionesMezcladas.forEach(opcion => {
+                const button = document.createElement('button');
+                button.type = 'button';
+                button.className = 'btn btn-outline-primary option-btn';
+                button.textContent = opcion;
+                button.addEventListener('click', () => {
+                    // Remover selección previa
+                    optionsContainer.querySelectorAll('.option-btn').forEach(btn => {
+                        btn.classList.remove('btn-primary');
+                        btn.classList.add('btn-outline-primary');
+                    });
+                    
+                    // Seleccionar esta opción
+                    button.classList.remove('btn-outline-primary');
+                    button.classList.add('btn-primary');
+                });
+                optionsContainer.appendChild(button);
+            });
+            
+            document.getElementById('completar-result').style.display = 'none';
+        }
+
+        function checkCompletar() {
+            const selectedButton = document.querySelector('#completar-options .btn-primary');
+            
+            if (!selectedButton) {
+                showResult('completar-result', 'Por favor, selecciona una opción.', false);
+                return;
+            }
+            
+            const selectedOption = selectedButton.textContent;
+            
+            if (selectedOption === completarData.correcta) {
+                showResult('completar-result', '¡Correcto! Has seleccionado la palabra adecuada.', true);
+                setTimeout(() => {
+                    document.getElementById('completarModal').querySelector('.btn-close').click();
+                }, 2000);
+            } else {
+                showResult('completar-result', `Incorrecto. La palabra correcta es: "${completarData.correcta}".`, false);
+            }
+        }
+
+        // Inicialización
+        document.addEventListener('DOMContentLoaded', function() {
+            // Cargar estadísticas
+            loadStats();
+            
+            // Configurar eventos de los juegos
+            
+            // Crucigrama
+            document.getElementById('check-crucigrama').addEventListener('click', checkCrucigrama);
+            document.getElementById('new-crucigrama').addEventListener('click', newCrucigrama);
+            document.getElementById('crucigramaModal').addEventListener('show.bs.modal', newCrucigrama);
+            
+            // Sopa de letras
+            document.getElementById('check-sopa').addEventListener('click', checkSopa);
+            document.getElementById('new-sopa').addEventListener('click', generateSopa);
+            document.getElementById('sopaModal').addEventListener('show.bs.modal', generateSopa);
+            document.getElementById('sopaModal').addEventListener('hide.bs.modal', function() {
+                clearInterval(sopaTimer);
+            });
+            
+            // Verdadero o falso
+            document.getElementById('vf-true').addEventListener('click', () => checkVf(true));
+            document.getElementById('vf-false').addEventListener('click', () => checkVf(false));
+            document.getElementById('new-vf').addEventListener('click', newVf);
+            document.getElementById('vfModal').addEventListener('show.bs.modal', newVf);
+            
+            // Ordenar oración
+            document.getElementById('check-ordenar').addEventListener('click', checkOrdenar);
+            document.getElementById('new-ordenar').addEventListener('click', newOrdenar);
+            document.getElementById('ordenarModal').addEventListener('show.bs.modal', newOrdenar);
+            
+            // Corregir error
+            document.getElementById('check-error').addEventListener('click', checkError);
+            document.getElementById('new-error').addEventListener('click', newError);
+            document.getElementById('errorModal').addEventListener('show.bs.modal', newError);
+            
+            // Completa la palabra
+            document.getElementById('check-completar').addEventListener('click', checkCompletar);
+            document.getElementById('new-completar').addEventListener('click', newCompletar);
+            document.getElementById('completarModal').addEventListener('show.bs.modal', newCompletar);
+        });
+    </script>
+</body>
+</html>

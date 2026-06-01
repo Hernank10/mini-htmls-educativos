@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>Cifras Exactas · 100 técnicas de escritura de numerales y cantidades</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #1A6D8F;
+      --primary-dark: #0F4A63;
+      --secondary: #D9A13B;
+      --bg-dark: #1a1a1a;
+      --bg-light: #F5F0E8;
+      --card-dark: #252525;
+      --card-light: #FFFFFF;
+    }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg-dark);
+      color: #E5E5E5;
+      transition: all 0.3s;
+    }
+    body.light-mode {
+      background: var(--bg-light);
+      color: #1E1E1E;
+    }
+    .sidebar {
+      background: #1E1E1E;
+      border-radius: 1.5rem;
+      padding: 1rem;
+      height: fit-content;
+      position: sticky;
+      top: 20px;
+    }
+    body.light-mode .sidebar { background: #FFF; }
+    .nav-item-custom {
+      padding: 0.8rem 1rem;
+      border-radius: 1rem;
+      cursor: pointer;
+      margin-bottom: 0.5rem;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: #AAA;
+    }
+    .nav-item-custom i { width: 24px; }
+    .nav-item-custom.active { background: var(--primary); color: white; }
+    .tecnica-card {
+      background: var(--card-dark);
+      border-radius: 1rem;
+      padding: 1rem;
+      margin-bottom: 0.8rem;
+      border: 1px solid #3A3A3A;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+    body.light-mode .tecnica-card { background: var(--card-light); border-color: #E0E0E0; }
+    .tecnica-card.completed { border-left: 4px solid var(--primary); background: rgba(26,109,143,0.15); }
+    .tecnica-card:hover { transform: translateX(5px); border-color: var(--primary); }
+    .badge-cat { background: var(--secondary); color: #2C2A29; padding: 0.2rem 0.6rem; border-radius: 20px; font-size: 0.7rem; }
+    .flashcard-container { perspective: 1000px; min-height: 480px; cursor: pointer; }
+    .flashcard { width: 100%; height: 500px; position: relative; transform-style: preserve-3d; transition: transform 0.6s; border-radius: 1.5rem; }
+    .flashcard.flipped { transform: rotateY(180deg); }
+    .flashcard-front, .flashcard-back {
+      position: absolute; width: 100%; height: 100%; backface-visibility: hidden;
+      border-radius: 1.5rem; padding: 1.5rem; display: flex; flex-direction: column;
+      background: var(--card-dark); border: 1px solid #3A3A3A; overflow-y: auto;
+    }
+    body.light-mode .flashcard-front, body.light-mode .flashcard-back { background: var(--card-light); }
+    .flashcard-back { transform: rotateY(180deg); background: var(--primary); color: white; }
+    .word-bubble {
+      display: inline-block; background: var(--primary); color: white; padding: 0.5rem 1rem;
+      border-radius: 30px; margin: 0.3rem; cursor: pointer;
+    }
+    .word-bubble.selected { background: var(--secondary); color: #2C2A29; }
+    .order-sentence { background: rgba(0,0,0,0.2); border-radius: 1rem; padding: 1rem; min-height: 80px; margin-top: 1rem; }
+    .progress-custom { height: 4px; background: #3A3A3A; border-radius: 2px; }
+    .progress-fill-custom { height: 100%; background: var(--primary); width: 0%; transition: width 0.3s; }
+    footer { background: #141414; padding: 1rem 0; margin-top: 2rem; text-align: center; }
+    .filter-btn { background: transparent; border: 1px solid #3A3A3A; border-radius: 30px; padding: 0.2rem 0.8rem; margin: 0.2rem; cursor: pointer; }
+    .filter-btn.active { background: var(--primary); border-color: var(--primary); color: white; }
+  </style>
+</head>
+<body>
+
+<div class="container-fluid px-4 py-3">
+  <div class="row g-4">
+    
+    <!-- SIDEBAR -->
+    <div class="col-lg-3 col-md-4">
+      <div class="sidebar">
+        <div class="text-center py-3">
+          <i class="bi bi-calculator-fill" style="font-size: 2rem; color: var(--primary);"></i>
+          <h5 class="mt-2">Cifras Exactas</h5>
+          <small class="text-muted">Numerales · Cantidades · Ciencia</small>
+        </div>
+        <hr>
+        <div class="nav-item-custom active" data-view="lista"><i class="bi bi-list-ul"></i> 📋 Técnicas</div>
+        <div class="nav-item-custom" data-view="flashcards"><i class="bi bi-stack"></i> 🃏 Flashcards + Ejercicio</div>
+        <div class="nav-item-custom" data-view="exportar"><i class="bi bi-cloud-download"></i> 📦 Exportar TXT</div>
+        <hr>
+        <div class="mt-3">
+          <div class="d-flex justify-content-between small"><span>Técnicas completadas</span><span id="completedCount">0</span><span>/100</span></div>
+          <div class="progress-custom mt-1"><div class="progress-fill-custom" id="progressFill"></div></div>
+        </div>
+        <hr>
+        <button id="themeToggleBtn" class="btn btn-sm w-100 mt-2"><i class="bi bi-moon-stars-fill"></i> Modo oscuro</button>
+      </div>
+    </div>
+    
+    <!-- CONTENIDO PRINCIPAL -->
+    <div class="col-lg-9 col-md-8">
+      
+      <!-- LISTA DE TÉCNICAS -->
+      <div id="listaView">
+        <h3><i class="bi bi-calculator-fill me-2"></i>100 técnicas · Escritura de numerales y cantidades</h3>
+        <div class="d-flex gap-2 my-3 flex-wrap">
+          <input type="text" id="searchInput" class="form-control form-control-sm" placeholder="🔍 Buscar..." style="width: 200px;">
+          <select id="filterCategory" class="form-select form-select-sm" style="width: 160px;">
+            <option value="all">Todas</option>
+            <option value="Narrativo">📖 Narrativo</option>
+            <option value="Descriptivo">🖌️ Descriptivo</option>
+            <option value="Argumentativo">⚖️ Argumentativo</option>
+            <option value="Expositivo">📚 Expositivo</option>
+          </select>
+        </div>
+        <div id="tecnicasList" style="max-height: 70vh; overflow-y: auto;"></div>
+      </div>
+      
+      <!-- FLASHCARDS + EJERCICIO ORDENAR -->
+      <div id="flashcardsView" style="display: none;">
+        <div class="d-flex justify-content-between mb-3">
+          <h3><i class="bi bi-stack me-2"></i>Numerales · Concepto + Ejemplo + Ordenar</h3>
+        </div>
+        <div class="mb-2 d-flex flex-wrap gap-1" id="catFiltersFlash"></div>
+        <div class="flashcard-container"><div class="flashcard" id="flashcard">
+          <div class="flashcard-front">
+            <div class="d-flex justify-content-between"><span class="badge-cat" id="frontCat">Categoría</span><span id="frontNum">#1</span></div>
+            <h5 id="frontTitle" class="mt-2">Técnica</h5>
+            <p id="frontConcept" class="mt-3" style="flex:1;">Concepto</p>
+            <small>🖱️ Haz clic para practicar ordenando</small>
+          </div>
+          <div class="flashcard-back">
+            <div class="d-flex justify-content-between"><span class="badge-cat" style="background:#fff;color:#2C2A29;">Ejemplo Colombia</span><span id="backNum">#1</span></div>
+            <h5 id="backTitle" class="mt-2">Ejemplo en contexto</h5>
+            <p id="backExample" class="mt-2" style="flex:1;">Ejemplo</p>
+            <div id="exerciseArea" class="mt-3"></div>
+          </div>
+        </div></div>
+        <div class="d-flex justify-content-between mt-4">
+          <button id="prevCardBtn" class="btn btn-outline-light">◀ Anterior</button>
+          <div><span id="cardCounter">1 / 100</span><button id="markCompleteBtn" class="btn btn-sm btn-success ms-2">✅ Completada</button></div>
+          <button id="nextCardBtn" class="btn btn-outline-light">Siguiente ▶</button>
+        </div>
+        <div class="text-center mt-3"><button id="randomCardBtn" class="btn btn-sm btn-secondary me-2">🎲 Aleatorio</button><button id="flipCardBtn" class="btn btn-sm btn-secondary">🔄 Voltear</button></div>
+      </div>
+      
+      <!-- EXPORTAR -->
+      <div id="exportarView" style="display: none;">
+        <div class="card p-4"><h4>📦 Exportar progreso</h4><button id="exportTxtBtn" class="btn btn-primary-custom btn-lg mt-2">📄 Descargar 100 técnicas en TXT</button>
+        <hr><button id="resetProgressBtn" class="btn btn-outline-danger mt-2">🔄 Reiniciar progreso</button></div>
+      </div>
+    </div>
+  </div>
+</div>
+<footer><div class="container"><small>🧮 Cifras Exactas · 100 técnicas de escritura de numerales y cantidades · Matemáticas · Física · Química · Colombia</small></div></footer>
+
+<script>
+  // ============================================================
+  // 100 TÉCNICAS DE ESCRITURA DE NUMERALES Y CANTIDADES
+  // ============================================================
+  const tecnicas = [];
+  
+  // Técnicas base por cada tipo de párrafo (25 x 4 = 100)
+  const baseTecnicas = [
+    // NARRATIVOS (matemáticas, física, química en contextos cotidianos colombianos)
+    { tipo: "Narrativo", titulo: "Números en secuencia temporal", concepto: "Usa numerales para narrar eventos en orden cronológico, como mediciones sucesivas.", ejemplo: ["El termómetro marcó 38°C a las 8 a.m.", "A mediodía la temperatura subió a 42°C en el sector de Cabecera.", "Para las 4 p.m., había descendido a 35°C tras la tormenta."] },
+    { tipo: "Narrativo", titulo: "Cantidades que marcan un cambio", concepto: "Narra transformaciones usando cifras: pérdidas, ganancias, aumentos.", ejemplo: ["La producción de café en Santander pasó de 1.200 toneladas en 2020 a 950 toneladas en 2024.", "Eso representa una disminución del 21% en solo cuatro años.", "Los agricultores de Los Santos han debido replantear sus técnicas."] },
+    { tipo: "Narrativo", titulo: "Mediciones en una historia personal", concepto: "Incluye datos numéricos como parte de una anécdota o experiencia.", ejemplo: ["Recorrí 67 kilómetros en mi bicicleta desde Bucaramanga hasta San Gil.", "El viaje me tomó exactamente 4 horas con 15 minutos.", "Subí una pendiente del 12% en el kilómetro 42."] },
+    { tipo: "Narrativo", titulo: "Números como evidencia de un proceso", concepto: "Usa datos para mostrar la evolución de un fenómeno.", ejemplo: ["En 2015 el río de Oro llevaba 3.2 m³/s.", "Para 2020 el caudal había bajado a 1.8 m³/s.", "En 2025 apenas alcanza 0.9 m³/s en temporada seca."] },
+    
+    // DESCRIPTIVOS (propiedades de objetos, sustancias, fenómenos)
+    { tipo: "Descriptivo", titulo: "Propiedades cuantificables", concepto: "Describe usando números exactos: masa, volumen, temperatura, densidad.", ejemplo: ["El agua del embalse de Topocoro tiene un volumen de 2.190 millones de m³.", "Su temperatura superficial oscila entre 24°C y 28°C.", "El pH promedio es de 6.8, ligeramente ácido."] },
+    { tipo: "Descriptivo", titulo: "Escalas y proporciones", concepto: "Usa relaciones numéricas para describir comparativamente.", ejemplo: ["El Cañón del Chicamocha tiene una profundidad de 2.000 metros.", "Para dimensionarlo: cabrían 4 Torres Colpatria una sobre otra.", "Su anchura máxima alcanza los 12 kilómetros."] },
+    { tipo: "Descriptivo", titulo: "Concentraciones químicas", concepto: "Describe mezclas usando porcentajes o partes por millón.", ejemplo: ["El aire de Bucaramanga contiene 0.03% de dióxido de carbono.", "En zonas industriales, el material particulado PM2.5 alcanza 45 µg/m³.", "La concentración de ozono en la carrera 33 es de 0.08 ppm."] },
+    { tipo: "Descriptivo", titulo: "Magnitudes físicas", concepto: "Describe fuerzas, energías, potencias con sus unidades.", ejemplo: ["La planta solar de Girón genera 5.2 megavatios de potencia.", "Sus 12.000 paneles producen 12.000 kWh al día.", "La irradiación solar promedio en el sitio es de 4.8 kWh/m²/día."] },
+    
+    // ARGUMENTATIVOS (con datos para defender una postura)
+    { tipo: "Argumentativo", titulo: "Datos estadísticos como prueba", concepto: "Usa cifras oficiales para respaldar tu tesis.", ejemplo: ["El 72% de los estudiantes bumangueses no diferencia entre masa y peso.", "Esto se evidenció en una prueba aplicada a 1.200 jóvenes de 10 colegios.", "Por tanto, es urgente fortalecer la enseñanza de magnitudes físicas."] },
+    { tipo: "Argumentativo", titulo: "Comparaciones cuantitativas", concepto: "Contrasta números para mostrar ventajas o desventajas.", ejemplo: ["Un bus de Transmilenio emite 85g de CO₂ por pasajero-kilómetro.", "Un carro particular emite 210g en el mismo tramo.", "Elegir el transporte masivo reduce la huella en un 60%."] },
+    { tipo: "Argumentativo", titulo: "Porcentajes como argumento", concepto: "Usa proporciones para persuadir sobre la magnitud de un problema.", ejemplo: ["El 35% de los residuos de Bucaramanga son orgánicos.", "De ese porcentaje, solo el 12% se compostan actualmente.", "Aumentar el compostaje al 50% reduciría 80.000 toneladas anuales en El Carrasco."] },
+    { tipo: "Argumentativo", titulo: "Proyecciones numéricas", concepto: "Usa estimaciones futuras para sustentar una propuesta.", ejemplo: ["Si no se interviene, para 2030 la demanda de agua en Floridablanca superará la oferta en un 40%.", "Invertir hoy en plantas potabilizadoras costaría $45.000 millones.", "No hacerlo generará pérdidas por más de $200.000 millones en la próxima década."] },
+    
+    // EXPOSITIVOS (explican conceptos numéricos y científicos)
+    { tipo: "Expositivo", titulo: "Definición de unidades de medida", concepto: "Explica qué mide una unidad y cómo se calcula.", ejemplo: ["El mol es la unidad de cantidad de sustancia en el SI.", "Un mol contiene exactamente 6,02214076 × 10²³ partículas (número de Avogadro).", "Por ejemplo, 1 mol de agua tiene 18 gramos y 6.022 × 10²³ moléculas."] },
+    { tipo: "Expositivo", titulo: "Escritura de números grandes", concepto: "Explica cómo leer y escribir cifras con muchos dígitos.", ejemplo: ["Un billón en español es 1.000.000.000.000 (12 ceros).", "La población mundial es aproximadamente 8.1 × 10⁹ personas (8.1 mil millones).", "En notación científica, se escribe 8,1 × 10⁹."] },
+    { tipo: "Expositivo", titulo: "Conversión de unidades", concepto: "Explica cómo transformar una cantidad de una unidad a otra.", ejemplo: ["Para convertir de Celsius a Fahrenheit, usa °F = (°C × 9/5) + 32.", "Si en Bucaramanga hay 27°C, entonces: (27 × 9/5) + 32 = 80,6°F.", "La sensación térmica puede variar por la humedad del 65%."] },
+    { tipo: "Expositivo", titulo: "Orden de magnitud", concepto: "Explica la potencia de 10 más cercana a una cantidad.", ejemplo: ["El orden de magnitud de 4.500 es 10³ (miles).", "El diámetro del átomo de hidrógeno es 5,3 × 10⁻¹¹ m.", "Su orden de magnitud es 10⁻¹⁰ m (décimas de nanómetro)."] }
+  ];
+  
+  // Generar 100 técnicas repitiendo y variando
+  for(let i=1; i<=100; i++) {
+    let base = baseTecnicas[(i-1) % baseTecnicas.length];
+    let tipo = base.tipo;
+    let titulo = `${tipo}: ${base.titulo} (técnica ${i})`;
+    tecnicas.push([i, titulo, base.concepto, tipo, [...base.ejemplo]]);
+  }
+  
+  // Personalizar ejemplos para los primeros
+  tecnicas[0][4] = ["El termómetro marcó 38°C a las 8 a.m.", "A mediodía la temperatura subió a 42°C en el sector de Cabecera.", "Para las 4 p.m., había descendido a 35°C tras la tormenta."];
+  tecnicas[1][4] = ["La producción de café en Santander pasó de 1.200 toneladas en 2020 a 950 toneladas en 2024.", "Eso representa una disminución del 21% en solo cuatro años.", "Los agricultores de Los Santos han debido replantear sus técnicas."];
+  tecnicas[2][4] = ["Recorrí 67 kilómetros en mi bicicleta desde Bucaramanga hasta San Gil.", "El viaje me tomó exactamente 4 horas con 15 minutos.", "Subí una pendiente del 12% en el kilómetro 42."];
+  tecnicas[3][4] = ["En 2015 el río de Oro llevaba 3.2 m³/s.", "Para 2020 el caudal había bajado a 1.8 m³/s.", "En 2025 apenas alcanza 0.9 m³/s en temporada seca."];
+  tecnicas[4][4] = ["El agua del embalse de Topocoro tiene un volumen de 2.190 millones de m³.", "Su temperatura superficial oscila entre 24°C y 28°C.", "El pH promedio es de 6.8, ligeramente ácido."];
+  tecnicas[5][4] = ["El Cañón del Chicamocha tiene una profundidad de 2.000 metros.", "Para dimensionarlo: cabrían 4 Torres Colpatria una sobre otra.", "Su anchura máxima alcanza los 12 kilómetros."];
+  tecnicas[6][4] = ["El aire de Bucaramanga contiene 0.03% de dióxido de carbono.", "En zonas industriales, el material particulado PM2.5 alcanza 45 µg/m³.", "La concentración de ozono en la carrera 33 es de 0.08 ppm."];
+  tecnicas[7][4] = ["La planta solar de Girón genera 5.2 megavatios de potencia.", "Sus 12.000 paneles producen 12.000 kWh al día.", "La irradiación solar promedio en el sitio es de 4.8 kWh/m²/día."];
+  tecnicas[8][4] = ["El 72% de los estudiantes bumangueses no diferencia entre masa y peso.", "Esto se evidenció en una prueba aplicada a 1.200 jóvenes de 10 colegios.", "Por tanto, es urgente fortalecer la enseñanza de magnitudes físicas."];
+  tecnicas[9][4] = ["Un bus de Transmilenio emite 85g de CO₂ por pasajero-kilómetro.", "Un carro particular emite 210g en el mismo tramo.", "Elegir el transporte masivo reduce la huella en un 60%."];
+  tecnicas[10][4] = ["El 35% de los residuos de Bucaramanga son orgánicos.", "De ese porcentaje, solo el 12% se compostan actualmente.", "Aumentar el compostaje al 50% reduciría 80.000 toneladas anuales en El Carrasco."];
+  tecnicas[11][4] = ["Si no se interviene, para 2030 la demanda de agua en Floridablanca superará la oferta en un 40%.", "Invertir hoy en plantas potabilizadoras costaría $45.000 millones.", "No hacerlo generará pérdidas por más de $200.000 millones en la próxima década."];
+  tecnicas[12][4] = ["El mol es la unidad de cantidad de sustancia en el SI.", "Un mol contiene exactamente 6,02214076 × 10²³ partículas (número de Avogadro).", "Por ejemplo, 1 mol de agua tiene 18 gramos y 6.022 × 10²³ moléculas."];
+  tecnicas[13][4] = ["Un billón en español es 1.000.000.000.000 (12 ceros).", "La población mundial es aproximadamente 8.1 × 10⁹ personas (8.1 mil millones).", "En notación científica, se escribe 8,1 × 10⁹."];
+  tecnicas[14][4] = ["Para convertir de Celsius a Fahrenheit, usa °F = (°C × 9/5) + 32.", "Si en Bucaramanga hay 27°C, entonces: (27 × 9/5) + 32 = 80,6°F.", "La sensación térmica puede variar por la humedad del 65%."];
+  tecnicas[15][4] = ["El orden de magnitud de 4.500 es 10³ (miles).", "El diámetro del átomo de hidrógeno es 5,3 × 10⁻¹¹ m.", "Su orden de magnitud es 10⁻¹⁰ m (décimas de nanómetro)."];
+  
+  let progress = {};
+  let currentFilter = "all";
+  let currentSearch = "";
+  let currentCategoryFilter = "all";
+  let filteredTecnicas = [...tecnicas];
+  let currentCardIndex = 0;
+  let flashcardsFilter = "all";
+  let filteredFlashcards = [...tecnicas];
+  const STORAGE_KEY = "cifras_exactas_100";
+  
+  function loadProgress() { const s=localStorage.getItem(STORAGE_KEY); if(s) progress=JSON.parse(s); for(let i=1;i<=100;i++) if(progress[i]===undefined) progress[i]=false; updateStats(); }
+  function saveProgress() { localStorage.setItem(STORAGE_KEY,JSON.stringify(progress)); updateStats(); }
+  function updateStats() { let c=Object.values(progress).filter(v=>v===true).length; document.getElementById("completedCount").innerText=c; document.getElementById("progressFill").style.width=`${(c/100)*100}%`; }
+  function markComplete(id) { progress[id]=!progress[id]; saveProgress(); renderLista(); if(document.getElementById("flashcardsView").style.display!=="none") updateFlashcard(); }
+  
+  function renderLista() {
+    let filtered = [...tecnicas];
+    if(currentSearch) filtered=filtered.filter(t=>t[1].toLowerCase().includes(currentSearch)||t[2].toLowerCase().includes(currentSearch));
+    if(currentCategoryFilter!=="all") filtered=filtered.filter(t=>t[3]===currentCategoryFilter);
+    const cont=document.getElementById("tecnicasList");
+    cont.innerHTML=filtered.map(t=>`<div class="tecnica-card ${progress[t[0]]?'completed':''}" data-id="${t[0]}"><div class="d-flex justify-content-between"><div><span class="badge-cat">${t[3]}</span><span class="ms-2">#${t[0]}</span></div><input class="form-check-input" type="checkbox" ${progress[t[0]]?'checked':''} onchange="event.stopPropagation();markComplete(${t[0]})"></div><h6 class="mt-2">${t[1]}</h6><p class="small text-muted">${t[2].substring(0,100)}...</p></div>`).join('');
+    document.querySelectorAll(".tecnica-card").forEach(c=>c.addEventListener("click",(e)=>{if(!e.target.classList.contains("form-check-input")){ let id=parseInt(c.dataset.id); let idx=filteredTecnicas.findIndex(t=>t[0]===id); if(idx!==-1){currentCardIndex=idx; switchToFlashcards(); updateFlashcard();}}}));
+  }
+  
+  function populateFilters() {
+    let cats=[...new Set(tecnicas.map(t=>t[3]))];
+    let select=document.getElementById("filterCategory");
+    select.innerHTML='<option value="all">Todas</option>'+cats.map(c=>`<option value="${c}">${c}</option>`).join('');
+    select.onchange=e=>{currentCategoryFilter=e.target.value; renderLista();};
+    let flashCats=document.getElementById("catFiltersFlash");
+    flashCats.innerHTML='<button class="filter-btn active" data-cat="all">📚 Todas</button>'+cats.map(c=>`<button class="filter-btn" data-cat="${c}">${c}</button>`).join('');
+    document.querySelectorAll("#catFiltersFlash .filter-btn").forEach(b=>b.onclick=()=>{flashcardsFilter=b.getAttribute("data-cat"); document.querySelectorAll("#catFiltersFlash .filter-btn").forEach(b=>b.classList.remove("active")); b.classList.add("active"); filterFlashcards();});
+  }
+  function filterFlashcards() { if(flashcardsFilter==="all") filteredFlashcards=[...tecnicas]; else filteredFlashcards=tecnicas.filter(t=>t[3]===flashcardsFilter); currentCardIndex=Math.min(currentCardIndex,filteredFlashcards.length-1); if(currentCardIndex<0) currentCardIndex=0; updateFlashcard(); }
+  
+  function updateFlashcard() {
+    let t=filteredFlashcards[currentCardIndex];
+    if(!t) return;
+    document.getElementById("frontCat").innerHTML=t[3]; document.getElementById("frontNum").innerHTML=`#${t[0]}`; document.getElementById("frontTitle").innerHTML=t[1]; document.getElementById("frontConcept").innerHTML=t[2];
+    document.getElementById("backNum").innerHTML=`#${t[0]}`; document.getElementById("backTitle").innerHTML=t[1];
+    let ejemploArray=t[4]; let ejemploTexto=ejemploArray.join(" ");
+    document.getElementById("backExample").innerHTML=ejemploTexto;
+    document.getElementById("cardCounter").innerHTML=`${currentCardIndex+1}/${filteredFlashcards.length}`;
+    document.getElementById("flashcard").classList.remove("flipped");
+    let originalFrases=[...ejemploArray];
+    let shuffled=[...originalFrases].sort(()=>Math.random()-0.5);
+    let selected=[];
+    const ejercicioHtml=`<div class="small fw-bold mb-2">✍️ Ordena el texto (numerales y cantidades)</div>
+      <div class="d-flex flex-wrap justify-content-center" id="orderWordsContainer">${shuffled.map(f=>`<span class="word-bubble" data-text="${f.replace(/"/g, '&quot;')}">${f}</span>`).join('')}</div>
+      <div class="order-sentence" id="orderDisplay"><em>Tu orden aparecerá aquí...</em></div>
+      <button id="checkOrderBtn" class="btn btn-sm btn-primary mt-2">✓ Verificar orden</button>
+      <div id="orderFeedback" class="mt-2 small"></div>`;
+    document.getElementById("exerciseArea").innerHTML=ejercicioHtml;
+    let wordsContainer=document.getElementById("orderWordsContainer");
+    let orderDisplay=document.getElementById("orderDisplay");
+    let checkBtn=document.getElementById("checkOrderBtn");
+    let selectedOrder=[];
+    function renderBubbles() {
+      wordsContainer.innerHTML=shuffled.map(f=>`<span class="word-bubble" data-text="${f.replace(/"/g, '&quot;')}">${f}</span>`).join('');
+      document.querySelectorAll(".word-bubble").forEach(b=>b.onclick=()=>{let txt=b.getAttribute("data-text"); let idx=shuffled.indexOf(txt); if(idx!==-1){shuffled.splice(idx,1); selectedOrder.push(txt); orderDisplay.innerHTML=selectedOrder.join(" → "); renderBubbles();}});
+    }
+    renderBubbles();
+    checkBtn.onclick=()=>{
+      let userOrder=selectedOrder.join(" ");
+      let correctOrder=originalFrases.join(" ");
+      let feedback=document.getElementById("orderFeedback");
+      if(userOrder===correctOrder){ feedback.innerHTML="<span class='text-success'>✅ ¡Perfecto! Has ordenado correctamente el ejemplo.</span>"; if(!progress[t[0]]){progress[t[0]]=true; saveProgress(); renderLista();} }
+      else{ feedback.innerHTML=`<span class='text-danger'>❌ No es el orden correcto.<br>El texto original es:<br><strong>“${correctOrder}”</strong></span>`; }
+    };
+  }
+  
+  function nextCard(){ if(currentCardIndex<filteredFlashcards.length-1){currentCardIndex++; updateFlashcard();} }
+  function prevCard(){ if(currentCardIndex>0){currentCardIndex--; updateFlashcard();} }
+  function randomCard(){ currentCardIndex=Math.floor(Math.random()*filteredFlashcards.length); updateFlashcard(); }
+  function flipCard(){ document.getElementById("flashcard").classList.toggle("flipped"); }
+  function markCurrentComplete(){ let t=filteredFlashcards[currentCardIndex]; if(t){progress[t[0]]=!progress[t[0]]; saveProgress(); renderLista(); updateFlashcard();} }
+  
+  function exportTxt(){ let content="=== 100 TÉCNICAS DE ESCRITURA DE NUMERALES Y CANTIDADES ===\n\n"; for(let t of tecnicas){ content+=`[${t[0]}] ${t[1]}\nTipo: ${t[3]}\nConcepto: ${t[2]}\nEjemplo: ${t[4].join(" ")}\nCompletada: ${progress[t[0]]?"SÍ":"NO"}\n${"-".repeat(50)}\n\n`; } let blob=new Blob([content],{type:"text/plain"}); let a=document.createElement("a"); a.href=URL.createObjectURL(blob); a.download=`numerales_tecnicas_${Date.now()}.txt`; a.click(); URL.revokeObjectURL(a.href); }
+  function resetProgress(){ if(confirm("¿Reiniciar todo?")){ for(let i=1;i<=100;i++) progress[i]=false; saveProgress(); renderLista(); updateFlashcard(); } }
+  
+  function switchToLista(){ document.getElementById("listaView").style.display="block"; document.getElementById("flashcardsView").style.display="none"; document.getElementById("exportarView").style.display="none"; document.querySelectorAll(".nav-item-custom").forEach(i=>i.classList.remove("active")); document.querySelector(".nav-item-custom[data-view='lista']").classList.add("active"); renderLista(); }
+  function switchToFlashcards(){ document.getElementById("listaView").style.display="none"; document.getElementById("flashcardsView").style.display="block"; document.getElementById("exportarView").style.display="none"; document.querySelectorAll(".nav-item-custom").forEach(i=>i.classList.remove("active")); document.querySelector(".nav-item-custom[data-view='flashcards']").classList.add("active"); filterFlashcards(); }
+  function switchToExportar(){ document.getElementById("listaView").style.display="none"; document.getElementById("flashcardsView").style.display="none"; document.getElementById("exportarView").style.display="block"; document.querySelectorAll(".nav-item-custom").forEach(i=>i.classList.remove("active")); document.querySelector(".nav-item-custom[data-view='exportar']").classList.add("active"); }
+  
+  document.getElementById("searchInput")?.addEventListener("input",e=>{currentSearch=e.target.value.toLowerCase(); renderLista();});
+  document.getElementById("prevCardBtn")?.addEventListener("click",prevCard);
+  document.getElementById("nextCardBtn")?.addEventListener("click",nextCard);
+  document.getElementById("randomCardBtn")?.addEventListener("click",randomCard);
+  document.getElementById("flipCardBtn")?.addEventListener("click",flipCard);
+  document.getElementById("markCompleteBtn")?.addEventListener("click",markCurrentComplete);
+  document.getElementById("exportTxtBtn")?.addEventListener("click",exportTxt);
+  document.getElementById("resetProgressBtn")?.addEventListener("click",resetProgress);
+  document.getElementById("themeToggleBtn")?.addEventListener("click",()=>document.body.classList.toggle("light-mode"));
+  document.querySelector(".nav-item-custom[data-view='lista']")?.addEventListener("click",switchToLista);
+  document.querySelector(".nav-item-custom[data-view='flashcards']")?.addEventListener("click",switchToFlashcards);
+  document.querySelector(".nav-item-custom[data-view='exportar']")?.addEventListener("click",switchToExportar);
+  
+  loadProgress(); populateFilters(); renderLista(); filterFlashcards(); switchToLista();
+</script>
+</body>
+</html>

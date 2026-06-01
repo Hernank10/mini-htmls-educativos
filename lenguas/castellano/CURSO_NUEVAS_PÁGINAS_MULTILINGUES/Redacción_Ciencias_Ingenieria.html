@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>EngiWrite · 100 técnicas de redacción para Ingenierías · Colombia</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #1A6D8F;
+      --primary-dark: #0F4A63;
+      --secondary: #D9A13B;
+      --bg-dark: #1a1a1a;
+      --bg-light: #F5F0E8;
+      --card-dark: #252525;
+      --card-light: #FFFFFF;
+    }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg-dark);
+      color: #E5E5E5;
+      transition: all 0.3s;
+    }
+    body.light-mode {
+      background: var(--bg-light);
+      color: #1E1E1E;
+    }
+    .sidebar {
+      background: #1E1E1E;
+      border-radius: 1.5rem;
+      padding: 1rem;
+      height: fit-content;
+      position: sticky;
+      top: 20px;
+    }
+    body.light-mode .sidebar { background: #FFF; }
+    .nav-item-custom {
+      padding: 0.8rem 1rem;
+      border-radius: 1rem;
+      cursor: pointer;
+      margin-bottom: 0.5rem;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: #AAA;
+    }
+    .nav-item-custom i { width: 24px; }
+    .nav-item-custom.active { background: var(--primary); color: white; }
+    .cat-filter {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+    }
+    .filter-btn {
+      background: transparent;
+      border: 1px solid #3A3A3A;
+      border-radius: 30px;
+      padding: 0.2rem 0.8rem;
+      font-size: 0.7rem;
+      cursor: pointer;
+    }
+    .filter-btn.active { background: var(--primary); border-color: var(--primary); color: white; }
+    body.light-mode .filter-btn { border-color: #D0D0D0; }
+    .tecnica-card {
+      background: var(--card-dark);
+      border-radius: 1rem;
+      padding: 1rem;
+      margin-bottom: 0.8rem;
+      border: 1px solid #3A3A3A;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+    body.light-mode .tecnica-card { background: var(--card-light); border-color: #E0E0E0; }
+    .tecnica-card.completed { border-left: 4px solid var(--primary); background: rgba(26,109,143,0.15); }
+    .flashcard-container { perspective: 1000px; min-height: 520px; cursor: pointer; }
+    .flashcard { width: 100%; height: 560px; position: relative; transform-style: preserve-3d; transition: transform 0.6s; border-radius: 1.5rem; }
+    .flashcard.flipped { transform: rotateY(180deg); }
+    .flashcard-front, .flashcard-back {
+      position: absolute; width: 100%; height: 100%; backface-visibility: hidden;
+      border-radius: 1.5rem; padding: 1.5rem; display: flex; flex-direction: column;
+      background: var(--card-dark); border: 1px solid #3A3A3A; overflow-y: auto;
+    }
+    body.light-mode .flashcard-front, body.light-mode .flashcard-back { background: var(--card-light); }
+    .flashcard-back { transform: rotateY(180deg); background: var(--primary); color: white; }
+    .option-btn { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); padding: 0.5rem 1rem; border-radius: 2rem; margin: 0.3rem; cursor: pointer; }
+    .option-btn:hover { background: rgba(255,255,255,0.2); }
+    .option-btn.correct { background: #27ae60; }
+    .option-btn.incorrect { background: #e74c3c; }
+    .progress-custom { height: 4px; background: #3A3A3A; border-radius: 2px; }
+    .progress-fill-custom { height: 100%; background: var(--primary); width: 0%; transition: width 0.3s; }
+    footer { background: #141414; padding: 1rem 0; margin-top: 2rem; text-align: center; }
+    .badge-cat { background: var(--secondary); color: #2C2A29; padding: 0.2rem 0.6rem; border-radius: 20px; font-size: 0.7rem; }
+    .search-box { width: 100%; padding: 0.5rem; border-radius: 2rem; border: 1px solid #3A3A3A; background: var(--card-dark); color: #E5E5E5; }
+    body.light-mode .search-box { background: var(--card-light); color: #1E1E1E; border-color: #D0D0D0; }
+  </style>
+</head>
+<body>
+
+<div class="container-fluid px-4 py-3">
+  <div class="row g-4">
+    
+    <!-- SIDEBAR -->
+    <div class="col-lg-3 col-md-4">
+      <div class="sidebar">
+        <div class="text-center py-3">
+          <i class="bi bi-gear-wide-connected" style="font-size: 2rem; color: var(--primary);"></i>
+          <h5 class="mt-2">EngiWrite</h5>
+          <small class="text-muted">100 técnicas · Ingenierías Colombia</small>
+        </div>
+        <hr>
+        <div class="nav-item-custom active" data-view="lista">
+          <i class="bi bi-list-ul"></i> <span>📋 Técnicas</span>
+        </div>
+        <div class="nav-item-custom" data-view="flashcards">
+          <i class="bi bi-stack"></i> <span>🃏 Flashcards</span>
+        </div>
+        <hr>
+        <div class="mt-3">
+          <div class="d-flex justify-content-between small"><span>Técnicas completadas</span><span id="completedCount">0</span><span>/100</span></div>
+          <div class="progress-custom mt-1"><div class="progress-fill-custom" id="progressFill"></div></div>
+        </div>
+        <hr>
+        <button id="themeToggleBtn" class="btn btn-sm w-100 mt-2"><i class="bi bi-moon-stars-fill"></i> Modo oscuro</button>
+      </div>
+    </div>
+    
+    <!-- CONTENIDO PRINCIPAL -->
+    <div class="col-lg-9 col-md-8">
+      
+      <!-- VISTA LISTA DE TÉCNICAS -->
+      <div id="listaView">
+        <h3><i class="bi bi-gear-wide-connected me-2"></i>100 técnicas de redacción para Ingenierías</h3>
+        <p class="text-muted small">Informes técnicos · Artículos científicos · Normativa · Comunicación profesional · Ética</p>
+        <div class="d-flex gap-2 my-3 flex-wrap">
+          <input type="text" id="searchInput" class="search-box" placeholder="🔍 Buscar técnica..." style="width: 200px;">
+          <select id="catFilter" class="form-select form-select-sm" style="width: 180px;">
+            <option value="all">Todas las categorías</option>
+            <option value="Informes técnicos">📋 Informes técnicos</option>
+            <option value="Artículos científicos">🔬 Artículos científicos</option>
+            <option value="Normativa y especificaciones">📜 Normativa y especificaciones</option>
+            <option value="Comunicación profesional">💬 Comunicación profesional</option>
+            <option value="Ética y buenas prácticas">⚖️ Ética y buenas prácticas</option>
+          </select>
+        </div>
+        <div id="tecnicasList" style="max-height: 70vh; overflow-y: auto;"></div>
+        <div class="d-flex justify-content-center mt-4"><ul class="pagination" id="pagination"></ul></div>
+      </div>
+      
+      <!-- VISTA FLASHCARDS -->
+      <div id="flashcardsView" style="display: none;">
+        <div class="d-flex justify-content-between mb-3">
+          <h3><i class="bi bi-stack me-2"></i>Flashcards · Aprende redacción técnica</h3>
+        </div>
+        <div class="flashcard-container"><div class="flashcard" id="flashcard">
+          <div class="flashcard-front">
+            <div class="d-flex justify-content-between"><span class="badge-cat" id="frontCat">Categoría</span><span id="frontNum">#1</span></div>
+            <h5 id="frontTitle" class="mt-2">Técnica</h5>
+            <p id="frontConcept" class="mt-3" style="flex:1;">Concepto</p>
+            <small>🖱️ Haz clic para ver el ejemplo técnico</small>
+          </div>
+          <div class="flashcard-back">
+            <div class="d-flex justify-content-between"><span class="badge-cat">📖 Ejemplo ingenieril</span><span id="backNum">#1</span></div>
+            <h5 id="backTitle" class="mt-2">Ejemplo práctico</h5>
+            <p id="backExample" class="mt-2" style="flex:1;"></p>
+            <div id="exerciseArea" class="mt-3"></div>
+          </div>
+        </div></div>
+        <div class="d-flex justify-content-between mt-4">
+          <button id="prevCardBtn" class="btn btn-outline-light">◀ Anterior</button>
+          <div><span id="cardCounter">1 / 100</span><button id="markCompleteBtn" class="btn btn-sm btn-success ms-2">✅ Aprendida</button></div>
+          <button id="nextCardBtn" class="btn btn-outline-light">Siguiente ▶</button>
+        </div>
+        <div class="text-center mt-3"><button id="randomCardBtn" class="btn btn-sm btn-secondary me-2">🎲 Aleatorio</button><button id="flipCardBtn" class="btn btn-sm btn-secondary">🔄 Voltear</button></div>
+      </div>
+    </div>
+  </div>
+</div>
+<footer><div class="container"><small>⚙️ EngiWrite · 100 técnicas de redacción para ingenierías · Colombia</small></div></footer>
+
+<script>
+  // ============================================================
+  // 100 TÉCNICAS DE REDACCIÓN PARA INGENIERÍAS (Colombia)
+  // ============================================================
+  
+  const tecnicas = [];
+  
+  const tecnicasPorCategoria = {
+    "Informes técnicos": [
+      [1, "Estructura el informe con IMRyD", "Introducción, Métodos, Resultados y Discusión.", "Ejemplo: '1. Introducción: contexto del proyecto; 2. Métodos: ensayos de laboratorio; 3. Resultados: resistencia del concreto; 4. Discusión: comparación con norma NSR-10'."],
+      [2, "Redacta la metodología con precisión", "Describe equipos, procedimientos y condiciones.", "Ejemplo: 'Se utilizó una prensa universal SHIMADZU de 1000 kN, siguiendo la norma ASTM C39'."],
+      [3, "Incluye tablas y figuras autoexplicativas", "Cada tabla debe entenderse sola.", "Ejemplo: 'Tabla 1: Resultados de resistencia a compresión (MPa) a 7, 14 y 28 días'."],
+      [4, "Usa unidades del Sistema Internacional (SI)", "Emplea metros, kilogramos, segundos, amperios.", "Ejemplo: 'La distancia es 120 m' no '120 metros'; 'La masa es 50 kg'."],
+      [5, "Redacta conclusiones basadas en resultados", "No incluyas información nueva.", "Ejemplo: 'Se concluye que la mezcla con 10% de ceniza volante alcanza 28 MPa'."],
+      [6, "Documenta desviaciones del procedimiento", "Registra cambios o incidentes.", "Ejemplo: 'Durante el ensayo, la máquina tuvo una parada de 5 min; se reinició y continuó'."],
+      [7, "Usa escalas y dimensiones correctamente", "Indica unidades en cada medición.", "Ejemplo: 'La longitud es 12,50 m, el ancho 3,80 m'."],
+      [8, "Incluye incertidumbre en mediciones", "Margen de error en resultados.", "Ejemplo: 'La resistencia es 28,5 ± 0,8 MPa'."],
+      [9, "Escribe el resumen ejecutivo al final", "Resume todo el informe en una página.", "Ejemplo: 'Se realizaron 15 ensayos de compresión; el promedio fue 29,2 MPa...'."],
+      [10, "Cita normas técnicas utilizadas", "ASTM, NTC, ISO, NSR-10.", "Ejemplo: 'Ensayo según NTC 3906 (ASTM C78)'."],
+      [11, "Redacta anexos ordenados", "Planos, tablas de datos, certificados.", "Ejemplo: 'Anexo A: Planos estructurales; Anexo B: Certificados de calibración'."],
+      [12, "Incluye glosario de términos técnicos", "Define siglas y abreviaturas.", "Ejemplo: 'NSR-10: Reglamento Colombiano de Construcción Sismo Resistente'."],
+      [13, "Usa referencias bibliográficas en formato IEEE", "Estilo numérico entre corchetes.", "Ejemplo: '[1] J. Pérez, Diseño estructural, 3ª ed., Bogotá: Unibiblos, 2020'."],
+      [14, "Diferencia resultados de discusión", "Resultados son datos; discusión es interpretación.", "Ejemplo: 'Resultado: 32,5 MPa. Discusión: valor superior al requerido de 28 MPa'."],
+      [15, "Redacta objetivos específicos medibles", "Cada objetivo debe ser verificable.", "Ejemplo: 'Determinar la resistencia a la compresión del concreto a 28 días'."],
+      [16, "Incluye diagrama de flujo del proceso", "Visualiza las etapas del estudio.", "Ejemplo: 'Figura 1: Diagrama de flujo del proceso de mezclado y curado'."],
+      [17, "Documenta condiciones ambientales", "Temperatura, humedad durante ensayos.", "Ejemplo: 'Los ensayos se realizaron a 23±2°C y 50±10% HR'."],
+      [18, "Redacta recomendaciones técnicas", "Sugerencias basadas en hallazgos.", "Ejemplo: 'Se recomienda utilizar vibrador de inmersión para mejorar la compactación'."],
+      [19, "Usa listas numeradas para procedimientos", "Pasos secuenciales claros.", "Ejemplo: '1. Preparar los moldes; 2. Verter el concreto; 3. Compactar; 4. Desmoldar'."],
+      [20, "Incluye fotografías de equipos y ensayos", "Facilita comprensión del montaje.", "Ejemplo: 'Figura 2: Equipo de laboratorio utilizado para ensayos de tracción'."]
+    ],
+    "Artículos científicos": [
+      [21, "Redacta título preciso y atractivo", "Incluye palabras clave y alcance.", "Ejemplo: 'Efecto del tipo de cemento en la resistencia a compresión del concreto de alta resistencia'."],
+      [22, "Usa resumen estructurado", "Objetivo, método, resultados, conclusiones.", "Ejemplo: 'Objetivo: evaluar... Métodos: ensayos de... Resultados: se obtuvo... Conclusión: la mezcla óptima es...'."],
+      [23, "Define palabras clave (keywords)", "Términos de indexación.", "Ejemplo: 'Keywords: Concreto, resistencia, cemento, aditivos, NSR-10'."],
+      [24, "Escribe introducción con pirámide invertida", "De lo general a lo específico.", "Ejemplo: 'El concreto es el material más usado; sin embargo, su resistencia varía; este estudio evalúa el efecto del cemento tipo I'."],
+      [25, "Cita estudios previos relevantes", "Contextualiza el estado del arte.", "Ejemplo: 'Estudios previos (Pérez, 2019; Gómez, 2021) han mostrado que el cemento tipo I alcanza 28 MPa'."],
+      [26, "Formula hipótesis claras", "Plantea relaciones esperadas.", "Ejemplo: 'Hipótesis: El cemento tipo I produce mayor resistencia que el tipo II'."],
+      [27, "Redacta sección de métodos replicable", "Suficiente detalle para reproducir.", "Ejemplo: 'Se prepararon 10 probetas cilíndricas de 15x30 cm; se curaron en agua a 23°C'."],
+      [28, "Usa gráficos de calidad", "Ejes etiquetados, escalas apropiadas.", "Ejemplo: 'Figura 3: Curva tensión-deformación del acero de refuerzo grado 60'."],
+      [29, "Incluye análisis estadístico", "Promedios, desviaciones, p-valores.", "Ejemplo: 'El promedio fue 29,5 MPa (DE 1,2; n=10)'."],
+      [30, "Redacta discusión comparativa", "Contrasta hallazgos con literatura.", "Ejemplo: 'A diferencia de Pérez (2020), encontramos mayor resistencia, posiblemente por el curado húmedo'."],
+      [31, "Plantea limitaciones del estudio", "Reconoce alcances y restricciones.", "Ejemplo: 'Limitación: solo se probó un tipo de agregado (caliza)'."],
+      [32, "Sugiere líneas de investigación futura", "A partir de los hallazgos.", "Ejemplo: 'Se recomienda evaluar el comportamiento bajo cargas cíclicas'."],
+      [33, "Escribe conclusiones concisas", "Respuesta a los objetivos.", "Ejemplo: 'La mezcla con 15% de ceniza volante alcanza la resistencia requerida'."],
+      [34, "Revisa ortografía y gramática", "Evita errores que resten calidad.", "Ejemplo: Usar correctamente 'a través de', 'sino', 'porque'."],
+      [35, "Usa lenguaje técnico preciso", "Terminología estándar de la ingeniería.", "Ejemplo: 'Esfuerzo de fluencia' no 'cuando el material se estira mucho'."],
+      [36, "Escribe en tercera persona", "Objetividad en la redacción científica.", "Ejemplo: 'Se realizó el ensayo' no 'yo realicé el ensayo'."],
+      [37, "Evita adjetivos subjetivos", "Usa datos, no juicios de valor.", "Ejemplo: 'El resultado fue 32,5 MPa' no 'fue excelente'."],
+      [38, "Incluye declaración de conflictos de interés", "Transparencia financiera.", "Ejemplo: 'Los autores declaran no tener conflictos de interés'."],
+      [39, "Redacta agradecimientos institucionales", "Financiación, laboratorios.", "Ejemplo: 'Agradecemos al Laboratorio de Suelos y Pavimentos por facilitar los equipos'."],
+      [40, "Cita correctamente según norma", "IEEE, Vancouver, APA según la revista.", "Ejemplo: '[1] J. Silva, M. Gómez, Ingeniería de materiales, Bogotá: Editorial Uniandes, 2023'."]
+    ],
+    "Normativa y especificaciones": [
+      [41, "Cita la norma NSR-10 correctamente", "Reglamento colombiano de construcción.", "Ejemplo: 'Según NSR-10, título F, la resistencia característica debe ser f'c ≥ 21 MPa'."],
+      [42, "Diferencia norma de ley", "Las normas técnicas no son leyes; las leyes son obligatorias.", "Ejemplo: 'La NTC 150 es una norma voluntaria; el RETIE es obligatorio'."],
+      [43, "Redacta especificaciones técnicas", "Define requisitos de materiales o procesos.", "Ejemplo: 'Especificación: El acero de refuerzo debe cumplir ASTM A615 grado 60'."],
+      [44, "Usa 'debe' para obligatoriedad", "No uses 'es recomendable' si es obligatorio.", "Ejemplo: 'La losa debe tener un espesor mínimo de 0,10 m'."],
+      [45, "Incluye tolerancias permitidas", "Margen de variación aceptable.", "Ejemplo: 'La pendiente debe ser 2% ± 0,3%'."],
+      [46, "Redacta procedimientos de control de calidad", "Pasos para verificar cumplimiento.", "Ejemplo: 'Inspección visual cada 50 m de tubería instalada'."],
+      [47, "Define criterios de aceptación y rechazo", "Condiciones para aprobar materiales.", "Ejemplo: 'Se rechazarán las probetas con resistencia menor a 28 MPa'."],
+      [48, "Referencia a normas internacionales", "ISO, ASTM, IEC, ANSI.", "Ejemplo: 'Según ASTM E8, la velocidad de ensayo debe ser 0,5 mm/min'."],
+      [49, "Documenta cambios de versión", "Control de revisiones de documentos.", "Ejemplo: 'Rev. 02: se actualizan las tolerancias según nueva normativa'."],
+      [50, "Usa redacción imperativa en instructivos", "Verbo al inicio de cada instrucción.", "Ejemplo: 'Conectar el cable rojo al borne positivo'."],
+      [51, "Diferencia 'especificación' de 'procedimiento'", "Qué vs cómo.", "Ejemplo: 'Especificación: cemento tipo I; Procedimiento: cómo medir su densidad'."],
+      [52, "Incluye advertencias de seguridad", "Riesgos asociados.", "Ejemplo: 'ADVERTENCIA: Usar guantes dieléctricos al manipular el panel'."],
+      [53, "Usa pictogramas normalizados", "Símbolos de seguridad complementan el texto.", "Ejemplo: 'Incluir símbolo de riesgo eléctrico junto a la advertencia'."],
+      [54, "Redacta alcance del documento", "Qué cubre y qué no cubre.", "Ejemplo: 'Este documento aplica a edificaciones de hasta 5 pisos; excluye estructuras metálicas'."],
+      [55, "Define términos clave al inicio", "Glosario de siglas.", "Ejemplo: 'RETIE: Reglamento Técnico de Instalaciones Eléctricas'."],
+      [56, "Usa verbos modales consistentemente", "'Debe', 'puede', 'no debe'.", "Ejemplo: 'El contratista debe entregar el informe; el interventor puede solicitar pruebas adicionales'."],
+      [57, "Documenta referencias normativas", "Lista de normas citadas.", "Ejemplo: 'NTC 2050: Código Eléctrico Colombiano; RETILAP: Alumbrado público'."],
+      [58, "Redacta cláusulas de responsabilidad", "Define obligaciones y límites.", "Ejemplo: 'El constructor es responsable de los vicios ocultos por 5 años'."],
+      [59, "Incluye formatos de registro", "Plantillas para documentar cumplimiento.", "Ejemplo: 'Formato F-01: Registro de resistencia de concreto'."],
+      [60, "Actualiza según normativa vigente", "Revisa cambios en leyes y decretos.", "Ejemplo: 'Actualizar según Resolución 1234 de 2024 del MinTrabajo'."]
+    ],
+    "Comunicación profesional": [
+      [61, "Redacta correos con asunto claro", "Resume el contenido.", "Ejemplo: 'Asunto: Solicitud de cotización para suministro de acero'."],
+      [62, "Inicia con saludo y presentación", "Contexto para el receptor.", "Ejemplo: 'Buenos días, soy el ingeniero Pérez del proyecto X'."],
+      [63, "Usa viñetas en correos largos", "Facilita lectura.", "Ejemplo: 'Los puntos a tratar son: • Plazo de entrega • Condiciones de pago'."],
+      [64, "Define destinatarios en copia", "CC y CCO correctamente.", "Ejemplo: 'CC: coordinador de obra; CCO: cliente'."],
+      [65, "Redacta minutas de reunión", "Fecha, asistentes, acuerdos, tareas.", "Ejemplo: 'Acuerdo 1: El contratista entregará los planos el 15 de junio'."],
+      [66, "Usa formato de oficio técnico", "Número, asunto, destinatario, contenido, remitente.", "Ejemplo: 'Oficio 001-2024: respuesta a solicitud de información técnica'."],
+      [67, "Redacta memorandos internos", "Comunicación entre áreas de la empresa.", "Ejemplo: 'Para: Departamento de Producción; Asunto: Cambio en especificaciones'."],
+      [68, "Usa lenguaje asertivo", "Claro, directo pero respetuoso.", "Ejemplo: 'Solicito su revisión del informe adjunto' no 'necesito que revise'."],
+      [69, "Redacta informes de avance", "Logros, pendientes, desviaciones.", "Ejemplo: 'Avance: 60% de instalación eléctrica; desviación: retraso en llegada de materiales'."],
+      [70, "Incluye cronogramas actualizados", "Gráficos de barras o tablas.", "Ejemplo: 'Figura 4: Cronograma actualizado a mayo 2024'."],
+      [71, "Usa tablas de seguimiento de tareas", "Responsable, fecha, estado.", "Ejemplo: 'Tabla de actividades: excavación (responsable: Gómez, fecha: 10/06, estado: en curso)'."],
+      [72, "Redacta actas de obra", "Decisiones tomadas en sitio.", "Ejemplo: 'Acta 001: Se acordó cambiar el tipo de soldadura de E6010 a E7018'."],
+      [73, "Documenta cambios de diseño", "Versión, fecha, motivo.", "Ejemplo: 'Cambio de diseño: se reemplaza viga VP-12 por VP-15 por carga adicional'."],
+      [74, "Usa emails con respuesta solicitada", "Indica plazo de respuesta.", "Ejemplo: 'Agradezco su confirmación antes del 20 de mayo'."],
+      [75, "Redacta informes ejecutivos", "Resumen para directivos.", "Ejemplo: 'Resumen: El proyecto avanza según lo planeado; riesgo bajo de desviación'."],
+      [76, "Define roles en comunicaciones", "Quién hace qué en el proyecto.", "Ejemplo: 'Responsable de calidad: ingeniero López; responsable de seguridad: ingeniera Martínez'."],
+      [77, "Usa alertas con prioridad", "Alta, media, baja.", "Ejemplo: '[ALTA PRIORIDAD] Falla en suministro de energía eléctrica'."],
+      [78, "Documenta llamadas telefónicas importantes", "Registro de acuerdos verbales.", "Ejemplo: 'Llamada del 10/05: el proveedor confirma entrega para el 15/05'."],
+      [79, "Redacta respuestas a PQRS", "Peticiones, quejas, reclamos, sugerencias.", "Ejemplo: 'Respuesta a PQRS 123: se adjunta informe de calidad solicitado'."],
+      [80, "Usa archivos adjuntos con nombres claros", "No 'Documento1.pdf' sino 'Informe_calidad_2024.pdf'."]
+    ],
+    "Ética y buenas prácticas": [
+      [81, "No falsifiques datos ni resultados", "Integridad científica.", "Ejemplo: 'Todos los datos reportados corresponden a mediciones reales; no se eliminaron valores atípicos sin justificación'."],
+      [82, "Declara intereses comerciales", "Si hay patrocinio, dilo.", "Ejemplo: 'Este estudio fue financiado parcialmente por Cementos Argos; los autores no tienen vínculo laboral'."],
+      [83, "Respeta propiedad intelectual", "Cita imágenes, tablas, datos de terceros.", "Ejemplo: 'Figura adaptada de Pérez (2020), con permiso del autor'."],
+      [84, "No copies textos sin citar", "Parafrasea o usa comillas.", "Ejemplo: 'Como señala Gómez: 'la fatiga del material es crítica' (Gómez, 2021, p. 45)'."],
+      [85, "Evita el sesgo en la presentación", "Muestra todos los resultados.", "Ejemplo: 'Se incluyen tanto los resultados favorables como los desfavorables'."],
+      [86, "Redacta con precisión evitando exageraciones", "No uses 'sin precedentes' si no lo es.", "Ejemplo: 'Los resultados son superiores a los obtenidos en condiciones similares'."],
+      [87, "Protege datos personales", "Anonimiza en publicaciones.", "Ejemplo: 'Los participantes se identifican como P1, P2, no nombres reales'."],
+      [88, "Respeta confidencialidad de proyectos", "No divulgues información reservada.", "Ejemplo: 'El diseño del puente es propiedad de la empresa; no puede ser compartido sin autorización'."],
+      [89, "Documenta errores y desviaciones", "No los ocultes.", "Ejemplo: 'Se detectó un error en la calibración del equipo; los datos del lote 3 se descartaron'."],
+      [90, "Reconoce contribuciones de otros", "Coautores, asistentes de laboratorio.", "Ejemplo: 'El técnico Rodríguez colaboró en la preparación de muestras'."],
+      [91, "Evita el plagio de normativas", "Parafrasea o cita textualmente.", "Ejemplo: 'La NSR-10 establece que 'las columnas deben tener refuerzo transversal' (título F)'."],
+      [92, "No uses lenguaje ofensivo", "Mantén respeto profesional.", "Ejemplo: 'El diseño presenta deficiencias' no 'el diseño es malo'."],
+      [93, "Redacta informes balanceados", "No solo lo positivo; menciona problemas.", "Ejemplo: 'Se lograron las metas de tiempo; sin embargo, hubo sobrecosto del 5%'."],
+      [94, "Acepta críticas constructivas", "Revisión por pares.", "Ejemplo: 'Agradecemos los comentarios del revisor; se corrigieron las tablas 2 y 3'."],
+      [95, "Documenta éticamente fallas de seguridad", "Reporta incidentes.", "Ejemplo: 'Se reportó un incidente con la prensa hidráulica; se suspendió el ensayo hasta revisión'."],
+      [96, "Usa lenguaje inclusivo apropiado", "Evita generalizaciones sexistas.", "Ejemplo: 'Los ingenieros e ingenieras asistieron a la reunión' o el colectivo 'el equipo'."],
+      [97, "No uses juicios de valor sin evidencia", "Basado en datos.", "Ejemplo: 'La resistencia es 25% menor que la especificada' no 'la resistencia es inaceptable'."],
+      [98, "Respeta plazos en revisiones", "No retrases procesos.", "Ejemplo: 'La revisión del informe se entregó dentro del término acordado'."],
+      [99, "Distingue entre opinión y hecho técnico", "Separar evidencia de interpretación.", "Ejemplo: 'Hecho: la muestra falló a 25 MPa. Opinión: puede deberse a mala compactación'."],
+      [100, "Promueve buenas prácticas en informes", "Comparte el conocimiento.", "Ejemplo: 'Se anexa guía para la correcta preparación de probetas; puede ser usada por futuros investigadores'."]
+    ]
+  };
+  
+  // Construir array de técnicas
+  for(let categoria in tecnicasPorCategoria) {
+    for(let tec of tecnicasPorCategoria[categoria]) {
+      tecnicas.push({
+        id: tec[0],
+        categoria: categoria,
+        titulo: tec[1],
+        concepto: tec[2],
+        ejemplo: tec[3]
+      });
+    }
+  }
+  
+  tecnicas.sort((a,b) => a.id - b.id);
+  
+  let progress = {};
+  let currentCatFilter = "all";
+  let currentSearch = "";
+  let currentPage = 1;
+  let itemsPerPage = 12;
+  let filteredTecnicas = [...tecnicas];
+  let currentCardIndex = 0;
+  let filteredFlashcards = [...tecnicas];
+  const STORAGE_KEY = "engiwrite_100_tecnicas";
+  
+  function loadProgress() {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if(saved) progress = JSON.parse(saved);
+    for(let i=0; i<tecnicas.length; i++) if(progress[tecnicas[i].id]===undefined) progress[tecnicas[i].id] = false;
+    updateStats();
+  }
+  function saveProgress() { localStorage.setItem(STORAGE_KEY, JSON.stringify(progress)); updateStats(); }
+  function updateStats() {
+    let c = Object.values(progress).filter(v=>v===true).length;
+    document.getElementById("completedCount").innerText = c;
+    document.getElementById("progressFill").style.width = `${(c/100)*100}%`;
+  }
+  function markComplete(id, isComplete) {
+    if(isComplete && !progress[id]) { progress[id] = true; saveProgress(); renderLista(); }
+  }
+  
+  function renderLista() {
+    let filtered = tecnicas.filter(t => {
+      if(currentCatFilter !== "all" && t.categoria !== currentCatFilter) return false;
+      if(currentSearch && !t.titulo.toLowerCase().includes(currentSearch) && !t.concepto.toLowerCase().includes(currentSearch)) return false;
+      return true;
+    });
+    filteredTecnicas = filtered;
+    const totalPages = Math.ceil(filtered.length / itemsPerPage);
+    const start = (currentPage-1) * itemsPerPage;
+    const paginated = filtered.slice(start, start+itemsPerPage);
+    
+    const container = document.getElementById("tecnicasList");
+    container.innerHTML = paginated.map(t => `
+      <div class="tecnica-card ${progress[t.id] ? 'completed' : ''}" data-id="${t.id}">
+        <div class="d-flex justify-content-between">
+          <div><span class="badge-cat">${t.categoria}</span><span class="ms-2">#${t.id}</span></div>
+          <input class="form-check-input" type="checkbox" ${progress[t.id] ? 'checked' : ''} onchange="event.stopPropagation(); markComplete(${t.id}, this.checked)">
+        </div>
+        <h6 class="mt-2">${t.titulo}</h6>
+        <p class="small text-muted">${t.concepto.substring(0, 100)}...</p>
+      </div>
+    `).join('');
+    
+    document.querySelectorAll(".tecnica-card").forEach(card => {
+      card.addEventListener("click", (e) => {
+        if(!e.target.classList.contains("form-check-input")) {
+          let id = parseInt(card.dataset.id);
+          let idx = filteredTecnicas.findIndex(t => t.id === id);
+          if(idx !== -1) { currentCardIndex = idx; switchToFlashcards(); updateFlashcard(); }
+        }
+      });
+    });
+    
+    let pagHtml = ''; for(let i=1;i<=totalPages;i++) pagHtml += `<li class="page-item ${i===currentPage?'active':''}"><a class="page-link" href="#" data-page="${i}">${i}</a></li>`;
+    document.getElementById("pagination").innerHTML = pagHtml;
+    document.querySelectorAll("#pagination .page-link").forEach(l=>l.addEventListener("click", e=>{ e.preventDefault(); currentPage=parseInt(l.dataset.page); renderLista(); }));
+  }
+  
+  function filterFlashcards() {
+    if(currentCatFilter === "all") filteredFlashcards = [...tecnicas];
+    else filteredFlashcards = tecnicas.filter(t => t.categoria === currentCatFilter);
+    currentCardIndex = Math.min(currentCardIndex, filteredFlashcards.length-1);
+    if(currentCardIndex < 0) currentCardIndex = 0;
+    updateFlashcard();
+  }
+  
+  function updateFlashcard() {
+    let t = filteredFlashcards[currentCardIndex];
+    if(!t) return;
+    document.getElementById("frontCat").innerHTML = t.categoria;
+    document.getElementById("frontNum").innerHTML = `#${t.id}`;
+    document.getElementById("frontTitle").innerHTML = t.titulo;
+    document.getElementById("frontConcept").innerHTML = t.concepto;
+    document.getElementById("backNum").innerHTML = `#${t.id}`;
+    document.getElementById("backTitle").innerHTML = t.titulo;
+    document.getElementById("backExample").innerHTML = t.ejemplo;
+    document.getElementById("cardCounter").innerHTML = `${currentCardIndex+1}/${filteredFlashcards.length}`;
+    document.getElementById("flashcard").classList.remove("flipped");
+    
+    let qText = t.concepto.split('.')[0] || t.concepto;
+    let ejercicioHtml = `<div class="small fw-bold mb-2">📝 Ejercicio: ¿Cuál es el objetivo de esta técnica?</div>
+      <div class="d-flex flex-wrap gap-2">
+        <button class="option-btn ejercicio-opt" data-value="${qText}">${qText}</button>
+        <button class="option-btn ejercicio-opt" data-value="Escribir sin estructura">Escribir sin estructura</button>
+        <button class="option-btn ejercicio-opt" data-value="Usar datos falsos">Usar datos falsos</button>
+      </div>
+      <div id="ejercicioFeedback" class="mt-2 small"></div>`;
+    document.getElementById("exerciseArea").innerHTML = ejercicioHtml;
+    
+    document.querySelectorAll(".ejercicio-opt").forEach(btn => {
+      btn.onclick = () => {
+        let isCorrect = btn.getAttribute("data-value") === qText;
+        let fb = document.getElementById("ejercicioFeedback");
+        if(isCorrect) { fb.innerHTML = "<span class='text-success'>✅ Correcto!</span>"; markComplete(t.id, true); renderLista(); }
+        else { fb.innerHTML = "<span class='text-danger'>❌ Incorrecto. Vuelve a leer la técnica.</span>"; }
+        document.querySelectorAll(".ejercicio-opt").forEach(b=>b.disabled=true);
+      };
+    });
+  }
+  
+  function nextCard(){ if(currentCardIndex<filteredFlashcards.length-1){currentCardIndex++; updateFlashcard();} }
+  function prevCard(){ if(currentCardIndex>0){currentCardIndex--; updateFlashcard();} }
+  function randomCard(){ currentCardIndex=Math.floor(Math.random()*filteredFlashcards.length); updateFlashcard(); }
+  function flipCard(){ document.getElementById("flashcard").classList.toggle("flipped"); }
+  function markCurrentComplete(){
+    let t = filteredFlashcards[currentCardIndex];
+    if(t && !progress[t.id]) { progress[t.id]=true; saveProgress(); renderLista(); updateFlashcard(); }
+  }
+  
+  function switchToLista() {
+    document.getElementById("listaView").style.display = "block";
+    document.getElementById("flashcardsView").style.display = "none";
+    document.querySelectorAll(".nav-item-custom").forEach(i=>i.classList.remove("active"));
+    document.querySelector(".nav-item-custom[data-view='lista']").classList.add("active");
+    renderLista();
+  }
+  function switchToFlashcards() {
+    document.getElementById("listaView").style.display = "none";
+    document.getElementById("flashcardsView").style.display = "block";
+    document.querySelectorAll(".nav-item-custom").forEach(i=>i.classList.remove("active"));
+    document.querySelector(".nav-item-custom[data-view='flashcards']").classList.add("active");
+    filterFlashcards();
+  }
+  
+  document.getElementById("prevCardBtn")?.addEventListener("click", prevCard);
+  document.getElementById("nextCardBtn")?.addEventListener("click", nextCard);
+  document.getElementById("randomCardBtn")?.addEventListener("click", randomCard);
+  document.getElementById("flipCardBtn")?.addEventListener("click", flipCard);
+  document.getElementById("markCompleteBtn")?.addEventListener("click", markCurrentComplete);
+  document.getElementById("themeToggleBtn")?.addEventListener("click", () => document.body.classList.toggle("light-mode"));
+  document.querySelector(".nav-item-custom[data-view='lista']")?.addEventListener("click", switchToLista);
+  document.querySelector(".nav-item-custom[data-view='flashcards']")?.addEventListener("click", switchToFlashcards);
+  
+  document.getElementById("searchInput")?.addEventListener("input", e => { currentSearch = e.target.value.toLowerCase(); currentPage = 1; renderLista(); });
+  document.getElementById("catFilter")?.addEventListener("change", e => { currentCatFilter = e.target.value; currentPage = 1; renderLista(); filterFlashcards(); });
+  
+  loadProgress();
+  renderLista();
+  switchToLista();
+</script>
+</body>
+</html>

@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Flexión Nominal y Variación Morfofonológica</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body { background-color: #f8f9fa; }
+    .card { border-radius: 15px; }
+    .navbar { background-color: #004d7a !important; }
+    .navbar-brand, .nav-link, footer { color: #fff !important; }
+    pre { background-color: #f0f0f0; padding: 10px; border-radius: 10px; }
+  </style>
+</head>
+<body>
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg">
+    <div class="container">
+      <a class="navbar-brand" href="#">Aprende Flexión Nominal</a>
+    </div>
+  </nav>
+
+  <div class="container my-5">
+
+    <!-- Teoría -->
+    <div class="card p-4 mb-4 shadow-sm">
+      <h2 class="text-primary">Configuración y Representación en la Flexión Nominal</h2>
+      <p>
+        La flexión nominal en español muestra una interesante variación morfofonológica. 
+        Si observamos palabras como <strong>niño</strong>, <strong>taxi</strong>, <strong>menú</strong>, <strong>piedra</strong> o <strong>clase</strong>,
+        notamos que forman sus plurales de manera regular, pero sus diminutivos o aumentativos pueden variar en forma o acentuación.
+        Estas diferencias reflejan configuraciones léxicas internas que determinan su comportamiento morfológico.
+      </p>
+    </div>
+
+    <!-- Ejemplos -->
+    <div class="card p-4 mb-4 shadow-sm">
+      <h3 class="text-success">Ejemplos de Sustantivos con Flexión</h3>
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>Sustantivo</th>
+            <th>Plural</th>
+            <th>Diminutivo</th>
+            <th>Aumentativo</th>
+          </tr>
+        </thead>
+        <tbody id="tabla-ejemplos"></tbody>
+      </table>
+    </div>
+
+    <!-- Quiz Interactivo -->
+    <div class="card p-4 mb-4 shadow-sm">
+      <h3 class="text-danger">Practica Interactiva</h3>
+      <p>Escribe la forma correcta (plural, diminutivo o aumentativo) de la palabra que aparece.</p>
+      <div id="pregunta" class="fw-bold fs-5 mb-2"></div>
+      <input type="text" id="respuesta" class="form-control w-50 mb-3" placeholder="Tu respuesta">
+      <button id="verificar" class="btn btn-primary">Verificar</button>
+      <p id="resultado" class="mt-3"></p>
+      <p id="vidas" class="text-muted">Vidas: 3</p>
+      <p id="puntaje" class="text-muted">Puntaje: 0</p>
+    </div>
+
+    <!-- Códigos en diferentes lenguajes -->
+    <div class="card p-4 mb-4 shadow-sm">
+      <h3 class="text-info">Versiones en otros lenguajes</h3>
+
+      <h5>Python</h5>
+      <pre><code>python3 programa.py</code></pre>
+
+      <h5>C++</h5>
+      <pre><code>g++ programa.cpp -o programa
+./programa</code></pre>
+
+      <h5>Kotlin</h5>
+      <pre><code>kotlinc programa.kt -include-runtime -d programa.jar
+java -jar programa.jar</code></pre>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="text-center py-3 bg-dark text-light">
+    &copy; 2025 Proyecto Educativo · Desarrollado por Hernán Acevedo y ChatGPT
+  </footer>
+
+  <script>
+    const sustantivos = {
+      "niño": { plural: "niños", diminutivo: "niñito", aumentativo: "niñote" },
+      "taxi": { plural: "taxis", diminutivo: "taxicito", aumentativo: "taxizote" },
+      "menú": { plural: "menús", diminutivo: "menucito", aumentativo: "menuzote" },
+      "piedra": { plural: "piedras", diminutivo: "piedrita", aumentativo: "piedrota" },
+      "clase": { plural: "clases", diminutivo: "clasita", aumentativo: "clasona" },
+      "sofá": { plural: "sofás", diminutivo: "sofacito", aumentativo: "sofazote" },
+      "rubí": { plural: "rubíes", diminutivo: "rubicito", aumentativo: "rubizote" },
+      "café": { plural: "cafés", diminutivo: "cafecito", aumentativo: "cafezote" },
+      "flor": { plural: "flores", diminutivo: "florecita", aumentativo: "florzota" },
+      "amor": { plural: "amores", diminutivo: "amorcito", aumentativo: "amorzote" }
+    };
+
+    // Cargar ejemplos en la tabla
+    const tabla = document.getElementById("tabla-ejemplos");
+    for (let palabra in sustantivos) {
+      const fila = `<tr>
+        <td>${palabra}</td>
+        <td>${sustantivos[palabra].plural}</td>
+        <td>${sustantivos[palabra].diminutivo}</td>
+        <td>${sustantivos[palabra].aumentativo}</td>
+      </tr>`;
+      tabla.innerHTML += fila;
+    }
+
+    // Quiz interactivo
+    let vidas = 3;
+    let puntaje = 0;
+
+    function nuevaPregunta() {
+      const keys = Object.keys(sustantivos);
+      const palabra = keys[Math.floor(Math.random() * keys.length)];
+      const tipo = ["plural", "diminutivo", "aumentativo"][Math.floor(Math.random() * 3)];
+      document.getElementById("pregunta").textContent = `¿Cuál es el ${tipo} de "${palabra}"?`;
+      document.getElementById("pregunta").dataset.palabra = palabra;
+      document.getElementById("pregunta").dataset.tipo = tipo;
+      document.getElementById("respuesta").value = "";
+    }
+
+    document.getElementById("verificar").addEventListener("click", () => {
+      const palabra = document.getElementById("pregunta").dataset.palabra;
+      const tipo = document.getElementById("pregunta").dataset.tipo;
+      const respuesta = document.getElementById("respuesta").value.trim().toLowerCase();
+      const correcta = sustantivos[palabra][tipo].toLowerCase();
+
+      if (respuesta === correcta) {
+        puntaje++;
+        document.getElementById("resultado").textContent = "✅ ¡Correcto!";
+      } else {
+        vidas--;
+        document.getElementById("resultado").textContent = `❌ Incorrecto. Era "${correcta}".`;
+      }
+
+      document.getElementById("vidas").textContent = `Vidas: ${vidas}`;
+      document.getElementById("puntaje").textContent = `Puntaje: ${puntaje}`;
+
+      if (vidas > 0) nuevaPregunta();
+      else document.getElementById("resultado").textContent += " 💀 Fin del juego.";
+    });
+
+    nuevaPregunta();
+  </script>
+</body>
+</html>

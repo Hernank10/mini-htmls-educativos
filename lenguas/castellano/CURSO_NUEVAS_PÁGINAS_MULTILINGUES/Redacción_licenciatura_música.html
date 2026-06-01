@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>Licenciatura en Música · Colombia · 100 conceptos esenciales</title>
+  <style>
+    /* ----- VARIABLES CSS: paleta musical (morado, dorado, negro) ----- */
+    :root {
+      --fondo: #fbf7fc;
+      --texto: #2e2c2e;
+      --morado-musica: #6c3483;
+      --dorado-acento: #d4af37;
+      --gris-partitura: #7f8c8d;
+      --acierto: #27ae60;
+      --fallo: #e67e22;
+      --sombra: rgba(0, 0, 0, 0.08);
+      --card-bg: #ffffff;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: var(--fondo);
+      color: var(--texto);
+      font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
+      line-height: 1.5;
+      padding: 1rem;
+    }
+
+    .app-container {
+      max-width: 1300px;
+      margin: 0 auto;
+      background: var(--card-bg);
+      border-radius: 2rem;
+      box-shadow: 0 12px 28px var(--sombra);
+      overflow: hidden;
+      border: 1px solid #e8ddf0;
+    }
+
+    header {
+      background: #f3ebf8;
+      padding: 1.2rem 2rem;
+      border-bottom: 3px solid var(--morado-musica);
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 1rem;
+    }
+    h1 {
+      font-size: 1.7rem;
+      font-weight: 600;
+      color: #6c3483;
+      letter-spacing: -0.2px;
+    }
+    h1 small {
+      font-size: 0.7rem;
+      font-weight: normal;
+      color: #9b6bb3;
+    }
+
+    nav {
+      display: flex;
+      gap: 0.5rem;
+      background: #e8dfef;
+      padding: 0.6rem 2rem;
+      border-bottom: 1px solid #d6cae3;
+      flex-wrap: wrap;
+    }
+    .nav-btn {
+      background: transparent;
+      border: none;
+      font-size: 0.95rem;
+      padding: 0.5rem 1.2rem;
+      border-radius: 40px;
+      cursor: pointer;
+      font-weight: 500;
+      transition: all 0.2s;
+      color: #6c3483;
+    }
+    .nav-btn.active {
+      background-color: var(--morado-musica);
+      color: white;
+    }
+    .nav-btn:hover:not(.active) {
+      background-color: #d6cae3;
+    }
+
+    .view {
+      display: none;
+      padding: 2rem;
+      animation: fade 0.2s ease;
+    }
+    .active-view { display: block; }
+    @keyframes fade { from { opacity: 0; transform: translateY(5px);} to { opacity: 1; transform: translateY(0);} }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+    .stat-card {
+      background: var(--fondo);
+      border-radius: 1.5rem;
+      padding: 1rem;
+      text-align: center;
+      border-left: 6px solid var(--dorado-acento);
+      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    }
+    .stat-number {
+      font-size: 2.2rem;
+      font-weight: 700;
+      color: var(--morado-musica);
+    }
+    .progress-bar-bg {
+      background: #e2e8f0;
+      border-radius: 40px;
+      height: 12px;
+      overflow: hidden;
+      margin: 0.8rem 0;
+    }
+    .progress-fill {
+      background: var(--morado-musica);
+      width: 0%;
+      height: 100%;
+      transition: width 0.2s;
+    }
+
+    .conceptos-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+      gap: 1rem;
+      max-height: 65vh;
+      overflow-y: auto;
+      padding-right: 0.3rem;
+    }
+    .concepto-item {
+      background: white;
+      border-radius: 1.2rem;
+      padding: 0.8rem 1rem;
+      border-left: 5px solid var(--gris-partitura);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+    .concepto-titulo {
+      font-weight: 700;
+      color: #6c3483;
+    }
+    .concepto-desc {
+      font-size: 0.85rem;
+      color: #5a4a6e;
+      margin-top: 6px;
+      border-top: 1px solid #f0e8f5;
+      padding-top: 6px;
+    }
+    .badge-progreso {
+      font-size: 0.7rem;
+      background: #f3ebf8;
+      border-radius: 20px;
+      padding: 2px 10px;
+      display: inline-block;
+      margin-top: 8px;
+    }
+
+    /* práctica */
+    .flashcard {
+      background: #ffffff;
+      border-radius: 2rem;
+      padding: 1.8rem;
+      text-align: center;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+      border: 1px solid #e8ddf0;
+      max-width: 750px;
+      margin: 0 auto;
+    }
+    .pregunta {
+      font-size: 1.4rem;
+      font-weight: 500;
+      margin-bottom: 1.8rem;
+      background: #f3ebf8;
+      padding: 1.2rem;
+      border-radius: 1.5rem;
+    }
+    .respuesta-oculta {
+      background: #faf6fe;
+      border-radius: 1.2rem;
+      padding: 1rem;
+      margin: 1rem 0;
+      display: none;
+    }
+    .palabras-baraja {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 0.6rem;
+      margin: 1.5rem 0;
+    }
+    .palabra-btn {
+      background: var(--morado-musica);
+      color: white;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 2rem;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: 0.1s;
+    }
+    .orden-actual {
+      background: #fefcf7;
+      border-radius: 1rem;
+      padding: 1rem;
+      min-height: 80px;
+      margin: 1rem 0;
+      text-align: left;
+      border: 1px dashed #d6cae3;
+    }
+    .btn {
+      background: #e2e8f0;
+      border: none;
+      padding: 0.6rem 1.5rem;
+      border-radius: 3rem;
+      font-weight: 600;
+      margin: 0.3rem;
+      cursor: pointer;
+      font-family: inherit;
+    }
+    .btn-primary { background: var(--morado-musica); color: white; }
+    .btn-acierto { background: var(--acierto); color: white; }
+    .btn-fallo { background: var(--fallo); color: white; }
+    .modo-selector { display: flex; justify-content: center; gap: 0.8rem; margin-bottom: 1.5rem; flex-wrap: wrap; }
+    footer {
+      text-align: center;
+      padding: 1rem;
+      font-size: 0.75rem;
+      border-top: 1px solid #e8ddf0;
+      background: #faf7fd;
+    }
+    @media (max-width: 680px) {
+      .view { padding: 1rem; }
+      .pregunta { font-size: 1rem; }
+    }
+  </style>
+</head>
+<body>
+<div class="app-container">
+  <header>
+    <h1>🎵 Licenciatura en Música · Colombia <small>100 conceptos esenciales</small></h1>
+    <div style="font-size:0.8rem;">🎓 Pedagogía · Teoría · Historia · Tecnología · Gestión cultural · Normativa educativa</div>
+  </header>
+  <nav>
+    <button class="nav-btn active" data-view="dashboard">📊 Panel</button>
+    <button class="nav-btn" data-view="listado">📚 Compendio</button>
+    <button class="nav-btn" data-view="practica">🃏 Práctica</button>
+  </nav>
+
+  <section id="dashboard" class="view active-view">
+    <div class="stats-grid" id="statsContainer"></div>
+    <div class="card" style="background:white; border-radius:1.6rem; padding:1.2rem;">
+      <h3>📈 Progreso en conceptos de música y pedagogía</h3>
+      <div class="progress-bar-bg"><div class="progress-fill" id="globalProgressFill"></div></div>
+      <p id="globalProgressText"></p>
+      <button id="resetProgresoBtn" class="btn" style="background:#d6cae3;">🔄 Reiniciar progreso</button>
+    </div>
+  </section>
+
+  <section id="listado" class="view">
+    <input type="text" id="filtroListado" placeholder="🔍 Buscar concepto o definición..." style="width:100%; padding:10px; margin-bottom:15px; border-radius:40px; border:1px solid #d6cae3;">
+    <div id="conceptosListadoContainer" class="conceptos-grid"></div>
+  </section>
+
+  <section id="practica" class="view">
+    <div class="modo-selector">
+      <button id="modoConceptoDef" class="btn btn-primary">📖 Concepto → Definición</button>
+      <button id="modoDefConcepto" class="btn">🔄 Definición → Concepto</button>
+      <button id="modoOrdenar" class="btn">🧩 Ordenar definición</button>
+    </div>
+    <div id="practicaContainer"></div>
+  </section>
+  <footer>Progreso guardado localmente · Ejercicio de ordenar definición · Enfoque en pedagogía musical y contextos colombianos</footer>
+</div>
+
+<script>
+  // --------------------------------------------------------------
+  // 100 CONCEPTOS PARA LICENCIATURA EN MÚSICA (Colombia)
+  // --------------------------------------------------------------
+  const conceptosData = [
+    [1, "Pedagogía musical", "Disciplina que estudia los procesos de enseñanza-aprendizaje de la música en diversos contextos educativos."],
+    [2, "Didáctica de la música", "Conjunto de métodos, técnicas y recursos para facilitar el aprendizaje musical en el aula."],
+    [3, "Currículo musical", "Plan de estudios estructurado que define objetivos, contenidos, metodología y evaluación en educación musical."],
+    [4, "Educación musical inclusiva", "Adaptación de la enseñanza musical para atender a estudiantes con necesidades educativas especiales."],
+    [5, "Aptitud musical", "Capacidad innata o desarrollada para percibir, comprender y producir música."],
+    [6, "Metodología Kodály", "Enfoque pedagógico húngaro basado en el canto, la fononimia y el uso de la música folclórica."],
+    [7, "Método Dalcroze", "Pedagogía que integra el movimiento corporal (euritmia) con la percepción rítmica y la improvisación."],
+    [8, "Método Suzuki", "Enfoque de aprendizaje musical por inmersión desde temprana edad, similar a la adquisición de la lengua materna."],
+    [9, "Método Willems", "Pedagogía que parte de lo natural (rítmico, melódico, armónico) para desarrollar la intuición musical."],
+    [10, "Método Orff", "Pedagogía que combina palabra, cuerpo, canto e instrumentos de percusión para la creación colectiva."],
+    [11, "Notación musical", "Sistema de escritura que representa gráficamente el sonido (altura, duración, intensidad, timbre)."],
+    [12, "Pentagrama", "Conjunto de cinco líneas y cuatro espacios donde se escriben las notas musicales."],
+    [13, "Clave de sol", "Signo que indica la posición de la nota Sol en la segunda línea del pentagrama."],
+    [14, "Figura rítmica", "Representación gráfica de la duración de un sonido (redonda, blanca, negra, corchea, semicorchea)."],
+    [15, "Compás", "División del tiempo musical en partes iguales, indicada por el quebrado al inicio de la obra."],
+    [16, "Escala musical", "Sucesión ordenada de sonidos ascendente o descendente (mayor, menor, cromática)."],
+    [17, "Intervalo", "Distancia en tonos y semitonos entre dos notas musicales."],
+    [18, "Acorde", "Superposición de tres o más sonidos simultáneos (tríadas, tétradas)."],
+    [19, "Armonía", "Estudio de la construcción y encadenamiento de acordes."],
+    [20, "Melodía", "Sucesión de notas con sentido musical, horizontal en el tiempo."],
+    [21, "Ritmo", "Organización del pulso, acentos y duraciones en el tiempo musical."],
+    [22, "Timbre", "Cualidad del sonido que permite distinguir la fuente (instrumento, voz)."],
+    [23, "Dinámica", "Grados de intensidad del sonido (piano, forte, crescendo, decrescendo)."],
+    [24, "Acento", "Énfasis en un pulso o nota específica."],
+    [25, "Síncopa", "Desplazamiento del acento natural a una parte débil del compás."],
+    [26, "Contrapunto", "Arte de combinar dos o más líneas melódicas independientes pero armónicamente coherentes."],
+    [27, "Fuga", "Forma polifónica basada en un tema principal que se imita en distintas voces."],
+    [28, "Sonata", "Composición para uno o dos instrumentos en varios movimientos (forma sonata)."],
+    [29, "Sinfonía", "Obra extensa para orquesta, generalmente en cuatro movimientos."],
+    [30, "Ópera", "Drama musical donde el texto es cantado con acompañamiento orquestal y escenografía."],
+    [31, "Música de cámara", "Composición para un grupo reducido de instrumentos (dúo, trío, cuarteto)."],
+    [32, "Jazz", "Género musical afroamericano caracterizado por la improvisación, el swing y los blue notes."],
+    [33, "Folclor musical colombiano", "Música tradicional de las distintas regiones (cumbia, bambuco, vallenato, joropo, currulao)."],
+    [34, "Música andina colombiana", "Géneros como el bambuco, la guabina, el torbellino y la carranga."],
+    [35, "Música del Pacífico colombiano", "Tradiciones como el currulao, la juga, el abozao, con influencia africana."],
+    [36, "Música de la Orinoquía", "Joropo llanero, con arpa, maracas y cuatro."],
+    [37, "Música del Caribe colombiano", "Cumbia, bullerengue, mapalé, vallenato, porro, chalupa."],
+    [38, "Música de la Amazonía colombiana", "Expresiones de los pueblos indígenas como los tucanos, huitotos y yucunas."],
+    [39, "Vallenato", "Género musical tradicional de la región Caribe, declarado Patrimonio Cultural Inmaterial de la UNESCO."],
+    [40, "Cumbia", "Ritmo y danza emblemáticos de Colombia, con raíces indígenas y africanas."],
+    [41, "Bambuco", "Género andino colombiano de ritmo ternario, considerado el más representativo de la región."],
+    [42, "MAESTRO", "Programa Nacional de Educación Artística del Ministerio de Educación de Colombia."],
+    [43, "Plan Nacional de Música para la Convivencia", "Estrategia del Ministerio de Cultura para fortalecer prácticas musicales en Colombia."],
+    [44, "Red de Escuelas de Música de Medellín", "Modelo de formación musical pública y descentralizada de impacto nacional."],
+    [45, "Batuta", "Fundación Nacional de Orquestas Sinfónicas Juveniles de Colombia."],
+    [46, "Educación musical formal", "Programas de estudio reconocidos por el MEN en colegios y universidades."],
+    [47, "Educación musical no formal", "Clases de música en escuelas privadas, academias o cursos libres."],
+    [48, "Estándares básicos de competencias en música", "Referentes del MEN para la educación artística en básica y media."],
+    [49, "Proyecto educativo institucional (PEI)", "Documento que orienta la identidad y currículo de cada institución educativa."],
+    [50, "Práctica docente en música", "Ejercicio del licenciado en contextos reales de aula, supervisado por tutores."],
+    [51, "Evaluación formativa en música", "Proceso continuo de retroalimentación que favorece el aprendizaje musical."],
+    [52, "Audición activa", "Escucha consciente y analítica de una obra musical para comprender sus elementos."],
+    [53, "Improvisación musical", "Creación espontánea de música en el momento, desarrollando la creatividad."],
+    [54, "Lectura a primera vista", "Capacidad de tocar o cantar una partitura desconocida sin preparación previa."],
+    [55, "Entrenamiento auditivo", "Desarrollo de la habilidad para reconocer intervalos, ritmos y armonías de oído."],
+    [56, "Dictado musical", "Transcripción de lo escuchado a notación musical."],
+    [57, "Solfeo", "Práctica de lectura entonada de notas y ritmos."],
+    [58, "Transposición", "Cambiar una melodía o acorde a otra tonalidad."],
+    [59, "Orquestación", "Arte de asignar líneas musicales a diferentes instrumentos de una orquesta."],
+    [60, "Arreglo musical", "Adaptación de una obra para diferentes instrumentos o voces."],
+    [61, "Dirección coral", "Técnica para dirigir grupos vocales."],
+    [62, "Dirección orquestal", "Arte de guiar a una orquesta mediante gestos y señales."],
+    [63, "Tecnología musical", "Uso de software de edición de audio, notación, secuenciación y producción musical en la enseñanza."],
+    [64, "DAW (Digital Audio Workstation)", "Estación de trabajo de audio digital (Pro Tools, Logic, Cubase, Reaper)."],
+    [65, "MIDI", "Protocolo digital para conectar instrumentos y computadoras."],
+    [66, "Grabación multipista", "Registro por separado de cada instrumento para mezcla posterior."],
+    [67, "Edición de audio", "Manipulación digital de grabaciones (cortar, copiar, pegar, ecualizar)."],
+    [68, "Mezcla musical", "Proceso de balancear niveles, panoramas y efectos de varias pistas."],
+    [69, "Masterización", "Ajuste final de niveles y procesamiento para un lanzamiento comercial."],
+    [70, "Marketing digital para músicos", "Promoción de proyectos musicales mediante SEO, redes, email y anuncios."],
+    [71, "Portafolio musical web", "Sitio que muestra demos, conciertos, currículum y contacto del licenciado."],
+    [72, "YouTube para educadores musicales", "Canal con lecciones, tutoriales y conciertos didácticos."],
+    [73, "Spotify para artistas", "Distribución de música para llegar a audiencia global."],
+    [74, "Redes sociales para músicos", "Instagram, TikTok, Facebook para compartir videos y conectar con estudiantes."],
+    [75, "Derechos de autor en música", "Protección legal de composiciones y grabaciones (Sayco, Acinpro en Colombia)."],
+    [76, "Licenciamiento Creative Commons", "Permite compartir música con atribución bajo ciertas condiciones."],
+    [77, "Emprendimiento cultural", "Gestión de proyectos musicales con sostenibilidad económica y social."],
+    [78, "Giras y conciertos", "Organización de presentaciones en vivo como docente intérprete."],
+    [79, "Festivales musicales en Colombia", "Eventos como el Festival de Música Andina Mono Núñez, el Petronio Álvarez, el Vallenato."],
+    [80, "Orquesta Sinfónica Nacional de Colombia", "Agrupación oficial del Ministerio de Cultura."],
+    [81, "Conservatorios en Colombia", "Instituciones de educación musical profesional (Conservatorio de la Universidad Nacional, EAFIT, etc.)."],
+    [82, "Universidad Pedagógica Nacional", "Pionera en la formación de licenciados en música en Colombia."],
+    [83, "Licenciatura en Música de la Universidad de Antioquia", "Prestigioso programa de formación musical en Medellín."],
+    [84, "Beca de estudios musicales", "Financiación ofrecida por el ICETEX o MinCultura para formación."],
+    [85, "Instrumento principal", "Instrumento en el que el estudiante se especializa y presenta examen de grado."],
+    [86, "Clase de instrumento", "Lección individualizada para desarrollar técnica y repertorio."],
+    [87, "Clase de conjunto", "Ensayo de agrupaciones como coro, orquesta, banda, grupo de cámara."],
+    [88, "Repertorio pedagógico", "Obras musicales seleccionadas según nivel y objetivo de aprendizaje."],
+    [89, "Práctica autónoma", "Tiempo de estudio individual fuera del aula, fundamental para el progreso."],
+    [90, "Estrategias de motivación", "Técnicas para fomentar el interés y la perseverancia en estudiantes."],
+    [91, "Adaptación curricular musical", "Ajuste de contenidos para estudiantes con discapacidad visual, auditiva o motriz."],
+    [92, "Sistema Braille musical", "Código táctil para que personas ciegas lean partituras."],
+    [93, "Tecnología de apoyo", "Software como Sibelius con lectores de pantalla, aplicaciones accesibles."],
+    [94, "Investigación en educación musical", "Estudio sistemático sobre procesos de enseñanza-aprendizaje musical."],
+    [95, "Trabajo de grado", "Monografía, propuesta pedagógica o recital requerido para obtener el título."],
+    [96, "Pasantía profesional", "Práctica en instituciones educativas, orquestas juveniles o programas sociales."],
+    [97, "Código deontológico del docente de música", "Principios éticos que guían la labor del licenciado."],
+    [98, "Resolución 5436 de 2010 (MEN)", "Parámetros para la formación de licenciados en educación artística."],
+    [99, "Competencias del licenciado en música", "Saberes disciplinares, pedagógicos, investigativos y de proyección social."],
+    [100, "Proyección social", "Actividades comunitarias del licenciado (conciertos, talleres gratuitos, procesos de formación en zonas vulnerables)."]
+  ];
+
+  // --------------------- LOCALSTORAGE Y PROGRESO -------------------------
+  let progreso = {};
+  const STORAGE_KEY = "licenciaturaMusicaProgreso";
+
+  function cargarProgreso() {
+    const guardado = localStorage.getItem(STORAGE_KEY);
+    if (guardado) progreso = JSON.parse(guardado);
+    else {
+      progreso = {};
+      for (let i = 1; i <= 100; i++) progreso[i] = { aciertos: 0, fallos: 0 };
+    }
+  }
+  function guardarProgreso() { localStorage.setItem(STORAGE_KEY, JSON.stringify(progreso)); }
+  function registrarResultado(id, acierto) {
+    if (!progreso[id]) progreso[id] = { aciertos: 0, fallos: 0 };
+    if (acierto) progreso[id].aciertos += 1;
+    else progreso[id].fallos += 1;
+    guardarProgreso();
+    renderDashboard();
+    renderListado(document.getElementById("filtroListado")?.value || "");
+    if (window.currentCardId === id && document.getElementById("infoProgresoCard")) {
+      document.getElementById("infoProgresoCard").innerHTML = `📊 Concepto ${id} · ✅ ${progreso[id].aciertos} aciertos · ❌ ${progreso[id].fallos} fallos`;
+    }
+  }
+
+  function renderDashboard() {
+    let totalAciertos = 0, totalFallos = 0, conceptosConAcierto = 0;
+    for (let i = 1; i <= 100; i++) {
+      const p = progreso[i] || { aciertos: 0, fallos: 0 };
+      totalAciertos += p.aciertos;
+      totalFallos += p.fallos;
+      if (p.aciertos > 0) conceptosConAcierto++;
+    }
+    const porcentaje = (conceptosConAcierto / 100) * 100;
+    document.getElementById("globalProgressFill").style.width = `${porcentaje}%`;
+    document.getElementById("globalProgressText").innerHTML = `${conceptosConAcierto} de 100 conceptos con al menos 1 acierto (${Math.round(porcentaje)}%).`;
+    document.getElementById("statsContainer").innerHTML = `
+      <div class="stat-card"><div class="stat-number">${totalAciertos}</div>✅ Aciertos totales</div>
+      <div class="stat-card"><div class="stat-number">${totalFallos}</div>❌ Fallos</div>
+      <div class="stat-card"><div class="stat-number">${conceptosConAcierto}</div>📘 Conceptos dominados</div>
+      <div class="stat-card"><div class="stat-number">${Math.round((totalAciertos/(totalAciertos+totalFallos+0.001))*100)}%</div>📊 Tasa éxito</div>
+    `;
+  }
+
+  function renderListado(filtro = "") {
+    const container = document.getElementById("conceptosListadoContainer");
+    container.innerHTML = "";
+    const filtroLower = filtro.toLowerCase();
+    for (let c of conceptosData) {
+      const [id, nombre, definicion] = c;
+      const prog = progreso[id] || { aciertos: 0, fallos: 0 };
+      if (filtro && !nombre.toLowerCase().includes(filtroLower) && !definicion.toLowerCase().includes(filtroLower)) continue;
+      const div = document.createElement("div");
+      div.className = "concepto-item";
+      div.innerHTML = `<div class="concepto-titulo">${id}. ${nombre}</div>
+                       <div class="concepto-desc">🎵 ${definicion.substring(0, 150)}${definicion.length > 150 ? '…' : ''}</div>
+                       <span class="badge-progreso">✅ ${prog.aciertos} aciertos · ❌ ${prog.fallos} fallos</span>`;
+      container.appendChild(div);
+    }
+  }
+
+  // --------------------- PRÁCTICA: TRES MODOS -------------------------
+  let currentMode = "concepto_def";
+  let cardsArray = [];
+  let currentCardIndex = 0;
+  let currentCardId = null;
+  let currentOrdenarPalabras = [];
+  let shuffledPalabras = [];
+  let selectedOrder = [];
+  let ordenarRespuestaCorrecta = "";
+
+  const practicaDiv = document.getElementById("practicaContainer");
+
+  function construirCards() {
+    cardsArray = conceptosData.map(item => {
+      const [id, concepto, definicion] = item;
+      if (currentMode === "concepto_def") {
+        return { id, pregunta: `🎵 Concepto: ${concepto}`, respuestaCorrecta: definicion };
+      } else if (currentMode === "def_concepto") {
+        let defCorta = definicion.length > 130 ? definicion.substring(0, 127) + "…" : definicion;
+        return { id, pregunta: `✍️ Definición: "${defCorta}"`, respuestaCorrecta: concepto };
+      } else {
+        return { id, concepto, definicion };
+      }
+    });
+  }
+
+  function renderFlashcardNormal() {
+    if (!cardsArray.length) return;
+    const card = cardsArray[currentCardIndex];
+    currentCardId = card.id;
+    practicaDiv.innerHTML = `
+      <div class="flashcard">
+        <div class="pregunta">${card.pregunta}</div>
+        <button id="mostrarRespuestaBtn" class="btn">📖 Mostrar respuesta</button>
+        <div id="respuestaDiv" class="respuesta-oculta"><strong>Respuesta:</strong><br>${card.respuestaCorrecta}</div>
+        <div style="margin-top:1rem;">
+          <button id="aciertoBtn" class="btn btn-acierto" disabled>✅ Acierto</button>
+          <button id="falloBtn" class="btn btn-fallo" disabled>❌ Fallo</button>
+        </div>
+        <button id="siguienteCardBtn" class="btn" style="margin-top:1rem;">⏩ Siguiente</button>
+        <p id="infoProgresoCard" style="margin-top:0.8rem;">📊 ${currentMode === "concepto_def" ? "Concepto" : "Definición"} ${card.id} · ✅ ${progreso[card.id]?.aciertos||0} aciertos · ❌ ${progreso[card.id]?.fallos||0} fallos</p>
+      </div>
+    `;
+    document.getElementById("mostrarRespuestaBtn").onclick = () => {
+      const respDiv = document.getElementById("respuestaDiv");
+      if (respDiv.style.display !== "block") {
+        respDiv.style.display = "block";
+        document.getElementById("aciertoBtn").disabled = false;
+        document.getElementById("falloBtn").disabled = false;
+      }
+    };
+    document.getElementById("aciertoBtn").onclick = () => { registrarResultado(currentCardId, true); siguienteNormal(); };
+    document.getElementById("falloBtn").onclick = () => { registrarResultado(currentCardId, false); siguienteNormal(); };
+    document.getElementById("siguienteCardBtn").onclick = () => siguienteNormal();
+  }
+
+  function siguienteNormal() {
+    currentCardIndex = (currentCardIndex + 1) % cardsArray.length;
+    renderFlashcardNormal();
+  }
+
+  function inicializarOrdenar() {
+    const card = cardsArray[currentCardIndex];
+    currentCardId = card.id;
+    const definicionOriginal = card.definicion;
+    ordenarRespuestaCorrecta = definicionOriginal;
+    let palabras = definicionOriginal.split(/\s+/).filter(p => p.length > 0);
+    currentOrdenarPalabras = [...palabras];
+    shuffledPalabras = [...palabras];
+    for (let i = shuffledPalabras.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [shuffledPalabras[i], shuffledPalabras[j]] = [shuffledPalabras[j], shuffledPalabras[i]];
+    }
+    selectedOrder = [];
+    renderOrdenarUI();
+  }
+
+  function renderOrdenarUI() {
+    const card = cardsArray[currentCardIndex];
+    const prog = progreso[currentCardId] || { aciertos:0, fallos:0 };
+    let palabrasHTML = shuffledPalabras.map(p => `<button class="palabra-btn" data-palabra="${p.replace(/"/g, '&quot;')}">${p}</button>`).join('');
+    let ordenHTML = selectedOrder.map(p => `<span style="background:#f3ebf8; padding:0.2rem 0.6rem; margin:0.2rem; border-radius:1rem;">${p}</span>`).join(' ');
+    if (ordenHTML === "") ordenHTML = "<em>Haz clic en las palabras en el orden correcto...</em>";
+    practicaDiv.innerHTML = `
+      <div class="flashcard">
+        <h3>🧩 Ordena la definición de:</h3>
+        <div class="pregunta" style="background:#f3ebf8;">📌 ${card.concepto}</div>
+        <div class="orden-actual"><strong>Tu orden actual:</strong><br> ${ordenHTML}</div>
+        <div class="palabras-baraja" id="palabrasBaraja">${palabrasHTML}</div>
+        <div>
+          <button id="resetOrdenBtn" class="btn" style="background:#d6cae3;">🔁 Reiniciar orden</button>
+          <button id="comprobarOrdenBtn" class="btn btn-primary">✓ Comprobar</button>
+        </div>
+        <button id="siguienteOrdenBtn" class="btn" style="margin-top:1rem;">⏩ Siguiente concepto</button>
+        <p id="infoProgresoCard">✅ ${prog.aciertos} aciertos · ❌ ${prog.fallos} fallos</p>
+        <div id="feedbackOrden" style="margin-top:0.8rem; font-weight:bold;"></div>
+      </div>
+    `;
+    document.querySelectorAll(".palabra-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const palabra = btn.getAttribute("data-palabra");
+        const idx = shuffledPalabras.indexOf(palabra);
+        if (idx !== -1) {
+          shuffledPalabras.splice(idx, 1);
+          selectedOrder.push(palabra);
+          renderOrdenarUI();
+        }
+      });
+    });
+    document.getElementById("resetOrdenBtn").onclick = () => {
+      shuffledPalabras = [...currentOrdenarPalabras];
+      for (let i = shuffledPalabras.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [shuffledPalabras[i], shuffledPalabras[j]] = [shuffledPalabras[j], shuffledPalabras[i]];
+      }
+      selectedOrder = [];
+      renderOrdenarUI();
+    };
+    document.getElementById("comprobarOrdenBtn").onclick = () => {
+      const ordenUsuario = selectedOrder.join(" ");
+      if (ordenUsuario === ordenarRespuestaCorrecta) {
+        document.getElementById("feedbackOrden").innerHTML = "<span style='color:#27ae60'>✅ ¡Correcto! Definición ordenada correctamente.</span>";
+        registrarResultado(currentCardId, true);
+        setTimeout(() => siguienteOrdenar(), 1200);
+      } else {
+        document.getElementById("feedbackOrden").innerHTML = `<span style='color:#e67e22'>❌ Incorrecto. La definición correcta es: "${ordenarRespuestaCorrecta}"</span>`;
+        registrarResultado(currentCardId, false);
+        setTimeout(() => siguienteOrdenar(), 2000);
+      }
+      document.getElementById("comprobarOrdenBtn").disabled = true;
+      document.querySelectorAll(".palabra-btn").forEach(b => b.style.pointerEvents = "none");
+      setTimeout(() => {
+        if (document.getElementById("comprobarOrdenBtn")) document.getElementById("comprobarOrdenBtn").disabled = false;
+        document.querySelectorAll(".palabra-btn").forEach(b => b.style.pointerEvents = "auto");
+      }, 2000);
+    };
+    document.getElementById("siguienteOrdenBtn").onclick = () => siguienteOrdenar();
+  }
+
+  function siguienteOrdenar() {
+    currentCardIndex = (currentCardIndex + 1) % cardsArray.length;
+    inicializarOrdenar();
+  }
+
+  function setMode(mode) {
+    currentMode = mode;
+    construirCards();
+    currentCardIndex = 0;
+    if (mode === "ordenar") inicializarOrdenar();
+    else renderFlashcardNormal();
+  }
+
+  function initUI() {
+    document.querySelectorAll(".nav-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const viewId = btn.getAttribute("data-view");
+        document.querySelectorAll(".view").forEach(v => v.classList.remove("active-view"));
+        document.getElementById(viewId).classList.add("active-view");
+        document.querySelectorAll(".nav-btn").forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+        if (viewId === "listado") renderListado(document.getElementById("filtroListado").value);
+        if (viewId === "dashboard") renderDashboard();
+        if (viewId === "practica") setMode(currentMode);
+      });
+    });
+    document.getElementById("modoConceptoDef").addEventListener("click", () => {
+      currentMode = "concepto_def";
+      setMode("concepto_def");
+      document.getElementById("modoConceptoDef").classList.add("btn-primary");
+      document.getElementById("modoDefConcepto").classList.remove("btn-primary");
+      document.getElementById("modoOrdenar").classList.remove("btn-primary");
+    });
+    document.getElementById("modoDefConcepto").addEventListener("click", () => {
+      currentMode = "def_concepto";
+      setMode("def_concepto");
+      document.getElementById("modoDefConcepto").classList.add("btn-primary");
+      document.getElementById("modoConceptoDef").classList.remove("btn-primary");
+      document.getElementById("modoOrdenar").classList.remove("btn-primary");
+    });
+    document.getElementById("modoOrdenar").addEventListener("click", () => {
+      currentMode = "ordenar";
+      setMode("ordenar");
+      document.getElementById("modoOrdenar").classList.add("btn-primary");
+      document.getElementById("modoConceptoDef").classList.remove("btn-primary");
+      document.getElementById("modoDefConcepto").classList.remove("btn-primary");
+    });
+    document.getElementById("resetProgresoBtn").addEventListener("click", () => {
+      if (confirm("¿Reiniciar todo el progreso? Se perderán aciertos y fallos.")) {
+        for (let i = 1; i <= 100; i++) progreso[i] = { aciertos: 0, fallos: 0 };
+        guardarProgreso();
+        renderDashboard();
+        renderListado(document.getElementById("filtroListado")?.value || "");
+        if (currentMode === "ordenar") inicializarOrdenar();
+        else if (currentMode !== "ordenar") renderFlashcardNormal();
+      }
+    });
+    document.getElementById("filtroListado").addEventListener("input", (e) => renderListado(e.target.value));
+  }
+
+  window.addEventListener("DOMContentLoaded", () => {
+    cargarProgreso();
+    construirCards();
+    setMode("concepto_def");
+    renderDashboard();
+    renderListado();
+    initUI();
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,903 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Práctica de Idiomas - Herramienta Educativa</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #3498db;
+            --secondary-color: #2ecc71;
+            --accent-color: #e74c3c;
+            --light-color: #f8f9fa;
+            --dark-color: #343a40;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f7fa;
+            color: #333;
+            transition: background-color 0.3s;
+        }
+        
+        .dark-mode {
+            background-color: #1a1a2e;
+            color: #e6e6e6;
+        }
+        
+        .navbar-brand {
+            font-weight: 700;
+        }
+        
+        .hero-section {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 4rem 0;
+            border-radius: 0 0 30px 30px;
+            margin-bottom: 2rem;
+        }
+        
+        .card {
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+            margin-bottom: 1.5rem;
+            border: none;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+        }
+        
+        .card-header {
+            background-color: var(--primary-color);
+            color: white;
+            border-radius: 15px 15px 0 0 !important;
+            font-weight: 600;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary-color);
+            border: none;
+            border-radius: 25px;
+            padding: 10px 25px;
+        }
+        
+        .btn-success {
+            background-color: var(--secondary-color);
+            border: none;
+            border-radius: 25px;
+            padding: 10px 25px;
+        }
+        
+        .btn-danger {
+            background-color: var(--accent-color);
+            border: none;
+            border-radius: 25px;
+            padding: 10px 25px;
+        }
+        
+        .feature-icon {
+            font-size: 2.5rem;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
+        
+        .exercise-container {
+            background-color: white;
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            margin-bottom: 2rem;
+        }
+        
+        .dark-mode .exercise-container {
+            background-color: #16213e;
+        }
+        
+        .progress {
+            height: 10px;
+            border-radius: 5px;
+            margin-bottom: 1.5rem;
+        }
+        
+        footer {
+            background-color: var(--dark-color);
+            color: white;
+            padding: 2rem 0;
+            margin-top: 3rem;
+        }
+        
+        .tab-content {
+            padding: 1.5rem 0;
+        }
+        
+        .nav-tabs .nav-link.active {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 10px 10px 0 0;
+        }
+        
+        .nav-tabs .nav-link {
+            color: var(--dark-color);
+            border-radius: 10px 10px 0 0;
+        }
+        
+        .dark-mode .nav-tabs .nav-link {
+            color: #e6e6e6;
+        }
+        
+        .word-item {
+            padding: 10px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .dark-mode .word-item {
+            border-bottom: 1px solid #444;
+        }
+        
+        .result-message {
+            padding: 10px;
+            border-radius: 10px;
+            margin-top: 15px;
+            text-align: center;
+            font-weight: 600;
+        }
+        
+        .correct {
+            background-color: rgba(46, 204, 113, 0.2);
+            color: var(--secondary-color);
+        }
+        
+        .incorrect {
+            background-color: rgba(231, 76, 60, 0.2);
+            color: var(--accent-color);
+        }
+        
+        .stat-item {
+            text-align: center;
+            padding: 15px;
+            border-radius: 10px;
+            background-color: rgba(52, 152, 219, 0.1);
+            margin-bottom: 15px;
+        }
+        
+        .dark-mode .stat-item {
+            background-color: rgba(52, 152, 219, 0.2);
+        }
+        
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand" href="#"><i class="fas fa-language me-2"></i>Práctica de Idiomas</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#"><i class="fas fa-home me-1"></i> Inicio</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#diccionario"><i class="fas fa-book me-1"></i> Diccionario</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#ejercicios"><i class="fas fa-pencil-alt me-1"></i> Ejercicios</a>
+                    </li>
+                    <li class="nav-item">
+                        <button class="btn btn-outline-light ms-2" id="darkModeToggle">
+                            <i class="fas fa-moon"></i>
+                        </button>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="container text-center">
+            <h1 class="display-4 fw-bold">Mejora tu vocabulario en idiomas</h1>
+            <p class="lead">Una herramienta interactiva para aprender y practicar palabras en diferentes idiomas</p>
+            <div class="row mt-5">
+                <div class="col-md-4">
+                    <div class="feature-icon">
+                        <i class="fas fa-book-open"></i>
+                    </div>
+                    <h4>Diccionario Personal</h4>
+                    <p>Agrega y organiza tus propias palabras y significados</p>
+                </div>
+                <div class="col-md-4">
+                    <div class="feature-icon">
+                        <i class="fas fa-gamepad"></i>
+                    </div>
+                    <h4>Ejercicios Interactivos</h4>
+                    <p>Practica con diferentes tipos de ejercicios y desafíos</p>
+                </div>
+                <div class="col-md-4">
+                    <div class="feature-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <h4>Seguimiento de Progreso</h4>
+                    <p>Mide tu avance y mejora continuamente</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <div class="container">
+        <!-- Stats Section -->
+        <div class="row mb-4">
+            <div class="col-md-3">
+                <div class="stat-item">
+                    <div class="stat-number" id="totalWords">0</div>
+                    <div>Palabras en diccionario</div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stat-item">
+                    <div class="stat-number" id="exercisesCompleted">0</div>
+                    <div>Ejercicios completados</div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stat-item">
+                    <div class="stat-number" id="correctAnswers">0</div>
+                    <div>Respuestas correctas</div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stat-item">
+                    <div class="stat-number" id="successRate">0%</div>
+                    <div>Tasa de éxito</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tabs Section -->
+        <ul class="nav nav-tabs" id="myTab" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="diccionario-tab" data-bs-toggle="tab" data-bs-target="#diccionario" type="button" role="tab">Diccionario</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="ejercicios-tab" data-bs-toggle="tab" data-bs-target="#ejercicios" type="button" role="tab">Ejercicios</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="consejos-tab" data-bs-toggle="tab" data-bs-target="#consejos" type="button" role="tab">Consejos</button>
+            </li>
+        </ul>
+
+        <div class="tab-content" id="myTabContent">
+            <!-- Diccionario Tab -->
+            <div class="tab-pane fade show active" id="diccionario" role="tabpanel">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="card">
+                            <div class="card-header">
+                                <i class="fas fa-plus-circle me-2"></i>Agregar Nueva Palabra
+                            </div>
+                            <div class="card-body">
+                                <form id="addWordForm">
+                                    <div class="mb-3">
+                                        <label for="word" class="form-label">Palabra</label>
+                                        <input type="text" class="form-control" id="word" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="meaning" class="form-label">Significado</label>
+                                        <textarea class="form-control" id="meaning" rows="3" required></textarea>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="language" class="form-label">Idioma</label>
+                                        <select class="form-select" id="language">
+                                            <option value="es">Español</option>
+                                            <option value="en">Inglés</option>
+                                            <option value="fr">Francés</option>
+                                            <option value="de">Alemán</option>
+                                            <option value="it">Italiano</option>
+                                        </select>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary w-100">
+                                        <i class="fas fa-save me-2"></i>Guardar Palabra
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-8">
+                        <div class="card">
+                            <div class="card-header d-flex justify-content-between align-items-center">
+                                <span><i class="fas fa-book me-2"></i>Mi Diccionario</span>
+                                <button class="btn btn-sm btn-outline-danger" id="clearDictionary">
+                                    <i class="fas fa-trash me-1"></i> Limpiar Todo
+                                </button>
+                            </div>
+                            <div class="card-body">
+                                <div id="dictionaryList">
+                                    <p class="text-muted text-center">No hay palabras en el diccionario. Agrega algunas para comenzar.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Ejercicios Tab -->
+            <div class="tab-pane fade" id="ejercicios" role="tabpanel">
+                <div class="row">
+                    <div class="col-md-8">
+                        <div class="exercise-container">
+                            <h4 id="exerciseTitle">Selecciona un tipo de ejercicio</h4>
+                            <div id="exerciseContent">
+                                <p class="text-muted">Elige un tipo de ejercicio de la barra lateral para comenzar a practicar.</p>
+                            </div>
+                            <div id="exerciseResult" class="mt-3"></div>
+                            <div class="mt-3" id="exerciseActions" style="display: none;">
+                                <button class="btn btn-primary" id="checkAnswer">
+                                    <i class="fas fa-check me-2"></i>Verificar Respuesta
+                                </button>
+                                <button class="btn btn-success ms-2" id="nextExercise">
+                                    <i class="fas fa-arrow-right me-2"></i>Siguiente Ejercicio
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card">
+                            <div class="card-header">
+                                <i class="fas fa-dumbbell me-2"></i>Tipos de Ejercicios
+                            </div>
+                            <div class="card-body">
+                                <div class="d-grid gap-2">
+                                    <button class="btn btn-outline-primary exercise-type" data-type="meaning">
+                                        <i class="fas fa-question-circle me-2"></i>Adivinar Significado
+                                    </button>
+                                    <button class="btn btn-outline-primary exercise-type" data-type="word">
+                                        <i class="fas fa-puzzle-piece me-2"></i>Completar Palabra
+                                    </button>
+                                    <button class="btn btn-outline-primary exercise-type" data-type="translation">
+                                        <i class="fas fa-exchange-alt me-2"></i>Traducción
+                                    </button>
+                                    <button class="btn btn-outline-primary exercise-type" data-type="spelling">
+                                        <i class="fas fa-spell-check me-2"></i>Deletreo
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="card mt-3">
+                            <div class="card-header">
+                                <i class="fas fa-cog me-2"></i>Configuración
+                            </div>
+                            <div class="card-body">
+                                <div class="mb-3">
+                                    <label for="exerciseLanguage" class="form-label">Idioma de práctica</label>
+                                    <select class="form-select" id="exerciseLanguage">
+                                        <option value="all">Todos los idiomas</option>
+                                        <option value="en">Inglés</option>
+                                        <option value="es">Español</option>
+                                        <option value="fr">Francés</option>
+                                        <option value="de">Alemán</option>
+                                        <option value="it">Italiano</option>
+                                    </select>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="difficulty" class="form-label">Dificultad</label>
+                                    <select class="form-select" id="difficulty">
+                                        <option value="easy">Fácil</option>
+                                        <option value="medium" selected>Medio</option>
+                                        <option value="hard">Difícil</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Consejos Tab -->
+            <div class="tab-pane fade" id="consejos" role="tabpanel">
+                <div class="row">
+                    <div class="col-md-8">
+                        <div class="card">
+                            <div class="card-header">
+                                <i class="fas fa-lightbulb me-2"></i>Consejos para Aprender Idiomas
+                            </div>
+                            <div class="card-body">
+                                <div id="adviceContent">
+                                    <p class="text-muted text-center">Cargando consejos...</p>
+                                </div>
+                                <div class="text-center mt-3">
+                                    <button class="btn btn-primary" id="randomAdvice">
+                                        <i class="fas fa-random me-2"></i>Consejo Aleatorio
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card">
+                            <div class="card-header">
+                                <i class="fas fa-history me-2"></i>Consejos Recientes
+                            </div>
+                            <div class="card-body">
+                                <div id="recentAdvice" class="small">
+                                    <p class="text-muted">Aún no has visto ningún consejo.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="mt-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <h5>Práctica de Idiomas</h5>
+                    <p>Una herramienta educativa para mejorar tu vocabulario en diferentes idiomas.</p>
+                </div>
+                <div class="col-md-3">
+                    <h5>Enlaces</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="#" class="text-light">Inicio</a></li>
+                        <li><a href="#diccionario" class="text-light">Diccionario</a></li>
+                        <li><a href="#ejercicios" class="text-light">Ejercicios</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-3">
+                    <h5>Contacto</h5>
+                    <ul class="list-unstyled">
+                        <li><i class="fas fa-envelope me-2"></i> info@practiceidiomas.com</li>
+                        <li><i class="fas fa-globe me-2"></i> www.practiceidiomas.com</li>
+                    </ul>
+                </div>
+            </div>
+            <hr class="my-4">
+            <div class="text-center">
+                <p>&copy; 2023 Práctica de Idiomas. Todos los derechos reservados.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS and dependencies -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Datos iniciales
+        let dictionary = JSON.parse(localStorage.getItem('languageDictionary')) || [];
+        let stats = JSON.parse(localStorage.getItem('languageStats')) || {
+            totalWords: 0,
+            exercisesCompleted: 0,
+            correctAnswers: 0,
+            successRate: 0
+        };
+        
+        let currentExercise = null;
+        let recentAdvice = JSON.parse(localStorage.getItem('recentAdvice')) || [];
+
+        // Consejos para aprender idiomas
+        const adviceList = [
+            "Establece metas realistas y específicas para tu aprendizaje.",
+            "Practica todos los días, incluso si es solo por 15 minutos.",
+            "Escucha música y ve películas en el idioma que estás aprendiendo.",
+            "No temas cometer errores; son parte del proceso de aprendizaje.",
+            "Enfócate en aprender frases útiles, no solo palabras sueltas.",
+            "Encuentra un compañero de idioma para practicar conversación.",
+            "Usa aplicaciones y herramientas en línea para complementar tu estudio.",
+            "Lee libros y artículos en el idioma objetivo, empezando con textos simples.",
+            "Lleva un diario en el idioma que estás aprendiendo.",
+            "Viaja a un país donde se hable el idioma, si es posible.",
+            "Aprende sobre la cultura asociada con el idioma.",
+            "Repasa regularmente lo que ya has aprendido.",
+            "Graba tu voz para mejorar tu pronunciación.",
+            "Aprende vocabulario en contexto, no de forma aislada.",
+            "Usa tarjetas de memoria (flashcards) para repasar.",
+            "Establece una rutina de estudio consistente.",
+            "No traduzcas literalmente; piensa en el idioma objetivo.",
+            "Celebra tus logros, por pequeños que sean.",
+            "Enseña a otros lo que has aprendido.",
+            "Sé paciente contigo mismo; aprender un idioma lleva tiempo."
+        ];
+
+        // Inicialización
+        document.addEventListener('DOMContentLoaded', function() {
+            updateStats();
+            renderDictionary();
+            loadRandomAdvice();
+            updateRecentAdvice();
+            
+            // Event Listeners
+            document.getElementById('addWordForm').addEventListener('submit', addWord);
+            document.getElementById('clearDictionary').addEventListener('click', clearDictionary);
+            document.getElementById('darkModeToggle').addEventListener('click', toggleDarkMode);
+            document.getElementById('randomAdvice').addEventListener('click', loadRandomAdvice);
+            
+            // Ejercicios
+            document.querySelectorAll('.exercise-type').forEach(button => {
+                button.addEventListener('click', function() {
+                    startExercise(this.dataset.type);
+                });
+            });
+            
+            document.getElementById('checkAnswer').addEventListener('click', checkAnswer);
+            document.getElementById('nextExercise').addEventListener('click', nextExercise);
+        });
+
+        // Funciones del diccionario
+        function addWord(e) {
+            e.preventDefault();
+            
+            const word = document.getElementById('word').value.trim();
+            const meaning = document.getElementById('meaning').value.trim();
+            const language = document.getElementById('language').value;
+            
+            if (word && meaning) {
+                dictionary.push({
+                    id: Date.now(),
+                    word: word,
+                    meaning: meaning,
+                    language: language,
+                    dateAdded: new Date().toISOString()
+                });
+                
+                localStorage.setItem('languageDictionary', JSON.stringify(dictionary));
+                updateStats();
+                renderDictionary();
+                
+                // Limpiar formulario
+                document.getElementById('addWordForm').reset();
+                
+                // Mostrar mensaje de éxito
+                showMessage('Palabra agregada correctamente', 'success');
+            }
+        }
+        
+        function renderDictionary() {
+            const container = document.getElementById('dictionaryList');
+            
+            if (dictionary.length === 0) {
+                container.innerHTML = '<p class="text-muted text-center">No hay palabras en el diccionario. Agrega algunas para comenzar.</p>';
+                return;
+            }
+            
+            let html = '';
+            dictionary.forEach(item => {
+                const langFlag = getLanguageFlag(item.language);
+                html += `
+                    <div class="word-item d-flex justify-content-between align-items-center">
+                        <div>
+                            <strong>${item.word}</strong> ${langFlag}
+                            <div class="text-muted small">${item.meaning}</div>
+                        </div>
+                        <button class="btn btn-sm btn-outline-danger delete-word" data-id="${item.id}">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                `;
+            });
+            
+            container.innerHTML = html;
+            
+            // Agregar event listeners para eliminar palabras
+            document.querySelectorAll('.delete-word').forEach(button => {
+                button.addEventListener('click', function() {
+                    deleteWord(parseInt(this.dataset.id));
+                });
+            });
+        }
+        
+        function deleteWord(id) {
+            dictionary = dictionary.filter(item => item.id !== id);
+            localStorage.setItem('languageDictionary', JSON.stringify(dictionary));
+            updateStats();
+            renderDictionary();
+            showMessage('Palabra eliminada', 'info');
+        }
+        
+        function clearDictionary() {
+            if (confirm('¿Estás seguro de que quieres eliminar todas las palabras del diccionario?')) {
+                dictionary = [];
+                localStorage.setItem('languageDictionary', JSON.stringify(dictionary));
+                updateStats();
+                renderDictionary();
+                showMessage('Diccionario limpiado', 'info');
+            }
+        }
+        
+        function getLanguageFlag(language) {
+            const flags = {
+                'en': '🇺🇸',
+                'es': '🇪🇸',
+                'fr': '🇫🇷',
+                'de': '🇩🇪',
+                'it': '🇮🇹'
+            };
+            return flags[language] || '🌐';
+        }
+
+        // Funciones de ejercicios
+        function startExercise(type) {
+            if (dictionary.length === 0) {
+                showMessage('Agrega palabras al diccionario antes de comenzar los ejercicios.', 'warning');
+                return;
+            }
+            
+            const languageFilter = document.getElementById('exerciseLanguage').value;
+            let filteredDictionary = dictionary;
+            
+            if (languageFilter !== 'all') {
+                filteredDictionary = dictionary.filter(item => item.language === languageFilter);
+                
+                if (filteredDictionary.length === 0) {
+                    showMessage('No hay palabras en el idioma seleccionado. Cambia el filtro o agrega palabras.', 'warning');
+                    return;
+                }
+            }
+            
+            // Seleccionar palabra aleatoria
+            const randomIndex = Math.floor(Math.random() * filteredDictionary.length);
+            const wordItem = filteredDictionary[randomIndex];
+            
+            currentExercise = {
+                type: type,
+                wordItem: wordItem,
+                userAnswer: ''
+            };
+            
+            // Configurar la interfaz según el tipo de ejercicio
+            const exerciseTitle = document.getElementById('exerciseTitle');
+            const exerciseContent = document.getElementById('exerciseContent');
+            const exerciseActions = document.getElementById('exerciseActions');
+            const exerciseResult = document.getElementById('exerciseResult');
+            
+            exerciseResult.innerHTML = '';
+            exerciseActions.style.display = 'block';
+            document.getElementById('checkAnswer').style.display = 'inline-block';
+            document.getElementById('nextExercise').style.display = 'none';
+            
+            switch(type) {
+                case 'meaning':
+                    exerciseTitle.textContent = 'Adivina el significado';
+                    exerciseContent.innerHTML = `
+                        <p class="lead">¿Cuál es el significado de la palabra <strong>"${wordItem.word}"</strong>?</p>
+                        <div class="mb-3">
+                            <textarea class="form-control" id="userAnswer" rows="3" placeholder="Escribe el significado aquí..."></textarea>
+                        </div>
+                    `;
+                    break;
+                    
+                case 'word':
+                    exerciseTitle.textContent = 'Completa la palabra';
+                    exerciseContent.innerHTML = `
+                        <p class="lead">Completa la palabra que corresponde al siguiente significado:</p>
+                        <p class="fs-5">"${wordItem.meaning}"</p>
+                        <div class="mb-3">
+                            <input type="text" class="form-control" id="userAnswer" placeholder="Escribe la palabra aquí...">
+                        </div>
+                    `;
+                    break;
+                    
+                case 'translation':
+                    exerciseTitle.textContent = 'Traducción';
+                    // Para simplificar, asumiremos que estamos traduciendo al español
+                    exerciseContent.innerHTML = `
+                        <p class="lead">Traduce la siguiente palabra al español:</p>
+                        <p class="fs-5">"${wordItem.word}" (${getLanguageName(wordItem.language)})</p>
+                        <div class="mb-3">
+                            <input type="text" class="form-control" id="userAnswer" placeholder="Escribe la traducción aquí...">
+                        </div>
+                    `;
+                    break;
+                    
+                case 'spelling':
+                    exerciseTitle.textContent = 'Deletreo';
+                    exerciseContent.innerHTML = `
+                        <p class="lead">Deletrea correctamente la palabra para el siguiente significado:</p>
+                        <p class="fs-5">"${wordItem.meaning}"</p>
+                        <div class="mb-3">
+                            <input type="text" class="form-control" id="userAnswer" placeholder="Escribe la palabra aquí...">
+                        </div>
+                    `;
+                    break;
+            }
+        }
+        
+        function checkAnswer() {
+            if (!currentExercise) return;
+            
+            const userAnswer = document.getElementById('userAnswer').value.trim();
+            if (!userAnswer) {
+                showMessage('Por favor, escribe una respuesta.', 'warning');
+                return;
+            }
+            
+            currentExercise.userAnswer = userAnswer;
+            const exerciseResult = document.getElementById('exerciseResult');
+            let isCorrect = false;
+            
+            switch(currentExercise.type) {
+                case 'meaning':
+                    // Comparación más flexible para significados
+                    isCorrect = compareAnswers(userAnswer, currentExercise.wordItem.meaning);
+                    break;
+                    
+                case 'word':
+                case 'spelling':
+                    // Comparación exacta para palabras
+                    isCorrect = userAnswer.toLowerCase() === currentExercise.wordItem.word.toLowerCase();
+                    break;
+                    
+                case 'translation':
+                    // Para traducción, comparamos con el significado en español
+                    isCorrect = compareAnswers(userAnswer, currentExercise.wordItem.meaning);
+                    break;
+            }
+            
+            // Actualizar estadísticas
+            stats.exercisesCompleted++;
+            if (isCorrect) {
+                stats.correctAnswers++;
+                exerciseResult.innerHTML = `<div class="result-message correct"><i class="fas fa-check-circle me-2"></i>¡Correcto! Respuesta precisa.</div>`;
+            } else {
+                exerciseResult.innerHTML = `<div class="result-message incorrect"><i class="fas fa-times-circle me-2"></i>Incorrecto. La respuesta correcta es: ${formatCorrectAnswer(currentExercise)}</div>`;
+            }
+            
+            stats.successRate = Math.round((stats.correctAnswers / stats.exercisesCompleted) * 100);
+            localStorage.setItem('languageStats', JSON.stringify(stats));
+            updateStats();
+            
+            // Mostrar botón para siguiente ejercicio
+            document.getElementById('checkAnswer').style.display = 'none';
+            document.getElementById('nextExercise').style.display = 'inline-block';
+        }
+        
+        function nextExercise() {
+            const currentType = currentExercise ? currentExercise.type : 'meaning';
+            startExercise(currentType);
+        }
+        
+        function compareAnswers(userAnswer, correctAnswer) {
+            // Eliminar puntuación y convertir a minúsculas para comparación más flexible
+            const normalizedUser = userAnswer.toLowerCase().replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g, "");
+            const normalizedCorrect = correctAnswer.toLowerCase().replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g, "");
+            
+            return normalizedUser === normalizedCorrect;
+        }
+        
+        function formatCorrectAnswer(exercise) {
+            switch(exercise.type) {
+                case 'meaning':
+                    return `<strong>"${exercise.wordItem.meaning}"</strong>`;
+                case 'word':
+                case 'spelling':
+                    return `<strong>"${exercise.wordItem.word}"</strong>`;
+                case 'translation':
+                    return `<strong>"${exercise.wordItem.meaning}"</strong>`;
+                default:
+                    return '';
+            }
+        }
+        
+        function getLanguageName(code) {
+            const languages = {
+                'en': 'inglés',
+                'es': 'español',
+                'fr': 'francés',
+                'de': 'alemán',
+                'it': 'italiano'
+            };
+            return languages[code] || code;
+        }
+
+        // Funciones de consejos
+        function loadRandomAdvice() {
+            const randomIndex = Math.floor(Math.random() * adviceList.length);
+            const advice = adviceList[randomIndex];
+            
+            document.getElementById('adviceContent').innerHTML = `
+                <div class="alert alert-info">
+                    <h5><i class="fas fa-lightbulb me-2"></i>Consejo #${randomIndex + 1}</h5>
+                    <p class="mb-0">${advice}</p>
+                </div>
+            `;
+            
+            // Agregar a consejos recientes (sin duplicados)
+            if (!recentAdvice.includes(advice)) {
+                recentAdvice.unshift(advice);
+                if (recentAdvice.length > 5) {
+                    recentAdvice.pop();
+                }
+                localStorage.setItem('recentAdvice', JSON.stringify(recentAdvice));
+                updateRecentAdvice();
+            }
+        }
+        
+        function updateRecentAdvice() {
+            const container = document.getElementById('recentAdvice');
+            
+            if (recentAdvice.length === 0) {
+                container.innerHTML = '<p class="text-muted">Aún no has visto ningún consejo.</p>';
+                return;
+            }
+            
+            let html = '<ul class="list-unstyled">';
+            recentAdvice.forEach(advice => {
+                html += `<li class="mb-2"><i class="fas fa-chevron-right text-primary me-2"></i>${advice}</li>`;
+            });
+            html += '</ul>';
+            
+            container.innerHTML = html;
+        }
+
+        // Funciones de utilidad
+        function updateStats() {
+            stats.totalWords = dictionary.length;
+            
+            document.getElementById('totalWords').textContent = stats.totalWords;
+            document.getElementById('exercisesCompleted').textContent = stats.exercisesCompleted;
+            document.getElementById('correctAnswers').textContent = stats.correctAnswers;
+            document.getElementById('successRate').textContent = stats.successRate + '%';
+        }
+        
+        function toggleDarkMode() {
+            document.body.classList.toggle('dark-mode');
+            const icon = document.querySelector('#darkModeToggle i');
+            
+            if (document.body.classList.contains('dark-mode')) {
+                icon.classList.remove('fa-moon');
+                icon.classList.add('fa-sun');
+                localStorage.setItem('darkMode', 'enabled');
+            } else {
+                icon.classList.remove('fa-sun');
+                icon.classList.add('fa-moon');
+                localStorage.setItem('darkMode', 'disabled');
+            }
+        }
+        
+        function showMessage(message, type) {
+            // Crear elemento de mensaje
+            const alert = document.createElement('div');
+            alert.className = `alert alert-${type} alert-dismissible fade show`;
+            alert.innerHTML = `
+                ${message}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            `;
+            
+            // Insertar al principio del contenido principal
+            const container = document.querySelector('.container');
+            container.insertBefore(alert, container.firstChild);
+            
+            // Auto-eliminar después de 5 segundos
+            setTimeout(() => {
+                if (alert.parentNode) {
+                    alert.remove();
+                }
+            }, 5000);
+        }
+
+        // Cargar modo oscuro si estaba activado
+        if (localStorage.getItem('darkMode') === 'enabled') {
+            document.body.classList.add('dark-mode');
+            document.querySelector('#darkModeToggle i').classList.remove('fa-moon');
+            document.querySelector('#darkModeToggle i').classList.add('fa-sun');
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Aprender el Futuro en Español e Inglés</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <style>
+        body { background: #eaf2ff; }
+        .categoria-card { border-radius: 1.5rem; }
+        .hero { background: linear-gradient(135deg,#4d8cff,#8fb7ff); color:white; padding:4rem 1rem; border-radius:1rem; }
+        .btn-main { background:#4d8cff; color:white; border-radius:1rem; }
+        .btn-main:hover { background:#3a6fd6; }
+        textarea { resize:none; }
+    </style>
+</head>
+<body>
+
+<div class="container my-4">
+    <div class="hero text-center">
+        <h1 class="fw-bold">Aprender el Futuro en Español e Inglés</h1>
+        <p class="lead">Práctica bilingüe • Dictado • Voz • Gramática • Ejemplos</p>
+    </div>
+
+    <section class="my-5">
+        <h2 class="text-center mb-4">10 Técnicas del Futuro</h2>
+        <div class="row" id="categorias"></div>
+    </section>
+
+    <section class="my-5">
+        <h2 class="text-center">Práctica interactiva</h2>
+        <div class="card p-4 categoria-card shadow-sm">
+            <label class="fw-bold">Frase a practicar:</label>
+            <p id="fraseOriginal" class="fs-5"></p>
+
+            <button class="btn btn-main my-2" onclick="leerFrase()">🔊 Escuchar</button>
+            <button class="btn btn-secondary my-2" onclick="dictar()">🎤 Dictar por voz</button>
+
+            <label class="fw-bold mt-4">Escribe o dicta tu traducción:</label>
+            <textarea id="respuesta" class="form-control" rows="3"></textarea>
+            
+            <button class="btn btn-success mt-3" onclick="comprobar()">✔ Comprobar</button>
+            <p id="resultado" class="mt-3 fs-5"></p>
+        </div>
+    </section>
+</div>
+
+<script>
+const ejemplos100 = [
+    ["Mañana estudiaré más temprano.", "Tomorrow I will study earlier."],
+    ["Compraré un nuevo cuaderno.", "I will buy a new notebook."],
+    ["Llegaremos a tiempo.", "We will arrive on time."],
+    ["Te llamaré más tarde.", "I will call you later."],
+    ["Harán el trabajo juntos.", "They will do the work together."],
+    ["Entenderás cuando seas mayor.", "You will understand when you're older."],
+    ["Conoceré a tus padres pronto.", "I will meet your parents soon."],
+    ["Lloverá esta noche.", "It will rain tonight."],
+    ["Seremos amigos por mucho tiempo.", "We will be friends for a long time."],
+    ["Viviré en otra ciudad.", "I will live in another city."],
+    ["Voy a estudiar ahora.", "I am going to study now."],
+    ["Voy a limpiar mi cuarto.", "I am going to clean my room."],
+    ["Voy a comprar comida.", "I am going to buy food."],
+    ["Voy a visitar a mis abuelos.", "I am going to visit my grandparents."],
+    ["Voy a comenzar un curso.", "I am going to start a course."],
+    ["Mañana tengo reunión.", "Tomorrow I have a meeting."],
+    ["El tren sale a las 8.", "The train leaves at 8."],
+    ["El lunes empiezo clases.", "On Monday I start classes."],
+    ["La película empieza en 10 minutos.", "The movie starts in 10 minutes."],
+    ["El concierto es mañana.", "The concert is tomorrow."],
+    ["He de terminar mi tarea esta noche.", "I must finish my homework tonight."],
+    ["He de enviar el correo.", "I must send the email."],
+    ["He de practicar más.", "I must practice more."],
+    ["He de mejorar en inglés.", "I must improve in English."],
+    ["He de ordenar mis documentos.", "I must organize my documents."],
+    ["Debo estudiar más.", "I must study more."],
+    ["Debo ahorrar dinero.", "I must save money."],
+    ["Debo comer mejor.", "I must eat better."],
+    ["Debo hacer ejercicio.", "I must exercise."],
+    ["Debo dormir temprano.", "I must sleep early."],
+    ["Dijo que vendría mañana.", "He said he would come tomorrow."],
+    ["Pensé que viajaría hoy.", "I thought he would travel today."],
+    ["Creí que llamarías.", "I thought you would call."],
+    ["Imaginé que llegarían tarde.", "I imagined they would arrive late."],
+    ["Supuse que estudiarías.", "I assumed you would study."],
+    ["Puede que llegue pronto.", "He may arrive soon."],
+    ["Puede que llueva.", "It may rain."],
+    ["Puede que cambie de opinión.", "He may change his mind."],
+    ["Puede que salga hoy.", "I may go out today."],
+    ["Puede que viaje este mes.", "I may travel this month."],
+    ["Habré terminado para entonces.", "I will have finished by then."],
+    ["Habré llegado a las 8.", "I will have arrived by 8."],
+    ["Habré estudiado suficiente.", "I will have studied enough."],
+    ["Habré enviado el informe.", "I will have sent the report."],
+    ["Habré comprado todo.", "I will have bought everything."],
+    ["Cuando termine, te aviso.", "When I finish, I will tell you."],
+    ["Cuando llegue, llamo.", "When I arrive, I call."],
+    ["Cuando estudie, salgo.", "When I study, I go out."],
+    ["Cuando limpie, descanso.", "When I clean, I rest."],
+    ["Cuando acabe, duermo.", "When I finish, I sleep."],
+    ["Serán las 10.", "It is probably 10 o'clock."],
+    ["Tendrán unos 20 años.", "They are probably about 20 years old."],
+    ["Estará en su casa.", "He is probably at home."],
+    ["Estará cansado.", "He is probably tired."],
+    ["Estará estudiando.", "He is probably studying."],
+    ["Haré deporte mañana.", "I will do sports tomorrow."],
+    ["Correré en la mañana.", "I will run in the morning."],
+    ["Leeré ese libro.", "I will read that book."],
+    ["Cantaré en el evento.", "I will sing in the event."],
+    ["Escribiré más.", "I will write more."],
+    ["Voy a cocinar hoy.", "I am going to cook today."],
+    ["Voy a tomar café.", "I am going to drink coffee."],
+    ["Voy a salir con amigos.", "I am going to go out with friends."],
+    ["Voy a estudiar inglés.", "I am going to study English."],
+    ["Voy a ver una película.", "I am going to watch a movie."],
+    ["La clase empieza mañana.", "Class starts tomorrow."],
+    ["El curso inicia hoy.", "The course begins today."],
+    ["La reunión es pronto.", "The meeting is soon."],
+    ["El examen es el lunes.", "The exam is on Monday."],
+    ["La fiesta es mañana.", "The party is tomorrow."],
+    ["Debo llamar a mi madre.", "I must call my mother."],
+    ["Debo limpiar mi casa.", "I must clean my house."],
+    ["Debo organizar mis notas.", "I must organize my notes."],
+    ["Debo preparar mi clase.", "I must prepare my class."],
+    ["Debo revisar mi correo.", "I must check my email."],
+    ["Puede que salga luego.", "I may leave later."],
+    ["Puede que estudie mañana.", "I may study tomorrow."],
+    ["Puede que compre comida.", "I may buy food."],
+    ["Puede que llame después.", "I may call later."],
+    ["Puede que duerma temprano.", "I may sleep early."],
+    ["Habré terminado mi trabajo.", "I will have finished my work."],
+    ["Habré leído el libro.", "I will have read the book."],
+    ["Habré limpiado la casa.", "I will have cleaned the house."],
+    ["Habré cocinado.", "I will have cooked."],
+    ["Habré aprendido mucho.", "I will have learned a lot."]
+];
+
+const categorias = [
+    {nombre:"Futuro simple", teoria:"Expresa acciones futuras claras.", ejemploES:"Estudiaré mañana.", ejemploEN:"I will study tomorrow."},
+    {nombre:"Ir a + infinitivo", teoria:"Expresa intención inmediata.", ejemploES:"Voy a viajar este mes.", ejemploEN:"I am going to travel this month."},
+    {nombre:"Presente con valor de futuro", teoria:"Eventos programados.", ejemploES:"Mañana tengo cita.", ejemploEN:"Tomorrow I have an appointment."},
+    {nombre:"Obligación futura", teoria:"He de + infinitivo.", ejemploES:"He de estudiar más.", ejemploEN:"I must study more."},
+    {nombre:"Deber + infinitivo", teoria:"Expresa deber en futuro.", ejemploES:"Debo viajar pronto.", ejemploEN:"I must travel soon."},
+    {nombre:"Condicional con valor de futuro", teoria:"Probabilidad desde el pasado.", ejemploES:"Vendría mañana.", ejemploEN:"He would come tomorrow."},
+    {nombre:"Futuro perifrástico modal", teoria:"Expresa posibilidad.", ejemploES:"Puede que llueva.", ejemploEN:"It may rain."},
+    {nombre:"Futuro perfecto", teoria:"Acción futura anterior a otra.", ejemploES:"Habré llegado.", ejemploEN:"I will have arrived."},
+    {nombre:"Oraciones temporales", teoria:"Presente con sentido futuro.", ejemploES:"Cuando termine, salgo.", ejemploEN:"When I finish, I leave."},
+    {nombre:"Futuro de probabilidad", teoria:"Suposición.", ejemploES:"Serán las 10.", ejemploEN:"It is probably 10."}
+];
+
+let fraseActualES = "";
+let fraseActualEN = "";
+
+function cargarCategorias() {
+    let html = '';
+    categorias.forEach((c,i)=>{
+        html += `
+            <div class="col-md-6 col-lg-4 mb-3">
+                <div class="card p-3 shadow-sm categoria-card">
+                    <h4>${c.nombre}</h4>
+                    <p>${c.teoria}</p>
+                    <button class="btn btn-main" onclick="seleccionarCategoria(${i})">Practicar</button>
+                </div>
+            </div>
+        `;
+    });
+    document.getElementById('categorias').innerHTML = html;
+}
+
+function seleccionarCategoria(i) {
+    fraseActualES = categorias[i].ejemploES;
+    fraseActualEN = categorias[i].ejemploEN;
+    document.getElementById('fraseOriginal').innerHTML = fraseActualES;
+    document.getElementById('resultado').innerHTML = "";
+    document.getElementById('respuesta').value = "";
+}
+
+function leerFrase() {
+    let u = new SpeechSynthesisUtterance(fraseActualES);
+    u.lang = "es-ES";
+    speechSynthesis.speak(u);
+}
+
+function dictar() {
+    const rec = new webkitSpeechRecognition();
+    rec.lang = "en-US";
+    rec.onresult = (e)=>{
+        document.getElementById('respuesta').value = e.results[0][0].transcript;
+    }
+    rec.start();
+}
+
+function comprobar() {
+    let r = document.getElementById('respuesta').value.trim().toLowerCase();
+    let correcto = fraseActualEN.toLowerCase();
+
+    if (r === correcto) {
+        document.getElementById('resultado').innerHTML = "<span class='text-success fw-bold'>✔ ¡Correcto!</span>";
+    } else {
+        document.getElementById('resultado').innerHTML = "<span class='text-danger fw-bold'>❌ Incorrecto.</span><br>Respuesta correcta: " + fraseActualEN;
+    }
+}
+
+cargarCategorias();
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,847 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Practicador de Colocaciones Léxicas</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #4e73df;
+            --secondary-color: #1cc88a;
+            --danger-color: #e74a3b;
+            --warning-color: #f6c23e;
+            --dark-color: #2c3e50;
+            --light-color: #f8f9fc;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8f9fc;
+            color: var(--dark-color);
+        }
+        
+        .navbar {
+            background-color: var(--primary-color);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .navbar-brand {
+            font-weight: 700;
+        }
+        
+        .card {
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            border: none;
+            margin-bottom: 20px;
+        }
+        
+        .card-header {
+            background-color: var(--primary-color);
+            color: white;
+            border-radius: 10px 10px 0 0 !important;
+            font-weight: 600;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+        
+        .btn-success {
+            background-color: var(--secondary-color);
+            border-color: var(--secondary-color);
+        }
+        
+        .btn-warning {
+            background-color: var(--warning-color);
+            border-color: var(--warning-color);
+            color: var(--dark-color);
+        }
+        
+        .btn-danger {
+            background-color: var(--danger-color);
+            border-color: var(--danger-color);
+        }
+        
+        .hero-section {
+            background: linear-gradient(135deg, var(--primary-color) 0%, #224abe 100%);
+            color: white;
+            padding: 80px 0;
+            border-radius: 0 0 30px 30px;
+            margin-bottom: 40px;
+        }
+        
+        .option-btn {
+            width: 100%;
+            margin-bottom: 10px;
+            text-align: left;
+            padding: 15px;
+            border-radius: 8px;
+            transition: all 0.3s;
+        }
+        
+        .option-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        
+        .correct-answer {
+            background-color: var(--secondary-color) !important;
+            color: white;
+        }
+        
+        .incorrect-answer {
+            background-color: var(--danger-color) !important;
+            color: white;
+        }
+        
+        .timer-container {
+            background-color: var(--light-color);
+            border-radius: 50px;
+            padding: 10px 20px;
+            display: inline-block;
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+        
+        .lives-container {
+            font-size: 1.5rem;
+            color: var(--danger-color);
+        }
+        
+        .score-container {
+            font-size: 1.5rem;
+            color: var(--secondary-color);
+            font-weight: bold;
+        }
+        
+        .difficulty-badge {
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+        
+        .difficulty-easy {
+            background-color: var(--secondary-color);
+            color: white;
+        }
+        
+        .difficulty-medium {
+            background-color: var(--warning-color);
+            color: var(--dark-color);
+        }
+        
+        .difficulty-hard {
+            background-color: var(--danger-color);
+            color: white;
+        }
+        
+        .explanation-box {
+            background-color: #e8f4fd;
+            border-left: 4px solid var(--primary-color);
+            padding: 15px;
+            border-radius: 0 8px 8px 0;
+            margin: 15px 0;
+        }
+        
+        .section-title {
+            position: relative;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .section-title:after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 50px;
+            height: 3px;
+            background-color: var(--primary-color);
+        }
+        
+        .progress {
+            height: 10px;
+            border-radius: 5px;
+        }
+        
+        footer {
+            background-color: var(--dark-color);
+            color: white;
+            padding: 30px 0;
+            margin-top: 50px;
+        }
+        
+        .feature-icon {
+            font-size: 2.5rem;
+            color: var(--primary-color);
+            margin-bottom: 15px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
+            <a class="navbar-brand" href="#">
+                <i class="fas fa-language me-2"></i>Colocaciones Léxicas
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#inicio">Inicio</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#practicar">Practicar</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#crear">Crear Preguntas</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#recursos">Recursos</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="inicio" class="hero-section">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-6">
+                    <h1 class="display-4 fw-bold mb-4">Domina las Colocaciones Léxicas del Español</h1>
+                    <p class="lead mb-4">Aprende y practica las combinaciones de palabras que siguen las normas de la RAE. Mejora tu dominio del idioma español con nuestro sistema interactivo.</p>
+                    <a href="#practicar" class="btn btn-light btn-lg px-4">Comenzar a Practicar <i class="fas fa-arrow-right ms-2"></i></a>
+                </div>
+                <div class="col-lg-6 text-center">
+                    <img src="https://cdn.pixabay.com/photo/2017/08/06/14/12/books-2592860_1280.png" alt="Libros y aprendizaje" class="img-fluid" style="max-height: 300px;">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="py-5">
+        <div class="container">
+            <div class="row text-center mb-5">
+                <div class="col">
+                    <h2 class="section-title d-inline-block">¿Por qué practicar colocaciones léxicas?</h2>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100 text-center">
+                        <div class="card-body">
+                            <div class="feature-icon">
+                                <i class="fas fa-graduation-cap"></i>
+                            </div>
+                            <h4>Mejora tu expresión</h4>
+                            <p>Domina combinaciones como "dar una vuelta" en lugar de "hacer una vuelta", que aunque parezcan arbitrarias, son esenciales para un español correcto.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100 text-center">
+                        <div class="card-body">
+                            <div class="feature-icon">
+                                <i class="fas fa-brain"></i>
+                            </div>
+                            <h4>Entrena tu memoria</h4>
+                            <p>Ejercita tu cerebro recordando las combinaciones correctas entre sustantivos, verbos y preposiciones según las normas de la RAE.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100 text-center">
+                        <div class="card-body">
+                            <div class="feature-icon">
+                                <i class="fas fa-trophy"></i>
+                            </div>
+                            <h4>Sistema de progreso</h4>
+                            <p>Avanza por niveles de dificultad, acumula puntos y mejora tus habilidades lingüísticas con nuestro sistema gamificado.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Practice Section -->
+    <section id="practicar" class="py-5 bg-light">
+        <div class="container">
+            <div class="row mb-5">
+                <div class="col">
+                    <h2 class="section-title d-inline-block">Practicar Colocaciones</h2>
+                    <p class="text-muted">Selecciona un nivel de dificultad y pon a prueba tus conocimientos.</p>
+                </div>
+            </div>
+            
+            <!-- Level Selection -->
+            <div class="row mb-4">
+                <div class="col-md-8 mx-auto">
+                    <div class="card">
+                        <div class="card-header text-center">
+                            <h4 class="mb-0">Selecciona el Nivel de Dificultad</h4>
+                        </div>
+                        <div class="card-body">
+                            <div class="row text-center">
+                                <div class="col-md-4 mb-3">
+                                    <div class="card h-100">
+                                        <div class="card-body">
+                                            <span class="difficulty-badge difficulty-easy">Nivel 1</span>
+                                            <h5 class="mt-3">Fácil</h5>
+                                            <p class="text-muted">Colocaciones básicas y comunes</p>
+                                            <p><i class="fas fa-clock me-2"></i>20 segundos por pregunta</p>
+                                            <button class="btn btn-primary mt-2 select-level" data-level="1">Seleccionar</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <div class="card h-100">
+                                        <div class="card-body">
+                                            <span class="difficulty-badge difficulty-medium">Nivel 2</span>
+                                            <h5 class="mt-3">Intermedio</h5>
+                                            <p class="text-muted">Colocaciones de uso frecuente</p>
+                                            <p><i class="fas fa-clock me-2"></i>15 segundos por pregunta</p>
+                                            <button class="btn btn-primary mt-2 select-level" data-level="2">Seleccionar</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <div class="card h-100">
+                                        <div class="card-body">
+                                            <span class="difficulty-badge difficulty-hard">Nivel 3</span>
+                                            <h5 class="mt-3">Avanzado</h5>
+                                            <p class="text-muted">Colocaciones complejas y específicas</p>
+                                            <p><i class="fas fa-clock me-2"></i>10 segundos por pregunta</p>
+                                            <button class="btn btn-primary mt-2 select-level" data-level="3">Seleccionar</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Quiz Container -->
+            <div id="quiz-container" class="row" style="display: none;">
+                <div class="col-md-8 mx-auto">
+                    <div class="card">
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <h4 class="mb-0">Práctica en Curso</h4>
+                            <div>
+                                <span class="lives-container me-3">
+                                    <i class="fas fa-heart"></i> <span id="lives-count">3</span>
+                                </span>
+                                <span class="score-container me-3">
+                                    <i class="fas fa-star"></i> <span id="score-count">0</span>
+                                </span>
+                                <span class="timer-container">
+                                    <i class="fas fa-stopwatch"></i> <span id="timer">20</span>s
+                                </span>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div id="question-container">
+                                <h4 id="question-text" class="mb-4"></h4>
+                                <div id="options-container" class="mb-4"></div>
+                                <div id="explanation-container" class="explanation-box" style="display: none;"></div>
+                            </div>
+                            <div id="results-container" style="display: none;">
+                                <h3 class="text-center mb-4">Resultados Finales</h3>
+                                <div class="text-center mb-4">
+                                    <h1 id="final-score" class="display-4 fw-bold text-success">0</h1>
+                                    <p class="lead">puntos obtenidos</p>
+                                </div>
+                                <div class="progress mb-4">
+                                    <div id="progress-bar" class="progress-bar bg-success" role="progressbar" style="width: 0%"></div>
+                                </div>
+                                <div id="performance-message" class="text-center mb-4"></div>
+                                <div class="text-center">
+                                    <button id="restart-btn" class="btn btn-primary btn-lg">Volver a Jugar</button>
+                                </div>
+                            </div>
+                            <div class="text-center mt-4">
+                                <button id="next-btn" class="btn btn-success" style="display: none;">Siguiente Pregunta</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Create Questions Section -->
+    <section id="crear" class="py-5">
+        <div class="container">
+            <div class="row mb-5">
+                <div class="col">
+                    <h2 class="section-title d-inline-block">Crear Nuevas Preguntas</h2>
+                    <p class="text-muted">Contribuye añadiendo nuevas colocaciones léxicas para practicar.</p>
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class="col-lg-8 mx-auto">
+                    <div class="card">
+                        <div class="card-header">
+                            <h4 class="mb-0">Formulario para Nueva Pregunta</h4>
+                        </div>
+                        <div class="card-body">
+                            <form id="question-form">
+                                <div class="mb-3">
+                                    <label for="question-text-input" class="form-label">Enunciado de la pregunta</label>
+                                    <input type="text" class="form-control" id="question-text-input" required>
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <label class="form-label">Opciones de respuesta</label>
+                                    <div class="row">
+                                        <div class="col-md-6 mb-2">
+                                            <input type="text" class="form-control option-input" placeholder="Opción 1" required>
+                                        </div>
+                                        <div class="col-md-6 mb-2">
+                                            <input type="text" class="form-control option-input" placeholder="Opción 2" required>
+                                        </div>
+                                        <div class="col-md-6 mb-2">
+                                            <input type="text" class="form-control option-input" placeholder="Opción 3" required>
+                                        </div>
+                                        <div class="col-md-6 mb-2">
+                                            <input type="text" class="form-control option-input" placeholder="Opción 4" required>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <label for="correct-answer" class="form-label">Respuesta correcta</label>
+                                    <select class="form-select" id="correct-answer" required>
+                                        <option value="" selected disabled>Selecciona la respuesta correcta</option>
+                                        <option value="0">Opción 1</option>
+                                        <option value="1">Opción 2</option>
+                                        <option value="2">Opción 3</option>
+                                        <option value="3">Opción 4</option>
+                                    </select>
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <label for="explanation" class="form-label">Explicación (según normas RAE)</label>
+                                    <textarea class="form-control" id="explanation" rows="3" required></textarea>
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <label for="difficulty" class="form-label">Nivel de dificultad</label>
+                                    <select class="form-select" id="difficulty" required>
+                                        <option value="1">Nivel 1 - Fácil</option>
+                                        <option value="2">Nivel 2 - Intermedio</option>
+                                        <option value="3">Nivel 3 - Avanzado</option>
+                                    </select>
+                                </div>
+                                
+                                <div class="text-center">
+                                    <button type="submit" class="btn btn-primary btn-lg">Guardar Pregunta</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Resources Section -->
+    <section id="recursos" class="py-5 bg-light">
+        <div class="container">
+            <div class="row mb-5">
+                <div class="col">
+                    <h2 class="section-title d-inline-block">Recursos Adicionales</h2>
+                    <p class="text-muted">Amplía tus conocimientos con estos recursos sobre colocaciones léxicas.</p>
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class="col-md-6 mb-4">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h4 class="card-title">¿Qué son las colocaciones léxicas?</h4>
+                            <p class="card-text">Las colocaciones léxicas son combinaciones fijas de palabras que, aunque parecen arbitrarias, se consolidan por el uso y la tradición lingüística.</p>
+                            <p class="card-text">Ejemplos:</p>
+                            <ul>
+                                <li>"Dar una vuelta" (no "hacer una vuelta")</li>
+                                <li>"Contraer matrimonio" (no "contraer sacerdocio")</li>
+                                <li>"Ejercer influencia" (pero "ejercitar la virtud")</li>
+                            </ul>
+                            <a href="#" class="btn btn-outline-primary">Leer más</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-6 mb-4">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h4 class="card-title">Normas RAE sobre colocaciones</h4>
+                            <p class="card-text">La Real Academia Española recoge estas combinaciones en su diccionario y obras gramaticales, aunque no siempre establece reglas explícitas.</p>
+                            <p class="card-text">Estas combinaciones dependen de factores históricos, semánticos y de uso consolidado en la comunidad lingüística.</p>
+                            <a href="#" class="btn btn-outline-primary">Consultar RAE</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6 mb-4 mb-md-0">
+                    <h5>Practicador de Colocaciones Léxicas</h5>
+                    <p>Una herramienta educativa para mejorar tu dominio del español según las normas de la RAE.</p>
+                </div>
+                <div class="col-md-3 mb-4 mb-md-0">
+                    <h5>Enlaces</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="#inicio" class="text-white">Inicio</a></li>
+                        <li><a href="#practicar" class="text-white">Practicar</a></li>
+                        <li><a href="#crear" class="text-white">Crear Preguntas</a></li>
+                        <li><a href="#recursos" class="text-white">Recursos</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-3">
+                    <h5>Contacto</h5>
+                    <ul class="list-unstyled">
+                        <li><i class="fas fa-envelope me-2"></i>info@colocaciones.es</li>
+                        <li><i class="fas fa-globe me-2"></i>www.colocaciones.es</li>
+                    </ul>
+                </div>
+            </div>
+            <hr class="my-4">
+            <div class="row align-items-center">
+                <div class="col-md-6">
+                    <p class="mb-0">&copy; 2023 Practicador de Colocaciones Léxicas. Todos los derechos reservados.</p>
+                </div>
+                <div class="col-md-6 text-md-end">
+                    <a href="#" class="text-white me-3"><i class="fab fa-twitter fa-lg"></i></a>
+                    <a href="#" class="text-white me-3"><i class="fab fa-facebook fa-lg"></i></a>
+                    <a href="#" class="text-white"><i class="fab fa-instagram fa-lg"></i></a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS and dependencies -->
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>
+    
+    <!-- Custom JavaScript -->
+    <script>
+        // Base de datos de preguntas
+        let questions = [
+            {
+                question: "¿Qué verbo se usa con 'vuelta'?",
+                options: ["hacer", "dar", "tomar", "crear"],
+                correctAnswer: 1,
+                explanation: "RAE: La combinación correcta es 'dar una vuelta'. Es una convención idiomática histórica.",
+                difficulty: 1
+            },
+            {
+                question: "¿Qué verbo acompaña a 'matrimonio'?",
+                options: ["contraer", "hacer", "construir", "desarrollar"],
+                correctAnswer: 0,
+                explanation: "RAE: 'Contraer matrimonio' viene del latín 'contrahere' (unir), usado solo para compromisos legales.",
+                difficulty: 2
+            },
+            {
+                question: "¿Cómo se completa? 'Desarrollar ______'",
+                options: ["velocidad", "desaliento", "sacerdocio", "virtud"],
+                correctAnswer: 0,
+                explanation: "RAE: 'Desarrollar velocidad' es una colocación técnica aceptada, frente a 'ejercitar virtud'.",
+                difficulty: 3
+            },
+            {
+                question: "¿Qué preposición usa 'inverso'?",
+                options: ["a", "de", "en", "por"],
+                correctAnswer: 1,
+                explanation: "RAE: Según la norma, 'inverso' siempre lleva preposición 'de' (ej: inverso de la proporción).",
+                difficulty: 2
+            },
+            {
+                question: "¿Qué verbo NO es correcto? '______ influencia'",
+                options: ["ejercer", "tener", "contraer", "desplegar"],
+                correctAnswer: 2,
+                explanation: "RAE: 'Contraer' se usa para deudas/enfermedades, no para influencia. Lo correcto es 'ejercer influencia'.",
+                difficulty: 3
+            }
+        ];
+
+        // Variables del juego
+        let currentQuestionIndex = 0;
+        let score = 0;
+        let lives = 3;
+        let timer;
+        let timeLeft;
+        let selectedLevel = 1;
+        let currentQuestions = [];
+
+        // Elementos del DOM
+        const quizContainer = document.getElementById('quiz-container');
+        const questionText = document.getElementById('question-text');
+        const optionsContainer = document.getElementById('options-container');
+        const explanationContainer = document.getElementById('explanation-container');
+        const nextBtn = document.getElementById('next-btn');
+        const livesCount = document.getElementById('lives-count');
+        const scoreCount = document.getElementById('score-count');
+        const timerElement = document.getElementById('timer');
+        const resultsContainer = document.getElementById('results-container');
+        const finalScore = document.getElementById('final-score');
+        const progressBar = document.getElementById('progress-bar');
+        const performanceMessage = document.getElementById('performance-message');
+        const restartBtn = document.getElementById('restart-btn');
+        const questionForm = document.getElementById('question-form');
+
+        // Selección de nivel
+        document.querySelectorAll('.select-level').forEach(button => {
+            button.addEventListener('click', function() {
+                selectedLevel = parseInt(this.getAttribute('data-level'));
+                startQuiz();
+            });
+        });
+
+        // Iniciar el quiz
+        function startQuiz() {
+            // Filtrar preguntas por nivel
+            currentQuestions = questions.filter(q => q.difficulty <= selectedLevel);
+            
+            // Mezclar preguntas
+            shuffleArray(currentQuestions);
+            
+            // Reiniciar variables
+            currentQuestionIndex = 0;
+            score = 0;
+            lives = 3;
+            
+            // Actualizar UI
+            updateUI();
+            
+            // Mostrar contenedor del quiz
+            document.querySelector('#practicar .row:nth-child(2)').style.display = 'none';
+            quizContainer.style.display = 'block';
+            
+            // Mostrar primera pregunta
+            showQuestion();
+        }
+
+        // Mostrar pregunta actual
+        function showQuestion() {
+            if (currentQuestionIndex >= currentQuestions.length) {
+                endGame();
+                return;
+            }
+            
+            const question = currentQuestions[currentQuestionIndex];
+            questionText.textContent = question.question;
+            
+            // Limpiar opciones anteriores
+            optionsContainer.innerHTML = '';
+            explanationContainer.style.display = 'none';
+            nextBtn.style.display = 'none';
+            
+            // Crear botones de opciones
+            question.options.forEach((option, index) => {
+                const button = document.createElement('button');
+                button.className = 'btn btn-outline-primary option-btn';
+                button.textContent = option;
+                button.setAttribute('data-index', index);
+                button.addEventListener('click', selectAnswer);
+                optionsContainer.appendChild(button);
+            });
+            
+            // Configurar temporizador
+            timeLeft = getTimeForLevel(selectedLevel);
+            timerElement.textContent = timeLeft;
+            startTimer();
+        }
+
+        // Obtener tiempo según nivel
+        function getTimeForLevel(level) {
+            const times = {1: 20, 2: 15, 3: 10};
+            return times[level];
+        }
+
+        // Iniciar temporizador
+        function startTimer() {
+            clearInterval(timer);
+            timer = setInterval(() => {
+                timeLeft--;
+                timerElement.textContent = timeLeft;
+                
+                if (timeLeft <= 0) {
+                    clearInterval(timer);
+                    handleTimeOut();
+                }
+            }, 1000);
+        }
+
+        // Manejar tiempo agotado
+        function handleTimeOut() {
+            lives--;
+            updateUI();
+            explanationContainer.textContent = "⏰ ¡Tiempo agotado!";
+            explanationContainer.style.display = 'block';
+            nextBtn.style.display = 'block';
+            
+            if (lives <= 0) {
+                endGame();
+            }
+        }
+
+        // Seleccionar respuesta
+        function selectAnswer(event) {
+            clearInterval(timer);
+            const selectedIndex = parseInt(event.target.getAttribute('data-index'));
+            const correctIndex = currentQuestions[currentQuestionIndex].correctAnswer;
+            
+            // Deshabilitar todos los botones
+            document.querySelectorAll('.option-btn').forEach(btn => {
+                btn.disabled = true;
+            });
+            
+            // Mostrar respuesta correcta/incorrecta
+            if (selectedIndex === correctIndex) {
+                event.target.classList.remove('btn-outline-primary');
+                event.target.classList.add('correct-answer');
+                score += 10;
+            } else {
+                event.target.classList.remove('btn-outline-primary');
+                event.target.classList.add('incorrect-answer');
+                
+                // Mostrar la respuesta correcta
+                document.querySelectorAll('.option-btn')[correctIndex].classList.remove('btn-outline-primary');
+                document.querySelectorAll('.option-btn')[correctIndex].classList.add('correct-answer');
+                
+                lives--;
+            }
+            
+            // Mostrar explicación
+            explanationContainer.textContent = currentQuestions[currentQuestionIndex].explanation;
+            explanationContainer.style.display = 'block';
+            
+            // Actualizar UI
+            updateUI();
+            
+            // Mostrar botón siguiente
+            nextBtn.style.display = 'block';
+            
+            // Verificar si se acabaron las vidas
+            if (lives <= 0) {
+                setTimeout(endGame, 2000);
+            }
+        }
+
+        // Siguiente pregunta
+        nextBtn.addEventListener('click', () => {
+            currentQuestionIndex++;
+            showQuestion();
+        });
+
+        // Actualizar UI
+        function updateUI() {
+            livesCount.textContent = lives;
+            scoreCount.textContent = score;
+        }
+
+        // Finalizar juego
+        function endGame() {
+            clearInterval(timer);
+            
+            // Ocultar contenedor de pregunta
+            document.getElementById('question-container').style.display = 'none';
+            
+            // Mostrar resultados
+            resultsContainer.style.display = 'block';
+            finalScore.textContent = score;
+            
+            // Calcular porcentaje
+            const maxScore = currentQuestions.length * 10;
+            const percentage = (score / maxScore) * 100;
+            progressBar.style.width = `${percentage}%`;
+            
+            // Mensaje de rendimiento
+            if (percentage >= 80) {
+                performanceMessage.innerHTML = '<h4 class="text-success">¡Excelente! Dominas las colocaciones léxicas.</h4>';
+            } else if (percentage >= 50) {
+                performanceMessage.innerHTML = '<h4 class="text-warning">¡Buen trabajo! Sigue practicando para mejorar.</h4>';
+            } else {
+                performanceMessage.innerHTML = '<h4 class="text-danger">¡Sigue intentándolo! La práctica hace al maestro.</h4>';
+            }
+        }
+
+        // Reiniciar juego
+        restartBtn.addEventListener('click', () => {
+            resultsContainer.style.display = 'none';
+            document.getElementById('question-container').style.display = 'block';
+            document.querySelector('#practicar .row:nth-child(2)').style.display = 'block';
+            quizContainer.style.display = 'none';
+        });
+
+        // Mezclar array (algoritmo Fisher-Yates)
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        // Manejar envío del formulario
+        questionForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Obtener valores del formulario
+            const questionText = document.getElementById('question-text-input').value;
+            const options = Array.from(document.querySelectorAll('.option-input')).map(input => input.value);
+            const correctAnswer = parseInt(document.getElementById('correct-answer').value);
+            const explanation = document.getElementById('explanation').value;
+            const difficulty = parseInt(document.getElementById('difficulty').value);
+            
+            // Crear nueva pregunta
+            const newQuestion = {
+                question: questionText,
+                options: options,
+                correctAnswer: correctAnswer,
+                explanation: explanation,
+                difficulty: difficulty
+            };
+            
+            // Agregar a la base de datos
+            questions.push(newQuestion);
+            
+            // Limpiar formulario
+            questionForm.reset();
+            
+            // Mostrar mensaje de éxito
+            alert('¡Pregunta guardada correctamente!');
+        });
+
+        // Smooth scroll para enlaces de navegación
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+    </script>
+</body>
+</html>

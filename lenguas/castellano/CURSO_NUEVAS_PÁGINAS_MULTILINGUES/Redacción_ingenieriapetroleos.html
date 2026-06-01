@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Redacción en Ingeniería de Petróleos — 100 técnicas para estudiantes colombianos</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ink:#1a1209; --parchment:#f5f0e8; --amber:#c8860a; --amber-light:#f0a830;
+  --amber-pale:#fdf3dc; --rust:#8b3a1a; --sage:#4a6741; --sage-light:#7a9e76;
+  --cream:#faf7f2; --border:#d4c9b0; --shadow:rgba(26,18,9,0.12);
+  --oil:#1b4f72; --oil-light:#2e86c1; --oil-pale:#eaf2f8;
+  --oil-energy:#f39c12;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'DM Sans',sans-serif;background:var(--parchment);color:var(--ink);min-height:100vh;
+  background-image:radial-gradient(ellipse at 15% 0%,rgba(27,79,114,.07) 0%,transparent 55%),
+  radial-gradient(ellipse at 85% 100%,rgba(243,156,18,.05) 0%,transparent 55%);}
+h1,h2,h3,.serif{font-family:'Playfair Display',serif;}
+
+.app-nav{background:var(--ink);display:flex;align-items:center;gap:.75rem;
+  padding:.7rem 1.5rem;position:sticky;top:0;z-index:200;box-shadow:0 2px 18px rgba(0,0,0,.25);}
+.nav-brand{font-family:'Playfair Display',serif;font-weight:900;font-size:1.25rem;
+  color:var(--oil-light);flex:1;white-space:nowrap;}
+.nav-brand span{color:#fff;}
+.nav-avatar{width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,var(--oil),var(--oil-energy));
+  display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.95rem;
+  color:#fff;font-family:'Playfair Display',serif;cursor:pointer;flex-shrink:0;
+  border:2px solid rgba(255,255,255,.2);transition:border-color .2s;}
+.nav-avatar:hover{border-color:var(--oil-light);}
+.nav-username{color:rgba(255,255,255,.8);font-size:.85rem;font-weight:500;white-space:nowrap;}
+.btn-reset{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);
+  color:rgba(255,255,255,.7);border-radius:8px;padding:.32rem .75rem;font-size:.78rem;
+  cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .2s;}
+.btn-reset:hover{background:rgba(255,255,255,.18);color:#fff;}
+
+.app-tabs{background:#fff;border-bottom:2px solid var(--border);display:flex;
+  padding:0 1.5rem;overflow-x:auto;gap:0;position:sticky;top:58px;z-index:150;}
+.app-tab{padding:.85rem 1.1rem;border:none;background:transparent;font-family:'DM Sans',sans-serif;
+  font-weight:700;font-size:.82rem;color:#999;cursor:pointer;white-space:nowrap;
+  border-bottom:3px solid transparent;margin-bottom:-2px;transition:all .2s;
+  display:flex;align-items:center;gap:.35rem;}
+.app-tab:hover{color:var(--ink);}
+.app-tab.active{color:var(--oil);border-bottom-color:var(--oil);}
+
+.app-body{max-width:1080px;margin:0 auto;padding:2rem 1.5rem;}
+.page{display:none;animation:rise .28s ease;}
+.page.active{display:block;}
+
+.card-app{background:#fff;border:1.5px solid var(--border);border-radius:16px;
+  box-shadow:0 2px 10px var(--shadow);overflow:hidden;}
+.card-app-header{padding:1.1rem 1.4rem;border-bottom:1px solid var(--border);
+  display:flex;align-items:center;gap:.75rem;}
+.card-app-body{padding:1.4rem;}
+
+.stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:.9rem;margin-bottom:1.6rem;}
+.stat-box{background:#fff;border:1.5px solid var(--border);border-radius:14px;
+  padding:1.1rem 1rem;text-align:center;transition:transform .2s;cursor:default;}
+.stat-box:hover{transform:translateY(-3px);box-shadow:0 6px 18px var(--shadow);}
+.stat-num{font-family:'Playfair Display',serif;font-size:2rem;font-weight:900;
+  color:var(--oil);line-height:1;margin-bottom:.2rem;}
+.stat-lbl{font-size:.73rem;font-weight:700;color:#aaa;text-transform:uppercase;letter-spacing:.05em;}
+
+.dot-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(26px,1fr));gap:4px;margin-bottom:1.6rem;}
+.dot{aspect-ratio:1;border-radius:6px;background:var(--border);cursor:pointer;
+  transition:all .18s;position:relative;display:flex;align-items:center;justify-content:center;}
+.dot.done{background:var(--sage);}
+.dot:hover{transform:scale(1.35);z-index:5;}
+.dot-tip{position:absolute;bottom:130%;left:50%;transform:translateX(-50%);
+  background:var(--ink);color:#fff;padding:.28rem .6rem;border-radius:6px;font-size:.68rem;
+  white-space:nowrap;pointer-events:none;opacity:0;transition:opacity .18s;z-index:99;}
+.dot:hover .dot-tip{opacity:1;}
+.dot-num{font-size:.5rem;font-weight:700;color:rgba(255,255,255,.7);}
+
+.search-field{border:1.5px solid var(--border);border-radius:10px;padding:.55rem 1rem .55rem 2.3rem;
+  font-family:'DM Sans',sans-serif;font-size:.87rem;background:#fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%23aaa' stroke-width='2.5'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cpath d='M21 21l-4.35-4.35'/%3E%3C/svg%3E") no-repeat .75rem center;
+  width:100%;max-width:260px;outline:none;transition:border-color .2s;}
+.search-field:focus{border-color:var(--oil);}
+.pill{padding:.28rem .75rem;border-radius:20px;border:1.5px solid var(--border);background:#fff;
+  font-size:.75rem;font-weight:700;cursor:pointer;transition:all .2s;font-family:'DM Sans',sans-serif;color:#888;}
+.pill.on,.pill:hover{background:var(--oil);border-color:var(--oil);color:#fff;}
+
+.ex-card{background:#fff;border:1.5px solid var(--border);border-radius:13px;padding:1rem 1.2rem;
+  margin-bottom:.6rem;cursor:pointer;transition:all .18s;display:flex;align-items:flex-start;gap:.9rem;
+  box-shadow:0 1px 4px var(--shadow);}
+.ex-card:hover{border-color:var(--oil);transform:translateX(5px);}
+.ex-card.done{border-left:4px solid var(--sage);}
+.ex-num-box{background:var(--parchment);border:1px solid var(--border);border-radius:8px;
+  width:42px;height:42px;display:flex;align-items:center;justify-content:center;
+  font-family:'DM Mono',monospace;font-size:.75rem;font-weight:600;color:var(--oil);flex-shrink:0;}
+.ex-card.done .ex-num-box{background:var(--sage);color:#fff;border-color:var(--sage);}
+.ex-body{flex:1;min-width:0;}
+.ex-cat-tag{font-size:.7rem;font-weight:700;color:var(--oil);text-transform:uppercase;letter-spacing:.05em;}
+.ex-name{font-weight:700;font-size:.9rem;margin:.1rem 0 .18rem;}
+.ex-short{font-size:.78rem;color:#777;line-height:1.5;}
+.badge-done{background:var(--sage);color:#fff;padding:.18rem .55rem;border-radius:9px;font-size:.7rem;font-weight:700;}
+.badge-new{background:var(--parchment);color:#bbb;padding:.18rem .55rem;border-radius:9px;font-size:.7rem;font-weight:700;border:1px solid var(--border);}
+
+.prac-header{background:#fff;border:1.5px solid var(--border);border-radius:16px;
+  padding:1.4rem 1.5rem;margin-bottom:1.2rem;box-shadow:0 2px 10px var(--shadow);}
+.prac-badge{display:inline-flex;align-items:center;gap:.35rem;background:var(--amber-pale);
+  border:1px solid rgba(200,134,10,.28);border-radius:8px;padding:.28rem .75rem;
+  font-size:.76rem;font-weight:700;color:var(--oil);margin-bottom:.7rem;}
+.prac-title{font-size:1.3rem;font-weight:900;margin-bottom:.45rem;}
+.prac-explanation{font-size:.88rem;color:#555;line-height:1.7;margin:0;}
+.prac-example{background:var(--parchment);border-left:3px solid var(--oil);
+  border-radius:0 9px 9px 0;padding:.7rem 1rem;margin-top:.9rem;font-size:.84rem;
+  color:var(--ink);font-style:italic;}
+
+.writing-zone{background:#fff;border:1.5px solid var(--border);border-radius:16px;
+  padding:1.4rem 1.5rem;margin-bottom:1rem;box-shadow:0 2px 10px var(--shadow);}
+.writing-prompt{background:linear-gradient(135deg,var(--oil-pale),#fffcf5);
+  border:1px solid rgba(27,79,114,.22);border-radius:10px;padding:.9rem 1.1rem;
+  margin-bottom:1rem;font-size:.87rem;line-height:1.65;}
+.writing-prompt strong{color:var(--rust);}
+#practiceTA{width:100%;min-height:145px;border:1.5px solid var(--border);border-radius:10px;
+  padding:.9rem 1rem;font-family:'DM Sans',sans-serif;font-size:.93rem;line-height:1.75;
+  color:var(--ink);resize:vertical;background:#fffef9;transition:border-color .2s;outline:none;}
+#practiceTA:focus{border-color:var(--oil);box-shadow:0 0 0 3px rgba(27,79,114,.1);}
+.wc{text-align:right;font-size:.76rem;color:#bbb;margin-top:.4rem;}
+
+.btn-check{background:linear-gradient(135deg,var(--sage),var(--sage-light));border:none;
+  border-radius:10px;color:#fff;font-weight:700;font-size:.92rem;padding:.75rem 1.6rem;
+  cursor:pointer;transition:all .2s;font-family:'DM Sans',sans-serif;
+  display:inline-flex;align-items:center;gap:.45rem;
+  box-shadow:0 4px 14px rgba(74,103,65,.32);}
+.btn-check:hover{transform:translateY(-2px);box-shadow:0 7px 20px rgba(74,103,65,.4);}
+.btn-check:disabled{opacity:.55;cursor:not-allowed;transform:none;}
+
+.btn-next{background:linear-gradient(135deg,var(--oil),var(--oil-energy));border:none;
+  border-radius:10px;color:#fff;font-weight:700;font-size:.92rem;padding:.75rem 1.6rem;
+  cursor:pointer;transition:all .2s;font-family:'DM Sans',sans-serif;
+  display:inline-flex;align-items:center;gap:.45rem;box-shadow:0 4px 14px rgba(27,79,114,.3);}
+.btn-next:hover{transform:translateY(-2px);}
+
+.fb-area{background:#fff;border:1.5px solid var(--border);border-radius:16px;
+  overflow:hidden;box-shadow:0 2px 10px var(--shadow);display:none;}
+.fb-area.show{display:block;animation:rise .35s ease;}
+.fb-head{padding:.95rem 1.4rem;display:flex;align-items:center;gap:.7rem;border-bottom:1px solid var(--border);}
+.fb-head.excellent{background:linear-gradient(90deg,#d4edda,#f0faf4);}
+.fb-head.good{background:linear-gradient(90deg,#fff3cd,#fffbf0);}
+.fb-head.low{background:linear-gradient(90deg,#f8d7da,#fdf5f5);}
+.fb-emoji{font-size:1.8rem;}
+.fb-htitle{font-weight:800;font-size:1rem;margin:0;}
+.fb-hsub{font-size:.78rem;color:#888;margin:0;}
+.fb-body{padding:1.4rem;}
+.score-circle{width:66px;height:66px;border-radius:50%;display:flex;align-items:center;
+  justify-content:center;font-family:'Playfair Display',serif;font-weight:900;font-size:1.25rem;flex-shrink:0;}
+.sc-high{background:#d4edda;color:#2d6a4f;}
+.sc-med{background:#fff3cd;color:#7a5c00;}
+.sc-low{background:#f8d7da;color:#8b1a1a;}
+.fb-section{margin-bottom:1.1rem;}
+.fb-section-title{font-weight:700;font-size:.76rem;text-transform:uppercase;letter-spacing:.07em;
+  color:#aaa;margin-bottom:.5rem;display:flex;align-items:center;gap:.35rem;}
+.fb-item{padding:.62rem .85rem;border-radius:8px;font-size:.84rem;line-height:1.52;
+  margin-bottom:.35rem;display:flex;gap:.55rem;align-items:flex-start;}
+.fb-item.ok{background:#f0f9f4;color:#2d6a4f;border-left:3px solid var(--sage);}
+.fb-item.err{background:#fdf5f5;color:#8b1a1a;border-left:3px solid #dc3545;}
+.fb-item.tip{background:#fffbf0;color:#7a5c00;border-left:3px solid var(--oil);}
+.fb-item.info{background:var(--parchment);color:var(--ink);border-left:3px solid #aaa;}
+.fb-ico{flex-shrink:0;margin-top:1px;}
+
+.spin{width:34px;height:34px;border:3px solid var(--border);border-top-color:var(--oil);
+  border-radius:50%;animation:rot .65s linear infinite;margin:0 auto 1rem;}
+@keyframes rot{to{transform:rotate(360deg)}}
+
+.profile-cover{height:96px;background:linear-gradient(135deg,var(--ink) 0%,#3d2a10 50%,var(--oil) 100%);position:relative;}
+.profile-av-lg{width:78px;height:78px;border-radius:50%;border:4px solid #fff;
+  background:linear-gradient(135deg,var(--oil),var(--oil-energy));display:flex;align-items:center;
+  justify-content:center;font-family:'Playfair Display',serif;font-weight:900;font-size:1.9rem;
+  color:#fff;position:absolute;bottom:-38px;left:1.4rem;box-shadow:0 4px 18px var(--shadow);}
+.profile-body{padding:3.2rem 1.4rem 1.4rem;}
+.profile-name{font-size:1.4rem;font-weight:900;margin-bottom:.15rem;}
+.profile-meta{color:#999;font-size:.83rem;}
+.ach-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:.65rem;}
+.ach{background:#fff;border:1.5px solid var(--border);border-radius:12px;padding:.9rem .7rem;
+  text-align:center;transition:all .2s;}
+.ach.unlocked{border-color:var(--oil);background:var(--oil-pale);}
+.ach.unlocked:hover{transform:translateY(-3px);box-shadow:0 5px 14px rgba(27,79,114,.22);}
+.ach-icon{font-size:1.6rem;display:block;margin-bottom:.35rem;}
+.ach-name{font-size:.7rem;font-weight:700;color:var(--ink);}
+.ach.locked .ach-icon{filter:grayscale(1);opacity:.35;}
+.ach.locked .ach-name{color:#ccc;}
+
+.hist-row{background:#fff;border:1.5px solid var(--border);border-radius:11px;
+  padding:.8rem 1rem;margin-bottom:.5rem;display:flex;align-items:center;gap:.8rem;cursor:pointer;transition:border-color .2s;}
+.hist-row:hover{border-color:var(--oil);}
+
+.toast-box{position:fixed;bottom:1.4rem;right:1.4rem;z-index:9999;}
+.toast-item{background:var(--ink);color:#fff;border-radius:12px;padding:.8rem 1.1rem;
+  margin-top:.45rem;display:flex;align-items:center;gap:.65rem;font-size:.84rem;font-weight:500;
+  box-shadow:0 8px 26px rgba(0,0,0,.28);animation:rise .28s ease;max-width:300px;}
+.toast-item.s{border-left:4px solid var(--sage-light);}
+.toast-item.e{border-left:4px solid #dc3545;}
+.toast-item.i{border-left:4px solid var(--oil-light);}
+
+.modal-backdrop-custom{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:1040;
+  display:flex;align-items:center;justify-content:center;padding:1rem;}
+.modal-box{background:#fff;border-radius:20px;max-width:480px;width:100%;
+  box-shadow:0 24px 64px rgba(0,0,0,.28);animation:rise .3s ease;overflow:hidden;}
+.modal-head{background:var(--ink);padding:1.1rem 1.4rem;color:#fff;display:flex;align-items:center;gap:.7rem;}
+.modal-head .modal-title-txt{font-weight:800;font-size:1rem;flex:1;}
+.modal-close{background:rgba(255,255,255,.12);border:none;color:#fff;border-radius:8px;
+  width:32px;height:32px;cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center;}
+.modal-close:hover{background:rgba(255,255,255,.25);}
+.modal-body-custom{padding:1.4rem;}
+.modal-foot{padding:1rem 1.4rem;border-top:1px solid var(--border);display:flex;gap:.7rem;justify-content:flex-end;}
+
+@keyframes rise{from{opacity:0;transform:translateY(28px)}to{opacity:1;transform:translateY(0)}}
+::-webkit-scrollbar{width:6px;height:6px;}
+::-webkit-scrollbar-track{background:transparent;}
+::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px;}
+@media(max-width:576px){
+  .app-body{padding:1rem;}
+  .stats-grid{grid-template-columns:1fr 1fr;}
+  .ach-grid{grid-template-columns:repeat(3,1fr);}
+  .app-nav{padding:.6rem 1rem;}
+  .nav-username{display:none;}
+}
+</style>
+</head>
+<body>
+
+<div id="appScreen">
+  <nav class="app-nav">
+    <div class="nav-brand">Redacción<span>Petróleos</span></div>
+    <div class="nav-avatar" id="navAv" onclick="switchPage('perfil')" title="Ver perfil">P</div>
+    <span class="nav-username" id="navName">Estudiante</span>
+    <button class="btn-reset" onclick="confirmReset()"><i class="bi bi-arrow-counterclockwise"></i> Reiniciar</button>
+  </nav>
+  <div class="app-tabs">
+    <button class="app-tab active" id="tab-dashboard" onclick="switchPage('dashboard')"><i class="bi bi-grid-3x3-gap-fill"></i> Inicio</button>
+    <button class="app-tab" id="tab-ejercicios" onclick="switchPage('ejercicios')"><i class="bi bi-journal-bookmark-fill"></i> Técnicas</button>
+    <button class="app-tab" id="tab-practica" onclick="switchPage('practica')"><i class="bi bi-pencil-square"></i> Practicar</button>
+    <button class="app-tab" id="tab-perfil" onclick="switchPage('perfil')"><i class="bi bi-person-circle"></i> Perfil</button>
+  </div>
+  <div class="app-body">
+    <div class="page active" id="page-dashboard">
+      <div class="d-flex align-items-center gap-2 mb-4"><div><h2 class="serif fw-black mb-0">¡Hola, <span id="dashName">futuro ingeniero de petróleos</span>! 🛢️</h2><p class="text-muted mb-0">Mejora tu redacción técnica en el contexto colombiano</p></div></div>
+      <div class="stats-grid mb-4">
+        <div class="stat-box"><div class="stat-num" id="sCompleted">0</div><div class="stat-lbl">Técnicas dominadas</div></div>
+        <div class="stat-box"><div class="stat-num" id="sPracticed">0</div><div class="stat-lbl">Prácticas realizadas</div></div>
+        <div class="stat-box"><div class="stat-num" id="sScore">—</div><div class="stat-lbl">Puntuación media</div></div>
+        <div class="stat-box"><div class="stat-num" id="sStreak">1🔥</div><div class="stat-lbl">Racha</div></div>
+      </div>
+      <div class="card-app mb-4"><div class="card-app-header"><i class="bi bi-map-fill text-warning"></i><div><div style="font-weight:800">Mapa de progreso</div><div style="font-size:.74rem;color:#aaa">100 técnicas · Verde = completado</div></div></div><div class="card-app-body"><div class="dot-grid" id="dotGrid"></div></div></div>
+      <div class="mb-2" style="font-weight:800">Siguiente técnica</div>
+      <div class="ex-card" id="nextCard"><div class="ex-num-box" id="nextNum">01</div><div class="ex-body"><div class="ex-cat-tag" id="nextCat">Precisión</div><div class="ex-name" id="nextName">Cargando...</div><div class="ex-short" id="nextDesc"></div></div><span style="color:var(--oil);font-size:1.4rem"><i class="bi bi-play-circle-fill"></i></span></div>
+      <div class="card-app mt-4"><div class="card-app-header"><i class="bi bi-bar-chart-fill text-warning"></i><div>Progreso por categoría</div></div><div class="card-app-body" id="catProgress"></div></div>
+    </div>
+    <div class="page" id="page-ejercicios">
+      <div class="d-flex align-items-center justify-content-between flex-wrap gap-2 mb-3"><h2 class="serif fw-black mb-0">100 Técnicas de Redacción en Ingeniería de Petróleos</h2><input class="search-field" id="searchQ" type="text" placeholder="Buscar..." oninput="renderList()"></div>
+      <div class="d-flex flex-wrap gap-2 mb-3" id="pills">
+        <button class="pill on" onclick="setFilter('all',this)">Todas</button>
+        <button class="pill" onclick="setFilter('precision',this)">Precisión y objetividad</button>
+        <button class="pill" onclick="setFilter('informes',this)">Informes de laboratorio</button>
+        <button class="pill" onclick="setFilter('perforacion',this)">Perforación y completamiento</button>
+        <button class="pill" onclick="setFilter('produccion',this)">Producción y levantamiento</button>
+        <button class="pill" onclick="setFilter('yacimientos',this)">Yacimientos y simulación</button>
+        <button class="pill" onclick="setFilter('normativa',this)">Normativa colombiana (ANH)</button>
+        <button class="pill" onclick="setFilter('seguridad',this)">Seguridad (HSE)</button>
+        <button class="pill" onclick="setFilter('articulos',this)">Artículos científicos</button>
+        <button class="pill" onclick="setFilter('etica',this)">Ética y comunicación</button>
+      </div>
+      <div id="exList"></div>
+    </div>
+    <div class="page" id="page-practica">
+      <div id="practiceEmpty" style="text-align:center;padding:4rem 1rem;"><div style="font-size:4rem">⛽</div><h3 class="serif fw-black mb-2">Selecciona una técnica</h3><button class="btn-main" style="display:inline-flex;width:auto" onclick="switchPage('ejercicios')"><i class="bi bi-journal-bookmark-fill"></i> Ver técnicas</button></div>
+      <div id="practiceContent" style="display:none">
+        <div class="prac-header"><div class="d-flex align-items-start justify-content-between gap-2 flex-wrap"><div><div class="prac-badge"><i class="bi bi-mortarboard-fill"></i> <span id="pracCat">Precisión</span> · Técnica <span id="pracNum">01</span></div><h2 class="prac-title serif" id="pracName">Título</h2><p class="prac-explanation" id="pracExpl">Explicación</p><div class="prac-example" id="pracEx"></div></div><div class="d-flex gap-2"><button class="btn-outline-app" onclick="prevExercise()"><i class="bi bi-chevron-left"></i></button><button class="btn-outline-app" onclick="nextExercise()"><i class="bi bi-chevron-right"></i></button></div></div></div>
+        <div class="writing-zone"><div class="writing-prompt" id="pracPrompt">Escribe tu respuesta.</div><textarea id="practiceTA" placeholder="Escribe tu respuesta aquí…"></textarea><div class="wc"><span id="wc">0</span> palabras · mínimo 10</div></div>
+        <div class="d-flex align-items-center gap-2 flex-wrap mb-3"><button class="btn-check" id="btnCheck" onclick="doCheck()"><i class="bi bi-magic"></i> Analizar respuesta</button><button class="btn-next" id="btnNext" onclick="nextExercise()" style="display:none">Siguiente <i class="bi bi-arrow-right"></i></button><span style="font-size:.76rem;color:#bbb">Aplica conceptos de redacción en petróleos.</span></div>
+        <div class="fb-area" id="fbArea"><div id="fbLoading" style="text-align:center;padding:2.5rem"><div class="spin"></div><div>Evaluando tu respuesta...</div></div><div id="fbContent" style="display:none"></div></div>
+      </div>
+    </div>
+    <div class="page" id="page-perfil">
+      <div class="card-app mb-4"><div class="profile-cover"><div class="profile-av-lg" id="profAv">P</div></div><div class="profile-body"><h3 class="profile-name" id="profName">—</h3><p class="profile-meta" id="profMeta">—</p><div class="d-flex gap-4 mt-3"><div><strong id="pComp">0</strong><span class="text-muted ms-1">técnicas</span></div><div><strong id="pPrac">0</strong><span class="text-muted ms-1">prácticas</span></div><div><strong id="pScr">—</strong><span class="text-muted ms-1">media</span></div></div><div class="d-flex gap-2 mt-3"><button class="btn-outline-app" onclick="openEditModal()"><i class="bi bi-pencil"></i> Editar perfil</button></div></div></div>
+      <div class="mb-2" style="font-weight:800">Logros destacados</div><div class="ach-grid mb-4" id="achGrid"></div>
+      <div class="mb-2" style="font-weight:800">Historial de prácticas</div><div id="histList"></div>
+    </div>
+  </div>
+</div>
+<div id="editModal" class="modal-backdrop-custom" style="display:none"><div class="modal-box"><div class="modal-head"><i class="bi bi-person-gear"></i><span class="modal-title-txt">Editar perfil</span><button class="modal-close" onclick="closeModal('editModal')"><i class="bi bi-x-lg"></i></button></div><div class="modal-body-custom"><div class="mb-3"><label class="field-label">Nombre</label><input id="editName" class="field" type="text"></div><div class="mb-3"><label class="field-label">Nivel</label><select id="editLevel" class="field"><option value="principiante">🌱 Principiante</option><option value="intermedio">📖 Intermedio</option><option value="avanzado">🎓 Avanzado</option></select></div></div><div class="modal-foot"><button class="btn-outline-app" onclick="closeModal('editModal')">Cancelar</button><button class="btn-main" style="width:auto" onclick="saveEdit()">Guardar</button></div></div></div>
+<div class="toast-box" id="toastBox"></div>
+<script>
+// ============================================================
+// 100 TÉCNICAS DE REDACCIÓN EN INGENIERÍA DE PETRÓLEOS (CONTEXTO COLOMBIANO)
+// ORGANIZADAS EN 10 BLOQUES DE 10 TÉCNICAS
+// ============================================================
+const CATS = {
+  precision: 'Precisión y objetividad en petróleos',
+  informes: 'Informes de laboratorio de núcleos y fluidos',
+  perforacion: 'Perforación y completamiento',
+  produccion: 'Producción y levantamiento artificial',
+  yacimientos: 'Yacimientos y simulación de reservorios',
+  normativa: 'Normativa colombiana (ANH, Ecopetrol)',
+  seguridad: 'Seguridad industrial (HSE) en hidrocarburos',
+  articulos: 'Artículos científicos y reportes técnicos',
+  datos: 'Datos, gráficos y curvas de declinación',
+  etica: 'Ética y comunicación profesional'
+};
+
+// Plantillas base: 10 bloques × 10 técnicas = 100
+const templates = [
+  // BLOQUE 1: Precisión y objetividad en petróleos (1-10)
+  { cat: 'precision', name: 'Unidades en ingeniería de petróleos', short: 'API, bbl, scf, psi, cP', expl: 'Especificar condiciones estándar (60°F, 14.7 psi).', prompt: 'Escribe una frase con densidad API 35°, presión 5000 psi, caudal 1000 bbl/día.' },
+  { cat: 'precision', name: 'Factores de conversión comunes', short: '1 bbl = 0.159 m³, 1 psi = 6894.76 Pa', expl: 'Usar sistema de unidades consistente.', prompt: 'Convierte 2500 psi a pascales y 5000 bbl a metros cúbicos.' },
+  { cat: 'precision', name: 'Propiedades de fluidos', short: 'Gravedad API, viscosidad, factor de volumen', expl: 'Ejemplo: "Petróleo de 35° API, viscosidad 2 cP".', prompt: 'Registra las propiedades de un crudo: 30° API, viscosidad 5 cP, Bo = 1.2.' },
+  { cat: 'precision', name: 'Unidades de permeabilidad', short: 'Darcy (D), milidarcy (mD)', expl: '1 Darcy = 0.987 × 10⁻¹² m².', prompt: 'Redacta una permeabilidad de 150 mD para una arenisca.' },
+  { cat: 'precision', name: 'Condiciones estándar y de yacimiento', short: 'SC (60°F, 14.7 psi), RC (presión y temperatura del yacimiento)', expl: 'Diferenciar.', prompt: 'Explica la diferencia entre barriles de yacimiento (RB) y barriles estándar (STB).' },
+  { cat: 'precision', name: 'Evitar adjetivos subjetivos', short: 'No usar "alto", "bajo" sin referencia', expl: 'Usar "presión de 5000 psi" en lugar de "presión alta".', prompt: 'Reemplaza "el pozo tiene baja productividad" por una descripción cuantitativa.' },
+  { cat: 'precision', name: 'Notación de pozos', short: 'Pozo A-1, Pozo B-2', expl: 'Seguir nomenclatura de la ANH.', prompt: 'Escribe la designación correcta para un pozo exploratorio en el bloque Llanos 34.' },
+  { cat: 'precision', name: 'Registro de profundidades', short: 'MD (profundidad medida), TVD (profundidad vertical verdadera)', expl: 'Especificar cuál se usa.', prompt: 'Registra una profundidad medida de 3500 m y TVD de 3200 m.' },
+  { cat: 'precision', name: 'Cifras significativas en mediciones', short: 'Adecuadas a la precisión del instrumento', expl: 'No dar más decimales que la resolución.', prompt: 'Corrige "La presión fue 1234.5678 psi" para un manómetro con precisión ±1 psi.' },
+  { cat: 'precision', name: 'Abreviaturas estándar', short: 'BHP (presión de fondo), WHP (presión de cabeza), GOR (relación gas-petróleo)', expl: 'Definir la primera vez.', prompt: 'Escribe una frase usando la sigla GOR (Gas-Oil Ratio) desarrollándola primero.' },
+  // BLOQUE 2: Informes de laboratorio de núcleos y fluidos (11-20)
+  { cat: 'informes', name: 'Estructura de informe de núcleos', short: 'Objetivo, muestras, procedimiento, resultados, conclusiones', expl: 'Norma API RP 40.', prompt: 'Enumera las secciones de un informe de análisis de testigos de núcleo.' },
+  { cat: 'informes', name: 'Descripción de testigos', short: 'Litología, porosidad, permeabilidad, saturación', expl: 'Incluir profundidad.', prompt: 'Describe un testigo de arenisca de 3 m de longitud, porosidad 18%, permeabilidad 200 mD.' },
+  { cat: 'informes', name: 'Análisis de saturación de fluidos', short: 'Agua, petróleo, gas', expl: 'Método de extracción Dean-Stark.', prompt: 'Registra una saturación de agua de 25%, petróleo 70%, gas 5% en un núcleo.' },
+  { cat: 'informes', name: 'Ensayo de porosidad', short: 'Método de Boyle's Law (porosímetro de helio)', expl: 'Porosidad efectiva.', prompt: 'Redacta un resultado de porosidad efectiva de 22% en una muestra de caliza.' },
+  { cat: 'informes', name: 'Ensayo de permeabilidad', short: 'Permeámetro de gas (nitrógeno)', expl: 'Corrección por efecto Klinkenberg.', prompt: 'Registra una permeabilidad al aire de 150 mD y permeabilidad absoluta de 120 mD.' },
+  { cat: 'informes', name: 'Análisis PVT de fluidos', short: 'Presión de burbuja, Rs, Bo', expl: 'Para petróleo.', prompt: 'Reporta una presión de burbuja de 3500 psi, Rs = 600 scf/STB, Bo = 1.3.' },
+  { cat: 'informes', name: 'Viscosidad de crudo', short: 'Medida con viscosímetro rotacional', expl: 'A presión y temperatura de yacimiento.', prompt: 'Registra una viscosidad de 2.5 cP a 180°F y 4000 psi.' },
+  { cat: 'informes', name: 'Análisis de agua de formación', short: 'Salinidad, pH, composición iónica', expl: 'Para compatibilidad.', prompt: 'Registra una salinidad de 150,000 ppm de NaCl en agua de formación.' },
+  { cat: 'informes', name: 'Ensayo de compresibilidad de roca', short: 'Coeficiente de compresibilidad de poro (Cf)', expl: 'Para simuladores.', prompt: 'Reporta una compresibilidad de roca de 3 × 10⁻⁶ psi⁻¹.' },
+  { cat: 'informes', name: 'Informe de mojabilidad', short: 'Ángulo de contacto, índice de Amott', expl: 'Determina preferencia de fluido.', prompt: 'Registra un ángulo de contacto de 45° (mojabilidad intermedia).' },
+  // BLOQUE 3: Perforación y completamiento (21-30)
+  { cat: 'perforacion', name: 'Programa de perforación', short: 'Sarta, trépano, lodo, parámetros de perforación', expl: 'Velocidad de rotación, peso sobre la mecha (WOB).', prompt: 'Redacta un programa de perforación: trépano PDC de 8.5", WOB 20,000 lb, RPM 120.' },
+  { cat: 'perforacion', name: 'Propiedades del lodo de perforación', short: 'Densidad (ppg), viscosidad, filtrado', expl: 'Control de presiones.', prompt: 'Registra una densidad de lodo de 12.5 ppg, viscosidad de 45 cP, filtrado API 8 mL.' },
+  { cat: 'perforacion', name: 'Reología del lodo', short: 'Modelo de Bingham o Power Law', expl: 'Esfuerzo de fluencia, índice de consistencia.', prompt: 'Reporta un esfuerzo de fluencia de 15 lb/100ft², índice de consistencia de 2 cP.' },
+  { cat: 'perforacion', name: 'Revestimiento (casing)', short: 'Diámetro, peso, grado', expl: 'Ejemplo: "Casing de 9 5/8", 47 lb/ft, grado L-80".', prompt: 'Especifica una sarta de revestimiento para un pozo de 10,000 ft.' },
+  { cat: 'perforacion', name: 'Cementación', short: 'Densidad de la lechada, tiempo de fraguado', expl: 'Aislamiento de zonas.', prompt: 'Redacta una especificación de lechada de cemento: densidad 15.8 ppg, tiempo de fraguado 4 horas.' },
+  { cat: 'perforacion', name: 'Pruebas de formación (DST)', short: 'Presión inicial, cierre, permeabilidad', expl: 'Evaluar potencial.', prompt: 'Interpreta un DST: presión inicial 4500 psi, permeabilidad 50 mD, daño (skin) +3.' },
+  { cat: 'perforacion', name: 'Completamiento (completion)', short: 'Tubería de producción, empacador, válvulas', expl: 'Diseño.', prompt: 'Describe un completamiento simple con empacador y tubería de 3.5".' },
+  { cat: 'perforacion', name: 'Estimulación (fracturamiento)', short: 'Presión de fractura, apuntalante (propante)', expl: 'Mejorar permeabilidad.', prompt: 'Redacta un diseño de fracturamiento hidráulico: tasa 40 bpm, arena 20/40 mesh.' },
+  { cat: 'perforacion', name: 'Control de sólidos en lodo', short: 'Mallas (shakers), desarenador, deslimador', expl: 'Eficiencia de remoción.', prompt: 'Registra una eficiencia de mallas del 85% en la remoción de sólidos.' },
+  { cat: 'perforacion', name: 'Seguridad en perforación (BOP)', short: 'Preventor de reventones (BOP)', expl: 'Pruebas de presión.', prompt: 'Redacta una prueba de BOP: 5000 psi durante 15 minutos, sin fugas.' },
+  // BLOQUE 4: Producción y levantamiento artificial (31-40)
+  { cat: 'produccion', name: 'Curva de declinación de producción', short: 'Exponencial, hiperbólica, armónica', expl: 'Predecir comportamiento.', prompt: 'Redacta una tasa de declinación exponencial del 10% anual para un pozo que produce 1000 bbl/día.' },
+  { cat: 'produccion', name: 'Bombeo mecánico (unidad de bombeo)', short: 'Tamaño de bomba, golpes por minuto (SPM)', expl: 'Para pozos de baja producción.', prompt: 'Especifica una unidad de bombeo: bomba de 2", SPM 10, profundidad 6000 ft.' },
+  { cat: 'produccion', name: 'Bombeo electro-sumergible (ESP)', short: 'Caudal, altura dinámica total (TDH), eficiencia', expl: 'Alta producción.', prompt: 'Redacta una especificación de ESP: caudal 5000 bbl/día, TDH 4000 ft, eficiencia 65%.' },
+  { cat: 'produccion', name: 'Gas lift', short: 'Inyección de gas, válvulas', expl: 'Reducir columna hidrostática.', prompt: 'Registra una relación gas-líquido (GLR) de 500 scf/bbl para levantamiento por gas.' },
+  { cat: 'produccion', name: 'Bombeo de cavidades progresivas (PCP)', short: 'Para crudos pesados', expl: 'Baja velocidad.', prompt: 'Especifica una PCP para crudo de 12° API, caudal 300 bbl/día.' },
+  { cat: 'produccion', name: 'Separación de fluidos', short: 'Separador trifásico (gas, petróleo, agua)', expl: 'Presión de operación.', prompt: 'Redacta una presión de separación de 150 psi para un separador de prueba.' },
+  { cat: 'produccion', name: 'Tratamiento de crudo', short: 'Deshidratación, desalación', expl: 'Calidad de venta (BS&W < 1%).', prompt: 'Registra un contenido de agua y sedimentos (BS&W) de 0.5% en crudo tratado.' },
+  { cat: 'produccion', name: 'Medición de producción', short: 'Medidor de flujo, tanque de prueba', expl: 'Precisión ±2%.', prompt: 'Redacta una medición de producción: 850 bbl/día de petróleo, 0.5% BS&W, 1200 scf/día de gas.' },
+  { cat: 'produccion', name: 'Análisis nodal (sistema de producción)', short: 'Curvas IPR (inflow) y VLP (outflow)', expl: 'Optimizar producción.', prompt: 'Interpreta un punto de operación donde IPR y VLP se intersectan a 800 bbl/día.' },
+  { cat: 'produccion', name: 'Cronograma de producción (histórico)', short: 'Tasa vs tiempo', expl: 'Identificar tendencias.', prompt: 'Redacta una producción acumulada de 500,000 bbl después de 3 años de explotación.' },
+  // BLOQUE 5: Yacimientos y simulación de reservorios (41-50)
+  { cat: 'yacimientos', name: 'Balance de materiales (MBE)', short: 'Ecuación de Havlena-Odeh', expl: 'Estimar petróleo original in situ (OOIP).', prompt: 'Redacta un OOIP calculado por MBE: 120 MMSTB.' },
+  { cat: 'yacimientos', name: 'Simulación numérica de yacimientos', short: 'Software Eclipse, CMG, Intersect', expl: 'Mallado, propiedades.', prompt: 'Redacta una simulación de un yacimiento de 100 celdas, porosidad promedio 15%, permeabilidad 100 mD.' },
+  { cat: 'yacimientos', name: 'Mecanismos de empuje', short: 'Empuje hidráulico (agua), empuje por gas en solución', expl: 'Recuperación primaria.', prompt: 'Identifica un yacimiento con empuje hidráulico activo (acuífero).' },
+  { cat: 'yacimientos', name: 'Recuperación secundaria (inyección de agua)', short: 'Patrón de inyección (5-spot, 7-spot)', expl: 'Mantenimiento de presión.', prompt: 'Redacta un patrón de inyección 5-spot para 20 pozos inyectores y productores.' },
+  { cat: 'yacimientos', name: 'Recuperación mejorada (EOR)', short: 'Inyección de polímeros, surfactantes, CO2', expl: 'Aumentar factor de recobro.', prompt: 'Propone una inyección de polímeros para reducir la movilidad del agua.' },
+  { cat: 'yacimientos', name: 'Historial de producción y ajuste de historia', short: 'History matching', expl: 'Calibrar modelo.', prompt: 'Redacta un ajuste de historia con error del 5% entre producción simulada y real.' },
+  { cat: 'yacimientos', name: 'Propiedades de la roca (capilares)', short: 'Presión capilar, permeabilidad relativa', expl: 'Curvas kr.', prompt: 'Registra una permeabilidad relativa al agua de 0.2 y al petróleo de 0.8 a Sw=0.4.' },
+  { cat: 'yacimientos', name: 'Factor de recobro (RF)', short: 'RF = (Recuperable / OOIP) × 100', expl: 'Predicción.', prompt: 'Calcula el factor de recobro si el OOIP es 100 MMSTB y la producción acumulada es 35 MMSTB.' },
+  { cat: 'yacimientos', name: 'Presión de burbuja y yacimientos subsaturados', short: 'P > Pb, sin gas libre', expl: 'Energía de empuje.', prompt: 'Redacta una presión de burbuja de 3000 psi para un yacimiento a 4000 psi (subsaturado).' },
+  { cat: 'yacimientos', name: 'Análisis de declinación (Arps)', short: 'Exponencial, hiperbólica, armónica', expl: 'Predecir EUR.', prompt: 'Redacta una declinación hiperbólica con b=0.5, tasa inicial 1000 bbl/día.' },
+  // BLOQUE 6: Normativa colombiana (ANH, Ecopetrol) (51-60)
+  { cat: 'normativa', name: 'Agencia Nacional de Hidrocarburos (ANH)', short: 'Ente regulador', expl: 'Contratos de exploración y producción.', prompt: 'Cita la ANH como autoridad para la presentación de informes técnicos de pozos.' },
+  { cat: 'normativa', name: 'Contratos de E&P en Colombia', short: 'Ronda Colombia, contratos de licencia', expl: 'Áreas contractuales.', prompt: 'Redacta una referencia al contrato de exploración y producción del bloque Llanos 34.' },
+  { cat: 'normativa', name: 'Informes técnicos a la ANH', short: 'Reporte de pozos, pruebas de producción', expl: 'Plazos establecidos.', prompt: 'Enumera la información mínima que debe contener un informe de terminación de pozo para la ANH.' },
+  { cat: 'normativa', name: 'Ecopetrol S.A.', short: 'Empresa estatal', expl: 'Socio en algunos contratos.', prompt: 'Menciona a Ecopetrol como operador en el bloque Castilla.' },
+  { cat: 'normativa', name: 'Regulación ambiental (ANLA)', short: 'Licencia ambiental para perforación', expl: 'Estudio de impacto ambiental (EIA).', prompt: 'Redacta una referencia a la licencia ambiental otorgada por la ANLA para un proyecto de perforación en el Meta.' },
+  { cat: 'normativa', name: 'Normas de salud y seguridad (SG-SST)', short: 'Resolución 2400 de 1979, Decreto 1072', expl: 'Aplica a operaciones petroleras.', prompt: 'Menciona un requisito de seguridad para trabajo en plataformas petroleras.' },
+  { cat: 'normativa', name: 'API (American Petroleum Institute)', short: 'Estándares internacionales', expl: 'API RP 65, API RP 53, etc.', prompt: 'Cita la norma API RP 65 (cementación) en un informe de completamiento.' },
+  { cat: 'normativa', name: 'Registro de producción de crudo', short: 'Ministerio de Minas y Energía', expl: 'Reporte mensual.', prompt: 'Redacta un formato de reporte de producción mensual a la ANH: pozo A-1, 5000 bbl.' },
+  { cat: 'normativa', name: 'Normas de metrología (ICONTEC)', short: 'Calibración de medidores de flujo', expl: 'NTC-ISO 10012.', prompt: 'Escribe una frase sobre la calibración de un medidor de flujo según NTC-ISO 10012.' },
+  { cat: 'normativa', name: 'Decreto Único Reglamentario del Sector Ambiental', short: 'Decreto 1076 de 2015', expl: 'Manejo de residuos peligrosos.', prompt: 'Cita el Decreto 1076 para el manejo de lodos de perforación.' },
+  // BLOQUE 7: Seguridad industrial (HSE) en hidrocarburos (61-70)
+  { cat: 'seguridad', name: 'Análisis de peligros y riesgos (HazOp)', short: 'Identificación de riesgos', expl: 'Para plantas e instalaciones.', prompt: 'Redacta una recomendación de un HazOp para una batería de separación.' },
+  { cat: 'seguridad', name: 'Equipos de protección personal (EPP)', short: 'Casco, gafas, guantes, overol, botas dieléctricas', expl: 'En campo.', prompt: 'Enumera el EPP requerido para un operario en una torre de perforación.' },
+  { cat: 'seguridad', name: 'Manejo de H2S (ácido sulfhídrico)', short: 'Detectores, respiradores, protocolo de emergencia', expl: 'Gas letal.', prompt: 'Redacta un protocolo de respuesta a una alarma de H2S en una plataforma.' },
+  { cat: 'seguridad', name: 'Permiso de trabajo (PTW)', short: 'Para actividades de alto riesgo', expl: 'Trabajo en caliente, altura, espacios confinados.', prompt: 'Redacta un permiso de trabajo en caliente para soldar una tubería.' },
+  { cat: 'seguridad', name: 'Sistema de gestión de seguridad (SG-SST)', short: 'Ley 1562 de 2012', expl: 'Comité paritario.', prompt: 'Menciona un elemento del SG-SST en una empresa petrolera (inspecciones de seguridad).' },
+  { cat: 'seguridad', name: 'Prevención de incendios', short: 'Extintores clase B (líquidos inflamables), clase C (equipos eléctricos)', expl: 'Ubicación.', prompt: 'Recomienda un extintor para una sala de bombas de crudo (clase B).' },
+  { cat: 'seguridad', name: 'Procedimiento de bloqueo y etiquetado (LOTO)', short: 'Aislamiento de energía', expl: 'Para mantenimiento.', prompt: 'Redacta los pasos para el bloqueo de una bomba centrífuga antes de reparación.' },
+  { cat: 'seguridad', name: 'Indicadores de seguridad (HSE)', short: 'Índice de frecuencia de accidentes (IF), días perdidos', expl: 'Medir desempeño.', prompt: 'Registra un IF de 0.5 accidentes por millón de horas hombre.' },
+  { cat: 'seguridad', name: 'Simulacros de emergencia', short: 'Evacuación, control de derrames', expl: 'Entrenamiento.', prompt: 'Redacta una observación de un simulacro de derrame de crudo (tiempo de respuesta 5 min).' },
+  { cat: 'seguridad', name: 'Reporte de incidentes (near miss)', short: 'Evento sin lesión', expl: 'Aprender de casi accidentes.', prompt: 'Redacta un reporte de near miss: "Cayó una herramienta desde 10 m, sin personal cerca".' },
+  // BLOQUE 8: Artículos científicos y reportes técnicos (71-80)
+  { cat: 'articulos', name: 'Título de artículo técnico', short: 'Informativo, conciso', expl: 'Ejemplo: "Análisis de producción de crudo pesado en el campo Chichimene".', prompt: 'Escribe un título para un artículo sobre la aplicación de bombas ESP en crudos pesados en Colombia.' },
+  { cat: 'articulos', name: 'Resumen ejecutivo para reporte técnico', short: 'Objetivos, metodología, resultados clave', expl: 'Para gerencia.', prompt: 'Redacta un resumen ejecutivo de un estudio de simulación de yacimientos del campo Caño Limón.' },
+  { cat: 'articulos', name: 'Introducción: antecedentes', short: 'Contexto regional, problema técnico', expl: 'Citar estudios previos.', prompt: 'Escribe el primer párrafo de una introducción sobre el uso de polímeros en el campo Rubiales.' },
+  { cat: 'articulos', name: 'Metodología de simulación', short: 'Software, mallado, parámetros', expl: 'Reproducibilidad.', prompt: 'Describe la metodología para construir un modelo de simulación en Eclipse.' },
+  { cat: 'articulos', name: 'Resultados y discusión', short: 'Presentar curvas, comparar con historia', expl: 'Interpretar.', prompt: 'Redacta una frase de resultados: "La inyección de agua incrementó la producción en 30%".' },
+  { cat: 'articulos', name: 'Conclusiones y recomendaciones', short: 'Aprendizajes, pasos futuros', expl: 'No repetir resultados.', prompt: 'Escribe una conclusión sobre la viabilidad técnica de la inyección de polímeros.' },
+  { cat: 'articulos', name: 'Referencias estilo SPE', short: 'Autor, título, conferencia o revista, año', expl: 'Society of Petroleum Engineers.', prompt: 'Escribe una referencia de un paper de SPE: "SPE-123456-MS, 2022, Análisis de declinación".' },
+  { cat: 'articulos', name: 'Citas en el texto', short: 'Números entre corchetes [1]', expl: 'Orden de aparición.', prompt: 'Cita el artículo [2] sobre fracturamiento hidráulico en la formación La Luna.' },
+  { cat: 'articulos', name: 'Palabras clave', short: '3-6 términos', expl: 'Ejemplo: "Crudo pesado, ESP, campo Rubiales, Colombia".', prompt: 'Selecciona 5 palabras clave para un artículo sobre inyección de agua en el Piedemonte.' },
+  { cat: 'articulos', name: 'Agradecimientos a entidades colombianas', short: 'ANH, Ecopetrol, Universidad', expl: 'Financiamiento.', prompt: 'Redacta un agradecimiento a la ANH por la cesión de datos de producción.' },
+  // BLOQUE 9: Datos, gráficos y curvas de declinación (81-90)
+  { cat: 'datos', name: 'Tabla de producción por pozo', short: 'Fecha, caudal de petróleo, agua, gas', expl: 'Datos mensuales.', prompt: 'Crea una tabla con producción mensual de 3 meses para un pozo (valores ficticios).' },
+  { cat: 'datos', name: 'Curva de declinación exponencial', short: 'q = qi * exp(-D*t)', expl: 'En escala semilog.', prompt: 'Describe una curva de declinación exponencial con tasa inicial 1000 bbl/día y D=0.1 por año.' },
+  { cat: 'datos', name: 'Gráfico de producción acumulada vs tiempo', short: 'Eje X tiempo, eje Y producción acumulada', expl: 'Mostrar EUR.', prompt: 'Interpreta una producción acumulada de 1 MMbbl después de 5 años.' },
+  { cat: 'datos', name: 'Diagrama de flujo de proceso de superficie', short: 'Separador, tanques, bomba, fiscalización', expl: 'Layout de batería.', prompt: 'Dibuja (describe) un diagrama de flujo de una batería de separación.' },
+  { cat: 'datos', name: 'Carta de control de calidad de crudo', short: 'BS&W, gravedad API', expl: 'Especificaciones de venta.', prompt: 'Redacta una carta de control con BS&W < 1% y API 32° durante un mes.' },
+  { cat: 'datos', name: 'Gráfico de presiones (BHP vs tiempo)', short: 'Presión de fondo fluyendo vs estática', expl: 'Evaluar daño.', prompt: 'Interpreta una presión de fondo que ha disminuido de 5000 a 4000 psi en 2 años.' },
+  { cat: 'datos', name: 'Mapa de localización de pozos', short: 'Coordenadas, plataformas', expl: 'Sistema de referencia.', prompt: 'Describe un mapa con 5 pozos productores y 2 inyectores en un patrón 5-spot.' },
+  { cat: 'datos', name: 'Perfil de producción de gas (GOR)', short: 'Relación gas-petróleo vs tiempo', expl: 'Identificar liberación de gas.', prompt: 'Redacta un GOR que aumenta de 500 a 2000 scf/bbl, indicando que la presión cayó por debajo de la presión de burbuja.' },
+  { cat: 'datos', name: 'Tabla de propiedades de fluidos PVT', short: 'Presión, Bo, Rs, μo', expl: 'Para simulación.', prompt: 'Crea una tabla con 3 puntos de presión: 4000, 3000, 2000 psi y sus Bo y Rs.' },
+  { cat: 'datos', name: 'Histograma de permeabilidades', short: 'Distribución de frecuencias', expl: 'Caracterizar yacimiento.', prompt: 'Describe un histograma con permeabilidad promedio de 150 mD y desviación 50 mD.' },
+  // BLOQUE 10: Ética y comunicación profesional (91-100)
+  { cat: 'etica', name: 'Integridad en informes de reservas', short: 'No inflar reservas', expl: 'Normas SEC, PRMS.', prompt: 'Redacta una declaración de integridad para un informe de certificación de reservas.' },
+  { cat: 'etica', name: 'Confidencialidad de datos de yacimiento', short: 'No divulgar información de la ANH', expl: 'Cláusulas de contrato.', prompt: 'Redacta una cláusula de confidencialidad para un consultor petrolero.' },
+  { cat: 'etica', name: 'Responsabilidad profesional del ingeniero', short: 'Firmar y sellar documentos', expl: 'Registro profesional.', prompt: 'Explica por qué un ingeniero de petróleos debe sellar un diseño de completamiento.' },
+  { cat: 'etica', name: 'Comunicación con comunidades', short: 'Consulta previa, lenguaje claro', expl: 'Responsabilidad social.', prompt: 'Redacta un comunicado para una comunidad explicando el proceso de perforación.' },
+  { cat: 'etica', name: 'Presentaciones a la gerencia', short: 'Estructura: resumen, análisis, recomendaciones', expl: 'Usar gráficos.', prompt: 'Enumera tres consejos para presentar un análisis de declinación de producción a la gerencia.' },
+  { cat: 'etica', name: 'Redacción de correos a operadores', short: 'Asunto claro, datos técnicos', expl: 'Para solicitar información.', prompt: 'Escribe un correo a un operador solicitando los últimos registros de producción del pozo A-1.' },
+  { cat: 'etica', name: 'Currículum vitae para ingeniero de petróleos', short: 'Destacar software (Eclipse, CMG), proyectos', expl: 'Incluir logros.', prompt: 'Redacta un punto de logro para un CV: "Optimización de producción aumentó 15% con ESP".' },
+  { cat: 'etica', name: 'Trabajo en equipo multidisciplinario', short: 'Geólogos, petrofísicos, ingenieros de yacimientos', expl: 'Colaboración.', prompt: 'Explica cómo comunicarías un modelo de simulación a un geólogo.' },
+  { cat: 'etica', name: 'Uso de IA en redacción petrolera', short: 'Declarar su uso (ChatGPT, Copilot)', expl: 'No como autor.', prompt: 'Redacta una declaración de uso de IA para corregir gramática en un informe.' },
+  { cat: 'etica', name: 'Sostenibilidad y transición energética', short: 'Reducir huella de carbono', expl: 'Captura de CO2, energías renovables.', prompt: 'Propón una práctica sostenible en operaciones petroleras (ej. uso de gas para generación eléctrica).' }
+];
+
+// Generar exactamente 100 ejercicios
+let ejercicios = [];
+for (let i = 0; i < 100; i++) {
+  const t = templates[i % templates.length];
+  const sufijo = i < templates.length ? '' : ` (${Math.floor(i / templates.length) + 1})`;
+  ejercicios.push({
+    id: i + 1,
+    cat: t.cat,
+    name: t.name + sufijo,
+    short: t.short,
+    expl: t.expl,
+    prompt: t.prompt
+  });
+}
+for (let i = 0; i < ejercicios.length; i++) ejercicios[i].id = i + 1;
+
+// ========== ESTADO DE USUARIO ==========
+let userData = { name:"Estudiante", level:"intermedio", completed:[], practiced:0, scores:[], history:[], joinDate:new Date().toLocaleDateString('es-ES') };
+function loadUserData(){ const saved=localStorage.getItem('redaccionPetroleosUser'); if(saved){ try{ const p=JSON.parse(saved); userData={...userData,...p}; }catch(e){} } updateUI(); }
+function saveUserData(){ localStorage.setItem('redaccionPetroleosUser',JSON.stringify(userData)); updateUI(); }
+function updateUI(){ document.getElementById('navName').textContent=userData.name.split(' ')[0]; document.getElementById('dashName').textContent=userData.name.split(' ')[0]; document.getElementById('navAv').textContent=userData.name[0].toUpperCase(); }
+loadUserData();
+
+let currentEx = null;
+let filterCatEx = 'all';
+function switchPage(p){
+  document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));
+  document.querySelectorAll('.app-tab').forEach(x=>x.classList.remove('active'));
+  document.getElementById('page-'+p)?.classList.add('active');
+  document.getElementById('tab-'+p)?.classList.add('active');
+  if(p==='dashboard') refreshDash();
+  if(p==='perfil') renderProfile();
+  if(p==='ejercicios') renderList();
+}
+function refreshDash(){
+  document.getElementById('sCompleted').textContent=userData.completed.length;
+  document.getElementById('sPracticed').textContent=userData.practiced;
+  const avg=userData.scores.length?Math.round(userData.scores.reduce((a,b)=>a+b,0)/userData.scores.length):null;
+  document.getElementById('sScore').textContent=avg?avg+'%':'—';
+  document.getElementById('sStreak').textContent=(userData.streak||1)+'🔥';
+  const grid=document.getElementById('dotGrid');
+  grid.innerHTML='';
+  ejercicios.forEach(ex=>{
+    const done=userData.completed.includes(ex.id);
+    const div=document.createElement('div');
+    div.className='dot'+(done?' done':'');
+    div.innerHTML=`<span class="dot-num">${ex.id}</span><div class="dot-tip">#${ex.id} ${ex.name}</div>`;
+    div.onclick=()=>startPractice(ex.id);
+    grid.appendChild(div);
+  });
+  const nid=nextId();
+  const next=ejercicios.find(e=>e.id===nid);
+  if(next){
+    document.getElementById('nextNum').textContent=String(next.id).padStart(2,'0');
+    document.getElementById('nextCat').textContent=CATS[next.cat]||next.cat;
+    document.getElementById('nextName').textContent=next.name;
+    document.getElementById('nextDesc').textContent=next.short;
+    document.getElementById('nextCard').onclick=()=>startPractice(next.id);
+  }
+  const cats=Object.keys(CATS);
+  const cp=document.getElementById('catProgress');
+  cp.innerHTML=cats.map(c=>{
+    const total=ejercicios.filter(e=>e.cat===c).length;
+    const done=ejercicios.filter(e=>e.cat===c && userData.completed.includes(e.id)).length;
+    const pct=Math.round(done/total*100);
+    return `<div class="mb-2"><div class="d-flex justify-content-between mb-1" style="font-size:.8rem;font-weight:700"><span>${CATS[c]}</span><span style="color:var(--amber)">${done}/${total}</span></div><div style="height:7px;border-radius:4px;background:var(--border)"><div style="height:100%;border-radius:4px;width:${pct}%;background:${pct===100?'var(--sage)':'var(--oil)'}"></div></div></div>`;
+  }).join('');
+}
+function nextId(){ for(let i=1;i<=100;i++) if(!userData.completed.includes(i)) return i; return 1; }
+function setFilter(cat,btn){ filterCatEx=cat; document.querySelectorAll('#pills .pill').forEach(p=>p.classList.remove('on')); btn.classList.add('on'); renderList(); }
+function renderList(){
+  const q=(document.getElementById('searchQ')?.value||'').toLowerCase();
+  const filtered=ejercicios.filter(e=>(filterCatEx==='all'||e.cat===filterCatEx) && (!q||e.name.toLowerCase().includes(q)||e.short.toLowerCase().includes(q)));
+  const list=document.getElementById('exList');
+  list.innerHTML=filtered.map(e=>{
+    const done=userData.completed.includes(e.id);
+    return `<div class="ex-card${done?' done':''}" onclick="startPractice(${e.id})"><div class="ex-num-box">${String(e.id).padStart(2,'0')}</div><div class="ex-body"><div class="ex-cat-tag">${CATS[e.cat]||e.cat}</div><div class="ex-name">${e.name}</div><div class="ex-short">${e.short}</div></div><div>${done?'<span class="badge-done"><i class="bi bi-check-lg"></i> Hecho</span>':'<span class="badge-new">Practicar</span>'}</div></div>`;
+  }).join('');
+  if(!filtered.length) list.innerHTML='<div class="text-muted text-center py-4">No se encontraron técnicas.</div>';
+}
+function startPractice(id){
+  const ex=ejercicios.find(x=>x.id===id);
+  if(!ex) return;
+  currentEx=ex;
+  document.getElementById('pracCat').textContent=CATS[ex.cat]||ex.cat;
+  document.getElementById('pracNum').textContent=String(ex.id).padStart(2,'0');
+  document.getElementById('pracName').textContent=ex.name;
+  document.getElementById('pracExpl').textContent=ex.expl;
+  document.getElementById('pracEx').textContent='📝 '+ex.expl;
+  document.getElementById('pracPrompt').innerHTML='<strong>✍️ Ejercicio:</strong> '+ex.prompt;
+  document.getElementById('practiceTA').value='';
+  document.getElementById('wc').textContent='0';
+  document.getElementById('fbArea').classList.remove('show');
+  document.getElementById('btnNext').style.display='none';
+  document.getElementById('btnCheck').disabled=false;
+  document.getElementById('btnCheck').innerHTML='<i class="bi bi-magic"></i> Analizar';
+  document.getElementById('practiceEmpty').style.display='none';
+  document.getElementById('practiceContent').style.display='';
+  switchPage('practica');
+  document.getElementById('practiceTA').focus();
+}
+function prevExercise(){
+  if(!currentEx) return;
+  const idx=ejercicios.findIndex(e=>e.id===currentEx.id);
+  startPractice(ejercicios[(idx-1+ejercicios.length)%ejercicios.length].id);
+}
+function nextExercise(){
+  if(!currentEx) return;
+  const idx=ejercicios.findIndex(e=>e.id===currentEx.id);
+  startPractice(ejercicios[(idx+1)%ejercicios.length].id);
+}
+function doCheck(){
+  const text=document.getElementById('practiceTA').value.trim();
+  if(!text || text.split(/\s+/).length<5){ toast('Escribe al menos 5 palabras','e'); return; }
+  if(!currentEx) return;
+  const btn=document.getElementById('btnCheck');
+  btn.disabled=true;
+  btn.innerHTML='<span class="spinner-border spinner-border-sm me-1"></span>Evaluando...';
+  const fb=document.getElementById('fbArea');
+  fb.classList.add('show');
+  document.getElementById('fbLoading').style.display='block';
+  document.getElementById('fbContent').style.display='none';
+  setTimeout(()=>{
+    let score=70;
+    if(text.length>100) score+=10;
+    if(text.toLowerCase().includes(currentEx.name.toLowerCase())) score+=10;
+    score=Math.min(100,score);
+    const nivel=score>=85?'excelente':score>=65?'bien':'necesita_mejorar';
+    const titulo=nivel==='excelente'?'¡Excelente redacción petrolera!':nivel==='bien'?'Buen trabajo':'Puedes mejorar';
+    const resumen=`Tu respuesta tiene ${text.split(/\s+/).length} palabras. ${score>=70?'Aplicas bien los conceptos de redacción en ingeniería de petróleos.':'Revisa la técnica y vuelve a intentarlo.'}`;
+    const aciertos=['La respuesta es relevante al ejercicio.'];
+    const consejos=['Consulta guías como "Petroleum Engineering Handbook" de SPE, normativas de la ANH, y el Manual de Estilo de la RAE.'];
+    const aplicacion=`Has aplicado conocimientos sobre ${currentEx.name}.`;
+    const r={score,nivel,titulo,resumen,aciertos,errores:[],consejos,aplicacion};
+    renderFeedback(r);
+    userData.practiced++;
+    userData.scores.push(r.score);
+    if(r.score>=65 && !userData.completed.includes(currentEx.id)){
+      userData.completed.push(currentEx.id);
+      toast(`✅ ¡Técnica #${currentEx.id} completada!`,'s');
+    }
+    userData.history=[{id:currentEx.id, name:currentEx.name, score:r.score, date:new Date().toLocaleDateString('es-ES')}, ...(userData.history||[])].slice(0,30);
+    saveUserData();
+    document.getElementById('fbLoading').style.display='none';
+    document.getElementById('fbContent').style.display='block';
+    btn.disabled=false;
+    btn.innerHTML='<i class="bi bi-magic"></i> Analizar de nuevo';
+    document.getElementById('btnNext').style.display='';
+    fb.scrollIntoView({behavior:'smooth',block:'start'});
+  },800);
+}
+function renderFeedback(r){
+  const sc=r.score>=80?'high':r.score>=60?'med':'low';
+  const hc=r.nivel==='excelente'?'excellent':r.nivel==='bien'?'good':'low';
+  const em=r.nivel==='excelente'?'🏆':r.nivel==='bien'?'👍':'💪';
+  const aciertos=(r.aciertos||[]).map(a=>`<div class="fb-item ok"><span class="fb-ico">✓</span><span>${a}</span></div>`).join('');
+  const errores=(r.errores||[]).map(a=>`<div class="fb-item err"><span class="fb-ico">✗</span><span>${a}</span></div>`).join('');
+  const consejos=(r.consejos||[]).map(a=>`<div class="fb-item tip"><span class="fb-ico">💡</span><span>${a}</span></div>`).join('');
+  document.getElementById('fbContent').innerHTML=`<div class="fb-head ${hc}"><span class="fb-emoji">${em}</span><div><p class="fb-htitle">${r.titulo}</p><p class="fb-hsub">Técnica #${currentEx?.id} · ${currentEx?.name}</p></div></div><div class="fb-body"><div style="display:flex;align-items:center;gap:1rem;margin-bottom:1.1rem"><div class="score-circle sc-${sc}">${r.score}%</div><div style="flex:1"><div style="font-weight:700;margin-bottom:.4rem">Dominio de la técnica</div><div style="height:8px;border-radius:4px;background:var(--border)"><div style="height:100%;width:${r.score}%;background:${r.score>=80?'#198754':r.score>=60?'#ffc107':'#dc3545'}"></div></div><div style="font-size:.77rem;margin-top:.4rem">${r.resumen}</div></div></div>${r.aplicacion?`<div class="fb-section"><div class="fb-section-title">🎯 Aplicación</div><div class="fb-item info"><span class="fb-ico">📖</span><span>${r.aplicacion}</span></div></div>`:''}${aciertos?`<div class="fb-section"><div class="fb-section-title">✅ Aciertos</div>${aciertos}</div>`:''}${errores?`<div class="fb-section"><div class="fb-section-title">❌ Errores</div>${errores}</div>`:''}${consejos?`<div class="fb-section"><div class="fb-section-title">💡 Consejos</div>${consejos}</div>`:''}</div>`;
+}
+function renderProfile(){
+  document.getElementById('profAv').textContent=userData.name[0].toUpperCase();
+  document.getElementById('profName').textContent=userData.name;
+  document.getElementById('profMeta').textContent=(userData.level==='principiante'?'Principiante':userData.level==='intermedio'?'Intermedio':'Avanzado')+' · Desde '+userData.joinDate;
+  document.getElementById('pComp').textContent=userData.completed.length;
+  document.getElementById('pPrac').textContent=userData.practiced;
+  const avg=userData.scores.length?Math.round(userData.scores.reduce((a,b)=>a+b,0)/userData.scores.length):null;
+  document.getElementById('pScr').textContent=avg?avg+'%':'—';
+  const ACHS=[{icon:'🎓',name:'Primera técnica',check:d=>d.practiced>=1},{icon:'🛢️',name:'10 prácticas',check:d=>d.practiced>=10},{icon:'🏅',name:'25 técnicas',check:d=>d.completed.length>=25},{icon:'🏆',name:'50 técnicas',check:d=>d.completed.length>=50},{icon:'⛽',name:'Maestro redactor petrolero',check:d=>d.completed.length>=100}];
+  document.getElementById('achGrid').innerHTML=ACHS.map(a=>{const u=a.check(userData); return `<div class="ach${u?' unlocked':' locked'}"><span class="ach-icon">${a.icon}</span><div class="ach-name">${a.name}</div></div>`;}).join('');
+  const hl=document.getElementById('histList');
+  if(userData.history?.length){ hl.innerHTML=userData.history.slice(0,15).map(h=>`<div class="hist-row" onclick="startPractice(${h.id})"><div class="ex-num-box" style="background:${h.score>=80?'var(--sage)':h.score>=60?'var(--amber-light)':'#f8d7da'};color:#fff">${String(h.id).padStart(2,'0')}</div><div><div style="font-weight:700">${h.name}</div><div style="font-size:.74rem;color:#aaa">${h.date}</div></div><span style="background:${h.score>=80?'var(--sage)':h.score>=60?'var(--amber)':'#dc3545'};color:#fff;padding:.18rem .55rem;border-radius:9px">${h.score}%</span></div>`).join('');}
+  else hl.innerHTML='<div class="text-muted">Aún sin prácticas.</div>';
+}
+function openEditModal(){ document.getElementById('editName').value=userData.name; document.getElementById('editLevel').value=userData.level; document.getElementById('editModal').style.display='flex'; }
+function saveEdit(){ const name=document.getElementById('editName').value.trim(); if(!name){ toast('Escribe un nombre','e'); return; } userData.name=name; userData.level=document.getElementById('editLevel').value; saveUserData(); updateUI(); closeModal('editModal'); renderProfile(); toast('Perfil actualizado','s'); }
+function confirmReset(){ if(confirm('¿Reiniciar todo el progreso?')){ userData.completed=[]; userData.practiced=0; userData.scores=[]; userData.history=[]; saveUserData(); refreshDash(); renderProfile(); toast('Progreso reiniciado','i'); } }
+function closeModal(id){ document.getElementById(id).style.display='none'; }
+function toast(msg,type='i'){ const box=document.getElementById('toastBox'); const t=document.createElement('div'); const icons={s:'✅',e:'❌',i:'ℹ️'}; t.className=`toast-item ${type}`; t.innerHTML=`<span>${icons[type]||'ℹ️'}</span><span>${msg}</span>`; box.appendChild(t); setTimeout(()=>{ t.style.opacity='0'; t.style.transform='translateY(16px)'; setTimeout(()=>t.remove(),350); },3200); }
+document.addEventListener('DOMContentLoaded',()=>{ const ta=document.getElementById('practiceTA'); if(ta) ta.addEventListener('input',()=>{ const w=ta.value.trim()?ta.value.trim().split(/\s+/).length:0; document.getElementById('wc').textContent=w; }); refreshDash(); renderList(); renderProfile(); });
+</script>
+</body>
+</html>

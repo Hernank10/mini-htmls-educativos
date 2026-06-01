@@ -1,0 +1,921 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>Bucaramanga y su Área Metropolitana · Música · Vida · Comercio · Reportajes · Crónicas · Entrevistas · C1-C2 Bilingual</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --fondo: #faf5eb;
+      --texto: #2c2a29;
+      --rojo-bga: #c0392b;
+      --azul-metro: #2980b9;
+      --verde-cronica: #27ae60;
+      --naranja-comercio: #e67e22;
+      --gris-elegante: #7f8c8d;
+      --acierto: #27ae60;
+      --fallo: #e74c3c;
+      --sombra: rgba(0, 0, 0, 0.08);
+      --card-bg: #ffffff;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: var(--fondo);
+      color: var(--texto);
+      font-family: 'Inter', 'Segoe UI', system-ui, serif;
+      line-height: 1.5;
+      padding: 1rem;
+    }
+
+    .app-container {
+      max-width: 1400px;
+      margin: 0 auto;
+      background: var(--card-bg);
+      border-radius: 2rem;
+      box-shadow: 0 12px 28px var(--sombra);
+      overflow: hidden;
+      border: 1px solid #e8e0d5;
+    }
+
+    header {
+      background: #faf3ea;
+      padding: 1rem 2rem;
+      border-bottom: 3px solid var(--rojo-bga);
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+    }
+    h1 {
+      font-size: 1.4rem;
+      font-weight: 600;
+      color: #c0392b;
+      letter-spacing: -0.2px;
+    }
+    h1 small {
+      font-size: 0.65rem;
+      font-weight: normal;
+      color: #b98f5c;
+    }
+
+    .lang-selector {
+      display: flex;
+      gap: 0.5rem;
+      background: white;
+      padding: 0.3rem;
+      border-radius: 40px;
+      border: 1px solid #e8e0d5;
+    }
+    .lang-btn {
+      background: transparent;
+      border: none;
+      padding: 0.4rem 1rem;
+      border-radius: 30px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.2s;
+      font-size: 0.85rem;
+    }
+    .lang-btn.active {
+      background: var(--rojo-bga);
+      color: white;
+    }
+
+    nav {
+      display: flex;
+      gap: 0.5rem;
+      background: #e6dcd0;
+      padding: 0.6rem 2rem;
+      border-bottom: 1px solid #d6cbb8;
+      flex-wrap: wrap;
+    }
+    .nav-btn {
+      background: transparent;
+      border: none;
+      font-size: 0.95rem;
+      padding: 0.5rem 1.2rem;
+      border-radius: 40px;
+      cursor: pointer;
+      font-weight: 500;
+      transition: all 0.2s;
+      color: #c0392b;
+    }
+    .nav-btn.active {
+      background-color: var(--rojo-bga);
+      color: white;
+    }
+    .nav-btn:hover:not(.active) {
+      background-color: #cfdec9;
+    }
+
+    .view {
+      display: none;
+      padding: 2rem;
+      animation: fade 0.2s ease;
+    }
+    .active-view { display: block; }
+    @keyframes fade { from { opacity: 0; transform: translateY(5px);} to { opacity: 1; transform: translateY(0);} }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+    .stat-card {
+      background: var(--fondo);
+      border-radius: 1.5rem;
+      padding: 1rem;
+      text-align: center;
+      border-left: 6px solid var(--gris-elegante);
+      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    }
+    .stat-number {
+      font-size: 2.2rem;
+      font-weight: 700;
+      color: var(--rojo-bga);
+    }
+
+    .progress-bar-bg {
+      background: #e2e8f0;
+      border-radius: 40px;
+      height: 12px;
+      overflow: hidden;
+      margin: 0.8rem 0;
+    }
+    .progress-fill {
+      background: var(--rojo-bga);
+      width: 0%;
+      height: 100%;
+      transition: width 0.2s;
+    }
+
+    .genre-badge {
+      display: inline-block;
+      padding: 0.2rem 0.6rem;
+      border-radius: 20px;
+      font-size: 0.7rem;
+      font-weight: bold;
+      margin-left: 0.5rem;
+    }
+    .genre-music { background: var(--rojo-bga); color: white; }
+    .genre-report { background: var(--azul-metro); color: white; }
+    .genre-chronicle { background: var(--verde-cronica); color: white; }
+    .genre-interview { background: var(--naranja-comercio); color: white; }
+
+    .conceptos-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(480px, 1fr));
+      gap: 1rem;
+      max-height: 65vh;
+      overflow-y: auto;
+      padding-right: 0.3rem;
+    }
+    .concepto-item {
+      background: white;
+      border-radius: 1.2rem;
+      padding: 0.8rem 1rem;
+      border-left: 5px solid var(--gris-elegante);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+    .concepto-titulo {
+      font-weight: 700;
+      color: #c0392b;
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+    .concepto-desc {
+      font-size: 0.85rem;
+      color: #5a4e44;
+      margin-top: 6px;
+      border-top: 1px solid #f5ebd8;
+      padding-top: 6px;
+    }
+    .badge-progreso {
+      font-size: 0.7rem;
+      background: #fef5e6;
+      border-radius: 20px;
+      padding: 2px 10px;
+      display: inline-block;
+      margin-top: 8px;
+    }
+
+    .flashcard {
+      background: #ffffff;
+      border-radius: 2rem;
+      padding: 1.8rem;
+      text-align: center;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+      border: 1px solid #e8e0d5;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    .pregunta {
+      font-size: 1.2rem;
+      font-weight: 500;
+      margin-bottom: 1.8rem;
+      background: #faf3ea;
+      padding: 1.2rem;
+      border-radius: 1.5rem;
+    }
+    .respuesta-oculta {
+      background: #fef9ec;
+      border-radius: 1.2rem;
+      padding: 1rem;
+      margin: 1rem 0;
+      display: none;
+    }
+    .orden-palabras {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 0.6rem;
+      margin: 1.5rem 0;
+    }
+    .palabra-btn {
+      background: var(--rojo-bga);
+      color: white;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 2rem;
+      font-size: 0.9rem;
+      cursor: pointer;
+    }
+    .orden-actual {
+      background: #fefef9;
+      border-radius: 1rem;
+      padding: 1rem;
+      min-height: 80px;
+      margin: 1rem 0;
+      text-align: left;
+      border: 1px dashed #d6cbb8;
+      font-size: 1rem;
+    }
+    .btn {
+      background: #e2e8f0;
+      border: none;
+      padding: 0.6rem 1.5rem;
+      border-radius: 3rem;
+      font-weight: 600;
+      margin: 0.3rem;
+      cursor: pointer;
+      font-family: inherit;
+    }
+    .btn-primary { background: var(--rojo-bga); color: white; }
+    .btn-acierto { background: var(--acierto); color: white; }
+    .btn-fallo { background: var(--fallo); color: white; }
+    .modo-selector {
+      display: flex;
+      justify-content: center;
+      gap: 0.8rem;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+    }
+    .modo-btn {
+      background: #e2e8f0;
+      border: none;
+      padding: 0.5rem 1.2rem;
+      border-radius: 40px;
+      cursor: pointer;
+      font-weight: 500;
+      transition: all 0.2s;
+    }
+    .modo-btn.active {
+      background: var(--rojo-bga);
+      color: white;
+    }
+    footer {
+      text-align: center;
+      padding: 1rem;
+      font-size: 0.75rem;
+      border-top: 1px solid #e8e0d5;
+      background: #faf7ef;
+    }
+    .genre-filter {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+      flex-wrap: wrap;
+    }
+    .genre-filter-btn {
+      background: #e6dcd0;
+      border: none;
+      padding: 0.3rem 1rem;
+      border-radius: 20px;
+      cursor: pointer;
+      font-size: 0.8rem;
+    }
+    .genre-filter-btn.active {
+      background: var(--rojo-bga);
+      color: white;
+    }
+    .translation-direction {
+      margin: 0.5rem 0;
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: var(--rojo-bga);
+    }
+    input {
+      padding: 0.8rem;
+      border-radius: 2rem;
+      border: 1px solid #cbd5e1;
+      font-size: 1rem;
+      width: 80%;
+      margin: 1rem auto;
+      display: block;
+      text-align: center;
+      font-family: inherit;
+    }
+    @media (max-width: 680px) {
+      .view { padding: 1rem; }
+      .pregunta { font-size: 1rem; }
+      .lang-selector { order: 2; width: 100%; justify-content: center; }
+      header { flex-direction: column; align-items: stretch; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+<div class="app-container">
+  <header>
+    <div>
+      <h1>🎙️ Bucaramanga y su Área Metropolitana <small>C1/C2 · Música · Vida · Comercio · Reportajes · Crónicas · Entrevistas</small></h1>
+      <div style="font-size:0.7rem;">100 ideas avanzadas para podcasts · Floridablanca · Girón · Piedecuesta · Spanish · English</div>
+    </div>
+    <div class="lang-selector">
+      <button id="langEsBtn" class="lang-btn active">🇪🇸 Español</button>
+      <button id="langEnBtn" class="lang-btn">🇬🇧 English</button>
+      <button id="langBothBtn" class="lang-btn">🌐 Bilingüe</button>
+    </div>
+  </header>
+  <nav>
+    <button class="nav-btn active" data-view="dashboard">📊 Panel</button>
+    <button class="nav-btn" data-view="listado">📚 100 Ideas</button>
+    <button class="nav-btn" data-view="practica">🃏 Práctica</button>
+  </nav>
+
+  <section id="dashboard" class="view active-view">
+    <div class="stats-grid" id="statsContainer"></div>
+    <div class="card" style="background:white; border-radius:1.6rem; padding:1.2rem;">
+      <h3 id="progressTitle">📈 Progreso ideas C1/C2 - AMB</h3>
+      <div class="progress-bar-bg"><div class="progress-fill" id="globalProgressFill"></div></div>
+      <p id="globalProgressText"></p>
+      <button id="resetProgresoBtn" class="btn" style="background:#e6dcd0;">🔄 Reiniciar progreso</button>
+    </div>
+  </section>
+
+  <section id="listado" class="view">
+    <input type="text" id="filtroListado" placeholder="🔍 Buscar idea / Search idea..." style="width:100%; padding:10px; margin-bottom:15px; border-radius:40px; border:1px solid #e6dcd0;">
+    <div class="genre-filter" id="genreFilter">
+      <button data-genre="all" class="genre-filter-btn active">🎵 Todas</button>
+      <button data-genre="music" class="genre-filter-btn">🎵 Música</button>
+      <button data-genre="report" class="genre-filter-btn">📝 Reportajes</button>
+      <button data-genre="chronicle" class="genre-filter-btn">📖 Crónicas</button>
+      <button data-genre="interview" class="genre-filter-btn">🎙️ Entrevistas</button>
+    </div>
+    <div id="conceptosListadoContainer" class="conceptos-grid"></div>
+  </section>
+
+  <section id="practica" class="view">
+    <div class="modo-selector" id="modoSelector">
+      <button id="modoTraduccionDirecta" class="modo-btn active">📖 Idea → Traducción</button>
+      <button id="modoTraduccionInversa" class="modo-btn">🔄 Traducción → Idea</button>
+      <button id="modoOrdenar" class="modo-btn">🧩 Ordenar idea</button>
+      <button id="modoEspEng" class="modo-btn">🌐 ESP ↔ ENG</button>
+    </div>
+    <div id="practicaContainer"></div>
+  </section>
+  <footer>Progreso guardado localmente · 100 ideas C1-C2 · Música, reportajes, crónicas, entrevistas · Bucaramanga, Floridablanca, Girón, Piedecuesta</footer>
+</div>
+
+<script>
+  // --------------------------------------------------------------
+  // 100 IDEAS C1-C2 - RADIOS COMUNITARIAS BUCARAMANGA Y ÁREA METROPOLITANA
+  // Música de los municipios, vida cotidiana, comercio, transporte, personajes, reportajes
+  // --------------------------------------------------------------
+  const conceptosData = [
+    // 🎵 MÚSICA DEL ÁREA METROPOLITANA (music)
+    [1, "El bambuco en la perla del Fonce: Bucaramanga y su tradición musical", "Bambuco in the pearl of the Fonce: Bucaramanga and its musical tradition", "Exploración de las agrupaciones de música andina que mantienen vivo el bambuco en la ciudad.", "Exploration of Andean music groups keeping bambuco alive in the city.", "music"],
+    [2, "Los trovadores de Girón: canciones improvisadas en la plaza", "The troubadours of Girón: improvised songs in the square", "Entrevista con los cantadores de torbellino que animan las tardes en el parque principal.", "Interview with torbellino singers who liven up afternoons in the main square.", "music"],
+    [3, "La carranga en Floridablanca: humor y crítica social", "Carranga in Floridablanca: humor and social criticism", "Cómo este género campesino se adaptó a la vida en el área metropolitana.", "How this peasant genre adapted to metropolitan life.", "music"],
+    [4, "Bandas de viento en Piedecuesta: tradición familiar", "Wind bands in Piedecuesta: family tradition", "Historia de las familias que han heredado la música de pueblo durante generaciones.", "History of families who have inherited town music for generations.", "music"],
+    [5, "El tiple como instrumento identitario del área metropolitana", "The tiple as an identity instrument of the metropolitan area", "Conversación con luthieres y tiplistas de Bucaramanga y Floridablanca.", "Conversation with luthiers and tiple players from Bucaramanga and Floridablanca.", "music"],
+    [6, "Música campesina en la ciudad: los conjuntos de la periferia", "Peasant music in the city: periphery ensembles", "Agrupaciones de músicos desplazados que mantienen sus tradiciones en barrios como Provenza.", "Groups of displaced musicians preserving traditions in neighborhoods like Provenza.", "music"],
+    [7, "Rock subterráneo en Bucaramanga: las bandas de los 90", "Underground rock in Bucaramanga: 90s bands", "Historia del movimiento rock en la ciudad, desde Coda hasta los grupos emergentes.", "History of the rock movement in the city, from Coda to emerging groups.", "music"],
+    [8, "Música electrónica en la ciudad bonita: los DJs locales", "Electronic music in the beautiful city: local DJs", "Cómo ha evolucionado la escena electrónica en Bucaramanga y sus clubes nocturnos.", "How the electronic scene has evolved in Bucaramanga and its nightclubs.", "music"],
+    [9, "El reguetón que se baila en los barrios", "The reggaeton danced in the neighborhoods", "Fenómeno cultural juvenil en comunas como la Ciudadela Real de Minas.", "Youth cultural phenomenon in neighborhoods like Ciudadela Real de Minas.", "music"],
+    [10, "La música llanera en los laderos de Bucaramanga", "Llanera music on the hillsides of Bucaramanga", "Influencia de la música de los llanos orientales en la zona del Puente Laureano Gómez.", "Influence of eastern plains music around the Laureano Gómez Bridge.", "music"],
+    [11, "Compositores santandereanos olvidados del siglo XX", "Forgotten Santander composers of the 20th century", "Recuperación de la obra de músicos que marcaron la identidad sonora de la región.", "Recovery of the work of musicians who shaped the region's sound identity.", "music"],
+    [12, "La rumba antioqueña en el barrio La Salle", "Antioquian rumba in La Salle neighborhood", "Porro y gaita en una de las zonas más tradicionales de Bucaramanga.", "Porro and gaita in one of Bucaramanga's most traditional areas.", "music"],
+    [13, "Cantautoras bumanguesas: la voz femenina", "Female singer-songwriters from Bucaramanga", "Entrevistas con Marta Gómez, Paula G. y las nuevas generaciones.", "Interviews with Marta Gómez, Paula G. and new generations.", "music"],
+    [14, "El vallenato en el área metropolitana", "Vallenato in the metropolitan area", "Cómo este género del Caribe se arraigó en la ciudad gracias a la migración.", "How this Caribbean genre took root in the city through migration.", "music"],
+    [15, "Los coros de iglesia en Girón", "Church choirs in Girón", "Tradición musical religiosa en los templos coloniales.", "Religious musical tradition in colonial temples.", "music"],
+    [16, "Música para los cerros: los conciertos en la periferia", "Music for the hills: concerts on the periphery", "Eventos musicales en barrios altos de Bucaramanga que promueven la convivencia.", "Music events in upper neighborhoods of Bucaramanga promoting coexistence.", "music"],
+    [17, "La escuela de música de Floridablanca", "Floridablanca music school", "Semilleros de jóvenes músicos en el municipio dormitorio.", "Training grounds for young musicians in the bedroom municipality.", "music"],
+    [18, "Instrumentos reciclados en Piedecuesta", "Recycled instruments in Piedecuesta", "Músicos que fabrican sus propios instrumentos con material reutilizado.", "Musicians who make their own instruments with recycled materials.", "music"],
+    [19, "El jazz en la ciudad: clubes y festivales", "Jazz in the city: clubs and festivals", "Pequeña pero vibrante escena del jazz en Bucaramanga.", "Small but vibrant jazz scene in Bucaramanga.", "music"],
+    [20, "Los músicos callejeros del parque Santander", "Street musicians of Santander Park", "Perfiles de artistas urbanos que tocan por monedas en el centro.", "Profiles of urban artists who play for coins downtown.", "music"],
+
+    // 📝 REPORTAJES DE VIDA Y COMERCIO (report)
+    [21, "El comercio informal en el centro de Bucaramanga", "Informal commerce in downtown Bucaramanga", "La lucha de los vendedores ambulantes en las calles 33, 34, y el parque Santander.", "The struggle of street vendors on 33rd, 34th Streets, and Santander Park.", "report"],
+    [22, "La carrera 33: el corazón comercial de la ciudad", "33rd Street: the commercial heart of the city", "Radiografía del comercio textil, calzado y tecnología en esta emblemática avenida.", "X-ray of textile, footwear and technology commerce on this emblematic avenue.", "report"],
+    [23, "Floridablanca: del pueblo al gigante comercial", "Floridablanca: from small town to commercial giant", "Crecimiento desbordado de centros comerciales (Cañaveral, La Florida y El Caracolí).", "Overwhelming growth of shopping malls (Cañaveral, La Florida, El Caracolí).", "report"],
+    [24, "Girón: patrimonio que sobrevive al concreto", "Girón: heritage surviving concrete", "El impacto de la urbanización en el casco histórico colonial.", "The impact of urbanization on the colonial historic center.", "report"],
+    [25, "Piedecuesta: el municipio donde todo se puede comprar", "Piedecuesta: the municipality where you can buy everything", "Variedad de comercio de mercancías, desde bisutería hasta maquinaria.", "Variety of merchandise commerce, from costume jewelry to machinery.", "report"],
+    [26, "Los taxistas: sobreviviendo a Uber y Didi", "Taxi drivers: surviving Uber and Didi", "El conflicto con las plataformas tecnológicas y la caída de ingresos.", "The conflict with technological platforms and falling income.", "report"],
+    [27, "El tráfico del cañaveral: pesadilla diaria", "Cañaveral traffic: daily nightmare", "Análisis de la movilidad en la autopista que conecta Bucaramanga con Floridablanca.", "Analysis of mobility on the highway connecting Bucaramanga with Floridablanca.", "report"],
+    [28, "Metrolínea: el sistema que no despegó", "Metrolínea: the system that never took off", "15 años después, balance del transporte masivo del área metropolitana.", "15 years later, balance of the metropolitan area's mass transit system.", "report"],
+    [29, "Vendedores de chance y lotería", "Lottery and chance sellers", "Perfil de esta profesión callejera que aún sobrevive en los barrios.", "Profile of this street profession that still survives in neighborhoods.", "report"],
+    [30, "Los peluqueros de la calle 52", "Barbers of 52nd Street", "Historia de los salones de barrio que son punto de encuentro y tertulia.", "History of neighborhood salons that are meeting points and gathering places.", "report"],
+    [31, "Tiendas de barrio vs grandes superficies", "Corner stores vs big box stores", "La batalla del comercio tradicional contra los gigantes del retail.", "The battle of traditional commerce against retail giants.", "report"],
+    [32, "Bares de Cabecera: de la rumba a la gentrificación", "Cabecera bars: from partying to gentrification", "Transformación de la zona rosa y el aumento de precios de la vivienda.", "Transformation of the pink zone and rising housing prices.", "report"],
+    [33, "La venta de electrodomésticos en la calle 34", "Home appliance sales on 34th Street", "Un sector que ha sido golpeado por el comercio electrónico.", "A sector hit by e-commerce.", "report"],
+    [34, "Restaurantes de comida rápida vs cocina tradicional", "Fast food restaurants vs traditional cuisine", "La pérdida de identidad gastronómica en el área metropolitana.", "The loss of gastronomic identity in the metropolitan area.", "report"],
+    [35, "La industria textil en Floridablanca", "Textile industry in Floridablanca", "Fábricas de ropa que sobreviven a la competencia asiática.", "Clothing factories surviving Asian competition.", "report"],
+    [36, "Mecánicos de motos en el barrio Mutis", "Motorcycle mechanics in Mutis neighborhood", "Talleres informales que mueven la economía de la comuna.", "Informal workshops driving the neighborhood's economy.", "report"],
+    [37, "Ferreterías de Girón: tradición familiar", "Hardware stores in Girón: family tradition", "Negocios con más de 50 años en el mismo local.", "Businesses with over 50 years in the same location.", "report"],
+    [38, "El mercado de La Concordia", "La Concordia market", "El sitio donde los campesinos venden sus productos desde la madrugada.", "The site where farmers sell their products from dawn.", "report"],
+    [39, "Los recicladores de El Carrasco", "Recyclers of El Carrasco", "La vida de quienes trabajan en el relleno sanitario de Bucaramanga.", "The life of those who work at Bucaramanga's landfill.", "report"],
+    [40, "Vendedores de minutos en los semáforos", "Minute sellers at traffic lights", "Emprendedores informales que ofrecen todo en los cruces.", "Informal entrepreneurs offering everything at intersections.", "report"],
+
+    // 📖 CRÓNICAS DE LA VIDA COTIDIANA (chronicle)
+    [41, "Un día en la fila del Metrolínea", "A day in the Metrolínea line", "Crónica de ciudadanos que pierden horas diarias en el transporte masivo.", "Chronicle of citizens losing daily hours on mass transit.", "chronicle"],
+    [42, "La cafetería de la terminal de transporte", "The coffee shop at the transport terminal", "Lugar de encuentro de viajeros, trabajadores y desempleados.", "Meeting place for travelers, workers and the unemployed.", "chronicle"],
+    [43, "El vendedor de mangos del parque García Rovira", "The mango seller at García Rovira Park", "Perfil de un personaje emblemático que lleva 30 años en el mismo lugar.", "Profile of an iconic character who has been in the same place for 30 years.", "chronicle"],
+    [44, "La noche del Black Friday en Cañaveral", "Black Friday night at Cañaveral", "Cronaca de la locura consumista en el centro comercial más grande de la región.", "Chronicle of consumer madness in the region's largest mall.", "chronicle"],
+    [45, "El último día de un almacén centenario", "The last day of a century-old store", "Cierre de Gente, un ícono comercial en el centro de Bucaramanga.", "Closure of Gente, a commercial icon in downtown Bucaramanga.", "chronicle"],
+    [46, "La peluquería del barrio Real de Minas", "The barbershop of Real de Minas neighborhood", "Historias cortadas al compás de las tijeras y la tertulia.", "Stories cut to the rhythm of scissors and conversation.", "chronicle"],
+    [47, "Un domingo en el parque Santander", "A Sunday at Santander Park", "Lo que pasa en la plaza principal de Bucaramanga durante el día de descanso.", "What happens in Bucaramanga's main square on the day of rest.", "chronicle"],
+    [48, "El conductor del bus de la ruta 52", "The driver of route 52 bus", "Un día en la vida de un conductor de bus que conecta Piedecuesta con Bucaramanga.", "A day in the life of a bus driver connecting Piedecuesta with Bucaramanga.", "chronicle"],
+    [49, "La hora del almuerzo en el mercado de Girón", "Lunchtime at Girón's market", "Conversaciones y sabores alrededor de los puestos de comida.", "Conversations and flavors around food stalls.", "chronicle"],
+    [50, "El guarda del edificio Colseguros", "The guard of Colseguros building", "Historias que ha presenciado en el edificio más emblemático de la ciudad.", "Stories he has witnessed in the city's most emblematic building.", "chronicle"],
+    [51, "La tienda de discos de la calle 30", "The record store on 30th Street", "El último lugar para comprar vinilos en Bucaramanga.", "The last place to buy vinyl records in Bucaramanga.", "chronicle"],
+    [52, "Los vendedores de flores del cementerio", "Flower sellers at the cemetery", "Crónica de los días de visita a los muertos.", "Chronicle of visitation days to the dead.", "chronicle"],
+    [53, "La panadería de la esquina", "The corner bakery", "El olor del pan recién horneado que despierta a todo el barrio.", "The smell of freshly baked bread that wakes up the whole neighborhood.", "chronicle"],
+    [54, "Una noche en la zona rosa de Cabecera", "A night in Cabecera's pink zone", "Luces, música y descontrol en los bares y discotecas.", "Lights, music and chaos in bars and nightclubs.", "chronicle"],
+    [55, "La biblioteca pública de Bucaramanga", "Bucaramanga's public library", "Un refugio silencioso en medio de la ciudad ruidosa.", "A silent refuge in the middle of the noisy city.", "chronicle"],
+    [56, "El taller de costura del barrio", "The neighborhood sewing workshop", "Mujeres que remiendan ropa y sueños en la comuna.", "Women who mend clothes and dreams in the neighborhood.", "chronicle"],
+    [57, "La farmacia de turno", "The on-duty pharmacy", "Lo que ocurre detrás de los mostradores durante la noche.", "What happens behind the counters during the night.", "chronicle"],
+    [58, "El conductor de mototaxi en Floridablanca", "The motorcycle taxi driver in Floridablanca", "Viajes cortos y conversaciones en el municipio.", "Short trips and conversations in the municipality.", "chronicle"],
+    [59, "La liga de fútbol de los domingos", "The Sunday soccer league", "Pasión desbordada en los canchas de tierra de la periferia.", "Overflowing passion on dirt fields on the periphery.", "chronicle"],
+    [60, "El patio de comidas de Megamall", "The food court at Megamall", "Ruido, prisas y familias en la plaza de alimentos más concurrida.", "Noise, rush and families in the busiest food plaza.", "chronicle"],
+
+    // 🎙️ ENTREVISTAS A PERSONAJES LOCALES (interview)
+    [61, "El último zapatero remendón de Girón", "The last cobbler of Girón", "50 años arreglando zapatos en el mismo taller.", "50 years repairing shoes in the same workshop.", "interview"],
+    [62, "El dueño del café más antiguo de Bucaramanga", "The owner of Bucaramanga's oldest café", "Historias entre aromas de café desde 1950.", "Stories amidst coffee aromas since 1950.", "interview"],
+    [63, "La vendedora de arepas de huevo", "The egg arepa seller", "25 años preparando arepas en un carrito del centro.", "25 years making arepas from a downtown cart.", "interview"],
+    [64, "El vigilante de la carrera 33", "The security guard of 33rd Street", "Testigo de robos, peleas y amores a la puerta de un banco.", "Witness to robberies, fights and loves at a bank door.", "interview"],
+    [65, "La costurera de vestidos de fiesta", "The party dress seamstress", "Sueños cosidos para quinceañeras y novias.", "Dreams sewn for Quinceañeras and brides.", "interview"],
+    [66, "El músico que toca en el Metrolínea", "The musician who plays on Metrolínea", "Voces y canciones para los pasajeros del sistema de transporte.", "Voices and songs for mass transit passengers.", "interview"],
+    [67, "El librero del parque", "The book seller at the park", "Un puesto de libros usados frente a la Catedral.", "A used book stall in front of the Cathedral.", "interview"],
+    [68, "El tatuador de la comuna", "The neighborhood tattoo artist", "Tinta y piel en una profesión que creció en los 2000.", "Ink and skin in a profession that grew in the 2000s.", "interview"],
+    [69, "La panadera de madrugada", "The early morning baker", "Empezar a trabajar a las 2 de la mañana para tener pan caliente a las 6.", "Starting work at 2 AM to have fresh bread by 6 AM.", "interview"],
+    [70, "El profesor de música de la escuela pública", "The public school music teacher", "Educación musical en medio de la precariedad.", "Music education amid precariousness.", "interview"],
+    [71, "El conductor de Uber", "The Uber driver", "Ingresos, libertad y riesgos de trabajar con plataforma digital.", "Income, freedom and risks of working with a digital platform.", "interview"],
+    [72, "La enfermera del Hospital Universitario", "The nurse at the University Hospital", "Años de servicio en urgencias durante la pandemia.", "Years of service in the emergency room during the pandemic.", "interview"],
+    [73, "El bombero voluntario", "The volunteer firefighter", "Rescates en el cañón y conflagraciones urbanas.", "Rescues in the canyon and urban fires.", "interview"],
+    [74, "La líder de la junta de acción comunal", "The community action board leader", "La lucha por mejorar el barrio sin presupuesto.", "The struggle to improve the neighborhood without budget.", "interview"],
+    [75, "El dueño del local de videojuegos", "The owner of the video game store", "Arcades, consolas y la nostalgia gamer de los 90.", "Arcades, consoles and 90s gamer nostalgia.", "interview"],
+    [76, "La vendedora de minutos", "The minute seller", "Celulares públicos en una época donde todos tienen uno.", "Public phones in an era where everyone has one.", "interview"],
+    [77, "El profesor de inglés en un instituto privado", "The English teacher at a private institute", "Cómo se enseña inglés en el área metropolitana.", "How English is taught in the metropolitan area.", "interview"],
+    [78, "La psicóloga escolar", "The school psychologist", "Salud mental en estudiantes bumangueses.", "Mental health in students from Bucaramanga.", "interview"],
+    [79, "El dueño de la funeraria", "The funeral home owner", "Al final, todos llegan a su negocio.", "In the end, everyone comes to his business.", "interview"],
+    [80, "La florista del parque", "The park florist", "Ventas de rosas para enamorados el día de San Valentín.", "Rose sales for lovers on Valentine's Day.", "interview"],
+    [81, "El zapatero de la calle 49", "The cobbler on 49th Street", "Reparación de calzado en una calle que fue centro comercial.", "Footwear repair on a street that was a commercial center.", "interview"],
+    [82, "La manicurista a domicilio", "The mobile manicurist", "Viajes por toda la ciudad para embellecer uñas.", "Trips across the city to beautify nails.", "interview"],
+    [83, "El dueño de la inmobiliaria", "The real estate owner", "El boom inmobiliario en las laderas de Bucaramanga.", "The real estate boom on Bucaramanga's hillsides.", "interview"],
+    [84, "La juez de paz", "The peace judge", "Resolución de conflictos vecinales.", "Resolution of neighborhood conflicts.", "interview"],
+    [85, "El entrenador de fútbol de barrio", "The neighborhood soccer coach", "Formación de jóvenes talentos en canchas de tierra.", "Training young talents on dirt fields.", "interview"],
+    [86, "La activista ambiental", "The environmental activist", "Protección de las quebradas en zonas urbanas.", "Protection of streams in urban areas.", "interview"],
+    [87, "El taxista que sabe de historia", "The taxi driver who knows history", "Datos curiosos de la ciudad para los pasajeros.", "Curious facts about the city for passengers.", "interview"],
+    [88, "La líder de la plaza de mercado", "The market square leader", "Organización de los vendedores ante el abandono del estado.", "Organization of vendors in the face of state abandonment.", "interview"],
+    [89, "El vigilante del edificio de la alcaldía", "The guard at the mayor's office building", "Historias políticas que ha presenciado.", "Political stories he has witnessed.", "interview"],
+    [90, "El dueño del bar de la esquina", "The owner of the corner bar", "Cervezas, fútbol y amistades duraderas.", "Beer, soccer and lasting friendships.", "interview"],
+    [91, "La cabeza del aseo en la empresa de servicios públicos", "The cleaning supervisor at the public utility company", "Recolección de basura en tiempo de pandemia.", "Garbage collection during the pandemic.", "interview"],
+    [92, "El programador de software freelance", "The freelance software programmer", "Trabajar desde casa para empresas internacionales.", "Working from home for international companies.", "interview"],
+    [93, "La domadora de perros callejeros", "The stray dog tamer", "Rescate y rehabilitación de animales en situación de calle.", "Rescue and rehabilitation of street animals.", "interview"],
+    [94, "El fotógrafo de bodas y quinceañeras", "The wedding and Quinceañera photographer", "Artes visuales y negocio familiar.", "Visual arts and family business.", "interview"],
+    [95, "El entrenador de gimnasio", "The gym trainer", "Fitness y comercio en una ciudad con moda saludable.", "Fitness and commerce in a city with health trends.", "interview"],
+    [96, "La peluquera de mascotas", "The pet groomer", "El negocio de embellecer perros en Floridablanca.", "The business of beautifying dogs in Floridablanca.", "interview"],
+    [97, "El vendedor de celulares usados", "The used cell phone seller", "El mercado de segunda mano en el centro de Bucaramanga.", "The second-hand market in downtown Bucaramanga.", "interview"],
+    [98, "La pastelera de celebraciones", "The celebration pastry chef", "Pasteles para primera comunión y cumpleaños.", "Cakes for First Communion and birthdays.", "interview"],
+    [99, "El dueño del taller de ebanistería", "The owner of the cabinetmaking workshop", "Muebles a medida en una era de muebles de paquete.", "Custom furniture in an era of flat-pack furniture.", "interview"],
+    [100, "La gestora cultural del municipio de Piedecuesta", "The cultural manager of Piedecuesta", "Eventos, talleres y promoción del arte local.", "Events, workshops and promotion of local art.", "interview"]
+  ];
+
+  // --------------------- LOCALSTORAGE Y PROGRESO -------------------------
+  let progreso = {};
+  let currentLang = "es";
+  let currentPracticeMode = "traduccion_directa";
+  let currentCardId = null;
+  let currentOrdenarPalabras = [];
+  let shuffledPalabras = [];
+  let selectedOrder = [];
+  let ordenarRespuestaCorrecta = "";
+  let currentGenreFilter = "all";
+  let currentFiltroTexto = "";
+
+  const STORAGE_KEY = "radioAmbC1C2Progreso";
+
+  function cargarProgreso() {
+    const guardado = localStorage.getItem(STORAGE_KEY);
+    if (guardado) progreso = JSON.parse(guardado);
+    else {
+      progreso = {};
+      for (let i = 1; i <= 100; i++) progreso[i] = { aciertos: 0, fallos: 0 };
+    }
+  }
+  function guardarProgreso() { localStorage.setItem(STORAGE_KEY, JSON.stringify(progreso)); }
+  function registrarResultado(id, acierto) {
+    if (!progreso[id]) progreso[id] = { aciertos: 0, fallos: 0 };
+    if (acierto) progreso[id].aciertos += 1;
+    else progreso[id].fallos += 1;
+    guardarProgreso();
+    renderDashboard();
+    renderListado(currentGenreFilter, currentFiltroTexto);
+  }
+
+  function obtenerTexto(item, tipo) {
+    if (currentLang === 'es') return tipo === 'palabra' ? item[1] : item[3];
+    if (currentLang === 'en') return tipo === 'palabra' ? item[2] : item[4];
+    return tipo === 'palabra' ? `${item[1]} / ${item[2]}` : `${item[3]} / ${item[4]}`;
+  }
+
+  function getGenreClass(genre) {
+    const classes = {
+      'music': 'genre-music',
+      'report': 'genre-report',
+      'chronicle': 'genre-chronicle',
+      'interview': 'genre-interview'
+    };
+    return classes[genre] || '';
+  }
+
+  function getGenreText(genre) {
+    const texts = {
+      'music': '🎵 Música',
+      'report': '📝 Reportaje',
+      'chronicle': '📖 Crónica',
+      'interview': '🎙️ Entrevista'
+    };
+    return texts[genre] || '';
+  }
+
+  function renderDashboard() {
+    let totalAciertos = 0, totalFallos = 0, conceptosConAcierto = 0;
+    for (let i = 1; i <= 100; i++) {
+      const p = progreso[i] || { aciertos: 0, fallos: 0 };
+      totalAciertos += p.aciertos;
+      totalFallos += p.fallos;
+      if (p.aciertos > 0) conceptosConAcierto++;
+    }
+    const porcentaje = (conceptosConAcierto / 100) * 100;
+    document.getElementById("globalProgressFill").style.width = `${porcentaje}%`;
+    document.getElementById("globalProgressText").innerHTML = `${conceptosConAcierto} de 100 ideas con al menos 1 acierto (${Math.round(porcentaje)}%).`;
+    document.getElementById("statsContainer").innerHTML = `
+      <div class="stat-card"><div class="stat-number">${totalAciertos}</div>✅ Aciertos totales</div>
+      <div class="stat-card"><div class="stat-number">${totalFallos}</div>❌ Fallos</div>
+      <div class="stat-card"><div class="stat-number">${conceptosConAcierto}</div>🎧 Ideas dominadas</div>
+      <div class="stat-card"><div class="stat-number">${Math.round((totalAciertos/(totalAciertos+totalFallos+0.001))*100)}%</div>📊 Tasa éxito</div>
+    `;
+  }
+
+  function renderListado(genre = currentGenreFilter, filtro = "") {
+    const container = document.getElementById("conceptosListadoContainer");
+    container.innerHTML = "";
+    const filtroLower = filtro.toLowerCase();
+    for (let c of conceptosData) {
+      const id = c[0];
+      const idea = obtenerTexto(c, 'palabra');
+      const descripcion = obtenerTexto(c, 'definicion');
+      const prog = progreso[id] || { aciertos: 0, fallos: 0 };
+      const cat = c[5];
+      if (genre !== "all" && cat !== genre) continue;
+      if (filtro && !idea.toLowerCase().includes(filtroLower) && !descripcion.toLowerCase().includes(filtroLower)) continue;
+      const div = document.createElement("div");
+      div.className = "concepto-item";
+      div.innerHTML = `<div class="concepto-titulo">
+                         ${id}. ${idea}
+                         <span class="genre-badge ${getGenreClass(cat)}">${getGenreText(cat)}</span>
+                       </div>
+                       <div class="concepto-desc">🎙️ ${descripcion}</div>
+                       <span class="badge-progreso">✅ ${prog.aciertos} aciertos · ❌ ${prog.fallos} fallos</span>`;
+      container.appendChild(div);
+    }
+  }
+
+  function getRandomItemByGenre() {
+    let filtered = conceptosData;
+    if (currentGenreFilter !== "all") {
+      filtered = conceptosData.filter(item => item[5] === currentGenreFilter);
+    }
+    if (filtered.length === 0) filtered = conceptosData;
+    const randomIndex = Math.floor(Math.random() * filtered.length);
+    return filtered[randomIndex];
+  }
+
+  const practicaDiv = document.getElementById("practicaContainer");
+
+  function modoTraduccionDirecta() {
+    const item = getRandomItemByGenre();
+    currentCardId = item[0];
+    const pregunta = obtenerTexto(item, 'palabra');
+    const respuestaCorrecta = obtenerTexto(item, 'palabra') === item[1] ? item[2] : item[1];
+    const catClass = getGenreClass(item[5]);
+    const catText = getGenreText(item[5]);
+    
+    practicaDiv.innerHTML = `
+      <div class="flashcard">
+        <div style="display: flex; justify-content: center; gap: 1rem; margin-bottom: 0.5rem;">
+          <span class="genre-badge ${catClass}">${catText}</span>
+        </div>
+        <div class="pregunta">🎙️ <strong>${pregunta}</strong></div>
+        <input type="text" id="respuestaInput" placeholder="Escribe la traducción / Type the translation...">
+        <button id="comprobarBtn" class="btn btn-primary">✓ Comprobar</button>
+        <div id="feedbackMsg" style="margin:1rem 0; font-weight:bold;"></div>
+        <button id="siguienteBtn" class="btn">⏩ Siguiente idea</button>
+        <p id="infoProgresoCard" style="margin-top:0.8rem;">📊 Idea ${currentCardId} · ✅ ${progreso[currentCardId]?.aciertos||0} aciertos · ❌ ${progreso[currentCardId]?.fallos||0} fallos</p>
+      </div>
+    `;
+    
+    document.getElementById("comprobarBtn").onclick = () => {
+      const userAnswer = document.getElementById("respuestaInput").value.trim().toLowerCase();
+      const correct = respuestaCorrecta.toLowerCase();
+      const isCorrect = userAnswer === correct;
+      const feedback = document.getElementById("feedbackMsg");
+      if (isCorrect) {
+        feedback.innerHTML = `<span style='color:#27ae60'>✅ ¡Correcto! "${respuestaCorrecta}"</span>`;
+        registrarResultado(currentCardId, true);
+      } else {
+        feedback.innerHTML = `<span style='color:#e67e22'>❌ Incorrecto. La traducción correcta es: "${respuestaCorrecta}"</span>`;
+        registrarResultado(currentCardId, false);
+      }
+      document.getElementById("comprobarBtn").disabled = true;
+      setTimeout(() => { document.getElementById("comprobarBtn").disabled = false; }, 1500);
+    };
+    document.getElementById("siguienteBtn").onclick = () => modoTraduccionDirecta();
+  }
+
+  function modoTraduccionInversa() {
+    const item = getRandomItemByGenre();
+    currentCardId = item[0];
+    const traduccion = obtenerTexto(item, 'palabra') === item[1] ? item[2] : item[1];
+    const respuestaCorrecta = obtenerTexto(item, 'palabra');
+    const catClass = getGenreClass(item[5]);
+    const catText = getGenreText(item[5]);
+    
+    practicaDiv.innerHTML = `
+      <div class="flashcard">
+        <div style="display: flex; justify-content: center; gap: 1rem; margin-bottom: 0.5rem;">
+          <span class="genre-badge ${catClass}">${catText}</span>
+        </div>
+        <div class="pregunta">🔄 <strong>${traduccion}</strong></div>
+        <input type="text" id="respuestaInput" placeholder="Escribe la idea original / Type the original idea...">
+        <button id="comprobarBtn" class="btn btn-primary">✓ Comprobar</button>
+        <div id="feedbackMsg" style="margin:1rem 0; font-weight:bold;"></div>
+        <button id="siguienteBtn" class="btn">⏩ Siguiente idea</button>
+        <p id="infoProgresoCard" style="margin-top:0.8rem;">📊 Idea ${currentCardId} · ✅ ${progreso[currentCardId]?.aciertos||0} aciertos · ❌ ${progreso[currentCardId]?.fallos||0} fallos</p>
+      </div>
+    `;
+    
+    document.getElementById("comprobarBtn").onclick = () => {
+      const userAnswer = document.getElementById("respuestaInput").value.trim().toLowerCase();
+      const correct = respuestaCorrecta.toLowerCase();
+      const isCorrect = userAnswer === correct;
+      const feedback = document.getElementById("feedbackMsg");
+      if (isCorrect) {
+        feedback.innerHTML = `<span style='color:#27ae60'>✅ ¡Correcto! "${respuestaCorrecta}"</span>`;
+        registrarResultado(currentCardId, true);
+      } else {
+        feedback.innerHTML = `<span style='color:#e67e22'>❌ Incorrecto. La idea correcta es: "${respuestaCorrecta}"</span>`;
+        registrarResultado(currentCardId, false);
+      }
+      document.getElementById("comprobarBtn").disabled = true;
+      setTimeout(() => { document.getElementById("comprobarBtn").disabled = false; }, 1500);
+    };
+    document.getElementById("siguienteBtn").onclick = () => modoTraduccionInversa();
+  }
+
+  function modoOrdenarPalabras() {
+    const item = getRandomItemByGenre();
+    currentCardId = item[0];
+    const fraseOriginal = obtenerTexto(item, 'palabra');
+    ordenarRespuestaCorrecta = fraseOriginal;
+    let palabras = fraseOriginal.split(/\s+/).filter(p => p.length > 0);
+    currentOrdenarPalabras = [...palabras];
+    shuffledPalabras = [...palabras];
+    for (let i = shuffledPalabras.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [shuffledPalabras[i], shuffledPalabras[j]] = [shuffledPalabras[j], shuffledPalabras[i]];
+    }
+    selectedOrder = [];
+    const catClass = getGenreClass(item[5]);
+    const catText = getGenreText(item[5]);
+    
+    const renderUI = () => {
+      let palabrasHTML = shuffledPalabras.map(p => `<button class="palabra-btn" data-palabra="${p.replace(/"/g, '&quot;')}">${p}</button>`).join('');
+      let ordenHTML = selectedOrder.map(p => `<span style="background:#faf3ea; padding:0.2rem 0.6rem; margin:0.2rem; border-radius:1rem;">${p}</span>`).join(' ');
+      if (ordenHTML === "") ordenHTML = "<em>Haz clic en las palabras en el orden correcto...</em>";
+      practicaDiv.innerHTML = `
+        <div class="flashcard">
+          <div style="display: flex; justify-content: center; gap: 1rem; margin-bottom: 0.5rem;">
+            <span class="genre-badge ${catClass}">${catText}</span>
+          </div>
+          <h3>🧩 Ordena el título:</h3>
+          <div class="pregunta" style="background:#faf3ea;">📌 ${obtenerTexto(item, 'definicion')}</div>
+          <div class="orden-actual"><strong>Tu orden:</strong><br> ${ordenHTML}</div>
+          <div class="orden-palabras" id="palabrasContainer">${palabrasHTML}</div>
+          <div>
+            <button id="resetBtn" class="btn" style="background:#e6dcd0;">🔁 Reiniciar</button>
+            <button id="comprobarBtn" class="btn btn-primary">✓ Comprobar</button>
+          </div>
+          <button id="siguienteBtn" class="btn" style="margin-top:1rem;">⏩ Siguiente idea</button>
+          <p id="infoProgresoCard">📊 Idea ${currentCardId} · ✅ ${progreso[currentCardId]?.aciertos||0} aciertos · ❌ ${progreso[currentCardId]?.fallos||0} fallos</p>
+          <div id="feedbackMsg" style="margin-top:0.8rem; font-weight:bold;"></div>
+        </div>
+      `;
+      document.querySelectorAll(".palabra-btn").forEach(btn => {
+        btn.addEventListener("click", () => {
+          const palabra = btn.getAttribute("data-palabra");
+          const idx = shuffledPalabras.indexOf(palabra);
+          if (idx !== -1) {
+            shuffledPalabras.splice(idx, 1);
+            selectedOrder.push(palabra);
+            renderUI();
+          }
+        });
+      });
+      document.getElementById("resetBtn").onclick = () => {
+        shuffledPalabras = [...currentOrdenarPalabras];
+        for (let i = shuffledPalabras.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [shuffledPalabras[i], shuffledPalabras[j]] = [shuffledPalabras[j], shuffledPalabras[i]];
+        }
+        selectedOrder = [];
+        renderUI();
+      };
+      document.getElementById("comprobarBtn").onclick = () => {
+        const ordenUsuario = selectedOrder.join(" ");
+        if (ordenUsuario === ordenarRespuestaCorrecta) {
+          document.getElementById("feedbackMsg").innerHTML = "<span style='color:#27ae60'>✅ ¡Correcto! Idea ordenada correctamente.</span>";
+          registrarResultado(currentCardId, true);
+          setTimeout(() => modoOrdenarPalabras(), 1500);
+        } else {
+          document.getElementById("feedbackMsg").innerHTML = `<span style='color:#e67e22'>❌ Incorrecto. El título correcto es: "${ordenarRespuestaCorrecta}"</span>`;
+          registrarResultado(currentCardId, false);
+          setTimeout(() => modoOrdenarPalabras(), 2000);
+        }
+        document.getElementById("comprobarBtn").disabled = true;
+        setTimeout(() => { if(document.getElementById("comprobarBtn")) document.getElementById("comprobarBtn").disabled = false; }, 2000);
+      };
+      document.getElementById("siguienteBtn").onclick = () => modoOrdenarPalabras();
+    };
+    renderUI();
+  }
+
+  function modoEspEng() {
+    const item = getRandomItemByGenre();
+    currentCardId = item[0];
+    const direction = Math.random() < 0.5 ? "esp2eng" : "eng2esp";
+    const [pregunta, respuestaCorrecta] = direction === "esp2eng" ? [item[1], item[2]] : [item[2], item[1]];
+    const directionText = direction === "esp2eng" ? "🇪🇸 → 🇬🇧 Español a Inglés" : "🇬🇧 → 🇪🇸 English to Spanish";
+    const catClass = getGenreClass(item[5]);
+    const catText = getGenreText(item[5]);
+    
+    practicaDiv.innerHTML = `
+      <div class="flashcard">
+        <div style="display: flex; justify-content: center; gap: 1rem; margin-bottom: 0.5rem;">
+          <span class="genre-badge ${catClass}">${catText}</span>
+        </div>
+        <div class="translation-direction">${directionText}</div>
+        <div class="pregunta">📝 <strong>${pregunta}</strong></div>
+        <input type="text" id="respuestaInput" placeholder="Escribe la traducción / Type the translation...">
+        <button id="comprobarBtn" class="btn btn-primary">✓ Comprobar</button>
+        <div id="feedbackMsg" style="margin:1rem 0; font-weight:bold;"></div>
+        <button id="siguienteBtn" class="btn">⏩ Siguiente idea</button>
+        <p id="infoProgresoCard" style="margin-top:0.8rem;">📊 Idea ${currentCardId} · ✅ ${progreso[currentCardId]?.aciertos||0} aciertos · ❌ ${progreso[currentCardId]?.fallos||0} fallos</p>
+      </div>
+    `;
+    
+    document.getElementById("comprobarBtn").onclick = () => {
+      const userAnswer = document.getElementById("respuestaInput").value.trim().toLowerCase();
+      const correct = respuestaCorrecta.toLowerCase();
+      const isCorrect = userAnswer === correct;
+      const feedback = document.getElementById("feedbackMsg");
+      if (isCorrect) {
+        feedback.innerHTML = `<span style='color:#27ae60'>✅ ¡Correcto! "${respuestaCorrecta}"</span>`;
+        registrarResultado(currentCardId, true);
+      } else {
+        feedback.innerHTML = `<span style='color:#e67e22'>❌ Incorrecto. La respuesta correcta es: "${respuestaCorrecta}"</span>`;
+        registrarResultado(currentCardId, false);
+      }
+      document.getElementById("comprobarBtn").disabled = true;
+      setTimeout(() => { document.getElementById("comprobarBtn").disabled = false; }, 1500);
+    };
+    document.getElementById("siguienteBtn").onclick = () => modoEspEng();
+  }
+
+  function setPracticeMode(mode) {
+    currentPracticeMode = mode;
+    document.querySelectorAll(".modo-btn").forEach(btn => btn.classList.remove("active"));
+    if (mode === "traduccion_directa") document.getElementById("modoTraduccionDirecta").classList.add("active");
+    if (mode === "traduccion_inversa") document.getElementById("modoTraduccionInversa").classList.add("active");
+    if (mode === "ordenar") document.getElementById("modoOrdenar").classList.add("active");
+    if (mode === "esp_eng") document.getElementById("modoEspEng").classList.add("active");
+    
+    if (mode === "traduccion_directa") modoTraduccionDirecta();
+    else if (mode === "traduccion_inversa") modoTraduccionInversa();
+    else if (mode === "ordenar") modoOrdenarPalabras();
+    else if (mode === "esp_eng") modoEspEng();
+  }
+
+  function setLanguage(lang) {
+    currentLang = lang;
+    document.getElementById("langEsBtn").classList.toggle("active", lang === 'es');
+    document.getElementById("langEnBtn").classList.toggle("active", lang === 'en');
+    document.getElementById("langBothBtn").classList.toggle("active", lang === 'both');
+    document.getElementById("progressTitle").innerHTML = lang === 'es' ? "📈 Progreso ideas AMB C1/C2" : 
+                                                         (lang === 'en' ? "📈 AMB C1/C2 Ideas Progress" : "📈 Progreso / Progress");
+    const placeholder = document.querySelector("#listado input");
+    if (placeholder) {
+      placeholder.placeholder = lang === 'es' ? "🔍 Buscar idea..." :
+                                (lang === 'en' ? "🔍 Search idea..." : "🔍 Buscar / Search...");
+    }
+    renderListado(currentGenreFilter, currentFiltroTexto);
+    setPracticeMode(currentPracticeMode);
+  }
+
+  function initUI() {
+    document.querySelectorAll(".nav-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const viewId = btn.getAttribute("data-view");
+        document.querySelectorAll(".view").forEach(v => v.classList.remove("active-view"));
+        document.getElementById(viewId).classList.add("active-view");
+        document.querySelectorAll(".nav-btn").forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+        if (viewId === "listado") renderListado(currentGenreFilter, currentFiltroTexto);
+        if (viewId === "dashboard") renderDashboard();
+        if (viewId === "practica") setPracticeMode(currentPracticeMode);
+      });
+    });
+    
+    document.getElementById("modoTraduccionDirecta").addEventListener("click", () => setPracticeMode("traduccion_directa"));
+    document.getElementById("modoTraduccionInversa").addEventListener("click", () => setPracticeMode("traduccion_inversa"));
+    document.getElementById("modoOrdenar").addEventListener("click", () => setPracticeMode("ordenar"));
+    document.getElementById("modoEspEng").addEventListener("click", () => setPracticeMode("esp_eng"));
+    
+    document.getElementById("resetProgresoBtn").addEventListener("click", () => {
+      if (confirm("¿Reiniciar todo el progreso? Se perderán aciertos y fallos. / Reset all progress?")) {
+        for (let i = 1; i <= 100; i++) progreso[i] = { aciertos: 0, fallos: 0 };
+        guardarProgreso();
+        renderDashboard();
+        renderListado(currentGenreFilter, currentFiltroTexto);
+        setPracticeMode(currentPracticeMode);
+      }
+    });
+    
+    const filtroInput = document.getElementById("filtroListado");
+    filtroInput.addEventListener("input", (e) => {
+      currentFiltroTexto = e.target.value;
+      renderListado(currentGenreFilter, currentFiltroTexto);
+    });
+    
+    document.querySelectorAll(".genre-filter-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const genre = btn.getAttribute("data-genre");
+        currentGenreFilter = genre;
+        document.querySelectorAll(".genre-filter-btn").forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+        renderListado(currentGenreFilter, currentFiltroTexto);
+      });
+    });
+    
+    document.getElementById("langEsBtn").addEventListener("click", () => setLanguage('es'));
+    document.getElementById("langEnBtn").addEventListener("click", () => setLanguage('en'));
+    document.getElementById("langBothBtn").addEventListener("click", () => setLanguage('both'));
+  }
+
+  window.addEventListener("DOMContentLoaded", () => {
+    cargarProgreso();
+    renderDashboard();
+    renderListado("all", "");
+    initUI();
+    setPracticeMode("traduccion_directa");
+  });
+</script>
+</body>
+</html>

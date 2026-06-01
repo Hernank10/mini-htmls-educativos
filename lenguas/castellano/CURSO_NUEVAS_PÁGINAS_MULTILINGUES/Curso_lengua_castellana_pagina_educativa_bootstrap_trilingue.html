@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Página Educativa Trilingüe – Griego / Español / Inglés</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <style>
+    body { background: #f5f8ff; }
+    .card { border-radius: 1.5rem; }
+    .concepto { font-weight: bold; font-size: 1.3rem; }
+    .footer { margin-top: 3rem; padding: 2rem; text-align: center; }
+  </style>
+</head>
+<body>
+  <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="#">Academia Trilingüe</a>
+    </div>
+  </nav>
+
+  <div class="container mt-4">
+    <h1 class="text-center mb-4">Aprendizaje Trilingüe Griego – Español – Inglés</h1>
+
+    <div class="row g-3">
+      <!-- Panel de Estudio -->
+      <div class="col-md-6">
+        <div class="card shadow p-4">
+          <h4>Estudio del Concepto</h4>
+          <label class="mt-3">Griego:</label>
+          <input type="text" id="greek" class="form-control" placeholder="λόγος" />
+
+          <label class="mt-3">Transliteración:</label>
+          <input type="text" id="translit" class="form-control" placeholder="logos" />
+
+          <label class="mt-3">Español:</label>
+          <input type="text" id="spanish" class="form-control" placeholder="razón" />
+
+          <label class="mt-3">Inglés:</label>
+          <input type="text" id="english" class="form-control" placeholder="reason" />
+
+          <button class="btn btn-primary mt-3 w-100" onclick="guardarConcepto()">Guardar</button>
+        </div>
+      </div>
+
+      <!-- Ejercicio Activo -->
+      <div class="col-md-6">
+        <div class="card shadow p-4">
+          <h4>Ejercicio Activo</h4>
+          <p>Escribe frases en español e inglés usando el concepto.</p>
+
+          <textarea id="frase_es" class="form-control mt-2" placeholder="El logos guía el pensamiento filosófico."></textarea>
+          <textarea id="frase_en" class="form-control mt-2" placeholder="Reason guides philosophical inquiry."></textarea>
+
+          <button class="btn btn-success mt-3 w-100" onclick="guardarFrases()">Guardar Frases</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Estadísticas -->
+    <div class="card shadow p-4 mt-4">
+      <h4>Progreso</h4>
+      <div id="stats"></div>
+      <button class="btn btn-outline-primary mt-2" onclick="mostrarStats()">Actualizar estadísticas</button>
+    </div>
+  </div>
+
+  <div class="footer text-secondary">
+    © 2025 Plataforma Educativa Multilingüe
+  </div>
+
+  <script>
+    let data = JSON.parse(localStorage.getItem("trilingue") || "{}");
+
+    function guardarConcepto() {
+      const g = greek.value.trim();
+      const t = translit.value.trim();
+      const s = spanish.value.trim();
+      const e = english.value.trim();
+
+      if (!g || !t || !s || !e) { alert("Completa todos los campos."); return; }
+      data[g] = { translit: t, es: s, en: e, frases: [] };
+      localStorage.setItem("trilingue", JSON.stringify(data));
+      alert("Concepto guardado.");
+    }
+
+    function guardarFrases() {
+      const g = greek.value.trim();
+      if (!data[g]) { alert("Debes guardar primero el concepto."); return; }
+      data[g].frases.push({ es: frase_es.value, en: frase_en.value });
+      localStorage.setItem("trilingue", JSON.stringify(data));
+      alert("Frases guardadas.");
+    }
+
+    function mostrarStats() {
+      let total = Object.keys(data).length;
+      let frases = 0;
+      for (const k in data) frases += data[k].frases.length;
+
+      stats.innerHTML = `
+        <p><strong>Conceptos aprendidos:</strong> ${total}</p>
+        <p><strong>Frases creadas:</strong> ${frases}</p>
+      `;
+    }
+  </script>
+
+</body>
+</html>

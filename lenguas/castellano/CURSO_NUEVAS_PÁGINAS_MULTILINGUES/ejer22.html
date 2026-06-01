@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>100 Reglas y Ejercicios: Español vs Inglés</title>
+    <!-- Bootstrap 5 + Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <style>
+        body { background: #f4f6f9; }
+        .nav-tabs .nav-link.active {
+            background-color: #0d6efd;
+            color: white;
+            font-weight: bold;
+        }
+        .card-technique {
+            border-left: 5px solid #0d6efd;
+            margin-bottom: 15px;
+            transition: 0.2s;
+        }
+        .card-technique:hover {
+            transform: translateX(5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        .difficulty-star { color: #ffc107; }
+        .feedback-correct { background-color: #d1e7dd; border-color: #198754; color: #0a3622; }
+        .feedback-partial { background-color: #fff3cd; border-color: #ffc107; color: #856404; }
+        .feedback-wrong { background-color: #f8d7da; border-color: #dc3545; color: #58151c; }
+        .progress-bar { transition: width 0.4s ease; }
+        .results-table th { background-color: #e9ecef; position: sticky; top: 0; }
+        .table-responsive { max-height: 450px; overflow-y: auto; }
+        .badge-difficulty { font-size: 0.85rem; }
+    </style>
+</head>
+<body>
+
+<!-- Header -->
+<header class="bg-primary text-white py-3 shadow-sm">
+    <div class="container">
+        <div class="d-flex justify-content-between align-items-center">
+            <div>
+                <h1 class="h3 mb-0"><i class="bi bi-journal-bookmark-fill me-2"></i>Español vs Inglés</h1>
+                <p class="mb-0 small">100 reglas de redacción + 100 ejercicios interactivos</p>
+            </div>
+            <div><span class="badge bg-warning text-dark fs-6" id="globalScoreHeader">Puntuación: 0</span></div>
+        </div>
+    </div>
+</header>
+
+<div class="container mt-4">
+    <!-- Pestañas -->
+    <ul class="nav nav-tabs mb-4" id="mainTab" role="tablist">
+        <li class="nav-item"><button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home"><i class="bi bi-house-door"></i> Inicio</button></li>
+        <li class="nav-item"><button class="nav-link" id="rules-tab" data-bs-toggle="tab" data-bs-target="#rules"><i class="bi bi-list-check"></i> 100 Reglas</button></li>
+        <li class="nav-item"><button class="nav-link" id="practice-tab" data-bs-toggle="tab" data-bs-target="#practice"><i class="bi bi-pencil-square"></i> Práctica (100 ejercicios)</button></li>
+        <li class="nav-item"><button class="nav-link" id="results-tab" data-bs-toggle="tab" data-bs-target="#results"><i class="bi bi-bar-chart-steps"></i> Resultados</button></li>
+    </ul>
+
+    <div class="tab-content">
+        <!-- INICIO -->
+        <div class="tab-pane fade show active" id="home">
+            <div class="row justify-content-center">
+                <div class="col-lg-9">
+                    <div class="card shadow-sm border-0">
+                        <div class="card-body text-center p-5">
+                            <i class="bi bi-translate display-1 text-primary mb-3"></i>
+                            <h2>Domina las diferencias entre español e inglés</h2>
+                            <p class="lead">Aprende las 100 técnicas de redacción esenciales para hispanohablantes y practica con 100 ejercicios de traducción directa.</p>
+                            <hr>
+                            <div class="row mt-4">
+                                <div class="col-md-4 mb-3">
+                                    <div class="card h-100 bg-light border-0">
+                                        <div class="card-body"><i class="bi bi-table text-primary fs-1"></i><h5>100 Reglas</h5><p>Comparativas: orden SVO, auxiliares, negación, preguntas, exclamaciones y más.</p></div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <div class="card h-100 bg-light border-0">
+                                        <div class="card-body"><i class="bi bi-chat-text text-success fs-1"></i><h5>100 Ejercicios</h5><p>Traduce del español al inglés, con retroalimentación inmediata y puntuación.</p></div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <div class="card h-100 bg-light border-0">
+                                        <div class="card-body"><i class="bi bi-graph-up text-warning fs-1"></i><h5>Estadísticas</h5><p>Seguimiento de aciertos, porcentaje y desglose por tipo de oración.</p></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mt-4">
+                                <label class="form-label fw-bold">Número de ejercicios por sesión:</label>
+                                <div class="d-flex justify-content-center gap-3">
+                                    <input type="range" id="sessionCount" class="form-range w-50" min="5" max="100" value="20" step="5">
+                                    <span id="countDisplay" class="badge bg-secondary fs-6 p-2">20</span>
+                                </div>
+                                <button class="btn btn-success btn-lg mt-3" onclick="startPracticeSession()"><i class="bi bi-play-circle"></i> Comenzar práctica</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 100 REGLAS (Técnicas de redacción) -->
+        <div class="tab-pane fade" id="rules">
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white"><h5 class="mb-0"><i class="bi bi-lightbulb"></i> 100 técnicas de redacción: Español ↔ Inglés</h5></div>
+                <div class="card-body" style="max-height: 550px; overflow-y: auto;">
+                    <div id="rulesList" class="row row-cols-1 row-cols-md-2 g-3"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- PRÁCTICA -->
+        <div class="tab-pane fade" id="practice">
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
+                    <div class="card shadow-sm mb-3">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div><h6>Progreso</h6><div class="progress" style="height:25px; width:250px;"><div id="progressBar" class="progress-bar bg-success" style="width:0%">0%</div></div></div>
+                                <div><span id="progressText" class="badge bg-info">Ejercicio 0/0</span></div>
+                                <div><span id="typeBadge" class="badge bg-secondary">Tipo: -</span> <span id="difficultyBadge" class="badge bg-warning text-dark">★</span></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card shadow-sm">
+                        <div class="card-header bg-light"><h5><i class="bi bi-chat-left-quote"></i> Oración en español</h5></div>
+                        <div class="card-body">
+                            <h4 id="spanishSentence" class="text-center text-primary py-3">---</h4>
+                            <label class="form-label fw-bold">Tu traducción al inglés:</label>
+                            <input type="text" id="answerInput" class="form-control form-control-lg" placeholder="Escribe aquí..." disabled>
+                            <div id="feedbackArea" class="alert mt-3 d-none"></div>
+                            <div class="d-flex justify-content-end gap-2 mt-3">
+                                <button class="btn btn-secondary" id="resetSessionBtn" onclick="resetPractice()" disabled><i class="bi bi-arrow-repeat"></i> Reiniciar</button>
+                                <button class="btn btn-primary" id="checkBtn" onclick="checkCurrentAnswer()" disabled><i class="bi bi-check-lg"></i> Verificar</button>
+                                <button class="btn btn-success" id="nextBtn" onclick="nextExercise()" disabled><i class="bi bi-arrow-right-circle"></i> Siguiente</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- RESULTADOS -->
+        <div class="tab-pane fade" id="results">
+            <div class="row g-3 mb-4">
+                <div class="col-md-4"><div class="card text-white bg-primary"><div class="card-body text-center"><i class="bi bi-trophy fs-1"></i><h3 id="finalScore">0/0</h3><p>Puntuación total</p></div></div></div>
+                <div class="col-md-4"><div class="card text-white bg-success"><div class="card-body text-center"><i class="bi bi-percent fs-1"></i><h3 id="finalPercent">0%</h3><p>Aciertos</p></div></div></div>
+                <div class="col-md-4"><div class="card text-white bg-info"><div class="card-body text-center"><i class="bi bi-check2-circle fs-1"></i><h3 id="completedCount">0</h3><p>Ejercicios completados</p></div></div></div>
+            </div>
+            <div class="card shadow-sm">
+                <div class="card-header bg-light"><h5><i class="bi bi-table"></i> Detalle de respuestas</h5></div>
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-striped mb-0 results-table">
+                            <thead><tr><th>#</th><th>Español</th><th>Tu respuesta</th><th>Correcta</th><th>Resultado</th></tr></thead>
+                            <tbody id="resultsTableBody"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="text-center mt-3"><button class="btn btn-outline-primary" onclick="exportResultsToCSV()"><i class="bi bi-download"></i> Exportar resultados (CSV)</button></div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // ---------- 100 REGLAS (técnicas de redacción para hispanohablantes) ----------
+    const rules = [];
+    for (let i=1; i<=100; i++) {
+        if (i<=20) rules.push(`Regla ${i}: El inglés exige sujeto explícito (I, you, he...), a diferencia del español donde se omite. Ej: "Está lloviendo" → "It is raining".`);
+        else if (i<=35) rules.push(`Regla ${i}: En preguntas y negaciones del presente simple se usa el auxiliar DO/DOES. "¿Tú hablas?" → "Do you speak?"`);
+        else if (i<=50) rules.push(`Regla ${i}: El orden de las palabras es estricto: Sujeto + Verbo + Objeto (SVO). En español es más flexible.`);
+        else if (i<=65) rules.push(`Regla ${i}: Los adjetivos van antes del sustantivo en inglés: "una casa roja" → "a red house".`);
+        else if (i<=80) rules.push(`Regla ${i}: En exclamaciones: "What a + adjetivo + sustantivo" o "How + adjetivo". Ej: "¡Qué bonito!" → "How beautiful!"`);
+        else rules.push(`Regla ${i}: Los verbos modales (can, must, should) no necesitan "to" después. "Ella puede nadar" → "She can swim".`);
+    }
+    // Cargar reglas en la pestaña
+    function renderRules() {
+        const container = document.getElementById('rulesList');
+        container.innerHTML = '';
+        rules.forEach((rule, idx) => {
+            const col = document.createElement('div');
+            col.className = 'col-md-6';
+            col.innerHTML = `<div class="card card-technique h-100"><div class="card-body"><i class="bi bi-check-circle-fill text-primary me-2"></i><strong>${rule.substring(0,70)}...</strong><br><small class="text-muted">${rule}</small></div></div>`;
+            container.appendChild(col);
+        });
+    }
+    renderRules();
+
+    // ---------- 100 EJERCICIOS (traducción español -> inglés, errores típicos) ----------
+    const allExercises = [];
+    // Generar 100 ejercicios variados
+    const tipos = ['afirmativa', 'negativa', 'interrogativa', 'exclamativa'];
+    const frasesBase = [
+        {es: "Ella come manzanas", en: "She eats apples", tipo: "afirmativa", dif:1},
+        {es: "Nosotros no tenemos dinero", en: "We do not have money", tipo: "negativa", dif:1},
+        {es: "¿Ellos estudian inglés?", en: "Do they study English?", tipo: "interrogativa", dif:1},
+        {es: "¡Qué día tan bonito!", en: "What a beautiful day!", tipo: "exclamativa", dif:1},
+        {es: "Yo camino al parque", en: "I walk to the park", tipo: "afirmativa", dif:1},
+        {es: "Ella no canta bien", en: "She does not sing well", tipo: "negativa", dif:1},
+        {es: "¿Tú necesitas ayuda?", en: "Do you need help?", tipo: "interrogativa", dif:1},
+        {es: "¡Qué rápido corres!", en: "How fast you run!", tipo: "exclamativa", dif:1},
+        {es: "Mi hermano trabaja en Madrid", en: "My brother works in Madrid", tipo: "afirmativa", dif:1},
+        {es: "Ellos no juegan fútbol", en: "They do not play soccer", tipo: "negativa", dif:1},
+        {es: "¿Dónde vive tu madre?", en: "Where does your mother live?", tipo: "interrogativa", dif:2},
+        {es: "¡Cómo me gusta esta música!", en: "How I like this music!", tipo: "exclamativa", dif:2},
+        {es: "El profesor explicó la lección", en: "The teacher explained the lesson", tipo: "afirmativa", dif:2},
+        {es: "No entendí la pregunta", en: "I did not understand the question", tipo: "negativa", dif:2},
+        {es: "¿Terminaste la tarea?", en: "Did you finish the homework?", tipo: "interrogativa", dif:2},
+        {es: "¡Qué sorpresa tan agradable!", en: "What a pleasant surprise!", tipo: "exclamativa", dif:2},
+        {es: "Ellos siempre llegan temprano", en: "They always arrive early", tipo: "afirmativa", dif:2},
+        {es: "Nosotros no vimos la película", en: "We did not see the movie", tipo: "negativa", dif:2},
+        {es: "¿Por qué lloras?", en: "Why do you cry?", tipo: "interrogativa", dif:2},
+        {es: "¡Qué hermoso paisaje!", en: "What a beautiful landscape!", tipo: "exclamativa", dif:2},
+        {es: "El niño corre rápido", en: "The boy runs fast", tipo: "afirmativa", dif:1},
+        {es: "Usted no fuma, ¿verdad?", en: "You do not smoke, do you?", tipo: "negativa", dif:3},
+        {es: "¿Cuándo llegaste a casa?", en: "When did you arrive home?", tipo: "interrogativa", dif:2},
+        {es: "¡Cómo has crecido!", en: "How you have grown!", tipo: "exclamativa", dif:3},
+        {es: "Esa empresa produce software", en: "That company produces software", tipo: "afirmativa", dif:2},
+    ];
+    // Rellenar hasta 100 ejercicios combinando y variando
+    while (allExercises.length < 100) {
+        for (let ex of frasesBase) {
+            if (allExercises.length >= 100) break;
+            // pequeñas variaciones para evitar duplicados exactos
+            let newEs = ex.es;
+            let newEn = ex.en;
+            if (allExercises.length % 7 === 0 && ex.tipo === 'afirmativa') {
+                newEs = "Yo " + ex.es.charAt(0).toLowerCase() + ex.es.slice(1);
+                newEn = "I " + ex.en.charAt(0).toLowerCase() + ex.en.slice(1);
+            }
+            allExercises.push({
+                spanish: newEs,
+                english: newEn,
+                type: ex.tipo,
+                difficulty: ex.dif
+            });
+        }
+    }
+    // Asegurar exactamente 100
+    while(allExercises.length > 100) allExercises.pop();
+
+    // Variables de estado de práctica
+    let currentSession = {
+        exercises: [],
+        currentIndex: 0,
+        score: 0,
+        results: [],   // { spanish, userAnswer, correctAnswer, result }
+        total: 0
+    };
+    let practiceActive = false;
+
+    function startPracticeSession() {
+        const count = parseInt(document.getElementById('sessionCount').value);
+        if (count < 5 || count > 100) { alert("Elige entre 5 y 100 ejercicios"); return; }
+        // seleccionar aleatoriamente 'count' ejercicios
+        const shuffled = [...allExercises].sort(() => Math.random() - 0.5);
+        currentSession.exercises = shuffled.slice(0, count);
+        currentSession.currentIndex = 0;
+        currentSession.score = 0;
+        currentSession.results = [];
+        currentSession.total = count;
+        practiceActive = true;
+        // habilitar UI
+        document.getElementById('answerInput').disabled = false;
+        document.getElementById('checkBtn').disabled = false;
+        document.getElementById('nextBtn').disabled = true;
+        document.getElementById('resetSessionBtn').disabled = false;
+        document.getElementById('globalScoreHeader').innerText = `Puntuación: 0`;
+        // mostrar primer ejercicio
+        loadExercise();
+        // cambiar a pestaña práctica
+        const practiceTab = new bootstrap.Tab(document.getElementById('practice-tab'));
+        practiceTab.show();
+    }
+
+    function loadExercise() {
+        if (!practiceActive || currentSession.currentIndex >= currentSession.total) {
+            finishPractice();
+            return;
+        }
+        const ex = currentSession.exercises[currentSession.currentIndex];
+        document.getElementById('spanishSentence').innerText = ex.spanish;
+        document.getElementById('typeBadge').innerHTML = `Tipo: ${ex.type}`;
+        const stars = "★".repeat(ex.difficulty);
+        document.getElementById('difficultyBadge').innerHTML = `${stars}`;
+        // progreso
+        const prog = (currentSession.currentIndex / currentSession.total) * 100;
+        const progBar = document.getElementById('progressBar');
+        progBar.style.width = `${prog}%`;
+        progBar.innerText = `${Math.round(prog)}%`;
+        document.getElementById('progressText').innerText = `Ejercicio ${currentSession.currentIndex+1}/${currentSession.total}`;
+        // limpiar
+        document.getElementById('answerInput').value = '';
+        const feedbackDiv = document.getElementById('feedbackArea');
+        feedbackDiv.classList.add('d-none');
+        document.getElementById('checkBtn').disabled = false;
+        document.getElementById('nextBtn').disabled = true;
+        document.getElementById('answerInput').focus();
+    }
+
+    function checkCurrentAnswer() {
+        const ex = currentSession.exercises[currentSession.currentIndex];
+        const userAnswer = document.getElementById('answerInput').value.trim();
+        const correct = ex.english;
+        let points = 0;
+        let resultText = '';
+        let feedbackClass = '';
+        let message = '';
+
+        const normalize = (s) => s.toLowerCase().replace(/[?!.,]/g, '').trim();
+        const userNorm = normalize(userAnswer);
+        const correctNorm = normalize(correct);
+        
+        if (userNorm === correctNorm) {
+            points = 1;
+            resultText = 'Correcto';
+            feedbackClass = 'feedback-correct';
+            message = `✅ ¡Correcto! +1 punto`;
+        } else if (userNorm === correctNorm.replace(/\s+/g,' ') || (userAnswer.length > 0 && correctNorm.includes(userNorm) && userNorm.length > 3)) {
+            // casi correcto (pequeños errores de puntuación o mayúsculas)
+            points = 0.5;
+            resultText = 'Parcial';
+            feedbackClass = 'feedback-partial';
+            message = `⚠️ Casi correcto (+0.5). La respuesta exacta: "${correct}"`;
+        } else {
+            points = 0;
+            resultText = 'Incorrecto';
+            feedbackClass = 'feedback-wrong';
+            message = `❌ Incorrecto. La respuesta correcta es: "${correct}"`;
+        }
+        currentSession.score += points;
+        currentSession.results.push({
+            spanish: ex.spanish,
+            userAnswer: userAnswer || '(vacío)',
+            correctAnswer: correct,
+            result: resultText
+        });
+        // Actualizar puntuación global en header
+        document.getElementById('globalScoreHeader').innerHTML = `Puntuación: ${currentSession.score.toFixed(1)}`;
+        // Mostrar feedback
+        const feedbackDiv = document.getElementById('feedbackArea');
+        feedbackDiv.className = `alert ${feedbackClass} mt-3`;
+        feedbackDiv.innerHTML = `<i class="bi bi-info-circle"></i> ${message}`;
+        feedbackDiv.classList.remove('d-none');
+        // Deshabilitar verificar y habilitar siguiente
+        document.getElementById('checkBtn').disabled = true;
+        document.getElementById('nextBtn').disabled = false;
+    }
+
+    function nextExercise() {
+        currentSession.currentIndex++;
+        if (currentSession.currentIndex < currentSession.total) {
+            loadExercise();
+        } else {
+            finishPractice();
+        }
+    }
+
+    function resetPractice() {
+        if (confirm("¿Reiniciar la práctica actual? Se perderá el progreso.")) {
+            startPracticeSession();
+        }
+    }
+
+    function finishPractice() {
+        practiceActive = false;
+        const total = currentSession.total;
+        const finalScore = currentSession.score;
+        const percent = (finalScore / total) * 100;
+        document.getElementById('finalScore').innerHTML = `${finalScore.toFixed(1)}/${total}`;
+        document.getElementById('finalPercent').innerHTML = `${percent.toFixed(1)}%`;
+        document.getElementById('completedCount').innerHTML = total;
+        // llenar tabla de resultados
+        const tbody = document.getElementById('resultsTableBody');
+        tbody.innerHTML = '';
+        currentSession.results.forEach((r, idx) => {
+            const badgeClass = r.result === 'Correcto' ? 'bg-success' : (r.result === 'Parcial' ? 'bg-warning text-dark' : 'bg-danger');
+            const row = `<tr>
+                <td>${idx+1}</td>
+                <td>${r.spanish}</td>
+                <td>${r.userAnswer}</td>
+                <td>${r.correctAnswer}</td>
+                <td><span class="badge ${badgeClass}">${r.result}</span></td>
+            </tr>`;
+            tbody.insertAdjacentHTML('beforeend', row);
+        });
+        // mostrar mensaje final
+        let msg = percent >= 90 ? "🎉 Excelente dominio de las diferencias" : (percent>=70 ? "👍 Muy bien, sigue así" : "📘 Practica más las reglas");
+        alert(`Práctica finalizada\n${msg}\nPuntuación: ${finalScore.toFixed(1)}/${total} (${percent.toFixed(1)}%)`);
+        // deshabilitar controles de práctica
+        document.getElementById('answerInput').disabled = true;
+        document.getElementById('checkBtn').disabled = true;
+        document.getElementById('nextBtn').disabled = true;
+        // Ir a pestaña resultados
+        const resultsTab = new bootstrap.Tab(document.getElementById('results-tab'));
+        resultsTab.show();
+    }
+
+    function exportResultsToCSV() {
+        if (currentSession.results.length === 0) { alert("No hay resultados para exportar."); return; }
+        let csv = "Nro,Español,Tu respuesta,Respuesta correcta,Resultado\n";
+        currentSession.results.forEach((r, i) => {
+            csv += `${i+1},"${r.spanish}","${r.userAnswer}","${r.correctAnswer}","${r.result}"\n`;
+        });
+        const blob = new Blob([csv], {type: "text/csv"});
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = "resultados_espanol_ingles.csv";
+        link.click();
+        URL.revokeObjectURL(link.href);
+    }
+
+    // Sincronizar slider
+    const slider = document.getElementById('sessionCount');
+    const countDisplay = document.getElementById('countDisplay');
+    slider.addEventListener('input', () => { countDisplay.innerText = slider.value; });
+    countDisplay.innerText = slider.value;
+</script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

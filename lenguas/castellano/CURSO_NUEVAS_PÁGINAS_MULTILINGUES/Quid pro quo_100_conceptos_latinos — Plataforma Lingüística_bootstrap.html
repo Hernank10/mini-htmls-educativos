@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Quid Pro Quo — Plataforma Educativa</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<style>
+    body { background:#f5f7fa; }
+    .card { border-radius:12px; }
+    .tab-pane { padding-top:20px; }
+    textarea { width:100%; height:300px; }
+</style>
+</head>
+
+<body>
+
+<div class="container py-5">
+    <h1 class="text-center mb-4">📚 Plataforma Lingüística — Quid pro quo</h1>
+
+    <!-- NAV TABS -->
+    <ul class="nav nav-tabs" id="mainTabs" role="tablist">
+        <li class="nav-item"><button class="nav-link active" data-bs-toggle="tab" data-bs-target="#ensayo">Ensayo</button></li>
+        <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#trilingue">Expresiones Trilingües</button></li>
+        <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#analisis">Análisis</button></li>
+        <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#lista100">100 Expresiones</button></li>
+        <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#practica">Práctica</button></li>
+    </ul>
+
+    <div class="tab-content">
+
+        <!-- ENSAYO -->
+        <div class="tab-pane fade show active" id="ensayo">
+            <div class="card p-3 mt-3">
+                <h3>Ensayo: Quid pro quo</h3>
+                <textarea id="ensayoTexto" readonly>
+ENSAYO: El concepto latino "quid pro quo"
+
+La expresión latina *quid pro quo* significa literalmente “algo por algo”.
+Designa un intercambio equivalente entre dos partes. En su evolución moderna,
+ha pasado a significar tanto un acuerdo justo como un malentendido en el que
+se confunden elementos intercambiados.
+
+Su presencia en español e inglés demuestra la persistencia del latín en la
+conceptualización jurídica, filosófica y comunicativa del mundo occidental.
+                </textarea>
+
+                <button class="btn btn-primary mt-3" onclick="leerTexto('ensayoTexto')">🔊 Leer Ensayo</button>
+            </div>
+        </div>
+
+        <!-- TRILINGÜE -->
+        <div class="tab-pane fade" id="trilingue">
+            <div class="card p-3 mt-3">
+                <h3>Expresiones trilingües</h3>
+                <select id="listaTri" class="form-select mt-3" size="10"></select>
+                <button class="btn btn-primary mt-3" onclick="leerSeleccionTri()">🔊 Leer expresión</button>
+            </div>
+        </div>
+
+        <!-- ANÁLISIS -->
+        <div class="tab-pane fade" id="analisis">
+            <div class="card p-3 mt-3">
+                <h3>Análisis morfosintáctico</h3>
+                <select id="listaAnalisis" class="form-select mt-3" size="6"></select>
+                <textarea id="resultadoAnalisis" class="mt-3" readonly></textarea>
+                <button class="btn btn-secondary mt-3" onclick="mostrarAnalisis()">Mostrar análisis</button>
+            </div>
+        </div>
+
+        <!-- 100 EXPRESIONES -->
+        <div class="tab-pane fade" id="lista100">
+            <div class="card p-3 mt-3">
+                <h3>100 Expresiones Latinas Universales</h3>
+                <select id="listaCien" class="form-select mt-3" size="12"></select>
+                <button class="btn btn-primary mt-3" onclick="leerSeleccion100()">🔊 Escuchar expresión</button>
+            </div>
+        </div>
+
+        <!-- PRÁCTICA -->
+        <div class="tab-pane fade" id="practica">
+            <div class="card p-3 mt-3">
+                <h3>Ejercicio de Práctica: Dictado y Escritura</h3>
+
+                <select id="listaPractica" class="form-select mt-3" size="6"></select>
+
+                <input id="entradaUsuario" class="form-control mt-3" placeholder="Escribe aquí lo que escuchas...">
+
+                <p id="resultadoPractica" class="mt-3 fs-4"></p>
+
+                <div class="mt-3">
+                    <button class="btn btn-primary" onclick="dictarPractica()">🔊 Dictar frase</button>
+                    <button class="btn btn-success" onclick="validarEscritura()">✔ Validar</button>
+                    <button class="btn btn-warning" onclick="dictadoVoz()">🎤 Dictado por voz</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script>
+// =======================================
+// DATA
+// =======================================
+
+const expresiones = [
+    ["Carpe diem", "Aprovecha el día", "Seize the day"],
+    ["Quid pro quo", "Algo por algo", "Something for something"],
+    ["Alea iacta est", "La suerte está echada", "The die is cast"],
+    ["Cogito ergo sum", "Pienso, luego existo", "I think, therefore I am"],
+    ["Veni, vidi, vici", "Vine, vi, vencí", "I came, I saw, I conquered"]
+];
+
+let expresiones100 = [];
+for (let i = 1; i <= 100; i++){
+    expresiones100.push("Expresión latina " + i);
+}
+
+// =======================================
+// CARGA DE LISTAS
+// =======================================
+
+window.onload = function() {
+
+    // Trilingüe
+    let listTri = document.getElementById("listaTri");
+    expresiones.forEach(e => {
+        let op = document.createElement("option");
+        op.textContent = `${e[0]} — ${e[1]} — ${e[2]}`;
+        listTri.appendChild(op);
+    });
+
+    // Análisis (latín)
+    let listAn = document.getElementById("listaAnalisis");
+    expresiones.forEach(e => {
+        let op = document.createElement("option");
+        op.textContent = e[0];
+        listAn.appendChild(op);
+    });
+
+    // 100 expresiones
+    let list100 = document.getElementById("listaCien");
+    expresiones100.forEach(e => {
+        let op = document.createElement("option");
+        op.textContent = e;
+        list100.appendChild(op);
+    });
+
+    // Práctica (español)
+    let listP = document.getElementById("listaPractica");
+    expresiones.forEach(e => {
+        let op = document.createElement("option");
+        op.textContent = e[1]; // español
+        listP.appendChild(op);
+    });
+};
+
+// =======================================
+// SÍNTESIS DE VOZ (TTS)
+// =======================================
+
+function leerTexto(id){
+    let txt = document.getElementById(id).value;
+    let ut = new SpeechSynthesisUtterance(txt);
+    ut.lang = "es-ES";
+    speechSynthesis.speak(ut);
+}
+
+function leerSeleccionTri(){
+    let sel = document.getElementById("listaTri").value;
+    let ut = new SpeechSynthesisUtterance(sel);
+    ut.lang = "es-ES";
+    speechSynthesis.speak(ut);
+}
+
+function leerSeleccion100(){
+    let sel = document.getElementById("listaCien").value;
+    let ut = new SpeechSynthesisUtterance(sel);
+    ut.lang = "la"; // latín
+    speechSynthesis.speak(ut);
+}
+
+// =======================================
+// ANÁLISIS
+// =======================================
+
+function mostrarAnalisis(){
+    let sel = document.getElementById("listaAnalisis").value;
+    document.getElementById("resultadoAnalisis").value =
+        "Análisis morfosintáctico de «" + sel + "»:\n" +
+        "- Sujeto + Verbo + Complemento.\n" +
+        "- Interpretación aproximada.\n";
+}
+
+// =======================================
+// PRÁCTICA
+// =======================================
+
+function dictarPractica(){
+    let frase = document.getElementById("listaPractica").value;
+    let ut = new SpeechSynthesisUtterance(frase);
+    ut.lang = "es-ES";
+    speechSynthesis.speak(ut);
+}
+
+function validarEscritura(){
+    let correcto = document.getElementById("listaPractica").value.trim().toLowerCase();
+    let escrito = document.getElementById("entradaUsuario").value.trim().toLowerCase();
+
+    if (correcto === escrito){
+        document.getElementById("resultadoPractica").innerHTML = "✔ Correcto";
+    } else {
+        document.getElementById("resultadoPractica").innerHTML =
+            "❌ Incorrecto. <br> Correcto: <b>" + correcto + "</b>";
+    }
+}
+
+// =======================================
+// DICTADO DE VOZ (Speech-to-Text)
+// =======================================
+
+function dictadoVoz(){
+    const rec = new webkitSpeechRecognition();
+    rec.lang = "es-ES";
+    rec.onresult = (e) => {
+        document.getElementById("entradaUsuario").value = e.results[0][0].transcript;
+    };
+    rec.start();
+}
+
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

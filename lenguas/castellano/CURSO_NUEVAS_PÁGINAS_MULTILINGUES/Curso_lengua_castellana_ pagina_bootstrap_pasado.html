@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Aprender el Pasado en Español – Plataforma Educativa</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <style>
+    body { background-color: #eef4ff; }
+    .card { border-radius: 1.5rem; }
+    .icon { width: 40px; }
+    .tts-btn, .stt-btn { cursor: pointer; }
+    textarea { resize: none; }
+  </style>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="#">Didáctica del Pasado</a>
+  </div>
+</nav>
+
+<div class="container py-4">
+  <h1 class="text-center mb-4">Plataforma Pedagógica del Pasado en Español</h1>
+  <p class="lead text-center">Aprende las 10 categorías del pasado, teoría, práctica bilingüe, dictado, audio y evaluación.</p>
+
+  <!-- Menú principal -->
+  <div class="row g-4">
+    <div class="col-md-4">
+      <div class="card shadow p-3">
+        <h4>Categorías del Pasado</h4>
+        <ul id="categoryList" class="list-group"></ul>
+      </div>
+    </div>
+
+    <div class="col-md-8">
+      <div class="card shadow p-4" id="contentArea">
+        <h3 id="sectionTitle">Seleccione una categoría</h3>
+        <div id="theory" class="mb-3"></div>
+        <div id="examples" class="mb-3"></div>
+
+        <!-- TTS y STT -->
+        <div class="d-flex gap-2 mb-3">
+          <button class="btn btn-primary tts-btn" onclick="speakText(currentExampleEs, 'es-ES')">🔊 Leer ES</button>
+          <button class="btn btn-primary tts-btn" onclick="speakText(currentExampleEn, 'en-US')">🔊 Read EN</button>
+          <button class="btn btn-success stt-btn" onclick="startDictation('es')">🎙 Dictado ES</button>
+          <button class="btn btn-success stt-btn" onclick="startDictation('en')">🎙 Dictado EN</button>
+        </div>
+
+        <!-- Área de práctica -->
+        <label class="form-label">Escribe aquí tu intento:</label>
+        <textarea id="userInput" class="form-control" rows="3"></textarea>
+        <button class="btn btn-secondary mt-3" onclick="evaluateWriting()">Evaluar escritura</button>
+        <div id="result" class="mt-3 fw-bold"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ==============================
+// DATA DEL PROGRAMA
+// ==============================
+const categories = [
+  "Pretérito Perfecto", "Pretérito Indefinido", "Pretérito Imperfecto",
+  "Pretérito Pluscuamperfecto", "Pretérito Anterior", "Pasado con perífrasis",
+  "Pasado narrativo", "Pasado habitual", "Pasado contrafactual", "Pasado descriptivo"
+];
+
+const theoryByCategory = {
+  "Pretérito Perfecto": "Expresa acciones pasadas relacionadas con el presente.",
+  "Pretérito Indefinido": "Acciones puntuales completamente terminadas.",
+  "Pretérito Imperfecto": "Acciones habituales o descripciones en el pasado.",
+  "Pretérito Pluscuamperfecto": "Acción anterior a otra en el pasado.",
+  "Pretérito Anterior": "Uso literario para acciones inmediatamente anteriores.",
+  "Pasado con perífrasis": "Formas como 'ir a', 'estar + gerundio' en pasado.",
+  "Pasado narrativo": "Uso del pasado para relatar historias.",
+  "Pasado habitual": "Cosas que solían ocurrir.",
+  "Pasado contrafactual": "Lo que habría pasado si...",
+  "Pasado descriptivo": "Descripciones estáticas en pasado."
+};
+
+const examples = {
+  "Pretérito Perfecto": [
+    { es: "He estudiado mucho hoy.", en: "I have studied a lot today." },
+    { es: "Hemos visto esa película.", en: "We have seen that movie." }
+  ],
+  "Pretérito Indefinido": [
+    { es: "Ayer comí pasta.", en: "Yesterday I ate pasta." }
+  ]
+};
+
+let currentExampleEs = "";
+let currentExampleEn = "";
+
+// ==============================
+// MENÚ DE CATEGORÍAS
+// ==============================
+const list = document.getElementById("categoryList");
+categories.forEach(cat => {
+  const li = document.createElement("li");
+  li.className = "list-group-item list-group-item-action";
+  li.textContent = cat;
+  li.onclick = () => loadCategory(cat);
+  list.appendChild(li);
+});
+
+// ==============================
+// CARGAR CATEGORÍA
+// ==============================
+function loadCategory(cat) {
+  document.getElementById("sectionTitle").textContent = cat;
+  document.getElementById("theory").textContent = theoryByCategory[cat];
+
+  const exArea = document.getElementById("examples");
+  exArea.innerHTML = "";
+
+  const ex = examples[cat] || [];
+  if (ex.length > 0) {
+    currentExampleEs = ex[0].es;
+    currentExampleEn = ex[0].en;
+    exArea.innerHTML = `<p><strong>ES:</strong> ${currentExampleEs}</p><p><strong>EN:</strong> ${currentExampleEn}</p>`;
+  } else {
+    exArea.innerHTML = "<p>No hay ejemplos cargados aún.</p>";
+  }
+}
+
+// ==============================
+// SÍNTESIS DE VOZ (TTS)
+// ==============================
+function speakText(text, lang) {
+  const utter = new SpeechSynthesisUtterance(text);
+  utter.lang = lang;
+  speechSynthesis.speak(utter);
+}
+
+// ==============================
+// RECONOCIMIENTO DE VOZ (STT)
+// ==============================
+function startDictation(lang) {
+  if (!('webkitSpeechRecognition' in window)) {
+    alert("El navegador no soporta reconocimiento de voz.");
+    return;
+  }
+  const rec = new webkitSpeechRecognition();
+  rec.lang = lang === 'es' ? 'es-ES' : 'en-US';
+  rec.onresult = e => {
+    document.getElementById("userInput").value = e.results[0][0].transcript;
+  };
+  rec.start();
+}
+
+// ==============================
+// EVALUACIÓN DE ESCRITURA (Fuzzy Matching simple)
+// ==============================
+function fuzzy(a, b) {
+  a = a.toLowerCase();
+  b = b.toLowerCase();
+  let matches = 0;
+  for (let i = 0; i < Math.min(a.length, b.length); i++) {
+    if (a[i] === b[i]) matches++;
+  }
+  return matches / b.length;
+}
+
+function evaluateWriting() {
+  const user = document.getElementById("userInput").value;
+  const similarity = fuzzy(user, currentExampleEs);
+  const pct = Math.round(similarity * 100);
+  document.getElementById("result").textContent = `Coincidencia aproximada: ${pct}%`;
+}
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

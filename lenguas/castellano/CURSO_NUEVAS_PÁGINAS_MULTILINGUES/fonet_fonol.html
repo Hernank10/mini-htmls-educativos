@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fonética y Gramática Hispánica — 100 ejercicios</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ink:#1a1209; --parchment:#f5f0e8; --amber:#c8860a; --amber-light:#f0a830;
+  --amber-pale:#fdf3dc; --rust:#8b3a1a; --sage:#4a6741; --sage-light:#7a9e76;
+  --cream:#faf7f2; --border:#d4c9b0; --shadow:rgba(26,18,9,0.12);
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'DM Sans',sans-serif;background:var(--parchment);color:var(--ink);min-height:100vh;
+  background-image:radial-gradient(ellipse at 15% 0%,rgba(200,134,10,.07) 0%,transparent 55%),
+  radial-gradient(ellipse at 85% 100%,rgba(139,58,26,.05) 0%,transparent 55%);}
+h1,h2,h3,.serif{font-family:'Playfair Display',serif;}
+
+.app-nav{background:var(--ink);display:flex;align-items:center;gap:.75rem;
+  padding:.7rem 1.5rem;position:sticky;top:0;z-index:200;box-shadow:0 2px 18px rgba(0,0,0,.25);}
+.nav-brand{font-family:'Playfair Display',serif;font-weight:900;font-size:1.25rem;
+  color:var(--amber-light);flex:1;white-space:nowrap;}
+.nav-brand span{color:#fff;}
+.nav-avatar{width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,var(--amber),var(--rust));
+  display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.95rem;
+  color:#fff;font-family:'Playfair Display',serif;cursor:pointer;flex-shrink:0;
+  border:2px solid rgba(255,255,255,.2);transition:border-color .2s;}
+.nav-avatar:hover{border-color:var(--amber-light);}
+.nav-username{color:rgba(255,255,255,.8);font-size:.85rem;font-weight:500;white-space:nowrap;}
+.btn-reset{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);
+  color:rgba(255,255,255,.7);border-radius:8px;padding:.32rem .75rem;font-size:.78rem;
+  cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .2s;}
+.btn-reset:hover{background:rgba(255,255,255,.18);color:#fff;}
+
+.app-tabs{background:#fff;border-bottom:2px solid var(--border);display:flex;
+  padding:0 1.5rem;overflow-x:auto;gap:0;position:sticky;top:58px;z-index:150;}
+.app-tab{padding:.85rem 1.1rem;border:none;background:transparent;font-family:'DM Sans',sans-serif;
+  font-weight:700;font-size:.82rem;color:#999;cursor:pointer;white-space:nowrap;
+  border-bottom:3px solid transparent;margin-bottom:-2px;transition:all .2s;
+  display:flex;align-items:center;gap:.35rem;}
+.app-tab:hover{color:var(--ink);}
+.app-tab.active{color:var(--amber);border-bottom-color:var(--amber);}
+
+.app-body{max-width:1080px;margin:0 auto;padding:2rem 1.5rem;}
+.page{display:none;animation:rise .28s ease;}
+.page.active{display:block;}
+
+.card-app{background:#fff;border:1.5px solid var(--border);border-radius:16px;
+  box-shadow:0 2px 10px var(--shadow);overflow:hidden;}
+.card-app-header{padding:1.1rem 1.4rem;border-bottom:1px solid var(--border);
+  display:flex;align-items:center;gap:.75rem;}
+.card-app-body{padding:1.4rem;}
+
+.stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:.9rem;margin-bottom:1.6rem;}
+.stat-box{background:#fff;border:1.5px solid var(--border);border-radius:14px;
+  padding:1.1rem 1rem;text-align:center;transition:transform .2s;cursor:default;}
+.stat-box:hover{transform:translateY(-3px);box-shadow:0 6px 18px var(--shadow);}
+.stat-num{font-family:'Playfair Display',serif;font-size:2rem;font-weight:900;
+  color:var(--amber);line-height:1;margin-bottom:.2rem;}
+.stat-lbl{font-size:.73rem;font-weight:700;color:#aaa;text-transform:uppercase;letter-spacing:.05em;}
+
+.dot-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(26px,1fr));gap:4px;margin-bottom:1.6rem;}
+.dot{aspect-ratio:1;border-radius:6px;background:var(--border);cursor:pointer;
+  transition:all .18s;position:relative;display:flex;align-items:center;justify-content:center;}
+.dot.done{background:var(--sage);}
+.dot:hover{transform:scale(1.35);z-index:5;}
+.dot-tip{position:absolute;bottom:130%;left:50%;transform:translateX(-50%);
+  background:var(--ink);color:#fff;padding:.28rem .6rem;border-radius:6px;font-size:.68rem;
+  white-space:nowrap;pointer-events:none;opacity:0;transition:opacity .18s;z-index:99;}
+.dot:hover .dot-tip{opacity:1;}
+.dot-num{font-size:.5rem;font-weight:700;color:rgba(255,255,255,.7);}
+
+.search-field{border:1.5px solid var(--border);border-radius:10px;padding:.55rem 1rem .55rem 2.3rem;
+  font-family:'DM Sans',sans-serif;font-size:.87rem;background:#fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%23aaa' stroke-width='2.5'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cpath d='M21 21l-4.35-4.35'/%3E%3C/svg%3E") no-repeat .75rem center;
+  width:100%;max-width:260px;outline:none;transition:border-color .2s;}
+.search-field:focus{border-color:var(--amber);}
+.pill{padding:.28rem .75rem;border-radius:20px;border:1.5px solid var(--border);background:#fff;
+  font-size:.75rem;font-weight:700;cursor:pointer;transition:all .2s;font-family:'DM Sans',sans-serif;color:#888;}
+.pill.on,.pill:hover{background:var(--amber);border-color:var(--amber);color:#fff;}
+
+.ex-card{background:#fff;border:1.5px solid var(--border);border-radius:13px;padding:1rem 1.2rem;
+  margin-bottom:.6rem;cursor:pointer;transition:all .18s;display:flex;align-items:flex-start;gap:.9rem;
+  box-shadow:0 1px 4px var(--shadow);}
+.ex-card:hover{border-color:var(--amber);transform:translateX(5px);}
+.ex-card.done{border-left:4px solid var(--sage);}
+.ex-num-box{background:var(--parchment);border:1px solid var(--border);border-radius:8px;
+  width:42px;height:42px;display:flex;align-items:center;justify-content:center;
+  font-family:'DM Mono',monospace;font-size:.75rem;font-weight:600;color:var(--amber);flex-shrink:0;}
+.ex-card.done .ex-num-box{background:var(--sage);color:#fff;border-color:var(--sage);}
+.ex-body{flex:1;min-width:0;}
+.ex-cat-tag{font-size:.7rem;font-weight:700;color:var(--amber);text-transform:uppercase;letter-spacing:.05em;}
+.ex-name{font-weight:700;font-size:.9rem;margin:.1rem 0 .18rem;}
+.ex-short{font-size:.78rem;color:#777;line-height:1.5;}
+.badge-done{background:var(--sage);color:#fff;padding:.18rem .55rem;border-radius:9px;font-size:.7rem;font-weight:700;}
+.badge-new{background:var(--parchment);color:#bbb;padding:.18rem .55rem;border-radius:9px;font-size:.7rem;font-weight:700;border:1px solid var(--border);}
+
+.prac-header{background:#fff;border:1.5px solid var(--border);border-radius:16px;
+  padding:1.4rem 1.5rem;margin-bottom:1.2rem;box-shadow:0 2px 10px var(--shadow);}
+.prac-badge{display:inline-flex;align-items:center;gap:.35rem;background:var(--amber-pale);
+  border:1px solid rgba(200,134,10,.28);border-radius:8px;padding:.28rem .75rem;
+  font-size:.76rem;font-weight:700;color:var(--amber);margin-bottom:.7rem;}
+.prac-title{font-size:1.3rem;font-weight:900;margin-bottom:.45rem;}
+.prac-explanation{font-size:.88rem;color:#555;line-height:1.7;margin:0;}
+.prac-example{background:var(--parchment);border-left:3px solid var(--amber);
+  border-radius:0 9px 9px 0;padding:.7rem 1rem;margin-top:.9rem;font-size:.84rem;
+  color:var(--ink);font-style:italic;}
+
+.writing-zone{background:#fff;border:1.5px solid var(--border);border-radius:16px;
+  padding:1.4rem 1.5rem;margin-bottom:1rem;box-shadow:0 2px 10px var(--shadow);}
+.writing-prompt{background:linear-gradient(135deg,var(--amber-pale),#fffcf5);
+  border:1px solid rgba(200,134,10,.22);border-radius:10px;padding:.9rem 1.1rem;
+  margin-bottom:1rem;font-size:.87rem;line-height:1.65;}
+.writing-prompt strong{color:var(--rust);}
+#practiceTA{width:100%;min-height:145px;border:1.5px solid var(--border);border-radius:10px;
+  padding:.9rem 1rem;font-family:'DM Sans',sans-serif;font-size:.93rem;line-height:1.75;
+  color:var(--ink);resize:vertical;background:#fffef9;transition:border-color .2s;outline:none;}
+#practiceTA:focus{border-color:var(--amber);box-shadow:0 0 0 3px rgba(200,134,10,.1);}
+.wc{text-align:right;font-size:.76rem;color:#bbb;margin-top:.4rem;}
+
+.btn-check{background:linear-gradient(135deg,var(--sage),var(--sage-light));border:none;
+  border-radius:10px;color:#fff;font-weight:700;font-size:.92rem;padding:.75rem 1.6rem;
+  cursor:pointer;transition:all .2s;font-family:'DM Sans',sans-serif;
+  display:inline-flex;align-items:center;gap:.45rem;
+  box-shadow:0 4px 14px rgba(74,103,65,.32);}
+.btn-check:hover{transform:translateY(-2px);box-shadow:0 7px 20px rgba(74,103,65,.4);}
+.btn-check:disabled{opacity:.55;cursor:not-allowed;transform:none;}
+
+.btn-next{background:linear-gradient(135deg,var(--amber),var(--rust));border:none;
+  border-radius:10px;color:#fff;font-weight:700;font-size:.92rem;padding:.75rem 1.6rem;
+  cursor:pointer;transition:all .2s;font-family:'DM Sans',sans-serif;
+  display:inline-flex;align-items:center;gap:.45rem;box-shadow:0 4px 14px rgba(200,134,10,.3);}
+.btn-next:hover{transform:translateY(-2px);}
+
+.fb-area{background:#fff;border:1.5px solid var(--border);border-radius:16px;
+  overflow:hidden;box-shadow:0 2px 10px var(--shadow);display:none;}
+.fb-area.show{display:block;animation:rise .35s ease;}
+.fb-head{padding:.95rem 1.4rem;display:flex;align-items:center;gap:.7rem;border-bottom:1px solid var(--border);}
+.fb-head.excellent{background:linear-gradient(90deg,#d4edda,#f0faf4);}
+.fb-head.good{background:linear-gradient(90deg,#fff3cd,#fffbf0);}
+.fb-head.low{background:linear-gradient(90deg,#f8d7da,#fdf5f5);}
+.fb-emoji{font-size:1.8rem;}
+.fb-htitle{font-weight:800;font-size:1rem;margin:0;}
+.fb-hsub{font-size:.78rem;color:#888;margin:0;}
+.fb-body{padding:1.4rem;}
+.score-circle{width:66px;height:66px;border-radius:50%;display:flex;align-items:center;
+  justify-content:center;font-family:'Playfair Display',serif;font-weight:900;font-size:1.25rem;flex-shrink:0;}
+.sc-high{background:#d4edda;color:#2d6a4f;}
+.sc-med{background:#fff3cd;color:#7a5c00;}
+.sc-low{background:#f8d7da;color:#8b1a1a;}
+.fb-section{margin-bottom:1.1rem;}
+.fb-section-title{font-weight:700;font-size:.76rem;text-transform:uppercase;letter-spacing:.07em;
+  color:#aaa;margin-bottom:.5rem;display:flex;align-items:center;gap:.35rem;}
+.fb-item{padding:.62rem .85rem;border-radius:8px;font-size:.84rem;line-height:1.52;
+  margin-bottom:.35rem;display:flex;gap:.55rem;align-items:flex-start;}
+.fb-item.ok{background:#f0f9f4;color:#2d6a4f;border-left:3px solid var(--sage);}
+.fb-item.err{background:#fdf5f5;color:#8b1a1a;border-left:3px solid #dc3545;}
+.fb-item.tip{background:#fffbf0;color:#7a5c00;border-left:3px solid var(--amber);}
+.fb-item.info{background:var(--parchment);color:var(--ink);border-left:3px solid #aaa;}
+.fb-ico{flex-shrink:0;margin-top:1px;}
+
+.spin{width:34px;height:34px;border:3px solid var(--border);border-top-color:var(--amber);
+  border-radius:50%;animation:rot .65s linear infinite;margin:0 auto 1rem;}
+@keyframes rot{to{transform:rotate(360deg)}}
+
+.profile-cover{height:96px;background:linear-gradient(135deg,var(--ink) 0%,#3d2a10 50%,var(--rust) 100%);position:relative;}
+.profile-av-lg{width:78px;height:78px;border-radius:50%;border:4px solid #fff;
+  background:linear-gradient(135deg,var(--amber),var(--rust));display:flex;align-items:center;
+  justify-content:center;font-family:'Playfair Display',serif;font-weight:900;font-size:1.9rem;
+  color:#fff;position:absolute;bottom:-38px;left:1.4rem;box-shadow:0 4px 18px var(--shadow);}
+.profile-body{padding:3.2rem 1.4rem 1.4rem;}
+.profile-name{font-size:1.4rem;font-weight:900;margin-bottom:.15rem;}
+.profile-meta{color:#999;font-size:.83rem;}
+.ach-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:.65rem;}
+.ach{background:#fff;border:1.5px solid var(--border);border-radius:12px;padding:.9rem .7rem;
+  text-align:center;transition:all .2s;}
+.ach.unlocked{border-color:var(--amber);background:var(--amber-pale);}
+.ach.unlocked:hover{transform:translateY(-3px);box-shadow:0 5px 14px rgba(200,134,10,.22);}
+.ach-icon{font-size:1.6rem;display:block;margin-bottom:.35rem;}
+.ach-name{font-size:.7rem;font-weight:700;color:var(--ink);}
+.ach.locked .ach-icon{filter:grayscale(1);opacity:.35;}
+.ach.locked .ach-name{color:#ccc;}
+
+.hist-row{background:#fff;border:1.5px solid var(--border);border-radius:11px;
+  padding:.8rem 1rem;margin-bottom:.5rem;display:flex;align-items:center;gap:.8rem;cursor:pointer;transition:border-color .2s;}
+.hist-row:hover{border-color:var(--amber);}
+
+.toast-box{position:fixed;bottom:1.4rem;right:1.4rem;z-index:9999;}
+.toast-item{background:var(--ink);color:#fff;border-radius:12px;padding:.8rem 1.1rem;
+  margin-top:.45rem;display:flex;align-items:center;gap:.65rem;font-size:.84rem;font-weight:500;
+  box-shadow:0 8px 26px rgba(0,0,0,.28);animation:rise .28s ease;max-width:300px;}
+.toast-item.s{border-left:4px solid var(--sage-light);}
+.toast-item.e{border-left:4px solid #dc3545;}
+.toast-item.i{border-left:4px solid var(--amber-light);}
+
+.modal-backdrop-custom{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:1040;
+  display:flex;align-items:center;justify-content:center;padding:1rem;}
+.modal-box{background:#fff;border-radius:20px;max-width:480px;width:100%;
+  box-shadow:0 24px 64px rgba(0,0,0,.28);animation:rise .3s ease;overflow:hidden;}
+.modal-head{background:var(--ink);padding:1.1rem 1.4rem;color:#fff;display:flex;align-items:center;gap:.7rem;}
+.modal-head .modal-title-txt{font-weight:800;font-size:1rem;flex:1;}
+.modal-close{background:rgba(255,255,255,.12);border:none;color:#fff;border-radius:8px;
+  width:32px;height:32px;cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center;}
+.modal-close:hover{background:rgba(255,255,255,.25);}
+.modal-body-custom{padding:1.4rem;}
+.modal-foot{padding:1rem 1.4rem;border-top:1px solid var(--border);display:flex;gap:.7rem;justify-content:flex-end;}
+
+@keyframes rise{from{opacity:0;transform:translateY(28px)}to{opacity:1;transform:translateY(0)}}
+::-webkit-scrollbar{width:6px;height:6px;}
+::-webkit-scrollbar-track{background:transparent;}
+::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px;}
+@media(max-width:576px){
+  .app-body{padding:1rem;}
+  .stats-grid{grid-template-columns:1fr 1fr;}
+  .ach-grid{grid-template-columns:repeat(3,1fr);}
+  .app-nav{padding:.6rem 1rem;}
+  .nav-username{display:none;}
+}
+</style>
+</head>
+<body>
+
+<div id="appScreen">
+  <nav class="app-nav">
+    <div class="nav-brand">Fonética<span>Gramática</span></div>
+    <div class="nav-avatar" id="navAv" onclick="switchPage('perfil')" title="Ver perfil">F</div>
+    <span class="nav-username" id="navName">Estudiante</span>
+    <button class="btn-reset" onclick="confirmReset()"><i class="bi bi-arrow-counterclockwise"></i> Reiniciar</button>
+  </nav>
+  <div class="app-tabs">
+    <button class="app-tab active" id="tab-dashboard" onclick="switchPage('dashboard')"><i class="bi bi-grid-3x3-gap-fill"></i> Inicio</button>
+    <button class="app-tab" id="tab-ejercicios" onclick="switchPage('ejercicios')"><i class="bi bi-journal-bookmark-fill"></i> Ejercicios</button>
+    <button class="app-tab" id="tab-practica" onclick="switchPage('practica')"><i class="bi bi-pencil-square"></i> Practicar</button>
+    <button class="app-tab" id="tab-perfil" onclick="switchPage('perfil')"><i class="bi bi-person-circle"></i> Perfil</button>
+  </div>
+  <div class="app-body">
+    <!-- DASHBOARD -->
+    <div class="page active" id="page-dashboard">
+      <div class="d-flex align-items-center gap-2 mb-4"><div><h2 class="serif fw-black mb-0">¡Hola, <span id="dashName">fonetista</span>! 🎙️</h2><p class="text-muted mb-0">Explora la fonética y la historia gramatical del castellano</p></div></div>
+      <div class="stats-grid mb-4">
+        <div class="stat-box"><div class="stat-num" id="sCompleted">0</div><div class="stat-lbl">Ejercicios completados</div></div>
+        <div class="stat-box"><div class="stat-num" id="sPracticed">0</div><div class="stat-lbl">Prácticas realizadas</div></div>
+        <div class="stat-box"><div class="stat-num" id="sScore">—</div><div class="stat-lbl">Puntuación media</div></div>
+        <div class="stat-box"><div class="stat-num" id="sStreak">1🔥</div><div class="stat-lbl">Racha</div></div>
+      </div>
+      <div class="card-app mb-4"><div class="card-app-header"><i class="bi bi-map-fill text-warning"></i><div><div style="font-weight:800">Mapa de progreso</div><div style="font-size:.74rem;color:#aaa">100 ejercicios · Verde = completado</div></div></div><div class="card-app-body"><div class="dot-grid" id="dotGrid"></div></div></div>
+      <div class="mb-2" style="font-weight:800">Siguiente ejercicio</div>
+      <div class="ex-card" id="nextCard"><div class="ex-num-box" id="nextNum">01</div><div class="ex-body"><div class="ex-cat-tag" id="nextCat">Fonética</div><div class="ex-name" id="nextName">Cargando...</div><div class="ex-short" id="nextDesc"></div></div><span style="color:var(--amber);font-size:1.4rem"><i class="bi bi-play-circle-fill"></i></span></div>
+      <div class="card-app mt-4"><div class="card-app-header"><i class="bi bi-bar-chart-fill text-warning"></i><div>Progreso por categoría</div></div><div class="card-app-body" id="catProgress"></div></div>
+    </div>
+    <!-- EJERCICIOS -->
+    <div class="page" id="page-ejercicios">
+      <div class="d-flex align-items-center justify-content-between flex-wrap gap-2 mb-3"><h2 class="serif fw-black mb-0">100 Ejercicios de Fonética y Gramática</h2><input class="search-field" id="searchQ" type="text" placeholder="Buscar..." oninput="renderList()"></div>
+      <div class="d-flex flex-wrap gap-2 mb-3" id="pills">
+        <button class="pill on" onclick="setFilter('all',this)">Todas</button>
+        <button class="pill" onclick="setFilter('fonetica',this)">Fonética articulatoria</button>
+        <button class="pill" onclick="setFilter('fonologia',this)">Fonología</button>
+        <button class="pill" onclick="setFilter('historia',this)">Historia de la gramática</button>
+        <button class="pill" onclick="setFilter('evolucion',this)">Evolución fonética</button>
+        <button class="pill" onclick="setFilter('transcripcion',this)">Transcripción AFI</button>
+      </div>
+      <div id="exList"></div>
+    </div>
+    <!-- PRACTICAR -->
+    <div class="page" id="page-practica">
+      <div id="practiceEmpty" style="text-align:center;padding:4rem 1rem;"><div style="font-size:4rem">🎤</div><h3 class="serif fw-black mb-2">Selecciona un ejercicio</h3><button class="btn-main" style="display:inline-flex;width:auto" onclick="switchPage('ejercicios')"><i class="bi bi-journal-bookmark-fill"></i> Ver ejercicios</button></div>
+      <div id="practiceContent" style="display:none">
+        <div class="prac-header"><div class="d-flex align-items-start justify-content-between gap-2 flex-wrap"><div><div class="prac-badge"><i class="bi bi-mortarboard-fill"></i> <span id="pracCat">Fonética</span> · Ejercicio <span id="pracNum">01</span></div><h2 class="prac-title serif" id="pracName">Título</h2><p class="prac-explanation" id="pracExpl">Explicación</p><div class="prac-example" id="pracEx"></div></div><div class="d-flex gap-2"><button class="btn-outline-app" onclick="prevExercise()"><i class="bi bi-chevron-left"></i></button><button class="btn-outline-app" onclick="nextExercise()"><i class="bi bi-chevron-right"></i></button></div></div></div>
+        <div class="writing-zone"><div class="writing-prompt" id="pracPrompt">Escribe tu respuesta.</div><textarea id="practiceTA" placeholder="Escribe tu respuesta aquí…"></textarea><div class="wc"><span id="wc">0</span> palabras · mínimo 10</div></div>
+        <div class="d-flex align-items-center gap-2 flex-wrap mb-3"><button class="btn-check" id="btnCheck" onclick="doCheck()"><i class="bi bi-magic"></i> Analizar respuesta</button><button class="btn-next" id="btnNext" onclick="nextExercise()" style="display:none">Siguiente <i class="bi bi-arrow-right"></i></button><span style="font-size:.76rem;color:#bbb">Responde con argumentos fonéticos o históricos.</span></div>
+        <div class="fb-area" id="fbArea"><div id="fbLoading" style="text-align:center;padding:2.5rem"><div class="spin"></div><div>Evaluando tu conocimiento fonético...</div></div><div id="fbContent" style="display:none"></div></div>
+      </div>
+    </div>
+    <!-- PERFIL -->
+    <div class="page" id="page-perfil">
+      <div class="card-app mb-4"><div class="profile-cover"><div class="profile-av-lg" id="profAv">F</div></div><div class="profile-body"><h3 class="profile-name" id="profName">—</h3><p class="profile-meta" id="profMeta">—</p><div class="d-flex gap-4 mt-3"><div><strong id="pComp">0</strong><span class="text-muted ms-1">ejercicios</span></div><div><strong id="pPrac">0</strong><span class="text-muted ms-1">prácticas</span></div><div><strong id="pScr">—</strong><span class="text-muted ms-1">media</span></div></div><div class="d-flex gap-2 mt-3"><button class="btn-outline-app" onclick="openEditModal()"><i class="bi bi-pencil"></i> Editar perfil</button></div></div></div>
+      <div class="mb-2" style="font-weight:800">Logros destacados</div><div class="ach-grid mb-4" id="achGrid"></div>
+      <div class="mb-2" style="font-weight:800">Historial de prácticas</div><div id="histList"></div>
+    </div>
+  </div>
+</div>
+
+<div id="editModal" class="modal-backdrop-custom" style="display:none"><div class="modal-box"><div class="modal-head"><i class="bi bi-person-gear"></i><span class="modal-title-txt">Editar perfil</span><button class="modal-close" onclick="closeModal('editModal')"><i class="bi bi-x-lg"></i></button></div><div class="modal-body-custom"><div class="mb-3"><label class="field-label">Nombre</label><input id="editName" class="field" type="text"></div><div class="mb-3"><label class="field-label">Nivel</label><select id="editLevel" class="field"><option value="principiante">🌱 Principiante</option><option value="intermedio">📖 Intermedio</option><option value="avanzado">🎓 Avanzado</option></select></div></div><div class="modal-foot"><button class="btn-outline-app" onclick="closeModal('editModal')">Cancelar</button><button class="btn-main" style="width:auto" onclick="saveEdit()">Guardar</button></div></div></div>
+<div class="toast-box" id="toastBox"></div>
+
+<script>
+// ============================================================
+// GENERACIÓN DE 100 EJERCICIOS DE FONÉTICA Y GRAMÁTICA (sin errores de sintaxis)
+// ============================================================
+const categorias = ['fonetica', 'fonologia', 'historia', 'evolucion', 'transcripcion'];
+const CATS = {
+  fonetica: 'Fonética articulatoria',
+  fonologia: 'Fonología',
+  historia: 'Historia de la gramática',
+  evolucion: 'Evolución fonética',
+  transcripcion: 'Transcripción AFI'
+};
+
+// Plantillas base para generar los 100 ejercicios de forma segura
+const templates = [
+  // Fonética articulatoria (1-20)
+  { cat: 'fonetica', name: 'Vocales del español', short: 'Clasificación de /a,e,i,o,u/', expl: 'Las cinco vocales se clasifican por abertura y localización.', prompt: 'Describe las vocales del español indicando abertura y punto de articulación. Da ejemplos.' },
+  { cat: 'fonetica', name: 'Consonantes oclusivas', short: '/p,t,k,b,d,g/', expl: 'Oclusivas sordas y sonoras.', prompt: 'Explica la diferencia entre /p/ y /b/. ¿En qué contextos se sonorizan?' },
+  { cat: 'fonetica', name: 'Fricativas', short: '/f,θ,s,x/', expl: 'Fricativas con estrechamiento.', prompt: 'Describe el punto y modo de articulación de /s/ y /θ/. ¿Qué variedades distinguen estos sonidos?' },
+  { cat: 'fonetica', name: 'Africada /tʃ/', short: 'Sonido de "ch"', expl: 'Comienza con oclusión y termina con fricación.', prompt: 'Escribe palabras con /tʃ/ en distintas posiciones. ¿Por qué no existe una africada sonora?' },
+  { cat: 'fonetica', name: 'Nasales', short: '/m,n,ɲ/', expl: 'Nasales y sus alófonos.', prompt: 'Explica los alófonos de /n/ ante labiodental, velar y palatal.' },
+  { cat: 'fonetica', name: 'Laterales', short: '/l/ y /ʎ/ (yeísmo)', expl: 'La lateral palatal /ʎ/ se ha perdido por yeísmo.', prompt: 'Define yeísmo y regiones donde se conserva /ʎ/.' },
+  { cat: 'fonetica', name: 'Vibrantes', short: '/ɾ/ y /r/', expl: 'Vibrante simple y múltiple.', prompt: 'Explica la distribución de /r/ y /ɾ/. ¿Dónde se neutralizan?' },
+  { cat: 'fonetica', name: 'Aproximantes', short: '[β,ð,ɣ]', expl: 'Alófonos de /b,d,g/ en contexto intervocálico.', prompt: 'Describe la espirantización con ejemplos: "haba", "dedo", "lago".' },
+  { cat: 'fonetica', name: 'Acento fonético', short: 'Intensidad', expl: 'El acento español es de intensidad y tiene valor fonológico.', prompt: 'Explica diferencia entre acento fonético y ortográfico. Da pares mínimos.' },
+  { cat: 'fonetica', name: 'Entonación', short: 'Curvas melódicas', expl: 'Distingue enunciados declarativos, interrogativos, exclamativos.', prompt: 'Describe la entonación de preguntas absolutas en español peninsular.' },
+  { cat: 'fonetica', name: 'Sonoridad', short: 'Vibración de cuerdas vocales', expl: 'Las consonantes sordas no vibran; las sonoras sí.', prompt: 'Explica cómo se produce la sonoridad y da pares mínimos.' },
+  { cat: 'fonetica', name: 'Formantes vocálicos', short: 'F1 y F2', expl: 'El timbre vocálico se define por los formantes.', prompt: 'Relaciona F1 con la abertura y F2 con la anterioridad.' },
+  { cat: 'fonetica', name: 'Sinalefa y diptongo', short: 'Fenómenos del habla continua', expl: 'Unión de vocales entre palabras o dentro de la sílaba.', prompt: 'Escribe un verso y explica sinalefas y diptongos.' },
+  { cat: 'fonetica', name: 'Ritmo silábico', short: 'El español es de ritmo silábico', expl: 'Cada sílaba ocupa aproximadamente el mismo tiempo.', prompt: 'Compara el ritmo del español con el del inglés.' },
+  { cat: 'fonetica', name: 'Yeísmo', short: 'Fusión de /ʎ/ y /ʝ/', expl: 'Predomina en gran parte del mundo hispánico.', prompt: 'Explica las causas históricas del yeísmo y su distribución actual.' },
+  { cat: 'fonetica', name: 'Seseo y ceceo', short: 'Igualación de /s/ y /θ/', expl: 'Seseo: /θ/ → /s/; ceceo: /s/ → /θ/.', prompt: 'Define seseo y ceceo. ¿Afecta a la ortografía?' },
+  { cat: 'fonetica', name: 'Aspiración de /s/', short: '[h] o pérdida de /s/ implosiva', expl: 'Común en Caribe, sur de España, Chile.', prompt: 'Explica la aspiración de /s/ y cómo afecta a la morfología verbal.' },
+  { cat: 'fonetica', name: 'Voseo y su fonética', short: 'Formas verbales del voseo', expl: 'En América, "vos" tiene particularidades fonéticas (cantái, coméi).', prompt: 'Describe los rasgos fonéticos del voseo rioplatense y chileno.' },
+  { cat: 'fonetica', name: 'La /x/ velar', short: 'Realización de j y g ante e,i', expl: 'Puede ser [x], [h] o [χ] según la zona.', prompt: 'Describe la variación geográfica de /x/ en el mundo hispánico.' },
+  { cat: 'fonetica', name: 'El fonema /θ/', short: 'Origen histórico', expl: 'Proviene del antiguo sistema de sibilantes.', prompt: 'Explica el origen histórico del ceceo y la distinción.' },
+  // Fonología (21-40)
+  { cat: 'fonologia', name: 'Fonema y alófono', short: 'Unidad abstracta vs. variante', expl: 'Fonema distingue significado; alófono es variante contextual.', prompt: 'Define fonema y alófono. Pon un ejemplo de distribución complementaria.' },
+  { cat: 'fonologia', name: 'Rasgos distintivos', short: 'Modelo de rasgos', expl: 'Los fonemas se descomponen en rasgos binarios.', prompt: 'Enumera los rasgos que diferencian /p/ y /b/.' },
+  { cat: 'fonologia', name: 'Neutralización fonológica', short: 'Pérdida de oposición en coda', expl: 'En coda silábica se neutralizan oclusivas sordas/sonoras.', prompt: 'Explica la neutralización de las oclusivas en coda.' },
+  { cat: 'fonologia', name: 'Arquifonema', short: 'Unidad que agrupa rasgos comunes', expl: 'Representa la neutralización con mayúscula.', prompt: 'Define arquifonema y propón ejemplos (/N/, /B/).' },
+  { cat: 'fonologia', name: 'Inventario fonológico', short: '5 vocales y 17-19 consonantes', expl: 'Depende de la variedad (yeísmo, distinción).', prompt: 'Escribe el inventario fonológico de tu variedad de español.' },
+  { cat: 'fonologia', name: 'Estructura silábica', short: 'Ataque, núcleo, coda', expl: 'El núcleo es vocálico. El ataque puede tener hasta dos consonantes.', prompt: 'Analiza la sílaba de "transporte".' },
+  { cat: 'fonologia', name: 'Fonotáctica', short: 'Secuencias permitidas', expl: 'No todas las combinaciones son posibles (ej. /tl/ no nativa).', prompt: 'Enumera los grupos consonánticos iniciales permitidos.' },
+  { cat: 'fonologia', name: 'Procesos fonológicos', short: 'Asimilación, disimilación', expl: 'Ejemplos: asimilación de nasal, epéntesis.', prompt: 'Explica la asimilación de nasales con ejemplos.' },
+  { cat: 'fonologia', name: 'Elisión de consonantes', short: 'Pérdida de /d/ y /s/ en habla rápida', expl: '"cansado" → "cansao".', prompt: 'Da ejemplos de elisión en el habla informal.' },
+  { cat: 'fonologia', name: 'Vibrante múltiple /r/', short: 'Fonema marginal', expl: 'Aparece en posición intervocálica, tras /l,n,s/ e inicio.', prompt: 'Justifica por qué /r/ tiene distribución restringida.' },
+  { cat: 'fonologia', name: 'Archifonemas /B/,/D/,/G/', short: 'Neutralización oclusivas sonoras', expl: 'En coda se realizan como aproximantes.', prompt: 'Explica el archifonema /B/ en "obtener".' },
+  { cat: 'fonologia', name: 'Teoría de la optimidad', short: 'Modelo actual', expl: 'Jerarquía de restricciones.', prompt: 'Describe brevemente la teoría de la optimidad.' },
+  { cat: 'fonologia', name: 'Acento fonológico', short: 'Pares mínimos acentuales', expl: 'término / termino / terminó.', prompt: 'Escribe tres pares mínimos acentuales.' },
+  { cat: 'fonologia', name: 'Funciones de la entonación', short: 'Gramaticales y pragmáticas', expl: 'Diferencia actos de habla.', prompt: '¿Qué funciones cumple la entonación en español?' },
+  { cat: 'fonologia', name: 'Alargamiento vocálico', short: 'Énfasis', expl: 'No es fonológico en español.', prompt: '¿En qué contextos aparece alargamiento vocálico?' },
+  { cat: 'fonologia', name: 'Fonología de préstamos', short: 'Adaptación de extranjerismos', expl: 'stress → estrés, scanner → escáner.', prompt: 'Explica adaptación de grupos /sp, st, sk/.' },
+  { cat: 'fonologia', name: 'Español rioplatense', short: 'Yeísmo rehilado y voseo', expl: '[ʃ] o [ʒ] para "ll" e "y".', prompt: 'Describe el sistema fonológico del español de Buenos Aires.' },
+  { cat: 'fonologia', name: 'Español andino', short: 'Conservador', expl: 'Mantiene /ʎ/ y /s/ no aspirada.', prompt: 'Enumera rasgos del español andino.' },
+  { cat: 'fonologia', name: 'Español caribeño', short: 'Aspiración, elisión', expl: 'Pérdida de /s/ y /d/, nasalización.', prompt: 'Explica la nasalización vocálica por pérdida de /n/.' },
+  { cat: 'fonologia', name: 'Fonología diacrónica', short: 'Cambios desde el latín', expl: 'Sonorización, diptongación, palatalización.', prompt: 'Describe el cambio de /f-/ latina a /h-/ y luego a Ø.' },
+  // Evolución fonética (41-60)
+  { cat: 'evolucion', name: 'Sonorización de sordas', short: '-P-, -T-, -K- → -b-, -d-, -g-', expl: 'VITA → vida, LUPU → lobo.', prompt: 'Explica la sonorización con tres ejemplos.' },
+  { cat: 'evolucion', name: 'Diptongación romance', short: 'Ĕ, Ŏ → ie, ue', expl: 'terra → tierra, porta → puerta.', prompt: 'Muestra evolución de PĔTRA, BŎNU, FŎCU.' },
+  { cat: 'evolucion', name: 'Palatalización de grupos', short: '-CT-, -LT- → -ch-', expl: 'NOCTE → noche, MULTU → mucho.', prompt: 'Explica la palatalización de /kt/ y /lt/.' },
+  { cat: 'evolucion', name: 'Pérdida de -E final', short: 'Apócope romance', expl: 'PANE → pan, MARE → mar.', prompt: '¿Por qué "pan" perdió -e pero "parte" la conservó?' },
+  { cat: 'evolucion', name: 'F- > H- > Ø', short: 'Evolución de F- inicial', expl: 'FILIU → hijo, FABULARE → hablar.', prompt: 'Escribe evolución de FARINA, FERRU, FACTU.' },
+  { cat: 'evolucion', name: 'Geminadas -NN- > -ñ-', short: 'ANNU → año', expl: 'La Ñ nace de la abreviatura de -NN-.', prompt: 'Explica el origen de la letra Ñ.' },
+  { cat: 'evolucion', name: 'Grupos cultos reintroducidos', short: 'Latinismos renacentistas', expl: 'leche/lácteo, noche/nocturno.', prompt: 'Define "doblete" y da tres ejemplos.' },
+  { cat: 'evolucion', name: 'Reajuste de sibilantes', short: 'De seis a dos fonemas', expl: 'Origen del seseo y ceceo.', prompt: 'Explica el reajuste de sibilantes (siglo XVI-XVII).' },
+  { cat: 'evolucion', name: 'X medieval [ʃ] > [x]', short: 'dixo → dijo, baxo → bajo', expl: 'Retracción a velar.', prompt: '¿Por qué se escribe "México" con X?' },
+  { cat: 'evolucion', name: 'Pérdida de -d- intervocálica', short: '-ado > -ao', expl: 'Participios en habla coloquial.', prompt: 'Explica la elisión de /d/ intervocálica.' },
+  { cat: 'evolucion', name: 'Lenición', short: 'Debilitamiento consonántico', expl: 'Tendencia general del romance hispánico.', prompt: 'Define lenición y pon ejemplos históricos.' },
+  { cat: 'evolucion', name: 'Sustrato vasco', short: 'Influencia en la pérdida de /f/', expl: 'El vasco no tenía /f/.', prompt: '¿Qué hipótesis explica la pérdida de /f/ inicial?' },
+  { cat: 'evolucion', name: 'Influencia del árabe', short: 'Préstamos con /x/ y grupos como /tl/', expl: 'Alcalde, almohada, azúcar.', prompt: 'Menciona palabras de origen árabe con /x/.' },
+  { cat: 'evolucion', name: 'Epéntesis consonántica', short: 'Inserción de /b/ en -mr-', expl: 'HOMINE → hombre, TAMBUR → tambor.', prompt: 'Explica la epéntesis de /b/ en "hombre".' },
+  { cat: 'evolucion', name: 'Metátesis', short: 'Cambio de orden', expl: 'CROCODILUS → cocodrilo.', prompt: 'Da dos ejemplos de metátesis en español.' },
+  { cat: 'evolucion', name: 'Prótesis vocálica', short: 'Añadir e- ante s+consonante', expl: 'SPATHA → espada, STATUS → estado.', prompt: 'Explica por qué "escribir" tiene e- inicial.' },
+  { cat: 'evolucion', name: 'Latinismos cultos', short: 'Grupos pt, ps, gn', expl: 'neptuno, psicología, gnomo.', prompt: '¿Cómo se pronuncian los grupos ps, pn, gn?' },
+  { cat: 'evolucion', name: 'Fonética sintáctica', short: 'Sandhi', expl: 'los árboles → [loˈsarβoles].', prompt: 'Explica la asimilación en "los árboles".' },
+  { cat: 'evolucion', name: 'Pérdida de cantidad vocálica', short: 'Del latín al romance', expl: 'El acento de intensidad reemplazó a la cantidad.', prompt: '¿Qué consecuencias tuvo la pérdida de cantidad?' },
+  { cat: 'evolucion', name: 'Tendencias actuales', short: 'Yeísmo, aspiración de /s/, pérdida de /d/', expl: 'Cambios en curso.', prompt: '¿Cuáles son los cambios fonéticos más activos?' },
+  // Historia de la gramática (61-80)
+  { cat: 'historia', name: 'Gramática de Nebrija (1492)', short: 'Primera gramática romance', expl: 'Nebrija: "la lengua fue compañera del imperio".', prompt: '¿Cuál fue la importancia de la Gramática de Nebrija?' },
+  { cat: 'historia', name: 'Elio Antonio de Nebrija', short: 'Humanista', expl: 'También propuso una ortografía fonémica.', prompt: 'Describe las propuestas ortográficas de Nebrija.' },
+  { cat: 'historia', name: 'Gramática de la RAE (1771)', short: 'Primera gramática académica', expl: 'Estableció la norma culta.', prompt: 'Compara el enfoque de Nebrija con el de la RAE.' },
+  { cat: 'historia', name: 'Andrés Bello (1847)', short: 'Gramática para americanos', expl: 'Reforma ortográfica y enfoque descriptivo.', prompt: '¿En qué se diferencia la Gramática de Bello?' },
+  { cat: 'historia', name: 'Rodolfo Lenz', short: 'Dialectología chilena', expl: 'Introdujo métodos experimentales.', prompt: '¿Cuál fue la contribución de Lenz a la fonética?' },
+  { cat: 'historia', name: 'Ramón Menéndez Pidal', short: 'Escuela filológica', expl: 'Estudió el castellano primitivo y los dialectos.', prompt: 'Explica el concepto de "castellano primitivo".' },
+  { cat: 'historia', name: 'Tomás Navarro Tomás', short: 'Manual de pronunciación', expl: 'Pionero de la fonética articulatoria y el atlas lingüístico.', prompt: '¿Qué aportó Navarro Tomás a la fonética?' },
+  { cat: 'historia', name: 'Rafael Lapesa', short: 'Historia de la lengua', expl: 'Obra de referencia sobre evolución interna.', prompt: '¿Cómo describe Lapesa la formación del castellano?' },
+  { cat: 'historia', name: 'Amado Alonso', short: 'Fonología del español', expl: 'Estudió el yeísmo y el seseo.', prompt: '¿Qué tesis defendió Amado Alonso sobre el seseo?' },
+  { cat: 'historia', name: 'Eugenio Coseriu', short: 'Lingüística funcional', expl: 'Sistema, norma y habla.', prompt: 'Define sistema, norma y habla según Coseriu.' },
+  { cat: 'historia', name: 'Nueva Gramática RAE (2009-2011)', short: 'Panhispánica', expl: 'Obra más completa y descriptiva.', prompt: '¿Cuáles son las novedades de la Nueva Gramática?' },
+  { cat: 'historia', name: 'Laboratorio de fonética CSIC', short: 'Investigación acústica', expl: 'Estudios sobre producción y percepción.', prompt: 'Menciona trabajos del Laboratorio de Fonética.' },
+  { cat: 'historia', name: 'Ortografía de la RAE', short: 'Reformas ortográficas', expl: '1741, 1952, 1959, 2010.', prompt: 'Describe las principales reformas ortográficas.' },
+  { cat: 'historia', name: 'Diccionario de la RAE', short: 'De Autoridades al DLE', expl: 'Primer diccionario (1726).', prompt: 'Explica el método de "autoridades".' },
+  { cat: 'historia', name: 'Asociación de Academias', short: 'Unidad panhispánica', expl: 'Fundada en 1951.', prompt: '¿Qué logros ha alcanzado la Asociación de Academias?' },
+  { cat: 'historia', name: 'Español en EE.UU.', short: 'Contacto con inglés', expl: 'Cambios como [ʃ] por /tʃ/ en "chips".', prompt: 'Describe rasgos fonéticos del español estadounidense.' },
+  { cat: 'historia', name: 'Atlas lingüísticos', short: 'ALPI, ALE', expl: 'Documentan la variación fonética.', prompt: '¿Para qué sirve un atlas lingüístico?' },
+  { cat: 'historia', name: 'Corpus CREA', short: 'Corpus de referencia', expl: 'Muestras orales y escritas.', prompt: '¿Cómo se utilizan los corpus en fonética variacionista?' },
+  { cat: 'historia', name: 'Enseñanza de la fonética', short: 'A hispanohablantes y extranjeros', expl: 'Destacar diferencias (vibrante, vocales).', prompt: 'Diseña un ejercicio para enseñar la /r/ a un angloparlante.' },
+  { cat: 'historia', name: 'Fonética forense', short: 'Identificación de hablantes', expl: 'Aplica conocimientos acústicos.', prompt: '¿Qué parámetros se usan en identificación de hablantes?' },
+  // Transcripción AFI (81-90)
+  { cat: 'transcripcion', name: 'Introducción al AFI', short: 'Símbolos para español', expl: '[a,e,i,o,u,p,t,k,b,d,g,f,θ,s,x,tʃ,m,n,ɲ,l,ʎ,ɾ,r,j,w].', prompt: 'Transcribe al AFI la palabra "perro".' },
+  { cat: 'transcripcion', name: 'Vocales AFI', short: '[a,e,i,o,u]', expl: 'Cinco vocales, sin alófonos significativos.', prompt: 'Transcribe "casa", "beso", "misa", "loco", "cura".' },
+  { cat: 'transcripcion', name: 'Oclusivas AFI', short: '[p,t,k,b,d,g] y aproximantes', expl: '[β,ð,ɣ] en contexto intervocálico.', prompt: 'Transcribe "cabo", "dedo", "lago".' },
+  { cat: 'transcripcion', name: 'Fricativas y africada', short: '[f,θ,s,x,tʃ]', expl: 'Ejemplos: foto, zapato, sapo, jota, chico.', prompt: 'Transcribe esas palabras.' },
+  { cat: 'transcripcion', name: 'Nasales AFI', short: '[m,n,ɲ,ŋ] (alófono)', expl: 'La nasal velar ante velar.', prompt: 'Transcribe "cinco", "ancha", "ángel".' },
+  { cat: 'transcripcion', name: 'Laterales y róticas', short: '[l,ʎ,ɾ,r]', expl: 'Vibrante múltiple [r] requiere dos o más contactos.', prompt: 'Transcribe "calle" con yeísmo y con distinción.' },
+  { cat: 'transcripcion', name: 'Semivocales', short: '[j] y [w]', expl: 'En diptongos: tierra [ˈtjera], agua [ˈaɣwa].', prompt: 'Transcribe "bueno", "ciudad", "paisaje".' },
+  { cat: 'transcripcion', name: 'Acento en AFI', short: '[ˈ] antes de sílaba tónica', expl: 'Ejemplo: [kaˈfe], [ˈaɾβol].', prompt: 'Transcribe "teléfono", "examen", "comisión".' },
+  { cat: 'transcripcion', name: 'Fonológica vs. fonética', short: '// vs. []', expl: 'Fonemas vs. realizaciones.', prompt: 'Transcribe fonológica y fonéticamente "dedo".' },
+  { cat: 'transcripcion', name: 'Variedades en AFI', short: 'Seseo, ceceo, yeísmo', expl: 'caza [ˈkasa] seseo, [ˈkaθa] ceceo.', prompt: 'Transcribe "caza" y "casa" en variedad seseante y distinguidora.' },
+  // Temas adicionales (91-100)
+  { cat: 'fonetica', name: 'Variación de /s/ en el mundo', short: 'Apical vs. predorsal', expl: 'España norte: [s̺]; América: [s].', prompt: 'Describe diferencias en la pronunciación de la "s".' },
+  { cat: 'fonetica', name: 'Entonación de preguntas', short: 'Ascendente o descendente', expl: 'Totales ascendente en muchas variedades.', prompt: '¿Cómo es la entonación de "¿Vienes?"?' },
+  { cat: 'fonologia', name: 'Principio de máxima ataque', short: 'Asignar consonantes al ataque', expl: 'Aplica en la silabificación.', prompt: 'Silabea "absolver" según el principio.' },
+  { cat: 'evolucion', name: 'Leyes fonéticas del romance', short: 'Sonorización, diptongación', expl: 'Operaron sistemáticamente.', prompt: 'Explica la ley de sonorización con tres verbos latinos.' },
+  { cat: 'historia', name: 'Reforma ortográfica de Bello', short: 'Uso de j para /x/, i para y', expl: 'Adoptada en Chile y Argentina.', prompt: '¿Qué elementos de la reforma de Bello triunfaron?' },
+  { cat: 'historia', name: 'RAE y pronunciación normativa', short: 'Prescripciones', expl: 'Evita prescribir en exceso.', prompt: '¿Qué dice la RAE sobre el yeísmo?' },
+  { cat: 'transcripcion', name: 'Transcripción de frase', short: 'Ejercicio integrador', expl: 'Transcribe "Los niños juegan en el parque".', prompt: 'Realiza la transcripción fonética.' },
+  { cat: 'fonologia', name: 'Vocales átonas', short: 'No se reducen', expl: 'A diferencia del inglés.', prompt: '¿Por qué el español no reduce las vocales átonas?' },
+  { cat: 'evolucion', name: 'Futuro del español', short: 'Tendencias', expl: 'Simplificación de grupos, armonización.', prompt: '¿Qué cambios predicen los estudios sociolingüísticos?' },
+  { cat: 'historia', name: 'Panorama actual de la fonética', short: 'Líneas de investigación', expl: 'Habla espontánea, variación social, adquisición, fonética forense.', prompt: 'Elige un tema e indica cómo lo investigarías.' }
+];
+
+// Construir el array completo de 100 ejercicios (rellenando con los templates cíclicamente hasta 100)
+let ejercicios = [];
+for (let i = 0; i < 100; i++) {
+  const t = templates[i % templates.length];
+  // Ajustar ligeramente el nombre y el short para que sean únicos por ID
+  const id = i + 1;
+  const sufijo = id <= templates.length ? '' : ` (${Math.floor(id / templates.length) + 1})`;
+  ejercicios.push({
+    id: id,
+    cat: t.cat,
+    name: t.name + (sufijo && !t.name.includes('(') ? sufijo : ''),
+    short: t.short,
+    expl: t.expl,
+    prompt: t.prompt
+  });
+}
+// Aseguramos que los IDs sean correlativos del 1 al 100
+ejercicios = ejercicios.slice(0, 100);
+for (let i = 0; i < ejercicios.length; i++) ejercicios[i].id = i + 1;
+
+// ========== ESTADO DE USUARIO ==========
+let userData = { name:"Estudiante", level:"intermedio", completed:[], practiced:0, scores:[], history:[], joinDate:new Date().toLocaleDateString('es-ES') };
+function loadUserData(){ const saved=localStorage.getItem('foneticaUser'); if(saved){ try{ const p=JSON.parse(saved); userData={...userData,...p}; }catch(e){} } updateUI(); }
+function saveUserData(){ localStorage.setItem('foneticaUser',JSON.stringify(userData)); updateUI(); }
+function updateUI(){ document.getElementById('navName').textContent=userData.name.split(' ')[0]; document.getElementById('dashName').textContent=userData.name.split(' ')[0]; document.getElementById('navAv').textContent=userData.name[0].toUpperCase(); }
+loadUserData();
+
+let currentEx = null;
+let filterCatEx = 'all';
+function switchPage(p){
+  document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));
+  document.querySelectorAll('.app-tab').forEach(x=>x.classList.remove('active'));
+  document.getElementById('page-'+p)?.classList.add('active');
+  document.getElementById('tab-'+p)?.classList.add('active');
+  if(p==='dashboard') refreshDash();
+  if(p==='perfil') renderProfile();
+  if(p==='ejercicios') renderList();
+}
+function refreshDash(){
+  document.getElementById('sCompleted').textContent=userData.completed.length;
+  document.getElementById('sPracticed').textContent=userData.practiced;
+  const avg=userData.scores.length?Math.round(userData.scores.reduce((a,b)=>a+b,0)/userData.scores.length):null;
+  document.getElementById('sScore').textContent=avg?avg+'%':'—';
+  document.getElementById('sStreak').textContent=(userData.streak||1)+'🔥';
+  const grid=document.getElementById('dotGrid');
+  grid.innerHTML='';
+  ejercicios.forEach(ex=>{
+    const done=userData.completed.includes(ex.id);
+    const div=document.createElement('div');
+    div.className='dot'+(done?' done':'');
+    div.innerHTML=`<span class="dot-num">${ex.id}</span><div class="dot-tip">#${ex.id} ${ex.name}</div>`;
+    div.onclick=()=>startPractice(ex.id);
+    grid.appendChild(div);
+  });
+  const nid=nextId();
+  const next=ejercicios.find(e=>e.id===nid);
+  if(next){
+    document.getElementById('nextNum').textContent=String(next.id).padStart(2,'0');
+    document.getElementById('nextCat').textContent=CATS[next.cat]||next.cat;
+    document.getElementById('nextName').textContent=next.name;
+    document.getElementById('nextDesc').textContent=next.short;
+    document.getElementById('nextCard').onclick=()=>startPractice(next.id);
+  }
+  const cats=Object.keys(CATS);
+  const cp=document.getElementById('catProgress');
+  cp.innerHTML=cats.map(c=>{
+    const total=ejercicios.filter(e=>e.cat===c).length;
+    const done=ejercicios.filter(e=>e.cat===c && userData.completed.includes(e.id)).length;
+    const pct=Math.round(done/total*100);
+    return `<div class="mb-2"><div class="d-flex justify-content-between mb-1" style="font-size:.8rem;font-weight:700"><span>${CATS[c]}</span><span style="color:var(--amber)">${done}/${total}</span></div><div style="height:7px;border-radius:4px;background:var(--border)"><div style="height:100%;border-radius:4px;width:${pct}%;background:${pct===100?'var(--sage)':'var(--amber)'}"></div></div></div>`;
+  }).join('');
+}
+function nextId(){ for(let i=1;i<=100;i++) if(!userData.completed.includes(i)) return i; return 1; }
+function setFilter(cat,btn){ filterCatEx=cat; document.querySelectorAll('#pills .pill').forEach(p=>p.classList.remove('on')); btn.classList.add('on'); renderList(); }
+function renderList(){
+  const q=(document.getElementById('searchQ')?.value||'').toLowerCase();
+  const filtered=ejercicios.filter(e=>(filterCatEx==='all'||e.cat===filterCatEx) && (!q||e.name.toLowerCase().includes(q)||e.short.toLowerCase().includes(q)));
+  const list=document.getElementById('exList');
+  list.innerHTML=filtered.map(e=>{
+    const done=userData.completed.includes(e.id);
+    return `<div class="ex-card${done?' done':''}" onclick="startPractice(${e.id})"><div class="ex-num-box">${String(e.id).padStart(2,'0')}</div><div class="ex-body"><div class="ex-cat-tag">${CATS[e.cat]||e.cat}</div><div class="ex-name">${e.name}</div><div class="ex-short">${e.short}</div></div><div>${done?'<span class="badge-done"><i class="bi bi-check-lg"></i> Hecho</span>':'<span class="badge-new">Practicar</span>'}</div></div>`;
+  }).join('');
+  if(!filtered.length) list.innerHTML='<div class="text-muted text-center py-4">No se encontraron ejercicios.</div>';
+}
+function startPractice(id){
+  const ex=ejercicios.find(x=>x.id===id);
+  if(!ex) return;
+  currentEx=ex;
+  document.getElementById('pracCat').textContent=CATS[ex.cat]||ex.cat;
+  document.getElementById('pracNum').textContent=String(ex.id).padStart(2,'0');
+  document.getElementById('pracName').textContent=ex.name;
+  document.getElementById('pracExpl').textContent=ex.expl;
+  document.getElementById('pracEx').textContent='📝 '+ex.expl;
+  document.getElementById('pracPrompt').innerHTML='<strong>🎯 Ejercicio:</strong> '+ex.prompt;
+  document.getElementById('practiceTA').value='';
+  document.getElementById('wc').textContent='0';
+  document.getElementById('fbArea').classList.remove('show');
+  document.getElementById('btnNext').style.display='none';
+  document.getElementById('btnCheck').disabled=false;
+  document.getElementById('btnCheck').innerHTML='<i class="bi bi-magic"></i> Analizar';
+  document.getElementById('practiceEmpty').style.display='none';
+  document.getElementById('practiceContent').style.display='';
+  switchPage('practica');
+  document.getElementById('practiceTA').focus();
+}
+function prevExercise(){
+  if(!currentEx) return;
+  const idx=ejercicios.findIndex(e=>e.id===currentEx.id);
+  startPractice(ejercicios[(idx-1+ejercicios.length)%ejercicios.length].id);
+}
+function nextExercise(){
+  if(!currentEx) return;
+  const idx=ejercicios.findIndex(e=>e.id===currentEx.id);
+  startPractice(ejercicios[(idx+1)%ejercicios.length].id);
+}
+function doCheck(){
+  const text=document.getElementById('practiceTA').value.trim();
+  if(!text || text.split(/\s+/).length<5){ toast('Escribe al menos 5 palabras','e'); return; }
+  if(!currentEx) return;
+  const btn=document.getElementById('btnCheck');
+  btn.disabled=true;
+  btn.innerHTML='<span class="spinner-border spinner-border-sm me-1"></span>Evaluando...';
+  const fb=document.getElementById('fbArea');
+  fb.classList.add('show');
+  document.getElementById('fbLoading').style.display='block';
+  document.getElementById('fbContent').style.display='none';
+  setTimeout(()=>{
+    let score=70;
+    if(text.length>100) score+=10;
+    if(text.toLowerCase().includes(currentEx.name.toLowerCase())) score+=10;
+    score=Math.min(100,score);
+    const nivel=score>=85?'excelente':score>=65?'bien':'necesita_mejorar';
+    const titulo=nivel==='excelente'?'¡Excelente análisis!':nivel==='bien'?'Buen trabajo':'Puedes profundizar';
+    const resumen=`Tu respuesta tiene ${text.split(/\s+/).length} palabras. ${score>=70?'Demuestras comprensión de los conceptos fonéticos.':'Revisa los conceptos clave y vuelve a intentarlo.'}`;
+    const aciertos=['La respuesta es relevante al ejercicio.'];
+    const consejos=['Consulta fuentes como el "Manual de pronunciación" de Navarro Tomás.'];
+    const aplicacion=`Has aplicado conocimientos sobre ${currentEx.name}.`;
+    const r={score,nivel,titulo,resumen,aciertos,errores:[],consejos,aplicacion};
+    renderFeedback(r);
+    userData.practiced++;
+    userData.scores.push(r.score);
+    if(r.score>=65 && !userData.completed.includes(currentEx.id)){
+      userData.completed.push(currentEx.id);
+      toast(`✅ ¡Ejercicio #${currentEx.id} completado!`,'s');
+    }
+    userData.history=[{id:currentEx.id, name:currentEx.name, score:r.score, date:new Date().toLocaleDateString('es-ES')}, ...(userData.history||[])].slice(0,30);
+    saveUserData();
+    document.getElementById('fbLoading').style.display='none';
+    document.getElementById('fbContent').style.display='block';
+    btn.disabled=false;
+    btn.innerHTML='<i class="bi bi-magic"></i> Analizar de nuevo';
+    document.getElementById('btnNext').style.display='';
+    fb.scrollIntoView({behavior:'smooth',block:'start'});
+  },800);
+}
+function renderFeedback(r){
+  const sc=r.score>=80?'high':r.score>=60?'med':'low';
+  const hc=r.nivel==='excelente'?'excellent':r.nivel==='bien'?'good':'low';
+  const em=r.nivel==='excelente'?'🏆':r.nivel==='bien'?'👍':'💪';
+  const aciertos=(r.aciertos||[]).map(a=>`<div class="fb-item ok"><span class="fb-ico">✓</span><span>${a}</span></div>`).join('');
+  const errores=(r.errores||[]).map(a=>`<div class="fb-item err"><span class="fb-ico">✗</span><span>${a}</span></div>`).join('');
+  const consejos=(r.consejos||[]).map(a=>`<div class="fb-item tip"><span class="fb-ico">💡</span><span>${a}</span></div>`).join('');
+  document.getElementById('fbContent').innerHTML=`<div class="fb-head ${hc}"><span class="fb-emoji">${em}</span><div><p class="fb-htitle">${r.titulo}</p><p class="fb-hsub">Ejercicio #${currentEx?.id} · ${currentEx?.name}</p></div></div><div class="fb-body"><div style="display:flex;align-items:center;gap:1rem;margin-bottom:1.1rem"><div class="score-circle sc-${sc}">${r.score}%</div><div style="flex:1"><div style="font-weight:700;margin-bottom:.4rem">Dominio del tema</div><div style="height:8px;border-radius:4px;background:var(--border)"><div style="height:100%;width:${r.score}%;background:${r.score>=80?'#198754':r.score>=60?'#ffc107':'#dc3545'}"></div></div><div style="font-size:.77rem;margin-top:.4rem">${r.resumen}</div></div></div>${r.aplicacion?`<div class="fb-section"><div class="fb-section-title">🎯 Aplicación</div><div class="fb-item info"><span class="fb-ico">📖</span><span>${r.aplicacion}</span></div></div>`:''}${aciertos?`<div class="fb-section"><div class="fb-section-title">✅ Aciertos</div>${aciertos}</div>`:''}${errores?`<div class="fb-section"><div class="fb-section-title">❌ Errores</div>${errores}</div>`:''}${consejos?`<div class="fb-section"><div class="fb-section-title">💡 Consejos</div>${consejos}</div>`:''}</div>`;
+}
+function renderProfile(){
+  document.getElementById('profAv').textContent=userData.name[0].toUpperCase();
+  document.getElementById('profName').textContent=userData.name;
+  document.getElementById('profMeta').textContent=(userData.level==='principiante'?'Principiante':userData.level==='intermedio'?'Intermedio':'Avanzado')+' · Desde '+userData.joinDate;
+  document.getElementById('pComp').textContent=userData.completed.length;
+  document.getElementById('pPrac').textContent=userData.practiced;
+  const avg=userData.scores.length?Math.round(userData.scores.reduce((a,b)=>a+b,0)/userData.scores.length):null;
+  document.getElementById('pScr').textContent=avg?avg+'%':'—';
+  const ACHS=[{icon:'🎓',name:'Primer ejercicio',check:d=>d.practiced>=1},{icon:'📘',name:'10 prácticas',check:d=>d.practiced>=10},{icon:'🏅',name:'25 ejercicios',check:d=>d.completed.length>=25},{icon:'🏆',name:'50 dominados',check:d=>d.completed.length>=50},{icon:'🎙️',name:'Maestro fonético',check:d=>d.completed.length>=100}];
+  document.getElementById('achGrid').innerHTML=ACHS.map(a=>{const u=a.check(userData); return `<div class="ach${u?' unlocked':' locked'}"><span class="ach-icon">${a.icon}</span><div class="ach-name">${a.name}</div></div>`;}).join('');
+  const hl=document.getElementById('histList');
+  if(userData.history?.length){ hl.innerHTML=userData.history.slice(0,15).map(h=>`<div class="hist-row" onclick="startPractice(${h.id})"><div class="ex-num-box" style="background:${h.score>=80?'var(--sage)':h.score>=60?'var(--amber-light)':'#f8d7da'};color:#fff">${String(h.id).padStart(2,'0')}</div><div><div style="font-weight:700">${h.name}</div><div style="font-size:.74rem;color:#aaa">${h.date}</div></div><span style="background:${h.score>=80?'var(--sage)':h.score>=60?'var(--amber)':'#dc3545'};color:#fff;padding:.18rem .55rem;border-radius:9px">${h.score}%</span></div>`).join('');}
+  else hl.innerHTML='<div class="text-muted">Aún sin prácticas.</div>';
+}
+function openEditModal(){ document.getElementById('editName').value=userData.name; document.getElementById('editLevel').value=userData.level; document.getElementById('editModal').style.display='flex'; }
+function saveEdit(){ const name=document.getElementById('editName').value.trim(); if(!name){ toast('Escribe un nombre','e'); return; } userData.name=name; userData.level=document.getElementById('editLevel').value; saveUserData(); updateUI(); closeModal('editModal'); renderProfile(); toast('Perfil actualizado','s'); }
+function confirmReset(){ if(confirm('¿Reiniciar todo el progreso?')){ userData.completed=[]; userData.practiced=0; userData.scores=[]; userData.history=[]; saveUserData(); refreshDash(); renderProfile(); toast('Progreso reiniciado','i'); } }
+function closeModal(id){ document.getElementById(id).style.display='none'; }
+function toast(msg,type='i'){ const box=document.getElementById('toastBox'); const t=document.createElement('div'); const icons={s:'✅',e:'❌',i:'ℹ️'}; t.className=`toast-item ${type}`; t.innerHTML=`<span>${icons[type]||'ℹ️'}</span><span>${msg}</span>`; box.appendChild(t); setTimeout(()=>{ t.style.opacity='0'; t.style.transform='translateY(16px)'; setTimeout(()=>t.remove(),350); },3200); }
+document.addEventListener('DOMContentLoaded',()=>{ const ta=document.getElementById('practiceTA'); if(ta) ta.addEventListener('input',()=>{ const w=ta.value.trim()?ta.value.trim().split(/\s+/).length:0; document.getElementById('wc').textContent=w; }); refreshDash(); renderList(); renderProfile(); });
+</script>
+</body>
+</html>

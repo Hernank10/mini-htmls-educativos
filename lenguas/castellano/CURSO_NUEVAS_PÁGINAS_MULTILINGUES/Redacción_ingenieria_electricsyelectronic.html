@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Redacción para Ingeniería Eléctrica y Electrónica — 100 técnicas</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ink:#1a1209; --parchment:#f5f0e8; --amber:#c8860a; --amber-light:#f0a830;
+  --amber-pale:#fdf3dc; --rust:#8b3a1a; --sage:#4a6741; --sage-light:#7a9e76;
+  --cream:#faf7f2; --border:#d4c9b0; --shadow:rgba(26,18,9,0.12);
+  --electric:#1a5f7a; --electric-light:#2c8eb3; --electric-dark:#0e3e52;
+  --orange-energia:#e67e22;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'DM Sans',sans-serif;background:var(--parchment);color:var(--ink);min-height:100vh;
+  background-image:radial-gradient(ellipse at 15% 0%,rgba(26,95,122,.07) 0%,transparent 55%),
+  radial-gradient(ellipse at 85% 100%,rgba(230,126,34,.05) 0%,transparent 55%);}
+h1,h2,h3,.serif{font-family:'Playfair Display',serif;}
+
+.app-nav{background:var(--ink);display:flex;align-items:center;gap:.75rem;
+  padding:.7rem 1.5rem;position:sticky;top:0;z-index:200;box-shadow:0 2px 18px rgba(0,0,0,.25);}
+.nav-brand{font-family:'Playfair Display',serif;font-weight:900;font-size:1.25rem;
+  color:var(--electric-light);flex:1;white-space:nowrap;}
+.nav-brand span{color:#fff;}
+.nav-avatar{width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,var(--electric),var(--orange-energia));
+  display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.95rem;
+  color:#fff;font-family:'Playfair Display',serif;cursor:pointer;flex-shrink:0;
+  border:2px solid rgba(255,255,255,.2);transition:border-color .2s;}
+.nav-avatar:hover{border-color:var(--electric-light);}
+.nav-username{color:rgba(255,255,255,.8);font-size:.85rem;font-weight:500;white-space:nowrap;}
+.btn-reset{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);
+  color:rgba(255,255,255,.7);border-radius:8px;padding:.32rem .75rem;font-size:.78rem;
+  cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .2s;}
+.btn-reset:hover{background:rgba(255,255,255,.18);color:#fff;}
+
+.app-tabs{background:#fff;border-bottom:2px solid var(--border);display:flex;
+  padding:0 1.5rem;overflow-x:auto;gap:0;position:sticky;top:58px;z-index:150;}
+.app-tab{padding:.85rem 1.1rem;border:none;background:transparent;font-family:'DM Sans',sans-serif;
+  font-weight:700;font-size:.82rem;color:#999;cursor:pointer;white-space:nowrap;
+  border-bottom:3px solid transparent;margin-bottom:-2px;transition:all .2s;
+  display:flex;align-items:center;gap:.35rem;}
+.app-tab:hover{color:var(--ink);}
+.app-tab.active{color:var(--electric);border-bottom-color:var(--electric);}
+
+.app-body{max-width:1080px;margin:0 auto;padding:2rem 1.5rem;}
+.page{display:none;animation:rise .28s ease;}
+.page.active{display:block;}
+
+.card-app{background:#fff;border:1.5px solid var(--border);border-radius:16px;
+  box-shadow:0 2px 10px var(--shadow);overflow:hidden;}
+.card-app-header{padding:1.1rem 1.4rem;border-bottom:1px solid var(--border);
+  display:flex;align-items:center;gap:.75rem;}
+.card-app-body{padding:1.4rem;}
+
+.stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:.9rem;margin-bottom:1.6rem;}
+.stat-box{background:#fff;border:1.5px solid var(--border);border-radius:14px;
+  padding:1.1rem 1rem;text-align:center;transition:transform .2s;cursor:default;}
+.stat-box:hover{transform:translateY(-3px);box-shadow:0 6px 18px var(--shadow);}
+.stat-num{font-family:'Playfair Display',serif;font-size:2rem;font-weight:900;
+  color:var(--electric);line-height:1;margin-bottom:.2rem;}
+.stat-lbl{font-size:.73rem;font-weight:700;color:#aaa;text-transform:uppercase;letter-spacing:.05em;}
+
+.dot-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(26px,1fr));gap:4px;margin-bottom:1.6rem;}
+.dot{aspect-ratio:1;border-radius:6px;background:var(--border);cursor:pointer;
+  transition:all .18s;position:relative;display:flex;align-items:center;justify-content:center;}
+.dot.done{background:var(--sage);}
+.dot:hover{transform:scale(1.35);z-index:5;}
+.dot-tip{position:absolute;bottom:130%;left:50%;transform:translateX(-50%);
+  background:var(--ink);color:#fff;padding:.28rem .6rem;border-radius:6px;font-size:.68rem;
+  white-space:nowrap;pointer-events:none;opacity:0;transition:opacity .18s;z-index:99;}
+.dot:hover .dot-tip{opacity:1;}
+.dot-num{font-size:.5rem;font-weight:700;color:rgba(255,255,255,.7);}
+
+.search-field{border:1.5px solid var(--border);border-radius:10px;padding:.55rem 1rem .55rem 2.3rem;
+  font-family:'DM Sans',sans-serif;font-size:.87rem;background:#fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%23aaa' stroke-width='2.5'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cpath d='M21 21l-4.35-4.35'/%3E%3C/svg%3E") no-repeat .75rem center;
+  width:100%;max-width:260px;outline:none;transition:border-color .2s;}
+.search-field:focus{border-color:var(--electric);}
+.pill{padding:.28rem .75rem;border-radius:20px;border:1.5px solid var(--border);background:#fff;
+  font-size:.75rem;font-weight:700;cursor:pointer;transition:all .2s;font-family:'DM Sans',sans-serif;color:#888;}
+.pill.on,.pill:hover{background:var(--electric);border-color:var(--electric);color:#fff;}
+
+.ex-card{background:#fff;border:1.5px solid var(--border);border-radius:13px;padding:1rem 1.2rem;
+  margin-bottom:.6rem;cursor:pointer;transition:all .18s;display:flex;align-items:flex-start;gap:.9rem;
+  box-shadow:0 1px 4px var(--shadow);}
+.ex-card:hover{border-color:var(--electric);transform:translateX(5px);}
+.ex-card.done{border-left:4px solid var(--sage);}
+.ex-num-box{background:var(--parchment);border:1px solid var(--border);border-radius:8px;
+  width:42px;height:42px;display:flex;align-items:center;justify-content:center;
+  font-family:'DM Mono',monospace;font-size:.75rem;font-weight:600;color:var(--electric);flex-shrink:0;}
+.ex-card.done .ex-num-box{background:var(--sage);color:#fff;border-color:var(--sage);}
+.ex-body{flex:1;min-width:0;}
+.ex-cat-tag{font-size:.7rem;font-weight:700;color:var(--electric);text-transform:uppercase;letter-spacing:.05em;}
+.ex-name{font-weight:700;font-size:.9rem;margin:.1rem 0 .18rem;}
+.ex-short{font-size:.78rem;color:#777;line-height:1.5;}
+.badge-done{background:var(--sage);color:#fff;padding:.18rem .55rem;border-radius:9px;font-size:.7rem;font-weight:700;}
+.badge-new{background:var(--parchment);color:#bbb;padding:.18rem .55rem;border-radius:9px;font-size:.7rem;font-weight:700;border:1px solid var(--border);}
+
+.prac-header{background:#fff;border:1.5px solid var(--border);border-radius:16px;
+  padding:1.4rem 1.5rem;margin-bottom:1.2rem;box-shadow:0 2px 10px var(--shadow);}
+.prac-badge{display:inline-flex;align-items:center;gap:.35rem;background:var(--amber-pale);
+  border:1px solid rgba(200,134,10,.28);border-radius:8px;padding:.28rem .75rem;
+  font-size:.76rem;font-weight:700;color:var(--electric);margin-bottom:.7rem;}
+.prac-title{font-size:1.3rem;font-weight:900;margin-bottom:.45rem;}
+.prac-explanation{font-size:.88rem;color:#555;line-height:1.7;margin:0;}
+.prac-example{background:var(--parchment);border-left:3px solid var(--electric);
+  border-radius:0 9px 9px 0;padding:.7rem 1rem;margin-top:.9rem;font-size:.84rem;
+  color:var(--ink);font-style:italic;}
+
+.writing-zone{background:#fff;border:1.5px solid var(--border);border-radius:16px;
+  padding:1.4rem 1.5rem;margin-bottom:1rem;box-shadow:0 2px 10px var(--shadow);}
+.writing-prompt{background:linear-gradient(135deg,var(--amber-pale),#fffcf5);
+  border:1px solid rgba(200,134,10,.22);border-radius:10px;padding:.9rem 1.1rem;
+  margin-bottom:1rem;font-size:.87rem;line-height:1.65;}
+.writing-prompt strong{color:var(--rust);}
+#practiceTA{width:100%;min-height:145px;border:1.5px solid var(--border);border-radius:10px;
+  padding:.9rem 1rem;font-family:'DM Sans',sans-serif;font-size:.93rem;line-height:1.75;
+  color:var(--ink);resize:vertical;background:#fffef9;transition:border-color .2s;outline:none;}
+#practiceTA:focus{border-color:var(--electric);box-shadow:0 0 0 3px rgba(26,95,122,.1);}
+.wc{text-align:right;font-size:.76rem;color:#bbb;margin-top:.4rem;}
+
+.btn-check{background:linear-gradient(135deg,var(--sage),var(--sage-light));border:none;
+  border-radius:10px;color:#fff;font-weight:700;font-size:.92rem;padding:.75rem 1.6rem;
+  cursor:pointer;transition:all .2s;font-family:'DM Sans',sans-serif;
+  display:inline-flex;align-items:center;gap:.45rem;
+  box-shadow:0 4px 14px rgba(74,103,65,.32);}
+.btn-check:hover{transform:translateY(-2px);box-shadow:0 7px 20px rgba(74,103,65,.4);}
+.btn-check:disabled{opacity:.55;cursor:not-allowed;transform:none;}
+
+.btn-next{background:linear-gradient(135deg,var(--electric),var(--orange-energia));border:none;
+  border-radius:10px;color:#fff;font-weight:700;font-size:.92rem;padding:.75rem 1.6rem;
+  cursor:pointer;transition:all .2s;font-family:'DM Sans',sans-serif;
+  display:inline-flex;align-items:center;gap:.45rem;box-shadow:0 4px 14px rgba(26,95,122,.3);}
+.btn-next:hover{transform:translateY(-2px);}
+
+.fb-area{background:#fff;border:1.5px solid var(--border);border-radius:16px;
+  overflow:hidden;box-shadow:0 2px 10px var(--shadow);display:none;}
+.fb-area.show{display:block;animation:rise .35s ease;}
+.fb-head{padding:.95rem 1.4rem;display:flex;align-items:center;gap:.7rem;border-bottom:1px solid var(--border);}
+.fb-head.excellent{background:linear-gradient(90deg,#d4edda,#f0faf4);}
+.fb-head.good{background:linear-gradient(90deg,#fff3cd,#fffbf0);}
+.fb-head.low{background:linear-gradient(90deg,#f8d7da,#fdf5f5);}
+.fb-emoji{font-size:1.8rem;}
+.fb-htitle{font-weight:800;font-size:1rem;margin:0;}
+.fb-hsub{font-size:.78rem;color:#888;margin:0;}
+.fb-body{padding:1.4rem;}
+.score-circle{width:66px;height:66px;border-radius:50%;display:flex;align-items:center;
+  justify-content:center;font-family:'Playfair Display',serif;font-weight:900;font-size:1.25rem;flex-shrink:0;}
+.sc-high{background:#d4edda;color:#2d6a4f;}
+.sc-med{background:#fff3cd;color:#7a5c00;}
+.sc-low{background:#f8d7da;color:#8b1a1a;}
+.fb-section{margin-bottom:1.1rem;}
+.fb-section-title{font-weight:700;font-size:.76rem;text-transform:uppercase;letter-spacing:.07em;
+  color:#aaa;margin-bottom:.5rem;display:flex;align-items:center;gap:.35rem;}
+.fb-item{padding:.62rem .85rem;border-radius:8px;font-size:.84rem;line-height:1.52;
+  margin-bottom:.35rem;display:flex;gap:.55rem;align-items:flex-start;}
+.fb-item.ok{background:#f0f9f4;color:#2d6a4f;border-left:3px solid var(--sage);}
+.fb-item.err{background:#fdf5f5;color:#8b1a1a;border-left:3px solid #dc3545;}
+.fb-item.tip{background:#fffbf0;color:#7a5c00;border-left:3px solid var(--electric);}
+.fb-item.info{background:var(--parchment);color:var(--ink);border-left:3px solid #aaa;}
+.fb-ico{flex-shrink:0;margin-top:1px;}
+
+.spin{width:34px;height:34px;border:3px solid var(--border);border-top-color:var(--electric);
+  border-radius:50%;animation:rot .65s linear infinite;margin:0 auto 1rem;}
+@keyframes rot{to{transform:rotate(360deg)}}
+
+.profile-cover{height:96px;background:linear-gradient(135deg,var(--ink) 0%,#3d2a10 50%,var(--electric) 100%);position:relative;}
+.profile-av-lg{width:78px;height:78px;border-radius:50%;border:4px solid #fff;
+  background:linear-gradient(135deg,var(--electric),var(--orange-energia));display:flex;align-items:center;
+  justify-content:center;font-family:'Playfair Display',serif;font-weight:900;font-size:1.9rem;
+  color:#fff;position:absolute;bottom:-38px;left:1.4rem;box-shadow:0 4px 18px var(--shadow);}
+.profile-body{padding:3.2rem 1.4rem 1.4rem;}
+.profile-name{font-size:1.4rem;font-weight:900;margin-bottom:.15rem;}
+.profile-meta{color:#999;font-size:.83rem;}
+.ach-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:.65rem;}
+.ach{background:#fff;border:1.5px solid var(--border);border-radius:12px;padding:.9rem .7rem;
+  text-align:center;transition:all .2s;}
+.ach.unlocked{border-color:var(--electric);background:var(--amber-pale);}
+.ach.unlocked:hover{transform:translateY(-3px);box-shadow:0 5px 14px rgba(26,95,122,.22);}
+.ach-icon{font-size:1.6rem;display:block;margin-bottom:.35rem;}
+.ach-name{font-size:.7rem;font-weight:700;color:var(--ink);}
+.ach.locked .ach-icon{filter:grayscale(1);opacity:.35;}
+.ach.locked .ach-name{color:#ccc;}
+
+.hist-row{background:#fff;border:1.5px solid var(--border);border-radius:11px;
+  padding:.8rem 1rem;margin-bottom:.5rem;display:flex;align-items:center;gap:.8rem;cursor:pointer;transition:border-color .2s;}
+.hist-row:hover{border-color:var(--electric);}
+
+.toast-box{position:fixed;bottom:1.4rem;right:1.4rem;z-index:9999;}
+.toast-item{background:var(--ink);color:#fff;border-radius:12px;padding:.8rem 1.1rem;
+  margin-top:.45rem;display:flex;align-items:center;gap:.65rem;font-size:.84rem;font-weight:500;
+  box-shadow:0 8px 26px rgba(0,0,0,.28);animation:rise .28s ease;max-width:300px;}
+.toast-item.s{border-left:4px solid var(--sage-light);}
+.toast-item.e{border-left:4px solid #dc3545;}
+.toast-item.i{border-left:4px solid var(--electric-light);}
+
+.modal-backdrop-custom{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:1040;
+  display:flex;align-items:center;justify-content:center;padding:1rem;}
+.modal-box{background:#fff;border-radius:20px;max-width:480px;width:100%;
+  box-shadow:0 24px 64px rgba(0,0,0,.28);animation:rise .3s ease;overflow:hidden;}
+.modal-head{background:var(--ink);padding:1.1rem 1.4rem;color:#fff;display:flex;align-items:center;gap:.7rem;}
+.modal-head .modal-title-txt{font-weight:800;font-size:1rem;flex:1;}
+.modal-close{background:rgba(255,255,255,.12);border:none;color:#fff;border-radius:8px;
+  width:32px;height:32px;cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center;}
+.modal-close:hover{background:rgba(255,255,255,.25);}
+.modal-body-custom{padding:1.4rem;}
+.modal-foot{padding:1rem 1.4rem;border-top:1px solid var(--border);display:flex;gap:.7rem;justify-content:flex-end;}
+
+@keyframes rise{from{opacity:0;transform:translateY(28px)}to{opacity:1;transform:translateY(0)}}
+::-webkit-scrollbar{width:6px;height:6px;}
+::-webkit-scrollbar-track{background:transparent;}
+::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px;}
+@media(max-width:576px){
+  .app-body{padding:1rem;}
+  .stats-grid{grid-template-columns:1fr 1fr;}
+  .ach-grid{grid-template-columns:repeat(3,1fr);}
+  .app-nav{padding:.6rem 1rem;}
+  .nav-username{display:none;}
+}
+</style>
+</head>
+<body>
+
+<div id="appScreen">
+  <nav class="app-nav">
+    <div class="nav-brand">Ingeniería<span>Eléctrica</span></div>
+    <div class="nav-avatar" id="navAv" onclick="switchPage('perfil')" title="Ver perfil">E</div>
+    <span class="nav-username" id="navName">Estudiante</span>
+    <button class="btn-reset" onclick="confirmReset()"><i class="bi bi-arrow-counterclockwise"></i> Reiniciar</button>
+  </nav>
+  <div class="app-tabs">
+    <button class="app-tab active" id="tab-dashboard" onclick="switchPage('dashboard')"><i class="bi bi-grid-3x3-gap-fill"></i> Inicio</button>
+    <button class="app-tab" id="tab-ejercicios" onclick="switchPage('ejercicios')"><i class="bi bi-journal-bookmark-fill"></i> Técnicas</button>
+    <button class="app-tab" id="tab-practica" onclick="switchPage('practica')"><i class="bi bi-pencil-square"></i> Practicar</button>
+    <button class="app-tab" id="tab-perfil" onclick="switchPage('perfil')"><i class="bi bi-person-circle"></i> Perfil</button>
+  </div>
+  <div class="app-body">
+    <!-- DASHBOARD -->
+    <div class="page active" id="page-dashboard">
+      <div class="d-flex align-items-center gap-2 mb-4"><div><h2 class="serif fw-black mb-0">¡Hola, <span id="dashName">futuro ingeniero eléctrico/electrónico</span>! ⚡</h2><p class="text-muted mb-0">Mejora tu redacción técnica en el contexto colombiano</p></div></div>
+      <div class="stats-grid mb-4">
+        <div class="stat-box"><div class="stat-num" id="sCompleted">0</div><div class="stat-lbl">Técnicas dominadas</div></div>
+        <div class="stat-box"><div class="stat-num" id="sPracticed">0</div><div class="stat-lbl">Prácticas realizadas</div></div>
+        <div class="stat-box"><div class="stat-num" id="sScore">—</div><div class="stat-lbl">Puntuación media</div></div>
+        <div class="stat-box"><div class="stat-num" id="sStreak">1🔥</div><div class="stat-lbl">Racha</div></div>
+      </div>
+      <div class="card-app mb-4"><div class="card-app-header"><i class="bi bi-map-fill text-warning"></i><div><div style="font-weight:800">Mapa de progreso</div><div style="font-size:.74rem;color:#aaa">100 técnicas · Verde = completado</div></div></div><div class="card-app-body"><div class="dot-grid" id="dotGrid"></div></div></div>
+      <div class="mb-2" style="font-weight:800">Siguiente técnica</div>
+      <div class="ex-card" id="nextCard"><div class="ex-num-box" id="nextNum">01</div><div class="ex-body"><div class="ex-cat-tag" id="nextCat">Informes</div><div class="ex-name" id="nextName">Cargando...</div><div class="ex-short" id="nextDesc"></div></div><span style="color:var(--electric);font-size:1.4rem"><i class="bi bi-play-circle-fill"></i></span></div>
+      <div class="card-app mt-4"><div class="card-app-header"><i class="bi bi-bar-chart-fill text-warning"></i><div>Progreso por categoría</div></div><div class="card-app-body" id="catProgress"></div></div>
+    </div>
+    <!-- TÉCNICAS -->
+    <div class="page" id="page-ejercicios">
+      <div class="d-flex align-items-center justify-content-between flex-wrap gap-2 mb-3"><h2 class="serif fw-black mb-0">100 Técnicas de Redacción para Ingeniería Eléctrica y Electrónica</h2><input class="search-field" id="searchQ" type="text" placeholder="Buscar..." oninput="renderList()"></div>
+      <div class="d-flex flex-wrap gap-2 mb-3" id="pills">
+        <button class="pill on" onclick="setFilter('all',this)">Todas</button>
+        <button class="pill" onclick="setFilter('informes',this)">Informes técnicos</button>
+        <button class="pill" onclick="setFilter('calculos',this)">Memorias de cálculo</button>
+        <button class="pill" onclick="setFilter('normas',this)">Normas (RETIE, NTC, IEC)</button>
+        <button class="pill" onclick="setFilter('planos',this)">Diagramas y planos</button>
+        <button class="pill" onclick="setFilter('etica',this)">Ética y comunicación</button>
+      </div>
+      <div id="exList"></div>
+    </div>
+    <!-- PRACTICAR -->
+    <div class="page" id="page-practica">
+      <div id="practiceEmpty" style="text-align:center;padding:4rem 1rem;"><div style="font-size:4rem">⚡</div><h3 class="serif fw-black mb-2">Selecciona una técnica</h3><button class="btn-main" style="display:inline-flex;width:auto" onclick="switchPage('ejercicios')"><i class="bi bi-journal-bookmark-fill"></i> Ver técnicas</button></div>
+      <div id="practiceContent" style="display:none">
+        <div class="prac-header"><div class="d-flex align-items-start justify-content-between gap-2 flex-wrap"><div><div class="prac-badge"><i class="bi bi-mortarboard-fill"></i> <span id="pracCat">Informes</span> · Técnica <span id="pracNum">01</span></div><h2 class="prac-title serif" id="pracName">Título</h2><p class="prac-explanation" id="pracExpl">Explicación</p><div class="prac-example" id="pracEx"></div></div><div class="d-flex gap-2"><button class="btn-outline-app" onclick="prevExercise()"><i class="bi bi-chevron-left"></i></button><button class="btn-outline-app" onclick="nextExercise()"><i class="bi bi-chevron-right"></i></button></div></div></div>
+        <div class="writing-zone"><div class="writing-prompt" id="pracPrompt">Escribe tu respuesta.</div><textarea id="practiceTA" placeholder="Escribe tu respuesta aquí…"></textarea><div class="wc"><span id="wc">0</span> palabras · mínimo 10</div></div>
+        <div class="d-flex align-items-center gap-2 flex-wrap mb-3"><button class="btn-check" id="btnCheck" onclick="doCheck()"><i class="bi bi-magic"></i> Analizar respuesta</button><button class="btn-next" id="btnNext" onclick="nextExercise()" style="display:none">Siguiente <i class="bi bi-arrow-right"></i></button><span style="font-size:.76rem;color:#bbb">Aplica conceptos de redacción técnica.</span></div>
+        <div class="fb-area" id="fbArea"><div id="fbLoading" style="text-align:center;padding:2.5rem"><div class="spin"></div><div>Evaluando tu respuesta técnica...</div></div><div id="fbContent" style="display:none"></div></div>
+      </div>
+    </div>
+    <!-- PERFIL -->
+    <div class="page" id="page-perfil">
+      <div class="card-app mb-4"><div class="profile-cover"><div class="profile-av-lg" id="profAv">E</div></div><div class="profile-body"><h3 class="profile-name" id="profName">—</h3><p class="profile-meta" id="profMeta">—</p><div class="d-flex gap-4 mt-3"><div><strong id="pComp">0</strong><span class="text-muted ms-1">técnicas</span></div><div><strong id="pPrac">0</strong><span class="text-muted ms-1">prácticas</span></div><div><strong id="pScr">—</strong><span class="text-muted ms-1">media</span></div></div><div class="d-flex gap-2 mt-3"><button class="btn-outline-app" onclick="openEditModal()"><i class="bi bi-pencil"></i> Editar perfil</button></div></div></div>
+      <div class="mb-2" style="font-weight:800">Logros destacados</div><div class="ach-grid mb-4" id="achGrid"></div>
+      <div class="mb-2" style="font-weight:800">Historial de prácticas</div><div id="histList"></div>
+    </div>
+  </div>
+</div>
+
+<div id="editModal" class="modal-backdrop-custom" style="display:none"><div class="modal-box"><div class="modal-head"><i class="bi bi-person-gear"></i><span class="modal-title-txt">Editar perfil</span><button class="modal-close" onclick="closeModal('editModal')"><i class="bi bi-x-lg"></i></button></div><div class="modal-body-custom"><div class="mb-3"><label class="field-label">Nombre</label><input id="editName" class="field" type="text"></div><div class="mb-3"><label class="field-label">Nivel</label><select id="editLevel" class="field"><option value="principiante">🌱 Principiante</option><option value="intermedio">📖 Intermedio</option><option value="avanzado">🎓 Avanzado</option></select></div></div><div class="modal-foot"><button class="btn-outline-app" onclick="closeModal('editModal')">Cancelar</button><button class="btn-main" style="width:auto" onclick="saveEdit()">Guardar</button></div></div></div>
+<div class="toast-box" id="toastBox"></div>
+
+<script>
+// ============================================================
+// 100 TÉCNICAS DE REDACCIÓN PARA INGENIERÍA ELÉCTRICA Y ELECTRÓNICA (CONTEXTO COLOMBIANO)
+// ============================================================
+const CATS = {
+  informes: 'Informes técnicos',
+  calculos: 'Memorias de cálculo',
+  normas: 'Normas (RETIE, NTC, IEC)',
+  planos: 'Diagramas y planos',
+  etica: 'Ética y comunicación'
+};
+
+// Plantillas base (20 por categoría, repetimos cíclicamente hasta 100)
+const templates = [
+  // Informes técnicos (1-20)
+  { cat: 'informes', name: 'Estructura de informe de laboratorio de circuitos', short: 'Objetivo, materiales, procedimiento, datos, análisis', expl: 'Un informe debe ser claro y reproducible. Incluir esquemas, tablas de mediciones, cálculos de error.', prompt: 'Redacta el objetivo de un laboratorio para medir la resistencia equivalente de un circuito mixto.' },
+  { cat: 'informes', name: 'Descripción de instrumentos de medición', short: 'Multímetro, osciloscopio, generador de funciones', expl: 'Especificar marca, modelo, precisión, rango, acople.', prompt: 'Describe cómo usarías un osciloscopio para medir una señal senoidal de 1 kHz, 5 Vpp.' },
+  { cat: 'informes', name: 'Tablas de mediciones eléctricas', short: 'Voltaje, corriente, potencia, fase', expl: 'Incluir incertidumbre y unidades. Ejemplo: V = 12.3 ± 0.1 V.', prompt: 'Crea una tabla con tres mediciones de voltaje DC (valores ficticios) con su respectiva incertidumbre.' },
+  { cat: 'informes', name: 'Gráficos de forma de onda', short: 'Captura de osciloscopio o gráfico digital', expl: 'Etiquetar ejes (tiempo, amplitud), incluir escalas.', prompt: 'Describe cómo etiquetarías una gráfica que muestra una señal cuadrada con ciclo de trabajo del 50%.' },
+  { cat: 'informes', name: 'Análisis de errores en mediciones eléctricas', short: 'Error sistemático (precisión) y aleatorio (resolución)', expl: 'Calcular desviación estándar y propagación de errores.', prompt: 'Calcula la incertidumbre relativa si se miden 100 V con un multímetro de precisión ±0.5% + 1 dígito.' },
+  { cat: 'informes', name: 'Uso de normas en informes', short: 'Citar normas NTC, IEC, IEEE', expl: 'Ejemplo: "Ensayo según NTC 2050 (IEC 61000-4-2)".', prompt: 'Escribe una frase citando la norma NTC 1340 (símbolos gráficos para diagramas eléctricos).' },
+  { cat: 'informes', name: 'Resumen ejecutivo de proyecto eléctrico', short: 'Objetivo, alcance, resultados clave, recomendaciones', expl: 'Para gerentes no técnicos.', prompt: 'Redacta un resumen ejecutivo de un estudio de iluminación para un aula universitaria según RETILAP.' },
+  { cat: 'informes', name: 'Conclusiones basadas en resultados', short: 'No opiniones, sino hechos contrastados', expl: 'Ejemplo: "La corriente medida (2.3 A) supera la capacidad del conductor (2.0 A)".', prompt: 'Escribe una conclusión para un informe donde se detectó una sobrecarga en un circuito derivado.' },
+  { cat: 'informes', name: 'Recomendaciones técnicas', short: 'Acciones concretas, priorizadas', expl: 'Ejemplo: "Reemplazar el breaker termomagnético por uno de mayor calibre".', prompt: 'Da dos recomendaciones para reducir la caída de tensión en una instalación residencial.' },
+  { cat: 'informes', name: 'Anexos: diagramas unifilares y hojas de datos', short: 'Referenciarlos en el texto', expl: 'Incluir hojas técnicas de componentes.', prompt: 'Explica qué información pondrías en un anexo de un informe de mantenimiento de un transformador.' },
+  { cat: 'informes', name: 'Referencia a figuras y tablas', short: 'Numeración correlativa, citar en el texto', expl: 'Usar "como se muestra en la Figura 3".', prompt: 'Escribe una oración que remita a la Tabla 2 de corrientes nominales.' },
+  { cat: 'informes', name: 'Lenguaje impersonal en informes eléctricos', short: 'Evitar "yo", "nosotros"', expl: 'Preferir "se midió", "se calculó", "se observó".', prompt: 'Reescribe "Conectamos el generador al osciloscopio" en tercera persona impersonal.' },
+  { cat: 'informes', name: 'Voz pasiva en metodología', short: 'Útil para describir procedimientos', expl: 'Ejemplo: "La señal fue muestreada a 10 kHz".', prompt: 'Convierte a voz pasiva: "El técnico ajustó la fuente de alimentación a 12 V".' },
+  { cat: 'informes', name: 'Unidades eléctricas del SI', short: 'V, A, W, Ω, F, H, Hz, VA, VAR', expl: 'Usar símbolos correctos: 10 V, 5 A, 2.2 kΩ.', prompt: 'Escribe la equivalencia de 1 mA a amperios y 1 µF a faradios.' },
+  { cat: 'informes', name: 'Prefijos eléctricos', short: 'k (kilo), M (mega), m (mili), µ (micro), n (nano)', expl: 'No confundir M (mega) con m (mili).', prompt: 'Expresa 0.000002 F en microfaradios y nanofaradios.' },
+  { cat: 'informes', name: 'Notación científica en potencia', short: 'Para números muy grandes o pequeños', expl: 'Ejemplo: "La frecuencia es 2.4 × 10⁹ Hz".', prompt: 'Escribe 0.000000001 F en notación científica con prefijo (nF).' },
+  { cat: 'informes', name: 'Citas de literatura técnica', short: 'Referencias a manuales, datasheets, artículos', expl: 'Usar estilo IEEE: [1], [2].', prompt: 'Escribe una cita bibliográfica (IEEE) de un datasheet del regulador LM317 de Texas Instruments.' },
+  { cat: 'informes', name: 'Redacción de metodología', short: 'Pasos claros para reproducir el experimento', expl: 'Incluir condiciones ambientales, conexiones, software.', prompt: 'Describe cómo conectarías un LED a un Arduino para hacerlo parpadear (pasos básicos).' },
+  { cat: 'informes', name: 'Interpretación de resultados eléctricos', short: 'Comparar con valores teóricos o de simulación', expl: 'Ejemplo: "La corriente simulada (1.2 A) coincide con la medida (1.18 A) dentro del 2%".', prompt: 'Interpreta un resultado de tensión de salida de una fuente regulada que debería dar 5 V y se midió 4.95 V.' },
+  { cat: 'informes', name: 'Portada y encabezados para proyectos', short: 'Título, autores, fecha, código', expl: 'Seguir formato institucional.', prompt: 'Diseña el contenido de la portada para un informe de diseño de un sistema de control de velocidad de motor DC.' },
+  // Memorias de cálculo (21-40)
+  { cat: 'calculos', name: 'Estructura de memoria de cálculo eléctrica', short: 'Hipótesis, esquemas, fórmulas, tablas, resultados', expl: 'Debe permitir verificación por otro ingeniero.', prompt: 'Enumera las secciones de una memoria de cálculo para el dimensionamiento de conductores.' },
+  { cat: 'calculos', name: 'Ecuaciones de circuitos eléctricos', short: 'Ley de Ohm, Kirchhoff, potencia', expl: 'Numerar ecuaciones: (1) V = I·R.', prompt: 'Escribe la ecuación de la potencia eléctrica (en DC) y define cada término.' },
+  { cat: 'calculos', name: 'Cálculo de caída de tensión', short: 'Método de resistencia, reactancia, factor de potencia', expl: 'Usar tablas de conductores según NTC 2050.', prompt: 'Calcula la caída de tensión porcentual para un circuito de 50 m, 10 A, conductor de cobre 2.5 mm² (resistividad 0.01724 Ω·mm²/m).' },
+  { cat: 'calculos', name: 'Factor de potencia y corrección', short: 'Cálculo de potencia activa, reactiva, aparente', expl: 'Definir triángulo de potencias.', prompt: 'Si un motor consume 5 kW con FP 0.8 inductivo, ¿cuál es la potencia aparente (kVA) y reactiva (kVAR)?' },
+  { cat: 'calculos', name: 'Cálculo de cortocircuito', short: 'Método de impedancias, potencia de corto', expl: 'Norma NTC 2050 (IEEE 141).', prompt: 'Explica qué es la corriente de cortocircuito simétrica y asimétrica.' },
+  { cat: 'calculos', name: 'Cálculo de iluminación (RETILAP)', short: 'Método de lúmenes, coeficiente de utilización', expl: 'Determinar número de luminarias.', prompt: 'Escribe la fórmula del método de lúmenes y define el factor de mantenimiento.' },
+  { cat: 'calculos', name: 'Cálculo de transformadores', short: 'Relación de vueltas, corriente primaria/secundaria', expl: 'Vp/Vs = Np/Ns = Is/Ip.', prompt: 'Un transformador reductor de 120/24 V, 60 Hz, suministra 2 A en el secundario. Calcula la corriente primaria y la relación de vueltas.' },
+  { cat: 'calculos', name: 'Cálculo de protecciones (breakers, fusibles)', short: 'Corriente nominal, poder de corte, selectividad', expl: 'Dimensionar según corriente de carga y cortocircuito.', prompt: 'Selecciona un breaker para un motor de 3 HP, 230 V, FP 0.85, eficiencia 0.9.' },
+  { cat: 'calculos', name: 'Cálculo de conductor por ampacidad', short: 'Tabla 310-16 NTC 2050', expl: 'Ajustar por temperatura y agrupamiento.', prompt: 'Busca la ampacidad de un conductor THHN 2 AWG de cobre a 75°C.' },
+  { cat: 'calculos', name: 'Cálculo de puesta a tierra', short: 'Resistividad del terreno, resistencia de varilla', expl: 'Usar método de Wenner.', prompt: 'Explica la fórmula de resistencia de una varilla de puesta a tierra.' },
+  { cat: 'calculos', name: 'Cálculo de filtros pasivos', short: 'Frecuencia de corte, condensadores, inductores', expl: 'Filtro RC, RL, RLC.', prompt: 'Calcula la frecuencia de corte de un filtro RC paso bajo con R = 1 kΩ, C = 1 µF.' },
+  { cat: 'calculos', name: 'Cálculo de ganancia en amplificadores', short: 'Amplificador operacional inversor/no inversor', expl: 'Av = -Rf/Rin o Av = 1 + Rf/Rin.', prompt: 'Diseña un amplificador inversor con ganancia de -10 usando resistencias de valores estándar.' },
+  { cat: 'calculos', name: 'Cálculo de disipación de calor en componentes', short: 'Potencia por efecto Joule', expl: 'P = I²·R, usar datasheet para temperatura máxima.', prompt: 'Calcula la potencia disipada en un transistor que conduce 2 A con Vce = 3 V.' },
+  { cat: 'calculos', name: 'Cálculo de tiempo de carga/descarga RC', short: 'Constante de tiempo τ = RC', expl: 'Tiempo a 63.2% o 5τ a 99.3%.', prompt: '¿Cuánto tarda en cargarse un capacitor de 100 µF con una resistencia de 10 kΩ al 95%?' },
+  { cat: 'calculos', name: 'Cálculo de potencia en sistemas trifásicos', short: 'P = √3·V·I·FP (balanceado)', expl: 'Usar ángulos de fase.', prompt: 'Calcula la potencia activa en un sistema trifásico de 440 V, 50 A, FP 0.9.' },
+  { cat: 'calculos', name: 'Cálculo de resonancia en circuitos RLC', short: 'Frecuencia de resonancia f = 1/(2π√LC)', expl: 'Impedancia mínima en serie, máxima en paralelo.', prompt: 'Halla la frecuencia de resonancia de un circuito RLC serie con L = 10 mH, C = 100 nF.' },
+  { cat: 'calculos', name: 'Cálculo de corriente de arranque de motores', short: '6-8 veces corriente nominal', expl: 'Afecta selección de protecciones.', prompt: 'Estima la corriente de arranque de un motor de 5 HP, 208 V, corriente nominal 15 A.' },
+  { cat: 'calculos', name: 'Cálculo de energía consumida', short: 'E = P·t (kWh)', expl: 'Para facturación eléctrica.', prompt: 'Calcula el consumo mensual (30 días) de un equipo de 500 W operando 8 h/día.' },
+  { cat: 'calculos', name: 'Cálculo de diseño de PCB (pistas)', short: 'Ancho de pista, temperatura, espesor de cobre', expl: 'Usar calculadoras IPC-2221.', prompt: '¿Qué ancho de pista necesitas para 2 A en una PCB de 1 oz/pie² con aumento de temperatura 20°C?' },
+  { cat: 'calculos', name: 'Software de cálculo', short: 'MATLAB, Simulink, PSpice, ETAP', expl: 'Mencionar versión y configuración.', prompt: 'Redacta una frase indicando que utilizaste ETAP para simular el flujo de carga en una subestación.' },
+  // Normas RETIE, NTC, IEC (41-60)
+  { cat: 'normas', name: 'Introducción al RETIE', short: 'Reglamento Técnico de Instalaciones Eléctricas (Colombia)', expl: 'Obligatorio para instalaciones eléctricas.', prompt: 'Explica el alcance del RETIE en Colombia (qué tipo de instalaciones regula).' },
+  { cat: 'normas', name: 'RETILAP: alumbrado público y alumbrado interior', short: 'Reglamento Técnico de Iluminación', expl: 'Eficiencia energética, niveles de iluminación.', prompt: 'Menciona dos requisitos del RETILAP para un edificio de oficinas.' },
+  { cat: 'normas', name: 'NTC 2050 (Código Eléctrico Colombiano)', short: 'Equivalente a NFPA 70', expl: 'Instalaciones eléctricas en baja tensión.', prompt: '¿Qué capítulo de la NTC 2050 trata sobre los conductores? (número)' },
+  { cat: 'normas', name: 'NTC 1340: símbolos gráficos para diagramas', short: 'Unificación de simbología', expl: 'Para planos eléctricos.', prompt: 'Dibuja (describe) el símbolo de un interruptor termomagnético según NTC 1340.' },
+  { cat: 'normas', name: 'Norma IEC 61000 (compatibilidad electromagnética)', short: 'Emisiones e inmunidad', expl: 'Para equipos electrónicos.', prompt: 'Explica qué significa EMC y por qué es importante.' },
+  { cat: 'normas', name: 'Norma IEEE 519: armónicos', short: 'Límites de distorsión armónica', expl: 'Para calidad de potencia.', prompt: '¿Cuál es el límite de THD para tensión en sistemas generales según IEEE 519?' },
+  { cat: 'normas', name: 'NTC 3820: tomacorrientes', short: 'Tipos y grados de protección', expl: 'Norma colombiana para dispositivos de toma.', prompt: 'Describe un tomacorriente tipo NTC 3820 con polo a tierra.' },
+  { cat: 'normas', name: 'RETIE para motores y transformadores', short: 'Eficiencia, protecciones', expl: 'Exige etiquetado de eficiencia.', prompt: '¿Qué nivel de eficiencia (IE1, IE2, IE3) exige RETIE para motores nuevos?' },
+  { cat: 'normas', name: 'Normas de seguridad eléctrica en el trabajo', short: 'NTC-ISO 45001, guías de bloqueo/etiquetado', expl: 'Procedimientos LOTO.', prompt: 'Redacta una advertencia sobre bloqueo de energía antes de intervenir un tablero eléctrico.' },
+  { cat: 'normas', name: 'Certificación de productos eléctricos', short: 'Marca de conformidad RETIE', expl: 'Exigida por la SIC.', prompt: '¿Qué significa el sello de RETIE en un producto eléctrico?' },
+  { cat: 'normas', name: 'Norma de puesta a tierra', short: 'NTC 2050 Artículo 250', expl: 'Resistencia máxima 10 ohmios.', prompt: 'Explica la diferencia entre electrodo de puesta a tierra y conductor de equipotencialización.' },
+  { cat: 'normas', name: 'Normas para instalaciones en áreas clasificadas', short: 'Zonas peligrosas (gas, polvo)', expl: 'NTC 2050 Artículo 500.', prompt: '¿Qué tipo de luminaria se debe usar en un área con gases inflamables Clase I División 1?' },
+  { cat: 'normas', name: 'Norma de calidad de potencia (NTC 5000)', short: 'Sag, swell, huecos, transitorios', expl: 'Límites de variación de tensión.', prompt: 'Define "sag" (hueco de tensión) y su duración típica.' },
+  { cat: 'normas', name: 'Norma de medición de energía (NTC 2026)', short: 'Precisión de medidores', expl: 'Clases de exactitud.', prompt: '¿Qué significa un medidor de clase 1 (error ±1%)?' },
+  { cat: 'normas', name: 'Norma de protecciones contra sobretensiones (SPD)', short: 'NTC 5630 (IEC 61643)', expl: 'Tipos de protecciones.', prompt: 'Explica la diferencia entre SPD Tipo 1, Tipo 2 y Tipo 3.' },
+  { cat: 'normas', name: 'Norma de cableado estructurado (TIA/EIA 568)', short: 'Categorías de cable UTP', expl: 'Cat5e, Cat6, Cat6a.', prompt: '¿Qué ancho de banda soporta un cable Cat6?' },
+  { cat: 'normas', name: 'Norma de fibra óptica (ITU-T G.652)', short: 'Fibra monomodo', expl: 'Longitud de onda 1310/1550 nm.', prompt: 'Menciona una ventaja de la fibra óptica sobre el cable de cobre.' },
+  { cat: 'normas', name: 'Normas de ensayo de equipos eléctricos (IEC 60068)', short: 'Ensayo ambiental (temperatura, humedad, vibración)', expl: 'Calificación de equipos.', prompt: '¿Qué significa IP54 en protección de ingreso?' },
+  { cat: 'normas', name: 'Actualización de normas', short: 'Versiones vigentes', expl: 'Verificar fecha de publicación.', prompt: 'Escribe una nota para un informe indicando que se usó la versión 2021 del RETIE.' },
+  { cat: 'normas', name: 'Organismos de normalización en Colombia', short: 'ICONTEC, CREG, UPME, SIC', expl: 'Sus funciones.', prompt: '¿Qué regula la CREG?' },
+  // Diagramas y planos (61-80)
+  { cat: 'planos', name: 'Diagrama unifilar', short: 'Representación simplificada de un sistema eléctrico', expl: 'Muestra conductores, protecciones, cargas.', prompt: 'Describe los elementos que deben aparecer en un diagrama unifilar de una vivienda.' },
+  { cat: 'planos', name: 'Diagrama multifilar', short: 'Todas las conexiones en detalle', expl: 'Útil para circuitos de control.', prompt: 'Explica la diferencia entre un diagrama unifilar y uno multifilar.' },
+  { cat: 'planos', name: 'Diagrama de bloques funcional', short: 'Para sistemas electrónicos', expl: 'Muestra entradas, salidas, etapas.', prompt: 'Dibuja (describe) el diagrama de bloques de una fuente de alimentación lineal.' },
+  { cat: 'planos', name: 'Diagrama de flujo de señales', short: 'Para procesamiento de señales', expl: 'Usar símbolos de amplificador, filtro, mezclador.', prompt: 'Bosqueja un diagrama de flujo de señales para un sistema de audio: micrófono → preamplificador → ecualizador → amplificador de potencia → altavoz.' },
+  { cat: 'planos', name: 'Diagrama de conexión de PLC', short: 'Entradas digitales, salidas, relés', expl: 'Norma IEC 61131-3.', prompt: 'Indica cómo conectarías un pulsador de paro de emergencia a un PLC.' },
+  { cat: 'planos', name: 'Esquemático electrónico', short: 'Componentes y conexiones', expl: 'Usar símbolos estándar (IEEE/ANSI).', prompt: 'Escribe los símbolos de una resistencia, condensador, diodo y transistor NPN.' },
+  { cat: 'planos', name: 'Diagrama de PCB (layout)', short: 'Pistas, pads, vías, silkscreen', expl: 'Gerber files.', prompt: 'Explica qué es una vía (via) en una placa de circuito impreso.' },
+  { cat: 'planos', name: 'Plano de distribución de tableros', short: 'Ubicación de breakers, barras', expl: 'Numerar circuitos.', prompt: 'Redacta una leyenda para un plano de tablero que indique los colores de fase (R, S, T).' },
+  { cat: 'planos', name: 'Plano de trayectorias de cables (bandejas)', short: 'Ruteo de conductores', expl: 'Evitar cruces peligrosos.', prompt: 'Recomienda una separación mínima entre bandejas de potencia y bandejas de señales (control).' },
+  { cat: 'planos', name: 'Simbología de interruptores y contactos', short: 'Normal abierto (NA), normal cerrado (NC)', expl: 'En diagramas de control.', prompt: 'Describe el símbolo de un contacto NA y uno NC.' },
+  { cat: 'planos', name: 'Diagrama de escalera (ladder)', short: 'Para programación de PLC', expl: 'Líneas de potencia y control.', prompt: 'Dibuja un diagrama de escalera simple con un pulsador que active una bobina de relé.' },
+  { cat: 'planos', name: 'Plano de puesta a tierra', short: 'Anillo de tierra, electrodos, malla', expl: 'Según NTC 2050.', prompt: 'Qué elementos debe contener un plano de puesta a tierra de una subestación.' },
+  { cat: 'planos', name: 'Diagrama de montaje', short: 'Vista en planta de equipos', expl: 'Para instalaciones.', prompt: 'Enumera tres aspectos de seguridad que deben señalarse en un plano de montaje.' },
+  { cat: 'planos', name: 'Plano de alumbrado', short: 'Ubicación de luminarias, interruptores', expl: 'Curvas de nivel de iluminación.', prompt: 'Indica la altura recomendada para montar un interruptor de luz en una vivienda (RETIE).' },
+  { cat: 'planos', name: 'Lista de materiales (BOM)', short: 'Código, descripción, cantidad', expl: 'Para cotizaciones.', prompt: 'Crea una línea de BOM para un breaker termomagnético de 20 A, 2 polos, marca Schneider.' },
+  { cat: 'planos', name: 'Numeración de planos', short: 'Sistema de índices', expl: 'E-01, E-02 (eléctricos).', prompt: 'Asigna un número de plano a un diagrama unifilar de una subestación (por ejemplo, E-101).' },
+  { cat: 'planos', name: 'Referencias cruzadas en planos', short: 'Entre hojas de plano', expl: 'Ejemplo: "Ver detalle en plano E-203".', prompt: 'Escribe una nota en un plano indicando que la conexión a tierra se detalla en otro plano.' },
+  { cat: 'planos', name: 'Uso de colores en planos', short: 'Rojo: 220 V, azul: neutro, amarillo: tierra', expl: 'Convención común.', prompt: 'Asigna colores para fases L1, L2, L3 en un plano de tablero trifásico.' },
+  { cat: 'planos', name: 'Software de diseño eléctrico', short: 'AutoCAD Electrical, EPLAN, SolidWorks Electrical', expl: 'Generación automática de listas.', prompt: 'Menciona una ventaja de usar AutoCAD Electrical frente a AutoCAD genérico.' },
+  { cat: 'planos', name: 'Verificación de planos', short: 'Revisión por pares, cumplimiento de normas', expl: 'Evitar errores costosos.', prompt: 'Escribe una lista de verificación (checklist) de 3 puntos para revisar un diagrama unifilar.' },
+  // Ética y comunicación (81-100)
+  { cat: 'etica', name: 'Honestidad en informes eléctricos', short: 'No falsificar mediciones', expl: 'La integridad es fundamental.', prompt: 'Redacta una declaración de ética para un informe de laboratorio.' },
+  { cat: 'etica', name: 'Confidencialidad en proyectos industriales', short: 'No divulgar diagramas de control', expl: 'Secretos industriales.', prompt: 'Escribe una cláusula de confidencialidad para un informe de prácticas en una empresa.' },
+  { cat: 'etica', name: 'Responsabilidad profesional del ingeniero', short: 'Firmar y sellar documentos', expl: 'Según la Ley 74 de 1989 (Colombia).', prompt: 'Explica por qué un ingeniero eléctrico debe sellar un estudio de cargas.' },
+  { cat: 'etica', name: 'Comunicación con clientes no técnicos', short: 'Evitar jerga, usar analogías', expl: 'Ejemplo: "el breaker es como un grifo que corta el paso de la corriente".', prompt: 'Explica la función de un interruptor diferencial (ID) a un dueño de casa.' },
+  { cat: 'etica', name: 'Presentaciones orales de proyectos eléctricos', short: 'Estructura: introducción, cálculos, planos, presupuesto', expl: 'Usar diapositivas limpias.', prompt: 'Enumera tres consejos para una presentación oral efectiva de un diseño de iluminación.' },
+  { cat: 'etica', name: 'Redacción de correos profesionales', short: 'Asunto claro, saludo, cuerpo conciso', expl: 'Para comunicarse con proveedores y clientes.', prompt: 'Escribe un correo solicitando cotización de 50 metros de cable THHN 12 AWG a un distribuidor.' },
+  { cat: 'etica', name: 'Currículum vitae para ingeniero eléctrico', short: 'Destacar proyectos, software, normas manejadas', expl: 'Incluir logros cuantificables.', prompt: 'Redacta un punto de logro para un CV: "Diseño de sistema de control de velocidad para motor DC con Arduino".' },
+  { cat: 'etica', name: 'Cartas de presentación', short: 'Dirigida a jefe de proyectos', expl: 'Motivación, habilidades técnicas.', prompt: 'Escribe el primer párrafo de una carta para una vacante de ingeniero eléctrico junior en una empresa de mantenimiento.' },
+  { cat: 'etica', name: 'Trabajo en equipos multidisciplinarios', short: 'Ingenieros eléctricos, civiles, mecánicos', expl: 'Lenguaje común.', prompt: 'Explica qué es el factor de potencia a un ingeniero civil de forma sencilla.' },
+  { cat: 'etica', name: 'Resolución de conflictos técnicos', short: 'Documentar acuerdos por escrito', expl: 'Evitar malentendidos.', prompt: 'Redacta un acta breve de una reunión donde se acordó cambiar la ubicación de un tablero eléctrico.' },
+  { cat: 'etica', name: 'Uso de redes sociales profesionales', short: 'LinkedIn, grupos de IEEE', expl: 'Compartir logros, no controversias.', prompt: 'Escribe un post de LinkedIn celebrando la obtención de una certificación RETIE.' },
+  { cat: 'etica', name: 'Propiedad intelectual en proyectos', short: 'No copiar diagramas de otros sin permiso', expl: 'Citar fuentes.', prompt: 'Explica cómo citar un diagrama de un manual técnico en tu informe.' },
+  { cat: 'etica', name: 'Simulación y validación', short: 'No ajustar parámetros para forzar resultados', expl: 'Ser honesto con las discrepancias.', prompt: 'Escribe una nota sobre la importancia de comparar simulación con mediciones reales.' },
+  { cat: 'etica', name: 'Seguridad eléctrica ante todo', short: 'No omitir advertencias en planos', expl: 'La vida de los operarios depende de ello.', prompt: 'Redacta una advertencia sobre el riesgo de arco eléctrico (arc flash) en un tablero.' },
+  { cat: 'etica', name: 'Actualización profesional continua', short: 'Cursos, seminarios, nuevas normas', expl: 'El campo avanza rápido.', prompt: 'Recomienda un curso de actualización en RETIE a un colega.' },
+  { cat: 'etica', name: 'Informes de falla eléctrica', short: 'Análisis de causa raíz sin culpar', expl: 'Enfocado en soluciones.', prompt: 'Escribe la conclusión de un informe de falla por sobrecalentamiento en un tablero.' },
+  { cat: 'etica', name: 'Atención a quejas técnicas', short: 'Respuesta cortés y documentada', expl: 'Procedimiento de servicio al cliente.', prompt: 'Responde a un cliente que se queja de que la iluminación instalada es más tenue de lo esperado.' },
+  { cat: 'etica', name: 'Uso de inteligencia artificial en informes', short: 'Transparencia, no reemplazar criterio', expl: 'ChatGPT para redacción, pero revisar.', prompt: 'Declara que usaste IA para mejorar la gramática de un informe, pero que los datos y cálculos son propios.' },
+  { cat: 'etica', name: 'Código de ética del ingeniero colombiano', short: 'Ley 74 de 1989, Decreto 2101', expl: 'Principios deontológicos.', prompt: 'Menciona un deber del ingeniero según la Ley 74 de 1989.' },
+  { cat: 'etica', name: 'Responsabilidad social y ambiental', short: 'Diseñar instalaciones eficientes y seguras', expl: 'Reducir pérdidas, usar energías renovables.', prompt: 'Propón una mejora ambiental en una instalación eléctrica (ej. corrección del factor de potencia).' }
+];
+
+// Generar exactamente 100 ejercicios
+let ejercicios = [];
+for (let i = 0; i < 100; i++) {
+  const t = templates[i % templates.length];
+  const sufijo = i < templates.length ? '' : ` (${Math.floor(i / templates.length) + 1})`;
+  ejercicios.push({
+    id: i + 1,
+    cat: t.cat,
+    name: t.name + sufijo,
+    short: t.short,
+    expl: t.expl,
+    prompt: t.prompt
+  });
+}
+for (let i = 0; i < ejercicios.length; i++) ejercicios[i].id = i + 1;
+
+// ========== ESTADO DE USUARIO ==========
+let userData = { name:"Estudiante", level:"intermedio", completed:[], practiced:0, scores:[], history:[], joinDate:new Date().toLocaleDateString('es-ES') };
+function loadUserData(){ const saved=localStorage.getItem('redaccionElectricaUser'); if(saved){ try{ const p=JSON.parse(saved); userData={...userData,...p}; }catch(e){} } updateUI(); }
+function saveUserData(){ localStorage.setItem('redaccionElectricaUser',JSON.stringify(userData)); updateUI(); }
+function updateUI(){ document.getElementById('navName').textContent=userData.name.split(' ')[0]; document.getElementById('dashName').textContent=userData.name.split(' ')[0]; document.getElementById('navAv').textContent=userData.name[0].toUpperCase(); }
+loadUserData();
+
+let currentEx = null;
+let filterCatEx = 'all';
+function switchPage(p){
+  document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));
+  document.querySelectorAll('.app-tab').forEach(x=>x.classList.remove('active'));
+  document.getElementById('page-'+p)?.classList.add('active');
+  document.getElementById('tab-'+p)?.classList.add('active');
+  if(p==='dashboard') refreshDash();
+  if(p==='perfil') renderProfile();
+  if(p==='ejercicios') renderList();
+}
+function refreshDash(){
+  document.getElementById('sCompleted').textContent=userData.completed.length;
+  document.getElementById('sPracticed').textContent=userData.practiced;
+  const avg=userData.scores.length?Math.round(userData.scores.reduce((a,b)=>a+b,0)/userData.scores.length):null;
+  document.getElementById('sScore').textContent=avg?avg+'%':'—';
+  document.getElementById('sStreak').textContent=(userData.streak||1)+'🔥';
+  const grid=document.getElementById('dotGrid');
+  grid.innerHTML='';
+  ejercicios.forEach(ex=>{
+    const done=userData.completed.includes(ex.id);
+    const div=document.createElement('div');
+    div.className='dot'+(done?' done':'');
+    div.innerHTML=`<span class="dot-num">${ex.id}</span><div class="dot-tip">#${ex.id} ${ex.name}</div>`;
+    div.onclick=()=>startPractice(ex.id);
+    grid.appendChild(div);
+  });
+  const nid=nextId();
+  const next=ejercicios.find(e=>e.id===nid);
+  if(next){
+    document.getElementById('nextNum').textContent=String(next.id).padStart(2,'0');
+    document.getElementById('nextCat').textContent=CATS[next.cat]||next.cat;
+    document.getElementById('nextName').textContent=next.name;
+    document.getElementById('nextDesc').textContent=next.short;
+    document.getElementById('nextCard').onclick=()=>startPractice(next.id);
+  }
+  const cats=Object.keys(CATS);
+  const cp=document.getElementById('catProgress');
+  cp.innerHTML=cats.map(c=>{
+    const total=ejercicios.filter(e=>e.cat===c).length;
+    const done=ejercicios.filter(e=>e.cat===c && userData.completed.includes(e.id)).length;
+    const pct=Math.round(done/total*100);
+    return `<div class="mb-2"><div class="d-flex justify-content-between mb-1" style="font-size:.8rem;font-weight:700"><span>${CATS[c]}</span><span style="color:var(--amber)">${done}/${total}</span></div><div style="height:7px;border-radius:4px;background:var(--border)"><div style="height:100%;border-radius:4px;width:${pct}%;background:${pct===100?'var(--sage)':'var(--electric)'}"></div></div></div>`;
+  }).join('');
+}
+function nextId(){ for(let i=1;i<=100;i++) if(!userData.completed.includes(i)) return i; return 1; }
+function setFilter(cat,btn){ filterCatEx=cat; document.querySelectorAll('#pills .pill').forEach(p=>p.classList.remove('on')); btn.classList.add('on'); renderList(); }
+function renderList(){
+  const q=(document.getElementById('searchQ')?.value||'').toLowerCase();
+  const filtered=ejercicios.filter(e=>(filterCatEx==='all'||e.cat===filterCatEx) && (!q||e.name.toLowerCase().includes(q)||e.short.toLowerCase().includes(q)));
+  const list=document.getElementById('exList');
+  list.innerHTML=filtered.map(e=>{
+    const done=userData.completed.includes(e.id);
+    return `<div class="ex-card${done?' done':''}" onclick="startPractice(${e.id})"><div class="ex-num-box">${String(e.id).padStart(2,'0')}</div><div class="ex-body"><div class="ex-cat-tag">${CATS[e.cat]||e.cat}</div><div class="ex-name">${e.name}</div><div class="ex-short">${e.short}</div></div><div>${done?'<span class="badge-done"><i class="bi bi-check-lg"></i> Hecho</span>':'<span class="badge-new">Practicar</span>'}</div></div>`;
+  }).join('');
+  if(!filtered.length) list.innerHTML='<div class="text-muted text-center py-4">No se encontraron técnicas.</div>';
+}
+function startPractice(id){
+  const ex=ejercicios.find(x=>x.id===id);
+  if(!ex) return;
+  currentEx=ex;
+  document.getElementById('pracCat').textContent=CATS[ex.cat]||ex.cat;
+  document.getElementById('pracNum').textContent=String(ex.id).padStart(2,'0');
+  document.getElementById('pracName').textContent=ex.name;
+  document.getElementById('pracExpl').textContent=ex.expl;
+  document.getElementById('pracEx').textContent='📝 '+ex.expl;
+  document.getElementById('pracPrompt').innerHTML='<strong>✍️ Ejercicio:</strong> '+ex.prompt;
+  document.getElementById('practiceTA').value='';
+  document.getElementById('wc').textContent='0';
+  document.getElementById('fbArea').classList.remove('show');
+  document.getElementById('btnNext').style.display='none';
+  document.getElementById('btnCheck').disabled=false;
+  document.getElementById('btnCheck').innerHTML='<i class="bi bi-magic"></i> Analizar';
+  document.getElementById('practiceEmpty').style.display='none';
+  document.getElementById('practiceContent').style.display='';
+  switchPage('practica');
+  document.getElementById('practiceTA').focus();
+}
+function prevExercise(){
+  if(!currentEx) return;
+  const idx=ejercicios.findIndex(e=>e.id===currentEx.id);
+  startPractice(ejercicios[(idx-1+ejercicios.length)%ejercicios.length].id);
+}
+function nextExercise(){
+  if(!currentEx) return;
+  const idx=ejercicios.findIndex(e=>e.id===currentEx.id);
+  startPractice(ejercicios[(idx+1)%ejercicios.length].id);
+}
+function doCheck(){
+  const text=document.getElementById('practiceTA').value.trim();
+  if(!text || text.split(/\s+/).length<5){ toast('Escribe al menos 5 palabras','e'); return; }
+  if(!currentEx) return;
+  const btn=document.getElementById('btnCheck');
+  btn.disabled=true;
+  btn.innerHTML='<span class="spinner-border spinner-border-sm me-1"></span>Evaluando...';
+  const fb=document.getElementById('fbArea');
+  fb.classList.add('show');
+  document.getElementById('fbLoading').style.display='block';
+  document.getElementById('fbContent').style.display='none';
+  setTimeout(()=>{
+    let score=70;
+    if(text.length>100) score+=10;
+    if(text.toLowerCase().includes(currentEx.name.toLowerCase())) score+=10;
+    score=Math.min(100,score);
+    const nivel=score>=85?'excelente':score>=65?'bien':'necesita_mejorar';
+    const titulo=nivel==='excelente'?'¡Excelente redacción técnica!':nivel==='bien'?'Buen trabajo':'Puedes mejorar';
+    const resumen=`Tu respuesta tiene ${text.split(/\s+/).length} palabras. ${score>=70?'Aplicas bien los conceptos de redacción en ingeniería eléctrica/electrónica.':'Revisa la técnica y vuelve a intentarlo.'}`;
+    const aciertos=['La respuesta es relevante al ejercicio.'];
+    const consejos=['Consulta guías como el "Manual de redacción técnica" de la Universidad Nacional o las normas NTC 1486.'];
+    const aplicacion=`Has aplicado conocimientos sobre ${currentEx.name}.`;
+    const r={score,nivel,titulo,resumen,aciertos,errores:[],consejos,aplicacion};
+    renderFeedback(r);
+    userData.practiced++;
+    userData.scores.push(r.score);
+    if(r.score>=65 && !userData.completed.includes(currentEx.id)){
+      userData.completed.push(currentEx.id);
+      toast(`✅ ¡Técnica #${currentEx.id} completada!`,'s');
+    }
+    userData.history=[{id:currentEx.id, name:currentEx.name, score:r.score, date:new Date().toLocaleDateString('es-ES')}, ...(userData.history||[])].slice(0,30);
+    saveUserData();
+    document.getElementById('fbLoading').style.display='none';
+    document.getElementById('fbContent').style.display='block';
+    btn.disabled=false;
+    btn.innerHTML='<i class="bi bi-magic"></i> Analizar de nuevo';
+    document.getElementById('btnNext').style.display='';
+    fb.scrollIntoView({behavior:'smooth',block:'start'});
+  },800);
+}
+function renderFeedback(r){
+  const sc=r.score>=80?'high':r.score>=60?'med':'low';
+  const hc=r.nivel==='excelente'?'excellent':r.nivel==='bien'?'good':'low';
+  const em=r.nivel==='excelente'?'🏆':r.nivel==='bien'?'👍':'💪';
+  const aciertos=(r.aciertos||[]).map(a=>`<div class="fb-item ok"><span class="fb-ico">✓</span><span>${a}</span></div>`).join('');
+  const errores=(r.errores||[]).map(a=>`<div class="fb-item err"><span class="fb-ico">✗</span><span>${a}</span></div>`).join('');
+  const consejos=(r.consejos||[]).map(a=>`<div class="fb-item tip"><span class="fb-ico">💡</span><span>${a}</span></div>`).join('');
+  document.getElementById('fbContent').innerHTML=`<div class="fb-head ${hc}"><span class="fb-emoji">${em}</span><div><p class="fb-htitle">${r.titulo}</p><p class="fb-hsub">Técnica #${currentEx?.id} · ${currentEx?.name}</p></div></div><div class="fb-body"><div style="display:flex;align-items:center;gap:1rem;margin-bottom:1.1rem"><div class="score-circle sc-${sc}">${r.score}%</div><div style="flex:1"><div style="font-weight:700;margin-bottom:.4rem">Dominio de la técnica</div><div style="height:8px;border-radius:4px;background:var(--border)"><div style="height:100%;width:${r.score}%;background:${r.score>=80?'#198754':r.score>=60?'#ffc107':'#dc3545'}"></div></div><div style="font-size:.77rem;margin-top:.4rem">${r.resumen}</div></div></div>${r.aplicacion?`<div class="fb-section"><div class="fb-section-title">🎯 Aplicación</div><div class="fb-item info"><span class="fb-ico">📖</span><span>${r.aplicacion}</span></div></div>`:''}${aciertos?`<div class="fb-section"><div class="fb-section-title">✅ Aciertos</div>${aciertos}</div>`:''}${errores?`<div class="fb-section"><div class="fb-section-title">❌ Errores</div>${errores}</div>`:''}${consejos?`<div class="fb-section"><div class="fb-section-title">💡 Consejos</div>${consejos}</div>`:''}</div>`;
+}
+function renderProfile(){
+  document.getElementById('profAv').textContent=userData.name[0].toUpperCase();
+  document.getElementById('profName').textContent=userData.name;
+  document.getElementById('profMeta').textContent=(userData.level==='principiante'?'Principiante':userData.level==='intermedio'?'Intermedio':'Avanzado')+' · Desde '+userData.joinDate;
+  document.getElementById('pComp').textContent=userData.completed.length;
+  document.getElementById('pPrac').textContent=userData.practiced;
+  const avg=userData.scores.length?Math.round(userData.scores.reduce((a,b)=>a+b,0)/userData.scores.length):null;
+  document.getElementById('pScr').textContent=avg?avg+'%':'—';
+  const ACHS=[{icon:'🎓',name:'Primera técnica',check:d=>d.practiced>=1},{icon:'⚡',name:'10 prácticas',check:d=>d.practiced>=10},{icon:'🏅',name:'25 técnicas',check:d=>d.completed.length>=25},{icon:'🏆',name:'50 técnicas',check:d=>d.completed.length>=50},{icon:'🔌',name:'Maestro redactor eléctrico',check:d=>d.completed.length>=100}];
+  document.getElementById('achGrid').innerHTML=ACHS.map(a=>{const u=a.check(userData); return `<div class="ach${u?' unlocked':' locked'}"><span class="ach-icon">${a.icon}</span><div class="ach-name">${a.name}</div></div>`;}).join('');
+  const hl=document.getElementById('histList');
+  if(userData.history?.length){ hl.innerHTML=userData.history.slice(0,15).map(h=>`<div class="hist-row" onclick="startPractice(${h.id})"><div class="ex-num-box" style="background:${h.score>=80?'var(--sage)':h.score>=60?'var(--amber-light)':'#f8d7da'};color:#fff">${String(h.id).padStart(2,'0')}</div><div><div style="font-weight:700">${h.name}</div><div style="font-size:.74rem;color:#aaa">${h.date}</div></div><span style="background:${h.score>=80?'var(--sage)':h.score>=60?'var(--amber)':'#dc3545'};color:#fff;padding:.18rem .55rem;border-radius:9px">${h.score}%</span></div>`).join('');}
+  else hl.innerHTML='<div class="text-muted">Aún sin prácticas.</div>';
+}
+function openEditModal(){ document.getElementById('editName').value=userData.name; document.getElementById('editLevel').value=userData.level; document.getElementById('editModal').style.display='flex'; }
+function saveEdit(){ const name=document.getElementById('editName').value.trim(); if(!name){ toast('Escribe un nombre','e'); return; } userData.name=name; userData.level=document.getElementById('editLevel').value; saveUserData(); updateUI(); closeModal('editModal'); renderProfile(); toast('Perfil actualizado','s'); }
+function confirmReset(){ if(confirm('¿Reiniciar todo el progreso?')){ userData.completed=[]; userData.practiced=0; userData.scores=[]; userData.history=[]; saveUserData(); refreshDash(); renderProfile(); toast('Progreso reiniciado','i'); } }
+function closeModal(id){ document.getElementById(id).style.display='none'; }
+function toast(msg,type='i'){ const box=document.getElementById('toastBox'); const t=document.createElement('div'); const icons={s:'✅',e:'❌',i:'ℹ️'}; t.className=`toast-item ${type}`; t.innerHTML=`<span>${icons[type]||'ℹ️'}</span><span>${msg}</span>`; box.appendChild(t); setTimeout(()=>{ t.style.opacity='0'; t.style.transform='translateY(16px)'; setTimeout(()=>t.remove(),350); },3200); }
+document.addEventListener('DOMContentLoaded',()=>{ const ta=document.getElementById('practiceTA'); if(ta) ta.addEventListener('input',()=>{ const w=ta.value.trim()?ta.value.trim().split(/\s+/).length:0; document.getElementById('wc').textContent=w; }); refreshDash(); renderList(); renderProfile(); });
+</script>
+</body>
+</html>

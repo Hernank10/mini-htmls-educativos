@@ -1,0 +1,1107 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Constructor de Oraciones Condicionales - Aprende Español con la RAE</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --secondary: #34495e;
+            --accent: #3498db;
+            --success: #2ecc71;
+            --warning: #f39c12;
+            --danger: #e74c3c;
+            --light: #ecf0f1;
+        }
+        
+        body {
+            background-color: #f8f9fa;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        .navbar-brand {
+            font-weight: bold;
+        }
+        
+        .jumbotron {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            border-radius: 0 0 30px 30px;
+            padding: 3rem 1rem;
+            margin-bottom: 2rem;
+        }
+        
+        .game-card {
+            transition: transform 0.3s, box-shadow 0.3s;
+            border: none;
+            border-radius: 15px;
+            overflow: hidden;
+            margin-bottom: 1.5rem;
+        }
+        
+        .game-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+        
+        .game-card-header {
+            font-weight: bold;
+            padding: 1rem;
+            color: white;
+        }
+        
+        .game-1 { background-color: var(--accent); }
+        .game-2 { background-color: var(--success); }
+        .game-3 { background-color: var(--warning); }
+        .game-4 { background-color: #9b59b6; }
+        .game-5 { background-color: var(--danger); }
+        
+        .game-container {
+            background-color: white;
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            margin-bottom: 2rem;
+        }
+        
+        .example-card {
+            background-color: var(--light);
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .example-sentence {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: var(--primary);
+        }
+        
+        .example-explanation {
+            font-style: italic;
+            color: #7f8c8d;
+        }
+        
+        .btn-game {
+            border-radius: 50px;
+            padding: 0.5rem 1.5rem;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+        
+        .btn-check {
+            background-color: var(--success);
+            color: white;
+        }
+        
+        .btn-next {
+            background-color: var(--accent);
+            color: white;
+        }
+        
+        .btn-menu {
+            background-color: var(--secondary);
+            color: white;
+        }
+        
+        .memory-card {
+            height: 120px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            cursor: pointer;
+            border-radius: 10px;
+            transition: all 0.3s;
+            color: white;
+        }
+        
+        .memory-card:hover {
+            transform: scale(1.05);
+        }
+        
+        .card-back {
+            background-color: var(--danger);
+        }
+        
+        .card-front {
+            background-color: var(--success);
+        }
+        
+        .card-matched {
+            background-color: #95a5a6;
+            cursor: default;
+        }
+        
+        .status-badge {
+            font-size: 0.9rem;
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+        }
+        
+        .word-draggable {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            margin: 0.25rem;
+            background-color: var(--light);
+            border-radius: 5px;
+            cursor: grab;
+            transition: all 0.2s;
+        }
+        
+        .word-draggable:hover {
+            background-color: #d5dbdb;
+        }
+        
+        .word-container {
+            min-height: 100px;
+            border: 2px dashed #bdc3c7;
+            border-radius: 10px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+        }
+        
+        .blank-input {
+            width: 100px;
+            display: inline-block;
+            margin: 0 5px;
+        }
+        
+        .stats-card {
+            background: white;
+            border-radius: 15px;
+            padding: 1.5rem;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+        
+        .stats-value {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: var(--primary);
+        }
+        
+        .stats-label {
+            color: #7f8c8d;
+            font-size: 0.9rem;
+        }
+        
+        .category-badge {
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            color: white;
+            font-weight: bold;
+        }
+        
+        .category-reales { background-color: var(--accent); }
+        .category-potenciales { background-color: var(--success); }
+        .category-irreales { background-color: var(--danger); }
+        
+        footer {
+            background-color: var(--primary);
+            color: white;
+            padding: 2rem 0;
+            margin-top: 3rem;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: var(--primary);">
+        <div class="container">
+            <a class="navbar-brand" href="#">
+                <i class="bi bi-journal-text me-2"></i>
+                Constructor de Oraciones Condicionales
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#home">Inicio</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#games">Juegos</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#stats">Estadísticas</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#about">Acerca de</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Jumbotron / Hero Section -->
+    <section id="home" class="jumbotron">
+        <div class="container text-center">
+            <h1 class="display-4">Aprende Oraciones Condicionales</h1>
+            <p class="lead">Domina el uso de las oraciones condicionales en español según las normas de la RAE</p>
+            <div class="mt-4">
+                <span class="status-badge bg-light text-dark me-2">
+                    <i class="bi bi-star-fill text-warning me-1"></i> Puntuación: <span id="score-display">0</span>
+                </span>
+                <span class="status-badge bg-light text-dark me-2">
+                    <i class="bi bi-graph-up me-1"></i> Nivel: <span id="level-display">1</span>
+                </span>
+                <span class="status-badge bg-light text-dark">
+                    <i class="bi bi-lightning-fill text-warning me-1"></i> Racha: <span id="streak-display">0</span>
+                </span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Games Section -->
+    <section id="games" class="container">
+        <h2 class="text-center mb-4">Juegos Educativos</h2>
+        <p class="text-center mb-5">Practica las oraciones condicionales con estos 5 juegos interactivos</p>
+        
+        <div class="row">
+            <!-- Game 1 Card -->
+            <div class="col-md-4">
+                <div class="card game-card h-100">
+                    <div class="game-card-header game-1">
+                        <i class="bi bi-pencil-square me-2"></i> Juego 1: Construye la Oración
+                    </div>
+                    <div class="card-body">
+                        <p class="card-text">Crea oraciones condicionales similares a los ejemplos proporcionados.</p>
+                        <button class="btn btn-outline-primary w-100" onclick="showGame(1)">Jugar</button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Game 2 Card -->
+            <div class="col-md-4">
+                <div class="card game-card h-100">
+                    <div class="game-card-header game-2">
+                        <i class="bi bi-tags me-2"></i> Juego 2: Clasifica el Tipo
+                    </div>
+                    <div class="card-body">
+                        <p class="card-text">Identifica si una oración es Real, Potencial o Irreal.</p>
+                        <button class="btn btn-outline-success w-100" onclick="showGame(2)">Jugar</button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Game 3 Card -->
+            <div class="col-md-4">
+                <div class="card game-card h-100">
+                    <div class="game-card-header game-3">
+                        <i class="bi bi-input-cursor-text me-2"></i> Juego 3: Completa los Huecos
+                    </div>
+                    <div class="card-body">
+                        <p class="card-text">Rellena los espacios en blanco en oraciones condicionales.</p>
+                        <button class="btn btn-outline-warning w-100" onclick="showGame(3)">Jugar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="row mt-4">
+            <!-- Game 4 Card -->
+            <div class="col-md-6">
+                <div class="card game-card h-100">
+                    <div class="game-card-header game-4">
+                        <i class="bi bi-sort-alpha-down me-2"></i> Juego 4: Ordena las Palabras
+                    </div>
+                    <div class="card-body">
+                        <p class="card-text">Organiza palabras desordenadas para formar oraciones correctas.</p>
+                        <button class="btn btn-outline-purple w-100" style="border-color: #9b59b6; color: #9b59b6;" onclick="showGame(4)">Jugar</button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Game 5 Card -->
+            <div class="col-md-6">
+                <div class="card game-card h-100">
+                    <div class="game-card-header game-5">
+                        <i class="bi bi-card-checklist me-2"></i> Juego 5: Memoria Condicional
+                    </div>
+                    <div class="card-body">
+                        <p class="card-text">Encuentra pares de condición y consecuencia.</p>
+                        <button class="btn btn-outline-danger w-100" onclick="showGame(5)">Jugar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Game Containers (Initially Hidden) -->
+    <div id="game-containers" class="container mt-5" style="display: none;">
+        <!-- Game 1: Construye la Oración -->
+        <div id="game1-container" class="game-container">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h3 class="text-accent"><i class="bi bi-pencil-square me-2"></i> Construye la Oración</h3>
+                <button class="btn btn-menu" onclick="hideGames()"><i class="bi bi-arrow-left me-1"></i> Volver al Menú</button>
+            </div>
+            
+            <div class="example-card">
+                <div class="example-sentence" id="game1-example">Cargando ejemplo...</div>
+                <div class="example-explanation" id="game1-explanation"></div>
+            </div>
+            
+            <div class="mb-3">
+                <label for="game1-input" class="form-label">Escribe tu oración aquí:</label>
+                <textarea class="form-control" id="game1-input" rows="3" placeholder="Escribe una oración condicional similar al ejemplo..."></textarea>
+            </div>
+            
+            <div class="d-flex gap-2">
+                <button class="btn btn-check" onclick="checkSentence()"><i class="bi bi-check-lg me-1"></i> Verificar</button>
+                <button class="btn btn-next" onclick="nextExample(1)"><i class="bi bi-arrow-right me-1"></i> Siguiente</button>
+            </div>
+            
+            <div id="game1-message" class="mt-3"></div>
+        </div>
+        
+        <!-- Game 2: Clasifica el Tipo -->
+        <div id="game2-container" class="game-container" style="display: none;">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h3 class="text-success"><i class="bi bi-tags me-2"></i> Clasifica el Tipo</h3>
+                <button class="btn btn-menu" onclick="hideGames()"><i class="bi bi-arrow-left me-1"></i> Volver al Menú</button>
+            </div>
+            
+            <div class="example-card text-center">
+                <div class="example-sentence" id="game2-example">Cargando ejemplo...</div>
+            </div>
+            
+            <div class="text-center mb-4">
+                <p>¿Qué tipo de oración condicional es esta?</p>
+            </div>
+            
+            <div class="d-flex flex-column gap-2 mb-4">
+                <button class="btn btn-outline-primary p-3 text-start" onclick="checkCategory('Reales')">
+                    <i class="bi bi-circle me-2"></i> Real (Condición posible)
+                </button>
+                <button class="btn btn-outline-success p-3 text-start" onclick="checkCategory('Potenciales')">
+                    <i class="bi bi-circle me-2"></i> Potencial (Condición improbable)
+                </button>
+                <button class="btn btn-outline-danger p-3 text-start" onclick="checkCategory('Irreales')">
+                    <i class="bi bi-circle me-2"></i> Irreal (Condición imposible)
+                </button>
+            </div>
+            
+            <div class="d-flex gap-2">
+                <button class="btn btn-next" onclick="nextExample(2)"><i class="bi bi-arrow-right me-1"></i> Siguiente</button>
+            </div>
+            
+            <div id="game2-message" class="mt-3"></div>
+        </div>
+        
+        <!-- Game 3: Completa los Huecos -->
+        <div id="game3-container" class="game-container" style="display: none;">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h3 class="text-warning"><i class="bi bi-input-cursor-text me-2"></i> Completa los Huecos</h3>
+                <button class="btn btn-menu" onclick="hideGames()"><i class="bi bi-arrow-left me-1"></i> Volver al Menú</button>
+            </div>
+            
+            <div class="mb-4">
+                <p>Completa los espacios en blanco:</p>
+                <div id="game3-sentence" class="p-3 bg-light rounded">
+                    <!-- Sentence with blanks will be inserted here -->
+                </div>
+            </div>
+            
+            <div class="d-flex gap-2">
+                <button class="btn btn-check" onclick="checkBlanks()"><i class="bi bi-check-lg me-1"></i> Verificar</button>
+                <button class="btn btn-next" onclick="nextExample(3)"><i class="bi bi-arrow-right me-1"></i> Siguiente</button>
+            </div>
+            
+            <div id="game3-message" class="mt-3"></div>
+        </div>
+        
+        <!-- Game 4: Ordena las Palabras -->
+        <div id="game4-container" class="game-container" style="display: none;">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h3 style="color: #9b59b6;"><i class="bi bi-sort-alpha-down me-2"></i> Ordena las Palabras</h3>
+                <button class="btn btn-menu" onclick="hideGames()"><i class="bi bi-arrow-left me-1"></i> Volver al Menú</button>
+            </div>
+            
+            <div class="mb-4">
+                <p>Palabras disponibles:</p>
+                <div id="game4-available" class="word-container">
+                    <!-- Available words will be inserted here -->
+                </div>
+                
+                <p>Tu oración:</p>
+                <div id="game4-selected" class="word-container">
+                    <!-- Selected words will be inserted here -->
+                </div>
+            </div>
+            
+            <div class="d-flex gap-2">
+                <button class="btn btn-check" onclick="checkOrder()"><i class="bi bi-check-lg me-1"></i> Verificar</button>
+                <button class="btn btn-next" onclick="nextExample(4)"><i class="bi bi-arrow-right me-1"></i> Siguiente</button>
+            </div>
+            
+            <div id="game4-message" class="mt-3"></div>
+        </div>
+        
+        <!-- Game 5: Memoria Condicional -->
+        <div id="game5-container" class="game-container" style="display: none;">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h3 class="text-danger"><i class="bi bi-card-checklist me-2"></i> Memoria Condicional</h3>
+                <button class="btn btn-menu" onclick="hideGames()"><i class="bi bi-arrow-left me-1"></i> Volver al Menú</button>
+            </div>
+            
+            <div class="text-center mb-4">
+                <p>Encuentra pares de condición y consecuencia:</p>
+                <div id="game5-pairs" class="mb-3">Pares encontrados: <span id="pairs-count">0</span>/4</div>
+            </div>
+            
+            <div id="game5-board" class="row g-3 mb-4">
+                <!-- Memory cards will be inserted here -->
+            </div>
+            
+            <div class="d-flex gap-2">
+                <button class="btn btn-next" onclick="nextExample(5)"><i class="bi bi-arrow-right me-1"></i> Siguiente</button>
+            </div>
+            
+            <div id="game5-message" class="mt-3"></div>
+        </div>
+    </div>
+
+    <!-- Statistics Section -->
+    <section id="stats" class="container mt-5">
+        <h2 class="text-center mb-4">Estadísticas</h2>
+        
+        <div class="row">
+            <div class="col-md-3">
+                <div class="stats-card">
+                    <div class="stats-value" id="stats-score">0</div>
+                    <div class="stats-label">Puntuación Total</div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stats-card">
+                    <div class="stats-value" id="stats-level">1</div>
+                    <div class="stats-label">Nivel Actual</div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stats-card">
+                    <div class="stats-value" id="stats-streak">0</div>
+                    <div class="stats-label">Racha Actual</div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stats-card">
+                    <div class="stats-value" id="stats-games">0</div>
+                    <div class="stats-label">Juegos Completados</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="row mt-4">
+            <div class="col-md-6">
+                <div class="stats-card">
+                    <h4>Ejemplos por Categoría</h4>
+                    <div class="d-flex flex-column gap-2 mt-3">
+                        <div class="d-flex justify-content-between">
+                            <span class="category-badge category-reales">Reales</span>
+                            <span id="count-reales">5 ejemplos</span>
+                        </div>
+                        <div class="d-flex justify-content-between">
+                            <span class="category-badge category-potenciales">Potenciales</span>
+                            <span id="count-potenciales">5 ejemplos</span>
+                        </div>
+                        <div class="d-flex justify-content-between">
+                            <span class="category-badge category-irreales">Irreales</span>
+                            <span id="count-irreales">5 ejemplos</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="stats-card">
+                    <h4>Progreso de Aprendizaje</h4>
+                    <div class="progress mt-3" style="height: 20px;">
+                        <div id="progress-bar" class="progress-bar bg-success" role="progressbar" style="width: 0%;" 
+                             aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">0%</div>
+                    </div>
+                    <p class="mt-2 text-muted">Basado en respuestas correctas</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="container mt-5">
+        <div class="row">
+            <div class="col-lg-8 mx-auto">
+                <h2 class="text-center mb-4">Acerca de este Proyecto</h2>
+                <div class="card">
+                    <div class="card-body">
+                        <p>Esta aplicación web educativa está diseñada para ayudar a estudiantes de español a dominar el uso de las oraciones condicionales según las normas de la Real Academia Española (RAE).</p>
+                        
+                        <h5>¿Qué son las oraciones condicionales?</h5>
+                        <p>Las oraciones condicionales expresan una condición que debe cumplirse para que ocurra lo expresado en la oración principal. Se clasifican en tres tipos:</p>
+                        
+                        <ul>
+                            <li><strong>Reales</strong>: Expresan condiciones posibles de cumplirse.</li>
+                            <li><strong>Potenciales</strong>: Expresan condiciones improbables o hipotéticas.</li>
+                            <li><strong>Irreales</strong>: Expresan condiciones imposibles de cumplir (generalmente referidas al pasado).</li>
+                        </ul>
+                        
+                        <h5>Características de la aplicación</h5>
+                        <ul>
+                            <li>5 juegos interactivos para practicar diferentes aspectos de las oraciones condicionales</li>
+                            <li>Sistema de progreso con puntuación, niveles y rachas</li>
+                            <li>Ejemplos basados en las normas de la RAE</li>
+                            <li>Diseño responsive que funciona en dispositivos móviles y de escritorio</li>
+                            <li>Interfaz intuitiva y atractiva</li>
+                        </ul>
+                        
+                        <p class="mb-0">¡Esperamos que esta herramienta te sea de gran ayuda en tu aprendizaje del español!</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="mt-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <h5>Constructor de Oraciones Condicionales</h5>
+                    <p>Aprende español con la RAE</p>
+                </div>
+                <div class="col-md-6 text-end">
+                    <p>Desarrollado con <i class="bi bi-heart-fill text-danger"></i> para estudiantes de español</p>
+                    <p>&copy; 2023 - Todos los derechos reservados</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Game Logic JavaScript -->
+    <script>
+        // Base de datos de ejemplos
+        const examples = [
+            {
+                sentence: "Si llueve, nos quedamos en casa.",
+                explanation: "Condición presente real. Consecuencia inmediata.",
+                category: "Reales"
+            },
+            {
+                sentence: "Si tienes hambre, come algo.",
+                explanation: "Condición presente. Consecuencia en imperativo.",
+                category: "Reales"
+            },
+            {
+                sentence: "Si terminas temprano, llámame.",
+                explanation: "Condición futura posible. Consecuencia en imperativo.",
+                category: "Reales"
+            },
+            {
+                sentence: "Si estudias, apruebas el examen.",
+                explanation: "Condición general/real. Relación causa-efecto.",
+                category: "Reales"
+            },
+            {
+                sentence: "Si quieres venir, debes avisar.",
+                explanation: "Condición posible. Consecuencia con verbo modal.",
+                category: "Reales"
+            },
+            {
+                sentence: "Si tuviera dinero, compraría una casa.",
+                explanation: "Condición improbable en presente. Deseo/consecuencia hipotética.",
+                category: "Potenciales"
+            },
+            {
+                sentence: "Si pudiera volar, viajaría por todo el mundo.",
+                explanation: "Condición imposible física. Consecuencia imaginaria.",
+                category: "Potenciales"
+            },
+            {
+                sentence: "Si tuviese más tiempo, te ayudaría.",
+                explanation: "Condición improbable. Oferta cortés hipotética.",
+                category: "Potenciales"
+            },
+            {
+                sentence: "Si lloviera mañana, cancelaríamos el picnic.",
+                explanation: "Condición meteorológica futura improbable.",
+                category: "Potenciales"
+            },
+            {
+                sentence: "Si fuera tú, no iría a esa reunión.",
+                explanation: "Consejo hipotético con improbabilidad de ser el otro.",
+                category: "Potenciales"
+            },
+            {
+                sentence: "Si hubieras estudiado, habrías aprobado el examen.",
+                explanation: "Condición pasada no cumplida. Consecuencia lógica fallida.",
+                category: "Irreales"
+            },
+            {
+                sentence: "Si hubiese sabido que venías, te habría esperado.",
+                explanation: "Condición pasada no conocida. Consecuencia deseada no realizada.",
+                category: "Irreales"
+            },
+            {
+                sentence: "Si hubiéramos salido antes, no habríamos perdido el tren.",
+                explanation: "Acción pasada no realizada. Consecuencia negativa evitable.",
+                category: "Irreales"
+            },
+            {
+                sentence: "Si hubieses llamado, habría ido a recogerte.",
+                explanation: "Acción pasada no realizada. Oferta de ayuda no materializada.",
+                category: "Irreales"
+            },
+            {
+                sentence: "Si no hubiera llovido, la boda habría sido en el jardín.",
+                explanation: "Condición meteorológica pasada no deseada. Plan original frustrado.",
+                category: "Irreales"
+            }
+        ];
+
+        // Estado del juego
+        let gameState = {
+            score: 0,
+            level: 1,
+            streak: 0,
+            gamesPlayed: 0,
+            correctAnswers: 0,
+            totalAnswers: 0
+        };
+
+        // Estado específico de cada juego
+        let currentGame = 0;
+        let currentExample = {};
+        let blankAnswers = [];
+        let blankInputs = [];
+        let shuffledWords = [];
+        let selectedWords = [];
+        let memoryCards = [];
+        let flippedCards = [];
+        let matchedPairs = 0;
+
+        // Inicialización
+        document.addEventListener('DOMContentLoaded', function() {
+            updateStatsDisplay();
+            updateCategoryCounts();
+        });
+
+        // Funciones de navegación
+        function showGame(gameNumber) {
+            document.getElementById('games').scrollIntoView({ behavior: 'smooth' });
+            document.getElementById('game-containers').style.display = 'block';
+            
+            // Ocultar todos los juegos
+            document.getElementById('game1-container').style.display = 'none';
+            document.getElementById('game2-container').style.display = 'none';
+            document.getElementById('game3-container').style.display = 'none';
+            document.getElementById('game4-container').style.display = 'none';
+            document.getElementById('game5-container').style.display = 'none';
+            
+            // Mostrar el juego seleccionado
+            document.getElementById(`game${gameNumber}-container`).style.display = 'block';
+            currentGame = gameNumber;
+            
+            // Inicializar el juego
+            nextExample(gameNumber);
+        }
+
+        function hideGames() {
+            document.getElementById('game-containers').style.display = 'none';
+        }
+
+        // Funciones de juego comunes
+        function getRandomExample() {
+            return examples[Math.floor(Math.random() * examples.length)];
+        }
+
+        function updateScore(correct) {
+            gameState.totalAnswers++;
+            
+            if (correct) {
+                gameState.score += 10 * gameState.level;
+                gameState.streak++;
+                gameState.correctAnswers++;
+                
+                if (gameState.streak % 5 === 0) {
+                    gameState.level++;
+                }
+            } else {
+                gameState.streak = 0;
+            }
+            
+            gameState.gamesPlayed++;
+            updateStatsDisplay();
+        }
+
+        function updateStatsDisplay() {
+            document.getElementById('score-display').textContent = gameState.score;
+            document.getElementById('level-display').textContent = gameState.level;
+            document.getElementById('streak-display').textContent = gameState.streak;
+            
+            document.getElementById('stats-score').textContent = gameState.score;
+            document.getElementById('stats-level').textContent = gameState.level;
+            document.getElementById('stats-streak').textContent = gameState.streak;
+            document.getElementById('stats-games').textContent = gameState.gamesPlayed;
+            
+            const progress = gameState.totalAnswers > 0 ? 
+                Math.round((gameState.correctAnswers / gameState.totalAnswers) * 100) : 0;
+            
+            document.getElementById('progress-bar').style.width = `${progress}%`;
+            document.getElementById('progress-bar').textContent = `${progress}%`;
+            document.getElementById('progress-bar').setAttribute('aria-valuenow', progress);
+        }
+
+        function updateCategoryCounts() {
+            const reales = examples.filter(ex => ex.category === 'Reales').length;
+            const potenciales = examples.filter(ex => ex.category === 'Potenciales').length;
+            const irreales = examples.filter(ex => ex.category === 'Irreales').length;
+            
+            document.getElementById('count-reales').textContent = `${reales} ejemplos`;
+            document.getElementById('count-potenciales').textContent = `${potenciales} ejemplos`;
+            document.getElementById('count-irreales').textContent = `${irreales} ejemplos`;
+        }
+
+        function showMessage(gameNumber, message, isSuccess) {
+            const messageElement = document.getElementById(`game${gameNumber}-message`);
+            messageElement.innerHTML = message;
+            messageElement.className = `mt-3 alert ${isSuccess ? 'alert-success' : 'alert-danger'}`;
+        }
+
+        function clearMessage(gameNumber) {
+            const messageElement = document.getElementById(`game${gameNumber}-message`);
+            messageElement.innerHTML = '';
+            messageElement.className = '';
+        }
+
+        // Juego 1: Construye la Oración
+        function nextExample(gameNumber) {
+            clearMessage(gameNumber);
+            currentExample = getRandomExample();
+            
+            if (gameNumber === 1) {
+                document.getElementById('game1-example').textContent = currentExample.sentence;
+                document.getElementById('game1-explanation').textContent = currentExample.explanation;
+                document.getElementById('game1-input').value = '';
+            } else if (gameNumber === 2) {
+                document.getElementById('game2-example').textContent = currentExample.sentence;
+                clearMessage(2);
+            } else if (gameNumber === 3) {
+                setupBlanksGame();
+            } else if (gameNumber === 4) {
+                setupWordOrderGame();
+            } else if (gameNumber === 5) {
+                setupMemoryGame();
+            }
+        }
+
+        function checkSentence() {
+            const userInput = document.getElementById('game1-input').value.trim();
+            
+            if (!userInput) {
+                showMessage(1, 'Por favor escribe una oración', false);
+                return;
+            }
+            
+            const hasSi = userInput.toLowerCase().includes('si ') || userInput.includes('Si ');
+            const hasComma = userInput.includes(',');
+            
+            if (hasSi && hasComma) {
+                showMessage(1, '¡Correcto! Buena construcción condicional.', true);
+                updateScore(true);
+            } else {
+                showMessage(1, 'Recuerda usar "si" y una coma para separar condición y consecuencia', false);
+                updateScore(false);
+            }
+        }
+
+        // Juego 2: Clasifica el Tipo
+        function checkCategory(selectedCategory) {
+            if (selectedCategory === currentExample.category) {
+                showMessage(2, `¡Correcto! ${currentExample.explanation}`, true);
+                updateScore(true);
+            } else {
+                showMessage(2, `Incorrecto. Es una oración ${currentExample.category}`, false);
+                updateScore(false);
+            }
+        }
+
+        // Juego 3: Completa los Huecos
+        function setupBlanksGame() {
+            clearMessage(3);
+            currentExample = getRandomExample();
+            
+            const words = currentExample.sentence.split(' ');
+            const numBlanks = Math.min(4, Math.max(2, Math.floor(words.length / 3)));
+            
+            // Seleccionar índices aleatorios para los espacios en blanco
+            const blankIndices = [];
+            while (blankIndices.length < numBlanks) {
+                const randomIndex = Math.floor(Math.random() * words.length);
+                if (!blankIndices.includes(randomIndex)) {
+                    blankIndices.push(randomIndex);
+                }
+            }
+            blankIndices.sort((a, b) => a - b);
+            
+            // Guardar respuestas
+            blankAnswers = [];
+            blankInputs = [];
+            
+            // Construir la oración con espacios en blanco
+            let sentenceHTML = '';
+            for (let i = 0; i < words.length; i++) {
+                if (blankIndices.includes(i)) {
+                    const answer = words[i].replace(/[.,;!?]/g, '');
+                    blankAnswers.push(answer);
+                    
+                    sentenceHTML += `<input type="text" class="blank-input form-control" id="blank-${blankInputs.length}" placeholder="_____"> `;
+                    blankInputs.push(`blank-${blankInputs.length}`);
+                } else {
+                    sentenceHTML += `<span>${words[i]} </span>`;
+                }
+            }
+            
+            document.getElementById('game3-sentence').innerHTML = sentenceHTML;
+        }
+
+        function checkBlanks() {
+            let allCorrect = true;
+            
+            for (let i = 0; i < blankInputs.length; i++) {
+                const inputElement = document.getElementById(blankInputs[i]);
+                const userAnswer = inputElement.value.trim();
+                
+                if (userAnswer.toLowerCase() === blankAnswers[i].toLowerCase()) {
+                    inputElement.classList.remove('is-invalid');
+                    inputElement.classList.add('is-valid');
+                } else {
+                    inputElement.classList.remove('is-valid');
+                    inputElement.classList.add('is-invalid');
+                    allCorrect = false;
+                }
+            }
+            
+            if (allCorrect) {
+                showMessage(3, `¡Correcto! ${currentExample.explanation}`, true);
+                updateScore(true);
+            } else {
+                showMessage(3, `Incorrecto. La oración correcta es: ${currentExample.sentence}`, false);
+                updateScore(false);
+            }
+        }
+
+        // Juego 4: Ordena las Palabras
+        function setupWordOrderGame() {
+            clearMessage(4);
+            currentExample = getRandomExample();
+            
+            // Dividir y mezclar palabras
+            shuffledWords = currentExample.sentence.split(' ');
+            for (let i = shuffledWords.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [shuffledWords[i], shuffledWords[j]] = [shuffledWords[j], shuffledWords[i]];
+            }
+            
+            selectedWords = [];
+            
+            // Mostrar palabras disponibles
+            let availableHTML = '';
+            shuffledWords.forEach(word => {
+                availableHTML += `<span class="word-draggable" onclick="selectWord('${word}')">${word}</span>`;
+            });
+            document.getElementById('game4-available').innerHTML = availableHTML;
+            
+            // Limpiar área seleccionada
+            document.getElementById('game4-selected').innerHTML = '';
+        }
+
+        function selectWord(word) {
+            // Agregar palabra a la lista seleccionada
+            selectedWords.push(word);
+            
+            // Actualizar visualización
+            let selectedHTML = '';
+            selectedWords.forEach(w => {
+                selectedHTML += `<span class="word-draggable" onclick="deselectWord('${w}')">${w}</span>`;
+            });
+            document.getElementById('game4-selected').innerHTML = selectedHTML;
+            
+            // Eliminar palabra de disponibles
+            const availableElement = document.getElementById('game4-available');
+            const wordElements = availableElement.getElementsByClassName('word-draggable');
+            
+            for (let i = 0; i < wordElements.length; i++) {
+                if (wordElements[i].textContent === word) {
+                    wordElements[i].remove();
+                    break;
+                }
+            }
+        }
+
+        function deselectWord(word) {
+            // Eliminar palabra de seleccionadas
+            const index = selectedWords.indexOf(word);
+            if (index > -1) {
+                selectedWords.splice(index, 1);
+            }
+            
+            // Actualizar visualización
+            let selectedHTML = '';
+            selectedWords.forEach(w => {
+                selectedHTML += `<span class="word-draggable" onclick="deselectWord('${w}')">${w}</span>`;
+            });
+            document.getElementById('game4-selected').innerHTML = selectedHTML;
+            
+            // Agregar palabra a disponibles
+            const availableElement = document.getElementById('game4-available');
+            availableElement.innerHTML += `<span class="word-draggable" onclick="selectWord('${word}')">${word}</span>`;
+        }
+
+        function checkOrder() {
+            const userSentence = selectedWords.join(' ');
+            
+            if (userSentence === currentExample.sentence) {
+                showMessage(4, '¡Correcto! Orden perfecto.', true);
+                updateScore(true);
+            } else {
+                showMessage(4, `Incorrecto. La oración correcta es: ${currentExample.sentence}`, false);
+                updateScore(false);
+            }
+        }
+
+        // Juego 5: Memoria Condicional
+        function setupMemoryGame() {
+            clearMessage(5);
+            matchedPairs = 0;
+            flippedCards = [];
+            memoryCards = [];
+            
+            // Seleccionar 4 ejemplos aleatorios
+            const selectedExamples = [];
+            const usedIndices = [];
+            
+            while (selectedExamples.length < 4) {
+                const randomIndex = Math.floor(Math.random() * examples.length);
+                if (!usedIndices.includes(randomIndex)) {
+                    usedIndices.push(randomIndex);
+                    selectedExamples.push(examples[randomIndex]);
+                }
+            }
+            
+            // Crear pares de cartas
+            selectedExamples.forEach(example => {
+                if (example.sentence.includes(',')) {
+                    const parts = example.sentence.split(',');
+                    const condition = parts[0].trim();
+                    const consequence = parts.slice(1).join(',').trim();
+                    
+                    memoryCards.push({
+                        text: condition,
+                        type: 'condición',
+                        example: example.sentence
+                    });
+                    
+                    memoryCards.push({
+                        text: consequence,
+                        type: 'consecuencia', 
+                        example: example.sentence
+                    });
+                }
+            });
+            
+            // Mezclar cartas
+            for (let i = memoryCards.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [memoryCards[i], memoryCards[j]] = [memoryCards[j], memoryCards[i]];
+            }
+            
+            // Crear tablero
+            let boardHTML = '';
+            memoryCards.forEach((card, index) => {
+                boardHTML += `
+                    <div class="col-3">
+                        <div class="memory-card card-back" onclick="flipCard(${index})" id="card-${index}">
+                            ?
+                        </div>
+                    </div>
+                `;
+            });
+            
+            document.getElementById('game5-board').innerHTML = boardHTML;
+            document.getElementById('pairs-count').textContent = '0';
+        }
+
+        function flipCard(index) {
+            // No permitir voltear más de 2 cartas
+            if (flippedCards.length >= 2) return;
+            
+            // No permitir voltear cartas ya emparejadas
+            const cardElement = document.getElementById(`card-${index}`);
+            if (cardElement.classList.contains('card-matched')) return;
+            
+            // Voltear carta
+            cardElement.textContent = memoryCards[index].text;
+            cardElement.classList.remove('card-back');
+            cardElement.classList.add('card-front');
+            
+            // Guardar carta volteada
+            flippedCards.push(index);
+            
+            // Si tenemos dos cartas volteadas, verificar si son un par
+            if (flippedCards.length === 2) {
+                setTimeout(checkMemoryPair, 1000);
+            }
+        }
+
+        function checkMemoryPair() {
+            const [index1, index2] = flippedCards;
+            const card1 = memoryCards[index1];
+            const card2 = memoryCards[index2];
+            
+            // Verificar si son un par válido
+            let validPair = false;
+            if (card1.example === card2.example && card1.type !== card2.type) {
+                validPair = true;
+            }
+            
+            if (validPair) {
+                // Par correcto
+                document.getElementById(`card-${index1}`).classList.add('card-matched');
+                document.getElementById(`card-${index2}`).classList.add('card-matched');
+                
+                matchedPairs++;
+                document.getElementById('pairs-count').textContent = matchedPairs;
+                
+                if (matchedPairs === 4) {
+                    showMessage(5, '¡Felicidades! Has completado el juego de memoria.', true);
+                    updateScore(true);
+                } else {
+                    showMessage(5, '¡Par correcto!', true);
+                }
+            } else {
+                // Voltear cartas de nuevo
+                document.getElementById(`card-${index1}`).textContent = '?';
+                document.getElementById(`card-${index1}`).classList.remove('card-front');
+                document.getElementById(`card-${index1}`).classList.add('card-back');
+                
+                document.getElementById(`card-${index2}`).textContent = '?';
+                document.getElementById(`card-${index2}`).classList.remove('card-front');
+                document.getElementById(`card-${index2}`).classList.add('card-back');
+                
+                showMessage(5, 'No es un par válido. Sigue intentando.', false);
+            }
+            
+            flippedCards = [];
+        }
+    </script>
+</body>
+</html>

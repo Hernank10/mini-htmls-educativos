@@ -1,0 +1,746 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LinguaLearn - Aprende Idiomas Jugando</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #4361ee;
+            --secondary: #3f37c9;
+            --accent: #4895ef;
+            --light: #f8f9fa;
+            --dark: #212529;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f7fb;
+            color: var(--dark);
+        }
+        
+        .navbar-brand {
+            font-weight: 700;
+            font-size: 1.5rem;
+        }
+        
+        .hero-section {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 5rem 0;
+            border-radius: 0 0 30px 30px;
+            margin-bottom: 3rem;
+        }
+        
+        .language-card {
+            transition: transform 0.3s, box-shadow 0.3s;
+            border: none;
+            border-radius: 15px;
+            overflow: hidden;
+            margin-bottom: 1.5rem;
+            height: 100%;
+        }
+        
+        .language-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+        
+        .language-flag {
+            height: 120px;
+            background-size: cover;
+            background-position: center;
+        }
+        
+        .game-card {
+            border-radius: 15px;
+            overflow: hidden;
+            transition: all 0.3s;
+            border: none;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        }
+        
+        .game-card:hover {
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+        
+        .progress-section {
+            background-color: white;
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            margin-bottom: 2rem;
+        }
+        
+        .game-area {
+            background-color: white;
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            min-height: 500px;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary);
+            border-color: var(--primary);
+            border-radius: 10px;
+            padding: 0.5rem 1.5rem;
+            font-weight: 600;
+        }
+        
+        .btn-primary:hover {
+            background-color: var(--secondary);
+            border-color: var(--secondary);
+        }
+        
+        .language-selector {
+            background-color: white;
+            border-radius: 15px;
+            padding: 1.5rem;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            margin-bottom: 2rem;
+        }
+        
+        .footer {
+            background-color: var(--dark);
+            color: white;
+            padding: 3rem 0;
+            margin-top: 3rem;
+        }
+        
+        .hangman-display {
+            font-family: monospace;
+            font-size: 1.2rem;
+            line-height: 1.5;
+            background-color: #f8f9fa;
+            padding: 1rem;
+            border-radius: 10px;
+            margin: 1rem 0;
+        }
+        
+        .word-display {
+            font-size: 2rem;
+            letter-spacing: 0.5rem;
+            margin: 1.5rem 0;
+            font-weight: bold;
+        }
+        
+        .language-icon {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            color: var(--primary);
+        }
+        
+        .stat-card {
+            text-align: center;
+            padding: 1.5rem;
+            border-radius: 10px;
+            background-color: white;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        }
+        
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--primary);
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: var(--primary);">
+        <div class="container">
+            <a class="navbar-brand" href="#">
+                <i class="fas fa-language me-2"></i>LinguaLearn
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#">Inicio</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#languages">Idiomas</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#games">Juegos</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#progress">Progreso</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="container text-center">
+            <h1 class="display-4 fw-bold mb-4">Aprende Idiomas Jugando</h1>
+            <p class="lead mb-4">Mejora tu vocabulario en diferentes idiomas con nuestros juegos educativos interactivos.</p>
+            <a href="#languages" class="btn btn-light btn-lg">Comenzar Ahora</a>
+        </div>
+    </section>
+
+    <!-- Languages Section -->
+    <section id="languages" class="container mb-5">
+        <h2 class="text-center mb-4">Elige un Idioma para Practicar</h2>
+        <div class="row">
+            <div class="col-md-3 col-sm-6 mb-4">
+                <div class="card language-card">
+                    <div class="language-flag" style="background-color: #ff6b6b;"></div>
+                    <div class="card-body text-center">
+                        <i class="fas fa-globe-americas language-icon"></i>
+                        <h5 class="card-title">Español</h5>
+                        <p class="card-text">Practica ortografía y vocabulario en español.</p>
+                        <button class="btn btn-primary" onclick="selectLanguage('spanish')">Seleccionar</button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-6 mb-4">
+                <div class="card language-card">
+                    <div class="language-flag" style="background-color: #4cc9f0;"></div>
+                    <div class="card-body text-center">
+                        <i class="fas fa-flag-usa language-icon"></i>
+                        <h5 class="card-title">Inglés</h5>
+                        <p class="card-text">Mejora tu vocabulario en inglés.</p>
+                        <button class="btn btn-primary" onclick="selectLanguage('english')">Seleccionar</button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-6 mb-4">
+                <div class="card language-card">
+                    <div class="language-flag" style="background-color: #f72585;"></div>
+                    <div class="card-body text-center">
+                        <i class="fas fa-yin-yang language-icon"></i>
+                        <h5 class="card-title">Chino</h5>
+                        <p class="card-text">Aprende caracteres y pronunciación.</p>
+                        <button class="btn btn-primary" onclick="selectLanguage('chinese')">Seleccionar</button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-6 mb-4">
+                <div class="card language-card">
+                    <div class="language-flag" style="background-color: #7209b7;"></div>
+                    <div class="card-body text-center">
+                        <i class="fas fa-snowflake language-icon"></i>
+                        <h5 class="card-title">Japonés</h5>
+                        <p class="card-text">Practica hiragana, katakana y kanji.</p>
+                        <button class="btn btn-primary" onclick="selectLanguage('japanese')">Seleccionar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Selected Language & Games -->
+    <section id="selected-language" class="container mb-5" style="display: none;">
+        <div class="language-selector text-center">
+            <h3 id="current-language">Idioma Seleccionado: Español</h3>
+            <p id="language-description">Practica tu ortografía y vocabulario en español.</p>
+        </div>
+
+        <div id="games" class="row">
+            <div class="col-lg-4 col-md-6 mb-4">
+                <div class="card game-card h-100">
+                    <div class="card-body">
+                        <h5 class="card-title">Ahorcado</h5>
+                        <p class="card-text">Adivina la palabra letra por letra antes de que se complete el dibujo.</p>
+                        <button class="btn btn-primary" onclick="startGame('hangman')">Jugar</button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6 mb-4">
+                <div class="card game-card h-100">
+                    <div class="card-body">
+                        <h5 class="card-title">Sopa de Letras</h5>
+                        <p class="card-text">Encuentra palabras ocultas en una cuadrícula de letras.</p>
+                        <button class="btn btn-primary" onclick="startGame('wordsearch')">Jugar</button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6 mb-4">
+                <div class="card game-card h-100">
+                    <div class="card-body">
+                        <h5 class="card-title">Dominó de Palabras</h5>
+                        <p class="card-text">Conecta palabras según reglas ortográficas o de significado.</p>
+                        <button class="btn btn-primary" onclick="startGame('domino')">Jugar</button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6 mb-4">
+                <div class="card game-card h-100">
+                    <div class="card-body">
+                        <h5 class="card-title">Bingo de Palabras</h5>
+                        <p class="card-text">Marca las palabras correctas en tu tarjeta de bingo.</p>
+                        <button class="btn btn-primary" onclick="startGame('bingo')">Jugar</button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6 mb-4">
+                <div class="card game-card h-100">
+                    <div class="card-body">
+                        <h5 class="card-title">Cadena de Palabras</h5>
+                        <p class="card-text">Sigue la cadena de palabras sin cometer errores.</p>
+                        <button class="btn btn-primary" onclick="startGame('wordchain')">Jugar</button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6 mb-4">
+                <div class="card game-card h-100">
+                    <div class="card-body">
+                        <h5 class="card-title">Memoria de Palabras</h5>
+                        <p class="card-text">Encuentra pares de palabras y sus significados.</p>
+                        <button class="btn btn-primary" onclick="startGame('memory')">Jugar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Game Area -->
+    <section id="game-area" class="container mb-5" style="display: none;">
+        <div class="game-area">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h3 id="game-title">Ahorcado en Español</h3>
+                <button class="btn btn-outline-secondary" onclick="exitGame()">
+                    <i class="fas fa-times me-1"></i> Salir del Juego
+                </button>
+            </div>
+            
+            <div id="game-content">
+                <!-- Game content will be loaded here -->
+                <div class="text-center">
+                    <p>Selecciona un juego para comenzar</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Progress Section -->
+    <section id="progress" class="container mb-5">
+        <h2 class="text-center mb-4">Tu Progreso de Aprendizaje</h2>
+        
+        <div class="progress-section">
+            <h4 class="mb-3">Estadísticas Generales</h4>
+            <div class="row">
+                <div class="col-md-3 col-6 mb-3">
+                    <div class="stat-card">
+                        <div class="stat-number" id="total-games">0</div>
+                        <div>Juegos Completados</div>
+                    </div>
+                </div>
+                <div class="col-md-3 col-6 mb-3">
+                    <div class="stat-card">
+                        <div class="stat-number" id="correct-answers">0</div>
+                        <div>Respuestas Correctas</div>
+                    </div>
+                </div>
+                <div class="col-md-3 col-6 mb-3">
+                    <div class="stat-card">
+                        <div class="stat-number" id="learning-streak">0</div>
+                        <div>Días Consecutivos</div>
+                    </div>
+                </div>
+                <div class="col-md-3 col-6 mb-3">
+                    <div class="stat-card">
+                        <div class="stat-number" id="words-learned">0</div>
+                        <div>Palabras Aprendidas</div>
+                    </div>
+                </div>
+            </div>
+            
+            <h4 class="mt-4 mb-3">Progreso por Idioma</h4>
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Idioma</th>
+                            <th>Juegos Completados</th>
+                            <th>Palabras Aprendidas</th>
+                            <th>Puntuación</th>
+                        </tr>
+                    </thead>
+                    <tbody id="language-progress">
+                        <!-- Progress data will be loaded here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4 mb-4">
+                    <h5>LinguaLearn</h5>
+                    <p>Una plataforma educativa para aprender idiomas a través de juegos interactivos.</p>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <h5>Enlaces Rápidos</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="#" class="text-light">Inicio</a></li>
+                        <li><a href="#languages" class="text-light">Idiomas</a></li>
+                        <li><a href="#games" class="text-light">Juegos</a></li>
+                        <li><a href="#progress" class="text-light">Progreso</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <h5>Contacto</h5>
+                    <ul class="list-unstyled">
+                        <li><i class="fas fa-envelope me-2"></i> info@lingualearn.com</li>
+                        <li><i class="fas fa-phone me-2"></i> +1 (123) 456-7890</li>
+                    </ul>
+                </div>
+            </div>
+            <hr class="my-4">
+            <div class="text-center">
+                <p>&copy; 2023 LinguaLearn. Todos los derechos reservados.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        // Language data
+        const languages = {
+            spanish: {
+                name: "Español",
+                description: "Practica tu ortografía y vocabulario en español.",
+                games: {
+                    hangman: {
+                        title: "Ahorcado en Español",
+                        words: ["manzana", "computadora", "escuela", "biblioteca", "elefante", "guitarra"]
+                    }
+                }
+            },
+            english: {
+                name: "Inglés",
+                description: "Mejora tu vocabulario en inglés.",
+                games: {
+                    hangman: {
+                        title: "Hangman in English",
+                        words: ["apple", "computer", "school", "library", "elephant", "guitar"]
+                    }
+                }
+            },
+            chinese: {
+                name: "Chino",
+                description: "Aprende caracteres y pronunciación en chino.",
+                games: {
+                    hangman: {
+                        title: "中文吊死鬼游戏 (Ahorcado en Chino)",
+                        words: ["苹果", "电脑", "学校", "图书馆", "大象", "吉他"]
+                    }
+                }
+            },
+            japanese: {
+                name: "Japonés",
+                description: "Practica hiragana, katakana y kanji.",
+                games: {
+                    hangman: {
+                        title: "ハングマン (Ahorcado en Japonés)",
+                        words: ["りんご", "コンピューター", "学校", "図書館", "象", "ギター"]
+                    }
+                }
+            }
+        };
+
+        // User progress data
+        let userProgress = {
+            totalGames: 0,
+            correctAnswers: 0,
+            learningStreak: 0,
+            wordsLearned: 0,
+            languages: {}
+        };
+
+        // Current game state
+        let currentLanguage = null;
+        let currentGame = null;
+        let hangmanState = {
+            word: "",
+            guessedLetters: [],
+            incorrectGuesses: 0,
+            maxIncorrectGuesses: 6
+        };
+
+        // Initialize the page
+        document.addEventListener('DOMContentLoaded', function() {
+            loadProgress();
+            updateProgressDisplay();
+        });
+
+        // Language selection
+        function selectLanguage(lang) {
+            currentLanguage = lang;
+            document.getElementById('current-language').textContent = `Idioma Seleccionado: ${languages[lang].name}`;
+            document.getElementById('language-description').textContent = languages[lang].description;
+            document.getElementById('selected-language').style.display = 'block';
+            
+            // Scroll to games section
+            document.getElementById('selected-language').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // Start a game
+        function startGame(game) {
+            currentGame = game;
+            document.getElementById('game-title').textContent = languages[currentLanguage].games[game].title;
+            document.getElementById('game-area').style.display = 'block';
+            
+            // Initialize the selected game
+            if (game === 'hangman') {
+                initHangman();
+            } else {
+                document.getElementById('game-content').innerHTML = `
+                    <div class="text-center py-5">
+                        <i class="fas fa-tools fa-3x text-secondary mb-3"></i>
+                        <h4>Juego en Desarrollo</h4>
+                        <p>Este juego estará disponible próximamente.</p>
+                        <button class="btn btn-primary mt-3" onclick="exitGame()">Volver a los Juegos</button>
+                    </div>
+                `;
+            }
+            
+            // Scroll to game area
+            document.getElementById('game-area').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // Exit current game
+        function exitGame() {
+            document.getElementById('game-area').style.display = 'none';
+            currentGame = null;
+        }
+
+        // Hangman game implementation
+        function initHangman() {
+            const words = languages[currentLanguage].games.hangman.words;
+            hangmanState.word = words[Math.floor(Math.random() * words.length)];
+            hangmanState.guessedLetters = [];
+            hangmanState.incorrectGuesses = 0;
+            
+            renderHangman();
+        }
+
+        function renderHangman() {
+            let displayWord = "";
+            for (let char of hangmanState.word) {
+                if (hangmanState.guessedLetters.includes(char) || char === " ") {
+                    displayWord += char + " ";
+                } else {
+                    displayWord += "_ ";
+                }
+            }
+            
+            const hangmanDrawing = getHangmanDrawing(hangmanState.incorrectGuesses);
+            
+            document.getElementById('game-content').innerHTML = `
+                <div class="text-center">
+                    <div class="hangman-display">${hangmanDrawing}</div>
+                    <div class="word-display">${displayWord}</div>
+                    <div class="mb-3">
+                        <p>Letras usadas: ${hangmanState.guessedLetters.join(', ')}</p>
+                    </div>
+                    <div class="mb-4">
+                        <p>Intentos restantes: ${hangmanState.maxIncorrectGuesses - hangmanState.incorrectGuesses}</p>
+                    </div>
+                    <div class="input-group mb-3 mx-auto" style="max-width: 300px;">
+                        <input type="text" class="form-control" id="letter-input" maxlength="1" placeholder="Ingresa una letra">
+                        <button class="btn btn-primary" onclick="guessLetter()">Adivinar</button>
+                    </div>
+                    <button class="btn btn-outline-secondary" onclick="initHangman()">Nueva Palabra</button>
+                </div>
+            `;
+            
+            // Check if game is over
+            if (isHangmanWordGuessed()) {
+                setTimeout(() => {
+                    alert("¡Felicidades! Has adivinado la palabra.");
+                    updateProgress(true);
+                    initHangman();
+                }, 500);
+            } else if (hangmanState.incorrectGuesses >= hangmanState.maxIncorrectGuesses) {
+                setTimeout(() => {
+                    alert(`¡Oh no! La palabra era: ${hangmanState.word}`);
+                    updateProgress(false);
+                    initHangman();
+                }, 500);
+            }
+        }
+
+        function guessLetter() {
+            const input = document.getElementById('letter-input');
+            const letter = input.value.toLowerCase();
+            
+            if (letter && !hangmanState.guessedLetters.includes(letter)) {
+                hangmanState.guessedLetters.push(letter);
+                
+                if (!hangmanState.word.includes(letter)) {
+                    hangmanState.incorrectGuesses++;
+                }
+                
+                renderHangman();
+            }
+            
+            input.value = '';
+        }
+
+        function isHangmanWordGuessed() {
+            for (let char of hangmanState.word) {
+                if (!hangmanState.guessedLetters.includes(char)) {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        function getHangmanDrawing(incorrectGuesses) {
+            const drawings = [
+                `
+  +---+
+  |   |
+      |
+      |
+      |
+      |
+=========`,
+                `
+  +---+
+  |   |
+  O   |
+      |
+      |
+      |
+=========`,
+                `
+  +---+
+  |   |
+  O   |
+  |   |
+      |
+      |
+=========`,
+                `
+  +---+
+  |   |
+  O   |
+ /|   |
+      |
+      |
+=========`,
+                `
+  +---+
+  |   |
+  O   |
+ /|\\  |
+      |
+      |
+=========`,
+                `
+  +---+
+  |   |
+  O   |
+ /|\\  |
+ /    |
+      |
+=========`,
+                `
+  +---+
+  |   |
+  O   |
+ /|\\  |
+ / \\  |
+      |
+=========`
+            ];
+            
+            return drawings[incorrectGuesses] || drawings[0];
+        }
+
+        // Progress management
+        function loadProgress() {
+            const savedProgress = localStorage.getItem('lingualearnProgress');
+            if (savedProgress) {
+                userProgress = JSON.parse(savedProgress);
+            }
+        }
+
+        function saveProgress() {
+            localStorage.setItem('lingualearnProgress', JSON.stringify(userProgress));
+        }
+
+        function updateProgress(isWin) {
+            userProgress.totalGames++;
+            
+            if (isWin) {
+                userProgress.correctAnswers++;
+                userProgress.wordsLearned++;
+            }
+            
+            // Update language-specific progress
+            if (!userProgress.languages[currentLanguage]) {
+                userProgress.languages[currentLanguage] = {
+                    gamesPlayed: 0,
+                    wordsLearned: 0,
+                    score: 0
+                };
+            }
+            
+            userProgress.languages[currentLanguage].gamesPlayed++;
+            if (isWin) {
+                userProgress.languages[currentLanguage].wordsLearned++;
+                userProgress.languages[currentLanguage].score += 10;
+            }
+            
+            // Update learning streak (simplified)
+            const lastPlayed = localStorage.getItem('lastPlayedDate');
+            const today = new Date().toDateString();
+            
+            if (lastPlayed !== today) {
+                userProgress.learningStreak++;
+                localStorage.setItem('lastPlayedDate', today);
+            }
+            
+            saveProgress();
+            updateProgressDisplay();
+        }
+
+        function updateProgressDisplay() {
+            document.getElementById('total-games').textContent = userProgress.totalGames;
+            document.getElementById('correct-answers').textContent = userProgress.correctAnswers;
+            document.getElementById('learning-streak').textContent = userProgress.learningStreak;
+            document.getElementById('words-learned').textContent = userProgress.wordsLearned;
+            
+            // Update language progress table
+            const progressTable = document.getElementById('language-progress');
+            progressTable.innerHTML = '';
+            
+            for (const lang in languages) {
+                const langProgress = userProgress.languages[lang] || {
+                    gamesPlayed: 0,
+                    wordsLearned: 0,
+                    score: 0
+                };
+                
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${languages[lang].name}</td>
+                    <td>${langProgress.gamesPlayed}</td>
+                    <td>${langProgress.wordsLearned}</td>
+                    <td>${langProgress.score}</td>
+                `;
+                progressTable.appendChild(row);
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tutor Gramatical - Aprende Español Interactivo</title>
+    <!-- Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #2A6F97;
+            --secondary: #83C5BE;
+            --accent: #FF6B6B;
+            --light: #F8F9FA;
+            --dark: #343A40;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+        }
+        
+        .navbar-brand {
+            font-weight: 700;
+            color: var(--primary) !important;
+        }
+        
+        .hero-section {
+            background: linear-gradient(rgba(42, 111, 151, 0.8), rgba(42, 111, 151, 0.9)), url('https://images.unsplash.com/photo-1434030216411-0b793f4b4173?ixlib=rb-4.0.3&auto=format&fit=crop&w=1950&q=80');
+            background-size: cover;
+            background-position: center;
+            color: white;
+            padding: 100px 0;
+            border-radius: 0 0 30px 30px;
+        }
+        
+        .category-card {
+            transition: transform 0.3s, box-shadow 0.3s;
+            border: none;
+            border-radius: 15px;
+            overflow: hidden;
+        }
+        
+        .category-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+        }
+        
+        .progress-bar-custom {
+            height: 8px;
+            border-radius: 10px;
+        }
+        
+        .exercise-card {
+            border-left: 5px solid var(--primary);
+            transition: all 0.3s;
+        }
+        
+        .exercise-card:hover {
+            background-color: #f8f9fa;
+            transform: translateX(5px);
+        }
+        
+        .achievement-badge {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 30px;
+            margin: 0 auto 15px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .btn-primary-custom {
+            background: var(--primary);
+            border: none;
+            padding: 12px 30px;
+            border-radius: 50px;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+        
+        .btn-primary-custom:hover {
+            background: #1a5270;
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+        
+        .stats-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            transition: transform 0.3s;
+        }
+        
+        .stats-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .stats-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 0;
+        }
+        
+        .speech-btn {
+            background: var(--secondary);
+            border: none;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.2rem;
+            transition: all 0.3s;
+        }
+        
+        .speech-btn:hover {
+            background: #6baaa5;
+            transform: scale(1.1);
+        }
+        
+        .answer-option {
+            padding: 15px;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .answer-option:hover {
+            border-color: var(--secondary);
+            background-color: rgba(131, 197, 190, 0.1);
+        }
+        
+        .answer-option.selected {
+            border-color: var(--primary);
+            background-color: rgba(42, 111, 151, 0.1);
+        }
+        
+        .level-badge {
+            display: inline-block;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-left: 10px;
+        }
+        
+        .level-beginner { background: #e3f2fd; color: #1976d2; }
+        .level-intermediate { background: #e8f5e9; color: #388e3c; }
+        .level-advanced { background: #fff3e0; color: #f57c00; }
+        
+        footer {
+            background: var(--dark);
+            color: white;
+            padding: 50px 0 20px;
+            margin-top: 50px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
+        <div class="container">
+            <a class="navbar-brand" href="#">
+                <i class="fas fa-book-open me-2"></i>TutorGramatical
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#inicio">Inicio</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#categorias">Categorías</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#progreso">Mi Progreso</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#logros">Logros</a>
+                    </li>
+                </ul>
+                <div class="d-flex align-items-center">
+                    <div class="me-3">
+                        <span class="fw-bold text-primary">Juan Pérez</span>
+                        <span class="level-badge level-intermediate">Intermedio</span>
+                    </div>
+                    <div class="dropdown">
+                        <button class="btn btn-outline-primary dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                            <i class="fas fa-user me-1"></i> Mi Cuenta
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="#"><i class="fas fa-cog me-2"></i>Configuración</a></li>
+                            <li><a class="dropdown-item" href="#"><i class="fas fa-sign-out-alt me-2"></i>Cerrar Sesión</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="inicio" class="hero-section">
+        <div class="container text-center">
+            <h1 class="display-4 fw-bold mb-4">Domina la Gramática Española</h1>
+            <p class="lead mb-5">Aprende y practica con nuestro sistema interactivo de ejercicios, seguimiento de progreso y logros desbloqueables.</p>
+            <a href="#categorias" class="btn btn-light btn-lg btn-primary-custom">Comenzar a Aprender</a>
+        </div>
+    </section>
+
+    <!-- Stats Section -->
+    <section class="py-5">
+        <div class="container">
+            <div class="row g-4">
+                <div class="col-md-3">
+                    <div class="stats-card">
+                        <h3 class="stats-number">24</h3>
+                        <p class="text-muted">Ejercicios Completados</p>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="stats-card">
+                        <h3 class="stats-number">87%</h3>
+                        <p class="text-muted">Tasa de Aciertos</p>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="stats-card">
+                        <h3 class="stats-number">5</h3>
+                        <p class="text-muted">Días de Racha</p>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="stats-card">
+                        <h3 class="stats-number">8</h3>
+                        <p class="text-muted">Logros Desbloqueados</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Categories Section -->
+    <section id="categorias" class="py-5 bg-light">
+        <div class="container">
+            <div class="row mb-5">
+                <div class="col-12 text-center">
+                    <h2 class="fw-bold mb-3">Categorías de Aprendizaje</h2>
+                    <p class="text-muted">Selecciona una categoría para comenzar a practicar</p>
+                </div>
+            </div>
+            <div class="row g-4">
+                <!-- Category 1 -->
+                <div class="col-md-4">
+                    <div class="card category-card h-100">
+                        <div class="card-body p-4">
+                            <div class="d-flex align-items-center mb-3">
+                                <div class="bg-primary rounded-circle p-3 me-3 text-white">
+                                    <i class="fas fa-verb fa-lg"></i>
+                                </div>
+                                <h5 class="card-title mb-0">Concordancia Verbal</h5>
+                            </div>
+                            <p class="card-text text-muted">Aprende a conjugar verbos correctamente y hacer concordar sujeto y verbo.</p>
+                            <div class="progress progress-bar-custom mb-3">
+                                <div class="progress-bar bg-primary" role="progressbar" style="width: 65%"></div>
+                            </div>
+                            <div class="d-flex justify-content-between text-muted small">
+                                <span>12/20 ejercicios</span>
+                                <span>65% completado</span>
+                            </div>
+                            <a href="#" class="btn btn-primary-custom w-100 mt-3">Practicar</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Category 2 -->
+                <div class="col-md-4">
+                    <div class="card category-card h-100">
+                        <div class="card-body p-4">
+                            <div class="d-flex align-items-center mb-3">
+                                <div class="bg-success rounded-circle p-3 me-3 text-white">
+                                    <i class="fas fa-clock fa-lg"></i>
+                                </div>
+                                <h5 class="card-title mb-0">Tiempos Verbales</h5>
+                            </div>
+                            <p class="card-text text-muted">Domina el uso correcto de pretérito, imperfecto, futuro y condicional.</p>
+                            <div class="progress progress-bar-custom mb-3">
+                                <div class="progress-bar bg-success" role="progressbar" style="width: 40%"></div>
+                            </div>
+                            <div class="d-flex justify-content-between text-muted small">
+                                <span>8/20 ejercicios</span>
+                                <span>40% completado</span>
+                            </div>
+                            <a href="#" class="btn btn-primary-custom w-100 mt-3">Practicar</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Category 3 -->
+                <div class="col-md-4">
+                    <div class="card category-card h-100">
+                        <div class="card-body p-4">
+                            <div class="d-flex align-items-center mb-3">
+                                <div class="bg-warning rounded-circle p-3 me-3 text-white">
+                                    <i class="fas fa-spell-check fa-lg"></i>
+                                </div>
+                                <h5 class="card-title mb-0">Ortografía</h5>
+                            </div>
+                            <p class="card-text text-muted">Mejora tu escritura con ejercicios de acentuación, puntuación y reglas ortográficas.</p>
+                            <div class="progress progress-bar-custom mb-3">
+                                <div class="progress-bar bg-warning" role="progressbar" style="width: 25%"></div>
+                            </div>
+                            <div class="d-flex justify-content-between text-muted small">
+                                <span>5/20 ejercicios</span>
+                                <span>25% completado</span>
+                            </div>
+                            <a href="#" class="btn btn-primary-custom w-100 mt-3">Practicar</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Exercise Section -->
+    <section class="py-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 mx-auto">
+                    <div class="card shadow-sm">
+                        <div class="card-header bg-primary text-white">
+                            <h4 class="mb-0"><i class="fas fa-pencil-alt me-2"></i>Ejercicio de Práctica</h4>
+                        </div>
+                        <div class="card-body p-4">
+                            <div class="d-flex justify-content-between align-items-start mb-4">
+                                <h5>Concordancia Verbal - Nivel Intermedio</h5>
+                                <button class="btn speech-btn">
+                                    <i class="fas fa-volume-up"></i>
+                                </button>
+                            </div>
+                            
+                            <div class="exercise-card bg-light p-4 rounded mb-4">
+                                <p class="fw-bold mb-3">Completa la oración con la forma verbal correcta:</p>
+                                <p class="lead">"Los estudiantes _______ (estudiar) para el examen toda la semana."</p>
+                            </div>
+                            
+                            <div class="mb-4">
+                                <div class="answer-option" onclick="selectAnswer(this)">
+                                    estudian
+                                </div>
+                                <div class="answer-option" onclick="selectAnswer(this)">
+                                    estudiamos
+                                </div>
+                                <div class="answer-option" onclick="selectAnswer(this)">
+                                    estudia
+                                </div>
+                                <div class="answer-option" onclick="selectAnswer(this)">
+                                    estudias
+                                </div>
+                            </div>
+                            
+                            <div class="d-flex justify-content-between">
+                                <button class="btn btn-outline-secondary">
+                                    <i class="fas fa-arrow-left me-2"></i>Anterior
+                                </button>
+                                <button class="btn btn-primary-custom" onclick="checkAnswer()">
+                                    Verificar Respuesta <i class="fas fa-check ms-2"></i>
+                                </button>
+                                <button class="btn btn-outline-secondary">
+                                    Siguiente <i class="fas fa-arrow-right ms-2"></i>
+                                </button>
+                            </div>
+                            
+                            <div id="feedback" class="mt-4" style="display: none;">
+                                <div class="alert alert-success">
+                                    <h5><i class="fas fa-check-circle me-2"></i>¡Correcto!</h5>
+                                    <p class="mb-0">La forma correcta es "estudian" porque el sujeto "Los estudiantes" es plural y tercera persona.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Achievements Section -->
+    <section id="logros" class="py-5 bg-light">
+        <div class="container">
+            <div class="row mb-5">
+                <div class="col-12 text-center">
+                    <h2 class="fw-bold mb-3">Mis Logros</h2>
+                    <p class="text-muted">Recompensas por tu progreso en el aprendizaje</p>
+                </div>
+            </div>
+            <div class="row g-4">
+                <!-- Achievement 1 -->
+                <div class="col-md-3">
+                    <div class="text-center">
+                        <div class="achievement-badge">
+                            <i class="fas fa-star"></i>
+                        </div>
+                        <h5>Primer Paso</h5>
+                        <p class="text-muted small">Completar tu primer ejercicio</p>
+                        <span class="badge bg-success">Desbloqueado</span>
+                    </div>
+                </div>
+                
+                <!-- Achievement 2 -->
+                <div class="col-md-3">
+                    <div class="text-center">
+                        <div class="achievement-badge">
+                            <i class="fas fa-fire"></i>
+                        </div>
+                        <h5>Racha de 5</h5>
+                        <p class="text-muted small">5 respuestas correctas consecutivas</p>
+                        <span class="badge bg-success">Desbloqueado</span>
+                    </div>
+                </div>
+                
+                <!-- Achievement 3 -->
+                <div class="col-md-3">
+                    <div class="text-center">
+                        <div class="achievement-badge">
+                            <i class="fas fa-trophy"></i>
+                        </div>
+                        <h5>Maestro Gramatical</h5>
+                        <p class="text-muted small">Completar 50 ejercicios</p>
+                        <div class="progress progress-bar-custom mt-2">
+                            <div class="progress-bar bg-warning" role="progressbar" style="width: 48%"></div>
+                        </div>
+                        <span class="badge bg-warning">48%</span>
+                    </div>
+                </div>
+                
+                <!-- Achievement 4 -->
+                <div class="col-md-3">
+                    <div class="text-center">
+                        <div class="achievement-badge bg-secondary">
+                            <i class="fas fa-lock"></i>
+                        </div>
+                        <h5>Perfeccionista</h5>
+                        <p class="text-muted small">10 puntuaciones perfectas</p>
+                        <span class="badge bg-secondary">Bloqueado</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4 mb-4">
+                    <h5><i class="fas fa-book-open me-2"></i>TutorGramatical</h5>
+                    <p class="mt-3">Plataforma educativa para el aprendizaje interactivo de la gramática española.</p>
+                    <div class="d-flex mt-4">
+                        <a href="#" class="text-white me-3"><i class="fab fa-facebook-f fa-lg"></i></a>
+                        <a href="#" class="text-white me-3"><i class="fab fa-twitter fa-lg"></i></a>
+                        <a href="#" class="text-white me-3"><i class="fab fa-instagram fa-lg"></i></a>
+                        <a href="#" class="text-white"><i class="fab fa-youtube fa-lg"></i></a>
+                    </div>
+                </div>
+                <div class="col-md-2 mb-4">
+                    <h5>Enlaces</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="#" class="text-white-50">Inicio</a></li>
+                        <li><a href="#" class="text-white-50">Categorías</a></li>
+                        <li><a href="#" class="text-white-50">Progreso</a></li>
+                        <li><a href="#" class="text-white-50">Logros</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-3 mb-4">
+                    <h5>Recursos</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="#" class="text-white-50">Reglas Gramaticales</a></li>
+                        <li><a href="#" class="text-white-50">Ejercicios Descargables</a></li>
+                        <li><a href="#" class="text-white-50">Guías de Estudio</a></li>
+                        <li><a href="#" class="text-white-50">Blog Educativo</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-3 mb-4">
+                    <h5>Contacto</h5>
+                    <ul class="list-unstyled">
+                        <li class="text-white-50"><i class="fas fa-envelope me-2"></i>info@tutorgramatical.com</li>
+                        <li class="text-white-50"><i class="fas fa-phone me-2"></i>+1 (555) 123-4567</li>
+                        <li class="text-white-50"><i class="fas fa-map-marker-alt me-2"></i>Madrid, España</li>
+                    </ul>
+                </div>
+            </div>
+            <hr class="bg-white">
+            <div class="row">
+                <div class="col-12 text-center">
+                    <p class="mb-0 text-white-50">&copy; 2023 TutorGramatical. Todos los derechos reservados.</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        // Funcionalidad para seleccionar respuestas
+        function selectAnswer(element) {
+            // Remover selección previa
+            document.querySelectorAll('.answer-option').forEach(opt => {
+                opt.classList.remove('selected');
+            });
+            
+            // Seleccionar nueva opción
+            element.classList.add('selected');
+        }
+        
+        // Funcionalidad para verificar respuesta
+        function checkAnswer() {
+            const selected = document.querySelector('.answer-option.selected');
+            if (!selected) {
+                alert('Por favor, selecciona una respuesta antes de verificar.');
+                return;
+            }
+            
+            // Mostrar feedback
+            document.getElementById('feedback').style.display = 'block';
+            
+            // Deshabilitar opciones después de verificar
+            document.querySelectorAll('.answer-option').forEach(opt => {
+                opt.style.pointerEvents = 'none';
+            });
+        }
+        
+        // Text-to-Speech simulation
+        document.querySelector('.speech-btn').addEventListener('click', function() {
+            const text = "Completa la oración con la forma verbal correcta: Los estudiantes _______ (estudiar) para el examen toda la semana.";
+            
+            // En un entorno real, aquí se integraría con una API de síntesis de voz
+            alert('Reproduciendo audio: ' + text);
+        });
+        
+        // Smooth scroll para navegación
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+    </script>
+</body>
+</html>

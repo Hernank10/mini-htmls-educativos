@@ -1,0 +1,924 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>100 Ideas para Podcasts · Área Metropolitana de Bucaramanga · C1 Bilingual</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --fondo: #fef7e8;
+      --texto: #2c3e2f;
+      --verde-radio: #2a7a4b;
+      --naranja-idea: #e67e22;
+      --morado-noche: #8e44ad;
+      --azul-dia: #3498db;
+      --amarillo-tarde: #f1c40f;
+      --acierto: #27ae60;
+      --fallo: #e74c3c;
+      --sombra: rgba(0, 0, 0, 0.08);
+      --card-bg: #ffffff;
+    }
+
+    body {
+      background: var(--fondo);
+      color: var(--texto);
+      font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
+      line-height: 1.5;
+      padding: 1rem;
+    }
+
+    .app-container {
+      max-width: 1300px;
+      margin: 0 auto;
+      background: var(--card-bg);
+      border-radius: 2rem;
+      box-shadow: 0 12px 28px var(--sombra);
+      overflow: hidden;
+      border: 1px solid #f0e0c0;
+    }
+
+    header {
+      background: #fdf4df;
+      padding: 1rem 2rem;
+      border-bottom: 3px solid var(--verde-radio);
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+    }
+    h1 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: #2a7a4b;
+      letter-spacing: -0.2px;
+    }
+    h1 small {
+      font-size: 0.65rem;
+      font-weight: normal;
+      color: #b98f5c;
+    }
+
+    .lang-selector {
+      display: flex;
+      gap: 0.5rem;
+      background: white;
+      padding: 0.3rem;
+      border-radius: 40px;
+      border: 1px solid #f0e0c0;
+    }
+    .lang-btn {
+      background: transparent;
+      border: none;
+      padding: 0.4rem 1rem;
+      border-radius: 30px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.2s;
+      font-size: 0.85rem;
+    }
+    .lang-btn.active {
+      background: var(--verde-radio);
+      color: white;
+    }
+
+    nav {
+      display: flex;
+      gap: 0.5rem;
+      background: #eaddc5;
+      padding: 0.6rem 2rem;
+      border-bottom: 1px solid #e6d5ba;
+      flex-wrap: wrap;
+    }
+    .nav-btn {
+      background: transparent;
+      border: none;
+      font-size: 0.95rem;
+      padding: 0.5rem 1.2rem;
+      border-radius: 40px;
+      cursor: pointer;
+      font-weight: 500;
+      transition: all 0.2s;
+      color: #2a7a4b;
+    }
+    .nav-btn.active {
+      background-color: var(--verde-radio);
+      color: white;
+    }
+    .nav-btn:hover:not(.active) {
+      background-color: #cfdec9;
+    }
+
+    .view {
+      display: none;
+      padding: 2rem;
+      animation: fade 0.2s ease;
+    }
+    .active-view { display: block; }
+    @keyframes fade { from { opacity: 0; transform: translateY(5px);} to { opacity: 1; transform: translateY(0);} }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+    .stat-card {
+      background: var(--fondo);
+      border-radius: 1.5rem;
+      padding: 1rem;
+      text-align: center;
+      border-left: 6px solid var(--azul-dia);
+      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    }
+    .stat-number {
+      font-size: 2.2rem;
+      font-weight: 700;
+      color: var(--verde-radio);
+    }
+
+    .progress-bar-bg {
+      background: #e2e8f0;
+      border-radius: 40px;
+      height: 12px;
+      overflow: hidden;
+      margin: 0.8rem 0;
+    }
+    .progress-fill {
+      background: var(--verde-radio);
+      width: 0%;
+      height: 100%;
+      transition: width 0.2s;
+    }
+
+    .slot-badge {
+      display: inline-block;
+      padding: 0.2rem 0.6rem;
+      border-radius: 20px;
+      font-size: 0.7rem;
+      font-weight: bold;
+      margin-left: 0.5rem;
+    }
+    .slot-morning { background: var(--azul-dia); color: white; }
+    .slot-afternoon { background: var(--amarillo-tarde); color: #2c3e2f; }
+    .slot-night { background: var(--morado-noche); color: white; }
+    .slot-dawn { background: #2c3e50; color: white; }
+
+    .conceptos-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(420px, 1fr));
+      gap: 1rem;
+      max-height: 65vh;
+      overflow-y: auto;
+      padding-right: 0.3rem;
+    }
+    .concepto-item {
+      background: white;
+      border-radius: 1.2rem;
+      padding: 0.8rem 1rem;
+      border-left: 5px solid var(--naranja-idea);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+    .concepto-titulo {
+      font-weight: 700;
+      color: #2a7a4b;
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+    .concepto-desc {
+      font-size: 0.85rem;
+      color: #6b5a44;
+      margin-top: 6px;
+      border-top: 1px solid #f5ebd8;
+      padding-top: 6px;
+    }
+    .badge-progreso {
+      font-size: 0.7rem;
+      background: #fef5e6;
+      border-radius: 20px;
+      padding: 2px 10px;
+      display: inline-block;
+      margin-top: 8px;
+    }
+
+    .flashcard {
+      background: #ffffff;
+      border-radius: 2rem;
+      padding: 1.8rem;
+      text-align: center;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+      border: 1px solid #f0e0c0;
+      max-width: 750px;
+      margin: 0 auto;
+    }
+    .pregunta {
+      font-size: 1.2rem;
+      font-weight: 500;
+      margin-bottom: 1.8rem;
+      background: #fdf4df;
+      padding: 1.2rem;
+      border-radius: 1.5rem;
+    }
+    .respuesta-oculta {
+      background: #fef9ec;
+      border-radius: 1.2rem;
+      padding: 1rem;
+      margin: 1rem 0;
+      display: none;
+    }
+    .orden-palabras {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 0.6rem;
+      margin: 1.5rem 0;
+    }
+    .palabra-btn {
+      background: var(--verde-radio);
+      color: white;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 2rem;
+      font-size: 0.9rem;
+      cursor: pointer;
+    }
+    .orden-actual {
+      background: #fefef9;
+      border-radius: 1rem;
+      padding: 1rem;
+      min-height: 80px;
+      margin: 1rem 0;
+      text-align: left;
+      border: 1px dashed #e6d5ba;
+      font-size: 1rem;
+    }
+    .btn {
+      background: #e2e8f0;
+      border: none;
+      padding: 0.6rem 1.5rem;
+      border-radius: 3rem;
+      font-weight: 600;
+      margin: 0.3rem;
+      cursor: pointer;
+      font-family: inherit;
+    }
+    .btn-primary { background: var(--verde-radio); color: white; }
+    .btn-acierto { background: var(--acierto); color: white; }
+    .btn-fallo { background: var(--fallo); color: white; }
+    .modo-selector {
+      display: flex;
+      justify-content: center;
+      gap: 0.8rem;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+    }
+    .modo-btn {
+      background: #e2e8f0;
+      border: none;
+      padding: 0.5rem 1.2rem;
+      border-radius: 40px;
+      cursor: pointer;
+      font-weight: 500;
+      transition: all 0.2s;
+    }
+    .modo-btn.active {
+      background: var(--verde-radio);
+      color: white;
+    }
+    footer {
+      text-align: center;
+      padding: 1rem;
+      font-size: 0.75rem;
+      border-top: 1px solid #f0e0c0;
+      background: #fefcf7;
+    }
+    .slot-filter {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+      flex-wrap: wrap;
+    }
+    .slot-filter-btn {
+      background: #eaddc5;
+      border: none;
+      padding: 0.3rem 1rem;
+      border-radius: 20px;
+      cursor: pointer;
+      font-size: 0.8rem;
+    }
+    .slot-filter-btn.active {
+      background: var(--verde-radio);
+      color: white;
+    }
+    .translation-direction {
+      margin: 0.5rem 0;
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: var(--naranja-idea);
+    }
+    input {
+      padding: 0.8rem;
+      border-radius: 2rem;
+      border: 1px solid #cbd5e1;
+      font-size: 1rem;
+      width: 80%;
+      margin: 1rem auto;
+      display: block;
+      text-align: center;
+      font-family: inherit;
+    }
+    @media (max-width: 680px) {
+      .view { padding: 1rem; }
+      .pregunta { font-size: 1rem; }
+      .lang-selector { order: 2; width: 100%; justify-content: center; }
+      header { flex-direction: column; align-items: stretch; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+<div class="app-container">
+  <header>
+    <div>
+      <h1>🎙️ Metropolitanas · BGA <small>100 ideas C1 · Bucaramanga y su área metropolitana</small></h1>
+    </div>
+    <div class="lang-selector">
+      <button id="langEsBtn" class="lang-btn active">🇪🇸 Español</button>
+      <button id="langEnBtn" class="lang-btn">🇬🇧 English</button>
+      <button id="langBothBtn" class="lang-btn">🌐 Bilingüe</button>
+    </div>
+  </header>
+  <nav>
+    <button class="nav-btn active" data-view="dashboard">📊 Panel</button>
+    <button class="nav-btn" data-view="listado">📚 100 Ideas</button>
+    <button class="nav-btn" data-view="practica">🃏 Práctica</button>
+  </nav>
+
+  <section id="dashboard" class="view active-view">
+    <div class="stats-grid" id="statsContainer"></div>
+    <div class="card" style="background:white; border-radius:1.6rem; padding:1.2rem;">
+      <h3 id="progressTitle">📈 Progreso en ideas C1 - AMB</h3>
+      <div class="progress-bar-bg"><div class="progress-fill" id="globalProgressFill"></div></div>
+      <p id="globalProgressText"></p>
+      <button id="resetProgresoBtn" class="btn" style="background:#eaddc5;">🔄 Reiniciar progreso</button>
+    </div>
+  </section>
+
+  <section id="listado" class="view">
+    <input type="text" id="filtroListado" placeholder="🔍 Buscar idea / Search idea..." style="width:100%; padding:10px; margin-bottom:15px; border-radius:40px; border:1px solid #e6d5ba;">
+    <div class="slot-filter" id="slotFilter">
+      <button data-slot="all" class="slot-filter-btn active">📻 Todas</button>
+      <button data-slot="morning" class="slot-filter-btn">🌅 Mañana (6am-12pm)</button>
+      <button data-slot="afternoon" class="slot-filter-btn">☀️ Tarde (12pm-6pm)</button>
+      <button data-slot="night" class="slot-filter-btn">🌙 Noche (6pm-12am)</button>
+      <button data-slot="dawn" class="slot-filter-btn">🌌 Madrugada (12am-6am)</button>
+    </div>
+    <div id="conceptosListadoContainer" class="conceptos-grid"></div>
+  </section>
+
+  <section id="practica" class="view">
+    <div class="modo-selector" id="modoSelector">
+      <button id="modoTraduccionDirecta" class="modo-btn active">📖 Idea → Traducción</button>
+      <button id="modoTraduccionInversa" class="modo-btn">🔄 Traducción → Idea</button>
+      <button id="modoOrdenar" class="modo-btn">🧩 Ordenar idea</button>
+      <button id="modoEspEng" class="modo-btn">🌐 ESP ↔ ENG</button>
+    </div>
+    <div id="practicaContainer"></div>
+  </section>
+  <footer>Progreso guardado localmente · 100 ideas para podcasts · Área Metropolitana de Bucaramanga · Nivel C1 bilingüe · Franjas horarias: mañana, tarde, noche, madrugada</footer>
+</div>
+
+<script>
+  // --------------------------------------------------------------
+  // 100 IDEAS INNOVADORAS PARA PODCASTS (C1 - Avanzado)
+  // Área Metropolitana de Bucaramanga (Bucaramanga, Floridablanca, Girón, Piedecuesta)
+  // Organizadas por franjas horarias: morning, afternoon, night, dawn
+  // --------------------------------------------------------------
+  const vocabularioData = [
+    // 🌅 MAÑANA (6am-12pm) - Energía, productividad, planes del día
+    [1, "Café de altura: las mejores cafeterías del área metropolitana", "High-altitude coffee: the best cafés in the metropolitan area", "Recorrido sonoro por los escondites del buen café en Bucaramanga y Floridablanca, ideales para comenzar el día con energía.", "A sonic journey through the hidden gems of good coffee in Bucaramanga and Floridablanca, perfect to start the day with energy.", "morning"],
+    [2, "Despertar en la ciudad: rutinas matutinas de los bumangueses", "Waking up in the city: morning routines of locals", "Exploramos cómo enfrentan la rutina laboral, el tráfico del Cañaveral y las mañanas en Girón.", "We explore how locals face work routines, Cañaveral traffic, and mornings in Girón.", "morning"],
+    [3, "Ejercicio al aire libre: parques para activarse", "Outdoor exercise: parks to get moving", "Guía sonora de los mejores lugares para trotar, hacer yoga o entrenar en el AMB.", "Audio guide to the best spots for jogging, yoga or training in the metropolitan area.", "morning"],
+    [4, "Emprendedores al volante: negocios que nacen en la madrugada", "Entrepreneurs behind the wheel: businesses born at dawn", "Historias de panaderos, repartidores y floristas que empiezan su jornada antes del amanecer.", "Stories of bakers, delivery drivers and florists who start their day before sunrise.", "morning"],
+    [5, "El tráfico de la 27: ¿realidad o mito?", "27th Avenue traffic: reality or myth?", "Analizamos los embotellamientos en la principal arteria de Bucaramanga y alternativas para sobrevivir a la hora pico.", "We analyze congestion on Bucaramanga's main artery and alternatives to survive rush hour.", "morning"],
+    [6, "Mercados campesinos: productos frescos al alba", "Farmers' markets: fresh produce at dawn", "Recorrido por plazas de mercado en Floridablanca y Piedecuesta mientras los agricultores instalan sus puestos.", "A tour of markets in Floridablanca and Piedecuesta as farmers set up their stalls.", "morning"],
+    [7, "Radio despertador: música para empezar con todo", "Radio alarm clock: music to start with a bang", "Selección de canciones locales e internacionales para animar las mañanas de los oyentes.", "Selection of local and international songs to brighten listeners' mornings.", "morning"],
+    [8, "El metrolinea: dentro del sistema de transporte", "Metrolinea: inside the transit system", "Testimonios de usuarios frecuentes del sistema integrado de transporte público del AMB.", "Testimonies from frequent users of the metropolitan area's integrated public transit system.", "morning"],
+    [9, "Noticias locales en 15 minutos: resumen matutino", "Local news in 15 minutes: morning summary", "Lo que debes saber antes de salir de casa: actualidad de Bucaramanga y su área metropolitana.", "What you need to know before leaving home: current affairs of Bucaramanga and its metropolitan area.", "morning"],
+    [10, "Salud y prevención: chequeos matutinos", "Health and prevention: morning check-ups", "Consejos médicos para iniciar el día con hábitos saludables y prevenir enfermedades comunes en la región.", "Medical advice to start the day with healthy habits and prevent common regional diseases.", "morning"],
+    [11, "Entrevista de trabajo: cómo prepararse en la mañana", "Job interview: how to prepare in the morning", "Estrategias para enfrentar procesos de selección en empresas del área metropolitana.", "Strategies to face selection processes in metropolitan area companies.", "morning"],
+    [12, "Ofertas laborales del día", "Job offers of the day", "Espacio para conectar empleadores y buscadores de empleo en la región.", "A space to connect employers and job seekers in the region.", "morning"],
+    [13, "Buenos días, vecino: saludos y anécdotas", "Good morning, neighbor: greetings and anecdotes", "Los oyentes comparten sus historias matutinas y mandan saludos a sus barrios.", "Listeners share their morning stories and send greetings to their neighborhoods.", "morning"],
+    [14, "Pilas con la mascota: cuidados en la mañana", "Watch your pet: morning care", "Consejos para alimentar y sacar a pasear a perros y gatos antes de ir al trabajo.", "Tips to feed and walk dogs and cats before going to work.", "morning"],
+    [15, "La oración del día: espacio espiritual", "The prayer of the day: spiritual space", "Reflexiones y contenidos religiosos para los oyentes que buscan paz interior al despertar.", "Reflections and religious content for listeners seeking inner peace upon waking.", "morning"],
+    [16, "Ciencia en la mañana: descubrimientos locales", "Science in the morning: local discoveries", "Investigadores de la UIS y Unab comparten sus hallazgos en biotecnología y energías renovables.", "Researchers from UIS and Unab share their findings in biotechnology and renewable energy.", "morning"],
+    [17, "Proyectos educativos: colegios e innovación", "Educational projects: schools and innovation", "Experiencias pedagógicas exitosas en instituciones educativas del área metropolitana.", "Successful pedagogical experiences in metropolitan area educational institutions.", "morning"],
+    [18, "Emprender desde casa: negocios digitales", "Entrepreneurship from home: digital businesses", "Jóvenes que han creado startups tecnológicas desde sus habitaciones en Floridablanca y Piedecuesta.", "Young people who have created tech startups from their bedrooms in Floridablanca and Piedecuesta.", "morning"],
+    [19, "El poder de las redes sociales en la mañana", "The power of social media in the morning", "Cómo influencers locales aprovechan las horas matutinas para conectar con su audiencia.", "How local influencers leverage morning hours to connect with their audience.", "morning"],
+    [20, "Lectura recomendada: libros para comenzar el día", "Recommended reading: books to start the day", "Reseña de obras literarias de autores santandereanos o relacionados con la región.", "Review of literary works by Santander authors or related to the region.", "morning"],
+    
+    // ☀️ TARDE (12pm-6pm) - Actividades, cultura, ocio
+    [21, "Almuerzo en familia: recetas metropolitanas", "Family lunch: metropolitan recipes", "Platos típicos de la región que se cocinan en casa durante los mediodías bumangueses.", "Typical dishes of the region cooked at home during Bucaramanga noontimes.", "afternoon"],
+    [22, "La siesta productiva: ¿mito o necesidad?", "The productive nap: myth or necessity?", "Debate sobre los beneficios de dormir una siesta después del almuerzo en la cultura local.", "Debate on the benefits of napping after lunch in local culture.", "afternoon"],
+    [23, "Tardes de café: los mejores sitios para tertulia", "Coffee afternoons: the best spots for conversation", "Recomendación de cafés y panaderías en Girón y Bucaramanga para conversar con amigos.", "Recommendation of cafés and bakeries in Girón and Bucaramanga to chat with friends.", "afternoon"],
+    [24, "Cine colombiano: cartelera y estrenos", "Colombian cinema: schedule and releases", "Entrevistas con directores y actores locales sobre las películas que llegan a las salas del AMB.", "Interviews with local directors and actors about films arriving in AMB theaters.", "afternoon"],
+    [25, "Teatro en la ciudad: obras y elencos", "Theater in the city: plays and casts", "Cobertura de la cartelera teatral en Bucaramanga, Floridablanca y el Teatro Santander.", "Coverage of the theater scene in Bucaramanga, Floridablanca and Santander Theater.", "afternoon"],
+    [26, "Música para la tarde: playlist del día", "Afternoon music: daily playlist", "Selección musical para ambientar las horas de trabajo desde casa o la oficina.", "Musical selection to set the mood for working from home or the office.", "afternoon"],
+    [27, "Deporte en la tarde: fútbol, ciclismo y más", "Afternoon sports: soccer, cycling and more", "Cobertura de torneos deportivos locales y actividades recreativas en la ciudad.", "Coverage of local sports tournaments and recreational activities in the city.", "afternoon"],
+    [28, "Los parques de la ciudad: vida en el verde", "City parks: life in the green", "Recorrido por el Parque Santander, Parque de los Niños y otros pulmones del área metropolitana.", "Tour through Santander Park, Children's Park and other lungs of the metropolitan area.", "afternoon"],
+    [29, "Artesanías de Girón: tradición en la tarde", "Girón crafts: tradition in the afternoon", "Visita a talleres de artesanos que trabajan en cuero, cerámica y tejidos durante la tarde.", "Visit to artisan workshops working in leather, ceramics and weaves during the afternoon.", "afternoon"],
+    [30, "El centro comercial como espacio social", "The mall as a social space", "Cómo los centros comerciales de Floridablanca y Bucaramanga se han convertido en lugares de encuentro.", "How malls in Floridablanca and Bucaramanga have become meeting places.", "afternoon"],
+    [31, "Lectura y literatura: club del libro vespertino", "Reading and literature: afternoon book club", "Reunión virtual o presencial para comentar obras de autores locales e internacionales.", "Virtual or in-person meeting to discuss works by local and international authors.", "afternoon"],
+    [32, "La calle de la novena: comercio y tradición", "Ninth Street: commerce and tradition", "Historia de una de las arterias comerciales más emblemáticas de Bucaramanga.", "History of one of the most emblematic commercial arteries of Bucaramanga.", "afternoon"],
+    [33, "Juegos de mesa y tardes de convivencia", "Board games and coexistence afternoons", "Espacios donde jóvenes y adultos se reúnen para jugar y compartir en cafés temáticos.", "Spaces where young people and adults gather to play and share in theme cafés.", "afternoon"],
+    [34, "Clases y talleres: formación en la tarde", "Classes and workshops: afternoon training", "Oferta educativa para adultos: idiomas, cocina, fotografía y más en el AMB.", "Educational offerings for adults: languages, cooking, photography and more in the AMB.", "afternoon"],
+    [35, "Voluntariado comunitario: cómo ayudar", "Community volunteering: how to help", "Iniciativas sociales que operan durante la tarde y necesitan manos solidarias.", "Social initiatives that operate during the afternoon and need helping hands.", "afternoon"],
+    [36, "Salud mental: pausa activa vespertina", "Mental health: afternoon active break", "Micro-meditaciones y ejercicios de respiración para recargar energías.", "Micro-meditations and breathing exercises to recharge energy.", "afternoon"],
+    [37, "Viajes y escapadas: planes de fin de semana", "Travel and getaways: weekend plans", "Destinos cercanos a Bucaramanga para huir de la rutina los sábados en la tarde.", "Nearby destinations from Bucaramanga to escape routine on Saturday afternoons.", "afternoon"],
+    [38, "Entrevista a personaje local de la semana", "Interview with local personality of the week", "Conversación íntima con líderes comunitarios, empresarios o artistas del área.", "Intimate conversation with community leaders, entrepreneurs or artists from the area.", "afternoon"],
+    [39, "Cuidado del adulto mayor: actividades vespertinas", "Elderly care: afternoon activities", "Propuestas para mantener activos a los abuelos durante las horas de la tarde.", "Proposals to keep grandparents active during afternoon hours.", "afternoon"],
+    [40, "El futuro de la ciudad: proyectos urbanísticos", "The future of the city: urban projects", "Análisis de los planes de desarrollo y nuevas infraestructuras en el AMB.", "Analysis of development plans and new infrastructures in the AMB.", "afternoon"],
+
+    // 🌙 NOCHE (6pm-12am) - Cultura, nocturnidad, análisis
+    [41, "La noche en el cañón: vida nocturna de Bucaramanga", "Night in the canyon: Bucaramanga nightlife", "Recorrido por bares, discotecas y lugares de encuentro nocturno en Cabecera y Sotomayor.", "Tour through bars, clubs and nightlife spots in Cabecera and Sotomayor.", "night"],
+    [42, "Cena con sabor local: restaurantes para la noche", "Dinner with local flavor: restaurants for the night", "Recomendaciones gastronómicas para disfrutar de la cocina santandereana al caer el sol.", "Gastronomic recommendations to enjoy Santander cuisine as the sun sets.", "night"],
+    [43, "Conversatorios profundos: filosofía y sociedad", "Deep conversations: philosophy and society", "Debate sobre temas actuales con invitados expertos en ciencias sociales.", "Debate on current issues with expert guests in social sciences.", "night"],
+    [44, "Cine foro: película comentada", "Film forum: commented movie", "Transmisión de una película con análisis posterior y participación de la audiencia.", "Movie broadcast with subsequent analysis and audience participation.", "night"],
+    [45, "Poesía y literatura nocturna", "Poetry and night literature", "Lectura de poemas de autores santandereanos con fondo musical.", "Reading of poems by Santander authors with musical background.", "night"],
+    [46, "Música alternativa: bandas locales emergentes", "Alternative music: emerging local bands", "Presentación de grupos musicales del área metropolitana que buscan hacerse escuchar.", "Presentation of musical groups from the metropolitan area seeking to be heard.", "night"],
+    [47, "Terror y misterio: leyendas de la ciudad", "Terror and mystery: city legends", "Relatos de aparecidos, casas embrujadas y sucesos paranormales en Bucaramanga y Girón.", "Tales of ghosts, haunted houses and paranormal events in Bucaramanga and Girón.", "night"],
+    [48, "La hora del trueque: intercambio de objetos", "The hour of barter: object exchange", "Plataforma nocturna para que oyentes ofrezcan canjes de libros, ropa o electrodomésticos.", "Nighttime platform for listeners to offer trades of books, clothes or appliances.", "night"],
+    [49, "Radio-teatro: dramatizados originales", "Radio theater: original dramatizations", "Ficciones sonoras escritas y producidas por jóvenes del área metropolitana.", "Sound fictions written and produced by young people from the metropolitan area.", "night"],
+    [50, "Economía nocturna: negocios que abren de noche", "Night economy: businesses that open at night", "Entrevistas a dueños de tiendas 24 horas, farmacias y bares sobre su labor.", "Interviews with owners of 24-hour stores, pharmacies and bars about their work.", "night"],
+    [51, "Seguridad en la noche: consejos y alertas", "Safety at night: tips and alerts", "Recomendaciones para moverse seguro por la ciudad después del anochecer.", "Recommendations for moving safely around the city after dark.", "night"],
+    [52, "Clubes de lectura nocturnos", "Nighttime reading clubs", "Espacios virtuales para leer en voz alta y comentar libros antes de dormir.", "Virtual spaces to read aloud and discuss books before sleeping.", "night"],
+    [53, "Astronomía ciudadana: mirando el cielo", "Citizen astronomy: looking at the sky", "Observación de estrellas desde los miradores de la ciudad y explicaciones científicas.", "Star observation from city viewpoints and scientific explanations.", "night"],
+    [54, "Amor y desamor: consejos sentimentales", "Love and heartbreak: romantic advice", "Espacio para hablar de relaciones, desamor y cómo sanar después de una ruptura.", "Space to talk about relationships, heartbreak and how to heal after a breakup.", "night"],
+    [55, "Historias de migrantes en la noche", "Migrant stories at night", "Testimonios de venezolanos y desplazados que han encontrado en Bucaramanga un nuevo hogar.", "Testimonies of Venezuelans and displaced people who have found a new home in Bucaramanga.", "night"],
+    [56, "Llamada en vivo: opinión de los oyentes", "Live call: listeners' opinions", "Abordamos temas de actualidad regional y abrimos las líneas telefónicas.", "We address regional current affairs and open phone lines.", "night"],
+    [57, "Análisis político: lo que pasó en el día", "Political analysis: what happened during the day", "Resumen y comentario de las noticias políticas más relevantes del área metropolitana.", "Summary and commentary on the most relevant political news in the metropolitan area.", "night"],
+    [58, "Las 10 canciones que marcaron la semana", "The 10 songs that marked the week", "Recuento musical de los temas más escuchados en las emisoras y plataformas locales.", "Musical recount of the most listened songs on local stations and platforms.", "night"],
+    [59, "Espiritualidad y meditación nocturna", "Spirituality and nighttime meditation", "Cierre del día con reflexiones y ejercicios de relajación para dormir mejor.", "End of the day with reflections and relaxation exercises to sleep better.", "night"],
+    [60, "El futuro de Bocas: proyecto ciudad-región", "The future of Bocas: city-region project", "Debate sobre el desarrollo sostenible del Área Metropolitana hacia el 2030.", "Debate on the sustainable development of the Metropolitan Area towards 2030.", "night"],
+
+    // 🌌 MADRUGADA (12am-6am) - Reflexión, trabajo nocturno, silencio
+    [61, "Voces del silencio: trabajadores nocturnos", "Voices of silence: night workers", "Entrevistas a vigilantes, conductores de taxi y personal de limpieza que velan mientras la ciudad duerme.", "Interviews with security guards, taxi drivers and cleaning staff who watch over while the city sleeps.", "dawn"],
+    [62, "Hospital de noche: la vida en urgencias", "Hospital at night: life in the emergency room", "Relato de médicos y enfermeros del Hospital Universitario de Santander durante sus turnos nocturnos.", "Account of doctors and nurses at Santander University Hospital during their night shifts.", "dawn"],
+    [63, "Música para dormir o trabajar de noche", "Music to sleep or work at night", "Selección de melodías tranquilas para acompañar la madrugada.", "Selection of quiet melodies to accompany the early morning.", "dawn"],
+    [64, "Pensamientos nocturnos: poesía y reflexión", "Night thoughts: poetry and reflection", "Espacio para leer textos íntimos y compartir reflexiones sobre la vida.", "Space to read intimate texts and share reflections on life.", "dawn"],
+    [65, "Silencio radiofónico: paisajes sonoros de la madrugada", "Radio silence: soundscapes of the early morning", "Grabaciones ambientales de la ciudad vacía: el ruido de la lluvia, el viento o un perro ladrando.", "Ambient recordings of the empty city: the sound of rain, wind or a dog barking.", "dawn"],
+    [66, "Consejos para insomnes", "Tips for insomniacs", "Estrategias para conciliar el sueño cuando el cuerpo no responde.", "Strategies to fall asleep when the body doesn't respond.", "dawn"],
+    [67, "La ciudad fantasma: qué pasa cuando todos duermen", "The ghost city: what happens when everyone sleeps", "Recorrido imaginario por las calles vacías de Bucaramanga en la madrugada.", "Imaginary tour through the empty streets of Bucaramanga in the early morning.", "dawn"],
+    [68, "Mensajes al futuro: cartas grabadas", "Messages to the future: recorded letters", "Espacio para que oyentes dejen grabados mensajes para ellos mismos dentro de un año.", "Space for listeners to leave recorded messages for themselves within a year.", "dawn"],
+    [69, "Radio-arte: experimentación sonora", "Radio art: sound experimentation", "Piezas de artistas locales que exploran los límites del formato radiofónico.", "Pieces by local artists exploring the limits of the radio format.", "dawn"],
+    [70, "El vuelo del murciélago: fauna nocturna", "The bat's flight: nocturnal fauna", "Descubrimos las especies animales que habitan el AMB cuando anochece.", "We discover the animal species that inhabit the AMB when night falls.", "dawn"],
+    [71, "Leyes de la madrugada: normativas curiosas", "Laws of the early morning: curious regulations", "Repaso de normas locales poco conocidas que afectan a quienes trabajan de noche.", "Review of little-known local regulations affecting night workers.", "dawn"],
+    [72, "Terror real: casos sin resolver", "Real terror: unsolved cases", "Investigación sonora sobre crímenes y desapariciones misteriosas en la región.", "Sound investigation into crimes and mysterious disappearances in the region.", "dawn"],
+    [73, "Bucaramanga en la literatura", "Bucaramanga in literature", "Pasajes de libros cuyas historias transcurren en la ciudad durante la noche.", "Passages from books whose stories take place in the city at night.", "dawn"],
+    [74, "Amor a distancia: cartas de medianoche", "Long-distance love: midnight letters", "Lectura de cartas de amor enviadas por oyentes a sus seres queridos lejos.", "Reading of love letters sent by listeners to their loved ones far away.", "dawn"],
+    [75, "El oficio de repartidor de pan", "The trade of bread delivery", "Acompañamos a un panadero que reparte sus productos casa por casa antes del amanecer.", "We accompany a baker who delivers his products door to door before dawn.", "dawn"],
+    [76, "Taxi nocturno: anécdotas de conductores", "Night taxi: drivers' anecdotes", "Historias curiosas que los taxistas recogen en sus turnos de madrugada.", "Curious stories taxi drivers pick up during their early morning shifts.", "dawn"],
+    [77, "Cine de arte: películas para la madrugada", "Art cinema: movies for the early morning", "Recomendación de películas lentas, contemplativas e ideales para ver de madrugada.", "Recommendation of slow, contemplative films ideal for watching in the early morning.", "dawn"],
+    [78, "Radio-zazen: meditación guiada profunda", "Radio-zazen: deep guided meditation", "Sesión de meditación de 30 minutos para conectar con uno mismo.", "30-minute meditation session to connect with oneself.", "dawn"],
+    [79, "Periodismo de datos nocturno", "Nighttime data journalism", "Análisis de cifras sobre movilidad, contaminación y desarrollo en el AMB.", "Analysis of figures on mobility, pollution and development in the AMB.", "dawn"],
+    [80, "Despedida a la noche: rituales antes del alba", "Farewell to the night: rituals before dawn", "Cómo diferentes culturas despiden la oscuridad y saludan al nuevo día.", "How different cultures bid farewell to darkness and greet the new day.", "dawn"],
+
+    // 🌅 MAÑANA - continuación
+    [81, "Feria de empleo virtual: oportunidades laborales", "Virtual job fair: employment opportunities", "Empresas del área metropolitana ofrecen vacantes y consejos para postularse.", "Companies from the metropolitan area offer vacancies and tips to apply.", "morning"],
+    [82, "Hablemos de finanzas personales", "Let's talk about personal finance", "Educación financiera para bumangueses: cómo ahorrar e invertir.", "Financial education for locals: how to save and invest.", "morning"],
+    [83, "Calidad del aire: monitoreo matutino", "Air quality: morning monitoring", "Reporte diario de los niveles de contaminación en diferentes puntos del AMB.", "Daily report of pollution levels at different points in the AMB.", "morning"],
+    [84, "Bicicleta como medio de transporte", "Bicycle as a means of transport", "Beneficios de usar la bici en Bucaramanga y rutas seguras recomendadas.", "Benefits of using a bike in Bucaramanga and recommended safe routes.", "morning"],
+    [85, "Mercado laboral para jóvenes", "Labor market for young people", "Oportunidades de primer empleo para recién egresados de colegios y universidades.", "First job opportunities for recent high school and university graduates.", "morning"],
+    
+    // ☀️ TARDE - continuación
+    [86, "De la finca a la olla: productos locales", "From farm to pot: local products", "Entrevistas con pequeños agricultores que abastecen las plazas de mercado.", "Interviews with small farmers who supply market squares.", "afternoon"],
+    [87, "Arquitectura de Bucaramanga: patrimonio escondido", "Architecture of Bucaramanga: hidden heritage", "Edificios históricos poco conocidos que merecen ser protegidos.", "Little-known historic buildings that deserve protection.", "afternoon"],
+    [88, "Museos y galerías: exposiciones temporales", "Museums and galleries: temporary exhibitions", "Recorrido por las muestras artísticas disponibles en la ciudad durante la tarde.", "Tour of the artistic exhibitions available in the city during the afternoon.", "afternoon"],
+    [89, "Clase de baile: salsa, merengue y más", "Dance class: salsa, merengue and more", "Radio-clase para aprender pasos de baile desde casa.", "Radio-class to learn dance steps from home.", "afternoon"],
+    [90, "Manualidades recicladas", "Recycled crafts", "Taller sonoro para transformar objetos usados en arte.", "Audio workshop to transform used objects into art.", "afternoon"],
+
+    // 🌙 NOCHE - continuación
+    [91, "Ciclorruta nocturna: pedaleando seguros", "Night bike path: pedaling safely", "Consejos y rutas recomendadas para andar en bicicleta después del atardecer.", "Tips and recommended routes for cycling after sunset.", "night"],
+    [92, "Espectáculos de circo y arte callejero", "Circus and street art shows", "Compañías locales que se presentan en espacios públicos durante la noche.", "Local companies performing in public spaces at night.", "night"],
+    [93, "Gastronomía fusión: restaurantes innovadores", "Fusion gastronomy: innovative restaurants", "Chefs del AMB que mezclan sabores tradicionales con técnicas internacionales.", "AMB chefs who mix traditional flavors with international techniques.", "night"],
+    [94, "Rock y metal underground en el AMB", "Underground rock and metal in the AMB", "Bandas locales que mueven la escena del rock pesado en la región.", "Local bands that move the heavy rock scene in the region.", "night"],
+    [95, "Mujeres en la noche: espacios seguros", "Women at night: safe spaces", "Debate sobre políticas de seguridad y prevención del acoso callejero.", "Debate on security policies and prevention of street harassment.", "night"],
+
+    // 🌌 MADRUGADA - continuación
+    [96, "El misterio de las luces en el cielo", "The mystery of lights in the sky", "Testimonios de avistamientos OVNI en el área metropolitana.", "UFO sighting testimonies in the metropolitan area.", "dawn"],
+    [97, "Periodismo lento: una noticia en profundidad", "Slow journalism: one in-depth news story", "Dedicamos una hora completa a analizar un solo tema de impacto regional.", "We dedicate a full hour to analyzing a single issue of regional impact.", "dawn"],
+    [98, "Radio para personas con insomnio crónico", "Radio for people with chronic insomnia", "Contenido especialmente diseñado para quienes no pueden dormir.", "Content specially designed for those who cannot sleep.", "dawn"],
+    [99, "El vuelo de las golondrinas al amanecer", "The flight of swallows at dawn", "Biodiversidad urbana en los alrededores de la ciudad.", "Urban biodiversity in the outskirts of the city.", "dawn"],
+    [100, "Planes para el nuevo día: inspiración antes del alba", "Plans for the new day: inspiration before dawn", "Propuestas de actividades y metas para quien empieza su jornada muy temprano.", "Proposals for activities and goals for those who start their day very early.", "dawn"]
+  ];
+
+  // --------------------- LOCALSTORAGE Y PROGRESO -------------------------
+  let progreso = {};
+  let currentLang = "es";
+  let currentPracticeMode = "traduccion_directa";
+  let currentCardId = null;
+  let currentOrdenarPalabras = [];
+  let shuffledPalabras = [];
+  let selectedOrder = [];
+  let ordenarRespuestaCorrecta = "";
+  let currentSlotFilter = "all";
+  let currentFiltroTexto = "";
+
+  const STORAGE_KEY = "podcastIdeasAmbC1Progreso";
+
+  function cargarProgreso() {
+    const guardado = localStorage.getItem(STORAGE_KEY);
+    if (guardado) progreso = JSON.parse(guardado);
+    else {
+      progreso = {};
+      for (let i = 1; i <= 100; i++) progreso[i] = { aciertos: 0, fallos: 0 };
+    }
+  }
+  function guardarProgreso() { localStorage.setItem(STORAGE_KEY, JSON.stringify(progreso)); }
+  function registrarResultado(id, acierto) {
+    if (!progreso[id]) progreso[id] = { aciertos: 0, fallos: 0 };
+    if (acierto) progreso[id].aciertos += 1;
+    else progreso[id].fallos += 1;
+    guardarProgreso();
+    renderDashboard();
+    renderListado(currentSlotFilter, currentFiltroTexto);
+  }
+
+  function obtenerTexto(item, tipo) {
+    if (currentLang === 'es') return tipo === 'palabra' ? item[1] : item[3];
+    if (currentLang === 'en') return tipo === 'palabra' ? item[2] : item[4];
+    return tipo === 'palabra' ? `${item[1]} / ${item[2]}` : `${item[3]} / ${item[4]}`;
+  }
+
+  function getSlotClass(slot) {
+    const classes = {
+      'morning': 'slot-morning',
+      'afternoon': 'slot-afternoon',
+      'night': 'slot-night',
+      'dawn': 'slot-dawn'
+    };
+    return classes[slot] || '';
+  }
+
+  function getSlotText(slot) {
+    const texts = {
+      'morning': '🌅 Mañana',
+      'afternoon': '☀️ Tarde',
+      'night': '🌙 Noche',
+      'dawn': '🌌 Madrugada'
+    };
+    return texts[slot] || '';
+  }
+
+  function renderDashboard() {
+    let totalAciertos = 0, totalFallos = 0, conceptosConAcierto = 0;
+    for (let i = 1; i <= 100; i++) {
+      const p = progreso[i] || { aciertos: 0, fallos: 0 };
+      totalAciertos += p.aciertos;
+      totalFallos += p.fallos;
+      if (p.aciertos > 0) conceptosConAcierto++;
+    }
+    const porcentaje = (conceptosConAcierto / 100) * 100;
+    document.getElementById("globalProgressFill").style.width = `${porcentaje}%`;
+    document.getElementById("globalProgressText").innerHTML = `${conceptosConAcierto} de 100 ideas con al menos 1 acierto (${Math.round(porcentaje)}%).`;
+    document.getElementById("statsContainer").innerHTML = `
+      <div class="stat-card"><div class="stat-number">${totalAciertos}</div>✅ Aciertos totales</div>
+      <div class="stat-card"><div class="stat-number">${totalFallos}</div>❌ Fallos</div>
+      <div class="stat-card"><div class="stat-number">${conceptosConAcierto}</div>💡 Ideas dominadas</div>
+      <div class="stat-card"><div class="stat-number">${Math.round((totalAciertos/(totalAciertos+totalFallos+0.001))*100)}%</div>📊 Tasa éxito</div>
+    `;
+  }
+
+  function renderListado(slot = currentSlotFilter, filtro = "") {
+    const container = document.getElementById("conceptosListadoContainer");
+    container.innerHTML = "";
+    const filtroLower = filtro.toLowerCase();
+    for (let c of vocabularioData) {
+      const id = c[0];
+      const idea = obtenerTexto(c, 'palabra');
+      const descripcion = obtenerTexto(c, 'definicion');
+      const prog = progreso[id] || { aciertos: 0, fallos: 0 };
+      const ideaSlot = c[5];
+      if (slot !== "all" && ideaSlot !== slot) continue;
+      if (filtro && !idea.toLowerCase().includes(filtroLower) && !descripcion.toLowerCase().includes(filtroLower)) continue;
+      const div = document.createElement("div");
+      div.className = "concepto-item";
+      div.innerHTML = `<div class="concepto-titulo">
+                         ${id}. ${idea}
+                         <span class="slot-badge ${getSlotClass(ideaSlot)}">${getSlotText(ideaSlot)}</span>
+                       </div>
+                       <div class="concepto-desc">💡 ${descripcion}</div>
+                       <span class="badge-progreso">✅ ${prog.aciertos} aciertos · ❌ ${prog.fallos} fallos</span>`;
+      container.appendChild(div);
+    }
+  }
+
+  // Función para obtener un ítem aleatorio según el filtro de franja
+  function getRandomItemBySlot() {
+    let filtered = vocabularioData;
+    if (currentSlotFilter !== "all") {
+      filtered = vocabularioData.filter(item => item[5] === currentSlotFilter);
+    }
+    if (filtered.length === 0) filtered = vocabularioData;
+    const randomIndex = Math.floor(Math.random() * filtered.length);
+    return filtered[randomIndex];
+  }
+
+  const practicaDiv = document.getElementById("practicaContainer");
+
+  function modoTraduccionDirecta() {
+    const item = getRandomItemBySlot();
+    currentCardId = item[0];
+    const pregunta = obtenerTexto(item, 'palabra');
+    const respuestaCorrecta = obtenerTexto(item, 'palabra') === item[1] ? item[2] : item[1];
+    const slotClass = getSlotClass(item[5]);
+    const slotText = getSlotText(item[5]);
+    
+    practicaDiv.innerHTML = `
+      <div class="flashcard">
+        <div style="display: flex; justify-content: center; gap: 1rem; margin-bottom: 0.5rem;">
+          <span class="slot-badge ${slotClass}">${slotText}</span>
+        </div>
+        <div class="pregunta">💡 Idea:<br><strong>${pregunta}</strong></div>
+        <input type="text" id="respuestaInput" placeholder="Escribe la traducción / Type the translation...">
+        <button id="comprobarBtn" class="btn btn-primary">✓ Comprobar</button>
+        <div id="feedbackMsg" style="margin:1rem 0; font-weight:bold;"></div>
+        <button id="siguienteBtn" class="btn">⏩ Siguiente idea</button>
+        <p id="infoProgresoCard" style="margin-top:0.8rem;">📊 Idea ${currentCardId} · ✅ ${progreso[currentCardId]?.aciertos||0} aciertos · ❌ ${progreso[currentCardId]?.fallos||0} fallos</p>
+      </div>
+    `;
+    
+    document.getElementById("comprobarBtn").onclick = () => {
+      const userAnswer = document.getElementById("respuestaInput").value.trim().toLowerCase();
+      const correct = respuestaCorrecta.toLowerCase();
+      const isCorrect = userAnswer === correct;
+      const feedback = document.getElementById("feedbackMsg");
+      if (isCorrect) {
+        feedback.innerHTML = `<span style='color:#27ae60'>✅ ¡Correcto! "${respuestaCorrecta}"</span>`;
+        registrarResultado(currentCardId, true);
+      } else {
+        feedback.innerHTML = `<span style='color:#e67e22'>❌ Incorrecto. La traducción correcta es: "${respuestaCorrecta}"</span>`;
+        registrarResultado(currentCardId, false);
+      }
+      document.getElementById("comprobarBtn").disabled = true;
+      setTimeout(() => { document.getElementById("comprobarBtn").disabled = false; }, 1500);
+    };
+    document.getElementById("siguienteBtn").onclick = () => modoTraduccionDirecta();
+  }
+
+  function modoTraduccionInversa() {
+    const item = getRandomItemBySlot();
+    currentCardId = item[0];
+    const traduccion = obtenerTexto(item, 'palabra') === item[1] ? item[2] : item[1];
+    const respuestaCorrecta = obtenerTexto(item, 'palabra');
+    const slotClass = getSlotClass(item[5]);
+    const slotText = getSlotText(item[5]);
+    
+    practicaDiv.innerHTML = `
+      <div class="flashcard">
+        <div style="display: flex; justify-content: center; gap: 1rem; margin-bottom: 0.5rem;">
+          <span class="slot-badge ${slotClass}">${slotText}</span>
+        </div>
+        <div class="pregunta">🔄 Traducción:<br><strong>${traduccion}</strong></div>
+        <input type="text" id="respuestaInput" placeholder="Escribe la idea original / Type the original idea...">
+        <button id="comprobarBtn" class="btn btn-primary">✓ Comprobar</button>
+        <div id="feedbackMsg" style="margin:1rem 0; font-weight:bold;"></div>
+        <button id="siguienteBtn" class="btn">⏩ Siguiente idea</button>
+        <p id="infoProgresoCard" style="margin-top:0.8rem;">📊 Idea ${currentCardId} · ✅ ${progreso[currentCardId]?.aciertos||0} aciertos · ❌ ${progreso[currentCardId]?.fallos||0} fallos</p>
+      </div>
+    `;
+    
+    document.getElementById("comprobarBtn").onclick = () => {
+      const userAnswer = document.getElementById("respuestaInput").value.trim().toLowerCase();
+      const correct = respuestaCorrecta.toLowerCase();
+      const isCorrect = userAnswer === correct;
+      const feedback = document.getElementById("feedbackMsg");
+      if (isCorrect) {
+        feedback.innerHTML = `<span style='color:#27ae60'>✅ ¡Correcto! "${respuestaCorrecta}"</span>`;
+        registrarResultado(currentCardId, true);
+      } else {
+        feedback.innerHTML = `<span style='color:#e67e22'>❌ Incorrecto. La idea correcta es: "${respuestaCorrecta}"</span>`;
+        registrarResultado(currentCardId, false);
+      }
+      document.getElementById("comprobarBtn").disabled = true;
+      setTimeout(() => { document.getElementById("comprobarBtn").disabled = false; }, 1500);
+    };
+    document.getElementById("siguienteBtn").onclick = () => modoTraduccionInversa();
+  }
+
+  function modoOrdenarPalabras() {
+    const item = getRandomItemBySlot();
+    currentCardId = item[0];
+    const fraseOriginal = obtenerTexto(item, 'palabra');
+    ordenarRespuestaCorrecta = fraseOriginal;
+    let palabras = fraseOriginal.split(/\s+/).filter(p => p.length > 0);
+    currentOrdenarPalabras = [...palabras];
+    shuffledPalabras = [...palabras];
+    for (let i = shuffledPalabras.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [shuffledPalabras[i], shuffledPalabras[j]] = [shuffledPalabras[j], shuffledPalabras[i]];
+    }
+    selectedOrder = [];
+    const slotClass = getSlotClass(item[5]);
+    const slotText = getSlotText(item[5]);
+    
+    const renderUI = () => {
+      let palabrasHTML = shuffledPalabras.map(p => `<button class="palabra-btn" data-palabra="${p.replace(/"/g, '&quot;')}">${p}</button>`).join('');
+      let ordenHTML = selectedOrder.map(p => `<span style="background:#fdf4df; padding:0.2rem 0.6rem; margin:0.2rem; border-radius:1rem;">${p}</span>`).join(' ');
+      if (ordenHTML === "") ordenHTML = "<em>Haz clic en las palabras en el orden correcto...</em>";
+      practicaDiv.innerHTML = `
+        <div class="flashcard">
+          <div style="display: flex; justify-content: center; gap: 1rem; margin-bottom: 0.5rem;">
+            <span class="slot-badge ${slotClass}">${slotText}</span>
+          </div>
+          <h3>🧩 Ordena la idea:</h3>
+          <div class="pregunta" style="background:#fdf4df;">📌 ${obtenerTexto(item, 'definicion')}</div>
+          <div class="orden-actual"><strong>Tu orden:</strong><br> ${ordenHTML}</div>
+          <div class="orden-palabras" id="palabrasContainer">${palabrasHTML}</div>
+          <div>
+            <button id="resetBtn" class="btn" style="background:#eaddc5;">🔁 Reiniciar</button>
+            <button id="comprobarBtn" class="btn btn-primary">✓ Comprobar</button>
+          </div>
+          <button id="siguienteBtn" class="btn" style="margin-top:1rem;">⏩ Siguiente idea</button>
+          <p id="infoProgresoCard">📊 Idea ${currentCardId} · ✅ ${progreso[currentCardId]?.aciertos||0} aciertos · ❌ ${progreso[currentCardId]?.fallos||0} fallos</p>
+          <div id="feedbackMsg" style="margin-top:0.8rem; font-weight:bold;"></div>
+        </div>
+      `;
+      document.querySelectorAll(".palabra-btn").forEach(btn => {
+        btn.addEventListener("click", () => {
+          const palabra = btn.getAttribute("data-palabra");
+          const idx = shuffledPalabras.indexOf(palabra);
+          if (idx !== -1) {
+            shuffledPalabras.splice(idx, 1);
+            selectedOrder.push(palabra);
+            renderUI();
+          }
+        });
+      });
+      document.getElementById("resetBtn").onclick = () => {
+        shuffledPalabras = [...currentOrdenarPalabras];
+        for (let i = shuffledPalabras.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [shuffledPalabras[i], shuffledPalabras[j]] = [shuffledPalabras[j], shuffledPalabras[i]];
+        }
+        selectedOrder = [];
+        renderUI();
+      };
+      document.getElementById("comprobarBtn").onclick = () => {
+        const ordenUsuario = selectedOrder.join(" ");
+        if (ordenUsuario === ordenarRespuestaCorrecta) {
+          document.getElementById("feedbackMsg").innerHTML = "<span style='color:#27ae60'>✅ ¡Correcto! Idea ordenada correctamente.</span>";
+          registrarResultado(currentCardId, true);
+          setTimeout(() => modoOrdenarPalabras(), 1500);
+        } else {
+          document.getElementById("feedbackMsg").innerHTML = `<span style='color:#e67e22'>❌ Incorrecto. La idea correcta es: "${ordenarRespuestaCorrecta}"</span>`;
+          registrarResultado(currentCardId, false);
+          setTimeout(() => modoOrdenarPalabras(), 2000);
+        }
+        document.getElementById("comprobarBtn").disabled = true;
+        setTimeout(() => { if(document.getElementById("comprobarBtn")) document.getElementById("comprobarBtn").disabled = false; }, 2000);
+      };
+      document.getElementById("siguienteBtn").onclick = () => modoOrdenarPalabras();
+    };
+    renderUI();
+  }
+
+  function modoEspEng() {
+    const item = getRandomItemBySlot();
+    currentCardId = item[0];
+    const direction = Math.random() < 0.5 ? "esp2eng" : "eng2esp";
+    const [pregunta, respuestaCorrecta] = direction === "esp2eng" ? [item[1], item[2]] : [item[2], item[1]];
+    const directionText = direction === "esp2eng" ? "🇪🇸 → 🇬🇧 Español a Inglés" : "🇬🇧 → 🇪🇸 English to Spanish";
+    const slotClass = getSlotClass(item[5]);
+    const slotText = getSlotText(item[5]);
+    
+    practicaDiv.innerHTML = `
+      <div class="flashcard">
+        <div style="display: flex; justify-content: center; gap: 1rem; margin-bottom: 0.5rem;">
+          <span class="slot-badge ${slotClass}">${slotText}</span>
+        </div>
+        <div class="translation-direction">${directionText}</div>
+        <div class="pregunta">📝 <strong>${pregunta}</strong></div>
+        <input type="text" id="respuestaInput" placeholder="Escribe la traducción / Type the translation...">
+        <button id="comprobarBtn" class="btn btn-primary">✓ Comprobar</button>
+        <div id="feedbackMsg" style="margin:1rem 0; font-weight:bold;"></div>
+        <button id="siguienteBtn" class="btn">⏩ Siguiente idea</button>
+        <p id="infoProgresoCard" style="margin-top:0.8rem;">📊 Idea ${currentCardId} · ✅ ${progreso[currentCardId]?.aciertos||0} aciertos · ❌ ${progreso[currentCardId]?.fallos||0} fallos</p>
+      </div>
+    `;
+    
+    document.getElementById("comprobarBtn").onclick = () => {
+      const userAnswer = document.getElementById("respuestaInput").value.trim().toLowerCase();
+      const correct = respuestaCorrecta.toLowerCase();
+      const isCorrect = userAnswer === correct;
+      const feedback = document.getElementById("feedbackMsg");
+      if (isCorrect) {
+        feedback.innerHTML = `<span style='color:#27ae60'>✅ ¡Correcto! "${respuestaCorrecta}"</span>`;
+        registrarResultado(currentCardId, true);
+      } else {
+        feedback.innerHTML = `<span style='color:#e67e22'>❌ Incorrecto. La respuesta correcta es: "${respuestaCorrecta}"</span>`;
+        registrarResultado(currentCardId, false);
+      }
+      document.getElementById("comprobarBtn").disabled = true;
+      setTimeout(() => { document.getElementById("comprobarBtn").disabled = false; }, 1500);
+    };
+    document.getElementById("siguienteBtn").onclick = () => modoEspEng();
+  }
+
+  function setPracticeMode(mode) {
+    currentPracticeMode = mode;
+    document.querySelectorAll(".modo-btn").forEach(btn => btn.classList.remove("active"));
+    if (mode === "traduccion_directa") document.getElementById("modoTraduccionDirecta").classList.add("active");
+    if (mode === "traduccion_inversa") document.getElementById("modoTraduccionInversa").classList.add("active");
+    if (mode === "ordenar") document.getElementById("modoOrdenar").classList.add("active");
+    if (mode === "esp_eng") document.getElementById("modoEspEng").classList.add("active");
+    
+    if (mode === "traduccion_directa") modoTraduccionDirecta();
+    else if (mode === "traduccion_inversa") modoTraduccionInversa();
+    else if (mode === "ordenar") modoOrdenarPalabras();
+    else if (mode === "esp_eng") modoEspEng();
+  }
+
+  function setLanguage(lang) {
+    currentLang = lang;
+    document.getElementById("langEsBtn").classList.toggle("active", lang === 'es');
+    document.getElementById("langEnBtn").classList.toggle("active", lang === 'en');
+    document.getElementById("langBothBtn").classList.toggle("active", lang === 'both');
+    document.getElementById("progressTitle").innerHTML = lang === 'es' ? "📈 Progreso en ideas C1 - AMB" : 
+                                                         (lang === 'en' ? "📈 C1 Ideas Progress - AMB" : "📈 Progreso / Progress");
+    const placeholder = document.querySelector("#listado input");
+    if (placeholder) {
+      placeholder.placeholder = lang === 'es' ? "🔍 Buscar idea..." :
+                                (lang === 'en' ? "🔍 Search idea..." : "🔍 Buscar / Search...");
+    }
+    renderListado(currentSlotFilter, currentFiltroTexto);
+    setPracticeMode(currentPracticeMode);
+  }
+
+  function initUI() {
+    document.querySelectorAll(".nav-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const viewId = btn.getAttribute("data-view");
+        document.querySelectorAll(".view").forEach(v => v.classList.remove("active-view"));
+        document.getElementById(viewId).classList.add("active-view");
+        document.querySelectorAll(".nav-btn").forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+        if (viewId === "listado") renderListado(currentSlotFilter, currentFiltroTexto);
+        if (viewId === "dashboard") renderDashboard();
+        if (viewId === "practica") setPracticeMode(currentPracticeMode);
+      });
+    });
+    
+    document.getElementById("modoTraduccionDirecta").addEventListener("click", () => setPracticeMode("traduccion_directa"));
+    document.getElementById("modoTraduccionInversa").addEventListener("click", () => setPracticeMode("traduccion_inversa"));
+    document.getElementById("modoOrdenar").addEventListener("click", () => setPracticeMode("ordenar"));
+    document.getElementById("modoEspEng").addEventListener("click", () => setPracticeMode("esp_eng"));
+    
+    document.getElementById("resetProgresoBtn").addEventListener("click", () => {
+      if (confirm("¿Reiniciar todo el progreso? Se perderán aciertos y fallos. / Reset all progress?")) {
+        for (let i = 1; i <= 100; i++) progreso[i] = { aciertos: 0, fallos: 0 };
+        guardarProgreso();
+        renderDashboard();
+        renderListado(currentSlotFilter, currentFiltroTexto);
+        setPracticeMode(currentPracticeMode);
+      }
+    });
+    
+    const filtroInput = document.getElementById("filtroListado");
+    filtroInput.addEventListener("input", (e) => {
+      currentFiltroTexto = e.target.value;
+      renderListado(currentSlotFilter, currentFiltroTexto);
+    });
+    
+    document.querySelectorAll(".slot-filter-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const slot = btn.getAttribute("data-slot");
+        currentSlotFilter = slot;
+        document.querySelectorAll(".slot-filter-btn").forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+        renderListado(currentSlotFilter, currentFiltroTexto);
+      });
+    });
+    
+    document.getElementById("langEsBtn").addEventListener("click", () => setLanguage('es'));
+    document.getElementById("langEnBtn").addEventListener("click", () => setLanguage('en'));
+    document.getElementById("langBothBtn").addEventListener("click", () => setLanguage('both'));
+  }
+
+  window.addEventListener("DOMContentLoaded", () => {
+    cargarProgreso();
+    renderDashboard();
+    renderListado("all", "");
+    initUI();
+    setPracticeMode("traduccion_directa");
+  });
+</script>
+</body>
+</html>

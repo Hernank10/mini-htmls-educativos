@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>🎙️ PodFlash · Redacta, convierte a flashcards y practica tu podcast</title>
+  <!-- Bootstrap 5 + Iconos -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700;800&family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #2A7A4B;
+      --primary-dark: #1E5F3A;
+      --secondary: #F39C12;
+      --bg-dark: #0f0f0f;
+      --bg-light: #F5F0E8;
+      --card-dark: #1E1E1E;
+      --card-light: #FFFFFF;
+    }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg-dark);
+      color: #E5E5E5;
+      transition: all 0.3s;
+    }
+    body.light-mode {
+      background: var(--bg-light);
+      color: #1E1E1E;
+    }
+    /* Sidebar */
+    .sidebar {
+      background: #1A1A1A;
+      border-radius: 1.5rem;
+      padding: 1rem;
+      height: fit-content;
+      position: sticky;
+      top: 20px;
+    }
+    body.light-mode .sidebar {
+      background: #FFFFFF;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+    }
+    .nav-item-custom {
+      padding: 0.8rem 1rem;
+      border-radius: 1rem;
+      cursor: pointer;
+      margin-bottom: 0.5rem;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      transition: 0.2s;
+      color: #AAA;
+    }
+    .nav-item-custom i { width: 24px; font-size: 1.2rem; }
+    .nav-item-custom.active {
+      background: var(--primary);
+      color: white;
+    }
+    .nav-item-custom:hover:not(.active) {
+      background: rgba(255,255,255,0.05);
+      color: white;
+    }
+    body.light-mode .nav-item-custom:hover:not(.active) {
+      background: rgba(0,0,0,0.05);
+      color: #1E1E1E;
+    }
+    /* Editor cards */
+    .editor-card {
+      background: var(--card-dark);
+      border-radius: 1.2rem;
+      margin-bottom: 1rem;
+      border: 1px solid #2C2C2C;
+    }
+    body.light-mode .editor-card {
+      background: var(--card-light);
+      border-color: #E0E0E0;
+    }
+    .editor-card-header {
+      padding: 1rem;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .editor-card-content {
+      padding: 0 1rem 1rem 1rem;
+      display: none;
+      border-top: 1px solid #2C2C2C;
+    }
+    body.light-mode .editor-card-content { border-top-color: #E0E0E0; }
+    .editor-card.expanded .editor-card-content { display: block; }
+    textarea, input {
+      background: #2A2A2A !important;
+      border: 1px solid #3A3A3A !important;
+      color: #E5E5E5 !important;
+      border-radius: 0.8rem !important;
+      font-family: 'Courier Prime', monospace !important;
+    }
+    body.light-mode textarea, body.light-mode input {
+      background: #FFFFFF !important;
+      border-color: #D0D0D0 !important;
+      color: #1E1E1E !important;
+    }
+    /* Flashcards */
+    .flashcard-container {
+      perspective: 1000px;
+      cursor: pointer;
+      min-height: 250px;
+    }
+    .flashcard {
+      width: 100%;
+      height: 280px;
+      position: relative;
+      transform-style: preserve-3d;
+      transition: transform 0.6s;
+      border-radius: 1.5rem;
+    }
+    .flashcard.flipped {
+      transform: rotateY(180deg);
+    }
+    .flashcard-front, .flashcard-back {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      backface-visibility: hidden;
+      border-radius: 1.5rem;
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      background: var(--card-dark);
+      border: 1px solid #3A3A3A;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+    }
+    body.light-mode .flashcard-front, body.light-mode .flashcard-back {
+      background: var(--card-light);
+      border-color: #E0E0E0;
+    }
+    .flashcard-back {
+      transform: rotateY(180deg);
+      background: var(--primary);
+      color: white;
+    }
+    .flashcard-back p { color: white; }
+    .flashcard-label {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      opacity: 0.7;
+      margin-bottom: 0.5rem;
+    }
+    /* badge */
+    .badge-time {
+      background: var(--secondary);
+      color: #2C2A29;
+      padding: 0.2rem 0.8rem;
+      border-radius: 30px;
+      font-size: 0.7rem;
+    }
+    footer { background: #141414; padding: 1rem 0; margin-top: 2rem; }
+    body.light-mode footer { background: #DDD; color: #333; }
+    .tts-controls { background: rgba(0,0,0,0.2); border-radius: 50px; padding: 0.3rem 0.8rem; }
+    body.light-mode .tts-controls { background: rgba(0,0,0,0.05); }
+  </style>
+</head>
+<body>
+
+<div class="container-fluid px-4 py-3">
+  <div class="row g-4">
+    
+    <!-- SIDEBAR -->
+    <div class="col-lg-3 col-md-4">
+      <div class="sidebar">
+        <div class="text-center py-3">
+          <i class="bi bi-mic-fill" style="font-size: 2rem; color: var(--primary);"></i>
+          <h5 class="mt-2">PodFlash</h5>
+          <small class="text-muted">Redacta · Flashcards · Practica</small>
+        </div>
+        <hr>
+        <div class="nav-item-custom active" data-view="editor">
+          <i class="bi bi-pencil-square"></i> <span>✍️ Redactar guion</span>
+        </div>
+        <div class="nav-item-custom" data-view="flashcards">
+          <i class="bi bi-stack"></i> <span>🃏 Flashcards</span>
+        </div>
+        <div class="nav-item-custom" data-view="exportar">
+          <i class="bi bi-cloud-download"></i> <span>📦 Exportar</span>
+        </div>
+        <hr>
+        <button id="themeToggleBtn" class="btn btn-sm w-100 mt-2" style="background: rgba(255,255,255,0.05);">
+          <i class="bi bi-moon-stars-fill"></i> Modo oscuro
+        </button>
+      </div>
+    </div>
+    
+    <!-- CONTENIDO PRINCIPAL -->
+    <div class="col-lg-9 col-md-8">
+      
+      <!-- VISTA 1: EDITOR -->
+      <div id="editorView">
+        <div class="d-flex justify-content-between mb-4">
+          <h3><i class="bi bi-journal-bookmark-fill me-2" style="color: var(--primary);"></i>Bloc de redacción</h3>
+          <button id="saveAllBtn" class="btn btn-sm btn-outline-light"><i class="bi bi-save-fill"></i> Guardar todo</button>
+        </div>
+        
+        <!-- Datos generales -->
+        <div class="editor-card expanded mb-3">
+          <div class="editor-card-header">
+            <span><i class="bi bi-info-circle-fill me-2" style="color: var(--primary);"></i>📋 Información del episodio</span>
+            <i class="bi bi-chevron-down"></i>
+          </div>
+          <div class="editor-card-content">
+            <div class="row g-3">
+              <div class="col-md-6"><input type="text" id="podcastTitle" class="form-control" placeholder="Título del podcast"></div>
+              <div class="col-md-6"><input type="text" id="episodeTitle" class="form-control" placeholder="Título del episodio"></div>
+              <div class="col-md-6"><input type="text" id="hostName" class="form-control" placeholder="Locutor(es)"></div>
+              <div class="col-md-6"><input type="text" id="guestName" class="form-control" placeholder="Invitado"></div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Secciones dinámicas del guion -->
+        <div id="sectionsContainer"></div>
+        
+        <div class="mt-3 p-3 bg-secondary bg-opacity-10 rounded text-center">
+          <div class="d-flex justify-content-between flex-wrap gap-2">
+            <span><i class="bi bi-stopwatch"></i> Duración: <strong id="estimatedDuration">-- min</strong></span>
+            <span><i class="bi bi-calculator"></i> Palabras: <strong id="totalWordsSpan">0</strong></span>
+            <span class="badge-time"><i class="bi bi-database"></i> Auto-guardado</span>
+          </div>
+        </div>
+        <div id="saveAlert" class="alert alert-success mt-3" style="display:none;">✅ ¡Guardado!</div>
+      </div>
+      
+      <!-- VISTA 2: FLASHCARDS -->
+      <div id="flashcardsView" style="display: none;">
+        <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+          <h3><i class="bi bi-stack me-2" style="color: var(--primary);"></i>Flashcards · Practica tus líneas</h3>
+          <div class="d-flex gap-2">
+            <select id="voiceSelectFlash" class="form-select form-select-sm" style="width: 140px;"><option value="">Voz</option></select>
+            <select id="rateSelectFlash" class="form-select form-select-sm" style="width: 80px;">
+              <option value="0.5">0.5x</option>
+              <option value="0.75">0.75x</option>
+              <option value="1" selected>1x</option>
+              <option value="1.25">1.25x</option>
+              <option value="1.5">1.5x</option>
+              <option value="2">2x</option>
+            </select>
+            <button id="speakCurrentFlashBtn" class="btn btn-sm btn-primary"><i class="bi bi-play-circle-fill"></i> Leer card</button>
+          </div>
+        </div>
+        <div id="flashcardCarousel" class="row justify-content-center">
+          <div class="col-lg-8">
+            <div class="flashcard-container" id="flashcardContainer">
+              <div class="flashcard" id="flashcard">
+                <div class="flashcard-front">
+                  <div class="flashcard-label" id="frontLabel">FRENTE</div>
+                  <p id="frontText">Cargando...</p>
+                  <small class="text-muted mt-auto">🖱️ Haz clic para voltear</small>
+                </div>
+                <div class="flashcard-back">
+                  <div class="flashcard-label">TU TEXTO</div>
+                  <p id="backText">...</p>
+                  <small class="text-muted mt-auto" style="color: rgba(255,255,255,0.7);">📖 Tu libreto completo</small>
+                </div>
+              </div>
+            </div>
+            <div class="d-flex justify-content-between mt-4">
+              <button id="prevCardBtn" class="btn btn-outline-light"><i class="bi bi-chevron-left"></i> Anterior</button>
+              <span id="cardCounter" class="align-self-center">Card 1 / 1</span>
+              <button id="nextCardBtn" class="btn btn-outline-light">Siguiente <i class="bi bi-chevron-right"></i></button>
+            </div>
+            <div class="text-center mt-3">
+              <button id="flipCardBtn" class="btn btn-sm btn-secondary">🔄 Voltear</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- VISTA 3: EXPORTAR -->
+      <div id="exportarView" style="display: none;">
+        <div class="card p-4" style="background: #1E1E1E; border: none;">
+          <h4><i class="bi bi-cloud-arrow-down-fill me-2"></i>Exportar tu producción</h4>
+          <div class="row g-3 mt-3">
+            <div class="col-md-4"><button id="exportTxtBtn" class="btn btn-light w-100 py-3"><i class="bi bi-file-text-fill"></i> TXT</button></div>
+            <div class="col-md-4"><button id="exportPdfBtn" class="btn btn-light w-100 py-3"><i class="bi bi-file-pdf-fill"></i> PDF</button></div>
+            <div class="col-md-4"><button id="copyAllBtn" class="btn btn-light w-100 py-3"><i class="bi bi-clipboard-fill"></i> Copiar</button></div>
+          </div>
+          <hr class="my-4">
+          <h5><i class="bi bi-mic-fill me-2"></i>Practica con flashcards</h5>
+          <p>Ve a la pestaña "Flashcards" para memorizar cada parte de tu podcast con el sistema de tarjetas.</p>
+          <button id="resetDataBtn" class="btn btn-outline-danger mt-2"><i class="bi bi-arrow-repeat"></i> Reiniciar todo</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer class="text-center">
+  <div class="container"><small>🎙️ PodFlash · Redacta tu podcast, conviértelo en flashcards y practica hasta dominarlo</small></div>
+</footer>
+
+<script>
+  // ---------- DEFINICIÓN DE SECCIONES DEL PODCAST ----------
+  const sections = [
+    { id: "introMusic", label: "🎵 INTRO MUSICAL", icon: "bi-music-note-beamed", placeholder: "[SUENA GUITARRA - 10 segundos] Describe la música de apertura..." },
+    { id: "greeting", label: "🎙️ SALUDO", icon: "bi-megaphone-fill", placeholder: "¡Bienvenidos! Soy [nombre] y hoy hablaremos de..." },
+    { id: "hook", label: "🎣 GANCHO", icon: "bi-bullseye", placeholder: "Frase impactante: ¿Sabías que...?" },
+    { id: "segment1", label: "📖 DESARROLLO 1", icon: "bi-1-square-fill", placeholder: "Contexto, datos, historia principal..." },
+    { id: "interview", label: "🎙️ ENTREVISTA", icon: "bi-chat-dots-fill", placeholder: "Preguntas y respuestas clave..." },
+    { id: "segment2", label: "📖 DESARROLLO 2", icon: "bi-2-square-fill", placeholder: "Análisis, soluciones, reflexiones..." },
+    { id: "closing", label: "🔚 CIERRE / CTA", icon: "bi-envelope-paper-fill", placeholder: "Despedida y llamado a la acción..." },
+    { id: "credits", label: "🎧 CRÉDITOS", icon: "bi-credit-card-fill", placeholder: "Agradecimientos, productores, música..." }
+  ];
+  
+  // Objeto para almacenar campos
+  const fields = {};
+  const STORAGE_KEY = "podflash_data";
+  
+  // Renderizar secciones dinámicamente
+  const container = document.getElementById("sectionsContainer");
+  sections.forEach(sec => {
+    const cardDiv = document.createElement("div");
+    cardDiv.className = "editor-card mb-3";
+    cardDiv.innerHTML = `
+      <div class="editor-card-header" data-card="${sec.id}">
+        <span><i class="${sec.icon} me-2" style="color: var(--primary);"></i>${sec.label}</span>
+        <i class="bi bi-chevron-down"></i>
+      </div>
+      <div class="editor-card-content">
+        <textarea id="${sec.id}" rows="3" class="form-control" placeholder="${sec.placeholder}"></textarea>
+        <div class="small text-muted mt-1" id="${sec.id}Count">0 palabras</div>
+      </div>
+    `;
+    container.appendChild(cardDiv);
+    fields[sec.id] = document.getElementById(sec.id);
+  });
+  
+  // Campos adicionales
+  const podcastTitle = document.getElementById("podcastTitle");
+  const episodeTitle = document.getElementById("episodeTitle");
+  const hostName = document.getElementById("hostName");
+  const guestName = document.getElementById("guestName");
+  fields.podcastTitle = podcastTitle;
+  fields.episodeTitle = episodeTitle;
+  fields.hostName = hostName;
+  fields.guestName = guestName;
+  
+  // Funciones auxiliares
+  function countWords(text) { return text.trim().split(/\s+/).filter(w=>w.length>0).length; }
+  function updateAllCounters() {
+    let total = 0;
+    for(let key in fields) if(fields[key]?.value) {
+      const words = countWords(fields[key].value);
+      if(document.getElementById(`${key}Count`)) document.getElementById(`${key}Count`).innerText = `${words} palabras`;
+      total += words;
+    }
+    document.getElementById("totalWordsSpan").innerText = total;
+    const mins = Math.round(total / 130);
+    document.getElementById("estimatedDuration").innerHTML = mins < 1 ? "< 1 min" : `${mins} minutos`;
+    return total;
+  }
+  
+  // Guardar/cargar
+  function saveToLocalStorage() {
+    const data = {};
+    for(let key in fields) if(fields[key]) data[key] = fields[key].value;
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+    const alert = document.getElementById("saveAlert");
+    if(alert) { alert.style.display = "block"; setTimeout(()=>alert.style.display="none", 1500); }
+  }
+  
+  function loadFromLocalStorage() {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if(saved) {
+      const data = JSON.parse(saved);
+      for(let key in data) if(fields[key]) fields[key].value = data[key];
+    } else {
+      // Demo inicial
+      podcastTitle.value = "Voces del Chicamocha";
+      episodeTitle.value = "Episodio 1: El agua que se nos va";
+      hostName.value = "Carolina Rodríguez";
+      guestName.value = "Alberto Lleras, campesino de Los Santos";
+      if(fields.introMusic) fields.introMusic.value = "[SUENA GUITARRA SANTANDEREANA - 10 segundos]";
+      if(fields.greeting) fields.greeting.value = "¡Bienvenidos a Voces del Chicamocha! Soy Carolina Rodríguez. Hoy hablamos del agua que se lleva el río.";
+      if(fields.hook) fields.hook.value = "¿Sabías que el río de Oro pierde 30 litros por segundo cada año? Eso es 50 piscinas olímpicas al mes.";
+      if(fields.segment1) fields.segment1.value = "El río de Oro nace en el páramo de Santurbán. La minería ilegal ha reducido su caudal un 40%.";
+      if(fields.interview) fields.interview.value = "P: Don Alberto, ¿cómo ha visto cambiar el río? R: Antes cantaba, ahora apenas susurra.";
+      if(fields.segment2) fields.segment2.value = "Soluciones: reforestar, denunciar minería ilegal. La comunidad puede unirse los domingos.";
+      if(fields.closing) fields.closing.value = "Comparte este episodio y participa en la minga este sábado.";
+      if(fields.credits) fields.credits.value = "Producido por Radio Comunitaria El Fonce. ¡Gracias por escuchar!";
+    }
+    updateAllCounters();
+  }
+  
+  // ----- FLASHCARDS -----
+  let flashcardsData = []; // {title, text}
+  let currentCardIndex = 0;
+  
+  function buildFlashcardsFromSections() {
+    const cards = [];
+    // Agregar tarjeta de título
+    cards.push({ title: "🎙️ TÍTULO", text: `${podcastTitle.value} · ${episodeTitle.value}` });
+    // Agregar cada sección que tenga contenido
+    for(let sec of sections) {
+      const content = fields[sec.id]?.value;
+      if(content && content.trim()) {
+        cards.push({ title: sec.label, text: content });
+      }
+    }
+    // Tarjeta de cierre
+    if(hostName.value) cards.push({ title: "🎤 LOCUTOR", text: `Presentado por ${hostName.value}` });
+    return cards;
+  }
+  
+  function updateFlashcardDisplay() {
+    if(!flashcardsData.length) flashcardsData = buildFlashcardsFromSections();
+    const card = flashcardsData[currentCardIndex];
+    if(!card) return;
+    document.getElementById("frontLabel").innerHTML = card.title;
+    document.getElementById("frontText").innerHTML = card.text;
+    document.getElementById("backText").innerHTML = card.text;
+    document.getElementById("cardCounter").innerHTML = `Card ${currentCardIndex+1} / ${flashcardsData.length}`;
+    // Resetear flip
+    const flashcardEl = document.getElementById("flashcard");
+    if(flashcardEl.classList.contains("flipped")) flashcardEl.classList.remove("flipped");
+  }
+  
+  function refreshFlashcards() {
+    flashcardsData = buildFlashcardsFromSections();
+    currentCardIndex = 0;
+    if(flashcardsData.length) updateFlashcardDisplay();
+    else document.getElementById("frontText").innerHTML = "Primero escribe algo en el editor.";
+  }
+  
+  function nextCard() { if(flashcardsData.length && currentCardIndex < flashcardsData.length-1) { currentCardIndex++; updateFlashcardDisplay(); } }
+  function prevCard() { if(currentCardIndex > 0) { currentCardIndex--; updateFlashcardDisplay(); } }
+  function flipCard() { document.getElementById("flashcard").classList.toggle("flipped"); }
+  
+  // Lector de voz para flashcards
+  let voices = [];
+  function populateVoices() {
+    voices = speechSynthesis.getVoices();
+    const selects = [document.getElementById("voiceSelectFlash"), document.getElementById("voiceSelectFlash")];
+    selects.forEach(select => {
+      if(!select) return;
+      select.innerHTML = '<option value="">Voz por defecto</option>';
+      voices.forEach(v => { if(v.lang.startsWith("es")) select.innerHTML += `<option value="${v.name}">${v.name}</option>`; });
+    });
+  }
+  if(typeof speechSynthesis !== 'undefined') speechSynthesis.onvoiceschanged = populateVoices;
+  setTimeout(populateVoices, 200);
+  
+  let currentUtterance = null;
+  function stopSpeaking() { if(currentUtterance) { speechSynthesis.cancel(); currentUtterance=null; } }
+  function speakCurrentFlashcard() {
+    stopSpeaking();
+    const card = flashcardsData[currentCardIndex];
+    if(!card || !card.text) return;
+    const utterance = new SpeechSynthesisUtterance(card.text);
+    utterance.lang = "es-ES";
+    utterance.rate = parseFloat(document.getElementById("rateSelectFlash")?.value || 1);
+    const voiceName = document.getElementById("voiceSelectFlash")?.value;
+    if(voiceName && voices.length) { const selected = voices.find(v=>v.name===voiceName); if(selected) utterance.voice = selected; }
+    currentUtterance = utterance;
+    speechSynthesis.speak(utterance);
+  }
+  
+  // Exportar
+  function generatePlainText() {
+    let txt = `${podcastTitle.value}\n${episodeTitle.value}\nLocutor: ${hostName.value}\n`;
+    if(guestName.value) txt += `Invitado: ${guestName.value}\n`;
+    txt += "\n" + "=".repeat(60) + "\n\n";
+    for(let sec of sections) if(fields[sec.id]?.value) txt += `[${sec.label}]\n${fields[sec.id].value}\n\n`;
+    return txt;
+  }
+  function exportTxt() {
+    const blob = new Blob([generatePlainText()], {type:"text/plain"});
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(blob);
+    link.download = `podcast_${episodeTitle.value.replace(/[^a-z0-9]/gi,'_') || "episodio"}.txt`;
+    link.click(); URL.revokeObjectURL(link.href);
+  }
+  async function exportPdf() {
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
+    let text = generatePlainText();
+    doc.text(text, 10, 10, { maxWidth: 180 });
+    doc.save(`podcast_${episodeTitle.value.slice(0,20)}.pdf`);
+  }
+  function copyAll() { navigator.clipboard.writeText(generatePlainText()).then(()=>alert("¡Copiado!")); }
+  
+  // Eventos UI
+  document.querySelectorAll(".editor-card-header").forEach(h => {
+    h.addEventListener("click", () => { h.closest(".editor-card").classList.toggle("expanded"); });
+  });
+  document.getElementById("saveAllBtn")?.addEventListener("click", saveToLocalStorage);
+  document.getElementById("exportTxtBtn")?.addEventListener("click", exportTxt);
+  document.getElementById("exportPdfBtn")?.addEventListener("click", exportPdf);
+  document.getElementById("copyAllBtn")?.addEventListener("click", copyAll);
+  document.getElementById("prevCardBtn")?.addEventListener("click", prevCard);
+  document.getElementById("nextCardBtn")?.addEventListener("click", nextCard);
+  document.getElementById("flipCardBtn")?.addEventListener("click", flipCard);
+  document.getElementById("speakCurrentFlashBtn")?.addEventListener("click", speakCurrentFlashcard);
+  document.getElementById("resetDataBtn")?.addEventListener("click", () => { if(confirm("¿Reiniciar todo?")) { localStorage.removeItem(STORAGE_KEY); location.reload(); } });
+  
+  // Actualizar flashcards cuando se edita cualquier campo
+  for(let key in fields) if(fields[key] && fields[key].addEventListener) {
+    fields[key].addEventListener("input", () => {
+      updateAllCounters();
+      refreshFlashcards();
+      saveToLocalStorage();
+    });
+  }
+  
+  // Navegación entre vistas
+  const views = { editor: "editorView", flashcards: "flashcardsView", exportar: "exportarView" };
+  document.querySelectorAll(".nav-item-custom").forEach(item => {
+    item.addEventListener("click", () => {
+      const view = item.getAttribute("data-view");
+      document.querySelectorAll(".nav-item-custom").forEach(i => i.classList.remove("active"));
+      item.classList.add("active");
+      for(let v in views) document.getElementById(views[v]).style.display = v === view ? "block" : "none";
+      if(view === "flashcards") refreshFlashcards();
+    });
+  });
+  
+  // Modo oscuro/claro
+  document.getElementById("themeToggleBtn").addEventListener("click", () => {
+    document.body.classList.toggle("light-mode");
+    const btn = document.getElementById("themeToggleBtn");
+    if(document.body.classList.contains("light-mode")) btn.innerHTML = '<i class="bi bi-brightness-high-fill"></i> Modo claro';
+    else btn.innerHTML = '<i class="bi bi-moon-stars-fill"></i> Modo oscuro';
+  });
+  
+  // Inicializar
+  loadFromLocalStorage();
+  refreshFlashcards();
+  document.querySelector(".editor-card").classList.add("expanded");
+  document.getElementById("editorView").style.display = "block";
+  setInterval(saveToLocalStorage, 30000);
+</script>
+</body>
+</html>

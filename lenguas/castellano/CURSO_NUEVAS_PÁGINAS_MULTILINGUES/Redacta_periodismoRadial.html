@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>PeriodistaPro · 100 técnicas de redacción para Periodismo (Radio y Web)</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #C0392B;
+      --primary-dark: #A93226;
+      --secondary: #F39C12;
+      --bg-dark: #1a1a1a;
+      --bg-light: #FEF9E6;
+      --card-dark: #252525;
+      --card-light: #FFFFFF;
+    }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg-dark);
+      color: #E5E5E5;
+      transition: all 0.3s;
+    }
+    body.light-mode {
+      background: var(--bg-light);
+      color: #1E1E1E;
+    }
+    .sidebar {
+      background: #1E1E1E;
+      border-radius: 1.5rem;
+      padding: 1rem;
+      height: fit-content;
+      position: sticky;
+      top: 20px;
+    }
+    body.light-mode .sidebar { background: #FFF; }
+    .nav-item-custom {
+      padding: 0.8rem 1rem;
+      border-radius: 1rem;
+      cursor: pointer;
+      margin-bottom: 0.5rem;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: #AAA;
+    }
+    .nav-item-custom i { width: 24px; }
+    .nav-item-custom.active { background: var(--primary); color: white; }
+    .cat-filter {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+    }
+    .filter-btn {
+      background: transparent;
+      border: 1px solid #3A3A3A;
+      border-radius: 30px;
+      padding: 0.2rem 0.8rem;
+      font-size: 0.7rem;
+      cursor: pointer;
+    }
+    .filter-btn.active { background: var(--primary); border-color: var(--primary); color: white; }
+    body.light-mode .filter-btn { border-color: #D0D0D0; }
+    .tecnica-card {
+      background: var(--card-dark);
+      border-radius: 1rem;
+      padding: 1rem;
+      margin-bottom: 0.8rem;
+      border: 1px solid #3A3A3A;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+    body.light-mode .tecnica-card { background: var(--card-light); border-color: #E0E0E0; }
+    .tecnica-card.completed { border-left: 4px solid var(--primary); background: rgba(192,57,43,0.15); }
+    .flashcard-container { perspective: 1000px; min-height: 520px; cursor: pointer; }
+    .flashcard { width: 100%; height: 580px; position: relative; transform-style: preserve-3d; transition: transform 0.6s; border-radius: 1.5rem; }
+    .flashcard.flipped { transform: rotateY(180deg); }
+    .flashcard-front, .flashcard-back {
+      position: absolute; width: 100%; height: 100%; backface-visibility: hidden;
+      border-radius: 1.5rem; padding: 1.5rem; display: flex; flex-direction: column;
+      background: var(--card-dark); border: 1px solid #3A3A3A; overflow-y: auto;
+    }
+    body.light-mode .flashcard-front, body.light-mode .flashcard-back { background: var(--card-light); }
+    .flashcard-back { transform: rotateY(180deg); background: var(--primary); color: white; }
+    .option-btn { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); padding: 0.5rem 1rem; border-radius: 2rem; margin: 0.3rem; cursor: pointer; }
+    .option-btn:hover { background: rgba(255,255,255,0.2); }
+    .option-btn.correct { background: #27ae60; }
+    .option-btn.incorrect { background: #e74c3c; }
+    .progress-custom { height: 4px; background: #3A3A3A; border-radius: 2px; }
+    .progress-fill-custom { height: 100%; background: var(--primary); width: 0%; transition: width 0.3s; }
+    footer { background: #141414; padding: 1rem 0; margin-top: 2rem; text-align: center; }
+    .badge-cat { background: var(--secondary); color: #2C2A29; padding: 0.2rem 0.6rem; border-radius: 20px; font-size: 0.7rem; }
+    .search-box { width: 100%; padding: 0.5rem; border-radius: 2rem; border: 1px solid #3A3A3A; background: var(--card-dark); color: #E5E5E5; }
+    body.light-mode .search-box { background: var(--card-light); color: #1E1E1E; border-color: #D0D0D0; }
+  </style>
+</head>
+<body>
+
+<div class="container-fluid px-4 py-3">
+  <div class="row g-4">
+    
+    <!-- SIDEBAR -->
+    <div class="col-lg-3 col-md-4">
+      <div class="sidebar">
+        <div class="text-center py-3">
+          <i class="bi bi-mic-fill" style="font-size: 2rem; color: var(--primary);"></i>
+          <h5 class="mt-2">PeriodistaPro</h5>
+          <small class="text-muted">100 técnicas · Radio · Web · Colombia</small>
+        </div>
+        <hr>
+        <div class="nav-item-custom active" data-view="lista">
+          <i class="bi bi-list-ul"></i> <span>📋 Técnicas</span>
+        </div>
+        <div class="nav-item-custom" data-view="flashcards">
+          <i class="bi bi-stack"></i> <span>🃏 Flashcards</span>
+        </div>
+        <hr>
+        <div class="mt-3">
+          <div class="d-flex justify-content-between small"><span>Técnicas completadas</span><span id="completedCount">0</span><span>/100</span></div>
+          <div class="progress-custom mt-1"><div class="progress-fill-custom" id="progressFill"></div></div>
+        </div>
+        <hr>
+        <button id="themeToggleBtn" class="btn btn-sm w-100 mt-2"><i class="bi bi-moon-stars-fill"></i> Modo oscuro</button>
+      </div>
+    </div>
+    
+    <!-- CONTENIDO PRINCIPAL -->
+    <div class="col-lg-9 col-md-8">
+      
+      <!-- VISTA LISTA DE TÉCNICAS -->
+      <div id="listaView">
+        <h3><i class="bi bi-mic-fill me-2"></i>100 técnicas de redacción para Periodismo</h3>
+        <p class="text-muted small">Radio · Web · Entrevistas · Ética · Edición multimedia · Colombia</p>
+        <div class="d-flex gap-2 my-3 flex-wrap">
+          <input type="text" id="searchInput" class="search-box" placeholder="🔍 Buscar técnica..." style="width: 200px;">
+          <select id="catFilter" class="form-select form-select-sm" style="width: 180px;">
+            <option value="all">Todas las categorías</option>
+            <option value="Redacción para radio">🎙️ Redacción para radio</option>
+            <option value="Periodismo digital">💻 Periodismo digital</option>
+            <option value="Entrevista y fuentes">🎤 Entrevista y fuentes</option>
+            <option value="Ética periodística">⚖️ Ética periodística</option>
+            <option value="Edición multimedia">🎬 Edición multimedia</option>
+          </select>
+        </div>
+        <div id="tecnicasList" style="max-height: 70vh; overflow-y: auto;"></div>
+        <div class="d-flex justify-content-center mt-4"><ul class="pagination" id="pagination"></ul></div>
+      </div>
+      
+      <!-- VISTA FLASHCARDS -->
+      <div id="flashcardsView" style="display: none;">
+        <div class="d-flex justify-content-between mb-3">
+          <h3><i class="bi bi-stack me-2"></i>Flashcards · Aprende redacción periodística</h3>
+        </div>
+        <div class="flashcard-container"><div class="flashcard" id="flashcard">
+          <div class="flashcard-front">
+            <div class="d-flex justify-content-between"><span class="badge-cat" id="frontCat">Categoría</span><span id="frontNum">#1</span></div>
+            <h5 id="frontTitle" class="mt-2">Técnica</h5>
+            <p id="frontConcept" class="mt-3" style="flex:1;">Concepto</p>
+            <small>🖱️ Haz clic para ver el ejemplo periodístico</small>
+          </div>
+          <div class="flashcard-back">
+            <div class="d-flex justify-content-between"><span class="badge-cat">📖 Ejemplo periodístico</span><span id="backNum">#1</span></div>
+            <h5 id="backTitle" class="mt-2">Ejemplo práctico</h5>
+            <p id="backExample" class="mt-2" style="flex:1;"></p>
+            <div id="exerciseArea" class="mt-3"></div>
+          </div>
+        </div></div>
+        <div class="d-flex justify-content-between mt-4">
+          <button id="prevCardBtn" class="btn btn-outline-light">◀ Anterior</button>
+          <div><span id="cardCounter">1 / 100</span><button id="markCompleteBtn" class="btn btn-sm btn-success ms-2">✅ Aprendida</button></div>
+          <button id="nextCardBtn" class="btn btn-outline-light">Siguiente ▶</button>
+        </div>
+        <div class="text-center mt-3"><button id="randomCardBtn" class="btn btn-sm btn-secondary me-2">🎲 Aleatorio</button><button id="flipCardBtn" class="btn btn-sm btn-secondary">🔄 Voltear</button></div>
+      </div>
+    </div>
+  </div>
+</div>
+<footer><div class="container"><small>🎙️ PeriodistaPro · 100 técnicas de redacción para Periodismo radial y web · Colombia</small></div></footer>
+
+<script>
+  // ============================================================
+  // 100 TÉCNICAS DE REDACCIÓN PARA PERIODISMO (Radio y Web) - Colombia
+  // ============================================================
+  
+  const tecnicas = [];
+  
+  const tecnicasPorCategoria = {
+    "Redacción para radio": [
+      [1, "Escribe como hablas", "Usa un lenguaje natural y conversacional.", "Ejemplo: 'Buenos días, ¿qué tal? Les contamos que hoy amaneció lloviendo en Bogotá. Tome el paraguas antes de salir.'"],
+      [2, "Usa frases cortas", "Para facilitar la lectura en voz alta.", "Ejemplo: 'El presidente viajó a Medellín. Allí se reunió con los empresarios. Firmó un acuerdo de cooperación.'"],
+      [3, "Lee en voz alta el guion", "Detecta frases difíciles de pronunciar.", "Ejemplo: 'Si al leer tropiezas, reescribe la frase; el oyente también tropezará.'"],
+      [4, "Incluye pausas indicadas", "Separa ideas con silencios breves.", "Ejemplo: 'El Congreso aprobó la ley. (pausa de 1 segundo) Sin embargo, el presidente la objetó.'"],
+      [5, "Evita siglas sin explicar", "Di el nombre completo la primera vez.", "Ejemplo: 'La Unidad Nacional de Protección (UNP) informó...'"],
+      [6, "Usa el presente histórico", "Da actualidad a hechos pasados.", "Ejemplo: 'En 1819, Bolívar cruza los Andes y libera a Nueva Granada.'"],
+      [7, "Nombra al entrevistado periódicamente", "Recordatorio al oyente.", "Ejemplo: 'Como decía el ministro de Salud, Fernando Ruiz...'"],
+      [8, "Redacta titulares con verbos", "Dinamismo.", "Ejemplo: 'Amanece con protestas en Bogotá' no 'Amanecer con protestas'."],
+      [9, "Usa la pirámide invertida", "Lo más importante al inicio.", "Ejemplo: 'El Presidente anunció toque de queda en 5 departamentos. La medida empieza mañana a las 8 p.m.'"],
+      [10, "Diferencia radio de otros medios", "El oyente no puede releer.", "Ejemplo: 'No pongas datos muy densos; repite lo clave.'"],
+      [11, "Evita fechas completas", "Usa 'ayer', 'mañana', 'el lunes'.", "Ejemplo: 'Ayer, 15 de mayo, el gobierno...' mejor 'Ayer, el gobierno...'."],
+      [12, "Incluye gancho en la primera frase", "Atrapar al oyente.", "Ejemplo: '¿Sabías que el 70% de las noticias se abandonan en los primeros 15 segundos? Pues hoy no será así.'"],
+      [13, "Redacta cortinillas y ráfagas", "Separadores auditivos.", "Ejemplo: '[SEPARADOR: ráfaga de 3 segundos] Cambiamos de tema...'"],
+      [14, "Usa sonido ambiente", "Ambienta la información.", "Ejemplo: '[SONIDO DE TRÁFICO] Ya son las 6 p.m. y la movilidad en la 30 es un caos.'"],
+      [15, "Escribe indicaciones técnicas", "Para el operador.", "Ejemplo: '[SUBE VOLUMEN DE TESTIMONIO] [BAJA VOLUMEN]'"],
+      [16, "Ensaya la entonación", "No leer plano.", "Ejemplo: 'Las preguntas van con entonación ascendente; las afirmaciones, con descendente.'"],
+      [17, "Cuida la respiración", "Frases que permitan respirar.", "Ejemplo: 'Divide una frase larga en dos cortas para no ahogarte.'"],
+      [18, "Incluye llamadas a la acción", "Interacción con el oyente.", "Ejemplo: 'Cuéntanos, ¿qué opinas? Escríbenos al WhatsApp 300 123 4567.'"],
+      [19, "Redacta para oído", "No para vista.", "Ejemplo: 'Dos mil pesos' en lugar de '$2.000'."],
+      [20, "Verifica pronunciación de nombres", "Llama para confirmar.", "Ejemplo: 'El nombre del alcalde es 'Pérez', no 'Peres' (averigua cómo se pronuncia).'"]
+    ],
+    "Periodismo digital": [
+      [21, "Escribe títulos SEO", "Palabras clave al inicio.", "Ejemplo: 'Protestas en Bogotá: cierres viales y recomendaciones' no 'Hoy hubo protestas'."],
+      [22, "Redacta meta descripciones atractivas", "160 caracteres máx.", "Ejemplo: 'Las protestas en Bogotá afectan la movilidad. Entérate de las vías alternas y las demandas de los manifestantes.'"],
+      [23, "Usa subtítulos (H2, H3)", "Facilita la lectura en pantalla.", "Ejemplo: '¿Cuándo empezaron las protestas?', '¿Qué piden los manifestantes?'"],
+      [24, "Párrafos cortos", "Máximo 3 líneas.", "Ejemplo: 'El paro nacional comenzó a las 6 a.m. Los transportadores bloquearon la calle 80. La policía negoció el desbloqueo.'"],
+      [25, "Incluye enlaces internos", "Relaciona contenido del mismo sitio.", "Ejemplo: 'Lee también: [Lo que debe saber sobre el paro nacional]'"],
+      [26, "Usa negritas para frases clave", "Destaca lo más importante.", "Ejemplo: 'El presidente anunció que <b>bajarán los impuestos</b> a partir de julio.'"],
+      [27, "Incluye listas y viñetas", "Facilita escaneo.", "Ejemplo: 'Los puntos clave del acuerdo: • Aumento del salario mínimo • Subsidio de transporte'"],
+      [28, "Redacta para dispositivos móviles", "Primero móvil, después escritorio.", "Ejemplo: 'Fuentes grandes (mínimo 16px), botones amplios, párrafos cortos.'"],
+      [29, "Incluye multimedia", 'Imágenes, videos, audios.', "Ejemplo: 'El video muestra el momento exacto del accidente. (insertar video)'"],
+      [30, "Escribe pies de foto descriptivos", "No solo 'imagen 1'.", "Ejemplo: 'Figura 1. Marcha en la Plaza de Bolívar, 15 de mayo, fotografía: Juan Pérez.'"],
+      [31, "Actualiza noticias en vivo", "Marca la hora de actualización.", "Ejemplo: '[Actualización 3:45 p.m.] El paso por la calle 80 ya está habilitado.'"],
+      [32, "Usa tarjetas o cards", "Resúmenes en la portada.", "Ejemplo: 'Resumen: paro nacional, marchas, cierres viales (clic para ampliar)'"],
+      [33, "Redacta llamados a la acción (CTA)", "Compartir, comentar, suscribirse.", "Ejemplo: '¿Te pareció útil esta información? Compártela en tus redes sociales.'"],
+      [34, "Incluye botones para compartir", "Facilidad de difusión.", "Ejemplo: 'Compartir en WhatsApp, Facebook, Twitter.'"],
+      [35, "Optimiza velocidad de carga", "Imágenes livianas, hosting rápido.", "Ejemplo: 'Usa imágenes JPG de 80% calidad, tamaño 800px de ancho.'"],
+      [36, "Escribe URL amigables", "Con guiones y palabras clave.", "Ejemplo: 'www.mimedio.com/protestas-bogota-15-mayo' no 'articulo?id=12345'."],
+      [37, "Incluye autor y fecha", "Credibilidad y contexto.", "Ejemplo: 'Por: María Rodríguez - 15 de mayo de 2025'"],
+      [38, "Usa enlaces a fuentes originales", "Transparencia.", "Ejemplo: 'Según el informe del DANE (ver enlace)'"],
+      [39, "Incluye resaltados en citas", "Blockquote.", "Ejemplo: '<blockquote>La situación es crítica</blockquote>, declaró el alcalde.'"],
+      [40, "Redacta boletines por email", "Resumen diario.", "Ejemplo: 'Boletín 15 de mayo: lo que debe saber antes de salir de casa.'"]
+    ],
+    "Entrevista y fuentes": [
+      [41, "Prepara preguntas abiertas", "Evita sí/no.", "Ejemplo: '¿Cómo vivió la experiencia del desalojo?' no '¿Estuvo de acuerdo?'"],
+      [42, "Redacta preguntas de seguimiento", "Profundizar.", "Ejemplo: 'Usted dice que no estaba informado; ¿qué hizo la empresa para informarle?'"],
+      [43, "Contextualiza la respuesta", "Para el lector/oyente.", "Ejemplo: 'El ministro, refiriéndose a las críticas, afirmó que...'"],
+      [44, "Verifica datos de la fuente", "Contrasta con otras fuentes.", "Ejemplo: 'La cifra de desempleo del 12% fue confirmada por el DANE y la ANDI.'"],
+      [45, "Protege la identidad de fuentes sensibles", "Anonimato si es necesario.", "Ejemplo: 'Fuente: un funcionario que pidió reserva de su nombre.'"],
+      [46, "Diferencia off the record", "No publicable, solo contexto.", "Ejemplo: 'El funcionario habló off the record; no podemos citarlo directamente.'"],
+      [47, "Redacta entradilla de entrevista", "Resumen del invitado.", "Ejemplo: 'Hoy conversamos con la escritora colombiana Laura Restrepo, autora de 'La multitud errante'.'"],
+      [48, "Usa citas textuales con comillas", "Literalidad.", "Ejemplo: 'El presidente dijo: 'No habrá marcha atrás en las reformas'.'"],
+      [49, "Parafrasea respuestas largas", "Adelanta al oyente/lector.", "Ejemplo: 'En otras palabras, el ministro asegura que la reforma es irreversible.'"],
+      [50, "Verifica ortografía de nombres", "No errores.", "Ejemplo: 'García Márquez, con tilde en la z.'"],
+      [51, "Pregunta por pruebas", "Documentos, videos, testigos.", "Ejemplo: '¿Tiene alguna evidencia que respalde su afirmación?'"],
+      [52, "Respeta la confidencialidad", "No reveles fuente prometida.", "Ejemplo: 'La fuente pidió anonimato y se respeta su decisión.'"],
+      [53, "Diferencia hecho de opinión", "El periodista no opina.", "Ejemplo: 'El ministro dijo que la reforma es buena (opinión); el desempleo bajó 1% (hecho).'"],
+      [54, "No uses preguntas sugestivas", 'No induzcas la respuesta.', "Ejemplo: '¿Cree que la gestión del alcalde ha sido mala?' es sugestivo.'"],
+      [55, "Redacta perfiles de entrevistados", "Contexto biográfico.", "Ejemplo: 'María López, abogada de derechos humanos, ha trabajado 20 años en la Comisión de la Verdad.'"],
+      [56, "Incluye datos de contacto de fuentes", "Archivo periodístico.", "Ejemplo: 'Fuente: Jefe de prensa de la Alcaldía, teléfono 555-1234.'"],
+      [57, "Transcribe fragmentos importantes", "Para edición.", "Ejemplo: 'La frase textual dura 5 segundos; se transcribe para ponerla en el podcast.'"],
+      [58, "Usa fuentes múltiples", "No te quedes con una sola.", "Ejemplo: 'Tres testigos coinciden en que el vehículo iba a alta velocidad.'"],
+      [59, "Redacta cartas de autorización", "Para publicar entrevistas.", "Ejemplo: 'Firma de consentimiento informado del entrevistado.'"],
+      [60, "Verifica fechas de declaraciones", "Actualidad.", "Ejemplo: 'La declaración del ministro es de 2023; ver si sigue vigente.'"]
+    ],
+    "Ética periodística": [
+      [61, "Diferencia información de opinión", "Secciones separadas.", "Ejemplo: 'Los artículos de opinión van en la sección 'Columnas'; las noticias, en 'Actualidad'.'"],
+      [62, "No manipules citas", "No saques de contexto.", "Ejemplo: 'El presidente dijo 'no voy a renunciar', no 'voy a renunciar' como algunos sacaron.'"],
+      [63, "Corrige errores públicamente", "Fe de erratas.", "Ejemplo: 'En nuestra nota anterior dijimos que el accidente fue en la mañana; en realidad fue en la tarde. Rectificamos.'"],
+      [64, "No publiques información no verificada", "Contrasta.", "Ejemplo: 'La noticia del atentado no ha sido confirmada por fuentes oficiales; esperaremos para publicar.'"],
+      [65, "Respeta la presunción de inocencia", "No condenes antes de juicio.", "Ejemplo: 'El acusado es inocente hasta que se demuestre lo contrario.'"],
+      [66, "Protege a menores y víctimas", "No reveles identidad.", "Ejemplo: 'La menor abusada se identifica como 'L.M.' para proteger su identidad.'"],
+      [67, "Evita el sensacionalismo", "No exageres.", "Ejemplo: 'Accidente en la vía' no 'Tragedia en la carretera' si no hay muertos.'"],
+      [68, "No pagues por información", "Independencia.", "Ejemplo: 'No se deben pagar sobornos a fuentes; la información debe ser gratuita.'"],
+      [69, "Declara conflictos de interés", "Transparencia.", "Ejemplo: 'El periodista que cubre el sector salud es familiar del ministro; debe declararlo y no cubrir esa fuente.'"],
+      [70, "Diferencia publicidad de contenido editorial", "No publirreportajes engañosos.", "Ejemplo: 'Contenido patrocinado' debe ir claramente marcado.'"],
+      [71, "No aceptes regalos de fuentes", "Independencia.", "Ejemplo: 'Un periodista no debe aceptar viajes pagados por una empresa que cubre.'"],
+      [72, "Usa lenguaje no discriminatorio", "Respeto por grupos.", "Ejemplo: 'Persona con discapacidad' no 'discapacitado'."],
+      [73, "No estigmatices barrios o comunidades", 'Evita "barrio peligroso".', "Ejemplo: 'Comuna con altos índices de violencia' en lugar de 'barrio peligroso'."],
+      [74, "Respeta duelos y tragedias", "Sensibilidad.", "Ejemplo: 'No mostrar imágenes de cadáveres sin consentimiento de familiares.'"],
+      [75, "No uses fuentes anónimas por conveniencia", "Solo para proteger al informante.", "Ejemplo: 'Fuente anónima reveló...' solo si la fuente está en riesgo.'"],
+      [76, "Cumple el código de ética de FLIP", "Fundación para la Libertad de Prensa.", "Ejemplo: 'Consultar el código de ética de FLIP ante dilemas.'"],
+      [77, "No plagies", "Atribuye créditos.", "Ejemplo: 'La información fue tomada de la agencia EFE, con su crédito correspondiente.'"],
+      [78, "No presiones a víctimas", "No revictimices.", "Ejemplo: 'No insistir a una víctima de violencia sexual que dé detalles morbosos.'"],
+      [79, "Derecho a la rectificación", "Publicar respuesta del aludido.", "Ejemplo: 'El señor Pérez solicitó una rectificación; la publicamos en la sección 'Derecho a rectificar'.'"],
+      [80, "Actualiza información errónea", "No la dejes en internet sin corrección.", "Ejemplo: 'La noticia original decía 10 víctimas; se actualiza a 5 con disculpa por el error.'"]
+    ],
+    "Edición multimedia": [
+      [81, "Edita audio eliminando ruido", "Silencios largos, muletillas.", "Ejemplo: 'Elimina los 'eh', 'este' en la entrevista.'"],
+      [82, "Nivela volúmenes", "Entrevista y voz de locutor.", "Ejemplo: 'Normalizar el volumen: -3dB para entrevista, -6dB para fondo musical.'"],
+      [83, "Inserta cortinillas", "Entre segmentos.", "Ejemplo: '[CORTINILLA DE 5 SEGUNDOS] Pasamos al siguiente tema...'"],
+      [84, "Incluye músicas libres de derechos", "Creative Commons.", "Ejemplo: 'Usar música de bibliotecas como Free Music Archive o Jamendo.'"],
+      [85, "Edita video para redes", 'Formato cuadrado (1:1) o vertical (9:16).', "Ejemplo: 'Para Instagram, edita en 1080x1080 o 1080x1920.'"],
+      [86, "Pon subtítulos en videos", "Accesibilidad.", "Ejemplo: 'Los subtítulos ayudan a personas con discapacidad auditiva y a quienes ven sin sonido.'"],
+      [87, "Incluye capítulos en podcast", "Marcas de tiempo.", "Ejemplo: '00:00 Introducción; 05:00 Entrevista ministro; 20:00 Análisis.'"],
+      [88, "Redacta descripciones de podcast", "Para plataformas.", "Ejemplo: 'En este episodio hablamos sobre la reforma tributaria con el ministro de Hacienda.'"],
+      [89, "Ajusta ganancia", "Evita picos de volumen.", "Ejemplo: 'Aplicar compresor o limitador para que no haya sobremodulación.'"],
+      [90, "Elimina respiración excesiva", "En cortes.", "Ejemplo: 'Edita las respiraciones muy audibles entre frases.'"],
+      [91, "Incluye introducción musical", "Identidad del programa.", "Ejemplo: 'Intro de 10 segundos con el jingle del programa.'"],
+      [92, "Redacta guiones para piezas audiovisuales", "Voz en off + imágenes.", "Ejemplo: 'VO: El río Cauca se desbordó. (imagen del río) VO: Afectó a 5 municipios.'"],
+      [93, "Sincroniza audio y video", "Labial correcto.", "Ejemplo: 'La entrevista debe tener sincronía de labios; ajustar delay si es necesario.'"],
+      [94, "Incluye créditos", "Autores, música, agradecimientos.", "Ejemplo: 'Producido por: Juan Pérez; Música: Banda Sonora Libre; Agradecimientos: a la comunidad.'"],
+      [95, "Usa transiciones suaves", "Fundidos, encadenados.", "Ejemplo: 'Fundido a negro entre segmentos; no cortes bruscos.'"],
+      [96, "Redacta etiquetas (tags)", "Para SEO en plataformas.", "Ejemplo: 'Tags: protestas, Bogotá, paro nacional, movilidad.'"],
+      [97, "Crea thumbnail atractivo", "Para YouTube.", "Ejemplo: 'Imagen de alta resolución, texto grande, rostro expresivo.'"],
+      [98, "Incluye llamado a la acción en video", 'Suscribirse, comentar.', "Ejemplo: 'Si te gustó este video, dale like y suscríbete al canal.'"],
+      [99, "Exporta en formatos adecuados", "MP3 para audio, MP4 para video.", "Ejemplo: 'Audio: MP3 128 kbps; Video: MP4 H.264 1080p.'"],
+      [100, "Revisa antes de publicar", "Error detection.", "Ejemplo: 'Escucha el episodio completo antes de subirlo para detectar errores.'"]
+    ]
+  };
+  
+  // Construir array de técnicas
+  for(let categoria in tecnicasPorCategoria) {
+    for(let tec of tecnicasPorCategoria[categoria]) {
+      tecnicas.push({
+        id: tec[0],
+        categoria: categoria,
+        titulo: tec[1],
+        concepto: tec[2],
+        ejemplo: tec[3]
+      });
+    }
+  }
+  
+  tecnicas.sort((a,b) => a.id - b.id);
+  
+  let progress = {};
+  let currentCatFilter = "all";
+  let currentSearch = "";
+  let currentPage = 1;
+  let itemsPerPage = 12;
+  let filteredTecnicas = [...tecnicas];
+  let currentCardIndex = 0;
+  let filteredFlashcards = [...tecnicas];
+  const STORAGE_KEY = "periodistapro_100_tecnicas";
+  
+  function loadProgress() {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if(saved) progress = JSON.parse(saved);
+    for(let i=0; i<tecnicas.length; i++) if(progress[tecnicas[i].id]===undefined) progress[tecnicas[i].id] = false;
+    updateStats();
+  }
+  function saveProgress() { localStorage.setItem(STORAGE_KEY, JSON.stringify(progress)); updateStats(); }
+  function updateStats() {
+    let c = Object.values(progress).filter(v=>v===true).length;
+    document.getElementById("completedCount").innerText = c;
+    document.getElementById("progressFill").style.width = `${(c/100)*100}%`;
+  }
+  function markComplete(id, isComplete) {
+    if(isComplete && !progress[id]) { progress[id] = true; saveProgress(); renderLista(); }
+  }
+  
+  function renderLista() {
+    let filtered = tecnicas.filter(t => {
+      if(currentCatFilter !== "all" && t.categoria !== currentCatFilter) return false;
+      if(currentSearch && !t.titulo.toLowerCase().includes(currentSearch) && !t.concepto.toLowerCase().includes(currentSearch)) return false;
+      return true;
+    });
+    filteredTecnicas = filtered;
+    const totalPages = Math.ceil(filtered.length / itemsPerPage);
+    const start = (currentPage-1) * itemsPerPage;
+    const paginated = filtered.slice(start, start+itemsPerPage);
+    
+    const container = document.getElementById("tecnicasList");
+    container.innerHTML = paginated.map(t => `
+      <div class="tecnica-card ${progress[t.id] ? 'completed' : ''}" data-id="${t.id}">
+        <div class="d-flex justify-content-between">
+          <div><span class="badge-cat">${t.categoria}</span><span class="ms-2">#${t.id}</span></div>
+          <input class="form-check-input" type="checkbox" ${progress[t.id] ? 'checked' : ''} onchange="event.stopPropagation(); markComplete(${t.id}, this.checked)">
+        </div>
+        <h6 class="mt-2">${t.titulo}</h6>
+        <p class="small text-muted">${t.concepto.substring(0, 100)}...</p>
+      </div>
+    `).join('');
+    
+    document.querySelectorAll(".tecnica-card").forEach(card => {
+      card.addEventListener("click", (e) => {
+        if(!e.target.classList.contains("form-check-input")) {
+          let id = parseInt(card.dataset.id);
+          let idx = filteredTecnicas.findIndex(t => t.id === id);
+          if(idx !== -1) { currentCardIndex = idx; switchToFlashcards(); updateFlashcard(); }
+        }
+      });
+    });
+    
+    let pagHtml = ''; for(let i=1;i<=totalPages;i++) pagHtml += `<li class="page-item ${i===currentPage?'active':''}"><a class="page-link" href="#" data-page="${i}">${i}</a></li>`;
+    document.getElementById("pagination").innerHTML = pagHtml;
+    document.querySelectorAll("#pagination .page-link").forEach(l=>l.addEventListener("click", e=>{ e.preventDefault(); currentPage=parseInt(l.dataset.page); renderLista(); }));
+  }
+  
+  function filterFlashcards() {
+    if(currentCatFilter === "all") filteredFlashcards = [...tecnicas];
+    else filteredFlashcards = tecnicas.filter(t => t.categoria === currentCatFilter);
+    currentCardIndex = Math.min(currentCardIndex, filteredFlashcards.length-1);
+    if(currentCardIndex < 0) currentCardIndex = 0;
+    updateFlashcard();
+  }
+  
+  function updateFlashcard() {
+    let t = filteredFlashcards[currentCardIndex];
+    if(!t) return;
+    document.getElementById("frontCat").innerHTML = t.categoria;
+    document.getElementById("frontNum").innerHTML = `#${t.id}`;
+    document.getElementById("frontTitle").innerHTML = t.titulo;
+    document.getElementById("frontConcept").innerHTML = t.concepto;
+    document.getElementById("backNum").innerHTML = `#${t.id}`;
+    document.getElementById("backTitle").innerHTML = t.titulo;
+    document.getElementById("backExample").innerHTML = t.ejemplo;
+    document.getElementById("cardCounter").innerHTML = `${currentCardIndex+1}/${filteredFlashcards.length}`;
+    document.getElementById("flashcard").classList.remove("flipped");
+    
+    let qText = t.concepto.split('.')[0] || t.concepto;
+    let ejercicioHtml = `<div class="small fw-bold mb-2">📝 Ejercicio: ¿Cuál es el objetivo de esta técnica?</div>
+      <div class="d-flex flex-wrap gap-2">
+        <button class="option-btn ejercicio-opt" data-value="${qText}">${qText}</button>
+        <button class="option-btn ejercicio-opt" data-value="Escribir sin verificar">Escribir sin verificar</button>
+        <button class="option-btn ejercicio-opt" data-value="Ignorar la ética">Ignorar la ética</button>
+      </div>
+      <div id="ejercicioFeedback" class="mt-2 small"></div>`;
+    document.getElementById("exerciseArea").innerHTML = ejercicioHtml;
+    
+    document.querySelectorAll(".ejercicio-opt").forEach(btn => {
+      btn.onclick = () => {
+        let isCorrect = btn.getAttribute("data-value") === qText;
+        let fb = document.getElementById("ejercicioFeedback");
+        if(isCorrect) { fb.innerHTML = "<span class='text-success'>✅ Correcto!</span>"; markComplete(t.id, true); renderLista(); }
+        else { fb.innerHTML = "<span class='text-danger'>❌ Incorrecto. Vuelve a leer la técnica.</span>"; }
+        document.querySelectorAll(".ejercicio-opt").forEach(b=>b.disabled=true);
+      };
+    });
+  }
+  
+  function nextCard(){ if(currentCardIndex<filteredFlashcards.length-1){currentCardIndex++; updateFlashcard();} }
+  function prevCard(){ if(currentCardIndex>0){currentCardIndex--; updateFlashcard();} }
+  function randomCard(){ currentCardIndex=Math.floor(Math.random()*filteredFlashcards.length); updateFlashcard(); }
+  function flipCard(){ document.getElementById("flashcard").classList.toggle("flipped"); }
+  function markCurrentComplete(){
+    let t = filteredFlashcards[currentCardIndex];
+    if(t && !progress[t.id]) { progress[t.id]=true; saveProgress(); renderLista(); updateFlashcard(); }
+  }
+  
+  function switchToLista() {
+    document.getElementById("listaView").style.display = "block";
+    document.getElementById("flashcardsView").style.display = "none";
+    document.querySelectorAll(".nav-item-custom").forEach(i=>i.classList.remove("active"));
+    document.querySelector(".nav-item-custom[data-view='lista']").classList.add("active");
+    renderLista();
+  }
+  function switchToFlashcards() {
+    document.getElementById("listaView").style.display = "none";
+    document.getElementById("flashcardsView").style.display = "block";
+    document.querySelectorAll(".nav-item-custom").forEach(i=>i.classList.remove("active"));
+    document.querySelector(".nav-item-custom[data-view='flashcards']").classList.add("active");
+    filterFlashcards();
+  }
+  
+  document.getElementById("prevCardBtn")?.addEventListener("click", prevCard);
+  document.getElementById("nextCardBtn")?.addEventListener("click", nextCard);
+  document.getElementById("randomCardBtn")?.addEventListener("click", randomCard);
+  document.getElementById("flipCardBtn")?.addEventListener("click", flipCard);
+  document.getElementById("markCompleteBtn")?.addEventListener("click", markCurrentComplete);
+  document.getElementById("themeToggleBtn")?.addEventListener("click", () => document.body.classList.toggle("light-mode"));
+  document.querySelector(".nav-item-custom[data-view='lista']")?.addEventListener("click", switchToLista);
+  document.querySelector(".nav-item-custom[data-view='flashcards']")?.addEventListener("click", switchToFlashcards);
+  
+  document.getElementById("searchInput")?.addEventListener("input", e => { currentSearch = e.target.value.toLowerCase(); currentPage = 1; renderLista(); });
+  document.getElementById("catFilter")?.addEventListener("change", e => { currentCatFilter = e.target.value; currentPage = 1; renderLista(); filterFlashcards(); });
+  
+  loadProgress();
+  renderLista();
+  switchToLista();
+</script>
+</body>
+</html>

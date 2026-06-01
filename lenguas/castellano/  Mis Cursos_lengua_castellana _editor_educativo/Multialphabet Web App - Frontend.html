@@ -1,0 +1,255 @@
+<!-- Multialphabet Web App - Frontend (index.html) -->
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Plataforma Multialfabética</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="#">Multialfabética</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navMenu">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item"><a class="nav-link active" href="#alfabetos">Alfabetos</a></li>
+        <li class="nav-item"><a class="nav-link" href="#ejercicios">Ejercicios</a></li>
+        <li class="nav-item"><a class="nav-link" href="#progreso">Progreso</a></li>
+        <li class="nav-item"><a class="nav-link" href="#recursos">Recursos</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<main class="container my-4">
+  <section id="alfabetos" class="mb-5">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <h2>Alfabetos</h2>
+      <select id="selectIdioma" class="form-select w-auto">
+        <option value="es">Español</option>
+        <option value="en">Inglés</option>
+        <option value="hi">Hindi (Devanagari)</option>
+        <option value="zh">Chino</option>
+        <option value="yue">Cantonés</option>
+        <option value="ko">Coreano (Hangul)</option>
+        <option value="ru">Ruso (Cirílico)</option>
+        <option value="he">Hebreo</option>
+        <option value="ar">Árabe</option>
+        <option value="ja">Japonés</option>
+        <option value="pt">Portugués</option>
+        <option value="fr">Francés</option>
+        <option value="de">Alemán</option>
+        <option value="pl">Polaco</option>
+      </select>
+    </div>
+
+    <div id="alfabetoCard" class="card">
+      <div class="card-body">
+        <h5 id="alfabetoTitulo" class="card-title">Alfabeto</h5>
+        <div id="alfabetoContenido">Selecciona un idioma para ver su alfabeto y ejemplos.</div>
+      </div>
+    </div>
+  </section>
+
+  <section id="ejercicios" class="mb-5">
+    <h2>Ejercicios</h2>
+    <div class="row g-3">
+      <div class="col-md-6">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">Práctica por letra</h5>
+            <p>Selecciona una letra y escribe una oración (simple o compuesta).</p>
+            <div class="mb-2">
+              <input id="letraInput" class="form-control form-control-sm" placeholder="Letra (ej. A)">
+            </div>
+            <div class="mb-2">
+              <textarea id="oracionInput" class="form-control" rows="3" placeholder="Escribe tu oración aquí..."></textarea>
+            </div>
+            <div class="d-flex gap-2">
+              <button id="btnValidar" class="btn btn-success">Validar ortografía</button>
+              <button id="btnGuardarEjemplo" class="btn btn-primary">Guardar ejemplo</button>
+            </div>
+            <div id="feedback" class="mt-2"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-6">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">Ejemplos y ejercicio aleatorio</h5>
+            <button id="btnMostrarEjemplo" class="btn btn-outline-primary mb-2">Mostrar ejemplo por letra</button>
+            <div id="ejemploArea"></div>
+            <hr>
+            <button id="btnEjercicioAleatorio" class="btn btn-outline-secondary">Crear ejercicio aleatorio</button>
+            <div id="ejercicioArea" class="mt-2"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="progreso" class="mb-5">
+    <h2>Progreso</h2>
+    <div id="progresoArea">Cargando progreso...</div>
+    <button id="btnRefrescarProgreso" class="btn btn-sm btn-info mt-2">Refrescar</button>
+  </section>
+
+  <section id="recursos" class="mb-5">
+    <h2>Recursos</h2>
+    <p>Material adicional sobre caligrafía, historia de los alfabetos y enlaces de interés.</p>
+  </section>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+const apiBase = '/api';
+
+async function cargarAlfabeto(idioma){
+  const res = await fetch(`${apiBase}/alfabeto?lang=${idioma}`);
+  if(!res.ok) return document.getElementById('alfabetoContenido').innerText = 'Error al cargar alfabeto.';
+  const data = await res.json();
+  document.getElementById('alfabetoTitulo').innerText = data.nombre || 'Alfabeto';
+  document.getElementById('alfabetoContenido').innerHTML = `<pre>${JSON.stringify(data, null, 2)}</pre>`;
+}
+
+document.getElementById('selectIdioma').addEventListener('change', (e)=>{
+  cargarAlfabeto(e.target.value);
+});
+
+document.getElementById('btnMostrarEjemplo').addEventListener('click', async ()=>{
+  const letra = document.getElementById('letraInput').value || 'A';
+  const idioma = document.getElementById('selectIdioma').value;
+  const res = await fetch(`${apiBase}/ejemplo?lang=${idioma}&letra=${encodeURIComponent(letra)}`);
+  const data = await res.json();
+  document.getElementById('ejemploArea').innerText = data.ejemplo || 'No hay ejemplo.';
+});
+
+document.getElementById('btnValidar').addEventListener('click', async ()=>{
+  const oracion = document.getElementById('oracionInput').value;
+  const lang = document.getElementById('selectIdioma').value;
+  const res = await fetch(`${apiBase}/validar`, {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({text: oracion, lang})});
+  const data = await res.json();
+  document.getElementById('feedback').innerHTML = `<div class='alert alert-${data.ok? 'success':'warning'}'>${data.message}</div>`;
+});
+
+document.getElementById('btnGuardarEjemplo').addEventListener('click', async ()=>{
+  const letra = document.getElementById('letraInput').value;
+  const oracion = document.getElementById('oracionInput').value;
+  const lang = document.getElementById('selectIdioma').value;
+  const res = await fetch(`${apiBase}/guardar`, {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({lang, letra, oracion})});
+  const data = await res.json();
+  document.getElementById('feedback').innerHTML = `<div class='alert alert-info'>${data.message}</div>`;
+});
+
+document.getElementById('btnEjercicioAleatorio').addEventListener('click', async ()=>{
+  const res = await fetch(`${apiBase}/ejercicio`);
+  const data = await res.json();
+  document.getElementById('ejercicioArea').innerText = data.enunciado || 'No hay ejercicio.';
+});
+
+async function cargarProgreso(){
+  const res = await fetch(`${apiBase}/progreso`);
+  const data = await res.json();
+  document.getElementById('progresoArea').innerHTML = `<pre>${JSON.stringify(data, null, 2)}</pre>`;
+}
+
+document.getElementById('btnRefrescarProgreso').addEventListener('click', cargarProgreso);
+// Carga inicial
+cargarAlfabeto('es');
+cargarProgreso();
+</script>
+
+<!-- Backend sugerido (Flask) - guarda esto como app.py -->
+<!--
+from flask import Flask, request, jsonify, send_from_directory
+from flask_cors import CORS
+import sqlite3
+import os
+
+app = Flask(__name__, static_folder='static', static_url_path='/')
+CORS(app)
+DB = 'progreso.db'
+
+# Inicializar DB simple
+def init_db():
+    conn = sqlite3.connect(DB)
+    c = conn.cursor()
+    c.execute('CREATE TABLE IF NOT EXISTS progreso(id INTEGER PRIMARY KEY, lang TEXT, letra TEXT, oracion TEXT)')
+    conn.commit()
+    conn.close()
+
+init_db()
+
+# Datos de ejemplo (reemplazar/expandir)
+ALFABETOS = {
+    'es': {'nombre':'Alfabeto Español', 'letras': list('abcdefghijklmnñopqrstuvwxyz')},
+    'en': {'nombre':'Alfabeto Inglés', 'letras': list('abcdefghijklmnopqrstuvwxyz')},
+    # Agregar más alfabetos y metadatos...
+}
+
+EJEMPLOS = {
+    'es': {'A': 'Aunque estaba cansado, terminó el trabajo porque era urgente.'},
+    'en': {'A': 'Although it was raining, we decided to go hiking.'}
+}
+
+@app.route('/')
+def index():
+    return send_from_directory('.', 'index.html')
+
+@app.route('/api/alfabeto')
+def api_alfabeto():
+    lang = request.args.get('lang','es')
+    return jsonify(ALFABETOS.get(lang, {}))
+
+@app.route('/api/ejemplo')
+def api_ejemplo():
+    lang = request.args.get('lang','es')
+    letra = request.args.get('letra','A').upper()
+    ejemplo = EJEMPLOS.get(lang, {}).get(letra, '')
+    return jsonify({'letra':letra, 'ejemplo':ejemplo})
+
+@app.route('/api/validar', methods=['POST'])
+def api_validar():
+    data = request.json
+    text = data.get('text','')
+    # Validación simple: usar language_tool_python para corrección real
+    ok = True
+    message = 'No se han detectado errores (validación simulada).'
+    return jsonify({'ok':ok, 'message':message})
+
+@app.route('/api/guardar', methods=['POST'])
+def api_guardar():
+    data = request.json
+    lang = data.get('lang')
+    letra = data.get('letra')
+    oracion = data.get('oracion')
+    conn = sqlite3.connect(DB)
+    c = conn.cursor()
+    c.execute('INSERT INTO progreso(lang, letra, oracion) VALUES (?,?,?)', (lang, letra, oracion))
+    conn.commit()
+    conn.close()
+    return jsonify({'ok':True, 'message':'Ejemplo guardado en la base de datos.'})
+
+@app.route('/api/progreso')
+def api_progreso():
+    conn = sqlite3.connect(DB)
+    c = conn.cursor()
+    c.execute('SELECT lang, letra, oracion FROM progreso')
+    rows = c.fetchall()
+    conn.close()
+    data = [{'lang':r[0],'letra':r[1],'oracion':r[2]} for r in rows]
+    return jsonify(data)
+
+@app.route('/api/ejercicio')
+def api_ejercicio():
+    # Generador simple de ejercicios aleatorios
+    return jsonify({'enunciado':'Escribe una oración compuesta que empiece con la letra B en español.'})
+
+if __name__ == '__main__':
+    app.run(debug=True)
+-->

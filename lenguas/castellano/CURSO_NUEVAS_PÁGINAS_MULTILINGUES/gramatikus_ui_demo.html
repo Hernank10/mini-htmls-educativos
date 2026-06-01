@@ -1,0 +1,292 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Gramátikus — Demo UI</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body { background:#f6f8fb; font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial; }
+    .card-ex { transition: transform .12s ease, box-shadow .12s ease; }
+    .card-ex:hover { transform: translateY(-6px); box-shadow: 0 8px 20px rgba(25,40,60,0.12); }
+    .small-muted { font-size:.85rem; color:#6c757d; }
+    .filter-chip { cursor:pointer; }
+    .layout-toggle .btn { min-width:44px; }
+    @media (max-width:768px){ .sidebar { display:none; } }
+  </style>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom shadow-sm">
+  <div class="container-fluid">
+    <a class="navbar-brand fw-bold text-primary" href="#">Gramátikus</a>
+    <div class="d-flex align-items-center gap-2">
+      <div class="input-group d-none d-md-flex" style="width:420px;">
+        <input id="search" class="form-control" placeholder="Buscar ejercicios, reglas, palabras..." aria-label="Buscar">
+        <button id="clearSearch" class="btn btn-outline-secondary" title="Limpiar">✕</button>
+      </div>
+      <div class="btn-group layout-toggle" role="group" aria-label="Layout">
+        <button id="gridBtn" class="btn btn-outline-primary active" title="Grid">▦</button>
+        <button id="listBtn" class="btn btn-outline-secondary" title="Lista">☰</button>
+      </div>
+      <div class="btn-group ms-2" role="group">
+        <button id="langBtn" class="btn btn-outline-secondary">ES</button>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<div class="container-fluid mt-4">
+  <div class="row">
+    <aside class="col-lg-3 sidebar">
+      <div class="card p-3 mb-3 sticky-top" style="top:86px;">
+        <h6 class="mb-2">Filtros rápidos</h6>
+        <div class="mb-2">
+          <label class="form-label small-muted">Idioma</label>
+          <select id="filterLang" class="form-select mb-2">
+            <option value="any">Todos</option><option value="es">Español</option><option value="en">English</option>
+          </select>
+          <label class="form-label small-muted">Dificultad</label>
+          <select id="filterDiff" class="form-select mb-2">
+            <option value="any">Todos</option><option value="easy">Básico</option><option value="mid">Intermedio</option><option value="hard">Avanzado</option>
+          </select>
+          <label class="form-label small-muted">Tipo</label>
+          <select id="filterType" class="form-select mb-2">
+            <option value="any">Todos</option><option value="analysis">Análisis</option><option value="writing">Redacción</option><option value="orthography">Ortografía</option>
+          </select>
+        </div>
+        <hr>
+        <h6 class="mb-2">Progreso</h6>
+        <div class="d-flex align-items-center gap-3">
+          <div>
+            <svg class="progress-ring" viewBox="0 0 36 36" width="84" height="84">
+              <path class="bg" d="M18 2a16 16 0 1 1 0 32 16 16 0 1 1 0-32" fill="none" stroke="#e9ecef" stroke-width="4"></path>
+              <path id="arc" d="M18 2a16 16 0 1 1 0 32 16 16 0 1 1 0-32" fill="none" stroke="#0d6efd" stroke-width="4" stroke-dasharray="0 100"></path>
+            </svg>
+          </div>
+          <div>
+            <div class="fw-bold" id="xpText">XP: 0</div>
+            <div class="small-muted">Nivel: <span id="levelText">1</span></div>
+            <div class="mt-2"><span class="badge bg-warning text-dark">Poeta del Código</span></div>
+          </div>
+        </div>
+        <hr>
+        <h6 class="mb-2">Contadores</h6>
+        <div id="counters" class="d-flex flex-column gap-1 small-muted"></div>
+      </div>
+    </aside>
+
+    <main class="col-lg-9">
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <h4 class="m-0">Banco de ejercicios — <small id="exerciseCount" class="text-muted">0 ejercicios</small></h4>
+        <div>
+          <button class="btn btn-outline-success me-2" id="recommendBtn">Recomendar ejercicio</button>
+          <button class="btn btn-primary" id="newExercise">+ Nuevo ejercicio</button>
+        </div>
+      </div>
+
+      <div id="filtersRow" class="mb-3 d-flex gap-2 flex-wrap"></div>
+
+      <div id="cardsArea" class="row g-3"></div>
+
+      <div id="listArea" class="d-none"></div>
+    </main>
+  </div>
+</div>
+
+<div class="modal fade" id="exerciseModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content">
+      <div class="modal-header bg-primary text-white">
+        <h5 class="modal-title" id="modalTitle">Ejercicio</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <div id="modalBodyContent"></div>
+        <div id="feedback" class="mt-3"></div>
+      </div>
+      <div class="modal-footer">
+        <button id="prevBtn" class="btn btn-outline-secondary">Anterior</button>
+        <button id="nextBtn" class="btn btn-outline-secondary">Siguiente</button>
+        <button id="checkBtn" class="btn btn-success">Verificar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer class="text-center py-4 mt-5 small-muted">
+  Gramátikus — Demo UI · Proyecto educativo · © 2025 · Poetas del Código Abierto
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+const exercises = [
+  {id:1, title_es:"Uso del punto y coma", title_en:"Semicolon usage", diff:"mid", type:"analysis", lang:"es", preview:"Identifica el uso correcto del punto y coma en oraciones complejas.", state:"completed", score:100},
+  {id:2, title_es:"Sujeto y predicado", title_en:"Subject and predicate", diff:"easy", type:"analysis", lang:"en", preview:"Identifica sujeto y predicado en oraciones sencillas.", state:"in-progress", score:40},
+  {id:3, title_es:"Homófonos b/v", title_en:"b/v homophones", diff:"easy", type:"orthography", lang:"es", preview:"Elige la opción correcta: votar/botar.", state:"not-started", score:0},
+  {id:4, title_es:"Coordinación y subordinación", title_en:"Coordination and subordination", diff:"hard", type:"analysis", lang:"en", preview:"Analiza la relación entre oraciones coordinadas y subordinadas.", state:"not-started", score:0},
+  {id:5, title_es:"Puntuación en listas", title_en:"List punctuation", diff:"mid", type:"orthography", lang:"es", preview:"Coloca correctamente los signos en una lista compleja.", state:"completed", score:90},
+  {id:6, title_es:"Conectores lógicos", title_en:"Logical connectors", diff:"mid", type:"writing", lang:"en", preview:"Usa conectores para unir ideas en un párrafo.", state:"in-progress", score:60},
+  {id:7, title_es:"Uso de gerundios", title_en:"Gerunds usage", diff:"mid", type:"analysis", lang:"es", preview:"Selecciona oraciones con uso correcto de gerundios.", state:"not-started", score:0},
+  {id:8, title_es:"Mayúsculas y minúsculas", title_en:"Capitalization rules", diff:"easy", type:"orthography", lang:"en", preview:"Corrige el uso de mayúsculas en títulos.", state:"completed", score:100},
+  {id:9, title_es:"Oraciones compuestas", title_en:"Compound sentences", diff:"hard", type:"writing", lang:"es", preview:"Redacta una oración compuesta con conectores adecuados.", state:"not-started", score:0},
+  {id:10, title_es:"Pronombres relativos", title_en:"Relative pronouns", diff:"mid", type:"analysis", lang:"en", preview:"Identifica el antecedente y el pronombre relativo.", state:"in-progress", score:30},
+  {id:11, title_es:"Dígrafos y sonidos", title_en:"Digraphs and sounds", diff:"easy", type:"orthography", lang:"es", preview:"Relaciona dígrafos con su pronunciación.", state:"not-started", score:0},
+  {id:12, title_es:"Paráfrasis y síntesis", title_en:"Paraphrase and synthesis", diff:"hard", type:"writing", lang:"en", preview:"Reescribe un párrafo manteniendo su sentido.", state:"not-started", score:0},
+  {id:13, title_es:"Concordancia verbal", title_en:"Verb agreement", diff:"mid", type:"analysis", lang:"es", preview:"Selecciona la forma verbal correcta según el sujeto.", state:"completed", score:95},
+  {id:14, title_es:"Puntuación dialogal", title_en:"Dialog punctuation", diff:"mid", type:"orthography", lang:"en", preview:"Corrige la puntuación en diálogos entre personajes.", state:"in-progress", score:50},
+  {id:15, title_es:"Uso de comillas", title_en:"Quotation marks", diff:"easy", type:"orthography", lang:"es", preview:"Identifica cuándo usar distintas comillas.", state:"not-started", score:0},
+  {id:16, title_es:"Cohesión textual", title_en:"Text cohesion", diff:"hard", type:"writing", lang:"en", preview:"Mejora la cohesión de un texto dado.", state:"not-started", score:0},
+];
+let currentLang = 'es';
+let layout = 'grid';
+let visibleExercises = [...exercises];
+let currentIndex = 0;
+let userXP = 240;
+let userLevel = 3;
+const cardsArea = document.getElementById('cardsArea');
+const listArea = document.getElementById('listArea');
+const exerciseCount = document.getElementById('exerciseCount');
+const xpText = document.getElementById('xpText');
+const levelText = document.getElementById('levelText');
+const arc = document.getElementById('arc');
+const countersDiv = document.getElementById('counters');
+function renderCounters(data){
+  const totals = {all: data.length, completed: data.filter(e=>e.state==='completed').length, inprogress: data.filter(e=>e.state==='in-progress').length, notstarted: data.filter(e=>e.state==='not-started').length};
+  countersDiv.innerHTML = `
+    <div>Todos: <strong>${totals.all}</strong></div>
+    <div>Completados: <strong>${totals.completed}</strong></div>
+    <div>En progreso: <strong>${totals.inprogress}</strong></div>
+    <div>Pendientes: <strong>${totals.notstarted}</strong></div>
+  `;
+}
+function renderExercises(data){
+  visibleExercises = data;
+  exerciseCount.textContent = `${data.length} ejercicios`;
+  cardsArea.innerHTML='';
+  listArea.innerHTML='';
+  renderCounters(data);
+  data.forEach((ex, idx)=>{
+    const title = currentLang==='es' ? ex.title_es : ex.title_en;
+    const preview = ex.preview;
+    const col = document.createElement('div');
+    col.className = layout==='grid' ? 'col-md-6 col-lg-4' : 'col-12';
+    col.innerHTML = `
+      <div class="card card-ex h-100">
+        <div class="card-body d-flex flex-column">
+          <div class="d-flex justify-content-between align-items-start">
+            <div>
+              <h5 class="card-title mb-1">${title}</h5>
+              <div class="small-muted">${ex.diff} · ${ex.type} · <span class="badge badge-lang bg-light text-dark">${ex.lang.toUpperCase()}</span></div>
+            </div>
+            <div class="text-end">
+              <div class="mb-1 small-muted">${ex.score}%</div>
+              <div>${stateBadge(ex.state)}</div>
+            </div>
+          </div>
+          <p class="card-text mt-2 text-truncate">${preview}</p>
+          <div class="mt-auto d-flex justify-content-between align-items-center">
+            <div>
+              <button class="btn btn-outline-primary btn-sm" onclick="openExercise(${ex.id})">Practicar</button>
+            </div>
+            <div class="small-muted">ID ${ex.id}</div>
+          </div>
+        </div>
+      </div>
+    `;
+    cardsArea.appendChild(col);
+    const row = document.createElement('div');
+    row.className = 'list-group-item d-flex justify-content-between align-items-center';
+    row.innerHTML = `<div><strong>${title}</strong><div class="small-muted">${ex.preview}</div></div><div>${stateBadge(ex.state)}</div>`;
+    listArea.appendChild(row);
+  });
+  updateProgressRing();
+}
+function stateBadge(state){
+  if(state==='completed') return '<span class="badge bg-success">Completado</span>';
+  if(state==='in-progress') return '<span class="badge bg-warning text-dark">En progreso</span>';
+  return '<span class="badge bg-secondary">Pendiente</span>';
+}
+function updateProgressRing(){
+  const total = exercises.length;
+  const done = exercises.filter(e=>e.state==='completed').length;
+  const pct = Math.round((done/total)*100);
+  arc.setAttribute('stroke-dasharray', `${pct} 100`);
+  xpText.textContent = `XP: ${userXP}`;
+  levelText.textContent = userLevel;
+}
+document.getElementById('filterLang').addEventListener('change', applyFilters);
+document.getElementById('filterDiff').addEventListener('change', applyFilters);
+document.getElementById('filterType').addEventListener('change', applyFilters);
+document.getElementById('search').addEventListener('input', applyFilters);
+document.getElementById('clearSearch').addEventListener('click', ()=>{document.getElementById('search').value=''; applyFilters();});
+function applyFilters(){
+  const lang = document.getElementById('filterLang').value;
+  const diff = document.getElementById('filterDiff').value;
+  const type = document.getElementById('filterType').value;
+  const q = document.getElementById('search').value.toLowerCase().trim();
+  let res = exercises.filter(e=>{
+    if(lang!=='any' && e.lang!==lang) return false;
+    if(diff!=='any' && e.diff!==diff) return false;
+    if(type!=='any' && e.type!==type) return false;
+    if(q){
+      const t = (e.title_es + ' ' + e.title_en + ' ' + e.preview).toLowerCase();
+      if(!t.includes(q)) return false;
+    }
+    return true;
+  });
+  renderExercises(res);
+}
+document.getElementById('gridBtn').addEventListener('click', ()=>{layout='grid'; document.getElementById('gridBtn').classList.add('active'); document.getElementById('listBtn').classList.remove('active'); document.getElementById('cardsArea').classList.remove('d-none'); document.getElementById('listArea').classList.add('d-none'); renderExercises(visibleExercises);});
+document.getElementById('listBtn').addEventListener('click', ()=>{layout='list'; document.getElementById('gridBtn').classList.remove('active'); document.getElementById('listBtn').classList.add('active'); document.getElementById('cardsArea').classList.add('d-none'); document.getElementById('listArea').classList.remove('d-none');});
+document.getElementById('langBtn').addEventListener('click', ()=>{ currentLang = currentLang==='es'?'en':'es'; document.getElementById('langBtn').textContent = currentLang.toUpperCase(); renderExercises(visibleExercises); });
+const bsModal = new bootstrap.Modal(document.getElementById('exerciseModal'));
+function openExercise(id){
+  const idx = exercises.findIndex(e=>e.id===id);
+  if(idx===-1) return;
+  currentIndex = idx;
+  showModalForIndex(idx);
+  bsModal.show();
+}
+function showModalForIndex(idx){
+  const ex = exercises[idx];
+  const title = currentLang==='es' ? ex.title_es : ex.title_en;
+  const content = `
+    <p class="fw-semibold">${title}</p>
+    <p>${ex.preview}</p>
+    <div class="mt-3">
+      <label class="form-label">Tu respuesta:</label>
+      <input id="answerField" class="form-control" placeholder="Escribe tu respuesta aquí...">
+    </div>
+  `;
+  document.getElementById('modalTitle').textContent = (currentLang==='es'?ex.title_es:ex.title_en);
+  document.getElementById('modalBodyContent').innerHTML = content;
+  document.getElementById('feedback').innerHTML = '';
+}
+document.getElementById('checkBtn').addEventListener('click', ()=>{
+  const ans = document.getElementById('answerField').value.trim();
+  const ex = exercises[currentIndex];
+  const correct = fakeEvaluator(ex, ans);
+  const fb = document.getElementById('feedback');
+  if(correct){
+    fb.innerHTML = '<div class="alert alert-success p-2">✅ Correcto — ¡Bien hecho! +20 XP</div>';
+    if(ex.state !== 'completed'){ ex.state='completed'; ex.score = 100; userXP += 20; updateProgressRing(); renderExercises(visibleExercises); }
+  } else {
+    fb.innerHTML = '<div class="alert alert-danger p-2">❌ Revisa la respuesta. Consejo: busca el núcleo del sujeto y el verbo.</div>';
+    if(ex.state === 'not-started'){ ex.state='in-progress'; renderExercises(visibleExercises); }
+  }
+});
+document.getElementById('nextBtn').addEventListener('click', ()=>{ currentIndex = (currentIndex+1) % exercises.length; showModalForIndex(currentIndex); });
+document.getElementById('prevBtn').addEventListener('click', ()=>{ currentIndex = (currentIndex-1 + exercises.length) % exercises.length; showModalForIndex(currentIndex); });
+function fakeEvaluator(ex, ans){
+  const keywords = {1: ['punto', 'coma', ';','punto y coma','semicolon'],2: ['sujeto','subject','predicado','predicate'],3: ['b','v','botar','votar'],5: ['lista','elementos','coma',';'],8: ['mayúscula','capitalize','capital'],13: ['concordancia','agreement','concord'],};
+  const kw = keywords[ex.id] || [];
+  const t = ans.toLowerCase();
+  return kw.some(k=> t.includes(k));
+}
+renderExercises(exercises);
+applyFilters();
+document.getElementById('recommendBtn').addEventListener('click', ()=>{ const cand = exercises.filter(e=> e.state!=='completed').sort((a,b)=> a.diff.localeCompare(b.diff))[0]; if(cand) { openExercise(cand.id); } });
+document.getElementById('newExercise').addEventListener('click', ()=>{ alert('Función para crear nueva lección — disponible en panel docente (demo).'); });
+</script>
+</body>
+</html>

@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Práctica Fonética - Bootstrap</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        .phase-card {
+            transition: transform 0.3s ease;
+            cursor: pointer;
+        }
+        .phase-card:hover {
+            transform: translateY(-5px);
+        }
+        .progress-ring {
+            transform: rotate(-90deg);
+        }
+        .audio-visualizer {
+            background: linear-gradient(90deg, #0d6efd, #198754);
+            height: 4px;
+            border-radius: 2px;
+            transition: width 0.1s ease;
+        }
+        .syllable-practice {
+            min-height: 200px;
+        }
+    </style>
+</head>
+<body class="bg-light">
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container">
+            <a class="navbar-brand" href="#">
+                <i class="bi bi-mic-fill me-2"></i>
+                Práctica Fonética
+            </a>
+            <div class="navbar-nav ms-auto">
+                <span class="navbar-text me-3">
+                    <i class="bi bi-person-circle me-1"></i>
+                    <span id="userName">Usuario</span>
+                </span>
+                <div class="dropdown">
+                    <button class="btn btn-outline-light dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                        Nivel <span id="userLevel">1</span>
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li><span class="dropdown-item-text">XP: <span id="userXP">0</span>/100</span></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#progressModal">
+                            <i class="bi bi-graph-up me-2"></i>Ver Progreso
+                        </a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Container -->
+    <div class="container py-4">
+        <!-- Dashboard Header -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="card shadow-sm">
+                    <div class="card-body">
+                        <h1 class="card-title h3">Plan de 12 Semanas - Dominio Fonético</h1>
+                        <p class="card-text text-muted">
+                            Sistema estructurado para dominar las 100 sílabas del castellano
+                        </p>
+                        <div class="progress mb-3" style="height: 8px;">
+                            <div id="overallProgress" class="progress-bar bg-success" style="width: 15%"></div>
+                        </div>
+                        <div class="d-flex justify-content-between text-sm text-muted">
+                            <span>Semana 2 de 12</span>
+                            <span id="completionPercent">15% Completado</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Phases Grid -->
+        <div class="row g-4 mb-5">
+            <!-- Phase 1 -->
+            <div class="col-md-6 col-lg-3">
+                <div class="card phase-card h-100 border-primary" data-phase="1">
+                    <div class="card-header bg-primary text-white">
+                        <h5 class="card-title mb-0">
+                            <i class="bi bi-1-circle me-2"></i>
+                            Fase 1: Fundamentos
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <p class="card-text">Semanas 1-2: Sílabas CV/VC básicas</p>
+                        <div class="mb-3">
+                            <small class="text-muted">Progreso:</small>
+                            <div class="progress" style="height: 6px;">
+                                <div class="progress-bar" style="width: 85%"></div>
+                            </div>
+                        </div>
+                        <div class="d-grid gap-2">
+                            <button class="btn btn-outline-primary btn-sm" data-bs-toggle="modal" data-bs-target="#phase1Modal">
+                                Practicar Ahora
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Phase 2 -->
+            <div class="col-md-6 col-lg-3">
+                <div class="card phase-card h-100 border-warning" data-phase="2">
+                    <div class="card-header bg-warning text-dark">
+                        <h5 class="card-title mb-0">
+                            <i class="bi bi-2-circle me-2"></i>
+                            Fase 2: Consolidación
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <p class="card-text">Semanas 3-5: Estructuras CVC/CCV</p>
+                        <div class="mb-3">
+                            <small class="text-muted">Progreso:</small>
+                            <div class="progress" style="height: 6px;">
+                                <div class="progress-bar bg-warning" style="width: 45%"></div>
+                            </div>
+                        </div>
+                        <div class="d-grid gap-2">
+                            <button class="btn btn-outline-warning btn-sm" data-bs-toggle="modal" data-bs-target="#phase2Modal">
+                                Practicar Ahora
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Phase 3 -->
+            <div class="col-md-6 col-lg-3">
+                <div class="card phase-card h-100 border-info" data-phase="3">
+                    <div class="card-header bg-info text-white">
+                        <h5 class="card-title mb-0">
+                            <i class="bi bi-3-circle me-2"></i>
+                            Fase 3: Maestría
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <p class="card-text">Semanas 6-9: Sílabas complejas CCVC</p>
+                        <div class="mb-3">
+                            <small class="text-muted">Progreso:</small>
+                            <div class="progress" style="height: 6px;">
+                                <div class="progress-bar bg-info" style="width: 15%"></div>
+                            </div>
+                        </div>
+                        <div class="d-grid gap-2">
+                            <button class="btn btn-outline-info btn-sm" data-bs-toggle="modal" data-bs-target="#phase3Modal">
+                                Practicar Ahora
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Phase 4 -->
+            <div class="col-md-6 col-lg-3">
+                <div class="card phase-card h-100 border-success" data-phase="4">
+                    <div class="card-header bg-success text-white">
+                        <h5 class="card-title mb-0">
+                            <i class="bi bi-4-circle me-2"></i>
+                            Fase 4: Excelencia
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <p class="card-text">Semanas 10-12: Integración avanzada</p>
+                        <div class="mb-3">
+                            <small class="text-muted">Progreso:</small>
+                            <div class="progress" style="height: 6px;">
+                                <div class="progress-bar bg-success" style="width: 5%"></div>
+                            </div>
+                        </div>
+                        <div class="d-grid gap-2">
+                            <button class="btn btn-outline-success btn-sm" data-bs-toggle="modal" data-bs-target="#phase4Modal">
+                                Practicar Ahora
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Practice Area -->
+        <div class="row">
+            <div class="col-12">
+                <div class="card shadow">
+                    <div class="card-header bg-light">
+                        <h5 class="card-title mb-0">
+                            <i class="bi bi-mic me-2"></i>
+                            Zona de Práctica
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <!-- Left Panel - Syllable Info -->
+                            <div class="col-md-6">
+                                <div class="card syllable-practice mb-3">
+                                    <div class="card-body text-center">
+                                        <h2 id="currentSyllable" class="display-4 text-primary mb-3">ba</h2>
+                                        <div class="row mb-3">
+                                            <div class="col-6">
+                                                <div class="card bg-light">
+                                                    <div class="card-body py-2">
+                                                        <small class="text-muted">AFI</small>
+                                                        <div id="currentIPA" class="fw-bold">/ba/</div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-6">
+                                                <div class="card bg-light">
+                                                    <div class="card-body py-2">
+                                                        <small class="text-muted">Estructura</small>
+                                                        <div id="currentStructure" class="fw-bold">CV</div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="mb-3">
+                                            <button id="playAudio" class="btn btn-primary">
+                                                <i class="bi bi-play-circle me-2"></i>
+                                                Escuchar Modelo
+                                            </button>
+                                        </div>
+                                        <div class="audio-visualizer mb-3" style="width: 0%"></div>
+                                        <div class="d-grid gap-2">
+                                            <button id="recordButton" class="btn btn-success">
+                                                <i class="bi bi-record-circle me-2"></i>
+                                                <span id="recordText">Iniciar Grabación</span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Right Panel - Analysis -->
+                            <div class="col-md-6">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h6 class="card-title mb-0">Análisis en Tiempo Real</h6>
+                                    </div>
+                                    <div class="card-body">
+                                        <!-- Accuracy Gauge -->
+                                        <div class="text-center mb-4">
+                                            <canvas id="accuracyGauge" width="120" height="120"></canvas>
+                                            <div class="mt-2">
+                                                <span class="badge bg-success" id="accuracyScore">0%</span>
+                                                <span class="text-muted ms-2">Precisión</span>
+                                            </div>
+                                        </div>
+
+                                        <!-- Analysis Details -->
+                                        <div class="mb-3">
+                                            <label class="form-label">Feedback Detallado:</label>
+                                            <div id="feedbackText" class="alert alert-info">
+                                                Graba tu pronunciación para recibir análisis detallado.
+                                            </div>
+                                        </div>
+
+                                        <!-- Progress Stats -->
+                                        <div class="row text-center">
+                                            <div class="col-4">
+                                                <div class="border rounded p-2">
+                                                    <div class="h5 mb-0" id="syllablesToday">12</div>
+                                                    <small class="text-muted">Hoy</small>
+                                                </div>
+                                            </div>
+                                            <div class="col-4">
+                                                <div class="border rounded p-2">
+                                                    <div class="h5 mb-0" id="accuracyRate">78%</div>
+                                                    <small class="text-muted">Precisión</small>
+                                                </div>
+                                            </div>
+                                            <div class="col-4">
+                                                <div class="border rounded p-2">
+                                                    <div class="h5 mb-0" id="streakCount">5</div>
+                                                    <small class="text-muted">Racha</small>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Phase 1 Modal -->
+    <div class="modal fade" id="phase1Modal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title">Fase 1: Fundamentos (Semanas 1-2)</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h6>Objetivos de Aprendizaje</h6>
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item">Dominar 20 sílabas CV/VC básicas</li>
+                                <li class="list-group-item">Desarrollar reconocimiento auditivo</li>
+                                <li class="list-group-item">Establecer patrones articulatorios</li>
+                            </ul>
+                        </div>
+                        <div class="col-md-6">
+                            <h6>Ejercicios Recomendados</h6>
+                            <div class="list-group">
+                                <a href="#" class="list-group-item list-group-item-action">
+                                    <i class="bi bi-play-btn me-2"></i>
+                                    Práctica Guiada CV
+                                </a>
+                                <a href="#" class="list-group-item list-group-item-action">
+                                    <i class="bi bi-ear me-2"></i>
+                                    Reconocimiento Auditivo
+                                </a>
+                                <a href="#" class="list-group-item list-group-item-action">
+                                    <i class="bi bi-graph-up me-2"></i>
+                                    Análisis Comparativo
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    <button type="button" class="btn btn-primary" onclick="startPhasePractice(1)">Iniciar Práctica</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Progress Modal -->
+    <div class="modal fade" id="progressModal" tabindex="-1">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Progreso Detallado</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <canvas id="progressChart" height="250"></canvas>
+                        </div>
+                        <div class="col-md-6">
+                            <h6>Estadísticas por Fase</h6>
+                            <table class="table table-sm">
+                                <thead>
+                                    <tr>
+                                        <th>Fase</th>
+                                        <th>Completado</th>
+                                        <th>Precisión</th>
+                                        <th>Tiempo</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Fase 1</td>
+                                        <td>85%</td>
+                                        <td>92%</td>
+                                        <td>4h 30m</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Fase 2</td>
+                                        <td>45%</td>
+                                        <td>78%</td>
+                                        <td>2h 15m</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Fase 3</td>
+                                        <td>15%</td>
+                                        <td>65%</td>
+                                        <td>45m</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Fase 4</td>
+                                        <td>5%</td>
+                                        <td>58%</td>
+                                        <td>20m</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        // Sample data for the application
+        const syllablesData = {
+            phase1: [
+                { syllable: "ba", ipa: "/ba/", structure: "CV" },
+                { syllable: "pe", ipa: "/pe/", structure: "CV" },
+                { syllable: "li", ipa: "/li/", structure: "CV" },
+                { syllable: "an", ipa: "/an/", structure: "VC" },
+                { syllable: "es", ipa: "/es/", structure: "VC" }
+            ],
+            phase2: [
+                { syllable: "pan", ipa: "/pan/", structure: "CVC" },
+                { syllable: "sol", ipa: "/sol/", structure: "CVC" },
+                { syllable: "pra", ipa: "/pɾa/", structure: "CCV" },
+                { syllable: "bli", ipa: "/bli/", structure: "CCV" }
+            ]
+        };
+
+        // Current state
+        let currentPhase = 1;
+        let currentSyllableIndex = 0;
+        let isRecording = false;
+        let recordingInterval;
+
+        // DOM Elements
+        const currentSyllableEl = document.getElementById('currentSyllable');
+        const currentIPAEl = document.getElementById('currentIPA');
+        const currentStructureEl = document.getElementById('currentStructure');
+        const recordButton = document.getElementById('recordButton');
+        const recordText = document.getElementById('recordText');
+        const playAudioButton = document.getElementById('playAudio');
+        const accuracyGauge = document.getElementById('accuracyGauge');
+        const accuracyScore = document.getElementById('accuracyScore');
+        const feedbackText = document.getElementById('feedbackText');
+        const audioVisualizer = document.querySelector('.audio-visualizer');
+
+        // Initialize the application
+        function initApp() {
+            loadSyllable(1, 0);
+            setupAccuracyGauge();
+            setupProgressChart();
+        }
+
+        // Load a syllable for practice
+        function loadSyllable(phase, index) {
+            const phaseData = syllablesData[`phase${phase}`];
+            if (phaseData && phaseData[index]) {
+                const syllable = phaseData[index];
+                currentSyllableEl.textContent = syllable.syllable;
+                currentIPAEl.textContent = syllable.ipa;
+                currentStructureEl.textContent = syllable.structure;
+                currentPhase = phase;
+                currentSyllableIndex = index;
+            }
+        }
+
+        // Setup accuracy gauge
+        function setupAccuracyGauge() {
+            const ctx = accuracyGauge.getContext('2d');
+            // Draw gauge background
+            ctx.beginPath();
+            ctx.arc(60, 60, 50, 0, 2 * Math.PI);
+            ctx.strokeStyle = '#e9ecef';
+            ctx.lineWidth = 8;
+            ctx.stroke();
+
+            // Draw gauge value (will be updated)
+            drawGaugeValue(0);
+        }
+
+        // Draw gauge value
+        function drawGaugeValue(accuracy) {
+            const ctx = accuracyGauge.getContext('2d');
+            ctx.clearRect(0, 0, accuracyGauge.width, accuracyGauge.height);
+            
+            // Background
+            ctx.beginPath();
+            ctx.arc(60, 60, 50, 0, 2 * Math.PI);
+            ctx.strokeStyle = '#e9ecef';
+            ctx.lineWidth = 8;
+            ctx.stroke();
+
+            // Value
+            const radians = (accuracy / 100) * 2 * Math.PI - Math.PI / 2;
+            ctx.beginPath();
+            ctx.arc(60, 60, 50, -Math.PI / 2, radians);
+            ctx.strokeStyle = accuracy >= 70 ? '#198754' : accuracy >= 50 ? '#ffc107' : '#dc3545';
+            ctx.lineWidth = 8;
+            ctx.stroke();
+
+            accuracyScore.textContent = `${accuracy}%`;
+            accuracyScore.className = `badge ${accuracy >= 70 ? 'bg-success' : accuracy >= 50 ? 'bg-warning' : 'bg-danger'}`;
+        }
+
+        // Setup progress chart
+        function setupProgressChart() {
+            const ctx = document.getElementById('progressChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['Fase 1', 'Fase 2', 'Fase 3', 'Fase 4'],
+                    datasets: [{
+                        label: 'Completado (%)',
+                        data: [85, 45, 15, 5],
+                        backgroundColor: [
+                            '#0d6efd',
+                            '#ffc107',
+                            '#0dcaf0',
+                            '#198754'
+                        ]
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        title: {
+                            display: true,
+                            text: 'Progreso por Fase'
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 100
+                        }
+                    }
+                }
+            });
+        }
+
+        // Start phase practice
+        function startPhasePractice(phase) {
+            // Close modal
+            const modal = bootstrap.Modal.getInstance(document.getElementById('phase1Modal'));
+            modal.hide();
+
+            // Load first syllable of phase
+            loadSyllable(phase, 0);
+            
+            // Update UI to show phase is active
+            document.querySelectorAll('.phase-card').forEach(card => {
+                if (parseInt(card.dataset.phase) === phase) {
+                    card.classList.add('border-3');
+                } else {
+                    card.classList.remove('border-3');
+                }
+            });
+        }
+
+        // Toggle recording
+        function toggleRecording() {
+            if (isRecording) {
+                // Stop recording
+                isRecording = false;
+                recordText.textContent = 'Iniciar Grabación';
+                recordButton.className = 'btn btn-success';
+                clearInterval(recordingInterval);
+                audioVisualizer.style.width = '0%';
+
+                // Simulate analysis
+                simulateAnalysis();
+            } else {
+                // Start recording
+                isRecording = true;
+                recordText.textContent = 'Detener Grabación';
+                recordButton.className = 'btn btn-danger';
+
+                // Simulate audio visualization
+                let width = 0;
+                recordingInterval = setInterval(() => {
+                    width = (width + Math.random() * 10) % 100;
+                    audioVisualizer.style.width = `${width}%`;
+                }, 100);
+            }
+        }
+
+        // Simulate analysis
+        function simulateAnalysis() {
+            // Random accuracy between 50-95%
+            const accuracy = Math.floor(Math.random() * 46) + 50;
+            drawGaugeValue(accuracy);
+
+            // Provide feedback based on accuracy
+            if (accuracy >= 85) {
+                feedbackText.className = 'alert alert-success';
+                feedbackText.innerHTML = `
+                    <strong>¡Excelente!</strong> Pronunciación casi perfecta. 
+                    <ul class="mb-0 mt-2">
+                        <li>Vocal clara y bien definida</li>
+                        <li>Consonante precisa</li>
+                    </ul>
+                `;
+            } else if (accuracy >= 70) {
+                feedbackText.className = 'alert alert-warning';
+                feedbackText.innerHTML = `
+                    <strong>Buen trabajo</strong> con áreas de mejora.
+                    <ul class="mb-0 mt-2">
+                        <li>Vocal un poco tensa - relaja la mandíbula</li>
+                        <li>Practica la transición consonante-vocal</li>
+                    </ul>
+                `;
+            } else {
+                feedbackText.className = 'alert alert-danger';
+                feedbackText.innerHTML = `
+                    <strong>Necesita práctica</strong> - enfoque en los fundamentos.
+                    <ul class="mb-0 mt-2">
+                        <li>Posición lingual incorrecta</li>
+                        <li>Ejercicios de respiración recomendados</li>
+                    </ul>
+                `;
+            }
+
+            // Move to next syllable after delay
+            setTimeout(() => {
+                const phaseData = syllablesData[`phase${currentPhase}`];
+                if (phaseData && currentSyllableIndex < phaseData.length - 1) {
+                    loadSyllable(currentPhase, currentSyllableIndex + 1);
+                    feedbackText.className = 'alert alert-info';
+                    feedbackText.textContent = 'Graba tu pronunciación para recibir análisis detallado.';
+                    drawGaugeValue(0);
+                } else {
+                    // Phase completed
+                    feedbackText.className = 'alert alert-success';
+                    feedbackText.innerHTML = '<strong>¡Fase completada!</strong> Avanza a la siguiente fase.';
+                }
+            }, 3000);
+        }
+
+        // Play audio model
+        function playAudioModel() {
+            // In a real app, this would play the audio file
+            // For demo, we'll just show a visual effect
+            playAudioButton.disabled = true;
+            playAudioButton.innerHTML = '<i class="bi bi-volume-up me-2"></i>Reproduciendo...';
+            
+            let width = 0;
+            const audioInterval = setInterval(() => {
+                width += 5;
+                audioVisualizer.style.width = `${width}%`;
+                if (width >= 100) {
+                    clearInterval(audioInterval);
+                    setTimeout(() => {
+                        audioVisualizer.style.width = '0%';
+                        playAudioButton.disabled = false;
+                        playAudioButton.innerHTML = '<i class="bi bi-play-circle me-2"></i>Escuchar Modelo';
+                    }, 500);
+                }
+            }, 100);
+        }
+
+        // Event listeners
+        document.addEventListener('DOMContentLoaded', initApp);
+        recordButton.addEventListener('click', toggleRecording);
+        playAudioButton.addEventListener('click', playAudioModel);
+
+        // Phase card click handlers
+        document.querySelectorAll('.phase-card').forEach(card => {
+            card.addEventListener('click', function() {
+                const phase = parseInt(this.dataset.phase);
+                const modalId = `phase${phase}Modal`;
+                const modal = new bootstrap.Modal(document.getElementById(modalId));
+                modal.show();
+            });
+        });
+    </script>
+</body>
+</html>

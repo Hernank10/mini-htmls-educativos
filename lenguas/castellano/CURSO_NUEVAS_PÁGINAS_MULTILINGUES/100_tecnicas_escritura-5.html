@@ -1,0 +1,778 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>100 Técnicas de Escritura · Castellano</title>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=DM+Serif+Display:ital@0;1&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,600;1,8..60,300;1,8..60,400&family=Fira+Code:wght@300;400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#1a1209;--paper:#faf7f2;--cream:#f3ede3;
+  --gold:#b8882a;--gold-lt:#e8c97a;
+  --teal:#1d5c5c;--teal-lt:#e2f0ef;
+  --green:#1e6b3a;--red:#8b1a1a;
+  --muted:#6b5e4e;--border:#d9cfc0;
+  --card-bg:#ffffff;--shadow:rgba(26,18,9,.10);
+}
+*,*::before,*::after{box-sizing:border-box;}
+body{background:var(--paper);color:var(--ink);font-family:'Source Serif 4',Georgia,serif;min-height:100vh;
+  background-image:radial-gradient(ellipse 80% 40% at 10% 0%,rgba(184,136,42,.07) 0%,transparent 60%),
+  radial-gradient(ellipse 60% 50% at 90% 100%,rgba(29,92,92,.06) 0%,transparent 60%);}
+
+/* LOGIN */
+#loginScreen{position:fixed;inset:0;z-index:9000;background:var(--ink);display:flex;align-items:center;justify-content:center;}
+#loginScreen::before{content:'';position:absolute;inset:0;background:repeating-linear-gradient(45deg,transparent,transparent 60px,rgba(184,136,42,.04) 60px,rgba(184,136,42,.04) 61px);}
+.login-box{position:relative;background:var(--paper);border-radius:16px;padding:2.8rem 2.4rem;width:min(420px,92vw);box-shadow:0 32px 80px rgba(0,0,0,.5);}
+.login-logo{font-family:'DM Serif Display',serif;font-size:2rem;color:var(--ink);font-style:italic;text-align:center;margin-bottom:.2rem;}
+.login-logo span{color:var(--gold);}
+.login-tagline{text-align:center;font-size:.78rem;color:var(--muted);font-style:italic;margin-bottom:1.8rem;font-family:'Fira Code',monospace;letter-spacing:.05em;}
+.login-label{font-family:'Fira Code',monospace;font-size:.68rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:.3rem;}
+.login-input{width:100%;border:1px solid var(--border);border-radius:8px;padding:.58rem .88rem;font-family:'Source Serif 4',serif;font-size:.92rem;background:var(--cream);color:var(--ink);margin-bottom:.9rem;display:block;}
+.login-input:focus{outline:none;border-color:var(--gold);box-shadow:0 0 0 3px rgba(184,136,42,.18);}
+.btn-login{width:100%;background:var(--ink);color:var(--gold-lt);border:none;border-radius:8px;padding:.72rem;font-family:'Fira Code',monospace;font-size:.82rem;letter-spacing:.1em;cursor:pointer;transition:background .2s;}
+.btn-login:hover{background:#2d1f0e;}
+.login-err{color:var(--red);font-size:.78rem;margin-top:-.4rem;margin-bottom:.7rem;font-family:'Fira Code',monospace;display:none;}
+.login-switch{text-align:center;margin-top:.9rem;font-size:.8rem;color:var(--muted);}
+.login-switch a{color:var(--gold);cursor:pointer;text-decoration:underline;}
+.login-divider{text-align:center;margin:.35rem 0 .75rem;font-size:.7rem;color:var(--muted);font-family:'Fira Code',monospace;}
+
+/* NAV */
+.top-nav{background:var(--ink);padding:.55rem 0;border-bottom:1px solid rgba(255,255,255,.07);}
+.top-nav .brand{font-family:'DM Serif Display',serif;font-style:italic;font-size:1.25rem;color:#fff;}
+.top-nav .brand span{color:var(--gold-lt);}
+.nav-user{font-family:'Fira Code',monospace;font-size:.73rem;color:rgba(255,255,255,.5);display:flex;align-items:center;gap:.5rem;}
+.nav-user strong{color:var(--gold-lt);}
+.btn-nav{background:none;border:1px solid rgba(255,255,255,.15);border-radius:20px;padding:.22rem .75rem;font-family:'Fira Code',monospace;font-size:.7rem;color:rgba(255,255,255,.6);cursor:pointer;transition:all .2s;}
+.btn-nav:hover{border-color:var(--gold);color:var(--gold-lt);}
+.btn-nav.active-mode{background:var(--gold);border-color:var(--gold);color:var(--ink);}
+
+/* HEADER */
+.site-header{background:var(--ink);padding:2rem 0 1.5rem;position:relative;overflow:hidden;}
+.site-header::before{content:'';position:absolute;inset:0;background:repeating-linear-gradient(45deg,transparent,transparent 40px,rgba(184,136,42,.04) 40px,rgba(184,136,42,.04) 41px);}
+.site-header .label{font-family:'Fira Code',monospace;font-size:.7rem;letter-spacing:.18em;color:var(--gold-lt);text-transform:uppercase;margin-bottom:.45rem;display:block;}
+.site-header h1{font-family:'DM Serif Display',serif;font-size:clamp(1.75rem,4.5vw,3.1rem);color:#fff;line-height:1.1;font-weight:400;margin:0;}
+.site-header h1 em{color:var(--gold-lt);font-style:italic;}
+.site-header .subtitle{color:rgba(255,255,255,.48);font-size:.88rem;margin-top:.55rem;font-style:italic;}
+.header-deco{position:absolute;right:-60px;top:-60px;width:260px;height:260px;border-radius:50%;border:1px solid rgba(184,136,42,.2);pointer-events:none;}
+.header-deco::after{content:'';position:absolute;inset:28px;border-radius:50%;border:1px dashed rgba(184,136,42,.14);}
+
+/* STATS BAR */
+.stats-bar{background:var(--cream);border-bottom:1px solid var(--border);padding:.7rem 0;font-family:'Fira Code',monospace;font-size:.76rem;color:var(--muted);}
+.stats-bar .stat{display:inline-flex;align-items:center;gap:.38rem;margin-right:1.4rem;}
+.stats-bar .stat strong{color:var(--ink);}
+.score-badge{background:var(--ink);color:var(--gold-lt);border-radius:12px;padding:.16rem .65rem;font-family:'Fira Code',monospace;font-size:.72rem;margin-left:.4rem;}
+
+/* TOOLBAR */
+.toolbar{background:var(--card-bg);border:1px solid var(--border);border-radius:12px;padding:1.05rem 1.3rem;margin:1.3rem 0;box-shadow:0 2px 12px var(--shadow);}
+.toolbar label{font-family:'Fira Code',monospace;font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:.28rem;}
+.search-wrap{position:relative;}
+.search-wrap .bi-search{position:absolute;left:11px;top:50%;transform:translateY(-50%);color:var(--muted);font-size:.9rem;pointer-events:none;}
+#searchInput{padding-left:2.2rem;border:1px solid var(--border);border-radius:8px;background:var(--paper);color:var(--ink);font-family:'Source Serif 4',serif;font-size:.9rem;height:38px;width:100%;}
+#searchInput:focus{outline:none;border-color:var(--gold);box-shadow:0 0 0 3px rgba(184,136,42,.15);}
+.filter-btn{border:1px solid var(--border);border-radius:20px;padding:.26rem .8rem;font-family:'Fira Code',monospace;font-size:.7rem;letter-spacing:.04em;background:var(--paper);color:var(--muted);cursor:pointer;transition:all .2s;white-space:nowrap;}
+.filter-btn:hover{border-color:var(--gold);color:var(--gold);}
+.filter-btn.active{background:var(--ink);color:var(--gold-lt);border-color:var(--ink);}
+.filter-btn .count{background:var(--border);color:var(--muted);border-radius:10px;padding:.03rem .36rem;font-size:.63rem;margin-left:.28rem;}
+.filter-btn.active .count{background:rgba(255,255,255,.12);color:var(--gold-lt);}
+
+#resultCount{font-family:'Fira Code',monospace;font-size:.76rem;color:var(--muted);margin:.38rem 0 .85rem;}
+#resultCount strong{color:var(--gold);}
+
+/* BLOCK & SECTION */
+.block-header{display:flex;align-items:center;gap:.9rem;margin:2.1rem 0 .95rem;padding-bottom:.6rem;border-bottom:2px solid var(--ink);}
+.block-num{font-family:'DM Serif Display',serif;font-size:2.5rem;line-height:1;color:var(--gold);opacity:.33;font-style:italic;flex-shrink:0;}
+.block-title{font-family:'Playfair Display',serif;font-size:1.35rem;font-weight:700;color:var(--ink);margin:0;}
+.block-sub{font-size:.78rem;color:var(--muted);font-style:italic;margin-top:.1rem;}
+.section-label{font-family:'Fira Code',monospace;font-size:.67rem;letter-spacing:.15em;text-transform:uppercase;color:var(--teal);border-left:3px solid var(--teal);padding-left:.58rem;margin:1.5rem 0 .75rem;}
+
+/* CARDS */
+.tech-card{background:var(--card-bg);border:1px solid var(--border);border-radius:10px;margin-bottom:.75rem;overflow:hidden;transition:box-shadow .2s,transform .2s,border-color .2s;cursor:pointer;}
+.tech-card:hover{box-shadow:0 6px 24px var(--shadow);transform:translateY(-2px);border-color:var(--gold);}
+.tech-card.expanded{border-color:var(--gold);box-shadow:0 6px 28px var(--shadow);}
+.card-header-row{display:flex;align-items:center;gap:.7rem;padding:.75rem .95rem;user-select:none;}
+.card-num{font-family:'DM Serif Display',serif;font-size:1.35rem;font-style:italic;color:var(--gold);opacity:.6;min-width:2.1rem;text-align:right;flex-shrink:0;}
+.card-name{font-family:'Playfair Display',serif;font-size:.98rem;font-weight:700;color:var(--ink);flex:1;}
+.card-tag{font-family:'Fira Code',monospace;font-size:.6rem;letter-spacing:.07em;padding:.14rem .48rem;border-radius:12px;flex-shrink:0;text-transform:uppercase;}
+.tag-morfosintaxis{background:#e8f0fb;color:#2a5ab5;}
+.tag-morfologia{background:#fdf0e0;color:#9b5c00;}
+.tag-semantica{background:#e8f5f0;color:#1d6b4a;}
+.tag-cohesion{background:#f5e8f0;color:#7a2a8b;}
+.tag-prosodica{background:#fff3e0;color:#a64d00;}
+.tag-fono{background:#e0f5f5;color:#1d5c5c;}
+.tag-puntuacion{background:#f0f0f5;color:#3d3d6b;}
+.tag-retorica{background:#fdecea;color:#8b1a1a;}
+.card-chevron{color:var(--muted);font-size:.82rem;transition:transform .25s;flex-shrink:0;}
+.tech-card.expanded .card-chevron{transform:rotate(180deg);}
+.card-body-inner{display:none;padding:.8rem .95rem .8rem 3.5rem;border-top:1px dashed var(--border);}
+.tech-card.expanded .card-body-inner{display:block;}
+.card-desc{font-size:.88rem;line-height:1.75;color:#3a2e22;margin-bottom:.65rem;}
+.card-example{background:var(--cream);border-left:3px solid var(--gold);border-radius:0 6px 6px 0;padding:.55rem .8rem;font-style:italic;font-size:.86rem;color:var(--ink);line-height:1.7;}
+.card-example::before{content:'Ejemplo: ';font-family:'Fira Code',monospace;font-size:.63rem;font-style:normal;color:var(--gold);letter-spacing:.05em;text-transform:uppercase;display:block;margin-bottom:.12rem;}
+.card-quiz-btn{margin-top:.65rem;background:none;border:1px solid var(--teal);color:var(--teal);border-radius:20px;padding:.26rem .8rem;font-family:'Fira Code',monospace;font-size:.68rem;cursor:pointer;transition:all .2s;}
+.card-quiz-btn:hover{background:var(--teal);color:#fff;}
+
+#noResults{text-align:center;padding:4rem 2rem;display:none;}
+#noResults .icon{font-size:3rem;color:var(--border);}
+#noResults p{color:var(--muted);margin-top:.7rem;font-style:italic;}
+
+/* ══ QUIZ OVERLAY ══ */
+#quizMode{display:none;position:fixed;inset:0;z-index:5000;background:rgba(26,18,9,.92);backdrop-filter:blur(4px);overflow-y:auto;padding:2rem 0 3rem;}
+.quiz-box{background:var(--paper);border-radius:16px;width:min(700px,94vw);margin:0 auto;padding:1.8rem 1.8rem 1.4rem;position:relative;}
+.quiz-header{display:flex;align-items:flex-start;justify-content:space-between;gap:1rem;margin-bottom:1.3rem;}
+.quiz-title{font-family:'Playfair Display',serif;font-size:1.25rem;font-weight:700;color:var(--ink);}
+.quiz-subtitle{font-family:'Fira Code',monospace;font-size:.7rem;color:var(--muted);margin-top:.18rem;}
+.btn-close-quiz{background:none;border:none;font-size:1.4rem;color:var(--muted);cursor:pointer;padding:0;line-height:1;}
+.btn-close-quiz:hover{color:var(--ink);}
+.quiz-progress-bar{background:var(--border);border-radius:4px;height:5px;margin-bottom:1.3rem;overflow:hidden;}
+.quiz-progress-fill{background:var(--gold);height:100%;border-radius:4px;transition:width .4s ease;}
+.quiz-score-row{display:flex;gap:.55rem;margin-bottom:1.1rem;flex-wrap:wrap;}
+.quiz-chip{font-family:'Fira Code',monospace;font-size:.7rem;padding:.24rem .7rem;border-radius:12px;display:flex;align-items:center;gap:.32rem;}
+.chip-correct{background:#d4edda;color:var(--green);}
+.chip-wrong{background:#fdecea;color:var(--red);}
+.chip-pct{background:var(--cream);color:var(--muted);}
+.chip-streak{background:#fff8e1;color:#a07800;}
+.quiz-tech-info{background:var(--ink);color:#fff;border-radius:10px;padding:.9rem 1.1rem;margin-bottom:1.1rem;}
+.quiz-tech-num{font-family:'DM Serif Display',serif;font-size:1.8rem;font-style:italic;color:var(--gold-lt);opacity:.45;float:right;}
+.quiz-tech-name{font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:700;color:var(--gold-lt);}
+.quiz-tech-cat{font-family:'Fira Code',monospace;font-size:.65rem;letter-spacing:.08em;color:rgba(255,255,255,.4);text-transform:uppercase;margin-top:.18rem;}
+.quiz-tech-desc{font-size:.85rem;color:rgba(255,255,255,.72);margin-top:.6rem;line-height:1.7;font-style:italic;}
+.quiz-instruction{font-family:'Fira Code',monospace;font-size:.68rem;letter-spacing:.08em;text-transform:uppercase;color:var(--teal);display:flex;align-items:center;gap:.38rem;margin-bottom:.65rem;}
+
+/* ZONES */
+.drag-zone{min-height:52px;background:var(--cream);border:2px dashed var(--border);border-radius:10px;padding:.55rem;display:flex;flex-wrap:wrap;align-content:flex-start;gap:.45rem;margin-bottom:.7rem;transition:border-color .2s,background .2s;}
+.drag-zone.over{border-color:var(--gold);background:#fdf6e9;}
+.zone-label{font-family:'Fira Code',monospace;font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:.5rem;display:block;}
+.placeholder-hint{font-family:'Fira Code',monospace;font-size:.7rem;color:var(--muted);pointer-events:none;align-self:center;}
+
+/* TOKENS */
+.word-token{font-family:'Source Serif 4',serif;font-size:.92rem;padding:.32rem .7rem;border-radius:6px;cursor:grab;user-select:none;transition:transform .15s,box-shadow .15s,opacity .15s;display:inline-flex;align-items:center;border:1px solid transparent;white-space:nowrap;}
+.word-token:active{cursor:grabbing;}
+.word-token.dragging{opacity:.3;transform:scale(.92);}
+.bank-token{background:#fff;border-color:var(--border);color:var(--ink);box-shadow:0 1px 4px var(--shadow);}
+.bank-token:hover{border-color:var(--gold);box-shadow:0 2px 8px var(--shadow);transform:translateY(-1px);}
+.answer-token{background:var(--ink);color:#fff;border-color:var(--ink);}
+.answer-token:hover{border-color:var(--gold);}
+
+/* RESULT */
+.quiz-result{border-radius:10px;padding:.9rem 1.1rem;margin-bottom:.75rem;display:none;}
+.quiz-result.correct{background:#d4edda;border:1px solid #a8d5b5;}
+.quiz-result.wrong{background:#fdecea;border:1px solid #f1c0c0;}
+.result-title{font-family:'Fira Code',monospace;font-size:.73rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;margin-bottom:.35rem;display:flex;align-items:center;gap:.38rem;}
+.correct .result-title{color:var(--green);}
+.wrong .result-title{color:var(--red);}
+.result-correct-answer{font-style:italic;font-size:.88rem;color:var(--ink);margin-top:.3rem;line-height:1.65;}
+.result-correct-answer strong{font-style:normal;font-family:'Fira Code',monospace;font-size:.63rem;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:.18rem;}
+
+/* QUIZ BUTTONS */
+.quiz-btn-row{display:flex;gap:.6rem;flex-wrap:wrap;}
+.btn-quiz-check{background:var(--teal);color:#fff;border:none;border-radius:8px;padding:.58rem 1.3rem;font-family:'Fira Code',monospace;font-size:.76rem;cursor:pointer;transition:background .2s;}
+.btn-quiz-check:hover{background:#14403f;}
+.btn-quiz-check:disabled{background:var(--border);color:var(--muted);cursor:not-allowed;}
+.btn-quiz-next{background:var(--ink);color:var(--gold-lt);border:none;border-radius:8px;padding:.58rem 1.3rem;font-family:'Fira Code',monospace;font-size:.76rem;cursor:pointer;display:none;}
+.btn-quiz-next:hover{background:#2d1f0e;}
+.btn-quiz-skip{background:none;border:1px solid var(--border);border-radius:8px;color:var(--muted);padding:.58rem .95rem;font-family:'Fira Code',monospace;font-size:.7rem;cursor:pointer;}
+.btn-quiz-skip:hover{border-color:var(--muted);}
+
+/* END */
+.quiz-end{text-align:center;padding:1.5rem 0;}
+.quiz-end-score{font-family:'DM Serif Display',serif;font-size:4rem;font-style:italic;color:var(--gold);line-height:1;}
+.quiz-end-label{font-family:'Fira Code',monospace;font-size:.78rem;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;margin-bottom:1.1rem;}
+.quiz-end-msg{font-size:1rem;color:var(--ink);font-style:italic;margin-bottom:1.4rem;}
+.btn-quiz-restart{background:var(--ink);color:var(--gold-lt);border:none;border-radius:8px;padding:.65rem 1.6rem;font-family:'Fira Code',monospace;font-size:.8rem;cursor:pointer;}
+
+/* PROGRESS PILL */
+.progress-pill{position:fixed;bottom:1.5rem;right:1.5rem;background:var(--ink);color:var(--gold-lt);border-radius:24px;padding:.48rem .95rem;font-family:'Fira Code',monospace;font-size:.74rem;z-index:999;box-shadow:0 4px 20px rgba(0,0,0,.3);display:flex;align-items:center;gap:.42rem;opacity:0;transition:opacity .3s;pointer-events:none;}
+.progress-pill.show{opacity:1;pointer-events:auto;}
+.pip{width:6px;height:6px;background:var(--gold);border-radius:50%;flex-shrink:0;}
+
+.site-footer{margin-top:3.5rem;padding:1.4rem 0;border-top:1px solid var(--border);text-align:center;font-family:'Fira Code',monospace;font-size:.72rem;color:var(--muted);}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(14px);}to{opacity:1;transform:translateY(0);}}
+.tech-card{animation:fadeUp .3s ease both;}
+@keyframes shake{0%,100%{transform:translateX(0);}25%{transform:translateX(-7px);}75%{transform:translateX(7px);}}
+.shake{animation:shake .35s ease;}
+@keyframes popIn{from{transform:scale(.75);opacity:0;}to{transform:scale(1);opacity:1;}}
+.pop-in{animation:popIn .2s ease;}
+
+@media(max-width:576px){
+  .card-body-inner{padding-left:.95rem;}
+  .quiz-box{padding:1.3rem 1rem;}
+  .word-token{font-size:.82rem;padding:.26rem .56rem;}
+}
+</style>
+</head>
+<body>
+
+<!-- LOGIN SCREEN -->
+<div id="loginScreen">
+  <div class="login-box">
+    <div class="login-logo">El Arte de <span>Escribir</span></div>
+    <div class="login-tagline">100 Técnicas · Lengua Castellana</div>
+    <div id="registerForm">
+      <label class="login-label">Nombre de usuario</label>
+      <input class="login-input" id="regUser" placeholder="ej. lucía_writer" autocomplete="off">
+      <label class="login-label">Contraseña</label>
+      <input class="login-input" id="regPass" type="password" placeholder="mínimo 4 caracteres">
+      <label class="login-label">Confirmar contraseña</label>
+      <input class="login-input" id="regPass2" type="password" placeholder="repite la contraseña">
+      <div class="login-err" id="regErr"></div>
+      <button class="btn-login" onclick="doRegister()">Crear cuenta &nbsp;<i class="bi bi-arrow-right"></i></button>
+      <div class="login-divider">— o —</div>
+      <div class="login-switch">¿Ya tienes cuenta? <a onclick="showLogin()">Inicia sesión</a></div>
+    </div>
+    <div id="loginForm" style="display:none">
+      <label class="login-label">Usuario</label>
+      <input class="login-input" id="loginUser" placeholder="tu nombre de usuario" autocomplete="off">
+      <label class="login-label">Contraseña</label>
+      <input class="login-input" id="loginPass" type="password" placeholder="tu contraseña">
+      <div class="login-err" id="loginErr"></div>
+      <button class="btn-login" onclick="doLogin()">Entrar &nbsp;<i class="bi bi-arrow-right"></i></button>
+      <div class="login-divider">— o —</div>
+      <div class="login-switch">¿No tienes cuenta? <a onclick="showRegister()">Regístrate</a></div>
+    </div>
+  </div>
+</div>
+
+<!-- APP CONTENT -->
+<div id="appContent" style="display:none">
+  <nav class="top-nav">
+    <div class="container d-flex align-items-center justify-content-between">
+      <span class="brand">El Arte de <span>Escribir</span></span>
+      <div class="d-flex align-items-center gap-2 flex-wrap justify-content-end">
+        <div class="nav-user d-none d-sm-flex"><i class="bi bi-person-circle"></i> Hola, <strong id="navUserName">—</strong></div>
+        <button class="btn-nav" onclick="openQuizAll()"><i class="bi bi-lightning-charge"></i> Quiz completo</button>
+        <button class="btn-nav" onclick="doLogout()"><i class="bi bi-box-arrow-right"></i> Salir</button>
+      </div>
+    </div>
+  </nav>
+  <header class="site-header">
+    <div class="header-deco"></div>
+    <div class="container">
+      <span class="label"><i class="bi bi-pen"></i> &nbsp;Guía de escritura · Lengua Castellana</span>
+      <h1>100 Técnicas de <em>Escritura</em></h1>
+      <p class="subtitle">Morfosintácticas &amp; Semánticas — consulta y práctica interactiva</p>
+    </div>
+  </header>
+  <div class="stats-bar">
+    <div class="container">
+      <span class="stat"><i class="bi bi-collection"></i> <strong>100</strong> técnicas</span>
+      <span class="stat"><i class="bi bi-tags"></i> <strong>2</strong> bloques</span>
+      <span class="stat" id="statScore" style="display:none">
+        <i class="bi bi-award"></i> Quiz: <span class="score-badge" id="statScoreVal">0/0</span>
+      </span>
+      <span class="stat" id="statStreak" style="display:none">
+        <i class="bi bi-lightning-charge"></i> Mejor racha: <span class="score-badge" id="statStreakVal">0</span>
+      </span>
+    </div>
+  </div>
+  <main class="container my-3">
+    <div class="toolbar">
+      <div class="row g-3 align-items-end">
+        <div class="col-md-5">
+          <label>Buscar técnica</label>
+          <div class="search-wrap">
+            <i class="bi bi-search"></i>
+            <input type="text" id="searchInput" placeholder="nombre, categoría, ejemplo…">
+          </div>
+        </div>
+        <div class="col-md-7">
+          <label>Filtrar por categoría</label>
+          <div class="d-flex flex-wrap gap-2">
+            <button class="filter-btn active" data-filter="all">Todas <span class="count">100</span></button>
+            <button class="filter-btn" data-filter="morfosintaxis">Morfosintaxis <span class="count">20</span></button>
+            <button class="filter-btn" data-filter="morfologia">Morfología <span class="count">15</span></button>
+            <button class="filter-btn" data-filter="semantica">Semántica <span class="count">30</span></button>
+            <button class="filter-btn" data-filter="cohesion">Cohesión <span class="count">10</span></button>
+            <button class="filter-btn" data-filter="prosodica">Prosodia <span class="count">10</span></button>
+            <button class="filter-btn" data-filter="fono">Fono-sem. <span class="count">5</span></button>
+            <button class="filter-btn" data-filter="puntuacion">Puntuación <span class="count">5</span></button>
+            <button class="filter-btn" data-filter="retorica">Retórica <span class="count">5</span></button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div id="resultCount"></div>
+    <div id="noResults"><div class="icon"><i class="bi bi-search"></i></div><p>No se encontraron técnicas.<br>Prueba otra búsqueda.</p></div>
+    <div id="content"></div>
+  </main>
+  <div class="progress-pill" id="progressPill"><span class="pip"></span><span id="pillText">Técnica 1/100</span></div>
+  <footer class="site-footer"><p>100 Técnicas de Escritura · Morfosintácticas y Semánticas de la Lengua Castellana</p></footer>
+</div>
+
+<!-- QUIZ OVERLAY -->
+<div id="quizMode">
+  <div class="quiz-box" id="quizBox">
+    <div id="quizMain">
+      <div class="quiz-header">
+        <div>
+          <div class="quiz-title">Quiz de Ordenamiento</div>
+          <div class="quiz-subtitle" id="quizSubtitle">Pregunta 1 de 100</div>
+        </div>
+        <button class="btn-close-quiz" onclick="closeQuiz()"><i class="bi bi-x-lg"></i></button>
+      </div>
+      <div class="quiz-progress-bar"><div class="quiz-progress-fill" id="quizProgressFill" style="width:0%"></div></div>
+      <div class="quiz-score-row">
+        <span class="quiz-chip chip-correct"><i class="bi bi-check2"></i><span id="chipC">0</span> correctas</span>
+        <span class="quiz-chip chip-wrong"><i class="bi bi-x"></i><span id="chipW">0</span> errores</span>
+        <span class="quiz-chip chip-pct"><i class="bi bi-percent"></i><span id="chipP">—</span></span>
+        <span class="quiz-chip chip-streak"><i class="bi bi-lightning-charge"></i> Racha: <span id="chipS">0</span></span>
+      </div>
+      <div class="quiz-tech-info">
+        <div class="quiz-tech-num" id="qN">1</div>
+        <div class="quiz-tech-name" id="qNombre">—</div>
+        <div class="quiz-tech-cat" id="qCat">—</div>
+        <div class="quiz-tech-desc" id="qDesc">—</div>
+      </div>
+      <div class="quiz-instruction"><i class="bi bi-arrow-left-right"></i> Arrastra · o haz clic · para ordenar las palabras del ejemplo</div>
+      <span class="zone-label"><i class="bi bi-sort-alpha-down"></i> Tu respuesta (coloca aquí las palabras en orden correcto)</span>
+      <div class="drag-zone" id="answerZone"><span class="placeholder-hint" id="answerHint">Arrastra o haz clic en las palabras…</span></div>
+      <span class="zone-label" style="color:var(--teal)"><i class="bi bi-collection"></i> Palabras disponibles</span>
+      <div class="drag-zone" id="wordBank" style="border-color:var(--teal);background:var(--teal-lt);"></div>
+      <div class="quiz-result" id="quizResult">
+        <div class="result-title" id="resultTitle"></div>
+        <div id="resultBody"></div>
+      </div>
+      <div class="quiz-btn-row">
+        <button class="btn-quiz-check" id="btnCheck" onclick="checkAnswer()"><i class="bi bi-check2-circle"></i> Verificar</button>
+        <button class="btn-quiz-next" id="btnNext" onclick="nextQuestion()">Siguiente <i class="bi bi-arrow-right"></i></button>
+        <button class="btn-quiz-skip" onclick="skipQuestion()"><i class="bi bi-skip-forward"></i> Saltar</button>
+      </div>
+    </div>
+    <div id="quizEnd" style="display:none">
+      <div class="quiz-end">
+        <div class="quiz-end-score" id="endScore">—</div>
+        <div class="quiz-end-label">Puntuación final</div>
+        <div class="quiz-end-msg" id="endMsg">—</div>
+        <div class="d-flex gap-2 justify-content-center flex-wrap">
+          <button class="btn-quiz-restart" onclick="restartQuiz()"><i class="bi bi-arrow-clockwise"></i> Jugar de nuevo</button>
+          <button class="btn-quiz-restart" style="background:var(--teal)" onclick="closeQuiz()"><i class="bi bi-journal-text"></i> Volver a la guía</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
+<script>
+// ══ DATA ══════════════════════════════════════════════════════════════════════
+const TECNICAS=[
+{n:1,nombre:"Hipérbaton",cat:"morfosintaxis",bloque:"A",sec:"A.1 · Estructura y orden oracional",desc:"Alteración del orden lógico de los elementos oracionales para generar énfasis o musicalidad.",ej:"Del salón en el ángulo oscuro de su dueño tal vez olvidada"},
+{n:2,nombre:"Anáfora",cat:"morfosintaxis",bloque:"A",sec:"A.1 · Estructura y orden oracional",desc:"Repetición de palabras al inicio de cláusulas consecutivas para crear ritmo e insistencia.",ej:"No me olvides no me abandones no me dejes"},
+{n:3,nombre:"Epífora",cat:"morfosintaxis",bloque:"A",sec:"A.1 · Estructura y orden oracional",desc:"Repetición de palabras al final de oraciones sucesivas.",ej:"Llueve en Madrid amanece en Madrid duerme en Madrid"},
+{n:4,nombre:"Anadiplosis",cat:"morfosintaxis",bloque:"A",sec:"A.1 · Estructura y orden oracional",desc:"El término final de una unidad se convierte en el término inicial de la siguiente.",ej:"El miedo engendra silencio el silencio engendra olvido"},
+{n:5,nombre:"Polisíndeton",cat:"morfosintaxis",bloque:"A",sec:"A.1 · Estructura y orden oracional",desc:"Multiplicación de conjunciones para ralentizar el ritmo y conferir solemnidad.",ej:"Y ríe y llora y canta y vive y muere"},
+{n:6,nombre:"Asíndeton",cat:"morfosintaxis",bloque:"A",sec:"A.1 · Estructura y orden oracional",desc:"Supresión de conjunciones para acelerar el ritmo y crear urgencia.",ej:"Llegué vi vencí"},
+{n:7,nombre:"Paralelismo",cat:"morfosintaxis",bloque:"A",sec:"A.1 · Estructura y orden oracional",desc:"Repetición de estructuras gramaticales equivalentes en cláusulas consecutivas.",ej:"Amaba el mar adoraba el viento veneraba la tormenta"},
+{n:8,nombre:"Quiasmo",cat:"morfosintaxis",bloque:"A",sec:"A.1 · Estructura y orden oracional",desc:"Disposición cruzada AB/BA de elementos en dos oraciones paralelas.",ej:"Hay que comer para vivir no vivir para comer"},
+{n:9,nombre:"Zeugma",cat:"morfosintaxis",bloque:"A",sec:"A.1 · Estructura y orden oracional",desc:"Omisión de un elemento verbal ya mencionado que se sobreentiende.",ej:"Ella eligió el silencio él la huida"},
+{n:10,nombre:"Elipsis",cat:"morfosintaxis",bloque:"A",sec:"A.1 · Estructura y orden oracional",desc:"Supresión de elementos oracionales recuperables por contexto.",ej:"Yo estudié medicina mi hermano derecho"},
+{n:11,nombre:"Presente histórico",cat:"morfologia",bloque:"A",sec:"A.2 · Modalidades verbales y tiempo",desc:"Uso del presente para relatar eventos pasados con inmediatez.",ej:"En 1492 Colón llega a América y cambia el mundo para siempre"},
+{n:12,nombre:"Subjuntivo de duda",cat:"morfologia",bloque:"A",sec:"A.2 · Modalidades verbales y tiempo",desc:"Uso del subjuntivo para expresar incertidumbre o hipótesis.",ej:"Quizás sea demasiado tarde para enmendar el error"},
+{n:13,nombre:"Infinitivo sustantivado",cat:"morfologia",bloque:"A",sec:"A.2 · Modalidades verbales y tiempo",desc:"Conversión del infinitivo en sustantivo mediante el artículo.",ej:"El vivir sin propósito pesa como una condena"},
+{n:14,nombre:"Gerundio narrativo",cat:"morfologia",bloque:"A",sec:"A.2 · Modalidades verbales y tiempo",desc:"Uso del gerundio para describir acciones simultáneas.",ej:"Caminaba entre la multitud buscando un rostro familiar"},
+{n:15,nombre:"Perífrasis aspectual",cat:"morfologia",bloque:"A",sec:"A.2 · Modalidades verbales y tiempo",desc:"Verbo auxiliar más infinitivo o gerundio para matizar el aspecto.",ej:"Llevaba tres horas esperando cuando al fin apareció"},
+{n:16,nombre:"Imperativo retórico",cat:"morfologia",bloque:"A",sec:"A.2 · Modalidades verbales y tiempo",desc:"Imperativo para invitar, sugerir o producir efecto dramático.",ej:"Imagina un mundo sin fronteras constrúyelo"},
+{n:17,nombre:"Voz pasiva refleja",cat:"morfologia",bloque:"A",sec:"A.2 · Modalidades verbales y tiempo",desc:"Construcción se más verbo para despersonalizar el agente.",ej:"Se publicó el informe sin que nadie lo leyera"},
+{n:18,nombre:"Condicional de cortesía",cat:"morfologia",bloque:"A",sec:"A.2 · Modalidades verbales y tiempo",desc:"Condicional simple para suavizar solicitudes con elegancia.",ej:"Querría preguntarle si no le molesta su opinión"},
+{n:19,nombre:"Pluscuamperfecto narrativo",cat:"morfologia",bloque:"A",sec:"A.2 · Modalidades verbales y tiempo",desc:"Pluscuamperfecto para marcar acción anterior a otra pasada.",ej:"Cuando llegué ella ya había tomado la decisión"},
+{n:20,nombre:"Imperfecto durativo",cat:"morfologia",bloque:"A",sec:"A.2 · Modalidades verbales y tiempo",desc:"Imperfecto que describe acciones habituales o estados prolongados.",ej:"Los domingos olían a pan recién hecho y a café"},
+{n:21,nombre:"Adjetivación antepuesta",cat:"morfologia",bloque:"A",sec:"A.3 · Nominales y concordancia",desc:"Adjetivo antes del sustantivo para aportar valor lírico y subjetivo.",ej:"La dulce memoria de los tiempos idos"},
+{n:22,nombre:"Acumulación adjetival",cat:"morfologia",bloque:"A",sec:"A.3 · Nominales y concordancia",desc:"Serie de adjetivos sin conjunción con ritmo enumerativo.",ej:"Una voz oscura grave lenta irreversible"},
+{n:23,nombre:"Sustantivación del adjetivo",cat:"morfologia",bloque:"A",sec:"A.3 · Nominales y concordancia",desc:"Adjetivo con artículo convertido en núcleo nominal abstracto.",ej:"Lo efímero nos define más que lo eterno"},
+{n:24,nombre:"Aposición explicativa",cat:"morfosintaxis",bloque:"A",sec:"A.3 · Nominales y concordancia",desc:"Frase nominal entre comas que amplía o aclara el sustantivo.",ej:"Madrid capital del reino no dormía aquella noche"},
+{n:25,nombre:"Dequeísmo evitado",cat:"morfosintaxis",bloque:"A",sec:"A.3 · Nominales y concordancia",desc:"Distinción correcta entre que y de que en el uso normativo.",ej:"Creo que llegarás tarde me alegra de que vengas"},
+{n:26,nombre:"Género inclusivo literario",cat:"morfologia",bloque:"A",sec:"A.3 · Nominales y concordancia",desc:"Sustantivos genéricos para abarcar universalidad.",ej:"La humanidad avanza cuando cada individuo crece"},
+{n:27,nombre:"Artículo enfático",cat:"morfosintaxis",bloque:"A",sec:"A.3 · Nominales y concordancia",desc:"Artículo determinado para señalar exclusividad del referente.",ej:"Esa fue la decisión que lo cambió todo"},
+{n:28,nombre:"Cuantificador intensivo",cat:"morfologia",bloque:"A",sec:"A.3 · Nominales y concordancia",desc:"Adverbios y cuantificadores que gradúan la intensidad.",ej:"Absolutamente imprescindible jamás bajo ningún concepto"},
+{n:29,nombre:"Pronombre de intensidad",cat:"morfosintaxis",bloque:"A",sec:"A.3 · Nominales y concordancia",desc:"Mismo, propio, solo para reforzar semánticamente al sustantivo.",ej:"El propio ministro reconoció el fracaso públicamente"},
+{n:30,nombre:"Concordancia ad sensum",cat:"morfosintaxis",bloque:"A",sec:"A.3 · Nominales y concordancia",desc:"Concordancia que sigue el sentido lógico más que la norma estricta.",ej:"La mayoría de los lectores abandonaron el libro a mitad"},
+{n:31,nombre:"Punto y coma dramático",cat:"puntuacion",bloque:"A",sec:"A.4 · Puntuación expresiva",desc:"Punto y coma entre cláusulas relacionadas que genera pausa tensa.",ej:"Todo estaba en su lugar solo faltaba ella"},
+{n:32,nombre:"Coma vocativa",cat:"puntuacion",bloque:"A",sec:"A.4 · Puntuación expresiva",desc:"Coma que aisla el vocativo dotando de tono directo al texto.",ej:"Escucha amigo mío lo que te voy a decir"},
+{n:33,nombre:"Guión largo narrativo",cat:"puntuacion",bloque:"A",sec:"A.4 · Puntuación expresiva",desc:"Guión largo que introduce discurso directo o aísla incisos.",ej:"No vuelvas dijo sin mirarle ya no hay nada aquí para ti"},
+{n:34,nombre:"Puntos suspensivos",cat:"puntuacion",bloque:"A",sec:"A.4 · Puntuación expresiva",desc:"Puntos que sugieren lo no dicho, la duda o el peligro latente.",ej:"Si no llega antes del amanecer todo habrá terminado"},
+{n:35,nombre:"Dos puntos anunciadores",cat:"puntuacion",bloque:"A",sec:"A.4 · Puntuación expresiva",desc:"Dos puntos que anticipan enumeración o consecuencia.",ej:"Tres cosas me importan en la vida la verdad la belleza y la justicia"},
+{n:36,nombre:"Oración nominal pura",cat:"morfosintaxis",bloque:"A",sec:"A.5 · Construcciones especiales",desc:"Oración sin verbo conjugado que transmite inmediatez o urgencia.",ej:"Silencio total oscuridad absoluta el fin"},
+{n:37,nombre:"Interrogación retórica",cat:"morfosintaxis",bloque:"A",sec:"A.5 · Construcciones especiales",desc:"Pregunta cuya respuesta está implícita para provocar reflexión.",ej:"Acaso no somos todos extranjeros en algún lugar"},
+{n:38,nombre:"Exclamación contenida",cat:"morfosintaxis",bloque:"A",sec:"A.5 · Construcciones especiales",desc:"Exclamativa de intensidad moderada que evita el melodramatismo.",ej:"Cuánto cuesta la verdad"},
+{n:39,nombre:"Construcción disyuntiva",cat:"morfosintaxis",bloque:"A",sec:"A.5 · Construcciones especiales",desc:"Uso de o para presentar alternativas con urgencia o dilema.",ej:"O te renuevas o pereces"},
+{n:40,nombre:"Subordinada concesiva",cat:"morfosintaxis",bloque:"A",sec:"A.5 · Construcciones especiales",desc:"Cláusula con obstáculo que no impide la acción principal.",ej:"Aunque el camino sea largo llegaremos"},
+{n:41,nombre:"Condicional irreal",cat:"morfosintaxis",bloque:"A",sec:"A.5 · Construcciones especiales",desc:"Hipótesis incumplida con pluscuamperfecto de subjuntivo.",ej:"Si hubiera sabido la verdad nunca habría partido"},
+{n:42,nombre:"Relativa especificativa",cat:"morfosintaxis",bloque:"A",sec:"A.5 · Construcciones especiales",desc:"Cláusula relativa sin comas que restringe el antecedente.",ej:"Los libros que transforman son los que incomodan"},
+{n:43,nombre:"Relativa explicativa",cat:"morfosintaxis",bloque:"A",sec:"A.5 · Construcciones especiales",desc:"Cláusula relativa entre comas que añade información adicional.",ej:"La novela que fue escrita en tres semanas obtuvo el premio"},
+{n:44,nombre:"Construcción impersonal",cat:"morfosintaxis",bloque:"A",sec:"A.5 · Construcciones especiales",desc:"Oraciones sin sujeto explícito para generalizar.",ej:"Se dice que el tiempo lo cura todo"},
+{n:45,nombre:"Hipótesis con como si",cat:"morfosintaxis",bloque:"A",sec:"A.5 · Construcciones especiales",desc:"Comparación irreal que introduce situación imaginada.",ej:"Hablaba como si el mundo no existiera fuera de esa habitación"},
+{n:46,nombre:"Prefijación intensiva",cat:"morfologia",bloque:"A",sec:"A.6 · Morfología léxica",desc:"Prefijos archi super hiper que intensifican el término base.",ej:"Una decisión archirrepetida un error superpredecible"},
+{n:47,nombre:"Sufijación diminutiva",cat:"morfologia",bloque:"A",sec:"A.6 · Morfología léxica",desc:"Sufijos illo ito ico con carga emocional cálida o irónica.",ej:"Venía con su maletita y su sombrerillo de los domingos"},
+{n:48,nombre:"Sufijación aumentativa",cat:"morfologia",bloque:"A",sec:"A.6 · Morfología léxica",desc:"Sufijos ón azo ote con tamaño real o metafórico.",ej:"Recibió un portazo que retumbó en todo el edificio"},
+{n:49,nombre:"Neologismo contextualizado",cat:"morfologia",bloque:"A",sec:"A.6 · Morfología léxica",desc:"Término nuevo justificado y definido implícitamente por el contexto.",ej:"La pantallización de la infancia no tiene precedentes históricos"},
+{n:50,nombre:"Compuesto léxico original",cat:"morfologia",bloque:"A",sec:"A.6 · Morfología léxica",desc:"Voz compuesta que fusiona dos realidades en un término.",ej:"El hombre era un sombra luz brillante en público apagado en privado"},
+{n:51,nombre:"Metáfora pura",cat:"semantica",bloque:"B",sec:"B.1 · Figuras de semejanza y contraste",desc:"Identificación directa entre dos realidades sin nexo comparativo.",ej:"Sus ojos eran dos naufragios"},
+{n:52,nombre:"Alegoría",cat:"semantica",bloque:"B",sec:"B.1 · Figuras de semejanza y contraste",desc:"Metáfora continuada que construye un plano simbólico coherente.",ej:"La vida es un barco sin puerto de llegada navegamos tempestamos anclamos"},
+{n:53,nombre:"Símil o comparación",cat:"semantica",bloque:"B",sec:"B.1 · Figuras de semejanza y contraste",desc:"Semejanza explícita mediante nexos comparativos como cual.",ej:"Sus manos temblaban como hojas en noviembre"},
+{n:54,nombre:"Personificación",cat:"semantica",bloque:"B",sec:"B.1 · Figuras de semejanza y contraste",desc:"Atribución de cualidades humanas a seres inanimados.",ej:"El viento murmuraba secretos que nadie quería escuchar"},
+{n:55,nombre:"Antítesis",cat:"semantica",bloque:"B",sec:"B.1 · Figuras de semejanza y contraste",desc:"Contraposición de ideas opuestas en estructuras paralelas.",ej:"Era el mejor de los tiempos era el peor de los tiempos"},
+{n:56,nombre:"Oxímoron",cat:"semantica",bloque:"B",sec:"B.1 · Figuras de semejanza y contraste",desc:"Unión de términos contradictorios con tensión semántica productiva.",ej:"Un silencio ensordecedor llenó la sala"},
+{n:57,nombre:"Paradoja",cat:"semantica",bloque:"B",sec:"B.1 · Figuras de semejanza y contraste",desc:"Enunciado aparentemente absurdo que esconde una verdad profunda.",ej:"Cuanto más lo busco menos lo encuentro cuando lo olvido aparece"},
+{n:58,nombre:"Ironía",cat:"semantica",bloque:"B",sec:"B.1 · Figuras de semejanza y contraste",desc:"Enunciado que dice lo contrario de lo que significa.",ej:"Qué puntual solo llegó dos horas tarde"},
+{n:59,nombre:"Sarcasmo",cat:"semantica",bloque:"B",sec:"B.1 · Figuras de semejanza y contraste",desc:"Ironía extrema con mordacidad e intención crítica.",ej:"Brillante gestión la suya arruinó la empresa en tres meses"},
+{n:60,nombre:"Lítote",cat:"semantica",bloque:"B",sec:"B.1 · Figuras de semejanza y contraste",desc:"Afirmación mediante la negación elegante de su contrario.",ej:"No es mala escritora quiere decir que es muy buena"},
+{n:61,nombre:"Hipérbole",cat:"semantica",bloque:"B",sec:"B.2 · Amplificación y condensación",desc:"Exageración deliberada para crear énfasis emocional.",ej:"Te lo he dicho mil veces y no lo entiendes"},
+{n:62,nombre:"Eufemismo",cat:"semantica",bloque:"B",sec:"B.2 · Amplificación y condensación",desc:"Sustitución de término tabú por expresión más suave.",ej:"Falleció en lugar de murió conflicto armado en lugar de guerra"},
+{n:63,nombre:"Disfemismo",cat:"semantica",bloque:"B",sec:"B.2 · Amplificación y condensación",desc:"Uso de términos crudos para intensificar el impacto expresivo.",ej:"Estiró la pata en lugar de murió engullir en lugar de comer"},
+{n:64,nombre:"Perífrasis",cat:"semantica",bloque:"B",sec:"B.2 · Amplificación y condensación",desc:"Descripción indirecta para evitar el nombre directo.",ej:"El astro rey en lugar de el Sol el rey de la selva en lugar de el león"},
+{n:65,nombre:"Enumeración clímax",cat:"semantica",bloque:"B",sec:"B.2 · Amplificación y condensación",desc:"Serie de menor a mayor intensidad con culminación emocional.",ej:"Susurró habló gritó bramó"},
+{n:66,nombre:"Enumeración anticlímax",cat:"semantica",bloque:"B",sec:"B.2 · Amplificación y condensación",desc:"Serie de mayor a menor que crea decepción o ironía.",ej:"Luchó resistió sufrió y al final se rindió"},
+{n:67,nombre:"Sinonimia acumulativa",cat:"semantica",bloque:"B",sec:"B.2 · Amplificación y condensación",desc:"Varios sinónimos para intensificar gradualmente el mismo concepto.",ej:"Era terco obstinado tozudo inflexible impenetrable"},
+{n:68,nombre:"Amplificatio",cat:"retorica",bloque:"B",sec:"B.2 · Amplificación y condensación",desc:"Desarrollo exhaustivo de una idea con detalles y matices.",ej:"Describe un objeto simple con todos sus ángulos sensoriales y emocionales"},
+{n:69,nombre:"Paráfrasis explicativa",cat:"semantica",bloque:"B",sec:"B.2 · Amplificación y condensación",desc:"Reescritura con otras palabras para aclarar el sentido.",ej:"Es decir lo que el autor quiere transmitir es que"},
+{n:70,nombre:"Síntesis o brevitas",cat:"retorica",bloque:"B",sec:"B.2 · Amplificación y condensación",desc:"Concentración máxima del sentido en el menor número de palabras.",ej:"Pienso luego existo"},
+{n:71,nombre:"Campo semántico",cat:"semantica",bloque:"B",sec:"B.3 · Campo semántico y registro",desc:"Uso sistemático de términos del mismo campo léxico para cohesión.",ej:"El mar evoca oleaje marejada popa proa sal espuma gaviota"},
+{n:72,nombre:"Isotopía",cat:"semantica",bloque:"B",sec:"B.3 · Campo semántico y registro",desc:"Recurrencia de rasgos semánticos que garantizan coherencia.",ej:"Un texto policial evoca sospecha rastro coartada evidencia culpable"},
+{n:73,nombre:"Connotación positiva",cat:"semantica",bloque:"B",sec:"B.3 · Campo semántico y registro",desc:"Términos con carga emocional positiva para predisponer al lector.",ej:"Iniciativa tiene connotación positiva frente a ocurrencia más neutra"},
+{n:74,nombre:"Connotación negativa",cat:"semantica",bloque:"B",sec:"B.3 · Campo semántico y registro",desc:"Términos con carga emocional negativa para generar rechazo.",ej:"Régimen en lugar de gobierno propaganda en lugar de campaña"},
+{n:75,nombre:"Registro culto",cat:"semantica",bloque:"B",sec:"B.3 · Campo semántico y registro",desc:"Vocabulario técnico o latinismos que confieren autoridad.",ej:"La exégesis del texto revela una intertextualidad compleja y estratificada"},
+{n:76,nombre:"Registro coloquial literario",cat:"semantica",bloque:"B",sec:"B.3 · Campo semántico y registro",desc:"Expresiones cotidianas que crean cercanía o comicidad.",ej:"Y total para lo que sirvió todo ese esfuerzo desplegado"},
+{n:77,nombre:"Tecnicismo humanizado",cat:"semantica",bloque:"B",sec:"B.3 · Campo semántico y registro",desc:"Término técnico seguido de su explicación accesible.",ej:"La sinapsis ese instante en que dos neuronas se tocan es el fundamento del pensamiento"},
+{n:78,nombre:"Arcaísmo expresivo",cat:"semantica",bloque:"B",sec:"B.3 · Campo semántico y registro",desc:"Términos en desuso para evocar ambiente histórico o solemne.",ej:"Asaz conocido era su valor entre las gentes del lugar"},
+{n:79,nombre:"Neologismo semántico",cat:"semantica",bloque:"B",sec:"B.3 · Campo semántico y registro",desc:"Significado nuevo asignado a un término ya existente.",ej:"Navegar en el sentido de explorar internet viralizarse"},
+{n:80,nombre:"Polisemia controlada",cat:"semantica",bloque:"B",sec:"B.3 · Campo semántico y registro",desc:"Uso de palabra polisémica para activar varios significados.",ej:"Tiene mucho peso en la organización activa varios significados"},
+{n:81,nombre:"Aliteración",cat:"fono",bloque:"B",sec:"B.4 · Recursos sonoros y rítmicos",desc:"Repetición de sonidos consonánticos con valor onomatopéyico.",ej:"El susurro suave del sauce sobre el suelo"},
+{n:82,nombre:"Onomatopeya",cat:"fono",bloque:"B",sec:"B.4 · Recursos sonoros y rítmicos",desc:"Palabras cuya pronunciación imita el sonido que designan.",ej:"El trueno retumbó el reloj tictaqueaba el grifo goteaba"},
+{n:83,nombre:"Paronomasia",cat:"fono",bloque:"B",sec:"B.4 · Recursos sonoros y rítmicos",desc:"Palabras fonéticamente similares de distinto significado.",ej:"Quien mal anda mal acaba amar y mar"},
+{n:84,nombre:"Ritmo binario",cat:"prosodica",bloque:"B",sec:"B.4 · Recursos sonoros y rítmicos",desc:"Alternancia de tónicas y átonas con cadencia binaria solemne.",ej:"Vine y vi y vencí"},
+{n:85,nombre:"Ritmo ternario",cat:"prosodica",bloque:"B",sec:"B.4 · Recursos sonoros y rítmicos",desc:"Grupos de tres elementos que crean equilibrio y elegancia.",ej:"Lo pensó lo dudó lo dijo"},
+{n:86,nombre:"Período oratorio",cat:"retorica",bloque:"B",sec:"B.4 · Recursos sonoros y rítmicos",desc:"Oración extensa con subordinadas que crean curva de tensión.",ej:"Cuando el sol se ocultó y la ciudad cayó en silencio él supo que el momento había llegado"},
+{n:87,nombre:"Fragmento rítmico",cat:"prosodica",bloque:"B",sec:"B.4 · Recursos sonoros y rítmicos",desc:"Fragmentación en unidades breves que imitan el pulso acelerado.",ej:"Se levantó respiró actuó"},
+{n:88,nombre:"Encabalgamiento prosístico",cat:"prosodica",bloque:"B",sec:"B.4 · Recursos sonoros y rítmicos",desc:"Ruptura de la unidad sintáctica que crea efecto de inacabamiento.",ej:"El problema no era la duda era la certeza"},
+{n:89,nombre:"Paralelismo fónico",cat:"prosodica",bloque:"B",sec:"B.4 · Recursos sonoros y rítmicos",desc:"Estructuras paralelas con simetría sintáctica y sonora.",ej:"Vivir es saber perderse amar es saber encontrarse"},
+{n:90,nombre:"Rima interna en prosa",cat:"prosodica",bloque:"B",sec:"B.4 · Recursos sonoros y rítmicos",desc:"Coincidencia de sonidos finales en palabras interiores del párrafo.",ej:"La luz del corazón late sin compás pero con verdad y lealtad"},
+{n:91,nombre:"Deixis anafórica",cat:"cohesion",bloque:"B",sec:"B.5 · Cohesión y deixis textual",desc:"Pronombre que remite a elemento ya mencionado.",ej:"El protagonista entró en la sala él no sabía que lo esperaban"},
+{n:92,nombre:"Deixis catafórica",cat:"cohesion",bloque:"B",sec:"B.5 · Cohesión y deixis textual",desc:"Pronombre que anticipa elemento que se mencionará después.",ej:"Esto es lo que importa la verdad"},
+{n:93,nombre:"Conector de adición",cat:"cohesion",bloque:"B",sec:"B.5 · Cohesión y deixis textual",desc:"Marcadores que añaden información: además asimismo igualmente.",ej:"El texto es claro además es elegante y preciso"},
+{n:94,nombre:"Conector de oposición",cat:"cohesion",bloque:"B",sec:"B.5 · Cohesión y deixis textual",desc:"Marcadores que introducen contraste: sin embargo no obstante.",ej:"Estudió durante años sin embargo no encontró respuestas"},
+{n:95,nombre:"Conector conclusivo",cat:"cohesion",bloque:"B",sec:"B.5 · Cohesión y deixis textual",desc:"Marcadores de consecuencia: por tanto por consiguiente.",ej:"La evidencia es concluyente por tanto la decisión es inevitable"},
+{n:96,nombre:"Reformulación clarificadora",cat:"cohesion",bloque:"B",sec:"B.5 · Cohesión y deixis textual",desc:"Marcadores que reinterpretan lo dicho: es decir esto es.",ej:"El texto es opaco es decir difícilmente accesible para el lector común"},
+{n:97,nombre:"Progresión temática lineal",cat:"cohesion",bloque:"B",sec:"B.5 · Cohesión y deixis textual",desc:"El rema de una oración se convierte en tema de la siguiente.",ej:"El miedo paraliza la parálisis alimenta el miedo el miedo se convierte en prisión"},
+{n:98,nombre:"Digresión controlada",cat:"retorica",bloque:"B",sec:"B.5 · Cohesión y deixis textual",desc:"Desvío temporal del hilo principal con retorno explícito.",ej:"Aunque esta reflexión merece un desarrollo aparte lo esencial es que"},
+{n:99,nombre:"Cierre circular",cat:"cohesion",bloque:"B",sec:"B.5 · Cohesión y deixis textual",desc:"El texto concluye evocando el inicio creando plenitud estructural.",ej:"Si el párrafo abrió con el amanecer que cierre con la primera luz"},
+{n:100,nombre:"Punch final",cat:"retorica",bloque:"B",sec:"B.5 · Cohesión y deixis textual",desc:"La última oración es la más breve contundente y memorable.",ej:"Toda su vida la pasó buscando algo que nunca perdió solo necesitaba mirarse"},
+];
+
+const CAT_TAG={
+  morfosintaxis:{cls:"tag-morfosintaxis",label:"Morfosintaxis"},
+  morfologia:{cls:"tag-morfologia",label:"Morfología"},
+  semantica:{cls:"tag-semantica",label:"Semántica"},
+  cohesion:{cls:"tag-cohesion",label:"Cohesión textual"},
+  prosodica:{cls:"tag-prosodica",label:"Prosodia"},
+  fono:{cls:"tag-fono",label:"Fono-semántica"},
+  puntuacion:{cls:"tag-puntuacion",label:"Puntuación"},
+  retorica:{cls:"tag-retorica",label:"Retórica"},
+};
+
+// ══ USER SYSTEM ═══════════════════════════════════════════════════════════════
+const USERS={};
+let currentUser=null;
+
+function showLogin(){document.getElementById('registerForm').style.display='none';document.getElementById('loginForm').style.display='block';}
+function showRegister(){document.getElementById('loginForm').style.display='none';document.getElementById('registerForm').style.display='block';}
+
+function doRegister(){
+  const u=document.getElementById('regUser').value.trim();
+  const p=document.getElementById('regPass').value;
+  const p2=document.getElementById('regPass2').value;
+  const err=document.getElementById('regErr');
+  err.style.display='none';
+  if(!u||u.length<3){err.textContent='Mínimo 3 caracteres.';err.style.display='block';return;}
+  if(USERS[u]){err.textContent='Ese usuario ya existe.';err.style.display='block';return;}
+  if(p.length<4){err.textContent='Contraseña mínimo 4 caracteres.';err.style.display='block';return;}
+  if(p!==p2){err.textContent='Las contraseñas no coinciden.';err.style.display='block';return;}
+  USERS[u]={pass:p,correct:0,wrong:0,best:0};
+  loginUser(u);
+}
+function doLogin(){
+  const u=document.getElementById('loginUser').value.trim();
+  const p=document.getElementById('loginPass').value;
+  const err=document.getElementById('loginErr');
+  err.style.display='none';
+  if(!USERS[u]){err.textContent='Usuario no encontrado.';err.style.display='block';return;}
+  if(USERS[u].pass!==p){err.textContent='Contraseña incorrecta.';err.style.display='block';return;}
+  loginUser(u);
+}
+function loginUser(u){
+  currentUser=u;
+  document.getElementById('loginScreen').style.display='none';
+  document.getElementById('appContent').style.display='block';
+  document.getElementById('navUserName').textContent=u;
+  renderAll();
+}
+function doLogout(){
+  currentUser=null;
+  document.getElementById('appContent').style.display='none';
+  document.getElementById('loginScreen').style.display='flex';
+  showLogin();
+}
+
+// ══ GUIDE RENDER ══════════════════════════════════════════════════════════════
+let activeFilter='all',searchQuery='',expandedCards=new Set();
+
+function matchesTecnica(t){
+  const q=searchQuery.toLowerCase();
+  return(activeFilter==='all'||t.cat===activeFilter)&&
+    (!q||t.nombre.toLowerCase().includes(q)||t.desc.toLowerCase().includes(q)||
+     t.ej.toLowerCase().includes(q)||t.cat.includes(q)||String(t.n).includes(q));
+}
+
+function renderAll(){
+  const content=document.getElementById('content');
+  const noR=document.getElementById('noResults');
+  const countEl=document.getElementById('resultCount');
+  const vis=TECNICAS.filter(matchesTecnica);
+  if(!vis.length){content.innerHTML='';noR.style.display='block';countEl.innerHTML='Mostrando <strong>0</strong> de 100';return;}
+  noR.style.display='none';
+  countEl.innerHTML=`Mostrando <strong>${vis.length}</strong> de 100 técnicas`;
+  const groups={};
+  vis.forEach(t=>{if(!groups[t.bloque])groups[t.bloque]={};if(!groups[t.bloque][t.sec])groups[t.bloque][t.sec]=[];groups[t.bloque][t.sec].push(t);});
+  const bM={A:{num:'A',title:'Técnicas Morfosintácticas',sub:'Arquitectura del enunciado · 1–50'},B:{num:'B',title:'Técnicas Semánticas',sub:'Significado, imagen y cohesión · 51–100'}};
+  let html='';
+  Object.keys(groups).forEach(b=>{
+    const m=bM[b];
+    html+=`<div class="block-header"><div class="block-num">${m.num}</div><div><h2 class="block-title">${m.title}</h2><div class="block-sub">${m.sub}</div></div></div>`;
+    Object.keys(groups[b]).forEach(sec=>{
+      html+=`<div class="section-label"><i class="bi bi-grid-3x2-gap-fill me-1"></i>${sec}</div>`;
+      groups[b][sec].forEach((t,i)=>{
+        const tag=CAT_TAG[t.cat]||{cls:'',label:t.cat};
+        const isExp=expandedCards.has(t.n);
+        html+=`<div class="tech-card${isExp?' expanded':''}" data-n="${t.n}" style="animation-delay:${i*.03}s">
+          <div class="card-header-row" onclick="toggleCard(${t.n})">
+            <div class="card-num">${t.n}</div>
+            <div class="card-name">${t.nombre}</div>
+            <span class="card-tag ${tag.cls}">${tag.label}</span>
+            <i class="bi bi-chevron-down card-chevron"></i>
+          </div>
+          <div class="card-body-inner">
+            <p class="card-desc">${t.desc}</p>
+            <div class="card-example">${t.ej}</div>
+            <button class="card-quiz-btn" onclick="event.stopPropagation();startQuizSingle(${t.n})">
+              <i class="bi bi-lightning-charge"></i> Practicar esta técnica
+            </button>
+          </div>
+        </div>`;
+      });
+    });
+  });
+  content.innerHTML=html;
+  updateScoreBar();
+}
+
+function toggleCard(n){
+  expandedCards.has(n)?expandedCards.delete(n):expandedCards.add(n);
+  renderAll();
+  setTimeout(()=>{const el=document.querySelector(`.tech-card[data-n="${n}"]`);if(el)el.scrollIntoView({behavior:'smooth',block:'nearest'});},50);
+}
+
+document.querySelectorAll('.filter-btn').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');activeFilter=btn.dataset.filter;expandedCards.clear();renderAll();
+    window.scrollTo({top:0,behavior:'smooth'});
+  });
+});
+document.getElementById('searchInput').addEventListener('input',e=>{searchQuery=e.target.value;expandedCards.clear();renderAll();});
+
+const pill=document.getElementById('progressPill');
+window.addEventListener('scroll',()=>{
+  const p=window.scrollY/(document.body.scrollHeight-window.innerHeight);
+  const n=Math.max(1,Math.round(p*100));
+  if(window.scrollY>200){pill.classList.add('show');document.getElementById('pillText').textContent=`Técnica ${n}/100`;}
+  else pill.classList.remove('show');
+});
+
+function updateScoreBar(){
+  if(!currentUser)return;
+  const u=USERS[currentUser];
+  const t=u.correct+u.wrong;
+  if(t>0){
+    document.getElementById('statScore').style.display='';
+    document.getElementById('statScoreVal').textContent=`${u.correct}/${t}`;
+    document.getElementById('statStreak').style.display='';
+    document.getElementById('statStreakVal').textContent=u.best;
+  }
+}
+
+// ══ QUIZ SYSTEM ═══════════════════════════════════════════════════════════════
+let quizQueue=[],quizIdx=0,quizAnswered=false;
+let qC=0,qW=0,qStreak=0;
+let dragSrc=null,dragSrcZone=null;
+
+function openQuizAll(){startQuiz([...TECNICAS].sort(()=>Math.random()-.5));}
+function startQuizSingle(n){const t=TECNICAS.find(x=>x.n===n);if(t)startQuiz([t]);}
+
+function startQuiz(queue){
+  quizQueue=queue;quizIdx=0;qC=0;qW=0;qStreak=0;
+  document.getElementById('quizMode').style.display='block';
+  document.getElementById('quizMain').style.display='block';
+  document.getElementById('quizEnd').style.display='none';
+  document.body.style.overflow='hidden';
+  loadQ();
+}
+function closeQuiz(){document.getElementById('quizMode').style.display='none';document.body.style.overflow='';updateScoreBar();}
+
+function loadQ(){
+  if(quizIdx>=quizQueue.length){showEnd();return;}
+  const t=quizQueue[quizIdx];
+  quizAnswered=false;
+  // progress
+  document.getElementById('quizProgressFill').style.width=(quizIdx/quizQueue.length*100)+'%';
+  document.getElementById('quizSubtitle').textContent=`Pregunta ${quizIdx+1} de ${quizQueue.length}`;
+  // info
+  document.getElementById('qN').textContent=t.n;
+  document.getElementById('qNombre').textContent=t.nombre;
+  document.getElementById('qCat').textContent=(CAT_TAG[t.cat]||{label:t.cat}).label;
+  document.getElementById('qDesc').textContent=t.desc;
+  // tokens
+  const words=t.ej.split(/\s+/).filter(Boolean);
+  const shuffled=shuffleArr([...words]);
+  // reset zones
+  const az=document.getElementById('answerZone');
+  az.innerHTML='<span class="placeholder-hint" id="answerHint">Arrastra o haz clic en las palabras…</span>';
+  const wb=document.getElementById('wordBank');
+  wb.innerHTML='';
+  shuffled.forEach((w,i)=>{wb.appendChild(makeToken(w,i,'bank'));});
+  // result
+  const res=document.getElementById('quizResult');
+  res.style.display='none';res.className='quiz-result';
+  // buttons
+  document.getElementById('btnCheck').style.display='';
+  document.getElementById('btnCheck').disabled=false;
+  document.getElementById('btnNext').style.display='none';
+  updateChips();
+  setupZones();
+}
+
+function makeToken(word,idx,zone){
+  const d=document.createElement('div');
+  d.className=`word-token ${zone==='bank'?'bank-token':'answer-token'} pop-in`;
+  d.textContent=word;d.dataset.word=word;d.dataset.idx=String(idx);d.draggable=true;
+  d.addEventListener('dragstart',onDragStart);
+  d.addEventListener('dragend',onDragEnd);
+  d.addEventListener('click',onTokenClick);
+  return d;
+}
+
+function shuffleArr(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+
+function setupZones(){
+  ['answerZone','wordBank'].forEach(id=>{
+    const z=document.getElementById(id);
+    const nz=z.cloneNode(false);
+    nz.id=id;
+    // re-append children
+    while(z.firstChild)nz.appendChild(z.firstChild);
+    z.parentNode.replaceChild(nz,z);
+    nz.addEventListener('dragover',e=>{e.preventDefault();nz.classList.add('over');});
+    nz.addEventListener('dragleave',()=>nz.classList.remove('over'));
+    nz.addEventListener('drop',e=>onDrop(e,nz));
+  });
+}
+
+function onDragStart(e){
+  dragSrc=this;dragSrcZone=this.parentElement;
+  e.dataTransfer.effectAllowed='move';
+  e.dataTransfer.setData('text/plain',this.dataset.idx);
+  setTimeout(()=>this.classList.add('dragging'),0);
+}
+function onDragEnd(){this.classList.remove('dragging');document.querySelectorAll('.drag-zone').forEach(z=>z.classList.remove('over'));}
+
+function onDrop(e,targetZone){
+  e.preventDefault();targetZone.classList.remove('over');
+  if(!dragSrc)return;
+  const isToAnswer=targetZone.id==='answerZone';
+  dragSrc.className=`word-token ${isToAnswer?'answer-token':'bank-token'} pop-in`;
+  const after=getDragAfter(targetZone,e.clientX);
+  if(after===null)targetZone.appendChild(dragSrc);
+  else targetZone.insertBefore(dragSrc,after);
+  updateHint();
+  dragSrc=null;dragSrcZone=null;
+}
+
+function getDragAfter(container,x){
+  const els=[...container.querySelectorAll('.word-token:not(.dragging)')];
+  return els.reduce((cl,ch)=>{const b=ch.getBoundingClientRect();const o=x-(b.left+b.width/2);if(o<0&&o>cl.offset)return{offset:o,el:ch};return cl;},{offset:Number.NEGATIVE_INFINITY}).el||null;
+}
+
+function onTokenClick(){
+  if(quizAnswered)return;
+  const az=document.getElementById('answerZone');
+  const wb=document.getElementById('wordBank');
+  if(az.contains(this)){this.className='word-token bank-token pop-in';wb.appendChild(this);}
+  else{this.className='word-token answer-token pop-in';az.appendChild(this);}
+  updateHint();
+}
+
+function updateHint(){
+  const az=document.getElementById('answerZone');
+  const hint=document.getElementById('answerHint');
+  if(hint)hint.style.display=az.querySelectorAll('.word-token').length?'none':'';
+}
+
+function checkAnswer(){
+  if(quizAnswered)return;
+  const t=quizQueue[quizIdx];
+  const correct=t.ej.split(/\s+/).filter(Boolean);
+  const az=document.getElementById('answerZone');
+  const given=[...az.querySelectorAll('.word-token')].map(tk=>tk.dataset.word);
+  if(!given.length){
+    document.getElementById('quizBox').classList.add('shake');
+    setTimeout(()=>document.getElementById('quizBox').classList.remove('shake'),400);return;
+  }
+  quizAnswered=true;
+  const ok=given.join(' ')===correct.join(' ');
+  const res=document.getElementById('quizResult');
+  if(ok){
+    qC++;qStreak++;
+    if(currentUser){USERS[currentUser].correct++;if(qStreak>USERS[currentUser].best)USERS[currentUser].best=qStreak;}
+    res.className='quiz-result correct';
+    document.getElementById('resultTitle').innerHTML='<i class="bi bi-check2-circle"></i> ¡Correcto! Orden perfecto.';
+    document.getElementById('resultBody').innerHTML='';
+  } else {
+    qW++;qStreak=0;
+    if(currentUser)USERS[currentUser].wrong++;
+    res.className='quiz-result wrong';
+    document.getElementById('resultTitle').innerHTML='<i class="bi bi-x-circle"></i> Orden incorrecto';
+    document.getElementById('resultBody').innerHTML=`<div class="result-correct-answer"><strong>Orden correcto:</strong>${correct.join(' ')}</div>`;
+  }
+  res.style.display='block';
+  updateChips();
+  document.querySelectorAll('.word-token').forEach(tk=>{tk.draggable=false;tk.style.cursor='default';tk.removeEventListener('click',onTokenClick);});
+  document.getElementById('btnCheck').style.display='none';
+  document.getElementById('btnNext').style.display='';
+}
+
+function skipQuestion(){if(currentUser)USERS[currentUser].wrong++;qW++;qStreak=0;quizIdx++;loadQ();}
+function nextQuestion(){quizIdx++;loadQ();}
+
+function updateChips(){
+  document.getElementById('chipC').textContent=qC;
+  document.getElementById('chipW').textContent=qW;
+  document.getElementById('chipS').textContent=qStreak;
+  const t=qC+qW;
+  document.getElementById('chipP').textContent=t?Math.round(qC/t*100)+'%':'—';
+}
+
+function showEnd(){
+  document.getElementById('quizProgressFill').style.width='100%';
+  document.getElementById('quizMain').style.display='none';
+  document.getElementById('quizEnd').style.display='block';
+  const t=qC+qW;const pct=t?Math.round(qC/t*100):0;
+  document.getElementById('endScore').textContent=pct+'%';
+  const msgs=[[90,'¡Excelente dominio! Eres un maestro de la escritura.'],[70,'¡Muy bien! Sigue practicando para perfeccionar tu nivel.'],[50,'Buen intento. Repasa las técnicas que fallaste.'],[0,'Sigue estudiando. ¡Con práctica lo lograrás!']];
+  document.getElementById('endMsg').textContent=msgs.find(([m])=>pct>=m)[1];
+  updateScoreBar();
+}
+
+function restartQuiz(){document.getElementById('quizEnd').style.display='none';document.getElementById('quizMain').style.display='block';openQuizAll();}
+</script>
+</body>
+</html>

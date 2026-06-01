@@ -1,0 +1,2276 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Evolución del Software Educativo - Portal Completo</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Roboto+Slab:wght@300;400;500&display=swap" rel="stylesheet">
+    <!-- Highlight.js para resaltado de código -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/atom-one-dark.min.css">
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --accent-color: #1abc9c;
+            --python-color: #3776ab;
+            --tkinter-color: #ff6600;
+            --kivy-color: #1f8ceb;
+            --ai-color: #9c27b0;
+            --light-color: #f8f9fa;
+            --dark-color: #212529;
+            --neon-blue: #00f3ff;
+            --neon-pink: #ff00ff;
+            --neon-green: #39ff14;
+        }
+        
+        [data-theme="dark"] {
+            --primary-color: #1a252f;
+            --secondary-color: #2980b9;
+            --accent-color: #16a085;
+            --light-color: #343a40;
+            --dark-color: #f8f9fa;
+            --neon-blue: #00e5ff;
+            --neon-pink: #ff00cc;
+            --neon-green: #32cd32;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            line-height: 1.7;
+            color: var(--dark-color);
+            background-color: var(--light-color);
+            transition: all 0.3s ease;
+            padding-left: 280px; /* Espacio para sidebar fijo */
+        }
+        
+        /* Sidebar fijo */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 260px;
+            height: 100vh;
+            background-color: var(--primary-color);
+            color: white;
+            padding: 20px 0;
+            z-index: 1000;
+            overflow-y: auto;
+            box-shadow: 3px 0 10px rgba(0,0,0,0.2);
+            transition: all 0.3s ease;
+        }
+        
+        .sidebar-header {
+            padding: 0 20px 20px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            text-align: center;
+        }
+        
+        .sidebar-header h3 {
+            font-size: 1.3rem;
+            margin-bottom: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .sidebar-menu {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .sidebar-menu li {
+            margin-bottom: 5px;
+        }
+        
+        .sidebar-menu a {
+            display: flex;
+            align-items: center;
+            padding: 12px 20px;
+            color: rgba(255,255,255,0.8);
+            text-decoration: none;
+            transition: all 0.3s;
+            border-left: 4px solid transparent;
+        }
+        
+        .sidebar-menu a:hover,
+        .sidebar-menu a.active {
+            background-color: rgba(255,255,255,0.1);
+            color: white;
+            border-left-color: var(--accent-color);
+        }
+        
+        .sidebar-menu i {
+            margin-right: 10px;
+            font-size: 1.2rem;
+            width: 24px;
+            text-align: center;
+        }
+        
+        .sidebar-footer {
+            padding: 20px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            margin-top: auto;
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+        }
+        
+        /* Contenido principal */
+        .main-content {
+            padding: 30px;
+            min-height: 100vh;
+        }
+        
+        /* Modo oscuro */
+        .dark-mode-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1001;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            transition: all 0.3s;
+        }
+        
+        .dark-mode-toggle:hover {
+            transform: rotate(30deg);
+        }
+        
+        /* Línea de tiempo neón animada */
+        .timeline-neon {
+            position: relative;
+            max-width: 1200px;
+            margin: 50px auto;
+            padding: 20px 0;
+        }
+        
+        .timeline-neon::after {
+            content: '';
+            position: absolute;
+            width: 6px;
+            height: 100%;
+            background: linear-gradient(to bottom, var(--neon-blue), var(--neon-pink), var(--neon-green));
+            top: 0;
+            left: 50%;
+            margin-left: -3px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px var(--neon-blue), 0 0 20px var(--neon-blue), 0 0 30px var(--neon-blue);
+            animation: neon-pulse 2s infinite alternate;
+        }
+        
+        @keyframes neon-pulse {
+            0% {
+                box-shadow: 0 0 5px var(--neon-blue), 0 0 10px var(--neon-blue), 0 0 15px var(--neon-blue);
+            }
+            50% {
+                box-shadow: 0 0 10px var(--neon-pink), 0 0 20px var(--neon-pink), 0 0 30px var(--neon-pink);
+            }
+            100% {
+                box-shadow: 0 0 5px var(--neon-green), 0 0 10px var(--neon-green), 0 0 15px var(--neon-green);
+            }
+        }
+        
+        .timeline-item-neon {
+            padding: 10px 40px;
+            position: relative;
+            width: 50%;
+            box-sizing: border-box;
+        }
+        
+        .timeline-item-neon:nth-child(odd) {
+            left: 0;
+        }
+        
+        .timeline-item-neon:nth-child(even) {
+            left: 50%;
+        }
+        
+        .timeline-content-neon {
+            padding: 20px;
+            background-color: var(--light-color);
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            position: relative;
+            border-left: 5px solid var(--accent-color);
+            transition: all 0.3s;
+        }
+        
+        .timeline-content-neon:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+        }
+        
+        .timeline-item-neon::after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background-color: var(--light-color);
+            border: 4px solid var(--accent-color);
+            border-radius: 50%;
+            top: 15px;
+            z-index: 1;
+            box-shadow: 0 0 10px var(--accent-color);
+        }
+        
+        .timeline-item-neon:nth-child(odd)::after {
+            right: -10px;
+        }
+        
+        .timeline-item-neon:nth-child(even)::after {
+            left: -10px;
+        }
+        
+        /* Tarjetas con iconos educativos */
+        .edu-card {
+            border-radius: 15px;
+            overflow: hidden;
+            transition: all 0.3s;
+            border: none;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+            height: 100%;
+            background-color: var(--light-color);
+        }
+        
+        .edu-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.15);
+        }
+        
+        .edu-icon {
+            font-size: 2.5rem;
+            color: var(--accent-color);
+            margin-bottom: 15px;
+        }
+        
+        /* Ejecutor de código */
+        .code-executor {
+            background-color: #1e1e1e;
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 20px 0;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+        
+        .code-header {
+            background-color: #252526;
+            color: #cccccc;
+            padding: 10px 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #3e3e42;
+        }
+        
+        .code-body {
+            padding: 15px;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        
+        .code-output {
+            background-color: #1e1e1e;
+            color: #d4d4d4;
+            padding: 15px;
+            border-top: 1px solid #3e3e42;
+            min-height: 100px;
+            max-height: 300px;
+            overflow-y: auto;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .run-button {
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+        
+        .run-button:hover {
+            background-color: var(--secondary-color);
+            transform: scale(1.05);
+        }
+        
+        /* Lector de voz */
+        .voice-reader {
+            position: fixed;
+            bottom: 20px;
+            right: 80px;
+            z-index: 999;
+            background-color: var(--primary-color);
+            color: white;
+            border-radius: 50px;
+            padding: 10px 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .voice-controls {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .voice-btn {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .voice-btn:hover {
+            color: var(--accent-color);
+            transform: scale(1.2);
+        }
+        
+        /* Subpáginas */
+        .subpage {
+            display: none;
+            animation: fadeIn 0.5s;
+        }
+        
+        .subpage.active {
+            display: block;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        /* Ejercicios interactivos */
+        .exercise-card {
+            border-left: 5px solid var(--accent-color);
+            padding: 20px;
+            margin-bottom: 20px;
+            background-color: rgba(26, 188, 156, 0.05);
+            border-radius: 0 10px 10px 0;
+        }
+        
+        .exercise-question {
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+        
+        .exercise-options {
+            margin-bottom: 15px;
+        }
+        
+        .exercise-option {
+            margin-bottom: 8px;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.2s;
+            background-color: rgba(0,0,0,0.03);
+        }
+        
+        .exercise-option:hover {
+            background-color: rgba(26, 188, 156, 0.1);
+        }
+        
+        .exercise-option.selected {
+            background-color: rgba(26, 188, 156, 0.2);
+            border-left: 3px solid var(--accent-color);
+        }
+        
+        .exercise-feedback {
+            padding: 10px;
+            border-radius: 5px;
+            margin-top: 15px;
+            display: none;
+        }
+        
+        .exercise-feedback.correct {
+            background-color: rgba(46, 204, 113, 0.2);
+            border-left: 3px solid #2ecc71;
+        }
+        
+        .exercise-feedback.incorrect {
+            background-color: rgba(231, 76, 60, 0.2);
+            border-left: 3px solid #e74c3c;
+        }
+        
+        /* Responsividad */
+        @media (max-width: 992px) {
+            body {
+                padding-left: 0;
+            }
+            
+            .sidebar {
+                transform: translateX(-100%);
+            }
+            
+            .sidebar.active {
+                transform: translateX(0);
+            }
+            
+            .main-content {
+                padding: 20px;
+            }
+            
+            .timeline-neon::after {
+                left: 31px;
+            }
+            
+            .timeline-item-neon {
+                width: 100%;
+                padding-left: 70px;
+                padding-right: 25px;
+            }
+            
+            .timeline-item-neon:nth-child(even) {
+                left: 0;
+            }
+            
+            .timeline-item-neon:nth-child(odd)::after, 
+            .timeline-item-neon:nth-child(even)::after {
+                left: 21px;
+            }
+        }
+        
+        /* Estilos para modo oscuro */
+        [data-theme="dark"] .edu-card,
+        [data-theme="dark"] .timeline-content-neon,
+        [data-theme="dark"] .exercise-card {
+            background-color: #2d3436;
+            color: #f8f9fa;
+        }
+        
+        [data-theme="dark"] .code-executor {
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+        
+        /* Estilos para el botón de menú móvil */
+        .mobile-menu-toggle {
+            display: none;
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 1001;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            font-size: 1.5rem;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+        
+        @media (max-width: 992px) {
+            .mobile-menu-toggle {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+        }
+        
+        /* Estilos para selector de idioma */
+        .lang-selector {
+            position: fixed;
+            top: 20px;
+            right: 80px;
+            z-index: 1000;
+        }
+        
+        .lang-btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+        
+        .lang-btn:hover {
+            background-color: var(--accent-color);
+        }
+    </style>
+</head>
+<body data-theme="light">
+    <!-- Botón de menú móvil -->
+    <button class="mobile-menu-toggle" id="mobileMenuToggle">
+        <i class="fas fa-bars"></i>
+    </button>
+    
+    <!-- Sidebar fijo -->
+    <nav class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <h3>
+                <i class="fas fa-laptop-code"></i>
+                <span id="site-title">Software Educativo</span>
+            </h3>
+            <p class="text-muted mt-2" id="site-subtitle">Historia y Tecnología</p>
+        </div>
+        
+        <ul class="sidebar-menu">
+            <li><a href="#" class="active" data-page="inicio">
+                <i class="fas fa-home"></i>
+                <span id="menu-home">Inicio</span>
+            </a></li>
+            <li><a href="#" data-page="historia">
+                <i class="fas fa-history"></i>
+                <span id="menu-history">Historia</span>
+            </a></li>
+            <li><a href="#" data-page="python">
+                <i class="fab fa-python"></i>
+                <span id="menu-python">Python</span>
+            </a></li>
+            <li><a href="#" data-page="tkinter">
+                <i class="fas fa-window-restore"></i>
+                <span id="menu-tkinter">Tkinter</span>
+            </a></li>
+            <li><a href="#" data-page="kivy">
+                <i class="fas fa-mobile-alt"></i>
+                <span id="menu-kivy">Kivy</span>
+            </a></li>
+            <li><a href="#" data-page="ia">
+                <i class="fas fa-robot"></i>
+                <span id="menu-ai">IA Educativa</span>
+            </a></li>
+            <li><a href="#" data-page="ejercicios">
+                <i class="fas fa-pencil-alt"></i>
+                <span id="menu-exercises">Ejercicios</span>
+            </a></li>
+            <li><a href="#" data-page="multilenguaje">
+                <i class="fas fa-language"></i>
+                <span id="menu-multilang">Multilingüe</span>
+            </a></li>
+            <li><a href="#" data-page="recursos">
+                <i class="fas fa-book"></i>
+                <span id="menu-resources">Recursos</span>
+            </a></li>
+        </ul>
+        
+        <div class="sidebar-footer">
+            <div class="d-flex justify-content-between align-items-center">
+                <small id="footer-text">© 2023 Software Educativo</small>
+                <div class="form-check form-switch">
+                    <input class="form-check-input" type="checkbox" id="themeSwitch">
+                    <label class="form-check-label" for="themeSwitch" id="theme-label">Modo Oscuro</label>
+                </div>
+            </div>
+        </div>
+    </nav>
+    
+    <!-- Selector de idioma -->
+    <div class="lang-selector">
+        <select class="lang-btn" id="languageSelect">
+            <option value="es">Español</option>
+            <option value="en">English</option>
+            <option value="fr">Français</option>
+        </select>
+    </div>
+    
+    <!-- Botón modo oscuro -->
+    <button class="dark-mode-toggle" id="darkModeToggle">
+        <i class="fas fa-moon"></i>
+    </button>
+    
+    <!-- Lector de voz -->
+    <div class="voice-reader" id="voiceReader">
+        <div class="voice-controls">
+            <button class="voice-btn" id="playVoice" title="Leer texto">
+                <i class="fas fa-play"></i>
+            </button>
+            <button class="voice-btn" id="pauseVoice" title="Pausar">
+                <i class="fas fa-pause"></i>
+            </button>
+            <button class="voice-btn" id="stopVoice" title="Detener">
+                <i class="fas fa-stop"></i>
+            </button>
+        </div>
+        <div class="voice-speed">
+            <select id="voiceSpeed" class="form-select form-select-sm">
+                <option value="0.5">0.5x</option>
+                <option value="0.75">0.75x</option>
+                <option value="1" selected>1x</option>
+                <option value="1.25">1.25x</option>
+                <option value="1.5">1.5x</option>
+            </select>
+        </div>
+    </div>
+    
+    <!-- Contenido principal -->
+    <div class="main-content">
+        <!-- Página de Inicio -->
+        <div class="subpage active" id="inicio">
+            <div class="container-fluid">
+                <h1 class="display-4 fw-bold mb-4" id="home-title">Evolución del Software Educativo</h1>
+                <p class="lead mb-5" id="home-subtitle">Un viaje a través de la historia y las tecnologías que han transformado la educación digital</p>
+                
+                <div class="row mb-5">
+                    <div class="col-md-4 mb-4">
+                        <div class="edu-card text-center p-4">
+                            <div class="edu-icon">
+                                <i class="fas fa-book-open"></i>
+                            </div>
+                            <h4 id="card1-title">Historia Completa</h4>
+                            <p id="card1-text">Desde los primeros sistemas CAI en mainframes hasta la IA educativa actual.</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-4">
+                        <div class="edu-card text-center p-4">
+                            <div class="edu-icon">
+                                <i class="fas fa-code"></i>
+                            </div>
+                            <h4 id="card2-title">Código Ejecutable</h4>
+                            <p id="card2-text">Prueba ejemplos de Python, Tkinter y Kivy directamente en tu navegador.</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-4">
+                        <div class="edu-card text-center p-4">
+                            <div class="edu-icon">
+                                <i class="fas fa-robot"></i>
+                            </div>
+                            <h4 id="card3-title">IA Educativa</h4>
+                            <p id="card3-text">Descubre cómo la inteligencia artificial está transformando el aprendizaje.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <div class="col-lg-8 mx-auto">
+                        <div class="card edu-card p-4">
+                            <h3 class="mb-3" id="home-features-title">Características del Sitio</h3>
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item d-flex align-items-center" style="background: transparent;">
+                                    <i class="fas fa-check-circle text-success me-3"></i>
+                                    <span id="feature1">Sidebar fijo con navegación completa</span>
+                                </li>
+                                <li class="list-group-item d-flex align-items-center" style="background: transparent;">
+                                    <i class="fas fa-check-circle text-success me-3"></i>
+                                    <span id="feature2">Modo claro/oscuro intercambiable</span>
+                                </li>
+                                <li class="list-group-item d-flex align-items-center" style="background: transparent;">
+                                    <i class="fas fa-check-circle text-success me-3"></i>
+                                    <span id="feature3">Línea de tiempo con efectos neón animados</span>
+                                </li>
+                                <li class="list-group-item d-flex align-items-center" style="background: transparent;">
+                                    <i class="fas fa-check-circle text-success me-3"></i>
+                                    <span id="feature4">Ejemplos de código Python ejecutables</span>
+                                </li>
+                                <li class="list-group-item d-flex align-items-center" style="background: transparent;">
+                                    <i class="fas fa-check-circle text-success me-3"></i>
+                                    <span id="feature5">Lector de voz integrado</span>
+                                </li>
+                                <li class="list-group-item d-flex align-items-center" style="background: transparent;">
+                                    <i class="fas fa-check-circle text-success me-3"></i>
+                                    <span id="feature6">Sección de ejercicios interactivos</span>
+                                </li>
+                                <li class="list-group-item d-flex align-items-center" style="background: transparent;">
+                                    <i class="fas fa-check-circle text-success me-3"></i>
+                                    <span id="feature7">Soporte multilingüe (ES, EN, FR)</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Página de Historia -->
+        <div class="subpage" id="historia">
+            <h1 class="display-5 fw-bold mb-5" id="history-title">Historia del Software Educativo</h1>
+            
+            <div class="timeline-neon">
+                <!-- Elementos de línea de tiempo -->
+                <div class="timeline-item-neon">
+                    <div class="timeline-content-neon">
+                        <h4 class="text-primary">1960s: Mainframes y CAI</h4>
+                        <p id="timeline1">Los primeros sistemas educativos asistidos por computadora (CAI) como PLATO permitían aprendizaje individualizado mediante terminales conectadas a mainframes.</p>
+                        <div class="mt-3">
+                            <span class="badge bg-secondary me-2">Mainframes</span>
+                            <span class="badge bg-secondary">Programación por tarjetas</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="timeline-item-neon">
+                    <div class="timeline-content-neon">
+                        <h4 class="text-primary">1970s: Lenguajes de Autor</h4>
+                        <p id="timeline2">Desarrollo de lenguajes como PILOT y TUTOR específicamente para crear software educativo sin necesidad de programación avanzada.</p>
+                        <div class="mt-3">
+                            <span class="badge bg-secondary me-2">Lenguajes de autor</span>
+                            <span class="badge bg-secondary">Aprendizaje individualizado</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="timeline-item-neon">
+                    <div class="timeline-content-neon">
+                        <h4 class="text-primary">1980s: Microcomputadoras</h4>
+                        <p id="timeline3">La llegada de Apple II, Commodore 64 y otras microcomputadoras democratiza el acceso al software educativo. Nacen los primeros juegos educativos.</p>
+                        <div class="mt-3">
+                            <span class="badge bg-secondary me-2">Microcomputadoras</span>
+                            <span class="badge bg-secondary">Juegos educativos</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="timeline-item-neon">
+                    <div class="timeline-content-neon">
+                        <h4 class="text-primary">1990s: CD-ROM e Internet</h4>
+                        <p id="timeline4">El CD-ROM permite contenido multimedia rico. Internet da lugar a los primeros entornos virtuales de aprendizaje y educación a distancia.</p>
+                        <div class="mt-3">
+                            <span class="badge bg-secondary me-2">CD-ROM</span>
+                            <span class="badge bg-secondary">Primera ola de e-learning</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="timeline-item-neon">
+                    <div class="timeline-content-neon">
+                        <h4 class="text-primary">2000s: Web 2.0 y LMS</h4>
+                        <p id="timeline5">Sistemas de Gestión del Aprendizaje (LMS) como Moodle y Blackboard. La Web 2.0 introduce herramientas colaborativas que transforman la educación.</p>
+                        <div class="mt-3">
+                            <span class="badge bg-secondary me-2">LMS</span>
+                            <span class="badge bg-secondary">Aprendizaje colaborativo</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="timeline-item-neon">
+                    <div class="timeline-content-neon">
+                        <h4 class="text-primary">2010s: M-learning y Gamificación</h4>
+                        <p id="timeline6">La proliferación de dispositivos móviles impulsa el mobile learning. La gamificación se incorpora al software educativo para aumentar la motivación.</p>
+                        <div class="mt-3">
+                            <span class="badge bg-secondary me-2">Mobile Learning</span>
+                            <span class="badge bg-secondary">Gamificación</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="timeline-item-neon">
+                    <div class="timeline-content-neon">
+                        <h4 class="text-primary">2020s: IA y Realidad Extendida</h4>
+                        <p id="timeline7">La inteligencia artificial permite personalización del aprendizaje. La realidad virtual/aumentada crea experiencias educativas inmersivas. Los MOOCs democratizan el acceso.</p>
+                        <div class="mt-3">
+                            <span class="badge bg-secondary me-2">Inteligencia Artificial</span>
+                            <span class="badge bg-secondary">Realidad Virtual/Aumentada</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Página de Python -->
+        <div class="subpage" id="python">
+            <h1 class="display-5 fw-bold mb-4" id="python-title">Python en la Educación</h1>
+            <p class="lead mb-5" id="python-subtitle">El lenguaje de programación más popular para desarrollo educativo</p>
+            
+            <div class="row mb-5">
+                <div class="col-md-6">
+                    <div class="card edu-card p-4 h-100">
+                        <h3 id="python-why-title">¿Por qué Python?</h3>
+                        <ul class="mt-3" id="python-why-list">
+                            <li>Sintaxis clara y legible, fácil de aprender</li>
+                            <li>Amplia comunidad y recursos educativos</li>
+                            <li>Multiplataforma (Windows, macOS, Linux, Raspberry Pi)</li>
+                            <li>Miles de librerías para todos los campos educativos</li>
+                            <li>Ideal para IA, ciencia de datos y desarrollo web educativo</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card edu-card p-4 h-100">
+                        <h3 id="python-libs-title">Librerías Educativas</h3>
+                        <ul class="mt-3" id="python-libs-list">
+                            <li><strong>SymPy:</strong> Matemáticas simbólicas para enseñanza</li>
+                            <li><strong>Pygame:</strong> Creación de juegos educativos</li>
+                            <li><strong>Jupyter:</strong> Notebooks interactivos para enseñanza</li>
+                            <li><strong>Matplotlib/Plotly:</strong> Visualización de datos educativa</li>
+                            <li><strong>scikit-learn:</strong> Machine learning para sistemas adaptativos</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <h3 class="mb-4" id="python-example-title">Ejemplo de Código Python Ejecutable</h3>
+            <div class="code-executor">
+                <div class="code-header">
+                    <span>game_math.py</span>
+                    <button class="run-button" id="runPythonCode">
+                        <i class="fas fa-play me-2"></i>
+                        <span id="run-button-text">Ejecutar Código</span>
+                    </button>
+                </div>
+                <div class="code-body">
+                    <pre><code class="python" id="python-code">
+# Juego educativo de matemáticas con Python
+import random
+
+def juego_matematicas(nivel=1):
+    """Juego interactivo de operaciones matemáticas"""
+    puntaje = 0
+    operaciones = ['+', '-', '*']
+    
+    print("=== JUEGO DE MATEMÁTICAS ===")
+    print(f"Nivel: {nivel}")
+    print("Resuelve 5 problemas matemáticos:\n")
+    
+    for i in range(1, 6):
+        # Generar números según el nivel
+        max_num = nivel * 10
+        a = random.randint(1, max_num)
+        b = random.randint(1, max_num)
+        operacion = random.choice(operaciones[:nivel+1])
+        
+        # Calcular respuesta correcta
+        if operacion == '+':
+            respuesta_correcta = a + b
+        elif operacion == '-':
+            respuesta_correcta = a - b
+        else:
+            respuesta_correcta = a * b
+            
+        # Mostrar problema
+        problema = f"Problema {i}: {a} {operacion} {b} = ?"
+        print(problema)
+        
+        # En un entorno real, aquí pediríamos input al usuario
+        # Para este ejemplo, simularemos respuestas
+        respuesta_usuario = respuesta_correcta  # Simulación: siempre correcta
+        
+        if respuesta_usuario == respuesta_correcta:
+            print(f"¡Correcto! {a} {operacion} {b} = {respuesta_correcta}")
+            puntaje += 1
+        else:
+            print(f"Incorrecto. La respuesta era: {respuesta_correcta}")
+    
+    print(f"\n¡Juego terminado! Puntaje: {puntaje}/5")
+    
+    # Sugerencia según puntaje
+    if puntaje >= 4:
+        print("¡Excelente! Puedes pasar al siguiente nivel.")
+        return nivel + 1
+    elif puntaje >= 3:
+        print("Buen trabajo. Practica un poco más.")
+        return nivel
+    else:
+        print("Necesitas practicar más. Sigue intentando.")
+        return max(1, nivel - 1)
+
+# Ejecutar el juego
+if __name__ == "__main__":
+    nivel_actual = 1
+    nivel_actual = juego_matematicas(nivel_actual)
+    print(f"\nTu nuevo nivel es: {nivel_actual}")
+                    </code></pre>
+                </div>
+                <div class="code-output" id="python-output">
+                    <p id="output-placeholder">La salida del código aparecerá aquí después de ejecutarlo...</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Página de Tkinter -->
+        <div class="subpage" id="tkinter">
+            <h1 class="display-5 fw-bold mb-4" id="tkinter-title">Tkinter para Interfaces Educativas</h1>
+            <p class="lead mb-5" id="tkinter-subtitle">Creación de aplicaciones educativas de escritorio con Python</p>
+            
+            <div class="row mb-5">
+                <div class="col-md-6">
+                    <div class="card edu-card p-4 h-100">
+                        <h3 id="tkinter-what-title">¿Qué es Tkinter?</h3>
+                        <p id="tkinter-what-text">Tkinter es la biblioteca estándar de Python para crear interfaces gráficas de usuario (GUI). Viene incluida con Python, por lo que no requiere instalación adicional.</p>
+                        
+                        <h5 class="mt-4" id="tkinter-advantages-title">Ventajas para educación:</h5>
+                        <ul id="tkinter-advantages-list">
+                            <li>Fácil de aprender y usar</li>
+                            <li>Multiplataforma (Windows, macOS, Linux)</li>
+                            <li>Ideal para herramientas educativas de escritorio</li>
+                            <li>Gran cantidad de tutoriales y ejemplos</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="code-executor">
+                        <div class="code-header">
+                            <span>tkinter_app.py</span>
+                            <button class="run-button" id="runTkinterCode">
+                                <i class="fas fa-play me-2"></i>
+                                <span>Ejecutar Código</span>
+                            </button>
+                        </div>
+                        <div class="code-body">
+                            <pre><code class="python" id="tkinter-code">
+# Ejemplo básico de aplicación educativa con Tkinter
+import tkinter as tk
+from tkinter import messagebox
+
+class AplicacionEducativa:
+    def __init__(self, root):
+        self.root = root
+        self.root.title("Aplicación Educativa - Tkinter")
+        self.root.geometry("500x400")
+        
+        # Configurar colores
+        bg_color = "#f0f8ff"
+        button_color = "#4CAF50"
+        
+        self.root.configure(bg=bg_color)
+        
+        # Título
+        titulo = tk.Label(
+            root, 
+            text="Sistema de Aprendizaje Interactivo",
+            font=("Arial", 18, "bold"),
+            bg=bg_color,
+            fg="#2c3e50"
+        )
+        titulo.pack(pady=20)
+        
+        # Descripción
+        descripcion = tk.Label(
+            root,
+            text="Selecciona una lección para comenzar a aprender:",
+            font=("Arial", 12),
+            bg=bg_color,
+            fg="#34495e"
+        )
+        descripcion.pack(pady=10)
+        
+        # Frame para botones
+        frame_botones = tk.Frame(root, bg=bg_color)
+        frame_botones.pack(pady=20)
+        
+        # Botones de lecciones
+        lecciones = [
+            ("Matemáticas Básicas", self.leccion_matematicas),
+            ("Introducción a la Programación", self.leccion_programacion),
+            ("Ciencias Naturales", self.leccion_ciencias)
+        ]
+        
+        for texto, comando in lecciones:
+            boton = tk.Button(
+                frame_botones,
+                text=texto,
+                command=comando,
+                bg=button_color,
+                fg="white",
+                font=("Arial", 11),
+                width=25,
+                height=2,
+                relief="raised",
+                borderwidth=2
+            )
+            boton.pack(pady=8)
+        
+        # Contador de lecciones
+        self.contador = 0
+        self.contador_label = tk.Label(
+            root,
+            text=f"Lecciones completadas: {self.contador}",
+            font=("Arial", 10),
+            bg=bg_color,
+            fg="#7f8c8d"
+        )
+        self.contador_label.pack(pady=20)
+        
+        # Botón de salir
+        tk.Button(
+            root,
+            text="Salir",
+            command=root.quit,
+            bg="#e74c3c",
+            fg="white",
+            font=("Arial", 10),
+            width=15
+        ).pack(pady=10)
+    
+    def leccion_matematicas(self):
+        messagebox.showinfo(
+            "Matemáticas Básicas",
+            "Lección: Operaciones fundamentales\n\n• Suma y resta\n• Multiplicación y división\n• Fracciones básicas\n\n¡Completa los ejercicios para continuar!"
+        )
+        self.incrementar_contador()
+    
+    def leccion_programacion(self):
+        messagebox.showinfo(
+            "Introducción a la Programación",
+            "Lección: Conceptos básicos\n\n• Variables y tipos de datos\n• Estructuras de control\n• Funciones básicas\n\n¡Perfecto para empezar con Python!"
+        )
+        self.incrementar_contador()
+    
+    def leccion_ciencias(self):
+        messagebox.showinfo(
+            "Ciencias Naturales",
+            "Lección: El sistema solar\n\n• Planetas y sus características\n• Movimientos de rotación y traslación\n• Características de la Tierra\n\n¡Explora el universo!"
+        )
+        self.incrementar_contador()
+    
+    def incrementar_contador(self):
+        self.contador += 1
+        self.contador_label.config(text=f"Lecciones completadas: {self.contador}")
+
+# Crear y ejecutar la aplicación
+if __name__ == "__main__":
+    root = tk.Tk()
+    app = AplicacionEducativa(root)
+    root.mainloop()
+                            </code></pre>
+                        </div>
+                        <div class="code-output" id="tkinter-output">
+                            <p>Nota: Tkinter requiere un entorno de escritorio para ejecutarse. Este código es un ejemplo para estudiar la sintaxis.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card edu-card p-4">
+                <h4 id="tkinter-projects-title">Proyectos Educativos con Tkinter</h4>
+                <div class="row mt-3">
+                    <div class="col-md-4">
+                        <div class="card h-100 border-0 bg-light">
+                            <div class="card-body">
+                                <h5 class="card-title">
+                                    <i class="fas fa-calculator me-2"></i>
+                                    <span id="project1-title">Calculadora Científica</span>
+                                </h5>
+                                <p class="card-text" id="project1-text">Herramienta para enseñar operaciones matemáticas avanzadas con gráficos.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card h-100 border-0 bg-light">
+                            <div class="card-body">
+                                <h5 class="card-title">
+                                    <i class="fas fa-edit me-2"></i>
+                                    <span id="project2-title">Editor de Código</span>
+                                </h5>
+                                <p class="card-text" id="project2-text">IDE simple con resaltado de sintaxis para enseñar programación.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card h-100 border-0 bg-light">
+                            <div class="card-body">
+                                <h5 class="card-title">
+                                    <i class="fas fa-question-circle me-2"></i>
+                                    <span id="project3-title">Quiz Interactivo</span>
+                                </h5>
+                                <p class="card-text" id="project3-text">Sistema de preguntas con temporizador, puntuación y retroalimentación.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Página de Ejercicios -->
+        <div class="subpage" id="ejercicios">
+            <h1 class="display-5 fw-bold mb-4" id="exercises-title">Ejercicios Interactivos</h1>
+            <p class="lead mb-5" id="exercises-subtitle">Pon a prueba tus conocimientos sobre software educativo</p>
+            
+            <div class="row">
+                <div class="col-lg-8 mx-auto">
+                    <!-- Ejercicio 1 -->
+                    <div class="exercise-card">
+                        <div class="exercise-question" id="exercise1-question">
+                            1. ¿En qué década aparecieron los primeros sistemas CAI (Computer-Assisted Instruction)?
+                        </div>
+                        <div class="exercise-options">
+                            <div class="exercise-option" data-correct="true" id="exercise1-option1">
+                                1960s
+                            </div>
+                            <div class="exercise-option" data-correct="false" id="exercise1-option2">
+                                1970s
+                            </div>
+                            <div class="exercise-option" data-correct="false" id="exercise1-option3">
+                                1980s
+                            </div>
+                            <div class="exercise-option" data-correct="false" id="exercise1-option4">
+                                1990s
+                            </div>
+                        </div>
+                        <div class="exercise-feedback" id="exercise1-feedback">
+                            ¡Correcto! Los primeros sistemas CAI aparecieron en los años 1960, con sistemas como PLATO que funcionaban en mainframes.
+                        </div>
+                        <button class="btn btn-sm btn-outline-primary mt-3" id="check-exercise1">
+                            <span id="check-button1">Verificar Respuesta</span>
+                        </button>
+                    </div>
+                    
+                    <!-- Ejercicio 2 -->
+                    <div class="exercise-card">
+                        <div class="exercise-question" id="exercise2-question">
+                            2. ¿Cuál de estas NO es una ventaja de Python para el desarrollo de software educativo?
+                        </div>
+                        <div class="exercise-options">
+                            <div class="exercise-option" data-correct="false" id="exercise2-option1">
+                                Sintaxis clara y legible
+                            </div>
+                            <div class="exercise-option" data-correct="false" id="exercise2-option2">
+                                Gran cantidad de librerías especializadas
+                            </div>
+                            <div class="exercise-option" data-correct="true" id="exercise2-option3">
+                                Requiere compilación compleja
+                            </div>
+                            <div class="exercise-option" data-correct="false" id="exercise2-option4">
+                                Es multiplataforma
+                            </div>
+                        </div>
+                        <div class="exercise-feedback" id="exercise2-feedback">
+                            Correcto. Python NO requiere compilación compleja (es un lenguaje interpretado), lo que es una ventaja para el desarrollo educativo.
+                        </div>
+                        <button class="btn btn-sm btn-outline-primary mt-3" id="check-exercise2">
+                            <span id="check-button2">Verificar Respuesta</span>
+                        </button>
+                    </div>
+                    
+                    <!-- Ejercicio 3 -->
+                    <div class="exercise-card">
+                        <div class="exercise-question" id="exercise3-question">
+                            3. ¿Qué tecnología permite crear aplicaciones educativas móviles multiplataforma con Python?
+                        </div>
+                        <div class="exercise-options">
+                            <div class="exercise-option" data-correct="false" id="exercise3-option1">
+                                Tkinter
+                            </div>
+                            <div class="exercise-option" data-correct="true" id="exercise3-option2">
+                                Kivy
+                            </div>
+                            <div class="exercise-option" data-correct="false" id="exercise3-option3">
+                                PyQt
+                            </div>
+                            <div class="exercise-option" data-correct="false" id="exercise3-option4">
+                                Django
+                            </div>
+                        </div>
+                        <div class="exercise-feedback" id="exercise3-feedback">
+                            ¡Exacto! Kivy es un framework de Python diseñado específicamente para crear aplicaciones móviles multiplataforma con interfaces táctiles.
+                        </div>
+                        <button class="btn btn-sm btn-outline-primary mt-3" id="check-exercise3">
+                            <span id="check-button3">Verificar Respuesta</span>
+                        </button>
+                    </div>
+                    
+                    <!-- Ejercicio de código -->
+                    <div class="exercise-card">
+                        <div class="exercise-question" id="exercise4-question">
+                            4. Completa el código Python para que la función devuelva la suma de dos números:
+                        </div>
+                        <div class="code-executor mt-3">
+                            <div class="code-body">
+                                <pre><code class="python">
+def sumar(a, b):
+    # Completa esta función
+    return _______
+
+# Prueba la función
+print(sumar(5, 3))  # Debería imprimir 8
+print(sumar(10, 20))  # Debería imprimir 30
+                                </code></pre>
+                            </div>
+                        </div>
+                        <div class="mt-3">
+                            <input type="text" class="form-control" id="code-answer" placeholder="Escribe lo que falta (ej: a + b)">
+                        </div>
+                        <div class="exercise-feedback mt-3" id="exercise4-feedback"></div>
+                        <button class="btn btn-sm btn-outline-primary mt-3" id="check-exercise4">
+                            <span id="check-button4">Verificar Código</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Página Multilingüe -->
+        <div class="subpage" id="multilenguaje">
+            <h1 class="display-5 fw-bold mb-4" id="multilang-title">Contenido Multilingüe</h1>
+            <p class="lead mb-5" id="multilang-subtitle">Explora la evolución del software educativo en diferentes idiomas</p>
+            
+            <div class="row">
+                <div class="col-md-4 mb-4">
+                    <div class="card edu-card text-center p-4 h-100">
+                        <div class="edu-icon">
+                            <i class="fas fa-flag"></i>
+                        </div>
+                        <h4 id="lang-es-title">Español</h4>
+                        <p id="lang-es-text">Contenido completo en español, el idioma original de este sitio.</p>
+                        <button class="btn btn-primary mt-3" data-lang="es" id="btn-lang-es">
+                            <span id="btn-es-text">Seleccionar Español</span>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="col-md-4 mb-4">
+                    <div class="card edu-card text-center p-4 h-100">
+                        <div class="edu-icon">
+                            <i class="fas fa-flag-usa"></i>
+                        </div>
+                        <h4 id="lang-en-title">English</h4>
+                        <p id="lang-en-text">Explore the evolution of educational software in English.</p>
+                        <button class="btn btn-primary mt-3" data-lang="en" id="btn-lang-en">
+                            <span id="btn-en-text">Select English</span>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="col-md-4 mb-4">
+                    <div class="card edu-card text-center p-4 h-100">
+                        <div class="edu-icon">
+                            <i class="fas fa-flag"></i>
+                        </div>
+                        <h4 id="lang-fr-title">Français</h4>
+                        <p id="lang-fr-text">Découvrez l'évolution du logiciel éducatif en français.</p>
+                        <button class="btn btn-primary mt-3" data-lang="fr" id="btn-lang-fr">
+                            <span id="btn-fr-text">Sélectionner Français</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card edu-card p-4 mt-4">
+                <h4 id="translation-title">Texto de Ejemplo en Diferentes Idiomas</h4>
+                <div class="row mt-4">
+                    <div class="col-md-4">
+                        <div class="card h-100">
+                            <div class="card-header bg-primary text-white" id="example-es-title">
+                                Español
+                            </div>
+                            <div class="card-body">
+                                <p id="example-es-text">La evolución del software educativo ha transformado radicalmente cómo aprendemos, desde los primeros sistemas basados en texto hasta las plataformas de inteligencia artificial actuales.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card h-100">
+                            <div class="card-header bg-primary text-white" id="example-en-title">
+                                English
+                            </div>
+                            <div class="card-body">
+                                <p id="example-en-text">The evolution of educational software has radically transformed how we learn, from the first text-based systems to today's artificial intelligence platforms.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card h-100">
+                            <div class="card-header bg-primary text-white" id="example-fr-title">
+                                Français
+                            </div>
+                            <div class="card-body">
+                                <p id="example-fr-text">L'évolution du logiciel éducatif a radicalement transformé notre façon d'apprendre, depuis les premiers systèmes basés sur du texte jusqu'aux plateformes d'intelligence artificielle d'aujourd'hui.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Otras páginas (Kivy, IA, Recursos) se implementarían de manera similar -->
+        <!-- Por brevedad, solo muestro la estructura básica -->
+        
+        <!-- Página de Kivy -->
+        <div class="subpage" id="kivy">
+            <h1 class="display-5 fw-bold mb-4">Kivy para Aplicaciones Móviles</h1>
+            <p class="lead mb-5">Desarrollo de aplicaciones educativas multiplataforma para dispositivos móviles</p>
+            <div class="alert alert-info">
+                <i class="fas fa-info-circle me-2"></i>
+                Contenido de Kivy en desarrollo. Próximamente más detalles y ejemplos ejecutables.
+            </div>
+        </div>
+        
+        <!-- Página de IA -->
+        <div class="subpage" id="ia">
+            <h1 class="display-5 fw-bold mb-4">Inteligencia Artificial Educativa</h1>
+            <p class="lead mb-5">Cómo la IA está transformando el aprendizaje personalizado</p>
+            <div class="alert alert-info">
+                <i class="fas fa-info-circle me-2"></i>
+                Contenido de IA Educativa en desarrollo. Próximamente ejemplos de sistemas de recomendación y tutores inteligentes.
+            </div>
+        </div>
+        
+        <!-- Página de Recursos -->
+        <div class="subpage" id="recursos">
+            <h1 class="display-5 fw-bold mb-4">Recursos y Herramientas</h1>
+            <p class="lead mb-5">Materiales adicionales para profundizar en el desarrollo de software educativo</p>
+            <div class="alert alert-info">
+                <i class="fas fa-info-circle me-2"></i>
+                Sección de recursos en desarrollo. Próximamente enlaces, documentación y herramientas recomendadas.
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Highlight.js para resaltado de código -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+    <!-- Pyodide para ejecutar Python en el navegador -->
+    <script src="https://cdn.jsdelivr.net/pyodide/v0.23.4/full/pyodide.js"></script>
+    
+    <script>
+        // Variables globales
+        let currentLang = 'es';
+        let currentTheme = 'light';
+        let speechSynthesis = window.speechSynthesis;
+        let currentUtterance = null;
+        let pyodide = null;
+        
+        // Diccionarios de traducción
+        const translations = {
+            es: {
+                // Títulos
+                "site-title": "Software Educativo",
+                "site-subtitle": "Historia y Tecnología",
+                "home-title": "Evolución del Software Educativo",
+                "home-subtitle": "Un viaje a través de la historia y las tecnologías que han transformado la educación digital",
+                "history-title": "Historia del Software Educativo",
+                "python-title": "Python en la Educación",
+                "tkinter-title": "Tkinter para Interfaces Educativas",
+                "exercises-title": "Ejercicios Interactivos",
+                "multilang-title": "Contenido Multilingüe",
+                
+                // Menú
+                "menu-home": "Inicio",
+                "menu-history": "Historia",
+                "menu-python": "Python",
+                "menu-tkinter": "Tkinter",
+                "menu-kivy": "Kivy",
+                "menu-ai": "IA Educativa",
+                "menu-exercises": "Ejercicios",
+                "menu-multilang": "Multilingüe",
+                "menu-resources": "Recursos",
+                
+                // Tarjetas de inicio
+                "card1-title": "Historia Completa",
+                "card1-text": "Desde los primeros sistemas CAI en mainframes hasta la IA educativa actual.",
+                "card2-title": "Código Ejecutable",
+                "card2-text": "Prueba ejemplos de Python, Tkinter y Kivy directamente en tu navegador.",
+                "card3-title": "IA Educativa",
+                "card3-text": "Descubre cómo la inteligencia artificial está transformando el aprendizaje.",
+                
+                // Características
+                "home-features-title": "Características del Sitio",
+                "feature1": "Sidebar fijo con navegación completa",
+                "feature2": "Modo claro/oscuro intercambiable",
+                "feature3": "Línea de tiempo con efectos neón animados",
+                "feature4": "Ejemplos de código Python ejecutables",
+                "feature5": "Lector de voz integrado",
+                "feature6": "Sección de ejercicios interactivos",
+                "feature7": "Soporte multilingüe (ES, EN, FR)",
+                
+                // Línea de tiempo
+                "timeline1": "Los primeros sistemas educativos asistidos por computadora (CAI) como PLATO permitían aprendizaje individualizado mediante terminales conectadas a mainframes.",
+                "timeline2": "Desarrollo de lenguajes como PILOT y TUTOR específicamente para crear software educativo sin necesidad de programación avanzada.",
+                "timeline3": "La llegada de Apple II, Commodore 64 y otras microcomputadoras democratiza el acceso al software educativo. Nacen los primeros juegos educativos.",
+                "timeline4": "El CD-ROM permite contenido multimedia rico. Internet da lugar a los primeros entornos virtuales de aprendizaje y educación a distancia.",
+                "timeline5": "Sistemas de Gestión del Aprendizaje (LMS) como Moodle y Blackboard. La Web 2.0 introduce herramientas colaborativas que transforman la educación.",
+                "timeline6": "La proliferación de dispositivos móviles impulsa el mobile learning. La gamificación se incorpora al software educativo para aumentar la motivación.",
+                "timeline7": "La inteligencia artificial permite personalización del aprendizaje. La realidad virtual/aumentada crea experiencias educativas inmersivas. Los MOOCs democratizan el acceso.",
+                
+                // Python
+                "python-subtitle": "El lenguaje de programación más popular para desarrollo educativo",
+                "python-why-title": "¿Por qué Python?",
+                "python-why-list": [
+                    "Sintaxis clara y legible, fácil de aprender",
+                    "Amplia comunidad y recursos educativos",
+                    "Multiplataforma (Windows, macOS, Linux, Raspberry Pi)",
+                    "Miles de librerías para todos los campos educativos",
+                    "Ideal para IA, ciencia de datos y desarrollo web educativo"
+                ],
+                "python-libs-title": "Librerías Educativas",
+                "python-libs-list": [
+                    "SymPy: Matemáticas simbólicas para enseñanza",
+                    "Pygame: Creación de juegos educativos",
+                    "Jupyter: Notebooks interactivos para enseñanza",
+                    "Matplotlib/Plotly: Visualización de datos educativa",
+                    "scikit-learn: Machine learning para sistemas adaptativos"
+                ],
+                "python-example-title": "Ejemplo de Código Python Ejecutable",
+                "run-button-text": "Ejecutar Código",
+                
+                // Tkinter
+                "tkinter-subtitle": "Creación de aplicaciones educativas de escritorio con Python",
+                "tkinter-what-title": "¿Qué es Tkinter?",
+                "tkinter-what-text": "Tkinter es la biblioteca estándar de Python para crear interfaces gráficas de usuario (GUI). Viene incluida con Python, por lo que no requiere instalación adicional.",
+                "tkinter-advantages-title": "Ventajas para educación:",
+                "tkinter-advantages-list": [
+                    "Fácil de aprender y usar",
+                    "Multiplataforma (Windows, macOS, Linux)",
+                    "Ideal para herramientas educativas de escritorio",
+                    "Gran cantidad de tutoriales y ejemplos"
+                ],
+                "tkinter-projects-title": "Proyectos Educativos con Tkinter",
+                "project1-title": "Calculadora Científica",
+                "project1-text": "Herramienta para enseñar operaciones matemáticas avanzadas con gráficos.",
+                "project2-title": "Editor de Código",
+                "project2-text": "IDE simple con resaltado de sintaxis para enseñar programación.",
+                "project3-title": "Quiz Interactivo",
+                "project3-text": "Sistema de preguntas con temporizador, puntuación y retroalimentación.",
+                
+                // Ejercicios
+                "exercises-subtitle": "Pon a prueba tus conocimientos sobre software educativo",
+                "exercise1-question": "1. ¿En qué década aparecieron los primeros sistemas CAI (Computer-Assisted Instruction)?",
+                "exercise1-option1": "1960s",
+                "exercise1-option2": "1970s",
+                "exercise1-option3": "1980s",
+                "exercise1-option4": "1990s",
+                "check-button1": "Verificar Respuesta",
+                "exercise2-question": "2. ¿Cuál de estas NO es una ventaja de Python para el desarrollo de software educativo?",
+                "exercise2-option1": "Sintaxis clara y legible",
+                "exercise2-option2": "Gran cantidad de librerías especializadas",
+                "exercise2-option3": "Requiere compilación compleja",
+                "exercise2-option4": "Es multiplataforma",
+                "check-button2": "Verificar Respuesta",
+                "exercise3-question": "3. ¿Qué tecnología permite crear aplicaciones educativas móviles multiplataforma con Python?",
+                "exercise3-option1": "Tkinter",
+                "exercise3-option2": "Kivy",
+                "exercise3-option3": "PyQt",
+                "exercise3-option4": "Django",
+                "check-button3": "Verificar Respuesta",
+                "exercise4-question": "4. Completa el código Python para que la función devuelva la suma de dos números:",
+                "check-button4": "Verificar Código",
+                
+                // Multilenguaje
+                "multilang-subtitle": "Explora la evolución del software educativo en diferentes idiomas",
+                "lang-es-title": "Español",
+                "lang-es-text": "Contenido completo en español, el idioma original de este sitio.",
+                "btn-es-text": "Seleccionar Español",
+                "lang-en-title": "English",
+                "lang-en-text": "Explore the evolution of educational software in English.",
+                "btn-en-text": "Select English",
+                "lang-fr-title": "Français",
+                "lang-fr-text": "Découvrez l'évolution du logiciel éducatif en français.",
+                "btn-fr-text": "Sélectionner Français",
+                "translation-title": "Texto de Ejemplo en Diferentes Idiomas",
+                "example-es-title": "Español",
+                "example-es-text": "La evolución del software educativo ha transformado radicalmente cómo aprendemos, desde los primeros sistemas basados en texto hasta las plataformas de inteligencia artificial actuales.",
+                "example-en-title": "English",
+                "example-en-text": "The evolution of educational software has radically transformed how we learn, from the first text-based systems to today's artificial intelligence platforms.",
+                "example-fr-title": "Français",
+                "example-fr-text": "L'évolution du logiciel éducatif a radicalement transformé notre façon d'apprendre, depuis les premiers systèmes basés sur du texte jusqu'aux plateformes d'intelligence artificielle d'aujourd'hui.",
+                
+                // Footer
+                "footer-text": "© 2023 Software Educativo",
+                "theme-label": "Modo Oscuro"
+            },
+            
+            en: {
+                // Títulos
+                "site-title": "Educational Software",
+                "site-subtitle": "History and Technology",
+                "home-title": "Evolution of Educational Software",
+                "home-subtitle": "A journey through history and technologies that have transformed digital education",
+                "history-title": "History of Educational Software",
+                "python-title": "Python in Education",
+                "tkinter-title": "Tkinter for Educational Interfaces",
+                "exercises-title": "Interactive Exercises",
+                "multilang-title": "Multilingual Content",
+                
+                // Menú
+                "menu-home": "Home",
+                "menu-history": "History",
+                "menu-python": "Python",
+                "menu-tkinter": "Tkinter",
+                "menu-kivy": "Kivy",
+                "menu-ai": "Educational AI",
+                "menu-exercises": "Exercises",
+                "menu-multilang": "Multilingual",
+                "menu-resources": "Resources",
+                
+                // Tarjetas de inicio
+                "card1-title": "Complete History",
+                "card1-text": "From the first CAI systems on mainframes to today's educational AI.",
+                "card2-title": "Executable Code",
+                "card2-text": "Try Python, Tkinter and Kivy examples directly in your browser.",
+                "card3-title": "Educational AI",
+                "card3-text": "Discover how artificial intelligence is transforming learning.",
+                
+                // Características
+                "home-features-title": "Site Features",
+                "feature1": "Fixed sidebar with complete navigation",
+                "feature2": "Switchable light/dark mode",
+                "feature3": "Timeline with animated neon effects",
+                "feature4": "Executable Python code examples",
+                "feature5": "Integrated voice reader",
+                "feature6": "Interactive exercises section",
+                "feature7": "Multilingual support (ES, EN, FR)",
+                
+                // Línea de tiempo
+                "timeline1": "The first computer-assisted instruction (CAI) systems like PLATO allowed individualized learning through terminals connected to mainframes.",
+                "timeline2": "Development of languages like PILOT and TUTOR specifically for creating educational software without advanced programming.",
+                "timeline3": "The arrival of Apple II, Commodore 64 and other microcomputers democratized access to educational software. The first educational games were born.",
+                "timeline4": "CD-ROM enabled rich multimedia content. The Internet gave rise to the first virtual learning environments and distance education.",
+                "timeline5": "Learning Management Systems (LMS) like Moodle and Blackboard. Web 2.0 introduced collaborative tools that transformed education.",
+                "timeline6": "The proliferation of mobile devices boosted mobile learning. Gamification was incorporated into educational software to increase motivation.",
+                "timeline7": "Artificial intelligence enables personalized learning. Virtual/augmented reality creates immersive educational experiences. MOOCs democratize access.",
+                
+                // Python
+                "python-subtitle": "The most popular programming language for educational development",
+                "python-why-title": "Why Python?",
+                "python-why-list": [
+                    "Clear and readable syntax, easy to learn",
+                    "Large community and educational resources",
+                    "Cross-platform (Windows, macOS, Linux, Raspberry Pi)",
+                    "Thousands of libraries for all educational fields",
+                    "Ideal for AI, data science and educational web development"
+                ],
+                "python-libs-title": "Educational Libraries",
+                "python-libs-list": [
+                    "SymPy: Symbolic mathematics for teaching",
+                    "Pygame: Creation of educational games",
+                    "Jupyter: Interactive notebooks for teaching",
+                    "Matplotlib/Plotly: Educational data visualization",
+                    "scikit-learn: Machine learning for adaptive systems"
+                ],
+                "python-example-title": "Executable Python Code Example",
+                "run-button-text": "Run Code",
+                
+                // Tkinter
+                "tkinter-subtitle": "Creating desktop educational applications with Python",
+                "tkinter-what-title": "What is Tkinter?",
+                "tkinter-what-text": "Tkinter is Python's standard library for creating graphical user interfaces (GUI). It comes included with Python, so no additional installation is required.",
+                "tkinter-advantages-title": "Advantages for education:",
+                "tkinter-advantages-list": [
+                    "Easy to learn and use",
+                    "Cross-platform (Windows, macOS, Linux)",
+                    "Ideal for desktop educational tools",
+                    "Large number of tutorials and examples"
+                ],
+                "tkinter-projects-title": "Educational Projects with Tkinter",
+                "project1-title": "Scientific Calculator",
+                "project1-text": "Tool for teaching advanced mathematical operations with graphics.",
+                "project2-title": "Code Editor",
+                "project2-text": "Simple IDE with syntax highlighting for teaching programming.",
+                "project3-title": "Interactive Quiz",
+                "project3-text": "Question system with timer, scoring and feedback.",
+                
+                // Ejercicios
+                "exercises-subtitle": "Test your knowledge about educational software",
+                "exercise1-question": "1. In which decade did the first CAI (Computer-Assisted Instruction) systems appear?",
+                "exercise1-option1": "1960s",
+                "exercise1-option2": "1970s",
+                "exercise1-option3": "1980s",
+                "exercise1-option4": "1990s",
+                "check-button1": "Check Answer",
+                "exercise2-question": "2. Which of these is NOT an advantage of Python for educational software development?",
+                "exercise2-option1": "Clear and readable syntax",
+                "exercise2-option2": "Large number of specialized libraries",
+                "exercise2-option3": "Requires complex compilation",
+                "exercise2-option4": "It is cross-platform",
+                "check-button2": "Check Answer",
+                "exercise3-question": "3. Which technology allows creating cross-platform mobile educational applications with Python?",
+                "exercise3-option1": "Tkinter",
+                "exercise3-option2": "Kivy",
+                "exercise3-option3": "PyQt",
+                "exercise3-option4": "Django",
+                "check-button3": "Check Answer",
+                "exercise4-question": "4. Complete the Python code so that the function returns the sum of two numbers:",
+                "check-button4": "Check Code",
+                
+                // Multilenguaje
+                "multilang-subtitle": "Explore the evolution of educational software in different languages",
+                "lang-es-title": "Spanish",
+                "lang-es-text": "Complete content in Spanish, the original language of this site.",
+                "btn-es-text": "Select Spanish",
+                "lang-en-title": "English",
+                "lang-en-text": "Explore the evolution of educational software in English.",
+                "btn-en-text": "Select English",
+                "lang-fr-title": "French",
+                "lang-fr-text": "Discover the evolution of educational software in French.",
+                "btn-fr-text": "Select French",
+                "translation-title": "Sample Text in Different Languages",
+                "example-es-title": "Spanish",
+                "example-es-text": "La evolución del software educativo ha transformado radicalmente cómo aprendemos, desde los primeros sistemas basados en texto hasta las plataformas de inteligencia artificial actuales.",
+                "example-en-title": "English",
+                "example-en-text": "The evolution of educational software has radically transformed how we learn, from the first text-based systems to today's artificial intelligence platforms.",
+                "example-fr-title": "French",
+                "example-fr-text": "L'évolution du logiciel éducatif a radicalement transformé notre façon d'apprendre, depuis les premiers systèmes basés sur du texte jusqu'aux plateformes d'intelligence artificielle d'aujourd'hui.",
+                
+                // Footer
+                "footer-text": "© 2023 Educational Software",
+                "theme-label": "Dark Mode"
+            },
+            
+            fr: {
+                // Títulos
+                "site-title": "Logiciel Éducatif",
+                "site-subtitle": "Histoire et Technologie",
+                "home-title": "Évolution du Logiciel Éducatif",
+                "home-subtitle": "Un voyage à travers l'histoire et les technologies qui ont transformé l'éducation numérique",
+                "history-title": "Histoire du Logiciel Éducatif",
+                "python-title": "Python dans l'Éducation",
+                "tkinter-title": "Tkinter pour les Interfaces Éducatives",
+                "exercises-title": "Exercices Interactifs",
+                "multilang-title": "Contenu Multilingue",
+                
+                // Menú
+                "menu-home": "Accueil",
+                "menu-history": "Histoire",
+                "menu-python": "Python",
+                "menu-tkinter": "Tkinter",
+                "menu-kivy": "Kivy",
+                "menu-ai": "IA Éducative",
+                "menu-exercises": "Exercices",
+                "menu-multilang": "Multilingue",
+                "menu-resources": "Ressources",
+                
+                // Tarjetas de inicio
+                "card1-title": "Histoire Complète",
+                "card1-text": "Des premiers systèmes CAI sur les mainframes à l'IA éducative d'aujourd'hui.",
+                "card2-title": "Code Exécutable",
+                "card2-text": "Essayez des exemples Python, Tkinter et Kivy directement dans votre navigateur.",
+                "card3-title": "IA Éducative",
+                "card3-text": "Découvrez comment l'intelligence artificielle transforme l'apprentissage.",
+                
+                // Características
+                "home-features-title": "Caractéristiques du Site",
+                "feature1": "Barre latérale fixe avec navigation complète",
+                "feature2": "Mode clair/sombre interchangeable",
+                "feature3": "Chronologie avec effets néon animés",
+                "feature4": "Exemples de code Python exécutables",
+                "feature5": "Lecteur vocal intégré",
+                "feature6": "Section d'exercices interactifs",
+                "feature7": "Support multilingue (ES, EN, FR)",
+                
+                // Línea de tiempo
+                "timeline1": "Les premiers systèmes d'enseignement assisté par ordinateur (CAI) comme PLATO permettaient un apprentissage individualisé via des terminaux connectés à des mainframes.",
+                "timeline2": "Développement de langages comme PILOT et TUTOR spécifiquement pour créer des logiciels éducatifs sans programmation avancée.",
+                "timeline3": "L'arrivée de l'Apple II, du Commodore 64 et d'autres micro-ordinateurs a démocratisé l'accès aux logiciels éducatifs. Les premiers jeux éducatifs sont nés.",
+                "timeline4": "Le CD-ROM a permis un contenu multimédia riche. Internet a donné naissance aux premiers environnements d'apprentissage virtuels et à l'enseignement à distance.",
+                "timeline5": "Systèmes de gestion de l'apprentissage (LMS) comme Moodle et Blackboard. Le Web 2.0 a introduit des outils collaboratifs qui ont transformé l'éducation.",
+                "timeline6": "La prolifération des appareils mobiles a stimulé l'apprentissage mobile. La gamification a été intégrée aux logiciels éducatifs pour augmenter la motivation.",
+                "timeline7": "L'intelligence artificielle permet un apprentissage personnalisé. La réalité virtuelle/augmentée crée des expériences éducatives immersives. Les MOOCs démocratisent l'accès.",
+                
+                // Python
+                "python-subtitle": "Le langage de programmation le plus populaire pour le développement éducatif",
+                "python-why-title": "Pourquoi Python ?",
+                "python-why-list": [
+                    "Syntaxe claire et lisible, facile à apprendre",
+                    "Large communauté et ressources éducatives",
+                    "Multiplateforme (Windows, macOS, Linux, Raspberry Pi)",
+                    "Des milliers de bibliothèques pour tous les domaines éducatifs",
+                    "Idéal pour l'IA, la science des données et le développement web éducatif"
+                ],
+                "python-libs-title": "Bibliothèques Éducatives",
+                "python-libs-list": [
+                    "SymPy : Mathématiques symboliques pour l'enseignement",
+                    "Pygame : Création de jeux éducatifs",
+                    "Jupyter : Notebooks interactifs pour l'enseignement",
+                    "Matplotlib/Plotly : Visualisation de données éducatives",
+                    "scikit-learn : Machine learning pour les systèmes adaptatifs"
+                ],
+                "python-example-title": "Exemple de Code Python Exécutable",
+                "run-button-text": "Exécuter le Code",
+                
+                // Tkinter
+                "tkinter-subtitle": "Création d'applications éducatives de bureau avec Python",
+                "tkinter-what-title": "Qu'est-ce que Tkinter ?",
+                "tkinter-what-text": "Tkinter est la bibliothèque standard de Python pour créer des interfaces graphiques (GUI). Elle est incluse avec Python, donc aucune installation supplémentaire n'est requise.",
+                "tkinter-advantages-title": "Avantages pour l'éducation :",
+                "tkinter-advantages-list": [
+                    "Facile à apprendre et à utiliser",
+                    "Multiplateforme (Windows, macOS, Linux)",
+                    "Idéal pour les outils éducatifs de bureau",
+                    "Grand nombre de tutoriels et d'exemples"
+                ],
+                "tkinter-projects-title": "Projets Éducatifs avec Tkinter",
+                "project1-title": "Calculatrice Scientifique",
+                "project1-text": "Outil pour enseigner les opérations mathématiques avancées avec des graphiques.",
+                "project2-title": "Éditeur de Code",
+                "project2-text": "IDE simple avec coloration syntaxique pour enseigner la programmation.",
+                "project3-title": "Quiz Interactif",
+                "project3-text": "Système de questions avec minuteur, score et retour d'information.",
+                
+                // Ejercicios
+                "exercises-subtitle": "Testez vos connaissances sur les logiciels éducatifs",
+                "exercise1-question": "1. Dans quelle décennie sont apparus les premiers systèmes CAI (Computer-Assisted Instruction) ?",
+                "exercise1-option1": "Années 1960",
+                "exercise1-option2": "Années 1970",
+                "exercise1-option3": "Années 1980",
+                "exercise1-option4": "Années 1990",
+                "check-button1": "Vérifier la Réponse",
+                "exercise2-question": "2. Laquelle de ces affirmations n'est PAS un avantage de Python pour le développement de logiciels éducatifs ?",
+                "exercise2-option1": "Syntaxe claire et lisible",
+                "exercise2-option2": "Grand nombre de bibliothèques spécialisées",
+                "exercise2-option3": "Nécessite une compilation complexe",
+                "exercise2-option4": "Il est multiplateforme",
+                "check-button2": "Vérifier la Réponse",
+                "exercise3-question": "3. Quelle technologie permet de créer des applications éducatives mobiles multiplateformes avec Python ?",
+                "exercise3-option1": "Tkinter",
+                "exercise3-option2": "Kivy",
+                "exercise3-option3": "PyQt",
+                "exercise3-option4": "Django",
+                "check-button3": "Vérifier la Réponse",
+                "exercise4-question": "4. Complétez le code Python pour que la fonction retourne la somme de deux nombres :",
+                "check-button4": "Vérifier le Code",
+                
+                // Multilenguaje
+                "multilang-subtitle": "Explorez l'évolution du logiciel éducatif dans différentes langues",
+                "lang-es-title": "Espagnol",
+                "lang-es-text": "Contenu complet en espagnol, la langue originale de ce site.",
+                "btn-es-text": "Sélectionner l'Espagnol",
+                "lang-en-title": "Anglais",
+                "lang-en-text": "Explorez l'évolution du logiciel éducatif en anglais.",
+                "btn-en-text": "Sélectionner l'Anglais",
+                "lang-fr-title": "Français",
+                "lang-fr-text": "Découvrez l'évolution du logiciel éducatif en français.",
+                "btn-fr-text": "Sélectionner le Français",
+                "translation-title": "Exemple de Texte en Différentes Langues",
+                "example-es-title": "Espagnol",
+                "example-es-text": "La evolución del software educativo ha transformado radicalmente cómo aprendemos, desde los primeros sistemas basados en texto hasta las plataformas de inteligencia artificial actuales.",
+                "example-en-title": "Anglais",
+                "example-en-text": "The evolution of educational software has radically transformed how we learn, from the first text-based systems to today's artificial intelligence platforms.",
+                "example-fr-title": "Français",
+                "example-fr-text": "L'évolution du logiciel éducatif a radicalement transformé notre façon d'apprendre, depuis les premiers systèmes basés sur du texte jusqu'aux plateformes d'intelligence artificielle d'aujourd'hui.",
+                
+                // Footer
+                "footer-text": "© 2023 Logiciel Éducatif",
+                "theme-label": "Mode Sombre"
+            }
+        };
+        
+        // Inicialización cuando el DOM esté listo
+        document.addEventListener('DOMContentLoaded', function() {
+            // Inicializar resaltado de código
+            hljs.highlightAll();
+            
+            // Inicializar Pyodide (para ejecutar Python)
+            initPyodide();
+            
+            // Configurar navegación del sidebar
+            setupSidebarNavigation();
+            
+            // Configurar modo oscuro
+            setupDarkMode();
+            
+            // Configurar lector de voz
+            setupVoiceReader();
+            
+            // Configurar ejercicios interactivos
+            setupInteractiveExercises();
+            
+            // Configurar selector de idioma
+            setupLanguageSelector();
+            
+            // Configurar menú móvil
+            setupMobileMenu();
+            
+            // Configurar ejecución de código
+            setupCodeExecution();
+            
+            // Aplicar traducción inicial
+            applyTranslation(currentLang);
+        });
+        
+        // Inicializar Pyodide
+        async function initPyodide() {
+            try {
+                console.log("Loading Pyodide...");
+                pyodide = await loadPyodide();
+                await pyodide.loadPackage(["micropip"]);
+                console.log("Pyodide loaded successfully");
+            } catch (error) {
+                console.error("Error loading Pyodide:", error);
+            }
+        }
+        
+        // Configurar navegación del sidebar
+        function setupSidebarNavigation() {
+            const menuLinks = document.querySelectorAll('.sidebar-menu a');
+            const subpages = document.querySelectorAll('.subpage');
+            
+            menuLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    // Remover clase active de todos los enlaces
+                    menuLinks.forEach(item => item.classList.remove('active'));
+                    
+                    // Añadir clase active al enlace clickeado
+                    this.classList.add('active');
+                    
+                    // Ocultar todas las subpáginas
+                    subpages.forEach(page => page.classList.remove('active'));
+                    
+                    // Mostrar la subpágina correspondiente
+                    const pageId = this.getAttribute('data-page');
+                    const targetPage = document.getElementById(pageId);
+                    if (targetPage) {
+                        targetPage.classList.add('active');
+                        
+                        // Detener lectura de voz si está activa
+                        stopVoiceReading();
+                        
+                        // Actualizar título para lector de voz
+                        updateVoiceContent();
+                        
+                        // Cerrar sidebar en móviles
+                        if (window.innerWidth <= 992) {
+                            document.getElementById('sidebar').classList.remove('active');
+                        }
+                    }
+                });
+            });
+        }
+        
+        // Configurar modo oscuro
+        function setupDarkMode() {
+            const themeSwitch = document.getElementById('themeSwitch');
+            const darkModeToggle = document.getElementById('darkModeToggle');
+            
+            // Cargar preferencia del usuario
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            setTheme(savedTheme);
+            
+            // Configurar interruptor
+            if (themeSwitch) {
+                themeSwitch.checked = savedTheme === 'dark';
+                themeSwitch.addEventListener('change', function() {
+                    const newTheme = this.checked ? 'dark' : 'light';
+                    setTheme(newTheme);
+                });
+            }
+            
+            // Configurar botón flotante
+            if (darkModeToggle) {
+                darkModeToggle.addEventListener('click', function() {
+                    const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+                    setTheme(newTheme);
+                    if (themeSwitch) {
+                        themeSwitch.checked = newTheme === 'dark';
+                    }
+                });
+            }
+        }
+        
+        // Cambiar tema
+        function setTheme(theme) {
+            currentTheme = theme;
+            document.body.setAttribute('data-theme', theme);
+            localStorage.setItem('theme', theme);
+            
+            // Actualizar icono del botón
+            const darkModeToggle = document.getElementById('darkModeToggle');
+            if (darkModeToggle) {
+                const icon = darkModeToggle.querySelector('i');
+                if (theme === 'dark') {
+                    icon.className = 'fas fa-sun';
+                    darkModeToggle.title = 'Cambiar a modo claro';
+                } else {
+                    icon.className = 'fas fa-moon';
+                    darkModeToggle.title = 'Cambiar a modo oscuro';
+                }
+            }
+        }
+        
+        // Configurar lector de voz
+        function setupVoiceReader() {
+            const playBtn = document.getElementById('playVoice');
+            const pauseBtn = document.getElementById('pauseVoice');
+            const stopBtn = document.getElementById('stopVoice');
+            const speedSelect = document.getElementById('voiceSpeed');
+            
+            if (playBtn) {
+                playBtn.addEventListener('click', function() {
+                    startVoiceReading();
+                });
+            }
+            
+            if (pauseBtn) {
+                pauseBtn.addEventListener('click', function() {
+                    pauseVoiceReading();
+                });
+            }
+            
+            if (stopBtn) {
+                stopBtn.addEventListener('click', function() {
+                    stopVoiceReading();
+                });
+            }
+            
+            if (speedSelect) {
+                speedSelect.addEventListener('change', function() {
+                    if (currentUtterance) {
+                        currentUtterance.rate = parseFloat(this.value);
+                    }
+                });
+            }
+        }
+        
+        // Iniciar lectura de voz
+        function startVoiceReading() {
+            const activePage = document.querySelector('.subpage.active');
+            if (!activePage) return;
+            
+            // Obtener texto de la página activa
+            const title = activePage.querySelector('h1')?.textContent || '';
+            const subtitle = activePage.querySelector('.lead')?.textContent || '';
+            const content = activePage.textContent || '';
+            
+            // Limpiar texto (remover código y elementos innecesarios)
+            let cleanText = content.replace(/[\n\r]+/g, ' ').replace(/\s+/g, ' ');
+            cleanText = cleanText.substring(0, 1000); // Limitar longitud
+            
+            const textToRead = `${title}. ${subtitle}. ${cleanText}`;
+            
+            // Detener lectura previa si existe
+            stopVoiceReading();
+            
+            // Crear nueva utterance
+            currentUtterance = new SpeechSynthesisUtterance(textToRead);
+            currentUtterance.lang = currentLang === 'es' ? 'es-ES' : currentLang === 'fr' ? 'fr-FR' : 'en-US';
+            currentUtterance.rate = parseFloat(document.getElementById('voiceSpeed').value);
+            currentUtterance.volume = 1;
+            
+            // Configurar eventos
+            currentUtterance.onend = function() {
+                currentUtterance = null;
+            };
+            
+            // Iniciar lectura
+            speechSynthesis.speak(currentUtterance);
+        }
+        
+        // Pausar lectura de voz
+        function pauseVoiceReading() {
+            if (speechSynthesis.speaking) {
+                speechSynthesis.pause();
+            }
+        }
+        
+        // Detener lectura de voz
+        function stopVoiceReading() {
+            speechSynthesis.cancel();
+            currentUtterance = null;
+        }
+        
+        // Actualizar contenido para lector de voz
+        function updateVoiceContent() {
+            // Detener lectura actual si hay cambio de página
+            stopVoiceReading();
+        }
+        
+        // Configurar ejercicios interactivos
+        function setupInteractiveExercises() {
+            // Ejercicios de opción múltiple
+            const exerciseOptions = document.querySelectorAll('.exercise-option');
+            exerciseOptions.forEach(option => {
+                option.addEventListener('click', function() {
+                    // Remover selección de otras opciones en el mismo ejercicio
+                    const parentExercise = this.closest('.exercise-card');
+                    parentExercise.querySelectorAll('.exercise-option').forEach(opt => {
+                        opt.classList.remove('selected');
+                    });
+                    
+                    // Seleccionar esta opción
+                    this.classList.add('selected');
+                });
+            });
+            
+            // Botones de verificación
+            document.getElementById('check-exercise1')?.addEventListener('click', function() {
+                checkExercise(1);
+            });
+            
+            document.getElementById('check-exercise2')?.addEventListener('click', function() {
+                checkExercise(2);
+            });
+            
+            document.getElementById('check-exercise3')?.addEventListener('click', function() {
+                checkExercise(3);
+            });
+            
+            document.getElementById('check-exercise4')?.addEventListener('click', function() {
+                checkCodeExercise();
+            });
+        }
+        
+        // Verificar ejercicio de opción múltiple
+        function checkExercise(exerciseNum) {
+            const exerciseCard = document.getElementById(`check-exercise${exerciseNum}`).closest('.exercise-card');
+            const selectedOption = exerciseCard.querySelector('.exercise-option.selected');
+            const feedback = exerciseCard.querySelector('.exercise-feedback');
+            
+            if (!selectedOption) {
+                alert(currentLang === 'es' ? 'Por favor, selecciona una respuesta.' : 
+                      currentLang === 'fr' ? 'Veuillez sélectionner une réponse.' : 
+                      'Please select an answer.');
+                return;
+            }
+            
+            const isCorrect = selectedOption.getAttribute('data-correct') === 'true';
+            
+            // Mostrar retroalimentación
+            feedback.textContent = selectedOption.getAttribute('data-correct') === 'true' 
+                ? (currentLang === 'es' ? '¡Correcto! ' : currentLang === 'fr' ? 'Correct ! ' : 'Correct! ') + feedback.textContent
+                : (currentLang === 'es' ? 'Incorrecto. ' : currentLang === 'fr' ? 'Incorrect. ' : 'Incorrect. ') + feedback.textContent;
+            
+            feedback.className = `exercise-feedback ${isCorrect ? 'correct' : 'incorrect'}`;
+            feedback.style.display = 'block';
+            
+            // Resaltar opción correcta
+            exerciseCard.querySelectorAll('.exercise-option').forEach(option => {
+                if (option.getAttribute('data-correct') === 'true') {
+                    option.style.backgroundColor = isCorrect ? 'rgba(46, 204, 113, 0.3)' : 'rgba(46, 204, 113, 0.1)';
+                    option.style.borderLeft = '3px solid #2ecc71';
+                }
+            });
+        }
+        
+        // Verificar ejercicio de código
+        function checkCodeExercise() {
+            const answer = document.getElementById('code-answer').value.trim();
+            const feedback = document.getElementById('exercise4-feedback');
+            
+            if (!answer) {
+                alert(currentLang === 'es' ? 'Por favor, escribe la respuesta.' : 
+                      currentLang === 'fr' ? 'Veuillez écrire la réponse.' : 
+                      'Please write the answer.');
+                return;
+            }
+            
+            // Respuestas aceptables
+            const validAnswers = ['a + b', 'a+b', 'return a + b', 'return a+b'];
+            
+            if (validAnswers.includes(answer)) {
+                feedback.textContent = currentLang === 'es' ? 
+                    '¡Correcto! La función debe devolver la suma de a y b.' :
+                    currentLang === 'fr' ?
+                    'Correct ! La fonction doit retourner la somme de a et b.' :
+                    'Correct! The function should return the sum of a and b.';
+                feedback.className = 'exercise-feedback correct';
+            } else {
+                feedback.textContent = currentLang === 'es' ?
+                    'Incorrecto. La respuesta debería ser "a + b".' :
+                    currentLang === 'fr' ?
+                    'Incorrect. La réponse devrait être "a + b".' :
+                    'Incorrect. The answer should be "a + b".';
+                feedback.className = 'exercise-feedback incorrect';
+            }
+            
+            feedback.style.display = 'block';
+        }
+        
+        // Configurar selector de idioma
+        function setupLanguageSelector() {
+            const languageSelect = document.getElementById('languageSelect');
+            const langButtons = document.querySelectorAll('[data-lang]');
+            
+            if (languageSelect) {
+                languageSelect.value = currentLang;
+                languageSelect.addEventListener('change', function() {
+                    const newLang = this.value;
+                    applyTranslation(newLang);
+                    currentLang = newLang;
+                    
+                    // Actualizar contenido para lector de voz
+                    updateVoiceContent();
+                });
+            }
+            
+            langButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const newLang = this.getAttribute('data-lang');
+                    applyTranslation(newLang);
+                    currentLang = newLang;
+                    
+                    // Actualizar selector
+                    if (languageSelect) {
+                        languageSelect.value = newLang;
+                    }
+                    
+                    // Actualizar contenido para lector de voz
+                    updateVoiceContent();
+                });
+            });
+        }
+        
+        // Aplicar traducción
+        function applyTranslation(lang) {
+            const langData = translations[lang];
+            if (!langData) return;
+            
+            // Actualizar todos los elementos con ID en el diccionario
+            Object.keys(langData).forEach(key => {
+                const element = document.getElementById(key);
+                if (element) {
+                    if (Array.isArray(langData[key])) {
+                        // Para listas, actualizar cada elemento
+                        const items = langData[key];
+                        const listItems = element.querySelectorAll('li');
+                        listItems.forEach((li, index) => {
+                            if (items[index]) {
+                                li.innerHTML = items[index];
+                            }
+                        });
+                    } else {
+                        // Para texto simple
+                        if (element.tagName === 'INPUT' && element.type === 'text') {
+                            element.placeholder = langData[key];
+                        } else {
+                            element.textContent = langData[key];
+                        }
+                    }
+                }
+            });
+            
+            // Actualizar textos específicos
+            updateLanguageSpecificContent(lang);
+        }
+        
+        // Actualizar contenido específico del idioma
+        function updateLanguageSpecificContent(lang) {
+            // Actualizar título de la página
+            const activePage = document.querySelector('.subpage.active');
+            if (activePage) {
+                const pageId = activePage.id;
+                const titleMap = {
+                    'inicio': lang === 'es' ? 'Evolución del Software Educativo' : 
+                              lang === 'en' ? 'Evolution of Educational Software' : 
+                              'Évolution du Logiciel Éducatif',
+                    'historia': lang === 'es' ? 'Historia del Software Educativo' : 
+                                lang === 'en' ? 'History of Educational Software' : 
+                                'Histoire du Logiciel Éducatif',
+                    'python': lang === 'es' ? 'Python en la Educación' : 
+                              lang === 'en' ? 'Python in Education' : 
+                              'Python dans l\'Éducation'
+                };
+                
+                if (titleMap[pageId]) {
+                    document.title = titleMap[pageId] + ' - Portal Educativo';
+                }
+            }
+        }
+        
+        // Configurar menú móvil
+        function setupMobileMenu() {
+            const mobileMenuToggle = document.getElementById('mobileMenuToggle');
+            const sidebar = document.getElementById('sidebar');
+            
+            if (mobileMenuToggle && sidebar) {
+                mobileMenuToggle.addEventListener('click', function() {
+                    sidebar.classList.toggle('active');
+                });
+                
+                // Cerrar sidebar al hacer clic en un enlace (en móviles)
+                const menuLinks = sidebar.querySelectorAll('a');
+                menuLinks.forEach(link => {
+                    link.addEventListener('click', function() {
+                        if (window.innerWidth <= 992) {
+                            sidebar.classList.remove('active');
+                        }
+                    });
+                });
+            }
+        }
+        
+        // Configurar ejecución de código
+        function setupCodeExecution() {
+            // Ejecutar código Python
+            document.getElementById('runPythonCode')?.addEventListener('click', async function() {
+                await runPythonCode();
+            });
+            
+            // Ejecutar código Tkinter (simulado)
+            document.getElementById('runTkinterCode')?.addEventListener('click', function() {
+                runTkinterCode();
+            });
+        }
+        
+        // Ejecutar código Python
+        async function runPythonCode() {
+            if (!pyodide) {
+                alert(currentLang === 'es' ? 'Pyodide no está cargado. Por favor, espera unos segundos.' :
+                      currentLang === 'fr' ? 'Pyodide n\'est pas chargé. Veuillez patienter quelques secondes.' :
+                      'Pyodide is not loaded. Please wait a few seconds.');
+                return;
+            }
+            
+            const code = document.getElementById('python-code').textContent;
+            const outputElement = document.getElementById('python-output');
+            
+            // Limpiar salida anterior
+            outputElement.innerHTML = '<p>Ejecutando código...</p>';
+            
+            try {
+                // Ejecutar código Python
+                const result = await pyodide.runPythonAsync(code);
+                
+                // Mostrar resultado
+                if (result !== undefined) {
+                    outputElement.innerHTML = `<pre>${result}</pre>`;
+                } else {
+                    // Capturar salida de print
+                    const stdout = pyodide.runPython(`
+                        import sys
+                        from io import StringIO
+                        
+                        # Capturar salida estándar
+                        old_stdout = sys.stdout
+                        sys.stdout = mystdout = StringIO()
+                        
+                        try:
+                            # Ejecutar el código del usuario
+                            exec(r"""${code.replace(/\\/g, '\\\\').replace(/"/g, '\\"')}""")
+                        finally:
+                            sys.stdout = old_stdout
+                        
+                        mystdout.getvalue()
+                    `);
+                    
+                    outputElement.innerHTML = `<pre>${stdout || 'Código ejecutado exitosamente.'}</pre>`;
+                }
+            } catch (error) {
+                outputElement.innerHTML = `<pre style="color: #e74c3c">Error: ${error.message}</pre>`;
+            }
+        }
+        
+        // Ejecutar código Tkinter (simulado)
+        function runTkinterCode() {
+            const outputElement = document.getElementById('tkinter-output');
+            
+            // Tkinter no se puede ejecutar en el navegador, mostramos simulación
+            outputElement.innerHTML = `
+                <p><strong>Simulación de aplicación Tkinter:</strong></p>
+                <div style="background: #2c3e50; color: white; padding: 15px; border-radius: 5px; font-family: monospace;">
+                    <div style="margin-bottom: 10px;">=== Aplicación Educativa - Tkinter ===</div>
+                    <div style="margin-bottom: 5px;">Sistema de Aprendizaje Interactivo</div>
+                    <div style="margin-bottom: 10px;">Selecciona una lección para comenzar a aprender:</div>
+                    <div style="margin-bottom: 5px;">[Botón: Matemáticas Básicas]</div>
+                    <div style="margin-bottom: 5px;">[Botón: Introducción a la Programación]</div>
+                    <div style="margin-bottom: 5px;">[Botón: Ciencias Naturales]</div>
+                    <div style="margin-bottom: 10px;">Lecciones completadas: 0</div>
+                    <div>[Botón: Salir]</div>
+                </div>
+                <p class="mt-3"><em>Nota: Tkinter requiere un entorno de escritorio para ejecutarse completamente. Este es un ejemplo de simulación.</em></p>
+            `;
+            
+            // Mostrar mensaje informativo
+            alert(currentLang === 'es' ? 
+                'Tkinter no puede ejecutarse en el navegador, pero puedes copiar este código y ejecutarlo en tu computadora con Python instalado.' :
+                currentLang === 'fr' ?
+                'Tkinter ne peut pas s\'exécuter dans le navigateur, mais vous pouvez copier ce code et l\'exécuter sur votre ordinateur avec Python installé.' :
+                'Tkinter cannot run in the browser, but you can copy this code and run it on your computer with Python installed.');
+        }
+    </script>
+</body>
+</html>

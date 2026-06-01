@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>Energía Solar Colombia · Instalación y Reparación · 100 conceptos</title>
+  <style>
+    /* ----- VARIABLES CSS: paleta solar (amarillo, azul, verde) ----- */
+    :root {
+      --fondo: #fef9e6;
+      --texto: #2c3e2f;
+      --amarillo-sol: #f39c12;
+      --azul-panel: #2c6e9e;
+      --verde-energia: #27ae60;
+      --gris-tecnico: #7f8c8d;
+      --acierto: #27ae60;
+      --fallo: #e74c3c;
+      --sombra: rgba(0, 0, 0, 0.08);
+      --card-bg: #ffffff;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: var(--fondo);
+      color: var(--texto);
+      font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
+      line-height: 1.5;
+      padding: 1rem;
+    }
+
+    .app-container {
+      max-width: 1300px;
+      margin: 0 auto;
+      background: var(--card-bg);
+      border-radius: 2rem;
+      box-shadow: 0 12px 28px var(--sombra);
+      overflow: hidden;
+      border: 1px solid #f0e0c0;
+    }
+
+    header {
+      background: #fdf4df;
+      padding: 1.2rem 2rem;
+      border-bottom: 3px solid var(--amarillo-sol);
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 1rem;
+    }
+    h1 {
+      font-size: 1.7rem;
+      font-weight: 600;
+      color: #e67e22;
+      letter-spacing: -0.2px;
+    }
+    h1 small {
+      font-size: 0.7rem;
+      font-weight: normal;
+      color: #b98f5c;
+    }
+
+    nav {
+      display: flex;
+      gap: 0.5rem;
+      background: #f5ebd8;
+      padding: 0.6rem 2rem;
+      border-bottom: 1px solid #e6d5ba;
+      flex-wrap: wrap;
+    }
+    .nav-btn {
+      background: transparent;
+      border: none;
+      font-size: 0.95rem;
+      padding: 0.5rem 1.2rem;
+      border-radius: 40px;
+      cursor: pointer;
+      font-weight: 500;
+      transition: all 0.2s;
+      color: #e67e22;
+    }
+    .nav-btn.active {
+      background-color: var(--amarillo-sol);
+      color: white;
+    }
+    .nav-btn:hover:not(.active) {
+      background-color: #eaddc5;
+    }
+
+    .view {
+      display: none;
+      padding: 2rem;
+      animation: fade 0.2s ease;
+    }
+    .active-view { display: block; }
+    @keyframes fade { from { opacity: 0; transform: translateY(5px);} to { opacity: 1; transform: translateY(0);} }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+    .stat-card {
+      background: var(--fondo);
+      border-radius: 1.5rem;
+      padding: 1rem;
+      text-align: center;
+      border-left: 6px solid var(--azul-panel);
+      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    }
+    .stat-number {
+      font-size: 2.2rem;
+      font-weight: 700;
+      color: var(--amarillo-sol);
+    }
+    .progress-bar-bg {
+      background: #e2e8f0;
+      border-radius: 40px;
+      height: 12px;
+      overflow: hidden;
+      margin: 0.8rem 0;
+    }
+    .progress-fill {
+      background: var(--amarillo-sol);
+      width: 0%;
+      height: 100%;
+      transition: width 0.2s;
+    }
+
+    .conceptos-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+      gap: 1rem;
+      max-height: 65vh;
+      overflow-y: auto;
+      padding-right: 0.3rem;
+    }
+    .concepto-item {
+      background: white;
+      border-radius: 1.2rem;
+      padding: 0.8rem 1rem;
+      border-left: 5px solid var(--gris-tecnico);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+    .concepto-titulo {
+      font-weight: 700;
+      color: #e67e22;
+    }
+    .concepto-desc {
+      font-size: 0.85rem;
+      color: #5a6e55;
+      margin-top: 6px;
+      border-top: 1px solid #f0e6d5;
+      padding-top: 6px;
+    }
+    .badge-progreso {
+      font-size: 0.7rem;
+      background: #fdf4df;
+      border-radius: 20px;
+      padding: 2px 10px;
+      display: inline-block;
+      margin-top: 8px;
+    }
+
+    /* práctica */
+    .flashcard {
+      background: #ffffff;
+      border-radius: 2rem;
+      padding: 1.8rem;
+      text-align: center;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+      border: 1px solid #f0e0c0;
+      max-width: 750px;
+      margin: 0 auto;
+    }
+    .pregunta {
+      font-size: 1.4rem;
+      font-weight: 500;
+      margin-bottom: 1.8rem;
+      background: #fdf4df;
+      padding: 1.2rem;
+      border-radius: 1.5rem;
+    }
+    .respuesta-oculta {
+      background: #fef9ec;
+      border-radius: 1.2rem;
+      padding: 1rem;
+      margin: 1rem 0;
+      display: none;
+    }
+    .palabras-baraja {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 0.6rem;
+      margin: 1.5rem 0;
+    }
+    .palabra-btn {
+      background: var(--amarillo-sol);
+      color: white;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 2rem;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: 0.1s;
+    }
+    .orden-actual {
+      background: #fefcf7;
+      border-radius: 1rem;
+      padding: 1rem;
+      min-height: 80px;
+      margin: 1rem 0;
+      text-align: left;
+      border: 1px dashed #e6d5ba;
+    }
+    .btn {
+      background: #e2e8f0;
+      border: none;
+      padding: 0.6rem 1.5rem;
+      border-radius: 3rem;
+      font-weight: 600;
+      margin: 0.3rem;
+      cursor: pointer;
+      font-family: inherit;
+    }
+    .btn-primary { background: var(--amarillo-sol); color: white; }
+    .btn-acierto { background: var(--acierto); color: white; }
+    .btn-fallo { background: var(--fallo); color: white; }
+    .modo-selector { display: flex; justify-content: center; gap: 0.8rem; margin-bottom: 1.5rem; flex-wrap: wrap; }
+    footer {
+      text-align: center;
+      padding: 1rem;
+      font-size: 0.75rem;
+      border-top: 1px solid #f0e0c0;
+      background: #fefcf7;
+    }
+    @media (max-width: 680px) {
+      .view { padding: 1rem; }
+      .pregunta { font-size: 1rem; }
+    }
+  </style>
+</head>
+<body>
+<div class="app-container">
+  <header>
+    <h1>☀️ Energía Solar · Colombia <small>100 conceptos para instalación y reparación</small></h1>
+    <div style="font-size:0.8rem;">🔋 Paneles · Inversores · Baterías · Controladores · Normativa RETIE · Reparación</div>
+  </header>
+  <nav>
+    <button class="nav-btn active" data-view="dashboard">📊 Panel</button>
+    <button class="nav-btn" data-view="listado">📚 Compendio</button>
+    <button class="nav-btn" data-view="practica">🃏 Práctica</button>
+  </nav>
+
+  <section id="dashboard" class="view active-view">
+    <div class="stats-grid" id="statsContainer"></div>
+    <div class="card" style="background:white; border-radius:1.6rem; padding:1.2rem;">
+      <h3>📈 Progreso en instalación solar</h3>
+      <div class="progress-bar-bg"><div class="progress-fill" id="globalProgressFill"></div></div>
+      <p id="globalProgressText"></p>
+      <button id="resetProgresoBtn" class="btn" style="background:#eaddc5;">🔄 Reiniciar progreso</button>
+    </div>
+  </section>
+
+  <section id="listado" class="view">
+    <input type="text" id="filtroListado" placeholder="🔍 Buscar concepto o definición..." style="width:100%; padding:10px; margin-bottom:15px; border-radius:40px; border:1px solid #e6d5ba;">
+    <div id="conceptosListadoContainer" class="conceptos-grid"></div>
+  </section>
+
+  <section id="practica" class="view">
+    <div class="modo-selector">
+      <button id="modoConceptoDef" class="btn btn-primary">📖 Concepto → Definición</button>
+      <button id="modoDefConcepto" class="btn">🔄 Definición → Concepto</button>
+      <button id="modoOrdenar" class="btn">🧩 Ordenar definición</button>
+    </div>
+    <div id="practicaContainer"></div>
+  </section>
+  <footer>Progreso guardado localmente · Ejercicio de ordenar definición · Basado en normativa colombiana (RETIE, UPME) y estándares técnicos</footer>
+</div>
+
+<script>
+  // --------------------------------------------------------------
+  // 100 CONCEPTOS DE ENERGÍA SOLAR (instalación, reparación, repuestos) - Colombia
+  // --------------------------------------------------------------
+  const conceptosData = [
+    [1, "Panel solar fotovoltaico", "Dispositivo que convierte luz solar en electricidad mediante celdas de silicio."],
+    [2, "Celda fotovoltaica", "Unidad básica que genera corriente continua al recibir radiación solar."],
+    [3, "Inversor solar", "Equipo que convierte corriente continua (DC) de los paneles en corriente alterna (AC) para uso doméstico o red."],
+    [4, "Inversor off-grid", "Inversor para sistemas aislados que trabajan con baterías, sin conexión a la red eléctrica."],
+    [5, "Inversor on-grid (grid-tie)", "Inversor conectado a la red eléctrica; puede inyectar excedentes y no requiere baterías."],
+    [6, "Inversor híbrido", "Combinación de off-grid y on-grid; gestiona paneles, baterías y red eléctrica."],
+    [7, "Controlador de carga solar", "Regula el voltaje y corriente de los paneles para cargar baterías sin sobrecargarlas."],
+    [8, "Controlador PWM", "Tecnología básica de control de carga que conecta directamente panel a batería."],
+    [9, "Controlador MPPT", "Tecnología avanzada que maximiza la potencia extraída del panel (más eficiente que PWM)."],
+    [10, "Batería solar", "Almacena energía para usar cuando no hay sol (noche o días nublados)."],
+    [11, "Batería de litio", "Tecnología moderna, liviana, larga vida útil, requiere BMS."],
+    [12, "Batería de ciclo profundo", "Diseñada para descargas profundas repetidas (AGM, Gel, Litio)."],
+    [13, "Batería AGM", "Batería sellada con fibra de vidrio absorbente, sin mantenimiento."],
+    [14, "Batería de Gel", "Electrolito en gel, mayor vida útil que AGM."],
+    [15, "BMS (Battery Management System)", "Circuito que protege baterías de litio contra sobrecarga, sobredescarga y cortocircuito."],
+    [16, "Capacidad de batería (Ah)", "Cantidad de carga eléctrica que puede almacenar (Amperios-hora)."],
+    [17, "Profundidad de descarga (DoD)", "Porcentaje de la batería que se puede usar sin dañarla (ej. 80% en litio)."],
+    [18, "Ciclo de vida", "Número de veces que una batería puede cargarse y descargarse antes de perder capacidad."],
+    [19, "Estructura de soporte", "Perfiles metálicos que fijan los paneles al techo o suelo con inclinación adecuada."],
+    [20, "Inclinación solar", "Ángulo de los paneles respecto al horizonte para maximizar captación."],
+    [21, "Orientación solar", "Dirección hacia donde apuntan los paneles (en el hemisferio sur, norte geográfico)."],
+    [22, "Sombras parciales", "Obstrucción que reduce drásticamente la producción del panel afectado y serie."],
+    [23, "Radiación solar", "Potencia solar por unidad de área (W/m²); en Colombia varía entre 4-6 kWh/m²/día."],
+    [24, "HSP (Horas Sol Pico)", "Número de horas equivalentes a 1000 W/m² de radiación."],
+    [25, "Potencia pico (Wp)", "Potencia máxima que entrega un panel en condiciones estándar (1000 W/m², 25°C)."],
+    [26, "Tensión de circuito abierto (Voc)", "Voltaje máximo del panel sin carga eléctrica."],
+    [27, "Tensión de máxima potencia (Vmp)", "Voltaje al que el panel entrega su máxima potencia."],
+    [28, "Corriente de cortocircuito (Isc)", "Corriente máxima del panel en cortocircuito."],
+    [29, "Corriente de máxima potencia (Imp)", "Corriente al punto de máxima potencia."],
+    [30, "Eficiencia del panel", "Porcentaje de luz solar convertida en electricidad (18-22% en paneles comerciales)."],
+    [31, "Efecto temperatura", "A mayor temperatura, menor voltaje y potencia del panel."],
+    [32, "Diodo de derivación (bypass)", "Protege el panel ante sombras parciales, evitando puntos calientes."],
+    [33, "Cable solar", "Conductor especial resistente a rayos UV y altas temperaturas (calibre 6-12 AWG)."],
+    [34, "Conectores MC4", "Conectores estandarizados para paneles solares, a prueba de agua y polarización."],
+    [35, "Caja de conexiones DC", "Gabinete que protege fusiones, protecciones y seccionadores del lado de corriente continua."],
+    [36, "Protección de polaridad inversa", "Dispositivo que evita daños si se conecta la batería al revés."],
+    [37, "Fusible solar", "Protección contra sobrecorriente en strings de paneles, de acción rápida."],
+    [38, "Pararrayos", "Protege el sistema contra sobretensiones por rayos."],
+    [39, "SPD (Supresor de sobretensiones)", "Desvía picos de voltaje a tierra."],
+    [40, "Puesta a tierra del sistema solar", "Conexión a tierra de estructuras, inversores y paneles para seguridad."],
+    [41, "Medidor bidireccional", "Mide energía consumida de la red y energía inyectada (on-grid)."],
+    [42, "Autoconsumo", "Uso directo de la energía solar sin inyectar a la red."],
+    [43, "Excedentes de energía", "Energía sobrante que se vierte a la red (Compensación de excedentes colombiana)."],
+    [44, "Resolución CREG 030 de 2018", "Norma colombiana que regula la generación distribuida y compensación de excedentes."],
+    [45, "UPME", "Unidad de Planeación Minero-Energética de Colombia, entidad que regula proyectos solares."],
+    [46, "RETIE", "Reglamento Técnico de Instalaciones Eléctricas, aplicable a sistemas solares en Colombia."],
+    [47, "Facturación de excedentes", "Mecanismo por el cual la empresa de energía paga la energía sobrante inyectada."],
+    [48, "Dimensionamiento del sistema", "Cálculo de paneles, baterías e inversor según consumo diario y radiación solar."],
+    [49, "Curva de consumo diario", "Registro de kWh consumidos en una vivienda o negocio."],
+    [50, "Simulador solar", "Software como PVsyst o HelioScope para predecir producción solar."],
+    [51, "Monitor solar", "Sistema que muestra en tiempo real producción, consumo y estado de baterías."],
+    [52, "Aplicación móvil del inversor", "Interfaz remota para monitorear el sistema solar."],
+    [53, "Fallo: panel sin voltaje", "Posibles causas: diodo bypass dañado, panel roto, mal contacto MC4."],
+    [54, "Fallo: baja generación", "Causas: suciedad, sombras, degradación, inclinación incorrecta."],
+    [55, "Limpieza de paneles", "Agua y esponja suave, evitar rayones; frecuencia cada 2-6 meses."],
+    [56, "Microinversor", "Inversor pequeño por panel, mejora producción en casos de sombra parcial."],
+    [57, "Optimizador de potencia", "Dispositivo por panel que ajusta voltaje y corriente, usado con inversor central."],
+    [58, "String solar", "Conjunto de paneles conectados en serie para elevar voltaje."],
+    [59, "Conexión en serie", "Aumenta voltaje, suma voltajes de cada panel."],
+    [60, "Conexión en paralelo", "Aumenta corriente, suma corrientes de cada panel."],
+    [61, "Conexión mixta (serie-paralelo)", "Combina ambas para lograr voltaje y corriente deseados."],
+    [62, "Reparación de panel roto", "Requiere reemplazo de celda; generalmente no rentable, se reemplaza el panel."],
+    [63, "Test de polaridad", "Verificar que positivo y negativo no estén invertidos."],
+    [64, "Medición de Voc e Isc", "Con multímetro, confirmar que panel entrega valores cercanos a especificaciones."],
+    [65, "Termografía solar", "Cámara térmica para detectar celdas calientes o diodos dañados."],
+    [66, "Resistencia de aislamiento", "Prueba con megóhmetro para medir fuga a tierra en paneles."],
+    [67, "Polímero EVA", "Encapsulado de paneles que protege celdas; puede amarillearse y reducir eficiencia."],
+    [68, "Vidrio templado", "Cubierta frontal del panel, resistente a impactos."],
+    [69, "Marco de aluminio", "Estructura perimetral del panel, resistente a corrosión."],
+    [70, "Caja de protección", "Aloja fusibles, interruptores y SPD del sistema."],
+    [71, "Interruptor seccionador DC", "Corta la corriente de los paneles para mantenimiento."],
+    [72, "Calibración de inversor", "Ajuste de parámetros según tipo de batería (litio, AGM, voltajes)."],
+    [73, "Fallo de inversor (error)", "Revisar códigos de error en pantalla (sobrecarga, batería baja, overtemperatura)."],
+    [74, "Reparación de inversor", "Generalmente cambio de fusibles, ventiladores o placas de potencia."],
+    [75, "Garantía de panel", "Garantía de producción (80% por 25 años) y garantía de defectos (10-12 años)."],
+    [76, "Garantía de batería", "Diferente según tecnología: litio 10 años, AGM 2-5 años."],
+    [77, "Repuestos comunes", "Conectores MC4, diodos, fusibles, protectores SPD, ventiladores de inversor."],
+    [78, "Almacén solar especializado", "Tienda que vende repuestos como RemSolar, Surtisolar en Colombia."],
+    [79, "Instalación en techo", "Estructura anclada a vigas, con separación para ventilación."],
+    [80, "Instalación en tierra", "Estructura anclada en pedestales de concreto, orientación ajustable."],
+    [81, "Poste solar (autosoportado)", "Estructura para alumbrado público solar con panel integrado."],
+    [82, "Bomba solar", "Sistema para extraer agua usando energía solar, sin baterías (funciona de día)."],
+    [83, "Refrigerador solar", "Electrodoméstico DC diseñado para funcionar directamente con batería solar."],
+    [84, "Cargador solar portátil", "Pequeño panel con regulador para cargar celulares o baterías externas."],
+    [85, "Estación de carga solar", "Punto para vehículos eléctricos con paneles."],
+    [86, "Kit solar básico", "Panel + controlador + batería + inversor, de 500-2000W para vivienda rural."],
+    [87, "Software de diseño solar", "PVGIS, SolarGIS para consultar radiación solar en Colombia."],
+    [88, "Certificación RETIE de instalador", "Obligatoria para empresas de instalaciones solares en Colombia."],
+    [89, "Seguro del sistema solar", "Cobertura contra daños por rayos, sobrecargas o robo."],
+    [90, "Microgrid solar", "Red local alimentada por paneles y baterías, independiente de la red nacional."],
+    [91, "Alumbrado público solar", "Luminaria LED con panel y batería integrados, sin cableado."],
+    [92, "Batería virtual", "Mecanismo en Colombia donde los excedentes se guardan como créditos en la factura."],
+    [93, "Incentivos tributarios", "Deducción de impuestos a la renta por inversión en paneles solares (Ley 1715 de 2014)."],
+    [94, "Ley 1715 de 2014", "Ley colombiana que promueve energías renovables no convencionales."],
+    [95, "Fondo de Energías No Convencionales (FENOGE)", "Entidad que financia proyectos solares en Colombia."],
+    [96, "Venta de energía", "Posibilidad de vender energía solar a la red en Colombia si se supera el autoconsumo."],
+    [97, "Huella solar", "Reducción de emisiones de CO2 al usar energía solar."],
+    [98, "Casa solar pasiva", "Diseño arquitectónico que maximiza ganancia solar térmica (no eléctrica)."],
+    [99, "Curso de energía solar SENA", "Formación técnica en instalación y mantenimiento de sistemas solares en Colombia."],
+    [100, "Feria Solar Colombia", "Evento anual de expositores de tecnología solar en Bogotá o Medellín."]
+  ];
+
+  // --------------------- LOCALSTORAGE Y PROGRESO -------------------------
+  let progreso = {};
+  const STORAGE_KEY = "energiaSolarProgreso";
+
+  function cargarProgreso() {
+    const guardado = localStorage.getItem(STORAGE_KEY);
+    if (guardado) progreso = JSON.parse(guardado);
+    else {
+      progreso = {};
+      for (let i = 1; i <= 100; i++) progreso[i] = { aciertos: 0, fallos: 0 };
+    }
+  }
+  function guardarProgreso() { localStorage.setItem(STORAGE_KEY, JSON.stringify(progreso)); }
+  function registrarResultado(id, acierto) {
+    if (!progreso[id]) progreso[id] = { aciertos: 0, fallos: 0 };
+    if (acierto) progreso[id].aciertos += 1;
+    else progreso[id].fallos += 1;
+    guardarProgreso();
+    renderDashboard();
+    renderListado(document.getElementById("filtroListado")?.value || "");
+    if (window.currentCardId === id && document.getElementById("infoProgresoCard")) {
+      document.getElementById("infoProgresoCard").innerHTML = `📊 Concepto ${id} · ✅ ${progreso[id].aciertos} aciertos · ❌ ${progreso[id].fallos} fallos`;
+    }
+  }
+
+  function renderDashboard() {
+    let totalAciertos = 0, totalFallos = 0, conceptosConAcierto = 0;
+    for (let i = 1; i <= 100; i++) {
+      const p = progreso[i] || { aciertos: 0, fallos: 0 };
+      totalAciertos += p.aciertos;
+      totalFallos += p.fallos;
+      if (p.aciertos > 0) conceptosConAcierto++;
+    }
+    const porcentaje = (conceptosConAcierto / 100) * 100;
+    document.getElementById("globalProgressFill").style.width = `${porcentaje}%`;
+    document.getElementById("globalProgressText").innerHTML = `${conceptosConAcierto} de 100 conceptos con al menos 1 acierto (${Math.round(porcentaje)}%).`;
+    document.getElementById("statsContainer").innerHTML = `
+      <div class="stat-card"><div class="stat-number">${totalAciertos}</div>✅ Aciertos totales</div>
+      <div class="stat-card"><div class="stat-number">${totalFallos}</div>❌ Fallos</div>
+      <div class="stat-card"><div class="stat-number">${conceptosConAcierto}</div>📘 Conceptos dominados</div>
+      <div class="stat-card"><div class="stat-number">${Math.round((totalAciertos/(totalAciertos+totalFallos+0.001))*100)}%</div>📊 Tasa éxito</div>
+    `;
+  }
+
+  function renderListado(filtro = "") {
+    const container = document.getElementById("conceptosListadoContainer");
+    container.innerHTML = "";
+    const filtroLower = filtro.toLowerCase();
+    for (let c of conceptosData) {
+      const [id, nombre, definicion] = c;
+      const prog = progreso[id] || { aciertos: 0, fallos: 0 };
+      if (filtro && !nombre.toLowerCase().includes(filtroLower) && !definicion.toLowerCase().includes(filtroLower)) continue;
+      const div = document.createElement("div");
+      div.className = "concepto-item";
+      div.innerHTML = `<div class="concepto-titulo">${id}. ${nombre}</div>
+                       <div class="concepto-desc">☀️ ${definicion.substring(0, 150)}${definicion.length > 150 ? '…' : ''}</div>
+                       <span class="badge-progreso">✅ ${prog.aciertos} aciertos · ❌ ${prog.fallos} fallos</span>`;
+      container.appendChild(div);
+    }
+  }
+
+  // --------------------- PRÁCTICA: TRES MODOS -------------------------
+  let currentMode = "concepto_def";
+  let cardsArray = [];
+  let currentCardIndex = 0;
+  let currentCardId = null;
+  let currentOrdenarPalabras = [];
+  let shuffledPalabras = [];
+  let selectedOrder = [];
+  let ordenarRespuestaCorrecta = "";
+
+  const practicaDiv = document.getElementById("practicaContainer");
+
+  function construirCards() {
+    cardsArray = conceptosData.map(item => {
+      const [id, concepto, definicion] = item;
+      if (currentMode === "concepto_def") {
+        return { id, pregunta: `☀️ Concepto: ${concepto}`, respuestaCorrecta: definicion };
+      } else if (currentMode === "def_concepto") {
+        let defCorta = definicion.length > 130 ? definicion.substring(0, 127) + "…" : definicion;
+        return { id, pregunta: `✍️ Definición: "${defCorta}"`, respuestaCorrecta: concepto };
+      } else {
+        return { id, concepto, definicion };
+      }
+    });
+  }
+
+  function renderFlashcardNormal() {
+    if (!cardsArray.length) return;
+    const card = cardsArray[currentCardIndex];
+    currentCardId = card.id;
+    practicaDiv.innerHTML = `
+      <div class="flashcard">
+        <div class="pregunta">${card.pregunta}</div>
+        <button id="mostrarRespuestaBtn" class="btn">📖 Mostrar respuesta</button>
+        <div id="respuestaDiv" class="respuesta-oculta"><strong>Respuesta:</strong><br>${card.respuestaCorrecta}</div>
+        <div style="margin-top:1rem;">
+          <button id="aciertoBtn" class="btn btn-acierto" disabled>✅ Acierto</button>
+          <button id="falloBtn" class="btn btn-fallo" disabled>❌ Fallo</button>
+        </div>
+        <button id="siguienteCardBtn" class="btn" style="margin-top:1rem;">⏩ Siguiente</button>
+        <p id="infoProgresoCard" style="margin-top:0.8rem;">📊 ${currentMode === "concepto_def" ? "Concepto" : "Definición"} ${card.id} · ✅ ${progreso[card.id]?.aciertos||0} aciertos · ❌ ${progreso[card.id]?.fallos||0} fallos</p>
+      </div>
+    `;
+    document.getElementById("mostrarRespuestaBtn").onclick = () => {
+      const respDiv = document.getElementById("respuestaDiv");
+      if (respDiv.style.display !== "block") {
+        respDiv.style.display = "block";
+        document.getElementById("aciertoBtn").disabled = false;
+        document.getElementById("falloBtn").disabled = false;
+      }
+    };
+    document.getElementById("aciertoBtn").onclick = () => { registrarResultado(currentCardId, true); siguienteNormal(); };
+    document.getElementById("falloBtn").onclick = () => { registrarResultado(currentCardId, false); siguienteNormal(); };
+    document.getElementById("siguienteCardBtn").onclick = () => siguienteNormal();
+  }
+
+  function siguienteNormal() {
+    currentCardIndex = (currentCardIndex + 1) % cardsArray.length;
+    renderFlashcardNormal();
+  }
+
+  function inicializarOrdenar() {
+    const card = cardsArray[currentCardIndex];
+    currentCardId = card.id;
+    const definicionOriginal = card.definicion;
+    ordenarRespuestaCorrecta = definicionOriginal;
+    let palabras = definicionOriginal.split(/\s+/).filter(p => p.length > 0);
+    currentOrdenarPalabras = [...palabras];
+    shuffledPalabras = [...palabras];
+    for (let i = shuffledPalabras.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [shuffledPalabras[i], shuffledPalabras[j]] = [shuffledPalabras[j], shuffledPalabras[i]];
+    }
+    selectedOrder = [];
+    renderOrdenarUI();
+  }
+
+  function renderOrdenarUI() {
+    const card = cardsArray[currentCardIndex];
+    const prog = progreso[currentCardId] || { aciertos:0, fallos:0 };
+    let palabrasHTML = shuffledPalabras.map(p => `<button class="palabra-btn" data-palabra="${p.replace(/"/g, '&quot;')}">${p}</button>`).join('');
+    let ordenHTML = selectedOrder.map(p => `<span style="background:#fdf4df; padding:0.2rem 0.6rem; margin:0.2rem; border-radius:1rem;">${p}</span>`).join(' ');
+    if (ordenHTML === "") ordenHTML = "<em>Haz clic en las palabras en el orden correcto...</em>";
+    practicaDiv.innerHTML = `
+      <div class="flashcard">
+        <h3>🧩 Ordena la definición de:</h3>
+        <div class="pregunta" style="background:#fdf4df;">📌 ${card.concepto}</div>
+        <div class="orden-actual"><strong>Tu orden actual:</strong><br> ${ordenHTML}</div>
+        <div class="palabras-baraja" id="palabrasBaraja">${palabrasHTML}</div>
+        <div>
+          <button id="resetOrdenBtn" class="btn" style="background:#eaddc5;">🔁 Reiniciar orden</button>
+          <button id="comprobarOrdenBtn" class="btn btn-primary">✓ Comprobar</button>
+        </div>
+        <button id="siguienteOrdenBtn" class="btn" style="margin-top:1rem;">⏩ Siguiente concepto</button>
+        <p id="infoProgresoCard">✅ ${prog.aciertos} aciertos · ❌ ${prog.fallos} fallos</p>
+        <div id="feedbackOrden" style="margin-top:0.8rem; font-weight:bold;"></div>
+      </div>
+    `;
+    document.querySelectorAll(".palabra-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const palabra = btn.getAttribute("data-palabra");
+        const idx = shuffledPalabras.indexOf(palabra);
+        if (idx !== -1) {
+          shuffledPalabras.splice(idx, 1);
+          selectedOrder.push(palabra);
+          renderOrdenarUI();
+        }
+      });
+    });
+    document.getElementById("resetOrdenBtn").onclick = () => {
+      shuffledPalabras = [...currentOrdenarPalabras];
+      for (let i = shuffledPalabras.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [shuffledPalabras[i], shuffledPalabras[j]] = [shuffledPalabras[j], shuffledPalabras[i]];
+      }
+      selectedOrder = [];
+      renderOrdenarUI();
+    };
+    document.getElementById("comprobarOrdenBtn").onclick = () => {
+      const ordenUsuario = selectedOrder.join(" ");
+      if (ordenUsuario === ordenarRespuestaCorrecta) {
+        document.getElementById("feedbackOrden").innerHTML = "<span style='color:#27ae60'>✅ ¡Correcto! Definición ordenada correctamente.</span>";
+        registrarResultado(currentCardId, true);
+        setTimeout(() => siguienteOrdenar(), 1200);
+      } else {
+        document.getElementById("feedbackOrden").innerHTML = `<span style='color:#e74c3c'>❌ Incorrecto. La definición correcta es: "${ordenarRespuestaCorrecta}"</span>`;
+        registrarResultado(currentCardId, false);
+        setTimeout(() => siguienteOrdenar(), 2000);
+      }
+      document.getElementById("comprobarOrdenBtn").disabled = true;
+      document.querySelectorAll(".palabra-btn").forEach(b => b.style.pointerEvents = "none");
+      setTimeout(() => {
+        if (document.getElementById("comprobarOrdenBtn")) document.getElementById("comprobarOrdenBtn").disabled = false;
+        document.querySelectorAll(".palabra-btn").forEach(b => b.style.pointerEvents = "auto");
+      }, 2000);
+    };
+    document.getElementById("siguienteOrdenBtn").onclick = () => siguienteOrdenar();
+  }
+
+  function siguienteOrdenar() {
+    currentCardIndex = (currentCardIndex + 1) % cardsArray.length;
+    inicializarOrdenar();
+  }
+
+  function setMode(mode) {
+    currentMode = mode;
+    construirCards();
+    currentCardIndex = 0;
+    if (mode === "ordenar") inicializarOrdenar();
+    else renderFlashcardNormal();
+  }
+
+  function initUI() {
+    document.querySelectorAll(".nav-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const viewId = btn.getAttribute("data-view");
+        document.querySelectorAll(".view").forEach(v => v.classList.remove("active-view"));
+        document.getElementById(viewId).classList.add("active-view");
+        document.querySelectorAll(".nav-btn").forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+        if (viewId === "listado") renderListado(document.getElementById("filtroListado").value);
+        if (viewId === "dashboard") renderDashboard();
+        if (viewId === "practica") setMode(currentMode);
+      });
+    });
+    document.getElementById("modoConceptoDef").addEventListener("click", () => {
+      currentMode = "concepto_def";
+      setMode("concepto_def");
+      document.getElementById("modoConceptoDef").classList.add("btn-primary");
+      document.getElementById("modoDefConcepto").classList.remove("btn-primary");
+      document.getElementById("modoOrdenar").classList.remove("btn-primary");
+    });
+    document.getElementById("modoDefConcepto").addEventListener("click", () => {
+      currentMode = "def_concepto";
+      setMode("def_concepto");
+      document.getElementById("modoDefConcepto").classList.add("btn-primary");
+      document.getElementById("modoConceptoDef").classList.remove("btn-primary");
+      document.getElementById("modoOrdenar").classList.remove("btn-primary");
+    });
+    document.getElementById("modoOrdenar").addEventListener("click", () => {
+      currentMode = "ordenar";
+      setMode("ordenar");
+      document.getElementById("modoOrdenar").classList.add("btn-primary");
+      document.getElementById("modoConceptoDef").classList.remove("btn-primary");
+      document.getElementById("modoDefConcepto").classList.remove("btn-primary");
+    });
+    document.getElementById("resetProgresoBtn").addEventListener("click", () => {
+      if (confirm("¿Reiniciar todo el progreso? Se perderán aciertos y fallos.")) {
+        for (let i = 1; i <= 100; i++) progreso[i] = { aciertos: 0, fallos: 0 };
+        guardarProgreso();
+        renderDashboard();
+        renderListado(document.getElementById("filtroListado")?.value || "");
+        if (currentMode === "ordenar") inicializarOrdenar();
+        else if (currentMode !== "ordenar") renderFlashcardNormal();
+      }
+    });
+    document.getElementById("filtroListado").addEventListener("input", (e) => renderListado(e.target.value));
+  }
+
+  window.addEventListener("DOMContentLoaded", () => {
+    cargarProgreso();
+    construirCards();
+    setMode("concepto_def");
+    renderDashboard();
+    renderListado();
+    initUI();
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,2045 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OrtografíaExpert — Domina el Castellano</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+<style>
+  :root {
+    --ink: #1a1209;
+    --parchment: #f5f0e8;
+    --amber: #c8860a;
+    --amber-light: #f0a830;
+    --amber-pale: #fdf3dc;
+    --rust: #8b3a1a;
+    --sage: #4a6741;
+    --sage-light: #7a9e76;
+    --cream: #faf7f2;
+    --border: #d4c9b0;
+    --shadow: rgba(26,18,9,0.12);
+    --correct: #2d6a4f;
+    --error: #8b1a1a;
+    --warn: #7a5c00;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--parchment);
+    color: var(--ink);
+    min-height: 100vh;
+    background-image:
+      radial-gradient(ellipse at 20% 0%, rgba(200,134,10,0.08) 0%, transparent 50%),
+      radial-gradient(ellipse at 80% 100%, rgba(139,58,26,0.06) 0%, transparent 50%),
+      url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23c8860a' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  }
+
+  /* ──────────── TYPOGRAPHY ──────────── */
+  h1,h2,h3,.serif { font-family: 'Playfair Display', serif; }
+
+  /* ──────────── SCREENS ──────────── */
+  .screen { display: none; min-height: 100vh; }
+  .screen.active { display: flex; }
+
+  /* ──────────── AUTH SCREEN ──────────── */
+  #authScreen {
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+  }
+
+  .auth-card {
+    background: var(--cream);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 2.5rem;
+    width: 100%;
+    max-width: 440px;
+    box-shadow: 0 20px 60px var(--shadow), 0 1px 0 rgba(255,255,255,0.8) inset;
+    animation: slideUp 0.5s ease;
+  }
+
+  @keyframes slideUp {
+    from { opacity:0; transform: translateY(30px); }
+    to   { opacity:1; transform: translateY(0); }
+  }
+
+  .auth-logo {
+    text-align: center;
+    margin-bottom: 2rem;
+  }
+
+  .auth-logo .logo-icon {
+    width: 64px;
+    height: 64px;
+    background: linear-gradient(135deg, var(--amber), var(--rust));
+    border-radius: 16px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    margin-bottom: 1rem;
+    box-shadow: 0 8px 24px rgba(200,134,10,0.35);
+  }
+
+  .auth-logo h1 {
+    font-size: 1.8rem;
+    font-weight: 900;
+    color: var(--ink);
+    margin: 0;
+  }
+
+  .auth-logo p {
+    color: var(--amber);
+    font-size: 0.85rem;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin: 0.25rem 0 0;
+  }
+
+  .form-label {
+    font-weight: 600;
+    font-size: 0.85rem;
+    color: var(--ink);
+    margin-bottom: 0.4rem;
+  }
+
+  .form-control {
+    background: white;
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    padding: 0.7rem 1rem;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.95rem;
+    color: var(--ink);
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+
+  .form-control:focus {
+    border-color: var(--amber);
+    box-shadow: 0 0 0 3px rgba(200,134,10,0.15);
+    outline: none;
+    background: white;
+    color: var(--ink);
+  }
+
+  .btn-primary-app {
+    background: linear-gradient(135deg, var(--amber), var(--rust));
+    border: none;
+    border-radius: 10px;
+    color: white;
+    font-weight: 600;
+    font-size: 0.95rem;
+    padding: 0.75rem 1.5rem;
+    width: 100%;
+    cursor: pointer;
+    transition: all 0.2s;
+    box-shadow: 0 4px 12px rgba(200,134,10,0.3);
+    font-family: 'DM Sans', sans-serif;
+  }
+
+  .btn-primary-app:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 20px rgba(200,134,10,0.4);
+  }
+
+  .btn-primary-app:active { transform: translateY(0); }
+
+  .auth-toggle {
+    text-align: center;
+    margin-top: 1.25rem;
+    font-size: 0.88rem;
+    color: #666;
+  }
+
+  .auth-toggle a {
+    color: var(--amber);
+    font-weight: 600;
+    text-decoration: none;
+    cursor: pointer;
+  }
+
+  .tab-switcher {
+    display: flex;
+    background: var(--parchment);
+    border-radius: 10px;
+    padding: 4px;
+    margin-bottom: 1.5rem;
+    border: 1px solid var(--border);
+  }
+
+  .tab-btn {
+    flex: 1;
+    padding: 0.5rem;
+    border: none;
+    background: transparent;
+    border-radius: 8px;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 600;
+    font-size: 0.88rem;
+    cursor: pointer;
+    color: #888;
+    transition: all 0.2s;
+  }
+
+  .tab-btn.active {
+    background: white;
+    color: var(--ink);
+    box-shadow: 0 2px 8px var(--shadow);
+  }
+
+  /* ──────────── MAIN APP ──────────── */
+  #appScreen { flex-direction: column; }
+
+  /* NAVBAR */
+  .app-nav {
+    background: var(--ink);
+    padding: 0.75rem 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 16px rgba(0,0,0,0.25);
+  }
+
+  .nav-brand {
+    font-family: 'Playfair Display', serif;
+    font-weight: 900;
+    font-size: 1.3rem;
+    color: var(--amber-light);
+    margin: 0;
+    flex: 1;
+  }
+
+  .nav-brand span { color: white; }
+
+  .nav-user {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    cursor: pointer;
+  }
+
+  .avatar {
+    width: 36px;
+    height: 36px;
+    background: linear-gradient(135deg, var(--amber), var(--rust));
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 0.85rem;
+    color: white;
+    font-family: 'Playfair Display', serif;
+  }
+
+  .nav-user-name {
+    color: rgba(255,255,255,0.85);
+    font-size: 0.88rem;
+    font-weight: 500;
+  }
+
+  .btn-logout {
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.15);
+    color: rgba(255,255,255,0.7);
+    border-radius: 8px;
+    padding: 0.35rem 0.75rem;
+    font-size: 0.8rem;
+    cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+    transition: all 0.2s;
+  }
+
+  .btn-logout:hover { background: rgba(255,255,255,0.15); color: white; }
+
+  /* APP TABS */
+  .app-tabs {
+    background: white;
+    border-bottom: 2px solid var(--border);
+    display: flex;
+    padding: 0 1.5rem;
+    gap: 0;
+    overflow-x: auto;
+  }
+
+  .app-tab {
+    padding: 0.9rem 1.25rem;
+    border: none;
+    background: transparent;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 600;
+    font-size: 0.85rem;
+    color: #888;
+    cursor: pointer;
+    white-space: nowrap;
+    border-bottom: 3px solid transparent;
+    margin-bottom: -2px;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+
+  .app-tab:hover { color: var(--ink); }
+  .app-tab.active { color: var(--amber); border-bottom-color: var(--amber); }
+
+  /* APP CONTENT */
+  .app-content { flex: 1; padding: 2rem 1.5rem; max-width: 1100px; margin: 0 auto; width: 100%; }
+
+  .page { display: none; }
+  .page.active { display: block; animation: fadeIn 0.3s ease; }
+
+  @keyframes fadeIn { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:translateY(0); } }
+
+  /* ──────────── DASHBOARD ──────────── */
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 1rem;
+    margin-bottom: 2rem;
+  }
+
+  .stat-card {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 1.25rem;
+    text-align: center;
+    box-shadow: 0 2px 8px var(--shadow);
+    transition: transform 0.2s;
+  }
+
+  .stat-card:hover { transform: translateY(-3px); }
+
+  .stat-number {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.2rem;
+    font-weight: 900;
+    color: var(--amber);
+    line-height: 1;
+    margin-bottom: 0.25rem;
+  }
+
+  .stat-label {
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: #888;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .progress-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(28px, 1fr));
+    gap: 4px;
+    margin-bottom: 2rem;
+  }
+
+  .tech-dot {
+    aspect-ratio: 1;
+    border-radius: 6px;
+    background: var(--border);
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.55rem;
+    font-weight: 700;
+    color: transparent;
+    position: relative;
+  }
+
+  .tech-dot.completed { background: var(--sage); color: white; }
+  .tech-dot.in-progress { background: var(--amber-light); color: white; }
+  .tech-dot:hover { transform: scale(1.3); z-index: 5; }
+
+  .tech-dot-tooltip {
+    position: absolute;
+    bottom: 130%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--ink);
+    color: white;
+    padding: 0.3rem 0.6rem;
+    border-radius: 6px;
+    font-size: 0.72rem;
+    white-space: nowrap;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.2s;
+    z-index: 100;
+  }
+
+  .tech-dot:hover .tech-dot-tooltip { opacity: 1; }
+
+  /* ──────────── TECHNIQUES LIST ──────────── */
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+  }
+
+  .section-title {
+    font-size: 1.5rem;
+    font-weight: 900;
+    margin: 0;
+    flex: 1;
+  }
+
+  .filter-pills {
+    display: flex;
+    gap: 0.4rem;
+    flex-wrap: wrap;
+  }
+
+  .pill {
+    padding: 0.3rem 0.8rem;
+    border-radius: 20px;
+    border: 1.5px solid var(--border);
+    background: white;
+    font-size: 0.78rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: 'DM Sans', sans-serif;
+  }
+
+  .pill.active, .pill:hover { background: var(--amber); border-color: var(--amber); color: white; }
+
+  .technique-card {
+    background: white;
+    border: 1.5px solid var(--border);
+    border-radius: 14px;
+    padding: 1.25rem 1.5rem;
+    margin-bottom: 0.75rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    box-shadow: 0 1px 4px var(--shadow);
+  }
+
+  .technique-card:hover { border-color: var(--amber); transform: translateX(4px); }
+  .technique-card.completed { border-left: 4px solid var(--sage); }
+  .technique-card.in-progress { border-left: 4px solid var(--amber); }
+
+  .tech-number {
+    background: var(--parchment);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.78rem;
+    font-weight: 500;
+    color: var(--amber);
+    flex-shrink: 0;
+  }
+
+  .technique-card.completed .tech-number { background: var(--sage); color: white; border-color: var(--sage); }
+
+  .tech-info { flex: 1; min-width: 0; }
+  .tech-name { font-weight: 700; font-size: 0.95rem; margin-bottom: 0.2rem; }
+  .tech-desc { font-size: 0.82rem; color: #666; margin: 0; line-height: 1.5; }
+  .tech-cat { font-size: 0.72rem; font-weight: 600; color: var(--amber); text-transform: uppercase; letter-spacing: 0.05em; }
+
+  .tech-status { flex-shrink: 0; }
+
+  .badge-done { background: var(--sage); color: white; padding: 0.2rem 0.6rem; border-radius: 10px; font-size: 0.72rem; font-weight: 600; }
+  .badge-new { background: var(--parchment); color: #888; padding: 0.2rem 0.6rem; border-radius: 10px; font-size: 0.72rem; font-weight: 600; }
+
+  /* ──────────── PRACTICE SCREEN ──────────── */
+  .practice-header {
+    background: white;
+    border: 1.5px solid var(--border);
+    border-radius: 16px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 2px 8px var(--shadow);
+  }
+
+  .technique-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    background: var(--amber-pale);
+    border: 1px solid rgba(200,134,10,0.3);
+    border-radius: 8px;
+    padding: 0.3rem 0.8rem;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--amber);
+    margin-bottom: 0.75rem;
+  }
+
+  .practice-title {
+    font-size: 1.4rem;
+    font-weight: 900;
+    margin-bottom: 0.5rem;
+  }
+
+  .practice-explanation {
+    font-size: 0.9rem;
+    color: #555;
+    line-height: 1.7;
+    margin: 0;
+  }
+
+  .practice-example {
+    background: var(--parchment);
+    border-left: 3px solid var(--amber);
+    border-radius: 0 8px 8px 0;
+    padding: 0.75rem 1rem;
+    margin-top: 1rem;
+    font-size: 0.88rem;
+    font-style: italic;
+    color: var(--ink);
+  }
+
+  .writing-zone {
+    background: white;
+    border: 1.5px solid var(--border);
+    border-radius: 16px;
+    padding: 1.5rem;
+    margin-bottom: 1rem;
+    box-shadow: 0 2px 8px var(--shadow);
+  }
+
+  .writing-prompt {
+    background: linear-gradient(135deg, var(--amber-pale), white);
+    border: 1px solid rgba(200,134,10,0.25);
+    border-radius: 10px;
+    padding: 1rem 1.25rem;
+    margin-bottom: 1rem;
+    font-size: 0.9rem;
+    color: var(--ink);
+    line-height: 1.6;
+  }
+
+  .writing-prompt strong { color: var(--rust); }
+
+  #practiceTextarea {
+    width: 100%;
+    min-height: 140px;
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    padding: 1rem;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.95rem;
+    line-height: 1.7;
+    color: var(--ink);
+    resize: vertical;
+    transition: border-color 0.2s;
+    background: #fffef9;
+  }
+
+  #practiceTextarea:focus {
+    outline: none;
+    border-color: var(--amber);
+    box-shadow: 0 0 0 3px rgba(200,134,10,0.1);
+  }
+
+  .word-count { text-align: right; font-size: 0.78rem; color: #999; margin-top: 0.5rem; }
+
+  .btn-check-app {
+    background: linear-gradient(135deg, var(--sage), var(--sage-light));
+    border: none;
+    border-radius: 10px;
+    color: white;
+    font-weight: 700;
+    font-size: 0.95rem;
+    padding: 0.8rem 2rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: 'DM Sans', sans-serif;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    box-shadow: 0 4px 12px rgba(74,103,65,0.35);
+  }
+
+  .btn-check-app:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(74,103,65,0.4); }
+  .btn-check-app:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+
+  .btn-next-app {
+    background: linear-gradient(135deg, var(--amber), var(--rust));
+    border: none;
+    border-radius: 10px;
+    color: white;
+    font-weight: 700;
+    font-size: 0.95rem;
+    padding: 0.8rem 2rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: 'DM Sans', sans-serif;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    box-shadow: 0 4px 12px rgba(200,134,10,0.3);
+  }
+
+  .btn-next-app:hover { transform: translateY(-2px); }
+
+  /* ──────────── FEEDBACK AREA ──────────── */
+  .feedback-area {
+    background: white;
+    border: 1.5px solid var(--border);
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px var(--shadow);
+    display: none;
+    animation: slideUp 0.4s ease;
+  }
+
+  .feedback-area.visible { display: block; }
+
+  .feedback-header {
+    padding: 1rem 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .feedback-header.excellent { background: linear-gradient(90deg, #d4edda, #f0f9f4); }
+  .feedback-header.good { background: linear-gradient(90deg, #fff3cd, #fffbf0); }
+  .feedback-header.needs-work { background: linear-gradient(90deg, #f8d7da, #fdf5f5); }
+
+  .feedback-icon { font-size: 1.75rem; }
+
+  .feedback-title { font-weight: 800; font-size: 1.1rem; margin: 0; }
+  .feedback-subtitle { font-size: 0.82rem; color: #666; margin: 0; }
+
+  .feedback-body { padding: 1.5rem; }
+
+  .feedback-score {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1.25rem;
+  }
+
+  .score-ring {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Playfair Display', serif;
+    font-weight: 900;
+    font-size: 1.3rem;
+    flex-shrink: 0;
+  }
+
+  .score-ring.high { background: #d4edda; color: var(--correct); }
+  .score-ring.med  { background: #fff3cd; color: var(--warn); }
+  .score-ring.low  { background: #f8d7da; color: var(--error); }
+
+  .score-details { flex: 1; }
+  .score-label { font-weight: 700; font-size: 0.88rem; margin-bottom: 0.5rem; }
+
+  .progress { height: 8px; border-radius: 4px; background: var(--parchment); margin-bottom: 0.3rem; }
+  .progress-bar { border-radius: 4px; transition: width 1s ease; }
+
+  .feedback-section { margin-bottom: 1.25rem; }
+  .feedback-section-title {
+    font-weight: 700;
+    font-size: 0.82rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: #888;
+    margin-bottom: 0.6rem;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+
+  .feedback-item {
+    padding: 0.7rem 0.9rem;
+    border-radius: 8px;
+    font-size: 0.88rem;
+    line-height: 1.5;
+    margin-bottom: 0.4rem;
+    display: flex;
+    gap: 0.6rem;
+    align-items: flex-start;
+  }
+
+  .feedback-item.correct { background: #f0f9f4; color: var(--correct); border-left: 3px solid var(--sage); }
+  .feedback-item.error   { background: #fdf5f5; color: var(--error);   border-left: 3px solid #dc3545; }
+  .feedback-item.tip     { background: #fffbf0; color: var(--warn);    border-left: 3px solid var(--amber); }
+
+  .feedback-item-icon { flex-shrink: 0; margin-top: 1px; }
+
+  .annotated-text {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.92rem;
+    line-height: 1.8;
+    padding: 1rem;
+    background: var(--parchment);
+    border-radius: 8px;
+    margin-bottom: 1rem;
+  }
+
+  .annotated-text .err-word { background: #ffd0d0; border-bottom: 2px solid #dc3545; border-radius: 2px; cursor: help; }
+  .annotated-text .ok-word  { background: #d0f0dc; border-bottom: 2px solid var(--sage); border-radius: 2px; }
+
+  .loading-feedback {
+    text-align: center;
+    padding: 2.5rem;
+    color: #888;
+  }
+
+  .spinner-custom {
+    width: 36px;
+    height: 36px;
+    border: 3px solid var(--border);
+    border-top-color: var(--amber);
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+    margin: 0 auto 1rem;
+  }
+
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* ──────────── PROFILE ──────────── */
+  .profile-card {
+    background: white;
+    border: 1.5px solid var(--border);
+    border-radius: 20px;
+    overflow: hidden;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 2px 8px var(--shadow);
+  }
+
+  .profile-cover {
+    height: 100px;
+    background: linear-gradient(135deg, var(--ink) 0%, #3d2a10 50%, var(--rust) 100%);
+    position: relative;
+  }
+
+  .profile-avatar-large {
+    width: 80px;
+    height: 80px;
+    background: linear-gradient(135deg, var(--amber), var(--rust));
+    border-radius: 50%;
+    border: 4px solid white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Playfair Display', serif;
+    font-weight: 900;
+    font-size: 2rem;
+    color: white;
+    position: absolute;
+    bottom: -40px;
+    left: 1.5rem;
+    box-shadow: 0 4px 16px var(--shadow);
+  }
+
+  .profile-info { padding: 3.5rem 1.5rem 1.5rem; }
+  .profile-name { font-size: 1.5rem; font-weight: 900; margin-bottom: 0.2rem; }
+  .profile-meta { color: #888; font-size: 0.85rem; }
+
+  .achievement-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 0.75rem;
+  }
+
+  .achievement {
+    background: white;
+    border: 1.5px solid var(--border);
+    border-radius: 12px;
+    padding: 1rem;
+    text-align: center;
+    transition: all 0.2s;
+    cursor: default;
+  }
+
+  .achievement.unlocked { border-color: var(--amber); background: var(--amber-pale); }
+  .achievement.unlocked:hover { transform: translateY(-3px); box-shadow: 0 4px 12px rgba(200,134,10,0.2); }
+
+  .achievement-icon { font-size: 1.75rem; margin-bottom: 0.4rem; display: block; }
+  .achievement-name { font-size: 0.72rem; font-weight: 700; color: var(--ink); }
+  .achievement.locked .achievement-icon { filter: grayscale(1); opacity: 0.4; }
+  .achievement.locked .achievement-name { color: #aaa; }
+
+  /* TOAST */
+  .toast-container { position: fixed; bottom: 1.5rem; right: 1.5rem; z-index: 9999; }
+
+  .toast-app {
+    background: var(--ink);
+    color: white;
+    border-radius: 12px;
+    padding: 0.9rem 1.25rem;
+    margin-top: 0.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 0.88rem;
+    font-weight: 500;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+    animation: toastIn 0.3s ease;
+    max-width: 320px;
+  }
+
+  @keyframes toastIn { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:translateY(0); } }
+
+  .toast-app.success { border-left: 4px solid var(--sage-light); }
+  .toast-app.error   { border-left: 4px solid #dc3545; }
+  .toast-app.info    { border-left: 4px solid var(--amber-light); }
+
+  /* NAV badge */
+  .nav-badge { background: var(--amber); color: white; border-radius: 10px; font-size: 0.65rem; font-weight: 700; padding: 1px 5px; }
+
+  /* Search */
+  .search-input {
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    padding: 0.55rem 1rem 0.55rem 2.4rem;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.88rem;
+    background: white url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%23888' stroke-width='2'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cpath d='M21 21l-4.35-4.35'/%3E%3C/svg%3E") no-repeat 0.75rem center;
+    width: 100%;
+    max-width: 280px;
+    transition: border-color 0.2s;
+  }
+
+  .search-input:focus { outline:none; border-color: var(--amber); }
+
+  /* Responsive */
+  @media(max-width:576px) {
+    .app-content { padding: 1rem; }
+    .stats-grid { grid-template-columns: repeat(2,1fr); }
+    .achievement-grid { grid-template-columns: repeat(3,1fr); }
+  }
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════════
+     AUTH SCREEN
+══════════════════════════════════════════════ -->
+<div id="authScreen" class="screen active">
+  <div class="auth-card">
+    <div class="auth-logo">
+      <div class="logo-icon">✍️</div>
+      <h1>OrtografíaExpert</h1>
+      <p>Domina el castellano escrito</p>
+    </div>
+
+    <div class="tab-switcher">
+      <button class="tab-btn active" onclick="switchAuthTab('login')">Iniciar sesión</button>
+      <button class="tab-btn" onclick="switchAuthTab('register')">Registrarse</button>
+    </div>
+
+    <!-- LOGIN -->
+    <div id="loginForm">
+      <div class="mb-3">
+        <label class="form-label">Correo electrónico</label>
+        <input type="email" class="form-control" id="loginEmail" placeholder="tu@correo.com">
+      </div>
+      <div class="mb-4">
+        <label class="form-label">Contraseña</label>
+        <input type="password" class="form-control" id="loginPassword" placeholder="••••••••">
+      </div>
+      <button class="btn-primary-app" onclick="handleLogin()">
+        <i class="bi bi-box-arrow-in-right me-2"></i>Entrar
+      </button>
+      <div class="auth-toggle">
+        ¿No tienes cuenta? <a onclick="switchAuthTab('register')">Regístrate gratis</a>
+      </div>
+      <div class="auth-toggle mt-2" style="font-size:0.78rem;color:#aaa;">
+        Demo rápida: correo cualquiera + contraseña cualquiera
+      </div>
+    </div>
+
+    <!-- REGISTER -->
+    <div id="registerForm" style="display:none">
+      <div class="mb-3">
+        <label class="form-label">Nombre completo</label>
+        <input type="text" class="form-control" id="regName" placeholder="Ana García López">
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Correo electrónico</label>
+        <input type="email" class="form-control" id="regEmail" placeholder="tu@correo.com">
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Contraseña</label>
+        <input type="password" class="form-control" id="regPassword" placeholder="Mínimo 6 caracteres">
+      </div>
+      <div class="mb-4">
+        <label class="form-label">Nivel de escritura</label>
+        <select class="form-control" id="regLevel">
+          <option value="principiante">Principiante</option>
+          <option value="intermedio" selected>Intermedio</option>
+          <option value="avanzado">Avanzado</option>
+        </select>
+      </div>
+      <button class="btn-primary-app" onclick="handleRegister()">
+        <i class="bi bi-person-plus me-2"></i>Crear cuenta
+      </button>
+      <div class="auth-toggle">
+        ¿Ya tienes cuenta? <a onclick="switchAuthTab('login')">Inicia sesión</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     APP SCREEN
+══════════════════════════════════════════════ -->
+<div id="appScreen" class="screen">
+
+  <!-- NAVBAR -->
+  <nav class="app-nav">
+    <h1 class="nav-brand">Ortografía<span>Expert</span></h1>
+    <div class="nav-user" onclick="switchPage('perfil')">
+      <div class="avatar" id="navAvatar">A</div>
+      <span class="nav-user-name" id="navUserName">Usuario</span>
+    </div>
+    <button class="btn-logout" onclick="handleLogout()"><i class="bi bi-box-arrow-right"></i> Salir</button>
+  </nav>
+
+  <!-- TABS -->
+  <div class="app-tabs">
+    <button class="app-tab active" onclick="switchPage('dashboard')" id="tab-dashboard">
+      <i class="bi bi-grid-3x3-gap"></i> Inicio
+    </button>
+    <button class="app-tab" onclick="switchPage('tecnicas')" id="tab-tecnicas">
+      <i class="bi bi-journal-bookmark"></i> Técnicas
+    </button>
+    <button class="app-tab" onclick="switchPage('practica')" id="tab-practica">
+      <i class="bi bi-pencil-square"></i> Practicar
+    </button>
+    <button class="app-tab" onclick="switchPage('perfil')" id="tab-perfil">
+      <i class="bi bi-person-circle"></i> Perfil
+    </button>
+  </div>
+
+  <!-- CONTENT -->
+  <div class="app-content">
+
+    <!-- ─── DASHBOARD ─── -->
+    <div class="page active" id="page-dashboard">
+      <div class="section-header">
+        <h2 class="section-title serif">¡Bienvenido, <span id="dashName">escritor</span>!</h2>
+      </div>
+
+      <div class="stats-grid" id="statsGrid">
+        <div class="stat-card">
+          <div class="stat-number" id="statCompleted">0</div>
+          <div class="stat-label">Técnicas dominadas</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number" id="statPracticed">0</div>
+          <div class="stat-label">Ejercicios hechos</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number" id="statScore">—</div>
+          <div class="stat-label">Puntuación media</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number" id="statStreak">0🔥</div>
+          <div class="stat-label">Días seguidos</div>
+        </div>
+      </div>
+
+      <div class="mb-3">
+        <h5 class="serif fw-bold mb-1">Tu progreso — 100 técnicas</h5>
+        <p class="text-muted" style="font-size:.82rem">Cada cuadro representa una técnica ortográfica. Verde = dominada, ámbar = en curso.</p>
+      </div>
+      <div class="progress-grid" id="progressGrid"></div>
+
+      <div class="mt-4">
+        <h5 class="serif fw-bold mb-3">Continúa donde lo dejaste</h5>
+        <div class="technique-card" onclick="startPractice(nextTechniqueId())">
+          <div class="tech-number" id="nextTechNum">01</div>
+          <div class="tech-info">
+            <div class="tech-cat" id="nextTechCat">Acentuación</div>
+            <div class="tech-name" id="nextTechName">Cargando...</div>
+            <p class="tech-desc" id="nextTechDesc"></p>
+          </div>
+          <div class="tech-status">
+            <span style="color:var(--amber);font-size:1.3rem"><i class="bi bi-arrow-right-circle-fill"></i></span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ─── TÉCNICAS ─── -->
+    <div class="page" id="page-tecnicas">
+      <div class="section-header">
+        <h2 class="section-title serif">100 Técnicas Ortográficas</h2>
+      </div>
+      <div class="d-flex gap-2 flex-wrap mb-3">
+        <input type="text" class="search-input" id="searchInput" placeholder="Buscar técnica..." oninput="filterTechniques()">
+        <div class="filter-pills" id="filterPills">
+          <button class="pill active" onclick="setFilter('all',this)">Todas</button>
+          <button class="pill" onclick="setFilter('acentuacion',this)">Acentuación</button>
+          <button class="pill" onclick="setFilter('grafias',this)">Grafías</button>
+          <button class="pill" onclick="setFilter('puntuacion',this)">Puntuación</button>
+          <button class="pill" onclick="setFilter('palabras',this)">Palabras</button>
+          <button class="pill" onclick="setFilter('errores',this)">Errores frecuentes</button>
+          <button class="pill" onclick="setFilter('avanzado',this)">Avanzado</button>
+        </div>
+      </div>
+      <div id="techniquesList"></div>
+    </div>
+
+    <!-- ─── PRÁCTICA ─── -->
+    <div class="page" id="page-practica">
+      <div class="practice-header">
+        <div class="technique-badge">
+          <i class="bi bi-mortarboard-fill"></i>
+          <span id="practiceCategory">Acentuación</span>
+          · Técnica <span id="practiceTechNum">01</span>
+        </div>
+        <h2 class="practice-title serif" id="practiceTechName">Palabras agudas</h2>
+        <p class="practice-explanation" id="practiceTechExplanation">Cargando...</p>
+        <div class="practice-example" id="practiceTechExample"></div>
+      </div>
+
+      <div class="writing-zone">
+        <div class="writing-prompt" id="writingPrompt">
+          Escribe una carta o párrafo aplicando esta técnica. Sé creativo y usa las formas indicadas.
+        </div>
+        <textarea id="practiceTextarea" placeholder="Escribe tu texto aquí...&#10;&#10;Cuanto más detallado y variado sea tu texto, mejor será la retroalimentación."></textarea>
+        <div class="word-count"><span id="wordCount">0</span> palabras</div>
+      </div>
+
+      <div class="d-flex gap-2 flex-wrap align-items-center mb-3">
+        <button class="btn-check-app" id="checkBtn" onclick="checkWriting()">
+          <i class="bi bi-magic"></i> Analizar con IA
+        </button>
+        <button class="btn-next-app" onclick="nextTechnique()" id="nextBtn" style="display:none">
+          Siguiente técnica <i class="bi bi-arrow-right"></i>
+        </button>
+        <span style="font-size:.8rem;color:#aaa" id="practiceHint">Escribe al menos 20 palabras para un análisis completo</span>
+      </div>
+
+      <div class="feedback-area" id="feedbackArea">
+        <div class="loading-feedback" id="feedbackLoading">
+          <div class="spinner-custom"></div>
+          <div>Analizando tu texto con inteligencia artificial…</div>
+          <div style="font-size:.78rem;color:#bbb;margin-top:.3rem">Esto puede tardar unos segundos</div>
+        </div>
+        <div id="feedbackContent" style="display:none"></div>
+      </div>
+    </div>
+
+    <!-- ─── PERFIL ─── -->
+    <div class="page" id="page-perfil">
+      <div class="profile-card">
+        <div class="profile-cover"></div>
+        <div class="profile-info">
+          <div class="profile-avatar-large" id="profileAvatar">A</div>
+          <h3 class="profile-name serif" id="profileName">Nombre de Usuario</h3>
+          <p class="profile-meta" id="profileMeta">Nivel intermedio · Miembro desde hoy</p>
+          <div class="d-flex gap-3 mt-3 flex-wrap">
+            <div><strong id="pStatCompleted">0</strong><span class="text-muted ms-1" style="font-size:.82rem">técnicas</span></div>
+            <div><strong id="pStatPracticed">0</strong><span class="text-muted ms-1" style="font-size:.82rem">ejercicios</span></div>
+            <div><strong id="pStatScore">—</strong><span class="text-muted ms-1" style="font-size:.82rem">puntuación media</span></div>
+          </div>
+        </div>
+      </div>
+
+      <h5 class="serif fw-bold mb-3">Logros desbloqueados</h5>
+      <div class="achievement-grid" id="achievementGrid"></div>
+
+      <div class="mt-4">
+        <h5 class="serif fw-bold mb-3">Últimas prácticas</h5>
+        <div id="historyList">
+          <div class="text-muted" style="font-size:.88rem">Aún no has practicado ninguna técnica.</div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /app-content -->
+</div><!-- /appScreen -->
+
+<!-- TOAST CONTAINER -->
+<div class="toast-container" id="toastContainer"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+// ══════════════════════════════════════════
+// DATA — 100 TÉCNICAS ORTOGRÁFICAS
+// ══════════════════════════════════════════
+const TECHNIQUES = [
+  // I. ACENTUACIÓN (1-15)
+  {id:1,  cat:'acentuacion', name:'Palabras agudas', short:'Tilde en palabras agudas',
+   explanation:'Las palabras agudas llevan tilde cuando terminan en vocal, en "n" o en "s". La sílaba tónica es la última.',
+   example:'café, camión, compás, mamá — pero: comer, reloj, ciudad (sin tilde)',
+   prompt:'Escribe un párrafo sobre una cafetería describiendo los sabores, los olores y lo que pides. Usa varias palabras agudas con y sin tilde.'},
+
+  {id:2,  cat:'acentuacion', name:'Palabras graves o llanas', short:'Tilde en palabras llanas',
+   explanation:'Las palabras graves llevan tilde cuando terminan en consonante distinta de "n" o "s".',
+   example:'árbol, lápiz, fácil, mártir — pero: casa, señor, comen (sin tilde)',
+   prompt:'Describe un jardín botánico con sus árboles, flores y características. Usa palabras graves con y sin tilde.'},
+
+  {id:3,  cat:'acentuacion', name:'Palabras esdrújulas y sobreesdrújulas', short:'Esdrújulas: siempre tilde',
+   explanation:'Las palabras esdrújulas tienen el acento en la antepenúltima sílaba y SIEMPRE llevan tilde, sin excepción. Lo mismo aplica a las sobreesdrújulas.',
+   example:'música, pájaro, mágico, rápido, dígamelo, dándoselo',
+   prompt:'Escribe sobre un músico que toca en un escenario público. Incluye el mayor número posible de palabras esdrújulas.'},
+
+  {id:4,  cat:'acentuacion', name:'Tilde diacrítica básica', short:'tú/tu, él/el, sí/si, más/mas',
+   explanation:'La tilde diacrítica diferencia palabras de igual forma pero distinto significado o función gramatical.',
+   example:'tú (pronombre) / tu (posesivo) · él (pronombre) / el (artículo) · sí (afirmación) / si (conjunción) · más (cantidad) / mas (pero)',
+   prompt:'Escribe un diálogo donde dos personajes discuten si él o ella tiene más razón. Usa las formas con y sin tilde correctamente.'},
+
+  {id:5,  cat:'acentuacion', name:'Tilde en interrogativos y exclamativos', short:'qué, cómo, cuándo, dónde, quién',
+   explanation:'Los pronombres y adverbios interrogativos y exclamativos siempre llevan tilde: qué, quién, cuál, cuándo, dónde, cómo, cuánto.',
+   example:'¿Qué hora es? · No sé cuándo llegará. · ¡Qué sorpresa! · Dime cómo llegaste.',
+   prompt:'Escribe una entrevista periodística con cinco preguntas y sus respuestas. Usa todos los interrogativos con tilde.'},
+
+  {id:6,  cat:'acentuacion', name:'Demostrativos sin tilde', short:'este, ese, aquel: sin tilde desde 2010',
+   explanation:'Desde la Ortografía de la RAE de 2010, los demostrativos (este, ese, aquel y variantes) NO llevan tilde en ningún caso.',
+   example:'Este libro es interesante. / Ese hombre llegó tarde. / Aquel día fue especial.',
+   prompt:'Describe tres objetos de tu habitación usando los demostrativos este, ese, aquel y sus variantes en género y número.'},
+
+  {id:7,  cat:'acentuacion', name:'Solo sin tilde', short:'"solo" nunca lleva tilde',
+   explanation:'El adverbio "solo" (= solamente) y el adjetivo "solo" (= sin compañía) se escriben sin tilde. La RAE eliminó la tilde diacrítica de "sólo" en 2010.',
+   example:'Vino solo al teatro. / Solo quiero un café. / Vive solo desde hace años.',
+   prompt:'Escribe sobre alguien que prefiere hacer cosas solo. Usa "solo" varias veces como adjetivo y como adverbio.'},
+
+  {id:8,  cat:'acentuacion', name:'Diptongos y su tilde', short:'La tilde recae sobre la vocal abierta del diptongo',
+   explanation:'En un diptongo (unión de vocal abierta + cerrada o dos cerradas), la tilde va sobre la vocal abierta. Si la tilde recae sobre la vocal cerrada, se rompe el diptongo (hiato).',
+   example:'también, también, huésped — con hiato: día, río (tilde en vocal cerrada rompe el diptongo)',
+   prompt:'Escribe un texto sobre el océano y el río. Usa palabras con diptongo (tierra, bien) y con hiato (río, día).'},
+
+  {id:9,  cat:'acentuacion', name:'El hiato y su tilde', short:'Hiato: vocal cerrada tónica siempre lleva tilde',
+   explanation:'Cuando una vocal cerrada tónica (i, u) está junto a una vocal abierta (a, e, o), se produce un hiato y la vocal cerrada lleva tilde aunque no lo pidan las reglas generales.',
+   example:'baúl, raíz, país, maíz, leído, oído, caído, reúne, búho',
+   prompt:'Escribe sobre la naturaleza del país donde vives: su geografía, su flora y fauna. Usa hiatos como país, raíz, maíz.'},
+
+  {id:10, cat:'acentuacion', name:'Tilde en palabras compuestas', short:'Adverbios en -mente conservan la tilde del adjetivo',
+   explanation:'Los adverbios terminados en -mente conservan la tilde del adjetivo base si este la tenía. En palabras compuestas unidas con guion, cada elemento mantiene su tilde propia.',
+   example:'fácilmente, rápidamente, ágilmente — teórico-práctico, físico-químico',
+   prompt:'Escribe instrucciones de cocina usando adverbios en -mente (rápidamente, fácilmente, cuidadosamente).'},
+
+  {id:11, cat:'acentuacion', name:'Monosílabos sin tilde', short:'Los monosílabos no llevan tilde salvo casos diacríticos',
+   explanation:'Los monosílabos no se tildan porque no hay ambigüedad de acento. Solo llevan tilde cuando son diacríticos (tú, él, sí, más, té, dé, sé).',
+   example:'fue, fui, vio, dio, pie, fe, sol, mar — pero: tú, él, sí, más, té, dé',
+   prompt:'Escribe un poema breve o un párrafo lírico usando muchos monosílabos. Cuida cuáles llevan tilde diacrítica.'},
+
+  {id:12, cat:'acentuacion', name:'Acentuación de latinismos y extranjerismos', short:'Extranjerismos adaptados siguen las reglas del español',
+   explanation:'Las palabras extranjeras incorporadas al español se acentúan según las reglas españolas: fútbol, béisbol, líder, máster, referéndum.',
+   example:'fútbol, béisbol, líder, máster, referéndum, récord, wéstern, dónut',
+   prompt:'Escribe sobre deportes y actividades modernas. Usa palabras de origen extranjero adaptadas al español con su tilde correcta.'},
+
+  {id:13, cat:'acentuacion', name:'Tilde en palabras interrogativas indirectas', short:'Qué, cómo, cuándo llevan tilde también en preguntas indirectas',
+   explanation:'Los interrogativos llevan tilde aunque estén dentro de oraciones enunciativas indirectas y no vayan entre signos de interrogación.',
+   example:'No sé qué decir. / Ignoro dónde vive. / Me preguntó cuándo llegaba.',
+   prompt:'Escribe sobre alguien que se enfrenta a decisiones difíciles y no sabe qué hacer, cómo actuar ni cuándo decidir.'},
+
+  {id:14, cat:'acentuacion', name:'Relativos sin tilde', short:'que, como, cuando, donde: sin tilde en función relativa',
+   explanation:'Cuando "que, como, cuando, donde, quien" funcionan como conjunciones o relativos (no interrogativos), no llevan tilde.',
+   example:'El libro que leí / La ciudad donde nací / El día cuando llegó / Hazlo como quieras',
+   prompt:'Describe un lugar especial para ti usando oraciones de relativo con donde, cuando, que, como y quien.'},
+
+  {id:15, cat:'acentuacion', name:'Revisión sistemática del acento', short:'Protocolo final de revisión de tildes',
+   explanation:'Todo buen escritor revisa la acentuación al final como paso sistemático: leer cada palabra y preguntarse si es aguda, grave o esdrújula, y si le corresponde tilde.',
+   example:'Releer despacio, sílaba por sílaba, toda palabra de más de dos sílabas es el mejor método.',
+   prompt:'Escribe una carta formal a un editor presentando tu libro. Luego explica qué palabras revisaste más cuidadosamente y por qué.'},
+
+  // II. GRAFÍAS (16-35)
+  {id:16, cat:'grafias', name:'Uso de B y V — regla del imperfecto', short:'Imperfecto de -AR y verbos en -bir con B',
+   explanation:'El pretérito imperfecto de los verbos de la 1ª conjugación siempre se escribe con B: amaba, cantaba. Los verbos terminados en -bir se escriben con B (escribir, recibir), salvo vivir, servir y hervir.',
+   example:'amaba, jugaba, cantaba — escribir, recibir, prohibir (con B) — vivir, servir (con V)',
+   prompt:'Escribe un recuerdo de infancia en imperfecto (jugaba, corría, escribía) y usa verbos como escribir, recibir.'},
+
+  {id:17, cat:'grafias', name:'Uso de B y V — regla del verbo IR', short:'El verbo "ir" usa V en presente',
+   explanation:'Todas las formas del presente de indicativo, subjuntivo e imperativo del verbo IR se escriben con V: voy, vas, va, vamos, vais, van, vaya, ve.',
+   example:'voy al mercado / ¿Vas tú también? / Vayan despacio / Ve con cuidado',
+   prompt:'Escribe un itinerario de viaje usando el verbo ir en todas sus formas de presente.'},
+
+  {id:18, cat:'grafias', name:'La H muda — verbos con H', short:'Haber, hacer, hablar, hallar y sus formas',
+   explanation:'Todos los verbos haber, hacer, hablar, habitar, hallar y sus formas conjugadas se escriben con H. También las palabras que empiezan por hie-, hue-, hui-, hia-.',
+   example:'había, hacía, hablamos — hielo, hueso, huir, hierro, huevo, hiato',
+   prompt:'Escribe sobre una historia que ocurre en un lugar nevado (hielo, hierro, humo). Usa las formas de haber y hacer.'},
+
+  {id:19, cat:'grafias', name:'G y J ante E e I', short:'Distinguir ge/je, gi/ji',
+   explanation:'El sonido /x/ ante e, i puede escribirse con G (genio, girar) o con J (jefe, jinete). No hay una regla única; depende de cada palabra.',
+   example:'G: genio, geología, gigante, gimnasio, giro / J: jefe, jinete, jirafa, jengibre, eje',
+   prompt:'Escribe sobre una jirafa en un jardín botánico con un jefe de equipo que es un genio. Usa palabras con ge/je y gi/ji.'},
+
+  {id:20, cat:'grafias', name:'C, Z y QU — el sonido /k/ y /θ/', short:'casa/queso/zapato: la distribución de sonidos',
+   explanation:'El sonido /k/: C ante a, o, u (casa, color, cuna) y QU ante e, i (queso, quiso). El sonido /θ/: Z ante a, o, u (zapato, zona, zumo) y C ante e, i (cero, cifra).',
+   example:'/k/: cama, queso, quiso, cosa — /θ/: zapato, zona, cero, ciudad',
+   prompt:'Escribe un menú de restaurante con entradas, platos principales y postres. Usa palabras con c, z y qu correctamente.'},
+
+  {id:21, cat:'grafias', name:'LL e Y — el yeísmo', short:'llave vs. yema: memorizar cuál lleva LL',
+   explanation:'En zonas de yeísmo, ll e y suenan igual. Hay que memorizar: se escribe LL en calle, llorar, llave, llegar, lleno. Y con Y: yema, ayer, yo, ya, yerno.',
+   example:'ll: llave, llorar, lluvia, llegar, calle, villa / y: yo, ya, yema, ayer, yerno, payaso',
+   prompt:'Escribe sobre un día lluvioso en un pueblo tranquilo. Usa palabras con ll y con y correctamente.'},
+
+  {id:22, cat:'grafias', name:'R y RR — vibrante simple y múltiple', short:'"perro" con RR entre vocales, "rosa" con R al inicio',
+   explanation:'La RR (vibrante múltiple) se escribe entre vocales. La R al inicio de palabra, o tras n, l, s también suena como vibrante múltiple pero se escribe con R simple.',
+   example:'perro, tierra, carro — pero: rosa, honra, alrededor, Israel, subrayar',
+   prompt:'Escribe sobre un perro que vive en el campo junto a un río. Usa palabras con r y rr correctamente.'},
+
+  {id:23, cat:'grafias', name:'M ante B y P', short:'"ambos", "campo": siempre M antes de B o P',
+   explanation:'Antes de B y P siempre se escribe M, nunca N: ambos, cambio, campo, tiempo, también.',
+   example:'ambos, cambio, tambor, campo, tiempo, siempre, también, impulso',
+   prompt:'Escribe sobre los cambios climáticos y su impacto en el medio ambiente. Usa palabras con mb y mp.'},
+
+  {id:24, cat:'grafias', name:'N ante V — enviar, invento', short:'"n" se escribe antes de "v"',
+   explanation:'Antes de V se escribe N, nunca M: enviar, inverso, envolver, convencer, invento.',
+   example:'enviar, inverso, envolver, convencer, invento, invisible, invierno',
+   prompt:'Escribe sobre un inventor que envía sus creaciones a todo el mundo en invierno.'},
+
+  {id:25, cat:'grafias', name:'Grupos consonánticos cultos — CC', short:'-cc- en acción, dirección, corrección',
+   explanation:'El grupo -cc- aparece cuando la raíz tiene dos c seguidas, lo que ocurre en palabras relacionadas con términos como "acto" (acción), "directo" (dirección), "correcto" (corrección).',
+   example:'acción, dirección, corrección, lección, sección, fracción, atracción, elección',
+   prompt:'Escribe sobre una elección política: la dirección del partido, sus acciones y las correcciones necesarias.'},
+
+  {id:26, cat:'grafias', name:'Grupos consonánticos cultos — PT y GN', short:'"apto", "signo": conservar las consonantes cultas',
+   explanation:'Los grupos cultos PT (apto, séptimo, capta) y GN (magnífico, signo, maligno) deben conservarse en la escritura aunque no siempre se pronuncien.',
+   example:'pt: apto, séptimo, captura, concepto, precepto / gn: signo, magnífico, maligno, benigno',
+   prompt:'Escribe sobre un artista magnífico cuyo séptimo cuadro capturó un concepto único de benigna belleza.'},
+
+  {id:27, cat:'grafias', name:'Uso de X', short:'"xilófono", "examen": la X con distintos sonidos',
+   explanation:'La X puede sonar como /ks/ (taxi, examen) o como /s/ en algunas palabras (xilófono, xenofobia). No debe confundirse con la S.',
+   example:'examen, taxi, exacto, éxito, luxo — xilófono, xenofobia, xerografía',
+   prompt:'Escribe sobre el éxito de un músico que toca el xilófono en un examen extraordinario.'},
+
+  {id:28, cat:'grafias', name:'Mayúsculas — nombres propios y títulos', short:'Cuándo usar mayúscula',
+   explanation:'Se usa mayúscula en: inicio de oración, nombres propios de personas y lugares, títulos de obras (primera palabra), organismos e instituciones.',
+   example:'Madrid, Carlos, «Cien años de soledad», la Real Academia Española, el Mediterráneo',
+   prompt:'Escribe la sinopsis de una novela ficticia. Usa mayúsculas correctamente en todos los nombres y títulos.'},
+
+  {id:29, cat:'grafias', name:'Minúsculas — días, meses, gentilicios', short:'Los días, meses y gentilicios van en minúscula',
+   explanation:'En español, a diferencia del inglés, los días de la semana, los meses del año, los gentilicios y los cargos NO van en mayúscula (salvo inicio de oración).',
+   example:'lunes, enero, español, madrileño, el presidente García, el papa Francisco',
+   prompt:'Escribe sobre una reunión que ocurre un lunes de enero entre ciudadanos españoles y franceses.'},
+
+  {id:30, cat:'grafias', name:'Prefijos siempre soldados', short:'exmarido, superrico: prefijos sin guion',
+   explanation:'Desde 2010, la RAE establece que los prefijos se escriben siempre unidos a la base sin guion: exmarido, superrico, anticorrupción, vicepresidente, extravagante.',
+   example:'exmarido, superrico, anticorrupción, vicepresidente, ultramoderno, posgrado',
+   prompt:'Escribe sobre un exdirector que se convirtió en vicepresidente de una organización anticorrupción.'},
+
+  {id:31, cat:'grafias', name:'Distinción entre I e Y', short:'"y" es conjunción, "i" es vocal',
+   explanation:'La Y funciona como vocal solo en posición final de diptongo (rey, buey) o como conjunción copulativa (Pedro y Juan). En todos los demás casos vocálicos se usa I.',
+   example:'y (conjunción): pan y agua / y (vocal en final): rey, buey / i (vocal): isla, imagen',
+   prompt:'Escribe sobre un rey y su reino. Usa la Y como conjunción y como parte de palabras, e I como vocal.'},
+
+  {id:32, cat:'grafias', name:'La letra H en palabras comunes', short:'Memorizar palabras con H que se confunden',
+   explanation:'Muchas palabras con H se confunden con sus homófonas sin H. Hay que memorizar: hola/ola, haber/a ver, hasta/asta, hora/ora, honda/onda.',
+   example:'hola (saludo) / ola (del mar) · hora (tiempo) / ora (reza) · honda (profunda) / onda (vibración)',
+   prompt:'Escribe un texto en el que uses correctamente: hola, ola, hora, hasta, honda y haber. Crea contextos que diferencien claramente su significado.'},
+
+  {id:33, cat:'grafias', name:'Extranjerismos en cursiva vs. adaptados', short:'Software en cursiva; fútbol en redonda',
+   explanation:'Las palabras extranjeras no adaptadas se escriben en cursiva (software, marketing). Las ya incorporadas al español se escriben en redonda con las reglas ortográficas del español (fútbol, béisbol, líder).',
+   example:'Cursiva: software, marketing, fair play, fashion / Redonda: fútbol, líder, béisbol, dónut, esnob',
+   prompt:'Escribe sobre el marketing digital y las redes sociales. Distingue los extranjerismos adaptados de los no adaptados.'},
+
+  {id:34, cat:'grafias', name:'Números: cifras vs. letras', short:'Del uno al nueve en letras; desde 10 en cifras',
+   explanation:'Del uno al nueve se escriben generalmente en letras en texto corrido. Desde el 10 en adelante se usan cifras. Los números al inicio de oración siempre en letras.',
+   example:'Compré tres libros. / El concierto dura 120 minutos. / Dieciséis personas asistieron.',
+   prompt:'Escribe sobre un evento que reunió a 350 personas durante tres días, con actuaciones de 12 artistas.'},
+
+  {id:35, cat:'grafias', name:'Plurales de extranjerismos', short:'"los referéndums", no "referenda"',
+   explanation:'Los plurales de extranjerismos incorporados se forman con las reglas del español: referéndums, currículos, álbumes, clubs o clubes (ambas válidas).',
+   example:'referéndum → referéndums / álbum → álbumes / club → clubes / currículum → currículos',
+   prompt:'Escribe sobre varios álbumes musicales y los clubes de fans que organizan referéndums para elegir el mejor.'},
+
+  // III. PUNTUACIÓN (36-55)
+  {id:36, cat:'puntuacion', name:'El punto final', short:'Cierre de enunciados completos',
+   explanation:'El punto señala el cierre de un enunciado completo. Tras el punto siempre sigue mayúscula. El punto final de un texto va después de la última palabra sin espacio.',
+   example:'El sol brillaba con intensidad. Las calles estaban vacías. Era un día perfecto.',
+   prompt:'Escribe una descripción de una ciudad al amanecer usando puntos correctamente para separar ideas completas.'},
+
+  {id:37, cat:'puntuacion', name:'Punto y seguido vs. punto y aparte', short:'Misma idea: punto y seguido / Nueva idea: punto y aparte',
+   explanation:'El punto y seguido separa oraciones dentro del mismo párrafo (misma idea). El punto y aparte cierra el párrafo y abre uno nuevo con distinto desarrollo.',
+   example:'El punto y seguido continúa la misma línea argumentativa. El punto y aparte introduce una nueva perspectiva.\n\nAquí comienza un nuevo párrafo.',
+   prompt:'Escribe tres párrafos sobre el cambio de estaciones. Usa punto y seguido dentro de cada párrafo y punto y aparte entre ellos.'},
+
+  {id:38, cat:'puntuacion', name:'La coma — enumeraciones', short:'Enumerar elementos separados por coma',
+   explanation:'La coma separa los elementos de una enumeración. Antes del último elemento se usa "y" o "e" (sin coma previa, salvo en la coma serial, que es optativa en español).',
+   example:'Compré pan, leche, aceite y sal. / Rápido, eficiente, preciso y económico.',
+   prompt:'Escribe sobre los ingredientes de tu receta favorita y los pasos necesarios para prepararla. Usa enumeraciones con comas.'},
+
+  {id:39, cat:'puntuacion', name:'La coma — vocativo', short:'El vocativo siempre va entre comas',
+   explanation:'Cuando nos dirigimos a alguien por su nombre o cargo (vocativo), este va aislado por comas. La posición de las comas depende de dónde esté el vocativo.',
+   example:'María, ven aquí. / Ven aquí, María. / Ven, María, aquí inmediatamente.',
+   prompt:'Escribe un diálogo entre dos personas donde se llamen frecuentemente por su nombre. Aplica las comas de vocativo.'},
+
+  {id:40, cat:'puntuacion', name:'La coma — incisos explicativos', short:'Los incisos van entre comas',
+   explanation:'Los incisos o aposiciones explicativas (información adicional no esencial) van entre comas. Si el inciso se elimina, la oración debe seguir teniendo sentido.',
+   example:'El libro, que compré ayer, es magnífico. / Madrid, capital de España, es una ciudad vibrante.',
+   prompt:'Escribe sobre tres personajes históricos usando aposiciones explicativas entre comas (nombre, profesión, época).'},
+
+  {id:41, cat:'puntuacion', name:'Prohibición de la coma de sujeto', short:'NUNCA coma entre sujeto y verbo',
+   explanation:'Es un error gravísimo colocar coma entre el sujeto y el verbo de una oración: "Los estudiantes, aprobaron el examen" es incorrecto. Solo se permite si hay un inciso explicativo entre ambos.',
+   example:'INCORRECTO: Los alumnos, llegaron tarde. / CORRECTO: Los alumnos llegaron tarde.',
+   prompt:'Escribe cinco oraciones sobre la vida escolar. Luego identifica mentalmente el sujeto y el verbo para asegurarte de no separarlos con coma.'},
+
+  {id:42, cat:'puntuacion', name:'El punto y coma', short:'Separar proposiciones yuxtapuestas largas',
+   explanation:'El punto y coma separa proposiciones yuxtapuestas extensas o cuando los elementos de una enumeración ya contienen comas internas.',
+   example:'Llegó tarde al trabajo; sin embargo, terminó la tarea a tiempo. / Los asistentes eran: Ana, directora; Luis, secretario; Marta, tesorera.',
+   prompt:'Escribe sobre los resultados de una investigación con varios apartados. Usa el punto y coma para separar los hallazgos.'},
+
+  {id:43, cat:'puntuacion', name:'Los dos puntos — usos principales', short:'Anuncian enumeraciones, citas y explicaciones',
+   explanation:'Los dos puntos anuncian: enumeraciones, citas textuales, explicaciones o consecuencias, y se usan en saludos de cartas y correos.',
+   example:'Necesitamos: harina, huevos y azúcar. / Dijo: «Volveré mañana». / Estimado señor García:',
+   prompt:'Escribe una carta formal con saludo, tres párrafos y una enumeración. Usa los dos puntos en todos sus usos.'},
+
+  {id:44, cat:'puntuacion', name:'Los puntos suspensivos', short:'Siempre tres puntos, nunca junto al punto final',
+   explanation:'Los puntos suspensivos son siempre exactamente tres (…). Expresan duda, suspense, pausa, o texto omitido. No se añade punto después de ellos al final de oración.',
+   example:'No sé si decirte esto… / El resultado fue… inesperado. / «En el principio fue…» (texto incompleto)',
+   prompt:'Escribe un cuento breve de suspenso usando los puntos suspensivos para crear intriga y pausas dramáticas.'},
+
+  {id:45, cat:'puntuacion', name:'Signos de interrogación y exclamación', short:'En español se abren y cierran: ¿? y ¡!',
+   explanation:'El español es la única lengua que usa signos de apertura y cierre en interrogaciones y exclamaciones. El signo de cierre sustituye al punto final.',
+   example:'¿Qué hora es? / ¡Qué sorpresa tan agradable! / ¿Pero cómo llegaste aquí tan rápido?',
+   prompt:'Escribe una escena emocionante donde un personaje recibe una noticia inesperada. Usa exclamaciones e interrogaciones correctamente.'},
+
+  {id:46, cat:'puntuacion', name:'El paréntesis', short:'Para aclaraciones o datos accesorios',
+   explanation:'El paréntesis encierra información accesoria, aclaraciones, referencias, fechas o datos que interrumpen el discurso sin ser esenciales.',
+   example:'La novela fue publicada en 1967 (año del boom latinoamericano) y tuvo gran éxito.',
+   prompt:'Escribe sobre tres pintores famosos incluyendo entre paréntesis sus fechas de nacimiento, país y movimiento artístico.'},
+
+  {id:47, cat:'puntuacion', name:'La raya en el diálogo', short:'La raya (—) introduce las palabras del personaje',
+   explanation:'La raya introduce las palabras de cada personaje en el diálogo. Si el narrador añade un inciso, también se usa raya para retomarlo.',
+   example:'—Buenos días —dijo ella con una sonrisa—. ¿Cómo has dormido?\n—Muy bien, gracias.',
+   prompt:'Escribe un diálogo de al menos diez intervenciones entre dos personajes. Usa la raya correctamente con e incisos del narrador.'},
+
+  {id:48, cat:'puntuacion', name:'La raya en incisos', short:'La raya enmarca incisos con más énfasis que el paréntesis',
+   explanation:'Las rayas —en parejas— encierran incisos con mayor énfasis que las comas o paréntesis. Se usan cuando el inciso es largo o ya contiene comas internas.',
+   example:'El proyecto —que había sido rechazado tres veces— fue finalmente aprobado por unanimidad.',
+   prompt:'Escribe sobre un descubrimiento científico usando rayas para introducir información complementaria con énfasis.'},
+
+  {id:49, cat:'puntuacion', name:'El guion vs. la raya', short:'Guion (-): une palabras. Raya (—): puntúa',
+   explanation:'El guion corto (-) une palabras compuestas en formación (teórico-práctico) o divide palabras a final de línea. La raya (—) es un signo de puntuación, más larga.',
+   example:'Guion: físico-químico, rojo-anaranjado, siglo XXI-XXII / Raya: —Hola— dijo con alegría—.',
+   prompt:'Escribe sobre un estudio teórico-práctico y un debate filosófico-científico. Usa guiones correctamente.'},
+
+  {id:50, cat:'puntuacion', name:'Las comillas', short:'« » para citas principales, " " y ' ' para citas dentro de citas',
+   explanation:'En español se prefieren las comillas angulares (« ») para citas principales. Las inglesas (" ") se usan en el nivel siguiente y las simples (' ') en el nivel más interno.',
+   example:'El crítico escribió: «La novela es "brillante" y su protagonista, \'inolvidable\'».',
+   prompt:'Escribe una reseña literaria citando fragmentos del libro y opiniones de críticos. Usa los tres niveles de comillas.'},
+
+  {id:51, cat:'puntuacion', name:'Posición de la puntuación respecto a comillas y paréntesis', short:'El punto va fuera si la cita no termina el enunciado',
+   explanation:'Si la cita entre comillas es parte de un enunciado mayor, el punto va fuera de las comillas de cierre. Si la cita es un enunciado completo autónomo, el punto va dentro.',
+   example:'Dijo que era «magnífico». (punto fuera) / «El tiempo es oro.» (punto dentro, cita autónoma)',
+   prompt:'Escribe tres citas de autores famosos integradas en tus propias oraciones y tres citas autónomas. Cuida la posición del punto.'},
+
+  {id:52, cat:'puntuacion', name:'Puntuación del discurso directo', short:'Cómo puntuar las palabras textuales del personaje',
+   explanation:'El discurso directo usa comillas o raya. Las comas, puntos, etc. del fragmento citado van dentro. El verbo de introducción se separa con coma o dos puntos.',
+   example:'María dijo: «Llegaré tarde». / «Llegaré tarde», dijo María. / «Llegaré —prometió— puntualmente».',
+   prompt:'Escribe un fragmento narrativo donde los personajes hablan tanto con comillas como con raya. Practica ambas formas.'},
+
+  {id:53, cat:'puntuacion', name:'Puntuación en listas y enumeraciones verticales', short:'Mayúsculas, minúsculas y puntos en viñetas',
+   explanation:'Si los elementos de una lista son oraciones completas, empiezan con mayúscula y terminan con punto. Si son frases cortas, pueden ir con minúscula y punto y coma o coma.',
+   example:'Reglas: / 1. Llegar puntual. / 2. Escuchar con atención. / 3. Participar activamente.',
+   prompt:'Escribe un manual de bienvenida para nuevos empleados con una lista de normas correctamente puntuadas.'},
+
+  {id:54, cat:'puntuacion', name:'Punto en abreviaturas', short:'Las abreviaturas llevan punto; los símbolos no',
+   explanation:'Las abreviaturas llevan punto (Sr., Dra., pág., núm., etc.) mientras que los símbolos del Sistema Internacional no (km, kg, cm, m²) y tampoco varían en plural.',
+   example:'Abrev.: Sr., Dra., etc., núm., pág. / Símbolos: 25 km, 3 kg, 37 °C, 1 500 m²',
+   prompt:'Escribe un informe técnico con medidas, referencias y abreviaturas. Usa puntos solo en las abreviaturas.'},
+
+  {id:55, cat:'puntuacion', name:'Puntuación de oraciones subordinadas', short:'Cómo puntuar las cláusulas subordinadas',
+   explanation:'Las subordinadas circunstanciales largas al inicio de oración se separan de la principal con coma. Las subordinadas sustantivas y relativas especificativas no llevan coma.',
+   example:'Cuando llegó la primavera, los jardines florecieron. / El libro que leí era interesante (sin coma: especificativa).',
+   prompt:'Escribe un texto descriptivo con oraciones subordinadas de tiempo, condición y causa. Cuida la coma.'},
+
+  // IV. PALABRAS Y LOCUCIONES (56-70)
+  {id:56, cat:'palabras', name:'Palabras compuestas unidas', short:'girasol, bocacalle: compuestos consolidados',
+   explanation:'Las palabras compuestas léxicamente estables se escriben unidas (girasol, bocacalle, mediodía). Las compuestas en formación o inestables pueden llevar guion.',
+   example:'girasol, bocacalle, mediodía, sordomudo, aguardiente, portavoz, malhumor',
+   prompt:'Escribe sobre un día cotidiano usando el mayor número posible de palabras compuestas unidas (mediodía, portavoz, etc.).'},
+
+  {id:57, cat:'palabras', name:'Sino vs. si no', short:'"Sino" adversativo vs. "si no" condicional',
+   explanation:'"Sino" (una sola palabra) es conjunción adversativa: equivale a "pero sí" o "excepto". "Si no" (dos palabras) es conjunción condicional con negación.',
+   example:'No es blanco, sino negro. / No lo haré si no me lo pides bien. / No quiero café, sino té.',
+   prompt:'Escribe un texto argumentativo donde se contrapongan ideas usando "sino" y condiciones con "si no".'},
+
+  {id:58, cat:'palabras', name:'Porque, por qué, porqué, por que', short:'Cuatro formas, cuatro usos distintos',
+   explanation:'"Porque" (conjunción causal), "por qué" (interrogativo), "porqué" (sustantivo: la causa), "por que" (preposición + relativo: la razón por que lucho).',
+   example:'Llegué tarde porque el tráfico era horrible. / ¿Por qué llegaste tarde? / El porqué de su retraso / La causa por que luchamos.',
+   prompt:'Escribe un texto donde expliques el porqué de una decisión importante. Usa las cuatro formas correctamente.'},
+
+  {id:59, cat:'palabras', name:'Demás vs. de más', short:'"demás" (los otros) vs. "de más" (en exceso)',
+   explanation:'"Demás" (junto) significa "el resto" o "los otros". "De más" (separado) significa "en exceso" o "sobrante".',
+   example:'Los demás estudiantes llegaron tarde. / Pagué de más por ese libro. / Eso está de más.',
+   prompt:'Escribe sobre una reunión de grupo donde los demás participantes aportaron de más ideas (demasiadas) al debate.'},
+
+  {id:60, cat:'palabras', name:'Adonde vs. a donde', short:'"adonde" con antecedente; "a donde" sin él',
+   explanation:'"Adonde" (junto) se usa cuando hay un antecedente expreso (el lugar adonde vamos). "A donde" (separado) cuando no hay antecedente.',
+   example:'El pueblo adonde fuimos era hermoso. / Iré a donde tú vayas. / La ciudad adonde me trasladé era grande.',
+   prompt:'Escribe sobre un viaje describiendo los lugares adonde fuiste y mencionando a donde irás en el futuro.'},
+
+  {id:61, cat:'palabras', name:'Conque, con que, con qué', short:'Tres formas con tres funciones',
+   explanation:'"Conque" (conjunción consecutiva), "con que" (preposición + relativo), "con qué" (preposición + interrogativo).',
+   example:'Ya terminaste, conque vete. / El lápiz con que escribo. / ¿Con qué escribes?',
+   prompt:'Escribe un diálogo donde alguien pregunta con qué herramientas trabaja otro, que responde con consecuencias lógicas.'},
+
+  {id:62, cat:'palabras', name:'Asimismo, así mismo, a sí mismo', short:'Tres formas con matices distintos',
+   explanation:'"Asimismo" (adverbio, = también, además), "así mismo" (de ese mismo modo), "a sí mismo" (reflexivo, se refiere al sujeto mismo).',
+   example:'Presentó el informe; asimismo, entregó el presupuesto. / Lo hizo así mismo. / Se valoró a sí mismo honestamente.',
+   prompt:'Escribe sobre un artista que se examina a sí mismo y, asimismo, valora su obra de ese mismo modo en que lo hacen sus críticos.'},
+
+  {id:63, cat:'palabras', name:'Entorno vs. en torno', short:'"entorno" (ambiente) vs. "en torno a" (alrededor de)',
+   explanation:'"Entorno" (sustantivo, = ambiente, contexto) y "en torno a" (locución prepositiva, = alrededor de, aproximadamente).',
+   example:'El entorno natural es fundamental. / La reunión giró en torno al presupuesto. / En torno a las diez llegó.',
+   prompt:'Escribe sobre el entorno urbano de una ciudad y los debates que giran en torno a su desarrollo sostenible.'},
+
+  {id:64, cat:'palabras', name:'Hay, ay, ahí', short:'Tres monosílabos homófonos con significados distintos',
+   explanation:'"Hay" (forma de haber), "ay" (interjección de dolor o sorpresa), "ahí" (adverbio de lugar).',
+   example:'Hay mucho trabajo. / ¡Ay, qué dolor! / El libro está ahí, sobre la mesa.',
+   prompt:'Escribe una escena cotidiana donde alguien busca sus llaves. Usa "hay", "ay" y "ahí" correctamente.'},
+
+  {id:65, cat:'palabras', name:'A ver vs. haber', short:'"a ver" (preposición + infinitivo) vs. "haber" (verbo)',
+   explanation:'"A ver" = preposición A + infinitivo VER. "Haber" = verbo auxiliar o impersonal. Son homófonos que se confunden frecuentemente.',
+   example:'A ver qué pasa. / Vamos a ver la película. / Debe haber una solución. / Puede haber errores.',
+   prompt:'Escribe sobre alguien que va a ver un espectáculo y reflexiona sobre qué podría haber pasado si no hubiera ido.'},
+
+  {id:66, cat:'palabras', name:'Queísmo y dequeísmo', short:'No quitar ni añadir "de" ante "que" indebidamente',
+   explanation:'Queísmo: omitir "de" donde es necesaria ("me alegro que" → correcto: "me alegro DE que"). Dequeísmo: añadir "de" donde no va ("pienso DE que" → correcto: "pienso que").',
+   example:'CORRECTO: Me alegro de que hayas venido. / Pienso que tienes razón. / Dijo que vendría.',
+   prompt:'Escribe un texto reflexivo sobre la amistad. Cuidado especialmente con: me alegro de que, estoy seguro de que, pienso que, creo que.'},
+
+  {id:67, cat:'palabras', name:'Locuciones en dos palabras', short:'"a priori", "in situ", "de hecho": dos palabras',
+   explanation:'Muchas locuciones latinas y españolas se escriben en dos palabras: a priori, in situ, de hecho, en torno a, a través de, sin embargo, no obstante.',
+   example:'a priori, in situ, de hecho, en torno a, a través de, sin embargo, no obstante, es decir',
+   prompt:'Escribe una argumentación académica usando locuciones como "sin embargo", "no obstante", "de hecho", "a través de".'},
+
+  {id:68, cat:'palabras', name:'Escritura de siglas', short:'ONU, ADN: sin puntos y sin variación en plural',
+   explanation:'Las siglas se escriben sin puntos entre las letras (ONU, ADN, ISBN). Su plural no varía ortográficamente (las ONG, los ISBN), salvo cuando se lexicalizan.',
+   example:'ONU, ADN, ISBN, RAE, PIB, ONG, OTAN, DNI — plurales: las ONG, los PIB',
+   prompt:'Escribe un artículo periodístico sobre organismos internacionales usando al menos cinco siglas correctamente.'},
+
+  {id:69, cat:'palabras', name:'Abreviaturas correctas', short:'Sr., Dra., pág.: abreviaturas con punto y género',
+   explanation:'Las abreviaturas llevan punto final y, si tienen forma de género, se adaptan: Sr./Sra., Dr./Dra., Lic./Lda. Algunas van en mayúscula: Ud., SS. MM.',
+   example:'Sr. García, Dra. López, pág. 15, núm. 3, etc., EE. UU., SS. MM. los Reyes',
+   prompt:'Escribe una carta formal a una doctora y un señor director. Usa las abreviaturas de tratamiento correctamente.'},
+
+  {id:70, cat:'palabras', name:'Símbolos del SI sin punto ni plural', short:'25 km, 37 °C: sin punto, sin s de plural',
+   explanation:'Los símbolos del Sistema Internacional (km, kg, m², l, °C, etc.) nunca llevan punto, nunca varían en plural y siempre van separados del número por un espacio.',
+   example:'25 km (no 25 kms. ni 25km) / 37 °C / 1 500 m² / 80 kg / 1,5 l',
+   prompt:'Escribe la descripción técnica de un apartamento (superficie, temperatura, distancias). Usa todos los símbolos correctamente.'},
+
+  // V. ERRORES FRECUENTES (71-85)
+  {id:71, cat:'errores', name:'Homófonos — hola/ola, tubo/tuvo', short:'Palabras que suenan igual pero se escriben diferente',
+   explanation:'Los homófonos suenan igual pero tienen significado y grafía distintos. Los más frecuentes: hola/ola, tubo/tuvo, vello/bello, cima/sima, hecho/echo, bello/vello.',
+   example:'hola (saludo) / ola (del mar) · tubo (objeto) / tuvo (verbo tener) · bello (hermoso) / vello (pelo)',
+   prompt:'Escribe un texto creativo que incluya correctamente al menos seis pares de homófonos en sus contextos apropiados.'},
+
+  {id:72, cat:'errores', name:'Parónimos — actitud/aptitud', short:'Palabras parecidas con significados distintos',
+   explanation:'Los parónimos son palabras de forma similar pero significado diferente: actitud (disposición anímica) / aptitud (capacidad); emigrar (salir) / inmigrar (entrar).',
+   example:'actitud/aptitud · emigrar/inmigrar · infligir/infringir · adaptación/adopción · prever/proveer',
+   prompt:'Escribe sobre un inmigrante con gran aptitud y actitud que ha adoptado la cultura del nuevo país.'},
+
+  {id:73, cat:'errores', name:'Haber impersonal — concordancia', short:'"Hay muchas personas", no "han habido"',
+   explanation:'El verbo "haber" en uso impersonal es invariable: siempre en singular. "Habían muchas personas" y "han habido errores" son incorrectos.',
+   example:'CORRECTO: Hay muchas personas. / Hubo varios problemas. / Ha habido cambios importantes.',
+   prompt:'Escribe una crónica periodística sobre un evento multitudinario. Usa "haber" impersonal correctamente en varios tiempos.'},
+
+  {id:74, cat:'errores', name:'Verbos con dificultades — satisfacer, prever', short:'Satisfacer, prever, maldecir: conjugarlos bien',
+   explanation:'Algunos verbos compuestos se conjugan como su simple: satisfacer como hacer (satisfago, satisfice), prever como ver (previó, no *preveyó), maldecir como decir.',
+   example:'satisfago, satisfice, satisfecho / previó (no preveyó) / maldijo (no maldicó) / contradijo',
+   prompt:'Escribe sobre alguien que satisfizo todas las expectativas, previó los problemas y maldijo su mala suerte.'},
+
+  {id:75, cat:'errores', name:'Participios irregulares', short:'Hecho, dicho, visto, escrito: no *hacido, *decido',
+   explanation:'Varios verbos tienen participios irregulares que deben memorizarse: hacer→hecho, decir→dicho, ver→visto, escribir→escrito, abrir→abierto, poner→puesto.',
+   example:'He hecho, ha dicho, había visto, han escrito, hemos abierto, habían puesto',
+   prompt:'Escribe un diario de una semana de trabajo usando el pretérito perfecto compuesto con participios irregulares.'},
+
+  {id:76, cat:'errores', name:'Leísmo, laísmo y loísmo', short:'Le (persona), la (cosa femenina), lo (cosa masculina)',
+   explanation:'El leísmo (usar "le" como objeto directo para personas masculinas) es aceptado en singular. El laísmo (la para objeto indirecto femenino) y el loísmo (lo para OI) son incorrectos.',
+   example:'Le vi ayer (aceptado) / La dije la verdad (LAÍSMO, incorrecto: Le dije la verdad) / Lo dije que viniera (LOÍSMO, incorrecto)',
+   prompt:'Escribe sobre tres personajes (dos mujeres y un hombre). Cuida el uso correcto de le, la, lo, les, las, los.'},
+
+  {id:77, cat:'errores', name:'Dequeísmo y queísmo avanzado', short:'Verbos que exigen "de que" vs. los que no',
+   explanation:'Algunos verbos exigen la preposición DE antes de QUE (alegrarse de que, arrepentirse de que, acordarse de que). Otros nunca la admiten (pensar que, creer que, decir que).',
+   example:'Me acuerdo de que fue en verano. / Me arrepiento de que no vine. / Creo que tienes razón.',
+   prompt:'Escribe sobre un recuerdo importante. Usa: me alegro de que, me arrepiento de que, creo que, pienso que.'},
+
+  {id:78, cat:'errores', name:'Concordancia en colectivos', short:'"La mayoría aprobó" o "aprobaron": ambas posibles',
+   explanation:'Con sustantivos colectivos (la mayoría, la mitad, el grupo), el verbo puede concordar en singular (con el colectivo) o en plural (con el complemento). Ambas son correctas.',
+   example:'La mayoría de los alumnos aprobó. / La mayoría de los alumnos aprobaron. (ambas correctas)',
+   prompt:'Escribe sobre los resultados de una votación usando sujetos colectivos (la mayoría, la mitad, el grupo, la gente).'},
+
+  {id:79, cat:'errores', name:'El gerundio — usos incorrectos', short:'No usar gerundio de posterioridad ni como modificador de sustantivo',
+   explanation:'El gerundio debe expresar una acción simultánea o anterior a la principal. Es incorrecto el gerundio de posterioridad (*Cayó rompiéndose la pierna) o especificativo (*una ley prohibiendo...).',
+   example:'CORRECTO: Llegó corriendo. / Haciéndolo bien, mejorarás. / INCORRECTO: *Cayó rompiéndose la pierna.',
+   prompt:'Escribe una crónica deportiva de una carrera. Usa gerundios solo cuando expresen acciones simultáneas o anteriores.'},
+
+  {id:80, cat:'errores', name:'Adverbios en -mente acumulados', short:'No encadenar varios adverbios en -mente seguidos',
+   explanation:'Encadenar varios adverbios en -mente resulta pesado: "Lo hizo rápida, eficiente y silenciosamente" es mejor que "rápidamente, eficientemente y silenciosamente".',
+   example:'MEJOR: Lo hizo rápida, eficiente y silenciosamente / EVITAR: rápidamente, eficientemente y silenciosamente',
+   prompt:'Describe cómo trabaja un artesano usando adverbios. Cuando necesites encadenar varios, usa la forma abreviada.'},
+
+  {id:81, cat:'errores', name:'Uso incorrecto de "a nivel de"', short:'Evitar "a nivel de" como comodín vago',
+   explanation:'"A nivel de" es una locución frecuentemente mal usada como comodín. Suele poder sustituirse por "en cuanto a", "respecto a", "en el ámbito de", "desde el punto de vista de".',
+   example:'MEJOR: En cuanto a la economía... / Desde el punto de vista legal... / EVITAR: A nivel de economía...',
+   prompt:'Escribe un análisis sobre educación sin usar "a nivel de". Sustitúyela por locuciones precisas.'},
+
+  {id:82, cat:'errores', name:'Ceceo, seseo y distinción', short:'Adaptar la ortografía a la norma culta, no a la pronunciación',
+   explanation:'Independientemente de si se pronuncia con seseo o distinción, la ortografía es una: "zapato" siempre con Z, "cerveza" con C, "casa" con S. La ortografía no refleja la pronunciación regional.',
+   example:'zapato (con Z), cerveza (c ante e), casa (s) — independientemente de cómo se pronuncie en cada zona.',
+   prompt:'Escribe sobre una celebración en un café. Usa palabras con z, c/e-i y s con perfecta conciencia de su grafía.'},
+
+  {id:83, cat:'errores', name:'Clichés ortográficos digitales', short:'Evitar errores comunes del lenguaje digital',
+   explanation:'El lenguaje digital fomenta errores como omitir tildes, escribir "q" por "que", "xq" por "porque", o usar minúsculas sistemáticas. En textos formales estos usos son incorrectos.',
+   example:'INCORRECTO (digital): q pasa? xq no vienes? / CORRECTO: ¿Qué pasa? ¿Por qué no vienes?',
+   prompt:'Reescribe en español correcto el siguiente mensaje informal: "hola q tal estas, no se xq no viniste ayer, habia muchisima gente"'},
+
+  {id:84, cat:'errores', name:'Hay que vs. a ver', short:'Confusiones frecuentes en el habla y la escritura',
+   explanation:'Además de hay/ay/ahí y a ver/haber, son frecuentes: "echo de menos" (echar de menos) / "hecho de menos" (incorrecto); "voy a ver" / "voy haver" (incorrecto).',
+   example:'CORRECTO: Echo de menos el verano. / Voy a ver qué pasa. / INCORRECTO: *hecho de menos / *voy haver',
+   prompt:'Escribe sobre alguien que echa de menos su ciudad natal. Usa "echo", "hecho", "voy a ver" y "puede haber" correctamente.'},
+
+  {id:85, cat:'errores', name:'Uso correcto de "e" en lugar de "y"', short:'"e" antes de palabra que empieza por i/hi',
+   explanation:'La conjunción "y" se convierte en "e" cuando la palabra siguiente empieza por el sonido /i/ (i- o hi-): "padres e hijos", "ciencia e historia".',
+   example:'padres e hijos / ciencia e historia / francés e inglés / agua e hielo / rápido e inteligente',
+   prompt:'Escribe sobre la relación entre la historia y la identidad cultural. Usa la conjunción "e" donde corresponda.'},
+
+  // VI. AVANZADO (86-100)
+  {id:86, cat:'avanzado', name:'Consulta del DLE y el DPD', short:'Usar el diccionario antes que dudar',
+   explanation:'El Diccionario de la lengua española (DLE) y el Diccionario panhispánico de dudas (DPD) son referencias obligadas. Consultar es signo de rigor, no de ignorancia.',
+   example:'Ante cualquier duda ortográfica: dle.rae.es y dpd.rae.es son las fuentes de autoridad.',
+   prompt:'Escribe sobre tres palabras que siempre te generan dudas ortográficas. Explica cuál es la forma correcta y por qué la confundes.'},
+
+  {id:87, cat:'avanzado', name:'La lectura como práctica ortográfica', short:'Leer buenos textos entrena la ortografía visual',
+   explanation:'La ortografía se interioriza también de forma visual. Leer textos de calidad forma imágenes mentales de las palabras bien escritas que luego se recuperan al escribir.',
+   example:'El escritor que lee mucho comete menos errores porque tiene interiorizado el aspecto visual correcto de las palabras.',
+   prompt:'Escribe sobre un libro que hayas leído y que te haya impresionado. Cuida especialmente la ortografía de todos los títulos y nombres propios.'},
+
+  {id:88, cat:'avanzado', name:'Lectura en voz alta para detectar errores', short:'Lo que el ojo no ve, el oído lo escucha',
+   explanation:'Leer el texto en voz alta permite detectar errores que el ojo omite al leer en silencio, especialmente palabras repetidas, oraciones confusas y puntuación incorrecta.',
+   example:'Al leer en voz alta se detecta: puntuación que impide el ritmo, palabras repetidas, oraciones demasiado largas.',
+   prompt:'Escribe un discurso de dos párrafos diseñado para ser leído en voz alta. Cuida el ritmo, la longitud de las oraciones y la puntuación.'},
+
+  {id:89, cat:'avanzado', name:'Dejar reposar el texto', short:'La distancia temporal mejora la autocorrección',
+   explanation:'El cerebro tiende a leer lo que quiso escribir, no lo que escribió. Dejar reposar el texto y releerlo horas después con ojos frescos es la mejor técnica de autocorrección.',
+   example:'Estrategia profesional: escribir, reposar mínimo una hora, releer, corregir. Para textos importantes: un día de descanso.',
+   prompt:'Escribe un texto sobre el proceso de escritura de un autor. Describe cómo revisa y corrige su obra antes de publicarla.'},
+
+  {id:90, cat:'avanzado', name:'Herramientas digitales de corrección', short:'El corrector ortográfico: aliado, no árbitro',
+   explanation:'Los correctores ortográficos son útiles pero no infalibles: no detectan errores de concordancia, homofonía o puntuación sutiles. Son complemento del criterio propio, nunca sustituto.',
+   example:'El corrector aceptará "tubo" aunque deba ser "tuvo", o no detectará "coma de sujeto" ni el dequeísmo.',
+   prompt:'Escribe una reflexión sobre el uso de la tecnología en la escritura. Argumenta por qué el corrector automático no reemplaza al escritor.'},
+
+  {id:91, cat:'avanzado', name:'Registro personal de errores', short:'Llevar un diario de errores propios para superarlos',
+   explanation:'Identificar los errores recurrentes propios y anotarlos permite diseñar ejercicios específicos. Cada escritor tiene sus puntos débiles particulares.',
+   example:'Un escritor que confunde sistemáticamente "sino/si no" puede hacer ejercicios específicos de ese par hasta automatizar la distinción.',
+   prompt:'Escribe una autoevaluación honesta de tus tres principales dificultades ortográficas y propón un plan para mejorarlas.'},
+
+  {id:92, cat:'avanzado', name:'Tipografía: cursiva para títulos de obras', short:'Los títulos de obras van en cursiva',
+   explanation:'Los títulos de obras (libros, películas, discos, pinturas) se escriben en cursiva: *Cien años de soledad*. Los títulos de artículos, capítulos y canciones van entre comillas.',
+   example:'La novela *Don Quijote de la Mancha* / el capítulo «El ingenioso hidalgo» / el cuadro *Las Meninas*',
+   prompt:'Escribe una reseña cultural que mencione cinco obras (libros, películas, pinturas). Usa la tipografía correcta para cada título.'},
+
+  {id:93, cat:'avanzado', name:'Números ordinales en textos formales', short:'Primero, segundo: en letras en textos formales',
+   explanation:'En textos formales los ordinales se escriben en letras: primero, segundo, vigésimo. Los símbolos 1.º, 2.ª se usan en contextos abreviados. No es correcto "1ro", "2do".',
+   example:'el primer capítulo / el décimo aniversario / el vigésimo congreso — NO: el 1er capítulo (informal)',
+   prompt:'Escribe el programa de un congreso académico con su vigésima edición. Usa los ordinales correctamente escritos.'},
+
+  {id:94, cat:'avanzado', name:'Coherencia tipográfica en el texto', short:'Mantener los mismos criterios en todo el documento',
+   explanation:'Un texto bien escrito mantiene coherencia tipográfica: siempre el mismo sistema de comillas, siempre la misma forma de presentar los títulos, siempre el mismo formato para números.',
+   example:'Si usas « » para citas, úsalas siempre. Si usas cursiva para títulos, aplícalo a todos.',
+   prompt:'Escribe un artículo de opinión con al menos tres citas de autores, tres títulos de obras y una lista. Mantén coherencia tipográfica.'},
+
+  {id:95, cat:'avanzado', name:'El punto de vista en el discurso', short:'Primera, segunda y tercera persona: coherencia y registro',
+   explanation:'El cambio arbitrario de persona gramatical a lo largo de un texto es un error de coherencia. Elegir la persona adecuada al registro y mantenerla es fundamental.',
+   example:'INCOHERENTE: "Cuando uno trabaja mucho, me canso." CORRECTO: "Cuando uno trabaja mucho, se cansa."',
+   prompt:'Escribe un texto de consejos para escritores novatos. Elige entre la segunda persona (tú/vosotros) o la impersonal (uno/se) y mantenla.'},
+
+  {id:96, cat:'avanzado', name:'La humildad ortográfica', short:'Consultar ante la duda es signo de madurez',
+   explanation:'Ningún escritor, por culto que sea, está exento de la duda. Reconocer la incertidumbre y consultar fuentes antes de escribir es el rasgo del escritor maduro.',
+   example:'Los mejores escritores tienen encima del escritorio el diccionario de dudas. La seguridad falsa es el enemigo del rigor.',
+   prompt:'Escribe sobre tres escritores o intelectuales que admiras. Incluye alguna reflexión sobre su rigor en el uso de la lengua.'},
+
+  {id:97, cat:'avanzado', name:'Norma culta y variedades del español', short:'Hay muchos españoles: todos tienen norma culta',
+   explanation:'El español tiene variedad geográfica, pero todas las variedades tienen su norma culta. El seseo, el voseo o el yeísmo no son errores: son diferencias legítimas dentro del sistema.',
+   example:'El español de México, Argentina, España o Colombia tienen normas cultas propias igualmente válidas.',
+   prompt:'Escribe sobre la riqueza de la lengua española en el mundo. Menciona algunas diferencias léxicas o gramaticales entre variedades.'},
+
+  {id:98, cat:'avanzado', name:'La práctica diaria como método', short:'La ortografía perfecta es fruto de la constancia',
+   explanation:'La ortografía no se domina en un curso ni de golpe, sino a través de la práctica diaria, la lectura intensa y la escritura sistemática durante años.',
+   example:'Escribir un diario, hacer resúmenes de textos, practicar dictados o redactar correos cuidados son ejercicios diarios de ortografía.',
+   prompt:'Diseña tu propio plan de práctica ortográfica para los próximos 30 días. Sé concreto: qué harás cada día y cuánto tiempo.'},
+
+  {id:99, cat:'avanzado', name:'El amor por la lengua como motor', short:'Amar el idioma transforma la corrección en placer',
+   explanation:'El escritor que ama genuinamente el castellano no cumple las normas por obligación, sino porque comprende que cada tilde y cada coma correcta son un acto de precisión y belleza.',
+   example:'"Cuidar la lengua no es un deber aburrido; es la forma más alta de respeto hacia quienes nos leen."',
+   prompt:'Escribe una carta a alguien que empieza a aprender español. Transmítele el amor por la lengua y la importancia de escribirla con cuidado.'},
+
+  {id:100, cat:'avanzado', name:'La excelencia ortográfica como horizonte', short:'La perfección no existe; la búsqueda, sí',
+   explanation:'La excelencia ortográfica no es un punto de llegada sino un horizonte que se desplaza. El mejor escritor no es el que nunca duda, sino el que siempre busca mejorar.',
+   example:'"Ningún texto es perfecto, pero sí puede ser cada vez mejor. Esa persecución es lo que distingue al verdadero escritor."',
+   prompt:'Escribe tu manifiesto personal sobre la escritura: qué significa para ti escribir bien, por qué te importa y a qué te comprometes como escritor.'}
+];
+
+// ══════════════════════════════════════════
+// APP STATE
+// ══════════════════════════════════════════
+let currentUser = null;
+let currentTechniqueId = 1;
+let currentFilter = 'all';
+let history = [];
+
+function getUsers() { return JSON.parse(localStorage.getItem('oe_users') || '{}'); }
+function saveUsers(u) { localStorage.setItem('oe_users', JSON.stringify(u)); }
+function getUserData(email) {
+  const users = getUsers();
+  return users[email] || { completed: [], practiced: 0, scores: [], streak: 1, history: [], joinDate: new Date().toLocaleDateString('es-ES') };
+}
+function saveUserData(data) {
+  const users = getUsers();
+  users[currentUser.email] = data;
+  saveUsers(users);
+}
+
+// ══════════════════════════════════════════
+// AUTH
+// ══════════════════════════════════════════
+function switchAuthTab(tab) {
+  document.querySelectorAll('.tab-btn').forEach((b,i) => b.classList.toggle('active', (tab==='login' && i===0)||(tab==='register' && i===1)));
+  document.getElementById('loginForm').style.display = tab === 'login' ? '' : 'none';
+  document.getElementById('registerForm').style.display = tab === 'register' ? '' : 'none';
+}
+
+function handleLogin() {
+  const email = document.getElementById('loginEmail').value.trim();
+  const pass = document.getElementById('loginPassword').value;
+  if (!email || !pass) { showToast('Por favor completa todos los campos', 'error'); return; }
+  const users = getUsers();
+  if (users[email] && users[email].password && users[email].password !== pass) {
+    showToast('Contraseña incorrecta', 'error'); return;
+  }
+  const name = users[email]?.name || email.split('@')[0];
+  currentUser = { email, name };
+  if (!users[email]) { users[email] = { name, password: pass, completed: [], practiced: 0, scores: [], streak: 1, history: [], joinDate: new Date().toLocaleDateString('es-ES') }; saveUsers(users); }
+  loginSuccess();
+}
+
+function handleRegister() {
+  const name = document.getElementById('regName').value.trim();
+  const email = document.getElementById('regEmail').value.trim();
+  const pass = document.getElementById('regPassword').value;
+  const level = document.getElementById('regLevel').value;
+  if (!name || !email || !pass) { showToast('Por favor completa todos los campos', 'error'); return; }
+  if (pass.length < 6) { showToast('La contraseña debe tener al menos 6 caracteres', 'error'); return; }
+  const users = getUsers();
+  users[email] = { name, password: pass, level, completed: [], practiced: 0, scores: [], streak: 1, history: [], joinDate: new Date().toLocaleDateString('es-ES') };
+  saveUsers(users);
+  currentUser = { email, name };
+  showToast('¡Cuenta creada con éxito!', 'success');
+  loginSuccess();
+}
+
+function loginSuccess() {
+  document.getElementById('authScreen').classList.remove('active');
+  document.getElementById('appScreen').classList.add('active');
+  const data = getUserData(currentUser.email);
+  document.getElementById('navAvatar').textContent = currentUser.name[0].toUpperCase();
+  document.getElementById('navUserName').textContent = currentUser.name.split(' ')[0];
+  document.getElementById('dashName').textContent = currentUser.name.split(' ')[0];
+  updateDashboard();
+  renderTechniques();
+  renderProfile();
+  showToast(`¡Bienvenido, ${currentUser.name.split(' ')[0]}!`, 'success');
+}
+
+function handleLogout() {
+  currentUser = null;
+  document.getElementById('appScreen').classList.remove('active');
+  document.getElementById('authScreen').classList.add('active');
+  showToast('Sesión cerrada', 'info');
+}
+
+// ══════════════════════════════════════════
+// NAVIGATION
+// ══════════════════════════════════════════
+function switchPage(page) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.app-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('page-' + page)?.classList.add('active');
+  document.getElementById('tab-' + page)?.classList.add('active');
+  if (page === 'perfil') renderProfile();
+  if (page === 'dashboard') updateDashboard();
+}
+
+// ══════════════════════════════════════════
+// DASHBOARD
+// ══════════════════════════════════════════
+function updateDashboard() {
+  if (!currentUser) return;
+  const data = getUserData(currentUser.email);
+  document.getElementById('statCompleted').textContent = data.completed.length;
+  document.getElementById('statPracticed').textContent = data.practiced;
+  const avg = data.scores.length ? Math.round(data.scores.reduce((a,b)=>a+b,0)/data.scores.length) : null;
+  document.getElementById('statScore').textContent = avg ? avg + '%' : '—';
+  document.getElementById('statStreak').textContent = (data.streak || 1) + '🔥';
+
+  // Progress grid
+  const grid = document.getElementById('progressGrid');
+  grid.innerHTML = '';
+  TECHNIQUES.forEach(t => {
+    const dot = document.createElement('div');
+    dot.className = 'tech-dot' + (data.completed.includes(t.id) ? ' completed' : '');
+    dot.innerHTML = `<span>${t.id}</span><div class="tech-dot-tooltip">#${t.id} ${t.name}</div>`;
+    dot.onclick = () => startPractice(t.id);
+    grid.appendChild(dot);
+  });
+
+  // Next technique
+  const nextId = nextTechniqueId();
+  const next = TECHNIQUES.find(t => t.id === nextId);
+  if (next) {
+    document.getElementById('nextTechNum').textContent = String(next.id).padStart(2,'0');
+    document.getElementById('nextTechCat').textContent = catLabel(next.cat);
+    document.getElementById('nextTechName').textContent = next.name;
+    document.getElementById('nextTechDesc').textContent = next.explanation.substring(0,100)+'...';
+  }
+}
+
+function nextTechniqueId() {
+  if (!currentUser) return 1;
+  const data = getUserData(currentUser.email);
+  for (let i = 1; i <= 100; i++) {
+    if (!data.completed.includes(i)) return i;
+  }
+  return 1;
+}
+
+// ══════════════════════════════════════════
+// TECHNIQUES LIST
+// ══════════════════════════════════════════
+function catLabel(cat) {
+  const m = { acentuacion:'Acentuación', grafias:'Grafías', puntuacion:'Puntuación', palabras:'Palabras y locuciones', errores:'Errores frecuentes', avanzado:'Avanzado' };
+  return m[cat] || cat;
+}
+
+function renderTechniques() {
+  const search = (document.getElementById('searchInput')?.value || '').toLowerCase();
+  const list = document.getElementById('techniquesList');
+  if (!list) return;
+  const data = getUserData(currentUser.email);
+  list.innerHTML = '';
+  TECHNIQUES
+    .filter(t => currentFilter === 'all' || t.cat === currentFilter)
+    .filter(t => !search || t.name.toLowerCase().includes(search) || t.explanation.toLowerCase().includes(search))
+    .forEach(t => {
+      const done = data.completed.includes(t.id);
+      const div = document.createElement('div');
+      div.className = 'technique-card' + (done ? ' completed' : '');
+      div.innerHTML = `
+        <div class="tech-number">${String(t.id).padStart(2,'0')}</div>
+        <div class="tech-info">
+          <div class="tech-cat">${catLabel(t.cat)}</div>
+          <div class="tech-name">${t.name}</div>
+          <p class="tech-desc">${t.short}</p>
+        </div>
+        <div class="tech-status">
+          ${done ? '<span class="badge-done"><i class="bi bi-check"></i> Hecho</span>' : '<span class="badge-new">Nuevo</span>'}
+        </div>`;
+      div.onclick = () => startPractice(t.id);
+      list.appendChild(div);
+    });
+}
+
+function setFilter(cat, btn) {
+  currentFilter = cat;
+  document.querySelectorAll('.pill').forEach(p => p.classList.remove('active'));
+  btn.classList.add('active');
+  renderTechniques();
+}
+
+function filterTechniques() { renderTechniques(); }
+
+// ══════════════════════════════════════════
+// PRACTICE
+// ══════════════════════════════════════════
+function startPractice(id) {
+  currentTechniqueId = id;
+  const t = TECHNIQUES.find(x => x.id === id);
+  if (!t) return;
+
+  document.getElementById('practiceCategory').textContent = catLabel(t.cat);
+  document.getElementById('practiceTechNum').textContent = String(t.id).padStart(2,'0');
+  document.getElementById('practiceTechName').textContent = t.name;
+  document.getElementById('practiceTechExplanation').textContent = t.explanation;
+  document.getElementById('practiceTechExample').textContent = '📝 Ejemplo: ' + t.example;
+  document.getElementById('writingPrompt').innerHTML = `<strong>✍️ Ejercicio:</strong> ${t.prompt}`;
+  document.getElementById('practiceTextarea').value = '';
+  document.getElementById('wordCount').textContent = '0';
+  document.getElementById('feedbackArea').classList.remove('visible');
+  document.getElementById('feedbackContent').style.display = 'none';
+  document.getElementById('feedbackLoading').style.display = 'none';
+  document.getElementById('nextBtn').style.display = 'none';
+  document.getElementById('checkBtn').style.display = '';
+
+  switchPage('practica');
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  const ta = document.getElementById('practiceTextarea');
+  if (ta) ta.addEventListener('input', () => {
+    const words = ta.value.trim() ? ta.value.trim().split(/\s+/).length : 0;
+    document.getElementById('wordCount').textContent = words;
+  });
+});
+
+async function checkWriting() {
+  const text = document.getElementById('practiceTextarea').value.trim();
+  if (text.split(/\s+/).length < 10) { showToast('Escribe al menos 10 palabras para el análisis', 'error'); return; }
+
+  const t = TECHNIQUES.find(x => x.id === currentTechniqueId);
+  const btn = document.getElementById('checkBtn');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Analizando...';
+
+  const area = document.getElementById('feedbackArea');
+  area.classList.add('visible');
+  document.getElementById('feedbackLoading').style.display = 'block';
+  document.getElementById('feedbackContent').style.display = 'none';
+
+  const prompt = `Eres un experto en ortografía del español castellano. El estudiante está practicando la técnica ortográfica número ${t.id}: "${t.name}".
+
+EXPLICACIÓN DE LA TÉCNICA: ${t.explanation}
+EJERCICIO PEDIDO: ${t.prompt}
+
+TEXTO DEL ESTUDIANTE:
+"""
+${text}
+"""
+
+Analiza el texto y proporciona retroalimentación INMEDIATA Y DETALLADA. Responde ÚNICAMENTE con un objeto JSON con esta estructura exacta:
+
+{
+  "score": <número del 0 al 100>,
+  "nivel": "<"excelente"|"bien"|"necesita_mejorar">",
+  "titulo": "<frase breve de evaluación>",
+  "resumen": "<evaluación general de 2-3 oraciones>",
+  "aciertos": ["<acierto 1>", "<acierto 2>", "<acierto 3>"],
+  "errores": ["<error específico 1 con corrección>", "<error específico 2 con corrección>"],
+  "consejos": ["<consejo específico para mejorar 1>", "<consejo específico para mejorar 2>"],
+  "aplicacion_tecnica": "<¿aplicó correctamente la técnica ${t.name}? Explica con ejemplos del texto>",
+  "palabras_correctas": ["<palabra bien usada del texto>", "<otra>"],
+  "palabras_incorrectas": ["<palabra o construcción incorrecta>", "<corrección>"]
+}
+
+Sé específico y cita ejemplos REALES del texto del estudiante. No inventes errores. Si el texto tiene pocas palabras, sé igualmente concreto.`;
+
+  try {
+    const response = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1000,
+        messages: [{ role: 'user', content: prompt }]
+      })
+    });
+
+    const data = await response.json();
+    let raw = data.content?.map(c => c.text || '').join('') || '';
+    raw = raw.replace(/```json|```/g, '').trim();
+    const result = JSON.parse(raw);
+    renderFeedback(result, text);
+
+    // Save progress
+    const userData = getUserData(currentUser.email);
+    userData.practiced = (userData.practiced || 0) + 1;
+    userData.scores = [...(userData.scores || []), result.score];
+    if (result.score >= 70 && !userData.completed.includes(currentTechniqueId)) {
+      userData.completed.push(currentTechniqueId);
+      showToast(`✅ ¡Técnica #${currentTechniqueId} completada!`, 'success');
+    }
+    userData.history = [{ techId: currentTechniqueId, techName: t.name, score: result.score, date: new Date().toLocaleDateString('es-ES') }, ...(userData.history || [])].slice(0, 20);
+    saveUserData(userData);
+    updateDashboard();
+
+  } catch (e) {
+    document.getElementById('feedbackContent').innerHTML = `
+      <div class="feedback-body">
+        <div class="feedback-item error"><span class="feedback-item-icon">⚠️</span>
+        <span>Error al conectar con la IA. Verifica tu conexión e inténtalo de nuevo.</span></div>
+      </div>`;
+    document.getElementById('feedbackContent').style.display = 'block';
+    console.error(e);
+  } finally {
+    document.getElementById('feedbackLoading').style.display = 'none';
+    document.getElementById('feedbackContent').style.display = 'block';
+    btn.disabled = false;
+    btn.innerHTML = '<i class="bi bi-magic"></i> Analizar de nuevo';
+    document.getElementById('nextBtn').style.display = '';
+  }
+}
+
+function renderFeedback(r, originalText) {
+  const scoreClass = r.score >= 80 ? 'high' : r.score >= 60 ? 'med' : 'low';
+  const headerClass = r.nivel === 'excelente' ? 'excellent' : r.nivel === 'bien' ? 'good' : 'needs-work';
+  const emoji = r.nivel === 'excelente' ? '🏆' : r.nivel === 'bien' ? '👍' : '💪';
+
+  const aciertos = (r.aciertos || []).map(a => `
+    <div class="feedback-item correct">
+      <span class="feedback-item-icon">✓</span><span>${a}</span>
+    </div>`).join('');
+
+  const errores = (r.errores || []).map(e => `
+    <div class="feedback-item error">
+      <span class="feedback-item-icon">✗</span><span>${e}</span>
+    </div>`).join('');
+
+  const consejos = (r.consejos || []).map(c => `
+    <div class="feedback-item tip">
+      <span class="feedback-item-icon">💡</span><span>${c}</span>
+    </div>`).join('');
+
+  document.getElementById('feedbackContent').innerHTML = `
+    <div class="feedback-header ${headerClass}">
+      <span class="feedback-icon">${emoji}</span>
+      <div>
+        <p class="feedback-title">${r.titulo || 'Análisis completado'}</p>
+        <p class="feedback-subtitle">Técnica #${currentTechniqueId} · ${TECHNIQUES.find(t=>t.id===currentTechniqueId)?.name}</p>
+      </div>
+    </div>
+    <div class="feedback-body">
+      <div class="feedback-score">
+        <div class="score-ring ${scoreClass}">${r.score}%</div>
+        <div class="score-details">
+          <div class="score-label">Puntuación ortográfica</div>
+          <div class="progress"><div class="progress-bar bg-${r.score>=80?'success':r.score>=60?'warning':'danger'}" style="width:${r.score}%"></div></div>
+          <div style="font-size:.78rem;color:#888">${r.resumen}</div>
+        </div>
+      </div>
+
+      ${r.aplicacion_tecnica ? `
+      <div class="feedback-section">
+        <div class="feedback-section-title">🎯 Aplicación de la técnica</div>
+        <div class="feedback-item tip"><span class="feedback-item-icon">📖</span><span>${r.aplicacion_tecnica}</span></div>
+      </div>` : ''}
+
+      ${aciertos ? `
+      <div class="feedback-section">
+        <div class="feedback-section-title">✅ Aciertos destacados</div>
+        ${aciertos}
+      </div>` : ''}
+
+      ${errores ? `
+      <div class="feedback-section">
+        <div class="feedback-section-title">❌ Errores encontrados</div>
+        ${errores}
+      </div>` : ''}
+
+      ${consejos ? `
+      <div class="feedback-section">
+        <div class="feedback-section-title">💡 Consejos para mejorar</div>
+        ${consejos}
+      </div>` : ''}
+
+      <div style="text-align:right;padding-top:.5rem;border-top:1px solid var(--border);margin-top:1rem">
+        <span style="font-size:.75rem;color:#aaa">Análisis generado por IA · OrtografíaExpert</span>
+      </div>
+    </div>`;
+}
+
+function nextTechnique() {
+  const ids = TECHNIQUES.map(t => t.id);
+  const idx = ids.indexOf(currentTechniqueId);
+  const nextId = ids[(idx + 1) % ids.length];
+  startPractice(nextId);
+}
+
+// ══════════════════════════════════════════
+// PROFILE
+// ══════════════════════════════════════════
+const ACHIEVEMENTS = [
+  { id:'first', icon:'🖊️', name:'Primer paso', desc:'Completa tu primera práctica', check: d => d.practiced >= 1 },
+  { id:'ten',   icon:'📚', name:'Diez ejercicios', desc:'Practica 10 veces', check: d => d.practiced >= 10 },
+  { id:'fifty', icon:'🎓', name:'50 ejercicios', desc:'Practica 50 veces', check: d => d.practiced >= 50 },
+  { id:'tech5', icon:'⭐', name:'5 técnicas', desc:'Domina 5 técnicas', check: d => d.completed.length >= 5 },
+  { id:'tech25',icon:'🏅', name:'25 técnicas', desc:'Domina 25 técnicas', check: d => d.completed.length >= 25 },
+  { id:'tech50',icon:'🥇', name:'Medio camino', desc:'Domina 50 técnicas', check: d => d.completed.length >= 50 },
+  { id:'tech100',icon:'🏆', name:'¡Maestro!', desc:'Domina las 100 técnicas', check: d => d.completed.length >= 100 },
+  { id:'perfect',icon:'💎', name:'Perfección', desc:'Obtén 100% en un ejercicio', check: d => (d.scores||[]).some(s=>s===100) },
+  { id:'streak7',icon:'🔥', name:'Semana de fuego', desc:'7 días seguidos', check: d => (d.streak||0) >= 7 },
+  { id:'scholar',icon:'📖', name:'Erudito', desc:'Practica todas las categorías', check: d => d.practiced >= 6 },
+  { id:'punct',  icon:'✍️', name:'Puntuación perfecta', desc:'Completa todas las técnicas de puntuación', check: d => TECHNIQUES.filter(t=>t.cat==='puntuacion').every(t=>d.completed.includes(t.id)) },
+  { id:'accent', icon:'á', name:'Rey del acento', desc:'Completa todas las de acentuación', check: d => TECHNIQUES.filter(t=>t.cat==='acentuacion').every(t=>d.completed.includes(t.id)) },
+];
+
+function renderProfile() {
+  if (!currentUser) return;
+  const data = getUserData(currentUser.email);
+  const avg = data.scores?.length ? Math.round(data.scores.reduce((a,b)=>a+b,0)/data.scores.length) : null;
+
+  document.getElementById('profileAvatar').textContent = currentUser.name[0].toUpperCase();
+  document.getElementById('profileName').textContent = currentUser.name;
+  document.getElementById('profileMeta').textContent = `Nivel ${data.level || 'intermedio'} · Miembro desde ${data.joinDate || 'hoy'}`;
+  document.getElementById('pStatCompleted').textContent = data.completed.length;
+  document.getElementById('pStatPracticed').textContent = data.practiced;
+  document.getElementById('pStatScore').textContent = avg ? avg + '%' : '—';
+
+  const grid = document.getElementById('achievementGrid');
+  grid.innerHTML = '';
+  ACHIEVEMENTS.forEach(a => {
+    const unlocked = a.check(data);
+    const div = document.createElement('div');
+    div.className = 'achievement' + (unlocked ? ' unlocked' : ' locked');
+    div.title = a.desc;
+    div.innerHTML = `<span class="achievement-icon">${a.icon}</span><div class="achievement-name">${a.name}</div>`;
+    grid.appendChild(div);
+  });
+
+  const histList = document.getElementById('historyList');
+  if (data.history?.length) {
+    histList.innerHTML = data.history.slice(0,10).map(h => `
+      <div class="technique-card" style="cursor:default" onclick="startPractice(${h.techId})">
+        <div class="tech-number">${String(h.techId).padStart(2,'0')}</div>
+        <div class="tech-info">
+          <div class="tech-name" style="font-size:.88rem">${h.techName}</div>
+          <div class="tech-desc">${h.date}</div>
+        </div>
+        <div class="tech-status">
+          <span class="badge-done" style="background:${h.score>=80?'var(--sage)':h.score>=60?'var(--amber)':'#dc3545'}">${h.score}%</span>
+        </div>
+      </div>`).join('');
+  } else {
+    histList.innerHTML = '<div class="text-muted" style="font-size:.88rem">Aún no has practicado ninguna técnica.</div>';
+  }
+}
+
+// ══════════════════════════════════════════
+// TOAST
+// ══════════════════════════════════════════
+function showToast(msg, type='info') {
+  const icons = { success:'✅', error:'❌', info:'ℹ️' };
+  const t = document.createElement('div');
+  t.className = `toast-app ${type}`;
+  t.innerHTML = `<span>${icons[type]||'ℹ️'}</span><span>${msg}</span>`;
+  document.getElementById('toastContainer').appendChild(t);
+  setTimeout(() => { t.style.opacity = '0'; t.style.transform = 'translateY(20px)'; t.style.transition = '0.3s'; setTimeout(() => t.remove(), 400); }, 3000);
+}
+
+// Init
+document.addEventListener('DOMContentLoaded', () => {
+  renderTechniques();
+});
+</script>
+</body>
+</html>

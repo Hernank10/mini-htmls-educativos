@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Aprende Instalaciones Eléctricas - Página Educativa</title>
+  <!-- Bootstrap 5 CDN -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Ace editor -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.23.0/ace.js" integrity="" crossorigin="anonymous"></script>
+  <!-- Brython (Python en el navegador) -->
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/brython@3.11.0/brython.min.js"></script>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/brython@3.11.0/brython_stdlib.js"></script>
+  <style>
+    body { padding-top: 70px; }
+    #editor { height: 300px; }
+    pre.output { background:#f8f9fa; padding:10px; border-radius:6px; }
+  </style>
+</head>
+<body onload="brython()">
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="#">ElectroEdu</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navmenu">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navmenu">
+      <ul class="navbar-nav ms-auto">
+        <li class="nav-item"><a class="nav-link" href="#lessons">Lecciones</a></li>
+        <li class="nav-item"><a class="nav-link" href="#editor-area">Práctica (Python)</a></li>
+        <li class="nav-item"><a class="nav-link" href="#simulators">Simuladores</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<div class="container">
+  <header class="mb-4">
+    <h1 class="display-6">Aprende instalaciones eléctricas con ejercicios programados</h1>
+    <p class="lead">Ejercicios interactivos en Python (Brython) y enlaces a simuladores de circuitos.</p>
+  </header>
+
+  <section id="lessons" class="mb-4">
+    <h2>Lecciones</h2>
+    <div class="row">
+      <div class="col-md-6">
+        <div class="card mb-3">
+          <div class="card-body">
+            <h5 class="card-title">1. Fundamentos: Ley de Ohm</h5>
+            <p>Aprende la relación entre voltaje, corriente y resistencia con ejercicios prácticos.</p>
+            <button class="btn btn-sm btn-primary" onclick="loadExercise('ohm')">Cargar ejercicio</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-6">
+        <div class="card mb-3">
+          <div class="card-body">
+            <h5 class="card-title">2. Circuitos en serie y paralelo</h5>
+            <p>Calcula resistencias equivalentes y analiza corrientes.</p>
+            <button class="btn btn-sm btn-primary" onclick="loadExercise('series_parallel')">Cargar ejercicio</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-6">
+        <div class="card mb-3">
+          <div class="card-body">
+            <h5 class="card-title">3. Sensores y microcontroladores</h5>
+            <p>Ejemplos de control (simulado) para aprender la lógica de instalaciones automatizadas.</p>
+            <button class="btn btn-sm btn-primary" onclick="loadExercise('sensor')">Cargar ejercicio</button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <section id="editor-area" class="mb-4">
+    <h2>Práctica: editor Python (Brython)</h2>
+    <p>Escribe o modifica el código y presiona <strong>Ejecutar</strong>. Estos ejercicios usan Brython —no requieren instalación local.</p>
+
+    <div class="mb-2">
+      <div id="editor"># Selecciona una lección y presiona Ejecutar
+print("Hola — este ejemplo calcula V=I*R")
+</div>
+    </div>
+
+    <div class="d-flex gap-2 mb-3">
+      <button class="btn btn-success" onclick="runCode()">Ejecutar</button>
+      <button class="btn btn-secondary" onclick="downloadCode()">Descargar .py</button>
+      <button class="btn btn-outline-primary" onclick="resetEditor()">Restablecer</button>
+    </div>
+
+    <h5>Salida</h5>
+    <pre id="output" class="output">(Aquí aparecerá la salida)</pre>
+  </section>
+
+  <section id="simulators" class="mb-5">
+    <h2>Simuladores recomendados</h2>
+    <p>Usa estos simuladores para crear y probar circuitos (requieren conexión a Internet):</p>
+    <ul>
+      <li><a href="https://www.tinkercad.com/circuits" target="_blank">Tinkercad Circuits</a> — editor visual y simulador de Arduino.</li>
+      <li><a href="https://circuitverse.org/" target="_blank">CircuitVerse</a> — simulador digital de circuitos lógicos.</li>
+      <li><a href="https://www.falstad.com/circuit/" target="_blank">Falstad Circuit</a> — simulador analógico interactivo.</li>
+    </ul>
+
+    <h5>Incrustar proyecto de CircuitVerse</h5>
+    <p>Puedes incrustar proyectos públicos usando iframe (ejemplo):</p>
+    <div class="ratio ratio-16x9">
+      <iframe src="https://circuitverse.org/embed/" title="CircuitVerse embed" allowfullscreen></iframe>
+    </div>
+  </section>
+
+  <footer class="pt-4 pb-4 border-top">
+    <div class="d-flex justify-content-between">
+      <small>Creado con ❤️ — ElectroEdu</small>
+      <small>Plantilla: Bootstrap + Brython + Ace</small>
+    </div>
+  </footer>
+</div>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+  // Inicializa Ace
+  var editor = ace.edit("editor");
+  editor.session.setMode("ace/mode/python");
+  editor.setOptions({fontSize: "12pt", wrap: true});
+
+  // Ejercicios predefinidos
+  var exercises = {
+    ohm: `# Ejercicio: Ley de Ohm\n# Calcula voltaje a partir de corriente (I en A) y resistencia (R en ohm)\nI = float(input('Corriente I (A): '))\nR = float(input('Resistencia R (ohm): '))\nV = I * R\nprint(f'Voltaje V = {V} V')\n`,
+
+    series_parallel: `# Ejercicio: Resistencias en serie y paralelo\nprint('Resistencias en serie: R_eq = R1 + R2 + ...')\nvals = input('Ingresa resistencias separadas por comas (ohm): ').split(',')\nres = [float(v) for v in vals]\n# Serie\nRserie = sum(res)\n# Paralelo\nRpar = 1.0 / sum(1.0/r for r in res)\nprint(f'Resistencia equivalente (serie) = {Rserie} ohm')\nprint(f'Resistencia equivalente (paralelo) = {Rpar:.4f} ohm')\n`,
+
+    sensor: `# Simulación simple de lectura de sensor y decisión\n# Este ejemplo simula un sensor de temperatura y activa un relé (True/False)
+import random
+T = random.uniform(15,40)
+print(f'Temperatura simulada: {T:.2f} °C')
+if T > 30:
+    print('Alerta: activar ventilador (salida = ON)')
+else:
+    print('Temperatura OK (salida = OFF)')
+`
+  };
+
+  function loadExercise(key){
+    editor.setValue(exercises[key], -1);
+    document.getElementById('output').textContent = '(Código cargado — presiona Ejecutar)';
+  }
+
+  function runCode(){
+    // Obtiene el código del editor y lo ejecuta con Brython
+    var src = editor.getValue();
+    // Reemplace la salida del sistema
+    __BRYTHON__.stdout = (function(){
+      var out = document.getElementById('output');
+      return function(s){ out.textContent += s; }
+    })();
+    // Limpia salida y ejecuta
+    document.getElementById('output').textContent = '';
+    try{
+      // Crea un script con type text/python y lo ejecuta con brython
+      var old = document.getElementById('user_script');
+      if(old) old.remove();
+      var s = document.createElement('script');
+      s.type = 'text/python'
+      s.id = 'user_script'
+      s.text = src;
+      document.body.appendChild(s);
+      brython();
+    }catch(e){
+      document.getElementById('output').textContent = 'Error al ejecutar: ' + e;
+    }
+  }
+
+  function downloadCode(){
+    var src = editor.getValue();
+    var blob = new Blob([src], {type: 'text/plain;charset=utf-8'});
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement('a');
+    a.href = url; a.download = 'ejercicio.py'; document.body.appendChild(a); a.click(); a.remove();
+    URL.revokeObjectURL(url);
+  }
+
+  function resetEditor(){
+    editor.setValue('# Nuevo ejercicio\nprint("Escribe tu código aquí")', -1);
+    document.getElementById('output').textContent = '(Salida)';
+  }
+
+  // Carga ejercicio por defecto: Ley de Ohm
+  loadExercise('ohm');
+</script>
+
+</body>
+</html>

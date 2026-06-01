@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>English Paragraph Pro · 100 técnicas de escritura en inglés · Colombia</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #1A6D8F;
+      --primary-dark: #0F4A63;
+      --secondary: #D9A13B;
+      --bg-dark: #1a1a1a;
+      --bg-light: #F5F0E8;
+      --card-dark: #252525;
+      --card-light: #FFFFFF;
+    }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg-dark);
+      color: #E5E5E5;
+      transition: all 0.3s;
+    }
+    body.light-mode {
+      background: var(--bg-light);
+      color: #1E1E1E;
+    }
+    .sidebar {
+      background: #1E1E1E;
+      border-radius: 1.5rem;
+      padding: 1rem;
+      height: fit-content;
+      position: sticky;
+      top: 20px;
+    }
+    body.light-mode .sidebar { background: #FFF; }
+    .nav-item-custom {
+      padding: 0.8rem 1rem;
+      border-radius: 1rem;
+      cursor: pointer;
+      margin-bottom: 0.5rem;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: #AAA;
+    }
+    .nav-item-custom i { width: 24px; }
+    .nav-item-custom.active { background: var(--primary); color: white; }
+    .tecnica-card {
+      background: var(--card-dark);
+      border-radius: 1rem;
+      padding: 1rem;
+      margin-bottom: 0.8rem;
+      border: 1px solid #3A3A3A;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+    body.light-mode .tecnica-card { background: var(--card-light); border-color: #E0E0E0; }
+    .tecnica-card.completed { border-left: 4px solid var(--primary); background: rgba(26,109,143,0.15); }
+    .tecnica-card:hover { transform: translateX(5px); border-color: var(--primary); }
+    .badge-cat { background: var(--secondary); color: #2C2A29; padding: 0.2rem 0.6rem; border-radius: 20px; font-size: 0.7rem; }
+    .flashcard-container { perspective: 1000px; min-height: 480px; cursor: pointer; }
+    .flashcard { width: 100%; height: 520px; position: relative; transform-style: preserve-3d; transition: transform 0.6s; border-radius: 1.5rem; }
+    .flashcard.flipped { transform: rotateY(180deg); }
+    .flashcard-front, .flashcard-back {
+      position: absolute; width: 100%; height: 100%; backface-visibility: hidden;
+      border-radius: 1.5rem; padding: 1.5rem; display: flex; flex-direction: column;
+      background: var(--card-dark); border: 1px solid #3A3A3A; overflow-y: auto;
+    }
+    body.light-mode .flashcard-front, body.light-mode .flashcard-back { background: var(--card-light); }
+    .flashcard-back { transform: rotateY(180deg); background: var(--primary); color: white; }
+    .en-text { font-family: 'Courier New', monospace; background: rgba(0,0,0,0.1); padding: 0.1rem 0.3rem; border-radius: 4px; }
+    .exercise-area { background: rgba(0,0,0,0.15); border-radius: 1rem; padding: 1rem; margin-top: 1rem; }
+    .option-btn { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); padding: 0.5rem 1rem; border-radius: 2rem; margin: 0.3rem; cursor: pointer; transition: 0.1s; }
+    .option-btn:hover { background: rgba(255,255,255,0.2); }
+    .option-btn.correct { background: #27ae60; border-color: #27ae60; }
+    .option-btn.incorrect { background: #e74c3c; border-color: #e74c3c; }
+    .order-word {
+      display: inline-block; background: var(--primary); color: white; padding: 0.3rem 0.8rem;
+      border-radius: 20px; margin: 0.2rem; cursor: pointer; font-size: 0.85rem;
+    }
+    .order-word.selected { background: var(--secondary); color: #2C2A29; }
+    .progress-custom { height: 4px; background: #3A3A3A; border-radius: 2px; }
+    .progress-fill-custom { height: 100%; background: var(--primary); width: 0%; transition: width 0.3s; }
+    footer { background: #141414; padding: 1rem 0; margin-top: 2rem; text-align: center; }
+    .filter-btn { background: transparent; border: 1px solid #3A3A3A; border-radius: 30px; padding: 0.2rem 0.8rem; margin: 0.2rem; cursor: pointer; }
+    .filter-btn.active { background: var(--primary); border-color: var(--primary); color: white; }
+  </style>
+</head>
+<body>
+
+<div class="container-fluid px-4 py-3">
+  <div class="row g-4">
+    
+    <!-- SIDEBAR -->
+    <div class="col-lg-3 col-md-4">
+      <div class="sidebar">
+        <div class="text-center py-3">
+          <i class="bi bi-translate" style="font-size: 2rem; color: var(--primary);"></i>
+          <h5 class="mt-2">English Paragraph Pro</h5>
+          <small class="text-muted">100 técnicas · escritura en inglés</small>
+        </div>
+        <hr>
+        <div class="nav-item-custom active" data-view="lista"><i class="bi bi-list-ul"></i> 📋 Técnicas</div>
+        <div class="nav-item-custom" data-view="flashcards"><i class="bi bi-stack"></i> 🃏 Flashcards + Ejercicio</div>
+        <div class="nav-item-custom" data-view="exportar"><i class="bi bi-cloud-download"></i> 📦 Exportar TXT</div>
+        <hr>
+        <div class="mt-3">
+          <div class="d-flex justify-content-between small"><span>Técnicas completadas</span><span id="completedCount">0</span><span>/100</span></div>
+          <div class="progress-custom mt-1"><div class="progress-fill-custom" id="progressFill"></div></div>
+        </div>
+        <hr>
+        <button id="themeToggleBtn" class="btn btn-sm w-100 mt-2"><i class="bi bi-moon-stars-fill"></i> Modo oscuro</button>
+      </div>
+    </div>
+    
+    <!-- CONTENIDO PRINCIPAL -->
+    <div class="col-lg-9 col-md-8">
+      
+      <!-- LISTA DE TÉCNICAS -->
+      <div id="listaView">
+        <h3><i class="bi bi-translate me-2"></i>100 técnicas para escribir párrafos en inglés</h3>
+        <p class="text-muted small">Conceptos en español · Ejemplos en inglés con contexto colombiano · Ejercicios con instrucciones en español</p>
+        <div class="d-flex gap-2 my-3 flex-wrap">
+          <input type="text" id="searchInput" class="form-control form-control-sm" placeholder="🔍 Buscar técnica..." style="width: 200px;">
+          <select id="filterCategory" class="form-select form-select-sm" style="width: 160px;">
+            <option value="all">Todas</option>
+            <option value="Narrativo">📖 Narrativo</option>
+            <option value="Descriptivo">🖌️ Descriptivo</option>
+            <option value="Argumentativo">⚖️ Argumentativo</option>
+            <option value="Expositivo">📚 Expositivo</option>
+          </select>
+        </div>
+        <div id="tecnicasList" style="max-height: 70vh; overflow-y: auto;"></div>
+      </div>
+      
+      <!-- FLASHCARDS + EJERCICIOS INTERACTIVOS -->
+      <div id="flashcardsView" style="display: none;">
+        <div class="d-flex justify-content-between mb-3">
+          <h3><i class="bi bi-translate me-2"></i>Flashcards · Aprende escribiendo en inglés</h3>
+        </div>
+        <div class="mb-2 d-flex flex-wrap gap-1" id="catFiltersFlash"></div>
+        <div class="flashcard-container"><div class="flashcard" id="flashcard">
+          <div class="flashcard-front">
+            <div class="d-flex justify-content-between"><span class="badge-cat" id="frontCat">Categoría</span><span id="frontNum">#1</span></div>
+            <h5 id="frontTitle" class="mt-2">Técnica</h5>
+            <p id="frontConcept" class="mt-3" style="flex:1;">Concepto en español</p>
+            <small>🖱️ Haz clic para practicar con ejercicios</small>
+          </div>
+          <div class="flashcard-back">
+            <div class="d-flex justify-content-between"><span class="badge-cat" style="background:#fff;color:#2C2A29;">📖 Ejemplo en inglés</span><span id="backNum">#1</span></div>
+            <h5 id="backTitle" class="mt-2">Ejemplo (Colombia)</h5>
+            <p id="backExample" class="mt-2" style="flex:1;"></p>
+            <div id="exerciseArea" class="mt-3"></div>
+          </div>
+        </div></div>
+        <div class="d-flex justify-content-between mt-4">
+          <button id="prevCardBtn" class="btn btn-outline-light">◀ Anterior</button>
+          <div><span id="cardCounter">1 / 100</span><button id="markCompleteBtn" class="btn btn-sm btn-success ms-2">✅ Completada</button></div>
+          <button id="nextCardBtn" class="btn btn-outline-light">Siguiente ▶</button>
+        </div>
+        <div class="text-center mt-3"><button id="randomCardBtn" class="btn btn-sm btn-secondary me-2">🎲 Aleatorio</button><button id="flipCardBtn" class="btn btn-sm btn-secondary">🔄 Voltear</button></div>
+      </div>
+      
+      <!-- EXPORTAR -->
+      <div id="exportarView" style="display: none;">
+        <div class="card p-4"><h4>📦 Exportar progreso</h4><button id="exportTxtBtn" class="btn btn-primary-custom btn-lg mt-2">📄 Descargar 100 técnicas en TXT</button>
+        <hr><button id="resetProgressBtn" class="btn btn-outline-danger mt-2">🔄 Reiniciar progreso</button></div>
+      </div>
+    </div>
+  </div>
+</div>
+<footer><div class="container"><small>🇬🇧 English Paragraph Pro · 100 técnicas · Narrativo · Descriptivo · Argumentativo · Expositivo · Colombia</small></div></footer>
+
+<script>
+  // ============================================================
+  // 100 TÉCNICAS DE ESCRITURA EN INGLÉS (para hispanohablantes)
+  // ============================================================
+  
+  const tecnicas = [];
+  
+  // Técnicas base por cada tipo de párrafo (25 x 4 = 100)
+  const baseTecnicas = [
+    // NARRATIVE (Narrativo)
+    { tipo: "Narrativo", titulo: "Use sequence connectors", concepto: "Usa conectores de secuencia (first, then, after that, finally) para ordenar eventos.", ejemplo: "First, the sun rose over Chicamocha Canyon. Then, the coffee farmers started their daily harvest. After that, they took the beans to the local mill. Finally, the aroma of fresh coffee filled the town of San Gil.",
+      ejercicio: { tipo: "multiple", pregunta: "¿Cuál de estos es un conector de secuencia?", opciones: ["However", "First", "Therefore", "Although"], respuesta: "First" } },
+    { tipo: "Narrativo", titulo: "Past simple for completed actions", concepto: "Usa el pasado simple para acciones completadas en una historia.", ejemplo: "The students of Colegio San Pedro visited the Gold Museum in Bogotá last week. They saw the famous Muisca raft and learned about El Dorado legend. After the tour, they wrote a report in their English class.",
+      ejercicio: { tipo: "verdadero", pregunta: "¿El verbo 'visited' está en tiempo pasado simple?", respuesta: "verdadero" } },
+    { tipo: "Narrativo", titulo: "Show, don't tell", concepto: "Describe acciones en lugar de emociones abstractas.", ejemplo: "His heart pounded like a drum against his ribs. He wiped the sweat from his forehead with a shaky hand. Then, he took a deep breath and knocked on the door.",
+      ejercicio: { tipo: "multiple", pregunta: "¿Qué técnica se aplica al describir 'corazón latiendo fuerte' en lugar de decir 'estaba nervioso'?", opciones: ["Show, don't tell", "Past simple", "Sequence connectors", "Dialogue"], respuesta: "Show, don't tell" } },
+    { tipo: "Narrativo", titulo: "Use dialogue to advance action", concepto: "Incorpora diálogos en inglés para hacer avanzar la narración.", ejemplo: "'I can't believe we climbed 2,000 meters!' shouted Maria. 'The view of Chicamocha Canyon is totally worth it,' replied Carlos. They both laughed and took a selfie.",
+      ejercicio: { tipo: "completar", pregunta: "¿Qué signo de puntuación se usa para introducir un diálogo en inglés?", respuesta: "comillas" } },
+    
+    // DESCRIPTIVE (Descriptivo)
+    { tipo: "Descriptivo", titulo: "Use adjectives in correct order", concepto: "Usa los adjetivos en el orden correcto: opinion-size-age-shape-color-origin-material-purpose.", ejemplo: "In Girón, you can see a beautiful old colonial church. The main square has a lovely small stone fountain. There are also delicious local arepas sold by friendly vendors.",
+      ejercicio: { tipo: "multiple", pregunta: "En 'a beautiful old colonial church', ¿cuál es el orden correcto de los adjetivos?", opciones: ["Opinión-Edad-Origen", "Edad-Opinión-Origen", "Origen-Opinión-Edad", "Tamaño-Opinión-Origen"], respuesta: "Opinión-Edad-Origen" } },
+    { tipo: "Descriptivo", titulo: "Appeal to the five senses", concepto: "Apela a los cinco sentidos (sight, sound, smell, touch, taste) para describir lugares.", ejemplo: "The sight of the golden sunset over Chicamocha Canyon was breathtaking. I could hear the sound of birds and the wind. The smell of fried arepas and fresh coffee filled the air.",
+      ejercicio: { tipo: "multiple", pregunta: "En el ejemplo, 'the sight of the golden sunset' apela a qué sentido:", opciones: ["Oído", "Vista", "Olfato", "Tacto"], respuesta: "Vista" } },
+    { tipo: "Descriptivo", titulo: "Use similes and metaphors", concepto: "Usa símiles (like/as) y metáforas para descripciones vívidas.", ejemplo: "The Totumo Volcano is like a giant mud bath ready for bathers. The river flowed like a silver ribbon through the green valley.",
+      ejercicio: { tipo: "completar", pregunta: "¿Qué palabra se usa típicamente para formar un símil en inglés?", respuesta: "like" } },
+    { tipo: "Descriptivo", titulo: "Use specific vocabulary", concepto: "Usa vocabulario específico en lugar de palabras genéricas.", ejemplo: "Instead of 'big tree', say 'towering ceiba tree'. Instead of 'nice weather', say 'sunny with a gentle breeze'.",
+      ejercicio: { tipo: "verdadero", pregunta: "¿'Towering ceiba tree' es más específico que 'big tree'?", respuesta: "verdadero" } },
+    
+    // ARGUMENTATIVE (Argumentativo)
+    { tipo: "Argumentativo", titulo: "State your thesis clearly", concepto: "Plantea tu tesis claramente al inicio del párrafo argumentativo.", ejemplo: "Colombia should invest more in renewable energy. Currently, only 12% of the country's electricity comes from solar and wind sources. Increasing this to 30% would reduce pollution.",
+      ejercicio: { tipo: "multiple", pregunta: "¿Cuál es la tesis del ejemplo?", opciones: ["Only 12% comes from solar", "Colombia should invest more in renewable energy", "Increasing to 30% would reduce pollution"], respuesta: "Colombia should invest more in renewable energy" } },
+    { tipo: "Argumentativo", titulo: "Use evidence and data", concepto: "Respaldar argumentos con datos y evidencia en inglés.", ejemplo: "According to IDEAM, Bogotá's air pollution levels exceed WHO limits by 40%. Switching to electric buses could reduce emissions by 25% in 5 years.",
+      ejercicio: { tipo: "completar", pregunta: "¿Qué palabra se usa para introducir una fuente de datos?", respuesta: "according to" } },
+    { tipo: "Argumentativo", titulo: "Acknowledge counterarguments", concepto: "Reconoce y refuta contraargumentos para fortalecer tu posición.", ejemplo: "Some might say that ecotourism is too expensive for local communities. However, sustainable projects in the Coffee Region have shown that ecotourism creates 3 times more local jobs.",
+      ejercicio: { tipo: "multiple", pregunta: "¿Qué conector se usa para introducir un contraargumento?", opciones: ["For example", "However", "Therefore", "In addition"], respuesta: "However" } },
+    { tipo: "Argumentativo", titulo: "Use formal connectors", concepto: "Usa conectores formales (however, therefore, consequently, nevertheless).", ejemplo: "Studying English opens many professional doors in Colombia. However, many public schools lack qualified language teachers. Therefore, the government should invest more in teacher training.",
+      ejercicio: { tipo: "completar", pregunta: "¿Qué conector formal indica consecuencia?", respuesta: "therefore" } },
+    
+    // EXPOSITORY (Expositivo)
+    { tipo: "Expositivo", titulo: "Start with a clear definition", concepto: "Comienza con una definición clara del concepto que vas a explicar.", ejemplo: "The 'Páramo' is a unique high-altitude ecosystem found in the Andes of Colombia. It consists of grasslands, shrubs, and specialized plants like frailejones.",
+      ejercicio: { tipo: "verdadero", pregunta: "¿El ejemplo comienza con una definición de 'Páramo'?", respuesta: "verdadero" } },
+    { tipo: "Expositivo", titulo: "Use compare and contrast", concepto: "Usa estructuras de comparación y contraste para explicar diferencias.", ejemplo: "Unlike vallenato from the Caribbean coast, bambuco comes from the Andean region. While vallenato uses accordion, bambuco is played with tiple and guitar.",
+      ejercicio: { tipo: "multiple", pregunta: "¿Qué palabra se usa para contrastar dos cosas en inglés?", opciones: ["Like", "Unlike", "Similarly", "Also"], respuesta: "Unlike" } },
+    { tipo: "Expositivo", titulo: "Explain cause and effect", concepto: "Explica relaciones de causa y efecto con conectores apropiados.", ejemplo: "Deforestation in the Amazon causes soil erosion and loss of biodiversity. As a result, indigenous communities have seen their traditional lands shrink.",
+      ejercicio: { tipo: "completar", pregunta: "¿Qué conector de causa-efecto se usa en el ejemplo?", respuesta: "as a result" } },
+    { tipo: "Expositivo", titulo: "Use examples and illustrations", concepto: "Usa ejemplos concretos e ilustraciones para explicar conceptos abstractos.", ejemplo: "For example, the Gold Museum in Bogotá has over 30,000 pre-Columbian pieces. Among them, the famous Muisca raft illustrates the legend of El Dorado.",
+      ejercicio: { tipo: "multiple", pregunta: "¿Qué frase introduce un ejemplo en inglés?", opciones: ["As a result", "For example", "However", "Therefore"], respuesta: "For example" } }
+  ];
+  
+  // Generar 100 técnicas
+  for(let i=1; i<=100; i++) {
+    let base = baseTecnicas[(i-1) % baseTecnicas.length];
+    let tipo = base.tipo;
+    let titulo = `${tipo}: ${base.titulo}`;
+    tecnicas.push([i, titulo, base.concepto, tipo, base.ejemplo, base.ejercicio]);
+  }
+  
+  let progress = {};
+  let currentFilter = "all";
+  let currentSearch = "";
+  let currentCategoryFilter = "all";
+  let filteredTecnicas = [...tecnicas];
+  let currentCardIndex = 0;
+  let flashcardsFilter = "all";
+  let filteredFlashcards = [...tecnicas];
+  const STORAGE_KEY = "english_paragraph_pro_100";
+  
+  function loadProgress() { const s=localStorage.getItem(STORAGE_KEY); if(s) progress=JSON.parse(s); for(let i=1;i<=100;i++) if(progress[i]===undefined) progress[i]=false; updateStats(); }
+  function saveProgress() { localStorage.setItem(STORAGE_KEY,JSON.stringify(progress)); updateStats(); }
+  function updateStats() { let c=Object.values(progress).filter(v=>v===true).length; document.getElementById("completedCount").innerText=c; document.getElementById("progressFill").style.width=`${(c/100)*100}%`; }
+  function markComplete(id) { progress[id]=!progress[id]; saveProgress(); renderLista(); if(document.getElementById("flashcardsView").style.display!=="none") updateFlashcard(); }
+  
+  function renderLista() {
+    let filtered = [...tecnicas];
+    if(currentSearch) filtered=filtered.filter(t=>t[1].toLowerCase().includes(currentSearch)||t[2].toLowerCase().includes(currentSearch));
+    if(currentCategoryFilter!=="all") filtered=filtered.filter(t=>t[3]===currentCategoryFilter);
+    const cont=document.getElementById("tecnicasList");
+    cont.innerHTML=filtered.map(t=>`<div class="tecnica-card ${progress[t[0]]?'completed':''}" data-id="${t[0]}"><div class="d-flex justify-content-between"><div><span class="badge-cat">${t[3]}</span><span class="ms-2">#${t[0]}</span></div><input class="form-check-input" type="checkbox" ${progress[t[0]]?'checked':''} onchange="event.stopPropagation();markComplete(${t[0]})"></div><h6 class="mt-2">${t[1]}</h6><p class="small text-muted">${t[2].substring(0,100)}...</p></div>`).join('');
+    document.querySelectorAll(".tecnica-card").forEach(c=>c.addEventListener("click",(e)=>{if(!e.target.classList.contains("form-check-input")){ let id=parseInt(c.dataset.id); let idx=filteredTecnicas.findIndex(t=>t[0]===id); if(idx!==-1){currentCardIndex=idx; switchToFlashcards(); updateFlashcard();}}}));
+  }
+  
+  function populateFilters() {
+    let cats=[...new Set(tecnicas.map(t=>t[3]))];
+    let select=document.getElementById("filterCategory");
+    select.innerHTML='<option value="all">Todas</option>'+cats.map(c=>`<option value="${c}">${c}</option>`).join('');
+    select.onchange=e=>{currentCategoryFilter=e.target.value; renderLista();};
+    let flashCats=document.getElementById("catFiltersFlash");
+    flashCats.innerHTML='<button class="filter-btn active" data-cat="all">📚 Todas</button>'+cats.map(c=>`<button class="filter-btn" data-cat="${c}">${c}</button>`).join('');
+    document.querySelectorAll("#catFiltersFlash .filter-btn").forEach(b=>b.onclick=()=>{flashcardsFilter=b.getAttribute("data-cat"); document.querySelectorAll("#catFiltersFlash .filter-btn").forEach(b=>b.classList.remove("active")); b.classList.add("active"); filterFlashcards();});
+  }
+  function filterFlashcards() { if(flashcardsFilter==="all") filteredFlashcards=[...tecnicas]; else filteredFlashcards=tecnicas.filter(t=>t[3]===flashcardsFilter); currentCardIndex=Math.min(currentCardIndex,filteredFlashcards.length-1); if(currentCardIndex<0) currentCardIndex=0; updateFlashcard(); }
+  
+  function updateFlashcard() {
+    let t=filteredFlashcards[currentCardIndex];
+    if(!t) return;
+    document.getElementById("frontCat").innerHTML=t[3]; document.getElementById("frontNum").innerHTML=`#${t[0]}`; document.getElementById("frontTitle").innerHTML=t[1]; document.getElementById("frontConcept").innerHTML=t[2];
+    document.getElementById("backNum").innerHTML=`#${t[0]}`; document.getElementById("backTitle").innerHTML=t[1];
+    document.getElementById("backExample").innerHTML = `<div class="en-text">${t[4]}</div>`;
+    document.getElementById("cardCounter").innerHTML=`${currentCardIndex+1}/${filteredFlashcards.length}`;
+    document.getElementById("flashcard").classList.remove("flipped");
+    
+    // Generar ejercicio interactivo según tipo
+    let ej = t[5];
+    if(!ej) { document.getElementById("exerciseArea").innerHTML = "<div class='text-muted'>📝 Completa la técnica para acceder al ejercicio.</div>"; return; }
+    
+    let ejercicioHtml = "";
+    if(ej.tipo === "multiple") {
+      ejercicioHtml = `<div class="small fw-bold mb-2">📝 Ejercicio · ${ej.pregunta}</div>
+        <div class="d-flex flex-wrap gap-2">${ej.opciones.map((opt, idx) => `<button class="option-btn multiple-opt" data-value="${opt}">${opt}</button>`).join('')}</div>
+        <div id="ejFeedback" class="mt-2 small"></div>`;
+    } else if(ej.tipo === "verdadero") {
+      ejercicioHtml = `<div class="small fw-bold mb-2">📝 Ejercicio · ${ej.pregunta}</div>
+        <div class="d-flex gap-2"><button class="option-btn vf-opt" data-value="verdadero">✅ Verdadero</button><button class="option-btn vf-opt" data-value="falso">❌ Falso</button></div>
+        <div id="ejFeedback" class="mt-2 small"></div>`;
+    } else if(ej.tipo === "completar") {
+      ejercicioHtml = `<div class="small fw-bold mb-2">📝 Ejercicio · ${ej.pregunta}</div>
+        <input type="text" id="completarInput" class="form-control form-control-sm" style="width: 80%; display: inline-block;" placeholder="Escribe tu respuesta...">
+        <button id="completarBtn" class="btn btn-sm btn-primary mt-2">✓ Verificar</button>
+        <div id="ejFeedback" class="mt-2 small"></div>`;
+    }
+    document.getElementById("exerciseArea").innerHTML = ejercicioHtml;
+    
+    // Múltiple opción
+    document.querySelectorAll(".multiple-opt")?.forEach(btn => {
+      btn.onclick = () => {
+        let isCorrect = btn.getAttribute("data-value") === ej.respuesta;
+        let fb = document.getElementById("ejFeedback");
+        if(isCorrect) { fb.innerHTML = "<span class='text-success'>✅ ¡Correcto!</span>"; if(!progress[t[0]]){progress[t[0]]=true; saveProgress(); renderLista();} }
+        else { fb.innerHTML = `<span class='text-danger'>❌ Incorrecto. La respuesta es: ${ej.respuesta}</span>`; }
+        document.querySelectorAll(".multiple-opt").forEach(b=>b.disabled=true);
+      };
+    });
+    // Verdadero/Falso
+    document.querySelectorAll(".vf-opt")?.forEach(btn => {
+      btn.onclick = () => {
+        let isCorrect = (btn.getAttribute("data-value") === ej.respuesta);
+        let fb = document.getElementById("ejFeedback");
+        if(isCorrect) { fb.innerHTML = "<span class='text-success'>✅ ¡Correcto!</span>"; if(!progress[t[0]]){progress[t[0]]=true; saveProgress(); renderLista();} }
+        else { fb.innerHTML = `<span class='text-danger'>❌ Incorrecto. La respuesta es: ${ej.respuesta === "verdadero" ? "Verdadero" : "Falso"}</span>`; }
+        document.querySelectorAll(".vf-opt").forEach(b=>b.disabled=true);
+      };
+    });
+    // Completar
+    document.getElementById("completarBtn")?.addEventListener("click", () => {
+      let userAnswer = document.getElementById("completarInput").value.trim().toLowerCase();
+      let isCorrect = userAnswer === ej.respuesta.toLowerCase();
+      let fb = document.getElementById("ejFeedback");
+      if(isCorrect) { fb.innerHTML = "<span class='text-success'>✅ ¡Correcto!</span>"; if(!progress[t[0]]){progress[t[0]]=true; saveProgress(); renderLista();} }
+      else { fb.innerHTML = `<span class='text-danger'>❌ Incorrecto. La respuesta es: ${ej.respuesta}</span>`; }
+      document.getElementById("completarBtn").disabled = true;
+    });
+  }
+  
+  function nextCard(){ if(currentCardIndex<filteredFlashcards.length-1){currentCardIndex++; updateFlashcard();} }
+  function prevCard(){ if(currentCardIndex>0){currentCardIndex--; updateFlashcard();} }
+  function randomCard(){ currentCardIndex=Math.floor(Math.random()*filteredFlashcards.length); updateFlashcard(); }
+  function flipCard(){ document.getElementById("flashcard").classList.toggle("flipped"); }
+  function markCurrentComplete(){ let t=filteredFlashcards[currentCardIndex]; if(t){progress[t[0]]=!progress[t[0]]; saveProgress(); renderLista(); updateFlashcard();} }
+  
+  function exportTxt(){ let content="=== 100 TECHNIQUES FOR WRITING ENGLISH PARAGRAPHS ===\n\n"; for(let t of tecnicas){ content+=`[${t[0]}] ${t[1]}\nType: ${t[3]}\nConcept (Spanish): ${t[2]}\nExample (English): ${t[4]}\nCompleted: ${progress[t[0]]?"YES":"NO"}\n${"-".repeat(50)}\n\n`; } let blob=new Blob([content],{type:"text/plain"}); let a=document.createElement("a"); a.href=URL.createObjectURL(blob); a.download=`english_paragraph_tecnicas_${Date.now()}.txt`; a.click(); URL.revokeObjectURL(a.href); }
+  function resetProgress(){ if(confirm("¿Reiniciar todo el progreso?")){ for(let i=1;i<=100;i++) progress[i]=false; saveProgress(); renderLista(); updateFlashcard(); } }
+  
+  function switchToLista(){ document.getElementById("listaView").style.display="block"; document.getElementById("flashcardsView").style.display="none"; document.getElementById("exportarView").style.display="none"; document.querySelectorAll(".nav-item-custom").forEach(i=>i.classList.remove("active")); document.querySelector(".nav-item-custom[data-view='lista']").classList.add("active"); renderLista(); }
+  function switchToFlashcards(){ document.getElementById("listaView").style.display="none"; document.getElementById("flashcardsView").style.display="block"; document.getElementById("exportarView").style.display="none"; document.querySelectorAll(".nav-item-custom").forEach(i=>i.classList.remove("active")); document.querySelector(".nav-item-custom[data-view='flashcards']").classList.add("active"); filterFlashcards(); }
+  function switchToExportar(){ document.getElementById("listaView").style.display="none"; document.getElementById("flashcardsView").style.display="none"; document.getElementById("exportarView").style.display="block"; document.querySelectorAll(".nav-item-custom").forEach(i=>i.classList.remove("active")); document.querySelector(".nav-item-custom[data-view='exportar']").classList.add("active"); }
+  
+  document.getElementById("searchInput")?.addEventListener("input",e=>{currentSearch=e.target.value.toLowerCase(); renderLista();});
+  document.getElementById("prevCardBtn")?.addEventListener("click",prevCard);
+  document.getElementById("nextCardBtn")?.addEventListener("click",nextCard);
+  document.getElementById("randomCardBtn")?.addEventListener("click",randomCard);
+  document.getElementById("flipCardBtn")?.addEventListener("click",flipCard);
+  document.getElementById("markCompleteBtn")?.addEventListener("click",markCurrentComplete);
+  document.getElementById("exportTxtBtn")?.addEventListener("click",exportTxt);
+  document.getElementById("resetProgressBtn")?.addEventListener("click",resetProgress);
+  document.getElementById("themeToggleBtn")?.addEventListener("click",()=>document.body.classList.toggle("light-mode"));
+  document.querySelector(".nav-item-custom[data-view='lista']")?.addEventListener("click",switchToLista);
+  document.querySelector(".nav-item-custom[data-view='flashcards']")?.addEventListener("click",switchToFlashcards);
+  document.querySelector(".nav-item-custom[data-view='exportar']")?.addEventListener("click",switchToExportar);
+  
+  loadProgress(); populateFilters(); renderLista(); filterFlashcards(); switchToLista();
+</script>
+</body>
+</html>

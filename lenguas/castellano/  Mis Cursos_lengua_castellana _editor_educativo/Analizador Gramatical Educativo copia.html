@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Analizador Gramatical Educativo</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body {
+      background: #f7f9fb;
+      font-family: 'Segoe UI', sans-serif;
+    }
+    .navbar {
+      background-color: #005f73;
+    }
+    .navbar-brand, .nav-link {
+      color: white !important;
+    }
+    .card {
+      border-radius: 1rem;
+      box-shadow: 0 0.3rem 1rem rgba(0,0,0,0.1);
+    }
+    textarea {
+      resize: none;
+    }
+    footer {
+      margin-top: 3rem;
+      background: #0a9396;
+      color: white;
+      padding: 1rem;
+      text-align: center;
+      border-top: 3px solid #94d2bd;
+    }
+  </style>
+</head>
+<body>
+  <!-- Navegación -->
+  <nav class="navbar navbar-expand-lg">
+    <div class="container-fluid">
+      <a class="navbar-brand fw-bold" href="#">Analizador Gramatical</a>
+      <div>
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <li class="nav-item"><a class="nav-link" href="#teoria">Teoría</a></li>
+          <li class="nav-item"><a class="nav-link" href="#ejemplos">Ejemplos</a></li>
+          <li class="nav-item"><a class="nav-link" href="#analizador">Analizador</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Encabezado -->
+  <header class="container text-center mt-4">
+    <h1 class="fw-bold text-primary">Aprende sobre los modos verbales y las oraciones subordinadas</h1>
+    <p class="text-muted">Interactúa, analiza y comprende cómo funcionan las oraciones con dos verbos principales.</p>
+  </header>
+
+  <!-- Sección Teoría -->
+  <section id="teoria" class="container mt-5">
+    <div class="card p-4">
+      <h3 class="text-success fw-bold">📘 Teoría: Modos verbales en oraciones subordinadas</h3>
+      <p>
+        En español, los verbos principales pueden exigir distintos modos (indicativo o subjuntivo) en las subordinadas.
+        Cuando se usan <strong>dos verbos principales</strong> en una misma subordinada, debe cuidarse que ambos requieran el mismo modo.
+      </p>
+      <ul>
+        <li><strong>Indicativo:</strong> Expresa certeza, realidad o conocimiento. Ej.: <em>Creo que vendrá</em>.</li>
+        <li><strong>Subjuntivo:</strong> Expresa deseo, duda o posibilidad. Ej.: <em>Deseo que venga</em>.</li>
+      </ul>
+      <div class="alert alert-warning">
+        ⚠️ Error común: usar dos verbos que exigen distintos modos en una misma subordinada.
+        <br>Ejemplo: ❌ <em>Creo y deseo que venga</em>.
+      </div>
+    </div>
+  </section>
+
+  <!-- Sección Ejemplos -->
+  <section id="ejemplos" class="container mt-5">
+    <div class="card p-4">
+      <h3 class="text-info fw-bold">🧪 Ejemplos y correcciones</h3>
+      <table class="table table-bordered table-striped mt-3">
+        <thead class="table-dark">
+          <tr>
+            <th>❌ Incorrecto</th>
+            <th>✅ Correcto</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Creo y deseo que venga.</td>
+            <td>Creo que vendrá y lo deseo.</td>
+          </tr>
+          <tr>
+            <td>Pienso y quiero que gane.</td>
+            <td>Pienso que ganará y quiero que gane.</td>
+          </tr>
+          <tr>
+            <td>Sé y espero que apruebe.</td>
+            <td>Sé que aprobará y lo espero.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- Sección Analizador -->
+  <section id="analizador" class="container mt-5">
+    <div class="card p-4">
+      <h3 class="fw-bold text-primary">✍️ Analiza tu oración</h3>
+      <p>Escribe una oración con dos verbos principales. El sistema analizará los modos verbales y te dará retroalimentación.</p>
+
+      <textarea id="oracion" class="form-control mb-3" rows="3" placeholder="Ejemplo: Creo y deseo que venga."></textarea>
+      <button class="btn btn-success" onclick="analizar()">Analizar oración</button>
+
+      <div id="resultado" class="mt-4 p-3 border rounded bg-light"></div>
+    </div>
+  </section>
+
+  <!-- Pie de página -->
+  <footer>
+    <p>© 2025 Plataforma Educativa de Lengua Española · Desarrollado en Bootstrap · Hernán Acevedo Mar</p>
+  </footer>
+
+  <script>
+    const verbosIndicativo = ["creo", "sé", "pienso", "afirmo"];
+    const verbosSubjuntivo = ["deseo", "quiero", "espero", "ojalá", "prefiero"];
+    const formasIndicativo = ["viene", "llega", "tiene", "puede", "sabe", "ha", "está", "fue", "vendrá"];
+    const formasSubjuntivo = ["venga", "llegue", "tenga", "pueda", "sepa", "haya", "esté", "viniera"];
+
+    function analizar() {
+      const texto = document.getElementById("oracion").value.toLowerCase();
+      if (texto.trim() === "") {
+        document.getElementById("resultado").innerHTML = "<div class='alert alert-warning'>Por favor, escribe una oración.</div>";
+        return;
+      }
+
+      let encontrados = [];
+      verbosIndicativo.forEach(v => { if (texto.includes(v)) encontrados.push(`${v}: indicativo`); });
+      verbosSubjuntivo.forEach(v => { if (texto.includes(v)) encontrados.push(`${v}: subjuntivo`); });
+
+      const modoSub = detectarModoVerbal(texto);
+      let html = "<h5>🔍 Verbos principales detectados:</h5><ul>";
+      if (encontrados.length === 0) {
+        html += "<li>No se detectaron verbos principales conocidos.</li>";
+      } else {
+        encontrados.forEach(v => { html += `<li>${v}</li>`; });
+      }
+      html += "</ul>";
+
+      html += `<p><strong>🧠 Modo de la subordinada detectado:</strong> ${modoSub}</p>`;
+
+      if (encontrados.length >= 2) {
+        const modo1 = encontrados[0].split(": ")[1];
+        const modo2 = encontrados[1].split(": ")[1];
+        if (modo1 !== modo2) {
+          html += `<div class='alert alert-danger'>⚠️ Error: los verbos exigen modos distintos.<br>💡 Sugerencia: separe las proposiciones o use pronombres como 'lo', 'eso'.</div>`;
+        } else {
+          html += `<div class='alert alert-success'>✅ Ambos verbos exigen el mismo modo.</div>`;
+        }
+      }
+
+      document.getElementById("resultado").innerHTML = html;
+    }
+
+    function detectarModoVerbal(texto) {
+      for (let f of formasSubjuntivo) if (texto.includes(f)) return "subjuntivo";
+      for (let f of formasIndicativo) if (texto.includes(f)) return "indicativo";
+      return "desconocido";
+    }
+  </script>
+
+</body>
+</html>

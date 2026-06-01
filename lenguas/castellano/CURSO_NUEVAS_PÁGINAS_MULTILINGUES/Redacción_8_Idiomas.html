@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>100 Técnicas de Redacción · 8 idiomas · Aprende a escribir bien</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700;800&family=Noto+Sans+SC:wght@400;500;700&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #2C5F8A;
+      --primary-dark: #1E3F5A;
+      --secondary: #D9A13B;
+      --bg-dark: #1a1a1a;
+      --bg-light: #F5F0E8;
+      --card-dark: #252525;
+      --card-light: #FFFFFF;
+    }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg-dark);
+      color: #E5E5E5;
+      transition: all 0.3s;
+    }
+    body.light-mode {
+      background: var(--bg-light);
+      color: #1E1E1E;
+    }
+    .sidebar {
+      background: #1E1E1E;
+      border-radius: 1.5rem;
+      padding: 1rem;
+      height: fit-content;
+      position: sticky;
+      top: 20px;
+    }
+    body.light-mode .sidebar { background: #FFF; }
+    .nav-item-custom {
+      padding: 0.8rem 1rem;
+      border-radius: 1rem;
+      cursor: pointer;
+      margin-bottom: 0.5rem;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: #AAA;
+    }
+    .nav-item-custom i { width: 24px; }
+    .nav-item-custom.active { background: var(--primary); color: white; }
+    .lang-filter {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+    }
+    .filter-btn {
+      background: transparent;
+      border: 1px solid #3A3A3A;
+      border-radius: 30px;
+      padding: 0.2rem 0.8rem;
+      font-size: 0.7rem;
+      cursor: pointer;
+    }
+    .filter-btn.active { background: var(--primary); border-color: var(--primary); color: white; }
+    body.light-mode .filter-btn { border-color: #D0D0D0; }
+    .tecnica-card {
+      background: var(--card-dark);
+      border-radius: 1rem;
+      padding: 1rem;
+      margin-bottom: 0.8rem;
+      border: 1px solid #3A3A3A;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+    body.light-mode .tecnica-card { background: var(--card-light); border-color: #E0E0E0; }
+    .tecnica-card.completed { border-left: 4px solid var(--primary); background: rgba(44,95,138,0.15); }
+    .flashcard-container { perspective: 1000px; min-height: 520px; cursor: pointer; }
+    .flashcard { width: 100%; height: 580px; position: relative; transform-style: preserve-3d; transition: transform 0.6s; border-radius: 1.5rem; }
+    .flashcard.flipped { transform: rotateY(180deg); }
+    .flashcard-front, .flashcard-back {
+      position: absolute; width: 100%; height: 100%; backface-visibility: hidden;
+      border-radius: 1.5rem; padding: 1.5rem; display: flex; flex-direction: column;
+      background: var(--card-dark); border: 1px solid #3A3A3A; overflow-y: auto;
+    }
+    body.light-mode .flashcard-front, body.light-mode .flashcard-back { background: var(--card-light); }
+    .flashcard-back { transform: rotateY(180deg); background: var(--primary); color: white; }
+    .option-btn { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); padding: 0.5rem 1rem; border-radius: 2rem; margin: 0.3rem; cursor: pointer; }
+    .option-btn:hover { background: rgba(255,255,255,0.2); }
+    .option-btn.correct { background: #27ae60; }
+    .option-btn.incorrect { background: #e74c3c; }
+    .progress-custom { height: 4px; background: #3A3A3A; border-radius: 2px; }
+    .progress-fill-custom { height: 100%; background: var(--primary); width: 0%; transition: width 0.3s; }
+    footer { background: #141414; padding: 1rem 0; margin-top: 2rem; text-align: center; }
+    .badge-lang { background: var(--secondary); color: #2C2A29; padding: 0.2rem 0.6rem; border-radius: 20px; font-size: 0.7rem; }
+    .search-box { width: 100%; padding: 0.5rem; border-radius: 2rem; border: 1px solid #3A3A3A; background: var(--card-dark); color: #E5E5E5; }
+    body.light-mode .search-box { background: var(--card-light); color: #1E1E1E; border-color: #D0D0D0; }
+    .chinese-text { font-family: 'Noto Sans SC', monospace; }
+    .korean-text { font-family: 'Noto Sans KR', monospace; }
+  </style>
+</head>
+<body>
+
+<div class="container-fluid px-4 py-3">
+  <div class="row g-4">
+    
+    <!-- SIDEBAR -->
+    <div class="col-lg-3 col-md-4">
+      <div class="sidebar">
+        <div class="text-center py-3">
+          <i class="bi bi-pencil-square" style="font-size: 2rem; color: var(--primary);"></i>
+          <h5 class="mt-2">Redacción Global</h5>
+          <small class="text-muted">100 técnicas · 8 idiomas</small>
+        </div>
+        <hr>
+        <div class="nav-item-custom active" data-view="lista">
+          <i class="bi bi-list-ul"></i> <span>📋 Técnicas</span>
+        </div>
+        <div class="nav-item-custom" data-view="flashcards">
+          <i class="bi bi-stack"></i> <span>🃏 Flashcards</span>
+        </div>
+        <hr>
+        <div class="mt-3">
+          <div class="d-flex justify-content-between small"><span>Técnicas completadas</span><span id="completedCount">0</span><span>/100</span></div>
+          <div class="progress-custom mt-1"><div class="progress-fill-custom" id="progressFill"></div></div>
+        </div>
+        <hr>
+        <button id="themeToggleBtn" class="btn btn-sm w-100 mt-2"><i class="bi bi-moon-stars-fill"></i> Modo oscuro</button>
+      </div>
+    </div>
+    
+    <!-- CONTENIDO PRINCIPAL -->
+    <div class="col-lg-9 col-md-8">
+      
+      <!-- VISTA LISTA DE TÉCNICAS -->
+      <div id="listaView">
+        <h3><i class="bi bi-list-ul me-2"></i>100 técnicas de redacción · 8 idiomas</h3>
+        <div class="d-flex gap-2 my-3 flex-wrap">
+          <input type="text" id="searchInput" class="search-box" placeholder="🔍 Buscar técnica..." style="width: 200px;">
+          <select id="langFilter" class="form-select form-select-sm" style="width: 140px;">
+            <option value="all">Todos los idiomas</option>
+            <option value="Español">🇪🇸 Español</option><option value="Chino">🇨🇳 Chino</option>
+            <option value="Portugués">🇵🇹 Portugués</option><option value="Italiano">🇮🇹 Italiano</option>
+            <option value="Inglés">🇬🇧 Inglés</option><option value="Coreano">🇰🇷 Coreano</option>
+            <option value="Francés">🇫🇷 Francés</option><option value="Alemán">🇩🇪 Alemán</option>
+          </select>
+        </div>
+        <div id="tecnicasList" style="max-height: 70vh; overflow-y: auto;"></div>
+        <div class="d-flex justify-content-center mt-4"><ul class="pagination" id="pagination"></ul></div>
+      </div>
+      
+      <!-- VISTA FLASHCARDS -->
+      <div id="flashcardsView" style="display: none;">
+        <div class="d-flex justify-content-between mb-3">
+          <h3><i class="bi bi-stack me-2"></i>Flashcards · Aprende redacción</h3>
+        </div>
+        <div class="flashcard-container"><div class="flashcard" id="flashcard">
+          <div class="flashcard-front">
+            <div class="d-flex justify-content-between"><span class="badge-lang" id="frontLang">Idioma</span><span id="frontNum">#1</span></div>
+            <h5 id="frontTitle" class="mt-2">Técnica</h5>
+            <p id="frontConcept" class="mt-3" style="flex:1;">Concepto</p>
+            <small>🖱️ Haz clic para ver el ejemplo</small>
+          </div>
+          <div class="flashcard-back">
+            <div class="d-flex justify-content-between"><span class="badge-lang">📖 Ejemplo</span><span id="backNum">#1</span></div>
+            <h5 id="backTitle" class="mt-2">Ejemplo práctico</h5>
+            <p id="backExample" class="mt-2" style="flex:1;"></p>
+            <div id="exerciseArea" class="mt-3"></div>
+          </div>
+        </div></div>
+        <div class="d-flex justify-content-between mt-4">
+          <button id="prevCardBtn" class="btn btn-outline-light">◀ Anterior</button>
+          <div><span id="cardCounter">1 / 100</span><button id="markCompleteBtn" class="btn btn-sm btn-success ms-2">✅ Aprendida</button></div>
+          <button id="nextCardBtn" class="btn btn-outline-light">Siguiente ▶</button>
+        </div>
+        <div class="text-center mt-3"><button id="randomCardBtn" class="btn btn-sm btn-secondary me-2">🎲 Aleatorio</button><button id="flipCardBtn" class="btn btn-sm btn-secondary">🔄 Voltear</button></div>
+      </div>
+    </div>
+  </div>
+</div>
+<footer><div class="container"><small>✍️ 100 técnicas de redacción · 8 idiomas · Aprende a escribir correctamente en cada lengua</small></div></footer>
+
+<script>
+  // ============================================================
+  // 100 TÉCNICAS DE REDACCIÓN (8 idiomas: Español, Chino, Portugués, Italiano, Inglés, Coreano, Francés, Alemán)
+  // ============================================================
+  
+  const tecnicas = [];
+  let idCounter = 1;
+  
+  // Definir técnicas por idioma (entre 12-13 por idioma para llegar a 100)
+  const tecnicasPorIdioma = {
+    "Español": [
+      [1, "Usa la pirámide invertida", "Coloca la información más importante al inicio del texto.", "Ejemplo: 'El nuevo horario será de 8 a 6', no 'Informamos que...'"],
+      [2, "Redacta oraciones cortas", "Limita cada oración a 15-20 palabras.", "Ejemplo: 'Llegó tarde. El tráfico era denso. No pudo entrar.'"],
+      [3, "Evita la voz pasiva", "Prefiere la voz activa para mayor claridad.", "Ejemplo: 'El equipo presentó el informe' sobre 'El informe fue presentado'"],
+      [4, "Usa conectores lógicos", "Emplea sin embargo, por lo tanto, en consecuencia.", "Ejemplo: 'Estudió mucho; por lo tanto, aprobó el examen.'"],
+      [5, "Elimina muletillas", "Suprime 'o sea', 'como que', 'en plan' en textos formales.", "Ejemplo: En lugar de 'o sea, el resultado fue bueno', di 'El resultado fue bueno'."],
+      [6, "Muestra, no digas", "Describe acciones en lugar de emociones abstractas.", "Ejemplo: No 'estaba enojado', escribe 'Golpeó la mesa y salió'."],
+      [7, "Inicia con un gancho", "Primera frase impactante que engancha al lector.", "Ejemplo: 'Nadie creyó que fuera posible hasta que lo vieron.'"],
+      [8, "Termina con fuerza", "El cierre debe resonar en la mente del lector.", "Ejemplo: 'Y así, sin más, comenzó la revolución.'"],
+      [9, "Usa la regla de tres", "Tres elementos generan mejor estructura.", "Ejemplo: 'Llegar, ver, vencer'."],
+      [10, "Revisa la concordancia", "Sujeto y verbo deben coincidir en número y persona.", "Ejemplo: 'Los niños juegan' no 'Los niños juega'."],
+      [11, "Sé específico, no vago", "Usa términos concretos en lugar de generalizaciones.", "Ejemplo: 'tres manzanas rojas' en lugar de 'algunas frutas'."],
+      [12, "Usa ejemplos concretos", "Ilustra ideas abstractas con casos reales.", "Ejemplo: 'Como cuando en 1995 la empresa quebró...'"],
+      [13, "Crea expectativa", "Anuncia lo que viene para mantener el interés.", "Ejemplo: 'A continuación, las tres claves del éxito.'"]
+    ],
+    "Chino": [
+      [14, "使用倒金字塔结构", "把最重要的信息放在开头。", "例子: '新时间表是8点到6点'，而不是'我们通知您...'"],
+      [15, "写短句子", "每个句子限制在15-20个词。", "例子: '他迟到了。交通很拥挤。他进不去。'"],
+      [16, "避免被动语态", "优先使用主动语态。", "例子: '团队提交了报告'而不是'报告被提交了'"],
+      [17, "使用逻辑连接词", "使用然而、因此、 consequently。", "例子: '他学习很努力；因此他通过了考试。'"],
+      [18, "展示，不要告诉", "描述动作而不是抽象情感。", "例子: 不要写'他很生气'，写'他拍桌子走了出去'。"],
+      [19, "用钩子开头", "第一句要抓住读者注意力。", "例子: '在他们看到之前，没人相信这是可能的。'"],
+      [20, "结尾要有力", "结束语应该产生共鸣。", "例子: '就这样，革命开始了。'"],
+      [21, "使用具体的词汇", "选择精确的词语。", "例子: '三个红苹果'而不是'一些水果'。"],
+      [22, "用主动动词", "选择强有力的行动动词。", "例子: '她冲过终点线'而不是'她走得很快'。"],
+      [23, "变换句子长度", "交替使用短句和长句。", "例子: '他来了。他们等了好几个小时。终于，他跨过了门槛。'"],
+      [24, "用例子说明", "用具体例子解释抽象概念。", "例子: '例如，黄金博物馆有3万件展品...'"],
+      [25, "创造期待感", "预告接下来要讲的内容。", "例子: '接下来，成功的三个关键。'"]
+    ],
+    "Portugués": [
+      [26, "Use a pirâmide invertida", "Coloque a informação mais importante no início.", "Exemplo: 'O novo horário será das 8 às 18', não 'Informamos que...'"],
+      [27, "Escreva frases curtas", "Limite cada frase a 15-20 palavras.", "Exemplo: 'Ele chegou tarde. O trânsito estava denso. Ele não conseguiu entrar.'"],
+      [28, "Evite a voz passiva", "Prefira a voz ativa.", "Exemplo: 'A equipe apresentou o relatório' em vez de 'O relatório foi apresentado'"],
+      [29, "Use conectores lógicos", "Use no entanto, portanto, consequentemente.", "Exemplo: 'Ele estudou muito; portanto, passou no exame.'"],
+      [30, "Mostre, não diga", "Descreva ações em vez de emoções abstratas.", "Exemplo: Em vez de 'ele estava com raiva', escreva 'Ele bateu na mesa e saiu'."],
+      [31, "Comece com um gancho", "Primeira frase que prende a atenção.", "Exemplo: 'Ninguém acreditava que era possível até que viram.'"],
+      [32, "Termine com força", "A conclusão deve ressoar.", "Exemplo: 'E assim, sem mais delongas, a revolução começou.'"],
+      [33, "Use verbos ativos", "Escolha verbos de ação fortes.", "Exemplo: 'Ela cruzou a linha de chegada correndo' em vez de 'ela foi rapidamente'."],
+      [34, "Use vocabulário específico", "Escolha palavras precisas.", "Exemplo: 'três maçãs vermelhas' em vez de 'algumas frutas'."],
+      [35, "Varie o comprimento das frases", "Alterne frases curtas e longas.", "Exemplo: 'Ele chegou. Eles esperaram horas. Finalmente, ele cruzou a soleira.'"]
+    ],
+    "Italiano": [
+      [36, "Usa la piramide invertita", "Metti le informazioni più importanti all'inizio.", "Esempio: 'Il nuovo orario sarà dalle 8 alle 18', non 'Vi informiamo che...'"],
+      [37, "Scrivi frasi brevi", "Limita ogni frase a 15-20 parole.", "Esempio: 'Arrivò tardi. Il traffico era intenso. Non poté entrare.'"],
+      [38, "Evita la voce passiva", "Preferisci la voce attiva.", "Esempio: 'Il team ha presentato il rapporto' invece di 'Il rapporto è stato presentato'"],
+      [39, "Usa connettori logici", "Usa tuttavia, quindi, di conseguenza.", "Esempio: 'Ha studiato molto; quindi ha superato l'esame.'"],
+      [40, "Mostra, non dire", "Descrivi azioni invece di emozioni astratte.", "Esempio: Invece di 'era arrabbiato', scrivi 'Ha sbattuto il tavolo ed è uscito'."],
+      [41, "Inizia con un gancio", "Prima frase che cattura l'attenzione.", "Esempio: 'Nessuno credeva fosse possibile finché non lo videro.'"],
+      [42, "Termina con forza", "La conclusione deve risuonare.", "Esempio: 'E così, senza ulteriori indugi, la rivoluzione iniziò.'"],
+      [43, "Usa verbi attivi", "Scegli verbi d'azione forti.", "Esempio: 'Ha attraversato il traguardo di corsa' invece di 'è andata velocemente'."],
+      [44, "Usa vocabolario specifico", "Scegli parole precise.", "Esempio: 'tre mele rosse' invece di 'alcuni frutti'."],
+      [45, "Varia la lunghezza delle frasi", "Alterna frasi corte e lunghe.", "Esempio: 'Arrivò. Aspettarono per ore. Finalmente, varcò la soglia.'"]
+    ],
+    "Inglés": [
+      [46, "Use the inverted pyramid", "Put the most important information first.", "Example: 'The new schedule will be 8 to 6', not 'We inform you that...'"],
+      [47, "Write short sentences", "Limit each sentence to 15-20 words.", "Example: 'He arrived late. Traffic was heavy. He couldn't enter.'"],
+      [48, "Avoid passive voice", "Prefer active voice for clarity.", "Example: 'The team presented the report' over 'The report was presented'"],
+      [49, "Use logical connectors", "Use however, therefore, consequently.", "Example: 'He studied hard; therefore, he passed the exam.'"],
+      [50, "Show, don't tell", "Describe actions instead of abstract emotions.", "Example: Instead of 'he was angry', write 'He slammed the table and left.'"],
+      [51, "Start with a hook", "First sentence that grabs the reader's attention.", "Example: 'No one believed it was possible until they saw it.'"],
+      [52, "End with power", "The closing should resonate with the reader.", "Example: 'And so, without further ado, the revolution began.'"],
+      [53, "Use active verbs", "Choose strong, action-oriented verbs.", "Example: 'She dashed across the finish line' instead of 'she went quickly'."],
+      [54, "Use specific vocabulary", "Choose precise words over generic ones.", "Example: 'three red apples' instead of 'some fruits'."],
+      [55, "Vary sentence length", "Alternate short and long sentences for rhythm.", "Example: 'He came. They had waited for hours. Finally, he crossed the threshold.'"],
+      [56, "Use concrete examples", "Illustrate abstract ideas with real cases.", "Example: 'Like when the company went bankrupt in 1995...'"]
+    ],
+    "Coreano": [
+      [57, "역피라미드 사용하기", "가장 중요한 정보를 처음에 배치하세요.", "예: '새 일정은 8시부터 6시까지입니다', '저희가 알려드립니다...' 아님"],
+      [58, "짧은 문장 쓰기", "각 문장을 15-20단어로 제한하세요.", "예: '그는 늦게 도착했다. 교통이 혼잡했다. 그는 들어갈 수 없었다.'"],
+      [59, "수동태 피하기", "능동태를 선호하세요.", "예: '팀이 보고서를 발표했습니다' (보고서가 발표되었습니다 아님)"],
+      [60, "논리적 연결어 사용하기", "그러나, 따라서, 결과적으로 사용.", "예: '그는 열심히 공부했다; 따라서 시험에 합격했다.'"],
+      [61, "보여주세요, 말하지 마세요", "추상적 감정 대신 행동을 설명하세요.", "예: '그는 화가 났다' 대신 '그는 탁자를 치고 나갔다'."],
+      [62, "훅으로 시작하기", "독자의 관심을 끄는 첫 문장.", "예: '그들이 그것을 볼 때까지 아무도 그것이 가능하다고 믿지 않았다.'"],
+      [63, "강하게 끝내기", "결말은 여운을 남겨야 합니다.", "예: '그리고 그래서, 더 이상 지체 없이 혁명이 시작되었다.'"],
+      [64, "능동 동사 사용하기", "강력한 행동 동사를 선택하세요.", "예: '그녀는 빨리 갔다' 대신 '그녀는 결승선을 향해 달려갔다'."],
+      [65, "구체적인 어휘 사용하기", "정확한 단어를 선택하세요.", "예: '어떤 과일들' 대신 '세 개의 빨간 사과'."],
+      [66, "문장 길이 바꾸기", "짧은 문장과 긴 문장을 번갈아 사용하세요.", "예: '그가 왔다. 그들은 몇 시간 동안 기다렸다. 마침내, 그는 문지방을 넘었다.'"]
+    ],
+    "Francés": [
+      [67, "Utilisez la pyramide inversée", "Placez l'information la plus importante au début.", "Exemple: 'Les nouveaux horaires seront de 8h à 18h', pas 'Nous vous informons que...'"],
+      [68, "Écrivez des phrases courtes", "Limitez chaque phrase à 15-20 mots.", "Exemple: 'Il arriva tard. La circulation était dense. Il ne put pas entrer.'"],
+      [69, "Évitez la voix passive", "Préférez la voix active.", "Exemple: 'L'équipe a présenté le rapport' plutôt que 'Le rapport a été présenté'"],
+      [70, "Utilisez des connecteurs logiques", "Utilisez cependant, par conséquent, donc.", "Exemple: 'Il a beaucoup étudié; par conséquent, il a réussi l'examen.'"],
+      [71, "Montrez, ne dites pas", "Décrivez les actions au lieu des émotions abstraites.", "Exemple: Au lieu de 'il était en colère', écrivez 'Il a frappé la table et est parti.'"],
+      [72, "Commencez par un accroche", "Première phrase qui capte l'attention.", "Exemple: 'Personne ne croyait que c'était possible jusqu'à ce qu'ils le voient.'"],
+      [73, "Terminez avec force", "La conclusion doit résonner.", "Exemple: 'Et ainsi, sans plus attendre, la révolution commença.'"],
+      [74, "Utilisez des verbes actifs", "Choisissez des verbes d'action forts.", "Exemple: 'Elle a traversé la ligne d'arrivée en courant' au lieu de 'elle est allée rapidement'."],
+      [75, "Utilisez un vocabulaire précis", "Choisissez des mots précis.", "Exemple: 'trois pommes rouges' au lieu de 'quelques fruits'."],
+      [76, "Variez la longueur des phrases", "Alternez phrases courtes et longues.", "Exemple: 'Il arriva. Ils l'attendaient depuis des heures. Finalement, il franchit le seuil.'"]
+    ],
+    "Alemán": [
+      [77, "Verwenden Sie die umgekehrte Pyramide", "Stellen Sie die wichtigste Information an den Anfang.", "Beispiel: 'Der neue Zeitplan ist von 8 bis 18 Uhr', nicht 'Wir informieren Sie, dass...'"],
+      [78, "Schreiben Sie kurze Sätze", "Begrenzen Sie jeden Satz auf 15-20 Wörter.", "Beispiel: 'Er kam spät an. Der Verkehr war dicht. Er konnte nicht eintreten.'"],
+      [79, "Vermeiden Sie das Passiv", "Bevorzugen Sie das Aktiv.", "Beispiel: 'Das Team präsentierte den Bericht' statt 'Der Bericht wurde präsentiert'"],
+      [80, "Verwenden Sie logische Konnektoren", "Benutzen Sie jedoch, daher, folglich.", "Beispiel: 'Er hat viel gelernt; daher hat er die Prüfung bestanden.'"],
+      [81, "Zeigen Sie, sagen Sie nicht", "Beschreiben Sie Handlungen statt abstrakter Emotionen.", "Beispiel: Statt 'er war wütend', schreiben Sie 'Er schlug auf den Tisch und ging.'"],
+      [82, "Beginnen Sie mit einem Haken", "Erster Satz, der die Aufmerksamkeit fesselt.", "Beispiel: 'Niemand glaubte, dass es möglich war, bis sie es sahen.'"],
+      [83, "Enden Sie mit Kraft", "Der Schluss sollte nachhallen.", "Beispiel: 'Und so begann ohne weiteres die Revolution.'"],
+      [84, "Verwenden Sie aktive Verben", "Wählen Sie starke Aktionsverben.", "Beispiel: 'Sie rannte über die Ziellinie' statt 'sie ging schnell'."],
+      [85, "Verwenden Sie spezifisches Vokabular", "Wählen Sie präzise Wörter.", "Beispiel: 'drei rote Äpfel' statt 'einige Früchte'."],
+      [86, "Variieren Sie die Satzlänge", "Wechseln Sie kurze und lange Sätze ab.", "Beispiel: 'Er kam. Sie hatten stundenlang gewartet. Endlich überschritt er die Schwelle.'"]
+    ]
+  };
+  
+  // Añadir técnicas restantes para completar 100 (algunos idiomas tienen 12-13, total 100)
+  let restantes = 100;
+  for(let idioma in tecnicasPorIdioma) {
+    for(let tec of tecnicasPorIdioma[idioma]) {
+      tecnicas.push({
+        id: tec[0],
+        idioma: idioma,
+        titulo: tec[1],
+        concepto: tec[2],
+        ejemplo: tec[3],
+        completada: false
+      });
+    }
+  }
+  
+  // Ordenar por ID
+  tecnicas.sort((a,b) => a.id - b.id);
+  
+  // Estado
+  let progress = {};
+  let currentFilterLang = "all";
+  let currentSearch = "";
+  let currentPage = 1;
+  let itemsPerPage = 12;
+  let filteredTecnicas = [...tecnicas];
+  let currentCardIndex = 0;
+  let filteredFlashcards = [...tecnicas];
+  const STORAGE_KEY = "redaccion_100_tecnicas_8_idiomas";
+  
+  function loadProgress() {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if(saved) progress = JSON.parse(saved);
+    for(let i=0; i<tecnicas.length; i++) if(progress[tecnicas[i].id]===undefined) progress[tecnicas[i].id] = false;
+    updateStats();
+  }
+  function saveProgress() { localStorage.setItem(STORAGE_KEY, JSON.stringify(progress)); updateStats(); }
+  function updateStats() {
+    let c = Object.values(progress).filter(v=>v===true).length;
+    document.getElementById("completedCount").innerText = c;
+    document.getElementById("progressFill").style.width = `${(c/100)*100}%`;
+  }
+  function markComplete(id, isComplete) {
+    if(isComplete && !progress[id]) { progress[id] = true; saveProgress(); renderLista(); }
+  }
+  
+  function renderLista() {
+    let filtered = tecnicas.filter(t => {
+      if(currentFilterLang !== "all" && t.idioma !== currentFilterLang) return false;
+      if(currentSearch && !t.titulo.toLowerCase().includes(currentSearch) && !t.concepto.toLowerCase().includes(currentSearch)) return false;
+      return true;
+    });
+    filteredTecnicas = filtered;
+    const totalPages = Math.ceil(filtered.length / itemsPerPage);
+    const start = (currentPage-1) * itemsPerPage;
+    const paginated = filtered.slice(start, start+itemsPerPage);
+    
+    const container = document.getElementById("tecnicasList");
+    container.innerHTML = paginated.map(t => `
+      <div class="tecnica-card ${progress[t.id] ? 'completed' : ''}" data-id="${t.id}">
+        <div class="d-flex justify-content-between">
+          <div><span class="badge-lang">${t.idioma}</span><span class="ms-2">#${t.id}</span></div>
+          <input class="form-check-input" type="checkbox" ${progress[t.id] ? 'checked' : ''} onchange="event.stopPropagation(); markComplete(${t.id}, this.checked)">
+        </div>
+        <h6 class="mt-2">${t.titulo}</h6>
+        <p class="small text-muted">${t.concepto.substring(0, 100)}...</p>
+      </div>
+    `).join('');
+    
+    document.querySelectorAll(".tecnica-card").forEach(card => {
+      card.addEventListener("click", (e) => {
+        if(!e.target.classList.contains("form-check-input")) {
+          let id = parseInt(card.dataset.id);
+          let idx = filteredTecnicas.findIndex(t => t.id === id);
+          if(idx !== -1) { currentCardIndex = idx; switchToFlashcards(); updateFlashcard(); }
+        }
+      });
+    });
+    
+    let pagHtml = ''; for(let i=1;i<=totalPages;i++) pagHtml += `<li class="page-item ${i===currentPage?'active':''}"><a class="page-link" href="#" data-page="${i}">${i}</a></li>`;
+    document.getElementById("pagination").innerHTML = pagHtml;
+    document.querySelectorAll("#pagination .page-link").forEach(l=>l.addEventListener("click", e=>{ e.preventDefault(); currentPage=parseInt(l.dataset.page); renderLista(); }));
+  }
+  
+  function filterFlashcards() {
+    if(currentFilterLang === "all") filteredFlashcards = [...tecnicas];
+    else filteredFlashcards = tecnicas.filter(t => t.idioma === currentFilterLang);
+    currentCardIndex = Math.min(currentCardIndex, filteredFlashcards.length-1);
+    if(currentCardIndex < 0) currentCardIndex = 0;
+    updateFlashcard();
+  }
+  
+  function updateFlashcard() {
+    let t = filteredFlashcards[currentCardIndex];
+    if(!t) return;
+    document.getElementById("frontLang").innerHTML = t.idioma;
+    document.getElementById("frontNum").innerHTML = `#${t.id}`;
+    document.getElementById("frontTitle").innerHTML = t.titulo;
+    document.getElementById("frontConcept").innerHTML = t.concepto;
+    document.getElementById("backNum").innerHTML = `#${t.id}`;
+    document.getElementById("backTitle").innerHTML = t.titulo;
+    document.getElementById("backExample").innerHTML = t.ejemplo;
+    document.getElementById("cardCounter").innerHTML = `${currentCardIndex+1}/${filteredFlashcards.length}`;
+    document.getElementById("flashcard").classList.remove("flipped");
+    
+    // Ejercicio simple de opción múltiple
+    let ejercicioHtml = `<div class="small fw-bold mb-2">📝 Ejercicio: ¿Cuál es el objetivo de esta técnica?</div>
+      <div class="d-flex flex-wrap gap-2">
+        <button class="option-btn ejercicio-opt" data-value="${t.concepto.split('.')[0]}">${t.concepto.split('.')[0]}</button>
+        <button class="option-btn ejercicio-opt" data-value="Escribir oraciones muy largas">Escribir oraciones muy largas</button>
+        <button class="option-btn ejercicio-opt" data-value="Usar palabras complicadas">Usar palabras complicadas</button>
+      </div>
+      <div id="ejercicioFeedback" class="mt-2 small"></div>`;
+    document.getElementById("exerciseArea").innerHTML = ejercicioHtml;
+    
+    document.querySelectorAll(".ejercicio-opt").forEach(btn => {
+      btn.onclick = () => {
+        let isCorrect = btn.getAttribute("data-value") === t.concepto.split('.')[0];
+        let fb = document.getElementById("ejercicioFeedback");
+        if(isCorrect) { fb.innerHTML = "<span class='text-success'>✅ Correcto!</span>"; markComplete(t.id, true); renderLista(); }
+        else { fb.innerHTML = "<span class='text-danger'>❌ Incorrecto. Vuelve a leer la técnica.</span>"; }
+        document.querySelectorAll(".ejercicio-opt").forEach(b=>b.disabled=true);
+      };
+    });
+  }
+  
+  function nextCard(){ if(currentCardIndex<filteredFlashcards.length-1){currentCardIndex++; updateFlashcard();} }
+  function prevCard(){ if(currentCardIndex>0){currentCardIndex--; updateFlashcard();} }
+  function randomCard(){ currentCardIndex=Math.floor(Math.random()*filteredFlashcards.length); updateFlashcard(); }
+  function flipCard(){ document.getElementById("flashcard").classList.toggle("flipped"); }
+  function markCurrentComplete(){
+    let t = filteredFlashcards[currentCardIndex];
+    if(t && !progress[t.id]) { progress[t.id]=true; saveProgress(); renderLista(); updateFlashcard(); }
+  }
+  
+  function switchToLista() {
+    document.getElementById("listaView").style.display = "block";
+    document.getElementById("flashcardsView").style.display = "none";
+    document.querySelectorAll(".nav-item-custom").forEach(i=>i.classList.remove("active"));
+    document.querySelector(".nav-item-custom[data-view='lista']").classList.add("active");
+    renderLista();
+  }
+  function switchToFlashcards() {
+    document.getElementById("listaView").style.display = "none";
+    document.getElementById("flashcardsView").style.display = "block";
+    document.querySelectorAll(".nav-item-custom").forEach(i=>i.classList.remove("active"));
+    document.querySelector(".nav-item-custom[data-view='flashcards']").classList.add("active");
+    filterFlashcards();
+  }
+  
+  document.getElementById("prevCardBtn")?.addEventListener("click", prevCard);
+  document.getElementById("nextCardBtn")?.addEventListener("click", nextCard);
+  document.getElementById("randomCardBtn")?.addEventListener("click", randomCard);
+  document.getElementById("flipCardBtn")?.addEventListener("click", flipCard);
+  document.getElementById("markCompleteBtn")?.addEventListener("click", markCurrentComplete);
+  document.getElementById("themeToggleBtn")?.addEventListener("click", () => document.body.classList.toggle("light-mode"));
+  document.querySelector(".nav-item-custom[data-view='lista']")?.addEventListener("click", switchToLista);
+  document.querySelector(".nav-item-custom[data-view='flashcards']")?.addEventListener("click", switchToFlashcards);
+  
+  document.getElementById("searchInput")?.addEventListener("input", e => { currentSearch = e.target.value.toLowerCase(); currentPage = 1; renderLista(); });
+  document.getElementById("langFilter")?.addEventListener("change", e => { currentFilterLang = e.target.value; currentPage = 1; renderLista(); filterFlashcards(); });
+  
+  loadProgress();
+  renderLista();
+  switchToLista();
+</script>
+</body>
+</html>

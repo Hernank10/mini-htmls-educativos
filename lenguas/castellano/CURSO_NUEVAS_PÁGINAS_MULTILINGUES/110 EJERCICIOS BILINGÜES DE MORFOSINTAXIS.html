@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lección: Centro Bilingüe Interactivo de Morfosintaxis (ES/EN)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Estilos generales para la apariencia moderna y bilingüe */
+        body { font-family: 'Inter', sans-serif; background-color: #f4f7f9; }
+        .card { transition: all 0.3s ease; }
+        .quiz-container { max-width: 900px; }
+        /* Colores inspirados en un centro educativo (azul profesional) */
+        .btn-primary { background-color: #007bff; color: white; }
+        .btn-primary:hover { background-color: #0056b3; }
+        /* Colores de retroalimentación */
+        .feedback-success { background-color: #d4edda; color: #155724; border-color: #c3e6cb; }
+        .feedback-error { background-color: #f8d7da; color: #721c24; border-color: #f5c6cb; }
+    </style>
+</head>
+<body class="p-4 md:p-8">
+
+    <div class="quiz-container mx-auto">
+        <!-- Encabezado del Centro Bilingüe Interactivo -->
+        <header class="text-center mb-8 p-4 bg-white rounded-xl shadow-lg">
+            <h1 class="text-3xl md:text-4xl font-extrabold text-[#007bff]">Centro Bilingüe Interactivo de Morfosintaxis (ES/EN)</h1>
+            <p class="text-md text-gray-600">Lección Modelo para Sala de Informática | Floridablanca, Colombia</p>
+            <p class="mt-2 text-sm text-gray-500">Sesión Tipo: 110 ejercicios interactivos nivel intermedio. Duración: 45 minutos.</p>
+        </header>
+
+        <!-- Indicadores de Progreso y Tiempo (Sticky para visibilidad) -->
+        <div id="quiz-status" class="bg-white p-4 rounded-xl shadow-lg mb-6 sticky top-0 z-10 border-t-4 border-b-4 border-[#007bff]">
+            <div class="flex justify-between items-center mb-2">
+                <span class="font-semibold text-gray-700">Progreso: <span id="progress-text">0/110</span></span>
+                <span class="font-semibold text-gray-700">Tiempo Restante: <span id="timer-text">45:00</span></span>
+            </div>
+            <div class="w-full bg-gray-200 rounded-full h-3">
+                <div id="progress-bar" class="bg-[#007bff] h-3 rounded-full" style="width: 0%"></div>
+            </div>
+        </div>
+
+        <main id="quiz-area" class="card bg-white p-6 rounded-xl shadow-xl">
+            <h2 class="text-2xl font-bold mb-4 text-gray-800" id="quiz-title">¡Bienvenido!</h2>
+            <p id="instruction-text" class="mb-6 text-gray-600">Haz clic en "Comenzar Lección" para iniciar tu práctica bilingüe. Tu objetivo es corregir el error y, lo más importante, **escribir la regla gramatical** que explica la corrección. Ambas partes son obligatorias para avanzar.</p>
+            
+            <div id="question-display" class="hidden">
+                <!-- Frase con el error a corregir -->
+                <div class="bg-red-50 p-4 rounded-lg border-l-4 border-red-500 mb-4">
+                    <p class="font-semibold text-lg text-red-800">Frase con Error:</p>
+                    <p class="text-xl italic text-red-700" id="current-doubt">Loading...</p>
+                    <p class="text-sm text-red-600 mt-1" id="current-translation">(Traducción: La traducción de la frase con error)</p>
+                </div>
+
+                <!-- Paso 1: Corrección (Corrección de la frase en Inglés) -->
+                <div id="correction-step">
+                    <label for="user-correction" class="block font-medium mb-2 text-gray-700">Paso 1: Escribe la corrección en inglés:</label>
+                    <input type="text" id="user-correction" class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#007bff] mb-4">
+                </div>
+
+                <!-- Paso 2: Regla (Explicación de la regla en Español) -->
+                <div id="rule-step" class="hidden bg-yellow-50 p-4 rounded-lg mb-4 border-l-4 border-yellow-500">
+                    <p class="font-semibold text-lg text-yellow-800 mb-2">Paso 2: Escribe la Regla Gramatical Aplicada (en español):</p>
+                    <p class="text-sm text-gray-600 mb-3">Sé conciso y preciso, explicando el porqué de la corrección.</p>
+                    <textarea id="user-rule" rows="3" class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#007bff]"></textarea>
+                </div>
+            </div>
+
+            <!-- Área de Retroalimentación del Usuario -->
+            <div id="feedback-area" class="mt-4 p-4 rounded-lg hidden"></div>
+
+            <!-- Controles principales -->
+            <div class="flex justify-between mt-6">
+                <button id="start-button" class="btn-primary px-6 py-3 rounded-lg font-bold shadow-md hover:shadow-lg">Comenzar Lección</button>
+                <button id="check-button" class="btn-primary px-6 py-3 rounded-lg font-bold shadow-md hover:shadow-lg hidden" disabled>Comprobar Corrección</button>
+                <button id="next-button" class="bg-green-600 text-white px-6 py-3 rounded-lg font-bold shadow-md hover:bg-green-700 hidden" disabled>Siguiente Pregunta</button>
+            </div>
+            
+            <!-- Área de Refuerzo Forzado (Aparece al cometer un error) -->
+            <div id="correction-forced-area" class="mt-4 hidden p-4 rounded-lg border-2 border-red-400 bg-red-50">
+                <p class="font-bold text-lg text-red-700 mb-2">¡Alto! Refuerzo Obligatorio.</p>
+                <p class="text-sm mb-3 text-red-600">Para avanzar, debes reescribir la **Corrección** y la **Regla** exactamente como se muestran a continuación para forzar la retención de la respuesta correcta.</p>
+                
+                <div class="space-y-3">
+                    <label class="block font-medium text-red-700">Corrección (EN):</label>
+                    <input type="text" id="forced-correction" class="w-full p-3 border border-red-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500" disabled>
+                    
+                    <label class="block font-medium text-red-700">Regla (ES):</label>
+                    <textarea id="forced-rule" rows="3" class="w-full p-3 border border-red-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500" disabled></textarea>
+                </div>
+                <button id="forced-check-button" class="bg-red-600 text-white px-6 py-3 rounded-lg font-bold shadow-md hover:bg-red-700 mt-4 w-full">Validar Refuerzo</button>
+            </div>
+
+        </main>
+    </div>
+
+    <script>
+        // --- 110 EJERCICIOS BILINGÜES DE MORFOSINTAXIS ---
+        const quizData = [
+            { doubt: "She is married with a doctor.", correction: "She is married to a doctor.", translation: "Ella está casada con un doctor.", rule: "El verbo 'married' siempre va seguido de la preposición 'to' en lugar de 'with' cuando se refiere a la persona." },
+            { doubt: "I am agree with your opinion.", correction: "I agree with your opinion.", translation: "Estoy de acuerdo con tu opinión.", rule: "El verbo 'agree' se usa sin el verbo 'to be' ('am') como verbo principal, no como adjetivo o participio." },
+            { doubt: "If I was rich, I would travel the world.", correction: "If I were rich, I would travel the world.", translation: "Si fuera rico, viajaría por el mundo.", rule: "En el segundo condicional (irreal) se usa el subjuntivo 'were' para todas las personas después de 'if' (incluyendo 'I' y 'he/she/it')." },
+            { doubt: "The house is not big enough for us.", correction: "The house is not big enough for us.", translation: "La casa no es lo suficientemente grande para nosotros.", rule: "El adverbio 'enough' siempre se coloca después del adjetivo o adverbio que modifica." },
+            { doubt: "Despite of the rain, we went out.", correction: "Despite the rain, we went out.", translation: "A pesar de la lluvia, salimos.", rule: "La preposición 'despite' nunca lleva la partícula 'of' detrás; solo 'in spite of' lleva 'of'." },
+            { doubt: "He insisted on pay for the dinner.", correction: "He insisted on paying for the dinner.", translation: "Él insistió en pagar la cena.", rule: "El verbo 'insist' seguido de la preposición 'on' requiere que el siguiente verbo esté en gerundio (terminación -ing)." },
+            { doubt: "I wish I had a new car.", correction: "I wish I had a new car.", translation: "Ojalá tuviera un coche nuevo.", rule: "Para expresar deseos sobre el presente, se usa 'wish' seguido del pasado simple, no del condicional." },
+            { doubt: "Can you lend me the money?", correction: "Can you lend me the money?", translation: "¿Puedes prestarme el dinero?", rule: "El verbo 'lend' (prestar) se usa sin la preposición 'to' cuando el objeto indirecto precede al objeto directo (lend me the money)." },
+            { doubt: "I look forward to hear from you soon.", correction: "I look forward to hearing from you soon.", translation: "Espero tener noticias tuyas pronto.", rule: "La frase 'look forward to' es una expresión preposicional fija que requiere el gerundio (-ing) en el siguiente verbo." },
+            { doubt: "I have known her since five years.", correction: "I have known her for five years.", translation: "La conozco desde hace cinco años.", rule: "Para un periodo de tiempo, se usa 'for' (durante), mientras que 'since' se usa para un punto de inicio específico en el tiempo." },
+            { doubt: "The police searched the area for clues.", correction: "The police searched the area for clues.", translation: "La policía buscó pistas en la zona.", rule: "El verbo 'search' se usa como transitivo sin la preposición 'in' o 'at' al indicar el área (search the area)." },
+            { doubt: "She told to me about her trip.", correction: "She told me about her trip.", translation: "Ella me habló de su viaje.", rule: "El verbo 'tell' es transitivo y no necesita la preposición 'to' antes del objeto indirecto si el objeto directo le sigue inmediatamente." },
+            { doubt: "Do you know where the post office is?", correction: "Do you know where the post office is?", translation: "¿Sabes dónde está la oficina de correos?", rule: "En preguntas indirectas, el orden de las palabras debe ser el de una afirmación (sujeto + verbo)." },
+            { doubt: "Neither John nor Mary are going to the party.", correction: "Neither John nor Mary is going to the party.", translation: "Ni John ni Mary van a la fiesta.", rule: "Con la conjunción 'neither... nor', la concordancia verbal se rige por el sustantivo más cercano al verbo, que en este caso es singular ('Mary')." },
+            { doubt: "This is the car what I bought yesterday.", correction: "This is the car that I bought yesterday.", translation: "Este es el coche que compré ayer.", rule: "Para referirse a objetos inanimados en cláusulas relativas restrictivas, se usa 'that' o 'which', no 'what'." },
+            { doubt: "Everybody were happy with the result.", correction: "Everybody was happy with the result.", translation: "Todo el mundo estaba contento con el resultado.", rule: "Los pronombres indefinidos como 'everybody' siempre requieren un verbo en singular ('was')." },
+            { doubt: "We discussed about the problem all night.", correction: "We discussed the problem all night.", translation: "Discutimos el problema toda la noche.", rule: "El verbo 'discuss' es transitivo y no requiere la preposición 'about' antes del objeto directo." },
+            { doubt: "I suggested to go to the cinema.", correction: "I suggested going to the cinema.", translation: "Sugerí ir al cine.", rule: "El verbo 'suggest' es seguido por el gerundio (terminación -ing), no por el infinitivo 'to go'." },
+            { doubt: "He avoided to answer my question.", correction: "He avoided answering my question.", translation: "Él evitó responder a mi pregunta.", rule: "El verbo 'avoid' es seguido por el gerundio (terminación -ing), no por el infinitivo 'to answer'." },
+            { doubt: "She succeeded on finishing the task.", correction: "She succeeded in finishing the task.", translation: "Ella logró terminar la tarea.", rule: "El verbo 'succeed' requiere la preposición 'in' antes del gerundio para indicar un logro." },
+            { doubt: "She bought a new pair of shoes.", correction: "She bought a new pair of shoes.", translation: "Ella compró un par de zapatos nuevos.", rule: "Los adjetivos en inglés siempre preceden al sustantivo que modifican (new pair of shoes)." },
+            { doubt: "We went to the cinema, which was disappointing.", correction: "We went to the cinema, which was disappointing.", translation: "Fuimos al cine, lo cual fue decepcionante.", rule: "El pronombre relativo 'which' se usa en cláusulas no restrictivas para referirse a la oración completa anterior." },
+            { doubt: "I have too much friends in the city.", correction: "I have too many friends in the city.", translation: "Tengo demasiados amigos en la ciudad.", rule: "Se usa el cuantificador 'many' para sustantivos contables plurales como 'friends'." },
+            { doubt: "He is capable for doing this job.", correction: "He is capable of doing this job.", translation: "Él es capaz de hacer este trabajo.", rule: "El adjetivo 'capable' siempre va seguido de la preposición 'of'." },
+            { doubt: "It's time to start to work.", correction: "It's time to start working.", translation: "Es hora de empezar a trabajar.", rule: "Aunque 'start' puede ir seguido de infinitivo o gerundio, el gerundio ('working') es más común para acciones continuas." },
+            { doubt: "He asked me what was my name.", correction: "He asked me what my name was.", translation: "Él me preguntó cuál era mi nombre.", rule: "En el estilo indirecto (pregunta incrustada), se mantiene el orden de la oración afirmativa (sujeto + verbo)." },
+            { doubt: "She is used to live in the countryside.", correction: "She is used to living in the countryside.", translation: "Ella está acostumbrada a vivir en el campo.", rule: "La expresión 'be used to' (estar acostumbrado a) requiere el gerundio (-ing) después de 'to'." },
+            { doubt: "The party was boring, so I left soon.", correction: "The party was boring, so I left soon.", rule: "La fiesta fue aburrida, así que me fui pronto.", translation: "Los adjetivos terminados en '-ing' describen la cualidad de una cosa o persona (boring: que aburre)." },
+            { doubt: "It's raining heavily, therefore we stayed inside.", correction: "It's raining heavily, therefore we stayed inside.", translation: "Está lloviendo mucho, por lo tanto nos quedamos dentro.", rule: "El adverbio 'heavily' modifica al verbo 'raining'." },
+            { doubt: "I prefer to run than swim.", correction: "I prefer running to swimming.", translation: "Prefiero correr a nadar.", rule: "La estructura correcta para comparar preferencias con el verbo 'prefer' es 'prefer + gerundio + to + gerundio'." },
+            { doubt: "It is a necessity to know English today.", correction: "It is necessary to know English today.", translation: "Es necesario saber inglés hoy.", rule: "Se debe usar el adjetivo 'necessary' en lugar del sustantivo 'necessity' en esta construcción impersonal." },
+            { doubt: "She is fond in reading novels.", correction: "She is fond of reading novels.", translation: "Le gusta mucho leer novelas.", rule: "La expresión 'fond' (ser aficionado a) siempre va seguida de la preposición 'of'." },
+            { doubt: "He died of a heart attack.", correction: "He died of a heart attack.", translation: "Él murió de un ataque al corazón.", rule: "El verbo 'die' seguido de una causa de enfermedad o condición requiere la preposición 'of'." },
+            { doubt: "Are you interested on history?", correction: "Are you interested in history?", translation: "¿Estás interesado en historia?", rule: "El adjetivo 'interested' siempre va seguido de la preposición 'in'." },
+            { doubt: "I wish I know the answer.", correction: "I wish I knew the answer.", translation: "Ojalá supiera la respuesta.", rule: "Para expresar un deseo irreal sobre el presente, se usa el pasado simple ('knew') después de 'wish'." },
+            { doubt: "The weather is very hot today.", correction: "The weather is very hot today.", translation: "El clima está muy caluroso hoy.", rule: "El sustantivo 'weather' es singular y se usa con el verbo 'is'." },
+            { doubt: "I can to speak three languages.", correction: "I can speak three languages.", translation: "Puedo hablar tres idiomas.", rule: "Los verbos modales (como 'can') van seguidos de la forma base del verbo sin la partícula 'to'." },
+            { doubt: "I saw him yesterday in the street.", correction: "I saw him yesterday in the street.", translation: "Lo vi ayer en la calle.", rule: "Para referirse a una calle o vía, se usa generalmente la preposición 'in' (in the street)." },
+            { doubt: "He arrived at the airport late.", correction: "He arrived at the airport late.", translation: "Llegó tarde al aeropuerto.", rule: "El verbo 'arrive' requiere la preposición 'at' para lugares específicos pequeños." },
+            { doubt: "She relies in her sister for help.", correction: "She relies on her sister for help.", translation: "Ella confía en su hermana para pedir ayuda.", rule: "El verbo 'rely' (confiar) siempre va seguido de la preposición 'on'." },
+            { doubt: "He succeeded in finishing the project.", correction: "He succeeded in finishing the project.", translation: "Él logró terminar el proyecto.", rule: "El verbo 'succeed' (tener éxito) va seguido de la preposición 'in'." },
+            { doubt: "This movie is different than the book.", correction: "This movie is different from the book.", translation: "Esta película es diferente al libro.", rule: "El adjetivo 'different' generalmente va seguido de la preposición 'from' en inglés formal." },
+            { doubt: "We walked during an hour.", correction: "We walked for an hour.", translation: "Caminamos durante una hora.", rule: "Para un período de tiempo definido se usa 'for' (durante), no 'during'." },
+            { doubt: "I came to the office on foot.", correction: "I came to the office on foot.", translation: "Vine a la oficina a pie.", rule: "La frase fija para caminar es 'on foot' (a pie)." },
+            { doubt: "They are waiting for us in the corner.", correction: "They are waiting for us on the corner.", translation: "Nos están esperando en la esquina.", rule: "Para referirse a una esquina específica en una calle se usa 'on the corner' o 'at the corner'." },
+            { doubt: "The book is laying on the table.", correction: "The book is lying on the table.", translation: "El libro está acostado en la mesa.", rule: "El verbo 'lie' (acostarse/estar echado) en gerundio es 'lying' (no 'laying', que es el gerundio de 'lay', poner)." },
+            { doubt: "We went to the beach, which was very sunny.", correction: "We went to the beach, which was very sunny.", translation: "Fuimos a la playa, la cual estaba muy soleada.", rule: "El pronombre relativo 'which' introduce una cláusula no restrictiva." },
+            { doubt: "She suggested me to take a break.", correction: "She suggested taking a break.", translation: "Ella sugirió tomar un descanso.", rule: "El verbo 'suggest' es seguido por el gerundio (-ing) o una cláusula con 'that', no por el infinitivo 'to'." },
+            { doubt: "The manager objected to the new policy.", correction: "The manager objected to the new policy.", translation: "El gerente se opuso a la nueva política.", rule: "El verbo 'object' (oponerse) siempre va seguido de la preposición 'to'." },
+            { doubt: "I don't know nothing about it.", correction: "I don't know anything about it.", translation: "No sé nada al respecto.", rule: "El inglés estándar evita la doble negación; se usa 'don't know' con 'anything'." },
+            { doubt: "He is tired from working all day.", correction: "He is tired of working all day.", translation: "Está cansado de trabajar todo el día.", rule: "El adjetivo 'tired' seguido de la causa que provoca el cansancio requiere la preposición 'of'." },
+            { doubt: "They were happy when they saw us.", correction: "They were happy when they saw us.", translation: "Estaban felices cuando nos vieron.", rule: "La conjunción 'when' introduce una cláusula temporal." },
+            { doubt: "The cake was made for butter and sugar.", correction: "The cake was made of butter and sugar.", translation: "El pastel estaba hecho de mantequilla y azúcar.", rule: "Para referirse a los materiales que componen algo, se usa la preposición 'of'." },
+            { doubt: "I am confident of success.", correction: "I am confident of success.", translation: "Estoy seguro de tener éxito.", rule: "El adjetivo 'confident' (confiado) siempre va seguido de la preposición 'of'." },
+            { doubt: "We are interested in your proposal.", correction: "We are interested in your proposal.", translation: "Estamos interesados en tu propuesta.", rule: "El adjetivo 'interested' (interesado) siempre va seguido de la preposición 'in'." },
+            { doubt: "He is good at playing chess.", correction: "He is good at playing chess.", translation: "Es bueno jugando al ajedrez.", rule: "Los adjetivos que expresan habilidad ('good', 'bad', etc.) van seguidos de la preposición 'at' y el gerundio." },
+            { doubt: "The letter was addressed to John.", correction: "The letter was addressed to John.", translation: "La carta estaba dirigida a John.", rule: "El verbo 'address' (dirigir) siempre va seguido de la preposición 'to'." },
+            { doubt: "She is dedicated with her work.", correction: "She is dedicated to her work.", translation: "Ella está dedicada a su trabajo.", rule: "El adjetivo 'dedicated' (dedicado) siempre va seguido de la preposición 'to'." },
+            { doubt: "I apologized for arriving late.", correction: "I apologized for arriving late.", translation: "Me disculpé por llegar tarde.", rule: "El verbo 'apologize' (disculparse) requiere la preposición 'for' seguida del gerundio para indicar la causa." },
+            { doubt: "They succeeded in winning the championship.", correction: "They succeeded in winning the championship.", translation: "Lograron ganar el campeonato.", rule: "El verbo 'succeed' (tener éxito) va seguido de la preposición 'in'." },
+            { doubt: "I am used to drive on the left.", correction: "I am used to driving on the left.", translation: "Estoy acostumbrado a conducir por la izquierda.", rule: "La expresión 'be used to' (estar acostumbrado a) requiere el gerundio (-ing) después de 'to'." },
+            { doubt: "He is accustomed with the climate.", correction: "He is accustomed to the climate.", translation: "Está acostumbrado al clima.", rule: "El adjetivo 'accustomed' (acostumbrado) siempre va seguido de la preposición 'to'." },
+            { doubt: "The film consists of three parts.", correction: "The film consists of three parts.", translation: "La película consta de tres partes.", rule: "El verbo 'consist' (constar) siempre va seguido de la preposición 'of'." },
+            { doubt: "I prefer coffee to tea.", correction: "I prefer coffee to tea.", translation: "Prefiero café a té.", rule: "El verbo 'prefer' (preferir) usa la preposición 'to' para introducir la opción menos preferida cuando se comparan sustantivos." },
+            { doubt: "He reminded me about the meeting.", correction: "He reminded me about the meeting.", translation: "Me recordó la reunión.", rule: "El verbo 'remind' (recordar) seguido de la preposición 'about' es usado para recordar un tema a alguien." },
+            { doubt: "She is worried for her exams.", correction: "She is worried about her exams.", translation: "Ella está preocupada por sus exámenes.", rule: "El adjetivo 'worried' (preocupado) siempre va seguido de la preposición 'about'." },
+            { doubt: "The baby is capable of walking now.", correction: "The baby is capable of walking now.", translation: "El bebé es capaz de caminar ahora.", rule: "El adjetivo 'capable' (capaz) siempre va seguido de la preposición 'of'." },
+            { doubt: "I am disappointed with your results.", correction: "I am disappointed with your results.", translation: "Estoy decepcionado con tus resultados.", rule: "El adjetivo 'disappointed' (decepcionado) seguido de la cosa que causa el sentimiento requiere la preposición 'with'." },
+            { doubt: "He is responsible for the accident.", correction: "He is responsible for the accident.", translation: "Él es responsable del accidente.", rule: "El adjetivo 'responsible' (responsable) siempre va seguido de la preposición 'for'." },
+            { doubt: "I am not afraid of spiders.", correction: "I am not afraid of spiders.", translation: "No tengo miedo a las arañas.", rule: "El adjetivo 'afraid' (asustado/miedo) siempre va seguido de la preposición 'of'." },
+            { doubt: "She insisted on buying a new house.", correction: "She insisted on buying a new house.", translation: "Ella insistió en comprar una casa nueva.", rule: "El verbo 'insist' requiere la preposición 'on' seguida de gerundio." },
+            { doubt: "The children participated in the game.", correction: "The children participated in the game.", translation: "Los niños participaron en el juego.", rule: "El verbo 'participate' (participar) siempre va seguido de la preposición 'in'." },
+            { doubt: "He suffers from allergies every spring.", correction: "He suffers from allergies every spring.", translation: "Él sufre de alergias cada primavera.", rule: "El verbo 'suffer' (sufrir) seguido de una enfermedad o condición requiere la preposición 'from'." },
+            { doubt: "We apologize for the inconvenience.", correction: "We apologize for the inconvenience.", translation: "Pedimos disculpas por las molestias.", rule: "El verbo 'apologize' (disculparse) va seguido de la preposición 'for'." },
+            { doubt: "Are you ready for the trip?", correction: "Are you ready for the trip?", translation: "¿Estás listo para el viaje?", rule: "El adjetivo 'ready' (listo) siempre va seguido de la preposición 'for'." },
+            { doubt: "I arrived at the city in the morning.", correction: "I arrived in the city in the morning.", translation: "Llegué a la ciudad por la mañana.", rule: "El verbo 'arrive' requiere la preposición 'in' para ciudades o países grandes." },
+            { doubt: "She is looking for her keys.", correction: "She is looking for her keys.", translation: "Ella está buscando sus llaves.", rule: "El verbo frasal 'look for' significa 'buscar'." },
+            { doubt: "I rely on your help.", correction: "I rely on your help.", translation: "Confío en tu ayuda.", rule: "El verbo 'rely' (confiar) siempre va seguido de la preposición 'on'." },
+            { doubt: "I was born in 1990 in a small town.", correction: "I was born in 1990 in a small town.", translation: "Nací en 1990 en un pueblo pequeño.", rule: "Se usa 'in' para años y para ciudades o pueblos." },
+            { doubt: "The meeting is on Monday at 2 PM.", correction: "The meeting is on Monday at 2 PM.", translation: "La reunión es el lunes a las 2 PM.", rule: "Se usa 'on' para días de la semana y 'at' para horas específicas." },
+            { doubt: "I am going to the supermarket.", correction: "I am going to the supermarket.", translation: "Voy al supermercado.", rule: "La preposición 'to' indica movimiento hacia un destino." },
+            { doubt: "The cat jumped on the table.", correction: "The cat jumped onto the table.", translation: "El gato saltó sobre la mesa.", rule: "Se prefiere 'onto' cuando hay movimiento hacia una superficie." },
+            { doubt: "He is interested in painting.", correction: "He is interested in painting.", translation: "Él está interesado en la pintura.", rule: "El adjetivo 'interested' (interesado) siempre va seguido de la preposición 'in'." },
+            { doubt: "I agree with your suggestion.", correction: "I agree with your suggestion.", translation: "Estoy de acuerdo con tu sugerencia.", rule: "El verbo 'agree' (estar de acuerdo) va seguido de la preposición 'with' si se trata de una persona o una opinión." },
+            { doubt: "She is angry at him.", correction: "She is angry at him.", translation: "Ella está enojada con él.", rule: "El adjetivo 'angry' (enojado) va seguido de la preposición 'at' o 'with' si es una persona." },
+            { doubt: "The project is different from the original plan.", correction: "The project is different from the original plan.", translation: "El proyecto es diferente al plan original.", rule: "El adjetivo 'different' (diferente) generalmente va seguido de la preposición 'from'." },
+            { doubt: "I dedicate myself to my studies.", correction: "I dedicate myself to my studies.", translation: "Me dedico a mis estudios.", rule: "El verbo 'dedicate' (dedicar) requiere la preposición 'to'." },
+            { doubt: "We talked about the future.", correction: "We talked about the future.", translation: "Hablamos sobre el futuro.", rule: "El verbo 'talk' (hablar) requiere la preposición 'about' para indicar el tema." },
+            { doubt: "She dreams of becoming an actress.", correction: "She dreams of becoming an actress.", translation: "Ella sueña con convertirse en actriz.", rule: "El verbo 'dream' (soñar) requiere la preposición 'of' o 'about'." },
+            { doubt: "I am worried about the exam.", correction: "I am worried about the exam.", translation: "Estoy preocupado por el examen.", rule: "El adjetivo 'worried' (preocupado) siempre va seguido de la preposición 'about'." },
+            { doubt: "He is grateful for your help.", correction: "He is grateful for your help.", translation: "Está agradecido por tu ayuda.", rule: "El adjetivo 'grateful' (agradecido) siempre va seguido de la preposición 'for' para la razón." },
+            { doubt: "I am sure of the answer.", correction: "I am sure of the answer.", translation: "Estoy seguro de la respuesta.", rule: "El adjetivo 'sure' (seguro) siempre va seguido de la preposición 'of'." },
+            { doubt: "She is proud of her son.", correction: "She is proud of her son.", translation: "Ella está orgullosa de su hijo.", rule: "El adjetivo 'proud' (orgulloso) siempre va seguido de la preposición 'of'." },
+            { doubt: "The bus is full of people.", correction: "The bus is full of people.", translation: "El autobús está lleno de gente.", rule: "El adjetivo 'full' (lleno) siempre va seguido de la preposición 'of'." },
+            { doubt: "I am tired of listening to excuses.", correction: "I am tired of listening to excuses.", translation: "Estoy cansado de escuchar excusas.", rule: "El adjetivo 'tired' (cansado) requiere la preposición 'of' seguida del gerundio para la causa." },
+            { doubt: "He apologized for his mistake.", correction: "He apologized for his mistake.", translation: "Se disculpó por su error.", rule: "El verbo 'apologize' (disculparse) requiere la preposición 'for' seguida del sustantivo que indica la causa." },
+            { doubt: "The student arrived at class on time.", correction: "The student arrived at class on time.", translation: "El estudiante llegó a clase a tiempo.", rule: "La expresión 'on time' significa 'a la hora exacta' o 'a tiempo'." },
+            { doubt: "I will call you in a moment.", correction: "I will call you in a moment.", translation: "Te llamaré en un momento.", rule: "La frase 'in a moment' (en un momento) es una expresión de tiempo fijo." },
+            { doubt: "The museum is open from 9 to 5.", correction: "The museum is open from 9 to 5.", translation: "El museo está abierto de 9 a 5.", rule: "La preposición 'from... to...' indica un rango de tiempo." },
+            { doubt: "She went to Italy for a vacation.", correction: "She went to Italy for a vacation.", translation: "Ella fue a Italia de vacaciones.", rule: "La preposición 'for' indica el propósito del viaje." },
+            { doubt: "The children played outside during the afternoon.", correction: "The children played outside during the afternoon.", translation: "Los niños jugaron afuera durante la tarde.", rule: "La preposición 'during' se usa para un periodo de tiempo en el cual ocurre algo." },
+            { doubt: "The party is at the weekend.", correction: "The party is at the weekend.", translation: "La fiesta es el fin de semana.", rule: "Se usa 'at the weekend' en inglés británico y 'on the weekend' en inglés americano." },
+            { doubt: "He lives in the third floor.", correction: "He lives on the third floor.", translation: "Él vive en el tercer piso.", rule: "Para referirse a pisos o niveles de un edificio, se usa la preposición 'on'." },
+            { doubt: "I saw the news on TV.", correction: "I saw the news on TV.", translation: "Vi las noticias en la televisión.", rule: "Para medios de comunicación como televisión o radio, se usa la preposición 'on'." },
+            { doubt: "She looks like her mother.", correction: "She looks like her mother.", translation: "Se parece a su madre.", rule: "El verbo 'look like' (parecerse a) no requiere preposición extra." },
+            { doubt: "The event takes place in the summer.", correction: "The event takes place in the summer.", translation: "El evento tiene lugar en el verano.", rule: "Para estaciones del año, se usa la preposición 'in'." },
+            { doubt: "The train arrived on time.", correction: "The train arrived on time.", translation: "El tren llegó a tiempo.", rule: "La expresión 'on time' significa 'a la hora exacta programada'." },
+            { doubt: "He is married with three children.", correction: "He is married with three children.", translation: "Está casado con tres hijos.", rule: "El adjetivo 'married' va seguido de 'to' para la persona y 'with' para indicar posesión o acompañamiento." },
+            { doubt: "I don't believe in ghosts.", correction: "I don't believe in ghosts.", translation: "No creo en fantasmas.", rule: "El verbo 'believe' (creer) seguido de 'in' indica fe o existencia." },
+            { doubt: "She is looking after the baby.", correction: "She is looking after the baby.", translation: "Ella está cuidando al bebé.", rule: "El verbo frasal 'look after' significa 'cuidar'." },
+            { doubt: "He is getting over his illness.", correction: "He is getting over his illness.", translation: "Se está recuperando de su enfermedad.", rule: "El verbo frasal 'get over' significa 'recuperarse de'." },
+            { doubt: "We ran out of coffee.", correction: "We ran out of coffee.", translation: "Nos quedamos sin café.", rule: "El verbo frasal 'run out of' significa 'quedarse sin algo'." },
+            { doubt: "She broke up with her boyfriend.", correction: "She broke up with her boyfriend.", translation: "Ella terminó con su novio.", rule: "El verbo frasal 'break up with' significa 'terminar una relación'." },
+            { doubt: "I am looking forward to seeing you.", correction: "I am looking forward to seeing you.", translation: "Tengo muchas ganas de verte.", rule: "La expresión 'look forward to' requiere el gerundio (-ing) después de 'to'." },
+            { doubt: "The students complained about the noise.", correction: "The students complained about the noise.", translation: "Los estudiantes se quejaron del ruido.", rule: "El verbo 'complain' (quejarse) seguido de la preposición 'about' indica la causa." },
+            { doubt: "He objected to their proposal.", correction: "He objected to their proposal.", translation: "Él se opuso a su propuesta.", rule: "El verbo 'object' (oponerse) siempre va seguido de la preposición 'to'." },
+            { doubt: "I am fed up with this situation.", correction: "I am fed up with this situation.", translation: "Estoy harto de esta situación.", rule: "La expresión 'fed up' (harto) siempre va seguida de la preposición 'with'." },
+            { doubt: "She succeeded in getting the job.", correction: "She succeeded in getting the job.", translation: "Ella logró conseguir el trabajo.", rule: "El verbo 'succeed' (tener éxito) va seguido de la preposición 'in'." },
+            { doubt: "The new model is different from the old one.", correction: "The new model is different from the old one.", translation: "El nuevo modelo es diferente al antiguo.", rule: "El adjetivo 'different' (diferente) generalmente va seguido de la preposición 'from'." },
+            { doubt: "I congratulated her on her success.", correction: "I congratulated her on her success.", translation: "La felicité por su éxito.", rule: "El verbo 'congratulate' (felicitar) seguido de la preposición 'on' indica el motivo." },
+            { doubt: "We arrived at the small village late.", correction: "We arrived at the small village late.", translation: "Llegamos tarde al pueblo pequeño.", rule: "El verbo 'arrive' requiere la preposición 'at' para lugares pequeños como pueblos o aldeas." },
+            { doubt: "He takes after his father.", correction: "He takes after his father.", translation: "Se parece a su padre.", rule: "El verbo frasal 'take after' significa 'parecerse a' (en apariencia o personalidad)." },
+            { doubt: "I am responsible for the error.", correction: "I am responsible for the error.", translation: "Soy responsable del error.", rule: "El adjetivo 'responsible' (responsable) siempre va seguido de la preposición 'for'." },
+            { doubt: "She is dedicated to her career.", correction: "She is dedicated to her career.", translation: "Ella está dedicada a su carrera.", rule: "El adjetivo 'dedicated' (dedicado) siempre va seguido de la preposición 'to'." },
+            { doubt: "I am sure of his innocence.", correction: "I am sure of his innocence.", translation: "Estoy seguro de su inocencia.", rule: "El adjetivo 'sure' (seguro) siempre va seguido de la preposición 'of'." },
+            { doubt: "The box is full of old books.", correction: "The box is full of old books.", translation: "La caja está llena de libros viejos.", rule: "El adjetivo 'full' (lleno) siempre va seguido de la preposición 'of'." },
+            { doubt: "He is good at solving problems.", correction: "He is good at solving problems.", translation: "Es bueno resolviendo problemas.", rule: "El adjetivo 'good' (bueno) requiere la preposición 'at' seguida de gerundio." },
+            { doubt: "I am interested in learning new things.", correction: "I am interested in learning new things.", translation: "Estoy interesado en aprender cosas nuevas.", rule: "El adjetivo 'interested' (interesado) requiere la preposición 'in' seguida de gerundio." },
+            { doubt: "She depends on her salary.", correction: "She depends on her salary.", translation: "Ella depende de su salario.", rule: "El verbo 'depend' (depender) siempre va seguido de la preposición 'on'." },
+            { doubt: "We talked about politics.", correction: "We talked about politics.", translation: "Hablamos de política.", rule: "El verbo 'talk' (hablar) requiere la preposición 'about' para indicar el tema." },
+            { doubt: "He dreamt of a better future.", correction: "He dreamt of a better future.", translation: "Soñó con un futuro mejor.", rule: "El verbo 'dream' (soñar) requiere la preposición 'of' o 'about'." },
+            { doubt: "I am worried about my grades.", correction: "I am worried about my grades.", translation: "Estoy preocupado por mis notas.", rule: "El adjetivo 'worried' (preocupado) siempre va seguido de la preposición 'about'." },
+            { doubt: "They suffered from a cold winter.", correction: "They suffered from a cold winter.", translation: "Sufrieron un invierno frío.", rule: "El verbo 'suffer' (sufrir) seguido de una condición requiere la preposición 'from'." },
+            { doubt: "The team is capable of winning.", correction: "The team is capable of winning.", translation: "El equipo es capaz de ganar.", rule: "El adjetivo 'capable' (capaz) requiere la preposición 'of' seguida de gerundio." },
+            { doubt: "I apologized to my friend for the delay.", correction: "I apologized to my friend for the delay.", translation: "Me disculpé con mi amigo por la demora.", rule: "El verbo 'apologize' requiere 'to' para la persona y 'for' para la causa." },
+            { doubt: "She is ready for the presentation.", correction: "She is ready for the presentation.", translation: "Ella está lista para la presentación.", rule: "El adjetivo 'ready' (listo) siempre va seguido de la preposición 'for'." },
+            { doubt: "The book is about history.", correction: "The book is about history.", translation: "El libro trata de historia.", rule: "El adjetivo 'about' se usa para indicar el tema de algo." },
+            { doubt: "He is popular with his students.", correction: "He is popular with his students.", translation: "Es popular entre sus estudiantes.", rule: "El adjetivo 'popular' (popular) seguido de la preposición 'with' indica el grupo con el que lo es." },
+            { doubt: "We walked to the park.", correction: "We walked to the park.", translation: "Caminamos hacia el parque.", rule: "La preposición 'to' indica el destino de un movimiento." },
+            { doubt: "The cat is under the bed.", correction: "The cat is under the bed.", translation: "El gato está debajo de la cama.", rule: "La preposición 'under' indica una posición debajo de algo." },
+            { doubt: "She is standing next to the door.", correction: "She is standing next to the door.", translation: "Ella está parada junto a la puerta.", rule: "La preposición 'next to' indica proximidad o al lado de." },
+            { doubt: "The meeting is between 2 PM and 4 PM.", correction: "The meeting is between 2 PM and 4 PM.", translation: "La reunión es entre las 2 PM y las 4 PM.", rule: "La preposición 'between' se usa para referirse a dos puntos específicos." },
+            { doubt: "The keys are inside the drawer.", correction: "The keys are inside the drawer.", translation: "Las llaves están dentro del cajón.", rule: "La preposición 'inside' indica que algo está contenido dentro de un espacio cerrado." },
+            { doubt: "The plane flew over the mountains.", correction: "The plane flew over the mountains.", translation: "El avión voló sobre las montañas.", rule: "La preposición 'over' indica una posición superior sin tocar la superficie." },
+            { doubt: "He walked through the forest.", correction: "He walked through the forest.", translation: "Caminó a través del bosque.", rule: "La preposición 'through' indica movimiento de un lado a otro de un espacio." },
+            { doubt: "She comes from Colombia.", correction: "She comes from Colombia.", translation: "Ella viene de Colombia.", rule: "La preposición 'from' indica el origen de una persona o cosa." },
+            { doubt: "I will be back by 5 PM.", correction: "I will be back by 5 PM.", translation: "Volveré a las 5 PM a más tardar.", rule: "La preposición 'by' se usa para indicar un plazo límite de tiempo ('a más tardar')." },
+            { doubt: "The party will last until midnight.", correction: "The party will last until midnight.", translation: "La fiesta durará hasta la medianoche.", rule: "La preposición 'until' se usa para indicar un punto final en el tiempo." },
+            { doubt: "I have been waiting since ten minutes.", correction: "I have been waiting for ten minutes.", translation: "He estado esperando durante diez minutos.", rule: "Para un periodo de tiempo, se usa 'for' (durante), no 'since'." },
+            { doubt: "The book was written by a famous author.", correction: "The book was written by a famous author.", translation: "El libro fue escrito por un autor famoso.", rule: "La preposición 'by' se usa en la voz pasiva para indicar el agente que realiza la acción." },
+            { doubt: "We traveled without incident.", correction: "We traveled without incident.", translation: "Viajamos sin incidentes.", rule: "La preposición 'without' significa 'sin'." },
+            { doubt: "I'm going to the store for milk.", correction: "I'm going to the store for milk.", translation: "Voy a la tienda por leche.", rule: "La preposición 'for' indica el propósito de una acción." },
+            { doubt: "The decision is up to you.", correction: "The decision is up to you.", translation: "La decisión depende de ti.", rule: "La expresión fija 'up to' significa 'depender de' o 'ser responsabilidad de'." },
+            { doubt: "She is good at languages.", correction: "She is good at languages.", translation: "Ella es buena en idiomas.", rule: "El adjetivo 'good' (bueno) requiere la preposición 'at' para las habilidades." },
+            { doubt: "He is aware of the situation.", correction: "He is aware of the situation.", translation: "Él es consciente de la situación.", rule: "El adjetivo 'aware' (consciente) siempre va seguido de la preposición 'of'." },
+            { doubt: "I am hopeful about the future.", correction: "I am hopeful about the future.", translation: "Tengo esperanzas sobre el futuro.", rule: "El adjetivo 'hopeful' (esperanzado) seguido de 'about' indica el tema de la esperanza." },
+            { doubt: "They are accustomed to hard work.", correction: "They are accustomed to hard work.", translation: "Están acostumbrados al trabajo duro.", rule: "El adjetivo 'accustomed' (acostumbrado) siempre va seguido de la preposición 'to'." },
+            { doubt: "The problem stems from a lack of communication.", correction: "The problem stems from a lack of communication.", translation: "El problema se deriva de una falta de comunicación.", rule: "El verbo 'stem' (derivar/provenir) siempre va seguido de la preposición 'from'." },
+            { doubt: "She is preoccupied with her phone.", correction: "She is preoccupied with her phone.", translation: "Ella está absorta en su teléfono.", rule: "El adjetivo 'preoccupied' (preocupado/absorto) va seguido de la preposición 'with'." },
+            { doubt: "I am responsible for the budget.", correction: "I am responsible for the budget.", translation: "Soy responsable del presupuesto.", rule: "El adjetivo 'responsible' (responsable) siempre va seguido de la preposición 'for'." },
+            { doubt: "The project will be finished by the end of the month.", correction: "The project will be finished by the end of the month.", translation: "El proyecto estará terminado a finales de mes.", rule: "La preposición 'by' indica el plazo límite para la finalización de algo." },
+            { doubt: "He is allergic to peanuts.", correction: "He is allergic to peanuts.", translation: "Él es alérgico a los cacahuetes.", rule: "El adjetivo 'allergic' (alérgico) siempre va seguido de la preposición 'to'." },
+            { doubt: "We talked over the phone.", correction: "We talked over the phone.", translation: "Hablamos por teléfono.", rule: "La preposición 'over' se usa comúnmente para indicar comunicación a través de un medio (over the phone)." },
+            { doubt: "The book is dedicated to his mother.", correction: "The book is dedicated to his mother.", translation: "El libro está dedicado a su madre.", rule: "El adjetivo 'dedicated' (dedicado) siempre va seguido de la preposición 'to'." },
+            { doubt: "She is obsessed with cleanliness.", correction: "She is obsessed with cleanliness.", translation: "Ella está obsesionada con la limpieza.", rule: "El adjetivo 'obsessed' (obsesionado) siempre va seguido de la preposición 'with'." },
+            { doubt: "He looks happy to see you.", correction: "He looks happy to see you.", translation: "Parece feliz de verte.", rule: "El verbo 'look' (parecer) es un verbo copulativo y va seguido directamente de un adjetivo ('happy')." },
+            { doubt: "I borrowed a book from the library.", correction: "I borrowed a book from the library.", translation: "Pedí prestado un libro de la biblioteca.", rule: "El verbo 'borrow' (tomar prestado) siempre va seguido de la preposición 'from' para indicar la fuente." },
+            { doubt: "She is angry about his behaviour.", correction: "She is angry about his behaviour.", translation: "Ella está enojada por su comportamiento.", rule: "El adjetivo 'angry' (enojado) va seguido de la preposición 'about' cuando se refiere a una cosa o situación." },
+            { doubt: "I will call you in three hours.", correction: "I will call you in three hours.", translation: "Te llamaré dentro de tres horas.", rule: "La preposición 'in' se utiliza para indicar el tiempo futuro en el que se realizará una acción ('dentro de...')." },
+            { doubt: "We talked at length about the plans.", correction: "We talked at length about the plans.", translation: "Hablamos extensamente sobre los planes.", rule: "La frase fija 'at length' significa 'extensamente' o 'por un largo tiempo'." }
+        ];
+
+        let questions = [];
+        let currentQuestionIndex = 0;
+        let score = 0;
+        let timerInterval;
+        const totalQuestions = 110; // Total fijo
+        let timeLimit = 45 * 60; // 45 minutos en segundos
+
+        // Elementos del DOM
+        const progressText = document.getElementById('progress-text');
+        const timerText = document.getElementById('timer-text');
+        const progressBar = document.getElementById('progress-bar');
+        const startButton = document.getElementById('start-button');
+        const checkButton = document.getElementById('check-button');
+        const nextButton = document.getElementById('next-button');
+        const questionDisplay = document.getElementById('question-display');
+        const currentDoubt = document.getElementById('current-doubt');
+        const currentTranslation = document.getElementById('current-translation');
+        const userCorrectionInput = document.getElementById('user-correction');
+        const userRuleInput = document.getElementById('user-rule');
+        const feedbackArea = document.getElementById('feedback-area');
+        const ruleStep = document.getElementById('rule-step');
+        const correctionStep = document.getElementById('correction-step');
+        const correctionForcedArea = document.getElementById('correction-forced-area');
+        const forcedCorrectionInput = document.getElementById('forced-correction');
+        const forcedRuleInput = document.getElementById('forced-rule');
+        const forcedCheckButton = document.getElementById('forced-check-button');
+        const quizTitle = document.getElementById('quiz-title');
+        const instructionText = document.getElementById('instruction-text');
+
+        // Función de ayuda para normalizar el texto (ignorar mayúsculas, espacios extra y puntuación)
+        const normalizeText = (text) => {
+            return text.toLowerCase().trim().replace(/[.,!?:;'\"]+/g, '').replace(/\s+/g, ' ');
+        };
+
+        const initQuiz = () => {
+            // Barajar y limitar a 110 preguntas
+            questions = [...quizData].sort(() => 0.5 - Math.random()).slice(0, 110);
+            currentQuestionIndex = 0;
+            score = 0;
+            timeLimit = 45 * 60; // Reiniciar el límite de tiempo
+
+            startButton.classList.add('hidden');
+            questionDisplay.classList.remove('hidden');
+            checkButton.classList.remove('hidden');
+            checkButton.disabled = false;
+            ruleStep.classList.add('hidden');
+            correctionForcedArea.classList.add('hidden');
+            
+            // Iniciar el temporizador
+            startTimer();
+            displayQuestion();
+        };
+
+        const startTimer = () => {
+            clearInterval(timerInterval); // Asegurar que no haya múltiples temporizadores
+            timerInterval = setInterval(() => {
+                const minutes = Math.floor(timeLimit / 60);
+                const seconds = timeLimit % 60;
+                timerText.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+
+                if (timeLimit <= 0) {
+                    clearInterval(timerInterval);
+                    endQuiz(true); // Terminar el quiz por tiempo
+                } else {
+                    timeLimit--;
+                }
+            }, 1000);
+        };
+
+        const updateProgress = () => {
+            progressText.textContent = `${currentQuestionIndex}/${questions.length}`;
+            const percent = (currentQuestionIndex / questions.length) * 100;
+            progressBar.style.width = `${percent}%`;
+        };
+
+        const displayQuestion = () => {
+            if (currentQuestionIndex >= questions.length) {
+                endQuiz(false);
+                return;
+            }
+
+            const q = questions[currentQuestionIndex];
+            
+            // Reiniciar campos y botones
+            userCorrectionInput.value = '';
+            userRuleInput.value = '';
+            forcedCorrectionInput.value = '';
+            forcedRuleInput.value = '';
+            forcedCorrectionInput.disabled = false;
+            forcedRuleInput.disabled = false;
+
+            feedbackArea.classList.add('hidden');
+            nextButton.classList.add('hidden');
+            checkButton.classList.remove('hidden');
+            checkButton.disabled = false;
+            ruleStep.classList.add('hidden');
+            correctionStep.classList.remove('hidden');
+            correctionForcedArea.classList.add('hidden');
+            checkButton.textContent = 'Comprobar Corrección'; // Resetear texto
+            
+            // Mostrar contenido
+            currentDoubt.textContent = q.doubt;
+            currentTranslation.textContent = `(Traducción: ${q.translation})`;
+            
+            updateProgress();
+        };
+
+        const endQuiz = (timedOut) => {
+            clearInterval(timerInterval);
+            questionDisplay.classList.add('hidden');
+            checkButton.classList.add('hidden');
+            nextButton.classList.add('hidden');
+            correctionForcedArea.classList.add('hidden');
+
+            quizTitle.textContent = "Lección Finalizada";
+            instructionText.textContent = timedOut 
+                ? `¡Tiempo agotado! Has completado ${currentQuestionIndex} de ${questions.length} preguntas.`
+                : `¡Felicidades! Has completado las ${questions.length} preguntas.`;
+            
+            feedbackArea.classList.remove('hidden');
+            feedbackArea.classList.add('feedback-success');
+            feedbackArea.classList.remove('feedback-error');
+            feedbackArea.innerHTML = `<p class="font-bold">Resultados Finales:</p><p>Puntuación: ${score} respuestas completamente correctas.</p><p>Teoría: ${Math.round((score / questions.length) * 100)}% de ejercicios completados.</p>`;
+        };
+
+        const handleCheck = () => {
+            const q = questions[currentQuestionIndex];
+            
+            // Etapa 1: Comprobar la Corrección (Correction Step visible)
+            if (ruleStep.classList.contains('hidden')) {
+                const userCorr = normalizeText(userCorrectionInput.value);
+                const actualCorr = normalizeText(q.correction);
+                
+                if (userCorr === actualCorr) {
+                    // Éxito en Corrección, pasar a la Etapa de Regla
+                    feedbackArea.classList.remove('feedback-error');
+                    feedbackArea.classList.add('feedback-success');
+                    feedbackArea.classList.remove('hidden');
+                    feedbackArea.innerHTML = `<p class="font-bold">¡Corrección correcta! Ahora, escribe la regla.</p>`;
+                    
+                    // Mostrar Etapa de Regla
+                    ruleStep.classList.remove('hidden');
+                    checkButton.textContent = 'Comprobar Regla'; // Cambiar texto del botón
+                    
+                } else {
+                    // Error en Corrección, activar Refuerzo Forzado
+                    checkButton.disabled = true;
+                    correctionForcedArea.classList.remove('hidden');
+                    
+                    // Mostrar la respuesta correcta para la escritura forzada
+                    forcedCorrectionInput.value = q.correction;
+                    forcedRuleInput.value = q.rule;
+                    forcedCorrectionInput.disabled = false;
+                    forcedRuleInput.disabled = false;
+                    
+                    feedbackArea.classList.remove('feedback-success');
+                    feedbackArea.classList.add('feedback-error');
+                    feedbackArea.classList.remove('hidden');
+                    feedbackArea.innerHTML = `<p class="font-bold">Error en la Corrección.</p><p>¡Refuerzo Forzado Activado!</p><p>Debes reescribir la corrección y la regla para asimilar el conocimiento.</p>`;
+                }
+            } 
+            // Etapa 2: Comprobar la Regla (Rule Step visible)
+            else {
+                const userRule = normalizeText(userRuleInput.value);
+                const actualRule = normalizeText(q.rule);
+
+                // Comprobación de la Regla: se permite un margen (ej. incluye la mitad de la regla correcta)
+                if (userRule.includes(actualRule.substring(0, Math.min(actualRule.length, 30))) || actualRule.includes(userRule.substring(0, Math.min(userRule.length, 30)))) {
+                    // Éxito en Regla: Ejercicio completo correcto
+                    score++;
+                    feedbackArea.classList.add('feedback-success');
+                    feedbackArea.classList.remove('feedback-error');
+                    feedbackArea.innerHTML = `<p class="font-bold">¡Éxito! Ambas partes son correctas.</p><p class="text-sm">Regla de Referencia: <i>${q.rule}</i>.</p>`;
+                    
+                    checkButton.classList.add('hidden');
+                    nextButton.classList.remove('hidden');
+                    checkButton.textContent = 'Comprobar Corrección'; // Resetear texto para siguiente Q
+                    
+                } else {
+                    // Error en Regla, activar Refuerzo Forzado
+                    checkButton.disabled = true;
+                    correctionForcedArea.classList.remove('hidden');
+
+                    forcedCorrectionInput.value = q.correction;
+                    forcedRuleInput.value = q.rule;
+                    forcedCorrectionInput.disabled = false;
+                    forcedRuleInput.disabled = false;
+                    
+                    feedbackArea.classList.remove('feedback-success');
+                    feedbackArea.classList.add('feedback-error');
+                    feedbackArea.innerHTML = `<p class="font-bold">Error en la Regla Gramatical.</p><p>¡Refuerzo Forzado Activado! Debes reescribir la Corrección y la Regla exactamente como se indican para forzar la asimilación.</p>`;
+
+                    // Ocultar Etapa de Regla, resetear el texto del botón
+                    ruleStep.classList.add('hidden');
+                    checkButton.textContent = 'Comprobar Corrección';
+                }
+            }
+        };
+
+        const handleForcedCheck = () => {
+            const q = questions[currentQuestionIndex];
+            
+            const userForcedCorr = normalizeText(forcedCorrectionInput.value);
+            const userForcedRule = normalizeText(forcedRuleInput.value);
+            
+            const actualCorr = normalizeText(q.correction);
+            const actualRule = normalizeText(q.rule);
+
+            
+            if (userForcedCorr === actualCorr && userForcedRule === actualRule) {
+                // Éxito en Refuerzo Forzado
+                feedbackArea.classList.add('feedback-success');
+                feedbackArea.classList.remove('feedback-error');
+                feedbackArea.innerHTML = `<p class="font-bold">¡Refuerzo Exitoso!</p><p>La asimilación de la regla fue completada. Avanza a la siguiente pregunta.</p>`;
+                
+                checkButton.classList.add('hidden');
+                nextButton.classList.remove('hidden');
+                correctionForcedArea.classList.add('hidden');
+
+                // Restaurar estado del botón principal
+                checkButton.textContent = 'Comprobar Corrección'; 
+                checkButton.disabled = false;
+                
+                // Se penaliza al usuario en el score por necesitar el refuerzo forzado, no sumamos punto
+
+            } else {
+                // Error en Refuerzo Forzado - debe reescribir exactamente
+                feedbackArea.classList.add('feedback-error');
+                feedbackArea.classList.remove('feedback-success');
+                feedbackArea.innerHTML = `<p class="font-bold">Error de Validación. Debes escribir la Corrección y la Regla exactamente como se muestran. Intenta de nuevo.</p>`;
+            }
+        };
+
+
+        // --- Event Listeners ---
+        startButton.addEventListener('click', initQuiz);
+        nextButton.addEventListener('click', () => {
+            currentQuestionIndex++;
+            displayQuestion();
+        });
+        checkButton.addEventListener('click', handleCheck);
+        forcedCheckButton.addEventListener('click', handleForcedCheck);
+
+        // Configuración inicial de progreso
+        updateProgress();
+
+    </script>
+</body>
+</html>

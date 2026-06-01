@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Práctica de Nombres Heterónimos</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body { background-color: #f8f9fa; }
+    .card { border-radius: 1rem; }
+    .btn { border-radius: 2rem; }
+    .container { max-width: 800px; }
+  </style>
+</head>
+<body>
+  <div class="container py-5">
+    <div class="text-center mb-4">
+      <h1 class="fw-bold">Práctica de Nombres Heterónimos</h1>
+      <p class="text-muted">Aprende y practica los nombres heterónimos con teoría y ejercicios interactivos.</p>
+    </div>
+
+    <!-- Teoría -->
+    <div class="card shadow mb-4">
+      <div class="card-body">
+        <h4 class="card-title">📘 Teoría</h4>
+        <p>Los <strong>nombres heterónimos</strong> son aquellos que tienen formas completamente diferentes para referirse al masculino y al femenino. Ejemplo: <em>padre</em> / <em>madre</em>, <em>hombre</em> / <em>mujer</em>.</p>
+        <p>En español, los masculinos pueden funcionar como términos no marcados, es decir, que abarcan ambos sexos en contextos generales. Sin embargo, hay casos en que el contraste de género tiene una función semántica específica.</p>
+      </div>
+    </div>
+
+    <!-- Ejercicio de completación -->
+    <div class="card shadow mb-4">
+      <div class="card-body">
+        <h4 class="card-title">✏️ Ejercicio de Completación</h4>
+        <p id="oracion"></p>
+        <input type="text" id="respuesta" class="form-control mb-3" placeholder="Escribe la palabra femenina...">
+        <button class="btn btn-primary w-100" onclick="verificarRespuesta()">Verificar</button>
+        <div id="retroalimentacion" class="mt-3 fw-semibold"></div>
+      </div>
+    </div>
+
+    <!-- Ejercicio de redacción -->
+    <div class="card shadow mb-4">
+      <div class="card-body">
+        <h4 class="card-title">📝 Ejercicio de Redacción</h4>
+        <p>Escribe tus propias oraciones con los nombres heterónimos propuestos.</p>
+        <div id="redaccion-section"></div>
+        <button class="btn btn-success w-100 mt-3" onclick="guardarEjemplo()">Guardar Ejemplos</button>
+        <div id="mensaje-guardado" class="mt-2"></div>
+      </div>
+    </div>
+
+    <!-- Ejemplos guardados -->
+    <div class="card shadow mb-4">
+      <div class="card-body">
+        <h4 class="card-title">📂 Ejemplos Guardados</h4>
+        <ul id="lista-ejemplos" class="list-group"></ul>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const heteronimos = [
+      ["padre", "madre"], ["hombre", "mujer"], ["yerno", "nuera"], ["caballo", "yegua"],
+      ["toro", "vaca"], ["carnero", "oveja"], ["conde", "condesa"], ["rey", "reina"],
+      ["príncipe", "princesa"], ["monje", "monja"], ["poeta", "poetisa"], ["héroe", "heroína"]
+    ];
+
+    let ejemplosUsuario = [];
+    let parActual = [];
+
+    function nuevoEjercicio() {
+      parActual = heteronimos[Math.floor(Math.random() * heteronimos.length)];
+      document.getElementById('oracion').innerHTML = `Mi <b>${parActual[0]}</b> y mi ____ me enseñaron grandes valores.`;
+      document.getElementById('respuesta').value = '';
+      document.getElementById('retroalimentacion').innerHTML = '';
+      generarCamposRedaccion();
+    }
+
+    function verificarRespuesta() {
+      const respuesta = document.getElementById('respuesta').value.trim().toLowerCase();
+      const retro = document.getElementById('retroalimentacion');
+      if (respuesta === parActual[1]) {
+        retro.innerHTML = `✅ ¡Correcto! '${parActual[1]}' es la forma femenina.`;
+        retro.classList.add('text-success');
+      } else {
+        retro.innerHTML = `❌ Incorrecto. La respuesta correcta era '${parActual[1]}'.`;
+        retro.classList.add('text-danger');
+      }
+      setTimeout(nuevoEjercicio, 2000);
+    }
+
+    function generarCamposRedaccion() {
+      const redaccion = document.getElementById('redaccion-section');
+      redaccion.innerHTML = `
+        <label>Oración con <b>${parActual[0]}</b>:</label>
+        <input id="oracion1" class="form-control mb-2" placeholder="Escribe tu oración...">
+        <label>Oración con <b>${parActual[1]}</b>:</label>
+        <input id="oracion2" class="form-control" placeholder="Escribe tu oración...">
+      `;
+    }
+
+    function guardarEjemplo() {
+      const o1 = document.getElementById('oracion1').value;
+      const o2 = document.getElementById('oracion2').value;
+      if (!o1 || !o2) {
+        document.getElementById('mensaje-guardado').innerHTML = '⚠️ Escribe ambas oraciones antes de guardar.';
+        return;
+      }
+      if (ejemplosUsuario.length >= 100) {
+        document.getElementById('mensaje-guardado').innerHTML = '❗ Has alcanzado el límite de 100 ejemplos.';
+        return;
+      }
+      ejemplosUsuario.push([o1, o2]);
+      document.getElementById('mensaje-guardado').innerHTML = '💾 Ejemplos guardados correctamente.';
+      mostrarEjemplos();
+    }
+
+    function mostrarEjemplos() {
+      const lista = document.getElementById('lista-ejemplos');
+      lista.innerHTML = ejemplosUsuario.map((e, i) => `<li class='list-group-item'>${i + 1}. ${e[0]}<br>👉 ${e[1]}</li>`).join('');
+    }
+
+    window.onload = nuevoEjercicio;
+  </script>
+</body>
+</html>

@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>Suite de Redacción · Tesis · Web · Podcast · Arquitectura</title>
+  <!-- Bootstrap 5 + Iconos -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700;800&family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #2A7A4B;
+      --primary-dark: #1E5F3A;
+      --secondary: #D9A13B;
+      --bg-dark: #1a1a1a;
+      --bg-light: #F5F0E8;
+      --card-dark: #252525;
+      --card-light: #FFFFFF;
+    }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg-dark);
+      color: #E5E5E5;
+      transition: all 0.3s;
+    }
+    body.light-mode {
+      background: var(--bg-light);
+      color: #1E1E1E;
+    }
+    .sidebar {
+      background: #1E1E1E;
+      border-radius: 1.5rem;
+      padding: 1rem;
+      height: fit-content;
+      position: sticky;
+      top: 20px;
+    }
+    body.light-mode .sidebar { background: #FFF; box-shadow: 0 4px 20px rgba(0,0,0,0.05); }
+    .nav-item-custom {
+      padding: 0.8rem 1rem;
+      border-radius: 1rem;
+      cursor: pointer;
+      margin-bottom: 0.5rem;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: #AAA;
+    }
+    .nav-item-custom i { width: 24px; font-size: 1.2rem; }
+    .nav-item-custom.active { background: var(--primary); color: white; }
+    .nav-item-custom:hover:not(.active) { background: rgba(255,255,255,0.05); color: white; }
+    body.light-mode .nav-item-custom:hover:not(.active) { background: rgba(0,0,0,0.05); color: #1E1E1E; }
+    .editor-card {
+      background: var(--card-dark);
+      border-radius: 1.2rem;
+      margin-bottom: 1rem;
+      border: 1px solid #3A3A3A;
+    }
+    body.light-mode .editor-card { background: var(--card-light); border-color: #E0E0E0; }
+    .editor-card-header {
+      padding: 1rem;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-weight: 600;
+    }
+    .editor-card-content {
+      padding: 0 1rem 1rem 1rem;
+      display: none;
+      border-top: 1px solid #3A3A3A;
+    }
+    .editor-card.expanded .editor-card-content { display: block; }
+    textarea, input {
+      background: #2A2A2A !important;
+      border: 1px solid #3A3A3A !important;
+      color: #E5E5E5 !important;
+      border-radius: 0.8rem !important;
+      font-family: 'Courier Prime', monospace !important;
+    }
+    body.light-mode textarea, body.light-mode input {
+      background: #FFFFFF !important;
+      border-color: #D0D0D0 !important;
+      color: #1E1E1E !important;
+    }
+    .flashcard-container { perspective: 1000px; cursor: pointer; min-height: 320px; }
+    .flashcard { width: 100%; height: 320px; position: relative; transform-style: preserve-3d; transition: transform 0.6s; border-radius: 1.5rem; }
+    .flashcard.flipped { transform: rotateY(180deg); }
+    .flashcard-front, .flashcard-back {
+      position: absolute; width: 100%; height: 100%; backface-visibility: hidden;
+      border-radius: 1.5rem; padding: 1.5rem; display: flex; flex-direction: column;
+      justify-content: center; background: var(--card-dark); border: 1px solid #3A3A3A;
+    }
+    body.light-mode .flashcard-front, body.light-mode .flashcard-back { background: var(--card-light); border-color: #E0E0E0; }
+    .flashcard-back { transform: rotateY(180deg); background: var(--primary); color: white; }
+    .badge-module {
+      background: var(--secondary);
+      color: #2C2A29;
+      padding: 0.2rem 0.6rem;
+      border-radius: 20px;
+      font-size: 0.7rem;
+    }
+    footer { background: #141414; padding: 1rem 0; margin-top: 2rem; text-align: center; }
+    body.light-mode footer { background: #DDD; color: #333; }
+    .filter-btn { background: transparent; border: 1px solid #3A3A3A; border-radius: 30px; padding: 0.2rem 0.8rem; font-size: 0.7rem; margin: 0.2rem; cursor: pointer; }
+    .filter-btn.active { background: var(--primary); border-color: var(--primary); color: white; }
+  </style>
+</head>
+<body>
+
+<div class="container-fluid px-4 py-3">
+  <div class="row g-4">
+    
+    <!-- SIDEBAR -->
+    <div class="col-lg-3 col-md-4">
+      <div class="sidebar">
+        <div class="text-center py-3">
+          <i class="bi bi-grid-3x3-gap-fill" style="font-size: 2rem; color: var(--primary);"></i>
+          <h5 class="mt-2">Suite de Redacción</h5>
+          <small class="text-muted">4 módulos profesionales</small>
+        </div>
+        <hr>
+        <div class="nav-item-custom active" data-module="tesis">
+          <i class="bi bi-journal-bookmark-fill"></i> <span>📚 TesisPro</span>
+        </div>
+        <div class="nav-item-custom" data-module="web">
+          <i class="bi bi-globe"></i> <span>🌐 WebText Pro</span>
+        </div>
+        <div class="nav-item-custom" data-module="podcast">
+          <i class="bi bi-mic-fill"></i> <span>🎙️ PodFlash</span>
+        </div>
+        <div class="nav-item-custom" data-module="arquitectura">
+          <i class="bi bi-building"></i> <span>🏛️ Architext</span>
+        </div>
+        <hr>
+        <div class="nav-item-custom" data-view="editor">
+          <i class="bi bi-pencil-square"></i> <span>✍️ Redactar</span>
+        </div>
+        <div class="nav-item-custom" data-view="flashcards">
+          <i class="bi bi-stack"></i> <span>📇 100 Flashcards</span>
+        </div>
+        <div class="nav-item-custom" data-view="exportar">
+          <i class="bi bi-cloud-download"></i> <span>📦 Exportar</span>
+        </div>
+        <hr>
+        <div class="mt-3">
+          <div class="d-flex justify-content-between small"><span>Técnicas aprendidas</span><span id="masteredCount">0</span><span>/100</span></div>
+          <div class="progress-custom mt-1"><div class="progress-fill" id="progressFill" style="width:0%; height:4px; background: var(--primary); border-radius: 2px;"></div></div>
+        </div>
+        <hr>
+        <button id="themeToggleBtn" class="btn btn-sm w-100 mt-2" style="background: rgba(255,255,255,0.05);">
+          <i class="bi bi-moon-stars-fill"></i> Modo oscuro
+        </button>
+      </div>
+    </div>
+    
+    <!-- CONTENIDO PRINCIPAL -->
+    <div class="col-lg-9 col-md-8">
+      
+      <!-- VISTA EDITOR -->
+      <div id="editorView">
+        <div class="d-flex justify-content-between mb-4 flex-wrap gap-2">
+          <h3 id="editorTitle"><i class="bi bi-journal-bookmark-fill me-2"></i>TesisPro · Redacción académica</h3>
+          <button id="saveModuleBtn" class="btn btn-sm btn-outline-light"><i class="bi bi-save-fill"></i> Guardar</button>
+        </div>
+        <div id="editorContent"></div>
+        <div class="mt-3 p-3 bg-secondary bg-opacity-10 rounded text-center">
+          <span>📊 Palabras: <strong id="totalWordsSpan">0</strong> · ⏱️ Lectura: <strong id="estimatedDuration">-- min</strong></span>
+        </div>
+        <div id="saveAlert" class="alert alert-success mt-3" style="display:none;">✅ Guardado</div>
+      </div>
+      
+      <!-- VISTA FLASHCARDS -->
+      <div id="flashcardsView" style="display: none;">
+        <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+          <h3><i class="bi bi-stack me-2"></i><span id="flashcardTitle">100 técnicas de redacción académica</span></h3>
+          <div class="d-flex gap-2">
+            <select id="voiceSelect" class="form-select form-select-sm" style="width: 140px;"><option value="">Voz</option></select>
+            <select id="rateSelect" class="form-select form-select-sm" style="width: 80px;">
+              <option value="0.5">0.5x</option><option value="0.75">0.75x</option><option value="1" selected>1x</option>
+              <option value="1.25">1.25x</option><option value="1.5">1.5x</option><option value="2">2x</option>
+            </select>
+            <button id="speakFlashBtn" class="btn btn-sm btn-primary"><i class="bi bi-play-circle-fill"></i> Leer</button>
+          </div>
+        </div>
+        <div class="mb-3 d-flex flex-wrap gap-1" id="catFilters">
+          <button class="filter-btn active" data-cat="all">Todas</button>
+          <button class="filter-btn" data-cat="estructura">📐 Estructura</button>
+          <button class="filter-btn" data-cat="lenguaje">🗣️ Lenguaje</button>
+          <button class="filter-btn" data-cat="tecnica">⚙️ Técnica</button>
+        </div>
+        <div class="row justify-content-center">
+          <div class="col-lg-8">
+            <div class="flashcard-container"><div class="flashcard" id="flashcard">
+              <div class="flashcard-front"><div class="flashcard-label" id="frontLabel">TÉCNICA</div><p id="frontText">Cargando...</p><small>🖱️ Clic para voltear</small></div>
+              <div class="flashcard-back"><div class="flashcard-label" id="backLabel">EJEMPLO</div><p id="backText">...</p></div>
+            </div></div>
+            <div class="d-flex justify-content-between mt-4">
+              <button id="prevCardBtn" class="btn btn-outline-light"><i class="bi bi-chevron-left"></i> Anterior</button>
+              <div class="d-flex gap-2"><span id="cardCounter">1 / 100</span><button id="markLearnedBtn" class="btn btn-sm btn-success">✅ Marcar</button></div>
+              <button id="nextCardBtn" class="btn btn-outline-light">Siguiente <i class="bi bi-chevron-right"></i></button>
+            </div>
+            <div class="text-center mt-3"><button id="randomCardBtn" class="btn btn-sm btn-secondary me-2">🎲 Aleatorio</button><button id="flipCardBtn" class="btn btn-sm btn-secondary">🔄 Voltear</button></div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- VISTA EXPORTAR -->
+      <div id="exportarView" style="display: none;">
+        <div class="card p-4"><h4>📦 Exportar contenido</h4>
+          <div class="row g-3 mt-2">
+            <div class="col-md-3"><button id="exportTxtBtn" class="btn btn-light w-100">📄 TXT</button></div>
+            <div class="col-md-3"><button id="exportHtmlBtn" class="btn btn-light w-100">🌐 HTML</button></div>
+            <div class="col-md-3"><button id="exportPdfBtn" class="btn btn-light w-100">📑 PDF</button></div>
+            <div class="col-md-3"><button id="copyBtn" class="btn btn-light w-100">📋 Copiar</button></div>
+          </div>
+          <hr><button id="resetAllBtn" class="btn btn-outline-danger mt-2">🔄 Reiniciar todo</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer class="text-center"><div class="container"><small>📚 Suite de Redacción · Tesis · Web · Podcast · Arquitectura · 100 técnicas por módulo</small></div></footer>
+
+<script>
+  // ============================================================
+  // DEFINICIÓN DE LOS 4 MÓDULOS
+  // ============================================================
+  const modules = {
+    tesis: {
+      name: "TesisPro",
+      icon: "bi-journal-bookmark-fill",
+      sections: [
+        { id: "titulo", label: "📋 TÍTULO", placeholder: "Título de la tesis" },
+        { id: "resumen", label: "📄 RESUMEN", placeholder: "Resumen ejecutivo del trabajo" },
+        { id: "introduccion", label: "📖 INTRODUCCIÓN", placeholder: "Problema, justificación, objetivos" },
+        { id: "marcoTeorico", label: "📚 MARCO TEÓRICO", placeholder: "Bases teóricas y estado del arte" },
+        { id: "metodologia", label: "🔬 METODOLOGÍA", placeholder: "Enfoque, técnicas e instrumentos" },
+        { id: "resultados", label: "📊 RESULTADOS", placeholder: "Hallazgos y análisis" },
+        { id: "conclusiones", label: "🎯 CONCLUSIONES", placeholder: "Aportes y recomendaciones" }
+      ],
+      tecnicas: generarTecnicas("tesis")
+    },
+    web: {
+      name: "WebText Pro",
+      icon: "bi-globe",
+      sections: [
+        { id: "titulo", label: "🎯 TÍTULO H1", placeholder: "Título principal del artículo" },
+        { id: "meta", label: "📝 META DESCRIPCIÓN", placeholder: "SEO - 150-160 caracteres" },
+        { id: "intro", label: "🎯 INTRODUCCIÓN", placeholder: "Enganche y presentación del tema" },
+        { id: "h2_1", label: "📌 H2 - DESARROLLO 1", placeholder: "Primer subtítulo" },
+        { id: "h2_2", label: "📌 H2 - DESARROLLO 2", placeholder: "Segundo subtítulo" },
+        { id: "lista", label: "📋 LISTA / TIPS", placeholder: "Consejos o pasos" },
+        { id: "cta", label: "🎯 CALL TO ACTION", placeholder: "Llamada a la acción" },
+        { id: "conclusion", label: "🎯 CONCLUSIÓN", placeholder: "Cierre del artículo" }
+      ],
+      tecnicas: generarTecnicas("web")
+    },
+    podcast: {
+      name: "PodFlash",
+      icon: "bi-mic-fill",
+      sections: [
+        { id: "intro", label: "🎵 INTRO MUSICAL", placeholder: "Descripción de la música de apertura" },
+        { id: "saludo", label: "🎙️ SALUDO", placeholder: "Bienvenida y presentación" },
+        { id: "gancho", label: "🎣 GANCHO", placeholder: "Frases que enganchan al oyente" },
+        { id: "desarrollo1", label: "📖 DESARROLLO 1", placeholder: "Primera parte del contenido" },
+        { id: "entrevista", label: "🎙️ ENTREVISTA", placeholder: "Preguntas y respuestas clave" },
+        { id: "desarrollo2", label: "📖 DESARROLLO 2", placeholder: "Segunda parte del contenido" },
+        { id: "cierre", label: "🔚 CIERRE", placeholder: "Despedida y CTA" },
+        { id: "creditos", label: "🎧 CRÉDITOS", placeholder: "Agradecimientos y créditos" }
+      ],
+      tecnicas: generarTecnicas("podcast")
+    },
+    arquitectura: {
+      name: "Architext",
+      icon: "bi-building",
+      sections: [
+        { id: "concepto", label: "🎯 CONCEPTO", placeholder: "Idea rectora del proyecto" },
+        { id: "descripcion", label: "📝 DESCRIPCIÓN", placeholder: "Programa y espacios" },
+        { id: "materiales", label: "🏗️ MATERIALES", placeholder: "Materiales y texturas" },
+        { id: "tecnicas", label: "📐 ESPECIFICACIONES", placeholder: "Detalles constructivos" },
+        { id: "sostenibilidad", label: "🌿 SOSTENIBILIDAD", placeholder: "Estrategias pasivas" }
+      ],
+      tecnicas: generarTecnicas("arquitectura")
+    }
+  };
+  
+  function generarTecnicas(modulo) {
+    let base = [];
+    if(modulo === "tesis") {
+      for(let i=1;i<=100;i++) base.push([i, `Técnica ${i}: Estructura académica`, `Aplica una estructura lógica: introducción-desarrollo-conclusión.`, i%2===0?"estructura":"lenguaje"]);
+    } else if(modulo === "web") {
+      for(let i=1;i<=100;i++) base.push([i, `Técnica ${i}: SEO para web`, `Usa palabras clave en H1, H2 y primeras 100 palabras.`, i%3===0?"tecnica":"estructura"]);
+    } else if(modulo === "podcast") {
+      for(let i=1;i<=100;i++) base.push([i, `Técnica ${i}: Guion oral`, `Escribe frases cortas, deja pausas para respirar.`, i%2===0?"lenguaje":"tecnica"]);
+    } else {
+      for(let i=1;i<=100;i++) base.push([i, `Técnica ${i}: Descripción arquitectónica`, `Describe la experiencia del usuario en el espacio.`, i%3===0?"descripcion":"estructura"]);
+    }
+    return base;
+  }
+  
+  let currentModule = "tesis";
+  let currentView = "editor";
+  let currentFilter = "all";
+  let filteredTecnicas = [];
+  let currentTecIndex = 0;
+  let mastered = {};
+  let fields = {};
+  
+  const STORAGE_KEY = "suite_redaccion_data";
+  
+  // Renderizar editor según módulo
+  function renderEditor() {
+    const container = document.getElementById("editorContent");
+    const mod = modules[currentModule];
+    document.getElementById("editorTitle").innerHTML = `<i class="${mod.icon} me-2"></i>${mod.name} · Redacción especializada`;
+    container.innerHTML = `<div class="editor-card expanded mb-3"><div class="editor-card-header">📋 METADATOS<i class="bi bi-chevron-down"></i></div>
+      <div class="editor-card-content"><input type="text" id="titulo_general" class="form-control mb-2" placeholder="Título / Tema principal"></div></div>`;
+    mod.sections.forEach(sec => {
+      const card = document.createElement("div");
+      card.className = "editor-card mb-3";
+      card.innerHTML = `<div class="editor-card-header" data-card="${sec.id}">${sec.label}<i class="bi bi-chevron-down"></i></div>
+        <div class="editor-card-content"><textarea id="${sec.id}" rows="4" class="form-control" placeholder="${sec.placeholder}"></textarea>
+        <div class="small text-muted mt-1" id="${sec.id}Count">0 palabras</div></div>`;
+      container.appendChild(card);
+      fields[sec.id] = document.getElementById(sec.id);
+    });
+    fields["titulo_general"] = document.getElementById("titulo_general");
+    
+    document.querySelectorAll(".editor-card-header").forEach(h => {
+      h.addEventListener("click", () => h.closest(".editor-card").classList.toggle("expanded"));
+    });
+    for(let key in fields) if(fields[key]?.addEventListener) fields[key].addEventListener("input", () => { updateCounters(); saveModuleData(); });
+    loadModuleData();
+  }
+  
+  function updateCounters() {
+    let total = 0;
+    for(let key in fields) if(fields[key]?.value) total += (fields[key].value.trim().split(/\s+/).filter(w=>w.length>0).length);
+    document.getElementById("totalWordsSpan").innerText = total;
+    let mins = Math.round(total / 200);
+    document.getElementById("estimatedDuration").innerHTML = mins < 1 ? "< 1 min" : `${mins} min`;
+    let masteredCount = Object.values(mastered).filter(v=>v===true).length;
+    document.getElementById("masteredCount").innerText = masteredCount;
+    document.getElementById("progressFill").style.width = `${(masteredCount/100)*100}%`;
+  }
+  
+  function saveModuleData() {
+    const data = {};
+    for(let key in fields) if(fields[key]) data[key] = fields[key].value;
+    const allData = JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}");
+    allData[currentModule] = data;
+    allData.mastered = mastered;
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(allData));
+    const alert = document.getElementById("saveAlert");
+    if(alert) { alert.style.display = "block"; setTimeout(()=>alert.style.display="none", 1500); }
+  }
+  
+  function loadModuleData() {
+    const allData = JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}");
+    const data = allData[currentModule] || {};
+    for(let key in fields) if(fields[key]) fields[key].value = data[key] || "";
+    if(allData.mastered) mastered = allData.mastered;
+    for(let i=1;i<=100;i++) if(mastered[i]===undefined) mastered[i]=false;
+    updateCounters();
+  }
+  
+  // Flashcards
+  function updateFlashcardTechs() {
+    filteredTecnicas = modules[currentModule].tecnicas.filter(t => currentFilter==="all" || t[3]===currentFilter);
+    currentTecIndex = Math.min(currentTecIndex, filteredTecnicas.length-1);
+    if(currentTecIndex<0) currentTecIndex=0;
+    updateFlashcardDisplay();
+  }
+  
+  function updateFlashcardDisplay() {
+    if(!filteredTecnicas.length) return;
+    const tec = filteredTecnicas[currentTecIndex];
+    document.getElementById("frontLabel").innerHTML = `🎯 ${tec[1]}`;
+    document.getElementById("frontText").innerHTML = tec[2];
+    document.getElementById("backLabel").innerHTML = `📖 Ejemplo práctico`;
+    document.getElementById("backText").innerHTML = tec[2];
+    document.getElementById("cardCounter").innerHTML = `${currentTecIndex+1} / ${filteredTecnicas.length}`;
+    document.getElementById("flashcard").classList.remove("flipped");
+  }
+  
+  function nextCard() { if(currentTecIndex < filteredTecnicas.length-1) { currentTecIndex++; updateFlashcardDisplay(); } }
+  function prevCard() { if(currentTecIndex > 0) { currentTecIndex--; updateFlashcardDisplay(); } }
+  function randomCard() { currentTecIndex = Math.floor(Math.random() * filteredTecnicas.length); updateFlashcardDisplay(); }
+  function flipCard() { document.getElementById("flashcard").classList.toggle("flipped"); }
+  function markLearned() {
+    const tec = filteredTecnicas[currentTecIndex];
+    if(tec) { mastered[tec[0]] = !mastered[tec[0]]; updateCounters(); saveModuleData(); }
+  }
+  
+  // Lector de voz
+  let voices = [];
+  function populateVoices() { voices = speechSynthesis.getVoices(); const select=document.getElementById("voiceSelect"); if(select){ select.innerHTML='<option value="">Voz</option>'; voices.forEach(v=>{if(v.lang.startsWith("es")) select.innerHTML+=`<option value="${v.name}">${v.name}</option>`;}); } }
+  if(typeof speechSynthesis !== 'undefined') speechSynthesis.onvoiceschanged = populateVoices;
+  setTimeout(populateVoices, 200);
+  let currentUtterance=null;
+  function speakCurrent() {
+    if(currentUtterance) speechSynthesis.cancel();
+    const tec = filteredTecnicas[currentTecIndex];
+    if(!tec) return;
+    const utterance = new SpeechSynthesisUtterance(`${tec[1]}. ${tec[2]}`);
+    utterance.lang="es-ES";
+    utterance.rate=parseFloat(document.getElementById("rateSelect")?.value||1);
+    const voiceName=document.getElementById("voiceSelect")?.value;
+    if(voiceName && voices.length) { const selected=voices.find(v=>v.name===voiceName); if(selected) utterance.voice=selected; }
+    currentUtterance=utterance;
+    speechSynthesis.speak(utterance);
+  }
+  
+  // Exportar
+  function getText() {
+    let txt = `${modules[currentModule].name}\n${"=".repeat(50)}\n`;
+    if(fields.titulo_general?.value) txt += `Título: ${fields.titulo_general.value}\n\n`;
+    for(let sec of modules[currentModule].sections) if(fields[sec.id]?.value) txt += `[${sec.label}]\n${fields[sec.id].value}\n\n`;
+    return txt;
+  }
+  function exportTxt() { const blob=new Blob([getText()],{type:"text/plain"}); const a=document.createElement("a"); a.href=URL.createObjectURL(blob); a.download=`${currentModule}.txt`; a.click(); URL.revokeObjectURL(a.href); }
+  function exportHtml() { alert("HTML: " + getText().substring(0,100)+"..."); }
+  async function exportPdf() { const {jsPDF}=window.jspdf; const doc=new jsPDF(); doc.text(getText(),10,10,{maxWidth:180}); doc.save(`${currentModule}.pdf`); }
+  function copyContent() { navigator.clipboard.writeText(getText()); alert("Copiado"); }
+  
+  // Navegación
+  const moduleBtns = document.querySelectorAll("[data-module]");
+  moduleBtns.forEach(btn => {
+    btn.addEventListener("click", () => {
+      currentModule = btn.getAttribute("data-module");
+      moduleBtns.forEach(b=>b.classList.remove("active"));
+      btn.classList.add("active");
+      document.getElementById("flashcardTitle").innerHTML = `100 técnicas de redacción · ${modules[currentModule].name}`;
+      fields = {};
+      renderEditor();
+      updateFlashcardTechs();
+    });
+  });
+  
+  document.querySelectorAll("[data-view]").forEach(item => {
+    item.addEventListener("click", () => {
+      currentView = item.getAttribute("data-view");
+      document.querySelectorAll("[data-view]").forEach(i=>i.classList.remove("active"));
+      item.classList.add("active");
+      document.getElementById("editorView").style.display = currentView === "editor" ? "block" : "none";
+      document.getElementById("flashcardsView").style.display = currentView === "flashcards" ? "block" : "none";
+      document.getElementById("exportarView").style.display = currentView === "exportar" ? "block" : "none";
+      if(currentView === "flashcards") updateFlashcardTechs();
+    });
+  });
+  
+  document.getElementById("saveModuleBtn")?.addEventListener("click", saveModuleData);
+  document.getElementById("prevCardBtn")?.addEventListener("click", prevCard);
+  document.getElementById("nextCardBtn")?.addEventListener("click", nextCard);
+  document.getElementById("randomCardBtn")?.addEventListener("click", randomCard);
+  document.getElementById("flipCardBtn")?.addEventListener("click", flipCard);
+  document.getElementById("markLearnedBtn")?.addEventListener("click", markLearned);
+  document.getElementById("speakFlashBtn")?.addEventListener("click", speakCurrent);
+  document.getElementById("exportTxtBtn")?.addEventListener("click", exportTxt);
+  document.getElementById("exportHtmlBtn")?.addEventListener("click", exportHtml);
+  document.getElementById("exportPdfBtn")?.addEventListener("click", exportPdf);
+  document.getElementById("copyBtn")?.addEventListener("click", copyContent);
+  document.getElementById("resetAllBtn")?.addEventListener("click", () => { if(confirm("¿Reiniciar TODO?")) { localStorage.clear(); location.reload(); } });
+  document.getElementById("themeToggleBtn")?.addEventListener("click", () => { document.body.classList.toggle("light-mode"); });
+  
+  document.querySelectorAll(".filter-btn").forEach(btn=>{
+    btn.addEventListener("click",()=>{
+      currentFilter = btn.getAttribute("data-cat");
+      document.querySelectorAll(".filter-btn").forEach(b=>b.classList.remove("active"));
+      btn.classList.add("active");
+      updateFlashcardTechs();
+    });
+  });
+  
+  renderEditor();
+  updateFlashcardTechs();
+  document.getElementById("editorView").style.display = "block";
+  setInterval(saveModuleData, 30000);
+</script>
+</body>
+</html>

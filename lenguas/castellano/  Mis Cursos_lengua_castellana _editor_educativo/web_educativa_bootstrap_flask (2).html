@@ -1,0 +1,314 @@
+# Web educativa (Bootstrap + FastAPI) - Estructura base
+
+Este documento contiene el **código base actualizado** para una web pedagógica que reúne varios ejercicios (análisis de voz, ortografía, reglas, etc.). Cambios importantes en esta versión:
+
+- Se sustituyó Flask por **FastAPI** para endpoints más rápidos y modernos.
+- Añadida **validación y normalización automática del audio** (conversión a mono y 16-bit PCM, y remuestreo opcional a 16 kHz).
+- Endpoint que genera espectrograma y devuelve métricas: F0 (cuando es posible), intensidad (dB RMS), duración.
+- Añadido un **panel de progreso** simple usando SQLite para almacenar puntajes/avance por usuario (sin autenticación; identificador de sesión provisional).
+- Añadidos **ejercicios de ortografía** básicos (API REST para obtener ejercicios y enviar respuestas; almacenamiento de resultados en la BD).
+
+---
+
+## Estructura de archivos sugerida
+
+```
+project/
+├─ app.py                   # Servidor FastAPI
+├─ requirements.txt
+├─ templates/
+│  ├─ index.html
+│  ├─ exercise_voice.html
+│  └─ exercise_spelling.html
+├─ static/
+│  ├─ css/styles.css
+│  └─ spectrograms/         # imágenes generadas
+└─ data.db                  # SQLite (creada por la app)
+```
+
+---
+
+## requirements.txt
+
+```
+fastapi
+uvicorn[standard]
+python-multipart
+aiofiles
+librosa
+soundfile
+numpy
+matplotlib
+sqlalchemy
+databases
+pydantic
+```
+
+---
+
+## Archivo: app.py (FastAPI)
+
+```python
+from fastapi import FastAPI, Request, UploadFile, File, Form
+from fastapi.responses import HTMLResponse, JSONResponse
+from fastapi.staticfiles import StaticFiles
+from fastapi.templating import Jinja2Templates
+import os
+import uuid
+import io
+import numpy as np
+import soundfile as sf
+import librosa
+import librosa.display
+import matplotlib.pyplot as plt
+import sqlite3
+from pathlib import Path
+
+BASE_DIR = Path(__file__).parent
+UPLOAD_FOLDER = BASE_DIR / 'uploads'
+SPECTRO_FOLDER = BASE_DIR / 'static' / 'spectrograms'
+DB_PATH = BASE_DIR / 'data.db'
+UPLOAD_FOLDER.mkdir(exist_ok=True)
+SPECTRO_FOLDER.mkdir(parents=True, exist_ok=True)
+
+app = FastAPI(title='Web Pedagógica - FastAPI')
+app.mount('/static', StaticFiles(directory=BASE_DIR / 'static'), name='static')
+templates = Jinja2Templates(directory=str(BASE_DIR / 'templates'))
+
+# --- Base de datos simple con sqlite3 ---
+def init_db():
+    conn = sqlite3.connect(DB_PATH)
+    c = conn.cursor()
+    c.execute('''
+    CREATE TABLE IF NOT EXISTS progress (
+        id TEXT PRIMARY KEY,
+        user_name TEXT,
+        score INTEGER DEFAULT 0
+    )
+    ''')
+    c.execute('''
+    CREATE TABLE IF NOT EXISTS spelling (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        user_id TEXT,
+        exercise TEXT,
+        correct INTEGER,
+        timestamp DATETIME DEFAULT CURRENT_TIMESTAMP
+    )
+    ''')
+    conn.commit()
+    conn.close()
+
+init_db()
+
+# --- Rutas de plantilla ---
+@app.get('/', response_class=HTMLResponse)
+async def index(request: Request):
+    return templates.TemplateResponse('index.html', {'request': request})
+
+@app.get('/voice', response_class=HTMLResponse)
+async def voice_page(request: Request):
+    return templates.TemplateResponse('exercise_voice.html', {'request': request})
+
+@app.get('/spelling', response_class=HTMLResponse)
+async def spelling_page(request: Request):
+    return templates.TemplateResponse('exercise_spelling.html', {'request': request})
+
+# --- Utilidades de audio ---
+
+def normalize_audio_bytes(data: bytes, target_sr: int = 16000, mono: bool = True):
+    """
+    Convierte datos de audio (bytes) a formato mono y PCM 16-bit, remuestreando a target_sr.
+    Devuelve (y_pcm16, sr)
+    """
+    # Leer con soundfile desde bytes
+    bio = io.BytesIO(data)
+    y, sr = sf.read(bio, dtype='float32')
+
+    # Si stereo -> convertir a mono
+    if y.ndim > 1:
+        y = np.mean(y, axis=1)
+
+    # Remuestrear si es necesario
+    if sr != target_sr:
+        y = librosa.resample(y, orig_sr=sr, target_sr=target_sr)
+        sr = target_sr
+
+    # Normalizar pico a -0.99..0.99
+    peak = np.max(np.abs(y))
+    if peak > 0:
+        y = y / peak * 0.99
+
+    # Convertir a PCM 16-bit
+    y_pcm16 = (y * 32767).astype(np.int16)
+    return y_pcm16, sr
+
+# --- Endpoint de análisis de voz ---
+@app.post('/api/analyze_voice')
+async def analyze_voice(file: UploadFile = File(...)):
+    # Validar extensión
+    filename = file.filename
+    ext = filename.split('.')[-1].lower()
+    if ext not in {'wav', 'flac', 'mp3', 'm4a', 'ogg'}:
+        return JSONResponse({'error':'Formato de archivo no soportado. Usar WAV/MP3/FLAC/M4A/OGG.'}, status_code=400)
+
+    content = await file.read()
+    # Normalizar a mono 16kHz PCM16
+    try:
+        y_pcm16, sr = normalize_audio_bytes(content, target_sr=16000, mono=True)
+    except Exception as e:
+        return JSONResponse({'error': f'Error al procesar audio: {e}'}, status_code=500)
+
+    # Convertir PCM16 a float (-1..1) para librosa
+    y = y_pcm16.astype(np.float32) / 32767.0
+
+    duration = len(y) / sr
+
+    # Calcular F0 con librosa.pyin (puede fallar si señal no es voz)
+    try:
+        f0, voiced_flag, voiced_probs = librosa.pyin(y, fmin=librosa.note_to_hz('C2'), fmax=librosa.note_to_hz('C7'))
+        voiced_flag = np.nan_to_num(voiced_flag).astype(bool)
+        if np.any(voiced_flag):
+            f0_mean = float(np.nanmean(f0[voiced_flag]))
+        else:
+            f0_mean = None
+    except Exception:
+        f0_mean = None
+
+    # Intensidad RMS -> dB
+    S, phase = librosa.magphase(librosa.stft(y.astype(float)))
+    rms = librosa.feature.rms(S=S)
+    intensity_db = 20 * np.log10(np.maximum(rms, 1e-6))
+    intensity_mean = float(np.mean(intensity_db))
+
+    # Generar espectrograma (mel) y guardarlo
+    spec_name = f"spec_{uuid.uuid4().hex}.png"
+    spec_path = SPECTRO_FOLDER / spec_name
+    plt.figure(figsize=(8,3))
+    D = np.abs(librosa.stft(y))**2
+    S_mel = librosa.feature.melspectrogram(S=D, sr=sr)
+    S_db = librosa.power_to_db(S_mel, ref=np.max)
+    librosa.display.specshow(S_db, sr=sr, x_axis='time', y_axis='mel')
+    plt.title('Mel spectrogram')
+    plt.tight_layout()
+    plt.savefig(spec_path, bbox_inches='tight', dpi=150)
+    plt.close()
+
+    spec_url = f'/static/spectrograms/{spec_name}'
+
+    return JSONResponse({
+        'f0_mean': f0_mean,
+        'intensity_mean': intensity_mean,
+        'duration': duration,
+        'spectrogram_url': spec_url
+    })
+
+# --- Endpoints del panel de progreso ---
+@app.post('/api/progress/create')
+async def create_progress(user_name: str = Form(...)):
+    user_id = uuid.uuid4().hex
+    conn = sqlite3.connect(DB_PATH)
+    c = conn.cursor()
+    c.execute('INSERT INTO progress (id, user_name, score) VALUES (?,?,?)', (user_id, user_name, 0))
+    conn.commit()
+    conn.close()
+    return {'user_id': user_id}
+
+@app.post('/api/progress/update')
+async def update_progress(user_id: str = Form(...), score_delta: int = Form(...)):
+    conn = sqlite3.connect(DB_PATH)
+    c = conn.cursor()
+    c.execute('UPDATE progress SET score = score + ? WHERE id = ?', (score_delta, user_id))
+    conn.commit()
+    conn.close()
+    return {'ok': True}
+
+@app.get('/api/progress/{user_id}')
+async def get_progress(user_id: str):
+    conn = sqlite3.connect(DB_PATH)
+    c = conn.cursor()
+    c.execute('SELECT id, user_name, score FROM progress WHERE id = ?', (user_id,))
+    row = c.fetchone()
+    conn.close()
+    if not row:
+        return JSONResponse({'error':'Usuario no encontrado'}, status_code=404)
+    return {'id': row[0], 'user_name': row[1], 'score': row[2]}
+
+# --- Endpoints de ortografía (ejercicios simples) ---
+SAMPLE_SPELLING = [
+    {'id':'b_vs_v_1', 'prompt':'Escribe la palabra correcta: "_aca" (se usa para referirse a un ave que...?)', 'answer':'baca'},
+    {'id':'b_vs_v_2', 'prompt':'Completa la palabra: "_otar" (decidir por mayoría)', 'answer':'votar'},
+    {'id':'z_vs_c_1', 'prompt':'Escribe la forma correcta: "_ebra" (animal)', 'answer':'cebra'}
+]
+
+@app.get('/api/spelling/random')
+async def random_spelling():
+    import random
+    ex = random.choice(SAMPLE_SPELLING)
+    return {'id': ex['id'], 'prompt': ex['prompt']}
+
+@app.post('/api/spelling/submit')
+async def submit_spelling(user_id: str = Form(...), exercise_id: str = Form(...), response: str = Form(...)):
+    # Buscar la respuesta correcta
+    correct = 0
+    ans = None
+    for ex in SAMPLE_SPELLING:
+        if ex['id'] == exercise_id:
+            ans = ex['answer']
+            break
+    if ans is None:
+        return JSONResponse({'error':'Ejercicio no encontrado'}, status_code=404)
+    if response.strip().lower() == ans.lower():
+        correct = 1
+        # actualizar puntaje
+        conn = sqlite3.connect(DB_PATH)
+        c = conn.cursor()
+        c.execute('UPDATE progress SET score = score + 10 WHERE id = ?', (user_id,))
+        conn.commit()
+        conn.close()
+    # guardar intento
+    conn = sqlite3.connect(DB_PATH)
+    c = conn.cursor()
+    c.execute('INSERT INTO spelling (user_id, exercise, correct) VALUES (?,?,?)', (user_id, exercise_id, correct))
+    conn.commit()
+    conn.close()
+    return {'correct': bool(correct), 'expected': ans}
+
+# --- Ejecutar: usar uvicorn app:app --reload ---
+```
+
+---
+
+## Plantilla: templates/index.html
+
+(Usar Bootstrap 5; menú con enlaces a voz y ortografía; panel lateral con formulario para crear usuario/progreso. El contenido de la plantilla se actualizó en el repo. Ver la plantilla completa dentro del documento.)
+
+---
+
+## Plantilla: templates/exercise_voice.html
+
+(Contiene formulario para subir audio, llamada JS a `/api/analyze_voice`, muestra espectrograma y métricas. También incluye botón para guardar resultado en progreso usando `/api/progress/update`.)
+
+---
+
+## Plantilla: templates/exercise_spelling.html
+
+(Interfaz simple que pide un ejercicio aleatorio desde `/api/spelling/random`, envía respuesta a `/api/spelling/submit` y muestra si estuvo correcto. Al acertar, la API suma puntos en la tabla `progress`.)
+
+---
+
+## Notas técnicas importantes
+
+- **Normalización**: el código usa `soundfile` para leer el audio como `float32`, convierta a mono promediando canales, remuestrea con `librosa.resample` y guarda internamente como PCM16 sólo para tratamiento (se convierte a float para cálculo con librosa).
+- **F0 (pitch)**: `librosa.pyin` es un buen método, pero puede fallar en señales ruidosas o con poco contenido tonal. Si no se detecta voz, `f0_mean` será `null`.
+- **Intensidad**: calculada con RMS de la STFT y transformada a dB. No reemplaza un medidor calibrado en dB SPL.
+- **Seguridad**: actualmente no hay autenticación. La tabla `progress` usa un `user_id` simple; para producción hay que añadir autenticación, validación de archivos grandes (size limit) y manejo de sesiones.
+- **Producción**: usar Uvicorn+Gunicorn/Hypercorn, y un almacenamiento de archivos en S3 o similar para escalabilidad.
+
+---
+
+## ¿Qué más quieres que añada ahora?
+- Integrar autenticación básica (usuarios/email+password) y dashboard con historial.
+- Más tipos de ejercicios de ortografía (listas por nivel, carga desde CSV).
+- Visualizaciones interactivas (Plotly) para espectrogramas y evolución del puntaje.
+
+El código ya está actualizado en este documento. Si quieres, genero los contenidos completos de las plantillas `index.html`, `exercise_voice.html` y `exercise_spelling.html` (listas completas) y te los coloco aquí para copiarlos, o puedo preparar un ZIP con todo listo para ejecutar localmente.

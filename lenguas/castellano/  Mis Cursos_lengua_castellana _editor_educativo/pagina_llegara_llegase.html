@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>La confluencia de “llegara” y “llegase” - Aula de Gramática</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+  <div class="container py-5">
+    <header class="text-center mb-5">
+      <h1 class="display-5 fw-bold text-primary">La confluencia de “llegara” y “llegase”</h1>
+      <p class="lead">Estudio interactivo sobre el modo, tiempo y evolución histórica del español</p>
+    </header>
+
+    <!-- Sección de teoría -->
+    <section class="mb-5">
+      <div class="card shadow-sm">
+        <div class="card-header bg-primary text-white">
+          <h2 class="h5">Teoría</h2>
+        </div>
+        <div class="card-body">
+          <p>En la historia del español, las formas <strong>“llegara”</strong> y <strong>“llegase”</strong> representan un fenómeno interesante de convergencia entre el <em>pretérito imperfecto de subjuntivo</em> y el <em>pluscuamperfecto de indicativo antiguo</em>. Aunque ambas expresan acciones hipotéticas o subordinadas, “llegara” conserva ciertos usos indicativos que la acercan a “llegaría”, mientras que “llegase” se mantiene más próxima a contextos puramente subjuntivos.</p>
+          <p>El proceso de fusión semántica ha llevado a que en muchos dialectos se prefiera “llegara” incluso en contextos donde antiguamente solo se habría usado “llegase”. Este cambio refleja la tendencia del idioma a simplificar las formas verbales manteniendo la inteligibilidad.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Ejercicio 1: opción múltiple -->
+    <section class="mb-5">
+      <div class="card shadow-sm">
+        <div class="card-header bg-success text-white">
+          <h2 class="h5">Ejercicio 1: Selecciona la forma correcta</h2>
+        </div>
+        <div class="card-body">
+          <p>Elige la forma adecuada según el contexto.</p>
+          <div id="ejercicio1"></div>
+          <button class="btn btn-primary mt-3" onclick="verificarEj1()">Verificar respuestas</button>
+          <div id="resultado1" class="mt-3"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Ejercicio 2: Completar oraciones -->
+    <section class="mb-5">
+      <div class="card shadow-sm">
+        <div class="card-header bg-warning">
+          <h2 class="h5">Ejercicio 2: Completa las oraciones</h2>
+        </div>
+        <div class="card-body">
+          <p>Escribe la forma correcta del verbo entre paréntesis: “llegara” o “llegase”.</p>
+          <div id="ejercicio2"></div>
+          <button class="btn btn-primary mt-3" onclick="verificarEj2()">Comprobar</button>
+          <div id="resultado2" class="mt-3"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Ejercicio 3: Redacción libre -->
+    <section class="mb-5">
+      <div class="card shadow-sm">
+        <div class="card-header bg-info text-white">
+          <h2 class="h5">Ejercicio 3: Redacta tus propias oraciones</h2>
+        </div>
+        <div class="card-body">
+          <p>Redacta 5 oraciones usando “llegara” y otras 5 usando “llegase”. Luego, podrás guardar y revisar tus ejemplos.</p>
+          <textarea id="redaccion" class="form-control mb-3" rows="5" placeholder="Escribe tus oraciones aquí..."></textarea>
+          <button class="btn btn-success" onclick="guardarEjemplos()">Guardar ejemplos</button>
+          <h5 class="mt-4">Tus ejemplos guardados:</h5>
+          <ul id="listaEjemplos" class="list-group"></ul>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    // --- Ejercicio 1 ---
+    const preguntas1 = [
+      { oracion: "Si él ___ antes, habría evitado el accidente.", opciones: ["llegara", "llegase"], correcta: "llegara" },
+      { oracion: "Me alegró que tú ___ a tiempo para el examen.", opciones: ["llegara", "llegase"], correcta: "llegases" },
+      { oracion: "Pensó que algún día ___ a ser director.", opciones: ["llegara", "llegase"], correcta: "llegara" }
+    ];
+
+    const contenedor1 = document.getElementById('ejercicio1');
+    preguntas1.forEach((p, i) => {
+      const bloque = document.createElement('div');
+      bloque.innerHTML = `<p>${i + 1}. ${p.oracion}</p>` +
+        p.opciones.map(o => `<div class='form-check'><input class='form-check-input' type='radio' name='preg${i}' value='${o}'><label>${o}</label></div>`).join('');
+      contenedor1.appendChild(bloque);
+    });
+
+    function verificarEj1() {
+      let aciertos = 0;
+      preguntas1.forEach((p, i) => {
+        const seleccion = document.querySelector(`input[name='preg${i}']:checked`);
+        if (seleccion && seleccion.value === p.correcta) aciertos++;
+      });
+      document.getElementById('resultado1').innerHTML = `<div class='alert alert-${aciertos === preguntas1.length ? 'success' : 'danger'}'>Has acertado ${aciertos} de ${preguntas1.length}.</div>`;
+    }
+
+    // --- Ejercicio 2 ---
+    const frases2 = [
+      { oracion: "Esperaba que él (llegar) temprano para ver la película.", correcta: "llegara" },
+      { oracion: "No creía que tú (llegar) a comprenderlo tan pronto.", correcta: "llegases" },
+      { oracion: "Si ella (llegar) a tiempo, el evento habría sido mejor.", correcta: "llegara" }
+    ];
+
+    const contenedor2 = document.getElementById('ejercicio2');
+    frases2.forEach((f, i) => {
+      contenedor2.innerHTML += `<p>${i + 1}. ${f.oracion}</p><input class='form-control mb-2' id='resp${i}' placeholder='Tu respuesta'>`;
+    });
+
+    function verificarEj2() {
+      let aciertos = 0;
+      frases2.forEach((f, i) => {
+        const resp = document.getElementById(`resp${i}`).value.trim().toLowerCase();
+        if (resp === f.correcta) aciertos++;
+      });
+      document.getElementById('resultado2').innerHTML = `<div class='alert alert-${aciertos === frases2.length ? 'success' : 'warning'}'>Has acertado ${aciertos} de ${frases2.length}.</div>`;
+    }
+
+    // --- Ejercicio 3 ---
+    function guardarEjemplos() {
+      const texto = document.getElementById('redaccion').value.trim();
+      if (!texto) return;
+      const li = document.createElement('li');
+      li.className = 'list-group-item';
+      li.textContent = texto;
+      document.getElementById('listaEjemplos').appendChild(li);
+      document.getElementById('redaccion').value = '';
+    }
+  </script>
+</body>
+</html>

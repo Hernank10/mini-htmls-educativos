@@ -1,0 +1,364 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Academia Pedagógica — Reescribir Consejos</title>
+
+  <!-- Bootstrap 5 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <style>
+    body { padding-top: 56px; }
+    .sidebar { height: calc(100vh - 56px); overflow:auto; }
+    .consejo-box { min-height: 140px; }
+    pre { white-space: pre-wrap; }
+  </style>
+</head>
+<body>
+
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="#">Academia Pedagógica</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navMenu">
+      <ul class="navbar-nav ms-auto">
+        <li class="nav-item"><button id="btnDownloadJSON" class="btn btn-outline-light me-2">Descargar JSON</button></li>
+        <li class="nav-item"><button id="btnDownloadTXT" class="btn btn-outline-light me-2">Descargar TXT</button></li>
+        <li class="nav-item"><input id="fileInput" type="file" accept=".json" class="form-control form-control-sm" /></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<div class="container-fluid">
+  <div class="row">
+
+    <!-- Sidebar: bloques -->
+    <nav class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse" id="sidebarMenu">
+      <div class="position-sticky pt-3">
+        <h6 class="px-3">Bloques</h6>
+        <ul id="bloquesList" class="nav flex-column px-2"></ul>
+      </div>
+    </nav>
+
+    <!-- Main -->
+    <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+      <div class="d-flex justify-content-between align-items-center pt-3 pb-2 mb-3 border-bottom">
+        <h2 id="tituloBloque">—</h2>
+        <div class="text-end">
+          <small id="contadorProgreso">0 / 0 reescritos</small>
+          <div class="progress" style="width:300px;">
+            <div id="barraProgreso" class="progress-bar" role="progressbar" style="width:0%">0%</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card mb-3">
+        <div class="card-body consejo-box">
+          <h5 class="card-title">Consejo original</h5>
+          <p id="consejoOriginal" class="card-text"></p>
+        </div>
+      </div>
+
+      <div class="mb-3">
+        <label for="editorReescrito" class="form-label">Reescribir consejo</label>
+        <textarea id="editorReescrito" class="form-control" rows="6" placeholder="Escribe aquí tu versión..."></textarea>
+      </div>
+
+      <div class="d-flex justify-content-between mb-5">
+        <div>
+          <button id="prevBtn" class="btn btn-secondary me-2">◀ Anterior</button>
+          <button id="saveBtn" class="btn btn-success me-2">💾 Guardar</button>
+          <button id="nextBtn" class="btn btn-primary">Siguiente ▶</button>
+        </div>
+        <div>
+          <button id="exportJSONBtn" class="btn btn-outline-primary me-2">Exportar reescritos (JSON)</button>
+          <button id="exportTXTBtn" class="btn btn-outline-secondary">Exportar reescritos (TXT)</button>
+        </div>
+      </div>
+
+      <hr>
+      <h5>Vista rápida del bloque</h5>
+      <div id="listaConsejos" class="list-group mb-5" style="max-height:320px; overflow:auto;"></div>
+    </main>
+  </div>
+</div>
+
+<!-- Bootstrap 5 JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+/*
+  Prototipo pedagógico con Bootstrap.
+  Datos embebidos (consejos.json que generamos antes).
+  Puedes cargar un JSON externo con el input de archivo (arriba).
+*/
+
+const consejosData = {
+  "Subida Web": [
+    "41. Usa plataformas como Google Sites, Wix o Carrd para subir tu contenido.",
+    "42. Crea un botón de descarga de libros EPUB y PDFs.",
+    "43. Comparte enlaces por redes sociales.",
+    "44. Ofrece actualizaciones mensuales de contenido.",
+    "45. Usa Gumroad, Ko-fi o Payhip para vender libros digitales.",
+    "46. Asegúrate de que tus lecciones estén optimizadas para móviles.",
+    "47. Crea una lista de correos con Mailchimp o Buttondown.",
+    "48. Ofrece “packs” temáticos: ortografía, redacción, literatura.",
+    "49. Utiliza un diseño atractivo para tus libros EPUB.",
+    "50. Incluye códigos QR para acceder a audios y ejercicios."
+  ],
+  "Distribución Android": [
+    "51. Crea tu APK con Kivy, React Native o MIT App Inventor.",
+    "52. Firma el APK para evitar bloqueos al instalar.",
+    "53. Usa WhatsApp o Google Drive para distribuirlo localmente.",
+    "54. Añade un manual simple de instalación.",
+    "55. Prueba tu app en varios celulares.",
+    "56. Incluye opción de actualizar la app manualmente.",
+    "57. Usa íconos e imágenes llamativas para la interfaz.",
+    "58. Comparte la app en ferias educativas o encuentros docentes.",
+    "59. Ofrece tu APK como bono al comprar tus cursos.",
+    "60. Prepara una versión ligera que funcione sin conexión."
+  ],
+  "Academia Digital": [
+    "61. Contacta a colegas de otras asignaturas (matemáticas, inglés, sociales).",
+    "62. Crea un grupo de WhatsApp o Telegram para planear la academia.",
+    "63. Establezcan roles: contenido, marketing, tecnología.",
+    "64. Establezcan porcentajes de ingreso compartido.",
+    "65. Creen un logo y nombre de marca local.",
+    "66. Diseñen un sitio web sencillo para presentar la academia.",
+    "67. Usen redes sociales para lanzar promociones conjuntas.",
+    "68. Ofrezcan paquetes por asignaturas y grados escolares.",
+    "69. Organicen clases presenciales un día a la semana.",
+    "70. Produzcan un boletín mensual con avances, promociones y tips."
+  ],
+  "Monetización y Precios": [
+    "71. Ofrece una clase gratuita como gancho.",
+    "72. Usa pagos por Nequi, Daviplata o transferencia bancaria.",
+    "73. Crea tarifas por niveles: básico, intermedio, avanzado.",
+    "74. Ofrece descuentos por referidos.",
+    "75. Haz campañas promocionales en redes.",
+    "76. Ofrece membresías mensuales.",
+    "77. Incluye contenido premium (audios, estadísticas, apps).",
+    "78. Vende también recursos impresos (cuadernos de ejercicios).",
+    "79. Ofrece planes familiares (dos o más hijos).",
+    "80. Aplica encuestas para ajustar precios y mejorar el servicio."
+  ],
+  "Marketing Local": [
+    "81. Comparte tu historia como profesor emprendedor en redes.",
+    "82. Diseña tarjetas de presentación digitales.",
+    "83. Colabora con influenciadores educativos locales.",
+    "84. Graba vídeos explicativos cortos en TikTok o Reels.",
+    "85. Escribe artículos educativos para blogs locales.",
+    "86. Publicita en emisoras comunitarias.",
+    "87. Publica en grupos de padres y profesores de Facebook.",
+    "88. Participa en ferias escolares o eventos culturales.",
+    "89. Regala cupones o promociones en fechas especiales.",
+    "90. Usa testimonios reales de estudiantes como publicidad."
+  ],
+  "Estrategia y Visión a Futuro": [
+    "91. Establece metas mensuales de ingresos y estudiantes.",
+    "92. Evalúa qué tipo de contenido tiene más aceptación.",
+    "93. Escucha las sugerencias de tus usuarios.",
+    "94. Piensa en expandirte a otras ciudades.",
+    "95. Publica cada cierto tiempo nuevas lecciones.",
+    "96. Mantén siempre una actitud de aprendizaje.",
+    "97. Recibe mentorías o únete a redes de docentes innovadores.",
+    "98. Busca financiamiento o patrocinios locales.",
+    "99. Explora publicar tu app en Google Play si es viable.",
+    "100. Cree en el valor de tu conocimiento: la lengua es poder."
+  ]
+};
+
+// Estado
+let bloques = Object.keys(consejosData);
+let flatConsejos = []; // {bloque, texto, indexWithinBlock}
+let currentIndex = 0;
+let reescritosMap = new Map(); // clave: bloque + '||' + idx
+
+// DOM refs
+const bloquesList = document.getElementById('bloquesList');
+const tituloBloque = document.getElementById('tituloBloque');
+const consejoOriginal = document.getElementById('consejoOriginal');
+const editor = document.getElementById('editorReescrito');
+const prevBtn = document.getElementById('prevBtn');
+const nextBtn = document.getElementById('nextBtn');
+const saveBtn = document.getElementById('saveBtn');
+const listaConsejos = document.getElementById('listaConsejos');
+const barraProgreso = document.getElementById('barraProgreso');
+const contadorProgreso = document.getElementById('contadorProgreso');
+const exportJSONBtn = document.getElementById('exportJSONBtn');
+const exportTXTBtn = document.getElementById('exportTXTBtn');
+const btnDownloadJSON = document.getElementById('btnDownloadJSON');
+const btnDownloadTXT = document.getElementById('btnDownloadTXT');
+const fileInput = document.getElementById('fileInput');
+
+function buildFlatConsejos() {
+  flatConsejos = [];
+  bloques = Object.keys(consejosData);
+  bloques.forEach(b => {
+    const arr = consejosData[b];
+    arr.forEach((texto, i) => {
+      flatConsejos.push({ bloque: b, texto, idxInBloque: i });
+    });
+  });
+}
+
+function renderBloquesSidebar() {
+  bloquesList.innerHTML = '';
+  bloques.forEach((b, i) => {
+    const li = document.createElement('li');
+    li.className = 'nav-item';
+    li.innerHTML = `<a href="#" class="nav-link" data-block="${i}">${b}</a>`;
+    bloquesList.appendChild(li);
+  });
+  // eventos
+  bloquesList.querySelectorAll('a').forEach(a => {
+    a.addEventListener('click', e => {
+      e.preventDefault();
+      const i = Number(a.dataset.block);
+      // saltar al primer consejo de ese bloque
+      let pos = flatConsejos.findIndex(c => c.bloque === bloques[i]);
+      if (pos >= 0) { currentIndex = pos; showConsejo(); }
+    });
+  });
+}
+
+function showConsejo() {
+  if (currentIndex < 0) currentIndex = 0;
+  if (currentIndex >= flatConsejos.length) currentIndex = flatConsejos.length - 1;
+  const node = flatConsejos[currentIndex];
+  tituloBloque.textContent = node.bloque;
+  consejoOriginal.textContent = node.texto;
+  const key = node.bloque + '||' + node.idxInBloque;
+  editor.value = reescritosMap.get(key) || '';
+  renderListaConsejos(node.bloque);
+  updateProgress();
+}
+
+function renderListaConsejos(currentBloque) {
+  listaConsejos.innerHTML = '';
+  const arr = consejosData[currentBloque];
+  arr.forEach((texto, i) => {
+    const key = currentBloque + '||' + i;
+    const done = reescritosMap.has(key);
+    const item = document.createElement('button');
+    item.className = 'list-group-item list-group-item-action d-flex justify-content-between align-items-center';
+    item.innerHTML = `<span>${texto}</span><span class="badge ${done ? 'bg-success' : 'bg-secondary'}">${done ? 'OK' : '—'}</span>`;
+    item.addEventListener('click', ()=> {
+      // saltar al consejo correspondiente
+      let pos = flatConsejos.findIndex(c => c.bloque === currentBloque && c.idxInBloque === i);
+      if (pos >= 0) { currentIndex = pos; showConsejo(); window.scrollTo({top:0, behavior:'smooth'}); }
+    });
+    listaConsejos.appendChild(item);
+  });
+}
+
+function updateProgress() {
+  const total = flatConsejos.length;
+  const done = reescritosMap.size;
+  const pct = Math.round((done/total)*100);
+  barraProgreso.style.width = pct + '%';
+  barraProgreso.textContent = pct + '%';
+  contadorProgreso.textContent = `${done} / ${total} reescritos`;
+}
+
+// Botones
+prevBtn.addEventListener('click', ()=> {
+  if (currentIndex > 0) { currentIndex--; showConsejo(); }
+});
+nextBtn.addEventListener('click', ()=> {
+  if (currentIndex < flatConsejos.length - 1) { currentIndex++; showConsejo(); }
+});
+saveBtn.addEventListener('click', ()=> {
+  const node = flatConsejos[currentIndex];
+  const key = node.bloque + '||' + node.idxInBloque;
+  const text = editor.value.trim();
+  if (text.length === 0) {
+    // confirmar borrar si ya existía
+    if (reescritosMap.has(key)) {
+      if (!confirm('Campo vacío: ¿deseas eliminar la reescritura anterior?')) return;
+      reescritosMap.delete(key);
+    } else {
+      alert('Escribe algo antes de guardar (o pulsa siguiente para saltar).');
+      return;
+    }
+  } else {
+    reescritosMap.set(key, text);
+  }
+  updateProgress();
+  renderListaConsejos(node.bloque);
+  alert('Guardado ✔');
+});
+
+// Exportar
+function exportReescritosAsJSON() {
+  const outObj = {};
+  for (const [k, v] of reescritosMap.entries()) {
+    const [bloque, idx] = k.split('||');
+    if (!outObj[bloque]) outObj[bloque] = [];
+    outObj[bloque][Number(idx)] = { original: consejosData[bloque][Number(idx)], reescrito: v };
+  }
+  // asegurar secuencia por bloque
+  for (const b of Object.keys(outObj)) {
+    outObj[b] = outObj[b].map(x=> x || null);
+  }
+  const blob = new Blob([JSON.stringify(outObj, null, 2)], {type: 'application/json;charset=utf-8'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a'); a.href = url; a.download = 'consejos_reescritos.json'; a.click();
+  URL.revokeObjectURL(url);
+}
+function exportReescritosAsTXT() {
+  let lines = [];
+  for (const c of flatConsejos) {
+    const key = c.bloque + '||' + c.idxInBloque;
+    const re = reescritosMap.get(key) || '';
+    lines.push(`${c.bloque} - ${c.texto}\nReescrito: ${re}\n`);
+  }
+  const blob = new Blob([lines.join('\n')], {type: 'text/plain;charset=utf-8'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a'); a.href = url; a.download = 'consejos_reescritos.txt'; a.click();
+  URL.revokeObjectURL(url);
+}
+exportJSONBtn.addEventListener('click', exportReescritosAsJSON);
+exportTXTBtn.addEventListener('click', exportReescritosAsTXT);
+btnDownloadJSON.addEventListener('click', exportReescritosAsJSON);
+btnDownloadTXT.addEventListener('click', exportReescritosAsTXT);
+
+// Importar JSON externo
+fileInput.addEventListener('change', (evt) => {
+  const file = evt.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    try {
+      const parsed = JSON.parse(e.target.result);
+      // reemplazar datos
+      for (const k of Object.keys(parsed)) {
+        consejosData[k] = parsed[k];
+      }
+      buildFlatConsejos();
+      renderBloquesSidebar();
+      currentIndex = 0;
+      reescritosMap.clear();
+      showConsejo();
+      alert('consejos.json importado correctamente.');
+    } catch(err) {
+      alert('Error al leer JSON: ' + err);
+    }
+  };
+  reader.readAsText(file, 'utf-8');
+});
+
+// Inicializar
+buildFlatConsejos();
+renderBloquesSidebar();
+showConsejo();
+
+</script>
+
+</body>
+</html>

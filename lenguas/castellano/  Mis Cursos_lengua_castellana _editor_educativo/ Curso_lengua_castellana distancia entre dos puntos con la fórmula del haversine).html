@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Página Pedagógica – Haversine y Traducción Inglés-Español</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body { background-color: #f8f9fa; }
+    .card { border-radius: 1rem; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+    h2 { color: #0d6efd; }
+  </style>
+</head>
+<body>
+
+  <div class="container py-5">
+    <h1 class="text-center mb-4">💡 Plataforma Pedagógica en Línea</h1>
+    <p class="text-center lead">Aprende inglés y geografía mediante la tecnología – Bootstrap + Python adaptado al navegador</p>
+
+    <div class="row g-4 mt-4">
+      <!-- Sección 1: Teoría -->
+      <div class="col-md-12">
+        <div class="card p-4">
+          <h2>1️⃣ Teoría General</h2>
+          <p>
+            Esta página combina dos programas educativos:
+          </p>
+          <ul>
+            <li><strong>Traducción Inglés ↔ Español:</strong> Aprende a escribir y traducir preguntas básicas entre ambos idiomas.</li>
+            <li><strong>Fórmula del Haversine:</strong> Calcula la distancia entre dos puntos geográficos mediante latitud y longitud.</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Sección 2: Traducción Inglés - Español -->
+      <div class="col-md-6">
+        <div class="card p-4">
+          <h2>🗣️ Práctica de Traducción</h2>
+          <p>Selecciona una pregunta y tradúcela al otro idioma. Luego verifica tu respuesta.</p>
+
+          <div class="mb-3">
+            <label for="idioma" class="form-label">Dirección de traducción:</label>
+            <select id="idioma" class="form-select">
+              <option value="es-en">Español → Inglés</option>
+              <option value="en-es">Inglés → Español</option>
+            </select>
+          </div>
+
+          <div class="mb-3">
+            <label for="pregunta" class="form-label">Selecciona una pregunta:</label>
+            <select id="pregunta" class="form-select"></select>
+          </div>
+
+          <div class="mb-3">
+            <label for="respuesta" class="form-label">Escribe tu traducción:</label>
+            <input type="text" id="respuesta" class="form-control" placeholder="Escribe aquí...">
+          </div>
+
+          <button class="btn btn-primary w-100" onclick="verificarTraduccion()">Verificar</button>
+          <p id="resultadoTraduccion" class="mt-3 fw-bold"></p>
+        </div>
+      </div>
+
+      <!-- Sección 3: Cálculo Haversine -->
+      <div class="col-md-6">
+        <div class="card p-4">
+          <h2>🌍 Calculadora de Distancia (Haversine)</h2>
+          <p>Introduce las coordenadas de dos lugares y calcula la distancia aproximada entre ellos.</p>
+
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label class="form-label">Latitud 1</label>
+              <input type="number" id="lat1" class="form-control" step="0.0001" placeholder="Ej: 48.8584">
+            </div>
+            <div class="col-md-6 mb-3">
+              <label class="form-label">Longitud 1</label>
+              <input type="number" id="lon1" class="form-control" step="0.0001" placeholder="Ej: 2.2945">
+            </div>
+            <div class="col-md-6 mb-3">
+              <label class="form-label">Latitud 2</label>
+              <input type="number" id="lat2" class="form-control" step="0.0001" placeholder="Ej: 41.8902">
+            </div>
+            <div class="col-md-6 mb-3">
+              <label class="form-label">Longitud 2</label>
+              <input type="number" id="lon2" class="form-control" step="0.0001" placeholder="Ej: 12.4922">
+            </div>
+          </div>
+
+          <button class="btn btn-success w-100" onclick="calcularHaversine()">Calcular distancia</button>
+          <p id="resultadoHaversine" class="mt-3 fw-bold"></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ------------------- Diccionarios de traducción -------------------
+    const preguntasEs = {
+      "¿Cómo te llamas?": "What is your name?",
+      "¿De dónde eres?": "Where are you from?",
+      "¿Cuántos años tienes?": "How old are you?",
+      "¿Dónde vives?": "Where do you live?",
+      "¿Qué te gusta hacer?": "What do you like to do?",
+      "¿Tienes hermanos?": "Do you have siblings?",
+      "¿Cuál es tu comida favorita?": "What is your favorite food?"
+    };
+
+    const preguntasEn = Object.fromEntries(
+      Object.entries(preguntasEs).map(([es, en]) => [en, es])
+    );
+
+    // Cargar preguntas según idioma
+    document.getElementById("idioma").addEventListener("change", cargarPreguntas);
+    function cargarPreguntas() {
+      const idioma = document.getElementById("idioma").value;
+      const select = document.getElementById("pregunta");
+      select.innerHTML = "";
+      const opciones = idioma === "es-en" ? Object.keys(preguntasEs) : Object.keys(preguntasEn);
+      opciones.forEach(p => {
+        const option = document.createElement("option");
+        option.textContent = p;
+        select.appendChild(option);
+      });
+    }
+    cargarPreguntas();
+
+    // Verificación de traducción
+    function verificarTraduccion() {
+      const idioma = document.getElementById("idioma").value;
+      const pregunta = document.getElementById("pregunta").value;
+      const respuesta = document.getElementById("respuesta").value.trim().toLowerCase();
+      const resultado = document.getElementById("resultadoTraduccion");
+
+      let correcta = "";
+      if (idioma === "es-en") correcta = preguntasEs[pregunta].toLowerCase();
+      else correcta = preguntasEn[pregunta].toLowerCase();
+
+      resultado.textContent = respuesta === correcta
+        ? "✅ ¡Correcto!"
+        : `❌ Incorrecto. La respuesta correcta es: ${correcta}`;
+    }
+
+    // ------------------- Fórmula del Haversine -------------------
+    function calcularHaversine() {
+      const lat1 = parseFloat(document.getElementById("lat1").value);
+      const lon1 = parseFloat(document.getElementById("lon1").value);
+      const lat2 = parseFloat(document.getElementById("lat2").value);
+      const lon2 = parseFloat(document.getElementById("lon2").value);
+      const resultado = document.getElementById("resultadoHaversine");
+
+      if (isNaN(lat1) || isNaN(lon1) || isNaN(lat2) || isNaN(lon2)) {
+        resultado.textContent = "⚠️ Por favor, completa todas las coordenadas.";
+        return;
+      }
+
+      const R = 6371; // Radio de la Tierra en km
+      const dLat = (lat2 - lat1) * Math.PI / 180;
+      const dLon = (lon2 - lon1) * Math.PI / 180;
+      const a = Math.sin(dLat/2)**2 + Math.cos(lat1*Math.PI/180)*Math.cos(lat2*Math.PI/180)*Math.sin(dLon/2)**2;
+      const c = 2 * Math.asin(Math.sqrt(a));
+      const distancia = R * c;
+
+      resultado.textContent = `🌐 La distancia entre los puntos es de ${distancia.toFixed(2)} km.`;
+    }
+  </script>
+
+</body>
+</html>

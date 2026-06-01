@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>Letras Colombianas · 100 conceptos clave para Licenciatura en Lengua Castellana</title>
+  <style>
+    /* ----- VARIABLES CSS (paleta: terracota, añil suave, crema) ----- */
+    :root {
+      --fondo-libro: #fef7e8;        /* papel antiguo */
+      --texto-profundo: #2c231d;
+      --tierra: #b87c4f;
+      --tinta: #3a2c29;
+      --arena: #efe0ce;
+      --ocre: #d6a15a;
+      --bien: #2f6b47;
+      --mal: #aa4a3a;
+      --sombra: rgba(70, 40, 20, 0.08);
+      --card-bg: #fffaf2;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: var(--fondo-libro);
+      color: var(--texto-profundo);
+      font-family: 'Merriweather', 'Georgia', 'Times New Roman', serif;
+      line-height: 1.5;
+      padding: 1rem;
+    }
+
+    .app-container {
+      max-width: 1300px;
+      margin: 0 auto;
+      background: var(--card-bg);
+      border-radius: 2rem;
+      box-shadow: 0 12px 28px var(--sombra);
+      overflow: hidden;
+      border: 1px solid #e2cfb3;
+    }
+
+    header {
+      background: #fff4e6;
+      padding: 1.2rem 2rem;
+      border-bottom: 3px solid var(--tierra);
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 1rem;
+    }
+    h1 {
+      font-size: 1.8rem;
+      font-weight: 600;
+      color: #5e3a25;
+      letter-spacing: -0.2px;
+    }
+    h1 small {
+      font-size: 0.75rem;
+      font-weight: normal;
+      color: #8f6a48;
+      margin-left: 0.6rem;
+    }
+
+    nav {
+      display: flex;
+      gap: 0.5rem;
+      background: #f7ecdd;
+      padding: 0.6rem 2rem;
+      border-bottom: 1px solid #e2cfb3;
+    }
+    .nav-btn {
+      background: transparent;
+      border: none;
+      font-size: 1rem;
+      padding: 0.5rem 1.2rem;
+      border-radius: 40px;
+      cursor: pointer;
+      font-weight: 500;
+      font-family: inherit;
+      color: #694e34;
+      transition: all 0.2s;
+    }
+    .nav-btn.active {
+      background-color: var(--tierra);
+      color: white;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+    .nav-btn:hover:not(.active) {
+      background-color: var(--arena);
+    }
+
+    .view {
+      display: none;
+      padding: 2rem;
+      animation: fade 0.2s ease;
+    }
+    .active-view { display: block; }
+    @keyframes fade { from { opacity: 0; transform: translateY(5px);} to { opacity: 1; transform: translateY(0);} }
+
+    .card {
+      background: white;
+      border-radius: 1.6rem;
+      padding: 1.2rem 1.6rem;
+      box-shadow: 0 4px 12px var(--sombra);
+      border: 1px solid #eadbbc;
+      margin-bottom: 1.8rem;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+      gap: 1.2rem;
+      margin-bottom: 2rem;
+    }
+    .stat-card {
+      background: var(--fondo-libro);
+      border-radius: 1.5rem;
+      padding: 1rem;
+      text-align: center;
+      border-left: 8px solid var(--ocre);
+    }
+    .stat-number {
+      font-size: 2.4rem;
+      font-weight: 700;
+      color: var(--tierra);
+    }
+    .progress-bar-bg {
+      background: #e3d3c0;
+      border-radius: 40px;
+      height: 12px;
+      overflow: hidden;
+      margin: 0.8rem 0;
+    }
+    .progress-fill {
+      background: var(--tierra);
+      width: 0%;
+      height: 100%;
+      transition: width 0.2s;
+    }
+
+    .conceptos-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+      gap: 1rem;
+      max-height: 65vh;
+      overflow-y: auto;
+      padding-right: 0.4rem;
+    }
+    .concepto-item {
+      background: white;
+      border-radius: 1.2rem;
+      padding: 0.8rem 1rem;
+      border-left: 5px solid var(--ocre);
+    }
+    .concepto-titulo {
+      font-weight: 700;
+      font-size: 0.95rem;
+      color: #5f3e24;
+    }
+    .concepto-desc {
+      font-size: 0.85rem;
+      color: #6f5640;
+      margin-top: 6px;
+      border-top: 1px dashed #efdecb;
+      padding-top: 6px;
+    }
+    .badge-progreso {
+      font-size: 0.7rem;
+      background: #e9dbc3;
+      border-radius: 20px;
+      padding: 2px 10px;
+      display: inline-block;
+      margin-top: 8px;
+    }
+
+    .flashcard {
+      background: #fffaf1;
+      border-radius: 2rem;
+      padding: 2rem;
+      text-align: center;
+      box-shadow: 0 15px 30px rgba(0,0,0,0.05);
+      border: 1px solid var(--arena);
+      max-width: 750px;
+      margin: 0 auto;
+    }
+    .pregunta {
+      font-size: 1.4rem;
+      font-weight: 500;
+      margin-bottom: 2rem;
+      background: #fdf2e3;
+      padding: 1.2rem;
+      border-radius: 1.5rem;
+    }
+    .respuesta-oculta {
+      background: #efe0cf;
+      border-radius: 1.2rem;
+      padding: 1rem;
+      margin: 1rem 0;
+      color: #2c1f17;
+      display: none;
+    }
+    .btn {
+      background: var(--arena);
+      border: none;
+      padding: 0.6rem 1.5rem;
+      border-radius: 3rem;
+      font-weight: 600;
+      margin: 0.3rem;
+      cursor: pointer;
+      font-family: inherit;
+    }
+    .btn-primary { background: var(--tierra); color: white; }
+    .btn-acierto { background: var(--bien); color: white; }
+    .btn-fallo { background: var(--mal); color: white; }
+    .modo-selector { display: flex; justify-content: center; gap: 0.8rem; margin-bottom: 1.5rem; }
+    footer {
+      text-align: center;
+      padding: 1rem;
+      font-size: 0.75rem;
+      border-top: 1px solid #e2cfb3;
+      background: #faf1e2;
+    }
+    @media (max-width: 680px) {
+      .view { padding: 1rem; }
+      .pregunta { font-size: 1.1rem; }
+    }
+  </style>
+</head>
+<body>
+<div class="app-container">
+  <header>
+    <h1>📖 Letras Colombianas <small>100 conceptos para Licenciatura en Lengua Castellana y Literatura</small></h1>
+    <div style="font-size:0.8rem;">🎓 Gramática · Literatura · Didáctica · Lingüística</div>
+  </header>
+  <nav>
+    <button class="nav-btn active" data-view="dashboard">📊 Panel</button>
+    <button class="nav-btn" data-view="listado">📜 Compendio</button>
+    <button class="nav-btn" data-view="practica">🃏 Estudio activo</button>
+  </nav>
+
+  <section id="dashboard" class="view active-view">
+    <div class="stats-grid" id="statsContainer"></div>
+    <div class="card">
+      <h3>📈 Tu progreso en los 100 fundamentos</h3>
+      <div class="progress-bar-bg"><div class="progress-fill" id="globalProgressFill"></div></div>
+      <p id="globalProgressText"></p>
+      <p style="margin-top:1rem; font-size:0.85rem;">✅ Aciertos registrados en la práctica. Cada concepto puede practicarse múltiples veces.</p>
+      <button id="resetProgresoBtn" class="btn" style="background:#d0ab84;">🔄 Reiniciar progreso</button>
+    </div>
+  </section>
+
+  <section id="listado" class="view">
+    <input type="text" id="filtroListado" placeholder="🔍 Buscar por concepto o definición..." style="width:100%; padding:10px; margin-bottom:15px; border-radius:40px; border:1px solid #e2cfb3;">
+    <div id="conceptosListadoContainer" class="conceptos-grid"></div>
+  </section>
+
+  <section id="practica" class="view">
+    <div class="modo-selector">
+      <button id="modoConceptoDef" class="btn btn-primary">📘 Concepto → Definición</button>
+      <button id="modoDefConcepto" class="btn">🔄 Definición → Concepto</button>
+    </div>
+    <div class="flashcard">
+      <div id="cardPregunta" class="pregunta"></div>
+      <button id="mostrarRespuestaBtn" class="btn">📖 Mostrar respuesta</button>
+      <div id="respuestaDiv" class="respuesta-oculta"></div>
+      <div style="margin-top: 1.5rem;">
+        <button id="aciertoBtn" class="btn btn-acierto" disabled>✅ Acierto</button>
+        <button id="falloBtn" class="btn btn-fallo" disabled>❌ Fallo</button>
+      </div>
+      <button id="siguienteCardBtn" class="btn" style="margin-top:1rem;">⏩ Siguiente concepto</button>
+      <p id="infoProgresoCard" style="margin-top:0.8rem; font-size:0.8rem;"></p>
+    </div>
+  </section>
+  <footer>Progreso guardado en tu navegador · Enfoque en el español de Colombia y literatura hispanoamericana</footer>
+</div>
+
+<script>
+  // --------------------------------------------------------------
+  // 100 CONCEPTOS CLAVE para Licenciatura en Lengua Castellana y Literatura
+  // (número, concepto o término, definición / explicación)
+  // Adaptado a contenidos universitarios colombianos
+  // --------------------------------------------------------------
+  const conceptosData = [
+    [1, "Fonema", "Unidad mínima sonora que distingue significados. En español, 24 fonemas."],
+    [2, "Sinalefa", "Fusión de la vocal final de una palabra con la inicial de la siguiente en una misma sílaba."],
+    [3, "Hiato", "Secuencia de dos vocales que pertenecen a sílabas distintas (ej. poe-ta)."],
+    [4, "Acento diacrítico", "Tilde que diferencia significados en palabras monosílabas (tú/tu, él/el)."],
+    [5, "Barbarismo", "Error en la pronunciación o escritura de una palabra, o uso de extranjerismo innecesario."],
+    [6, "Neologismo", "Palabra nueva creada o adaptada para designar realidades recientes."],
+    [7, "Colombianismo", "Expresión o significado propio del español hablado en Colombia (ej. 'chévere', 'parce')."],
+    [8, "Voseo dialectal", "Uso de 'vos' como pronombre de segunda persona singular, presente en regiones de Colombia (Valle, Antioquia)."],
+    [9, "Realismo mágico", "Movimiento literario hispanoamericano que fusiona realismo con elementos fantásticos. Referente: Gabriel García Márquez."],
+    [10, "Modernismo hispánico", "Reacción al romanticismo, con Rubén Darío como máximo exponente; búsqueda de la belleza y exotismo."],
+    [11, "Generación del 27", "Grupo de poetas españoles (Lorca, Alberti, etc.) que renovaron la lírica."],
+    [12, "Narrativa del 'boom'", "Fenómeno editorial de los años 60-70; autores: García Márquez, Vargas Llosa, Cortázar, Fuentes."],
+    [13, "Cien años de soledad", "Novela de Gabriel García Márquez, obra cumbre del realismo mágico, Macondo como mito fundacional."],
+    [14, "José Asunción Silva", "Poeta colombiano del modernismo; autor de 'Nocturno III' y 'El libro de versos'."],
+    [15, "Porfirio Barba Jacob", "Poeta antioqueño con tono existencialista y elegíaco."],
+    [16, "Aurea", "Casa de Nariño. Género de la literatura española del Siglo de Oro."],
+    [17, "Género lírico", "Poesía: expresa sentimientos subjetivos. Ejemplo: soneto, romance, oda."],
+    [18, "Género dramático", "Obras teatrales con diálogos destinadas a la representación."],
+    [19, "Género narrativo", "Relato de acciones en el tiempo: cuento, novela, epopeya."],
+    [20, "Métrica", "Estudio de la estructura rítmica de los versos; sílabas, acentos, pausas."],
+    [21, "Rima consonante", "Coincidencia de vocales y consonantes a partir de la última vocal acentuada."],
+    [22, "Rima asonante", "Coincidencia solo de las vocales a partir de la última tónica."],
+    [23, "Verso libre", "Sin sujeción a métrica ni rima fija, pero con ritmo interno."],
+    [24, "Sinécdoque", "Figura retórica que designa todo por la parte o viceversa (ej. 'cien cabezas' por cien reses)."],
+    [25, "Metonimia", "Designar algo con el nombre de otra cosa contigua: 'tomar un Rembrandt' (cuadro)."],
+    [26, "Hipérbaton", "Alteración del orden lógico de las palabras en una oración."],
+    [27, "Polisíndeton", "Uso reiterado de conjunciones para dar solemnidad."],
+    [28, "Asíndeton", "Supresión de conjunciones para acelerar el ritmo."],
+    [29, "Paradoja", "Unión de dos ideas opuestas en apariencia."],
+    [30, "Intertextualidad", "Relación de un texto con otros textos previos."],
+    [31, "Didáctica de la literatura", "Estrategias para enseñar literatura en educación básica y media."],
+    [32, "Competencia literaria", "Capacidad para comprender, interpretar y disfrutar textos literarios."],
+    [33, "Estandar lingüístico", "Variedad de lengua considerada modelo por prestigio social; base del español neutro."],
+    [34, "Variación diatópica", "Variedades geográficas del idioma (dialectos)."],
+    [35, "Variación diastrática", "Variedades sociales o niveles de habla (culto, vulgar)."],
+    [36, "Variación diafásica", "Variedad según situación comunicativa (formal/informal)."],
+    [37, "Bilingüismo en Colombia", "Convivencia de español con lenguas indígenas (wayuunaiki, nasa yuwe, etc.)."],
+    [38, "Préstamo lingüístico", "Incorporación de palabras de otra lengua (anglicismos, galicismos)."],
+    [39, "Categoría gramatical", "Clases de palabras: sustantivo, adjetivo, verbo, adverbio, etc."],
+    [40, "Verbos copulativos", "Ser, estar, parecer. Atribuyen cualidades al sujeto."],
+    [41, "Perífrasis verbal", "Estructura de verbo auxiliar + gerundio/infinitivo/participio (voy a comer)."],
+    [42, "Modo indicativo", "Expresa hechos reales o seguros (canto, cantaba, cantaré)."],
+    [43, "Modo subjuntivo", "Expresa deseo, duda, irrealidad (cante, cantara, hubiera cantado)."],
+    [44, "Modo imperativo", "Expresa mandatos o ruegos."],
+    [45, "Análisis sintáctico", "Identificación de constituyentes oracionales: sujeto, predicado, complementos."],
+    [46, "Oración simple", "Un solo verbo conjugado."],
+    [47, "Oración compuesta", "Dos o más verbos (coordinadas o subordinadas)."],
+    [48, "Proposiciones subordinadas sustantivas", "Funcionan como sujeto u objeto: 'Me alegra que vengas'."],
+    [49, "Subordinada adjetiva", "Equivalente a un adjetivo: 'El libro que leí'."],
+    [50, "Subordinada adverbial", "Complementan al verbo (tiempo, lugar, modo, etc.)."],
+    [51, "Complemento Directo", "Recibe la acción directamente (lo, la, los, las)."],
+    [52, "Complemento Indirecto", "Destinatario o beneficiario (le, les)."],
+    [53, "Complemento Circunstancial", "Aporta información de tiempo, lugar, modo, causa, etc."],
+    [54, "Oración impersonal", "Sin sujeto gramatical: 'Llueve', 'Hay niños'."],
+    [55, "Voz pasiva", "El sujeto recibe la acción: 'La carta fue escrita por Juan'."],
+    [56, "Voz activa", "El sujeto realiza la acción: 'Juan escribe la carta'."],
+    [57, "Concordancia gramatical", "Coincidencia de género y número entre sustantivo y adjetivo, o sujeto y verbo."],
+    [58, "Tilde diacrítica en interrogativos", "Qué, quién, cuál, cómo, cuándo, cuánto llevan tilde en exclamativas e interrogativas."],
+    [59, "Uso de 'sino' y 'si no'", "Sino (adversativo), si no (condicional)."],
+    [60, "Porqué / porque / por qué / por que", "Sustantivo, conjunción causal, interrogativo, preposición + conjunción."],
+    [61, "Reglas de acentuación", "Palabras agudas, graves, esdrújulas y sobresdrújulas."],
+    [62, "Puntuación: punto seguido", "Separa enunciados dentro del mismo párrafo."],
+    [63, "Punto y aparte", "Separa párrafos distintos."],
+    [64, "Uso del punto y coma", "Separa oraciones relacionadas o elementos de enumeraciones complejas."],
+    [65, "Dos puntos", "Introducen una cita, enumeración o explicación."],
+    [66, "Comillas", "Citas textuales o palabras con sentido especial."],
+    [67, "Paréntesis", "Aclaran o incluyen información adicional."],
+    [68, "Raya (—)", "Diálogo o inciso más enfático que el paréntesis."],
+    [69, "Elipsis", "Supresión de elementos sin perder claridad."],
+    [70, "Anáfora", "Repetición de una o más palabras al inicio de versos o frases."],
+    [71, "Catáfora", "Elemento que anticipa algo mencionado después."],
+    [72, "Deícticos", "Palabras que remiten a la situación comunicativa (yo, aquí, ahora)."],
+    [73, "Enunciado", "Unidad comunicativa mínima con sentido completo."],
+    [74, "Texto argumentativo", "Defiende una tesis con razones y evidencias."],
+    [75, "Texto expositivo", "Explica un tema de forma objetiva."],
+    [76, "Resumen", "Síntesis fiel de las ideas principales de otro texto."],
+    [77, "Ensayo académico", "Texto breve donde el autor analiza un tema con argumentos personales y erudición."],
+    [78, "Análisis del discurso", "Estudia el lenguaje en uso, más allá de la oración."],
+    [79, "Semántica", "Significado de las palabras y sus relaciones (sinonimia, antonimia)."],
+    [80, "Pragmática", "Estudio del significado en contexto y los actos de habla."],
+    [81, "Actos de habla", "Acciones realizadas al hablar: asertivos, directivos, compromisorios, expresivos, declarativos."],
+    [82, "Competencia comunicativa", "Habilidad para usar el lenguaje adecuadamente en diversos contextos (Hymes)."],
+    [83, "Literatura infantil colombiana", "Obras para niños: Rafael Pombo, 'El renacuajo paseador'."],
+    [84, "Mito y leyenda", "Relatos tradicionales: mito (sobre dioses) y leyenda (sucesos históricos fantásticos)."],
+    [85, "Coplas", "Estructura octosílaba de rima asonante, popular en la tradición oral andina."],
+    [86, "Decimero", "Cultivador de décimas; tradición en Antioquia y los Llanos."],
+    [87, "Escritura creativa", "Talleres para fomentar la producción literaria en el aula."],
+    [88, "Coevaluación", "Evaluación entre pares, muy usada en didáctica de la lengua."],
+    [89, "Rúbrica de evaluación", "Matriz con criterios específicos para calificar producciones escritas."],
+    [90, "Niveles de lectura", "Literal, inferencial y crítico-intertextual."],
+    [91, "Secuencia didáctica", "Conjunto de actividades ordenadas para enseñar un contenido."],
+    [92, "Adaptación curricular", "Ajustes para estudiantes con necesidades educativas especiales en la clase de lengua."],
+    [93, "Etnolingüística", "Relación entre lengua y cultura, especialmente en comunidades indígenas."],
+    [94, "Palabras patrimoniales", "Voz heredada del latín que ha evolucionado (p. ej. 'hijo' < filium)."],
+    [95, "Cultismo", "Palabra que mantiene forma latina sin cambios drásticos ('cátedra')."],
+    [96, "Lexicografía", "Técnica de elaboración de diccionarios."],
+    [97, "Corpus lingüístico", "Colección de textos usados para investigar el idioma."],
+    [98, "Norma culta", "Uso lingüístico de hablantes educados en situaciones formales."],
+    [99, "Literatura del siglo XIX en Colombia", "Autores: Jorge Isaacs (María), José Asunción Silva, Rafael Pombo."],
+    [100, "Maestría en Lingüística", "Posgrado común para profundizar en la estructura y uso del español en Colombia."]
+  ];
+
+  // --------------------- LOCALSTORAGE Y PROGRESO -------------------------
+  let progreso = {};
+  const STORAGE_KEY = "licenciaturaLenguaProgreso";
+
+  function cargarProgreso() {
+    const guardado = localStorage.getItem(STORAGE_KEY);
+    if (guardado) {
+      progreso = JSON.parse(guardado);
+    } else {
+      progreso = {};
+      for (let i = 1; i <= 100; i++) progreso[i] = { aciertos: 0, fallos: 0, ultimaPractica: null };
+    }
+  }
+  function guardarProgreso() { localStorage.setItem(STORAGE_KEY, JSON.stringify(progreso)); }
+  function registrarResultado(id, acierto) {
+    if (!progreso[id]) progreso[id] = { aciertos: 0, fallos: 0, ultimaPractica: null };
+    if (acierto) progreso[id].aciertos += 1;
+    else progreso[id].fallos += 1;
+    progreso[id].ultimaPractica = new Date().toISOString();
+    guardarProgreso();
+    renderDashboard();
+    renderListado(document.getElementById("filtroListado")?.value || "");
+    if (cardsArray.length && currentCardId === id) {
+      document.getElementById("infoProgresoCard").innerHTML = `📊 Concepto ${id} · ✅ ${progreso[id].aciertos} aciertos · ❌ ${progreso[id].fallos} fallos`;
+    }
+  }
+
+  // ----- renderizado -----
+  function renderDashboard() {
+    let totalAciertos = 0, totalFallos = 0, conceptosConAcierto = 0;
+    for (let i = 1; i <= 100; i++) {
+      const p = progreso[i] || { aciertos: 0, fallos: 0 };
+      totalAciertos += p.aciertos;
+      totalFallos += p.fallos;
+      if (p.aciertos > 0) conceptosConAcierto++;
+    }
+    const porcentaje = (conceptosConAcierto / 100) * 100;
+    document.getElementById("globalProgressFill").style.width = `${porcentaje}%`;
+    document.getElementById("globalProgressText").innerHTML = `${conceptosConAcierto} de 100 conceptos con al menos 1 acierto (${Math.round(porcentaje)}%).`;
+    document.getElementById("statsContainer").innerHTML = `
+      <div class="stat-card"><div class="stat-number">${totalAciertos}</div>✅ Aciertos totales</div>
+      <div class="stat-card"><div class="stat-number">${totalFallos}</div>❌ Fallos</div>
+      <div class="stat-card"><div class="stat-number">${conceptosConAcierto}</div>📘 Conceptos con acierto</div>
+      <div class="stat-card"><div class="stat-number">${Math.round((totalAciertos/(totalAciertos+totalFallos+0.001))*100)}%</div>📊 Índice éxito</div>
+    `;
+  }
+
+  function renderListado(filtro = "") {
+    const container = document.getElementById("conceptosListadoContainer");
+    if (!container) return;
+    container.innerHTML = "";
+    const filtroLower = filtro.toLowerCase();
+    for (let c of conceptosData) {
+      const [id, nombre, definicion] = c;
+      const prog = progreso[id] || { aciertos: 0, fallos: 0 };
+      if (filtro && !nombre.toLowerCase().includes(filtroLower) && !definicion.toLowerCase().includes(filtroLower)) continue;
+      const div = document.createElement("div");
+      div.className = "concepto-item";
+      div.innerHTML = `<div class="concepto-titulo">${id}. ${nombre}</div>
+                       <div class="concepto-desc">📖 ${definicion.substring(0, 150)}${definicion.length > 150 ? '…' : ''}</div>
+                       <span class="badge-progreso">✅ ${prog.aciertos} aciertos · ❌ ${prog.fallos} fallos</span>`;
+      container.appendChild(div);
+    }
+  }
+
+  // ----- LÓGICA DE PRÁCTICA (FLASHCARDS) -----
+  let modoPractica = "concepto_def"; // o "def_concepto"
+  let cardsArray = [];
+  let currentCardIndex = 0;
+  let respuestaRevelada = false;
+  let currentCardId = null;
+
+  function construirCards() {
+    cardsArray = conceptosData.map(item => {
+      const [id, concepto, definicion] = item;
+      if (modoPractica === "concepto_def") {
+        return { id, pregunta: `📌 Concepto: ${concepto}`, respuestaCorrecta: definicion };
+      } else {
+        const defCorta = definicion.length > 120 ? definicion.substring(0, 117) + "…" : definicion;
+        return { id, pregunta: `✍️ Definición: "${defCorta}"`, respuestaCorrecta: `Término: ${concepto}` };
+      }
+    });
+  }
+
+  function actualizarCardUI() {
+    if (!cardsArray.length) return;
+    const card = cardsArray[currentCardIndex];
+    currentCardId = card.id;
+    document.getElementById("cardPregunta").innerHTML = card.pregunta;
+    document.getElementById("respuestaDiv").innerHTML = `<strong>Respuesta:</strong><br>${card.respuestaCorrecta}`;
+    document.getElementById("respuestaDiv").style.display = "none";
+    respuestaRevelada = false;
+    document.getElementById("aciertoBtn").disabled = true;
+    document.getElementById("falloBtn").disabled = true;
+    const p = progreso[card.id] || { aciertos: 0, fallos: 0 };
+    document.getElementById("infoProgresoCard").innerHTML = `📊 Término ${card.id} · ✅ ${p.aciertos} aciertos · ❌ ${p.fallos} fallos`;
+  }
+
+  function mostrarRespuesta() {
+    if (!respuestaRevelada) {
+      document.getElementById("respuestaDiv").style.display = "block";
+      respuestaRevelada = true;
+      document.getElementById("aciertoBtn").disabled = false;
+      document.getElementById("falloBtn").disabled = false;
+    }
+  }
+
+  function siguienteTarjeta() {
+    currentCardIndex = (currentCardIndex + 1) % cardsArray.length;
+    actualizarCardUI();
+  }
+
+  function manejarAcierto() {
+    if (currentCardId && respuestaRevelada) {
+      registrarResultado(currentCardId, true);
+      siguienteTarjeta();
+    } else alert("Primero muestra la respuesta.");
+  }
+  function manejarFallo() {
+    if (currentCardId && respuestaRevelada) {
+      registrarResultado(currentCardId, false);
+      siguienteTarjeta();
+    } else alert("Muestra la respuesta antes de calificar.");
+  }
+
+  function resetProgresoGlobal() {
+    if (confirm("⚠️ ¿Borrar todo el progreso? Se perderán aciertos y fallos registrados.")) {
+      for (let i = 1; i <= 100; i++) progreso[i] = { aciertos: 0, fallos: 0, ultimaPractica: null };
+      guardarProgreso();
+      renderDashboard();
+      renderListado(document.getElementById("filtroListado")?.value || "");
+      if (cardsArray.length) actualizarCardUI();
+    }
+  }
+
+  // ----- NAVEGACIÓN Y EVENTOS -----
+  function initNavigation() {
+    document.querySelectorAll(".nav-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const viewId = btn.getAttribute("data-view");
+        document.querySelectorAll(".view").forEach(v => v.classList.remove("active-view"));
+        document.getElementById(viewId).classList.add("active-view");
+        document.querySelectorAll(".nav-btn").forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+        if (viewId === "listado") renderListado(document.getElementById("filtroListado").value);
+        if (viewId === "dashboard") renderDashboard();
+        if (viewId === "practica") { construirCards(); currentCardIndex = 0; actualizarCardUI(); }
+      });
+    });
+  }
+
+  window.addEventListener("DOMContentLoaded", () => {
+    cargarProgreso();
+    construirCards();
+    currentCardIndex = 0;
+    actualizarCardUI();
+    renderDashboard();
+    renderListado();
+    initNavigation();
+
+    document.getElementById("modoConceptoDef").addEventListener("click", () => {
+      modoPractica = "concepto_def";
+      construirCards();
+      currentCardIndex = 0;
+      actualizarCardUI();
+      document.getElementById("modoConceptoDef").classList.add("btn-primary");
+      document.getElementById("modoDefConcepto").classList.remove("btn-primary");
+    });
+    document.getElementById("modoDefConcepto").addEventListener("click", () => {
+      modoPractica = "def_concepto";
+      construirCards();
+      currentCardIndex = 0;
+      actualizarCardUI();
+      document.getElementById("modoDefConcepto").classList.add("btn-primary");
+      document.getElementById("modoConceptoDef").classList.remove("btn-primary");
+    });
+    document.getElementById("mostrarRespuestaBtn").addEventListener("click", mostrarRespuesta);
+    document.getElementById("aciertoBtn").addEventListener("click", manejarAcierto);
+    document.getElementById("falloBtn").addEventListener("click", manejarFallo);
+    document.getElementById("siguienteCardBtn").addEventListener("click", siguienteTarjeta);
+    document.getElementById("resetProgresoBtn").addEventListener("click", resetProgresoGlobal);
+    const filtroInput = document.getElementById("filtroListado");
+    if (filtroInput) filtroInput.addEventListener("input", (e) => renderListado(e.target.value));
+  });
+</script>
+</body>
+</html>

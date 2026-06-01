@@ -1,0 +1,889 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>100 Técnicas de Escritura · Castellano</title>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=DM+Serif+Display:ital@0;1&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,600;1,8..60,300;1,8..60,400&family=Fira+Code:wght@300;400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ink:       #1a1209;
+  --paper:     #faf7f2;
+  --cream:     #f3ede3;
+  --gold:      #b8882a;
+  --gold-lt:   #e8c97a;
+  --rust:      #9b3e22;
+  --teal:      #1d5c5c;
+  --teal-lt:   #e2f0ef;
+  --muted:     #6b5e4e;
+  --border:    #d9cfc0;
+  --card-bg:   #ffffff;
+  --shadow:    rgba(26,18,9,0.10);
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: 'Source Serif 4', Georgia, serif;
+  min-height: 100vh;
+  background-image:
+    radial-gradient(ellipse 80% 40% at 10% 0%, rgba(184,136,42,0.07) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 50% at 90% 100%, rgba(29,92,92,0.06) 0%, transparent 60%);
+}
+
+/* ── HEADER ── */
+.site-header {
+  background: var(--ink);
+  padding: 2.5rem 0 2rem;
+  position: relative;
+  overflow: hidden;
+}
+.site-header::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: repeating-linear-gradient(
+    45deg, transparent, transparent 40px,
+    rgba(184,136,42,0.04) 40px, rgba(184,136,42,0.04) 41px
+  );
+}
+.site-header .label {
+  font-family: 'Fira Code', monospace;
+  font-size: .72rem; letter-spacing: .18em;
+  color: var(--gold-lt); text-transform: uppercase;
+  margin-bottom: .6rem; display: block;
+}
+.site-header h1 {
+  font-family: 'DM Serif Display', serif;
+  font-size: clamp(2rem, 5vw, 3.6rem);
+  color: #fff; line-height: 1.1;
+  font-weight: 400; margin: 0;
+}
+.site-header h1 em { color: var(--gold-lt); font-style: italic; }
+.site-header .subtitle {
+  color: rgba(255,255,255,.55);
+  font-size: .95rem; margin-top: .75rem;
+  font-style: italic;
+}
+.header-deco {
+  position: absolute; right: -60px; top: -60px;
+  width: 340px; height: 340px; border-radius: 50%;
+  border: 1px solid rgba(184,136,42,0.2);
+  pointer-events: none;
+}
+.header-deco::after {
+  content: '';
+  position: absolute; inset: 30px;
+  border-radius: 50%;
+  border: 1px dashed rgba(184,136,42,0.15);
+}
+
+/* ── STATS BAR ── */
+.stats-bar {
+  background: var(--cream);
+  border-bottom: 1px solid var(--border);
+  padding: .8rem 0;
+  font-family: 'Fira Code', monospace;
+  font-size: .78rem; color: var(--muted);
+}
+.stats-bar .stat { display: inline-flex; align-items: center; gap: .4rem; margin-right: 1.5rem; }
+.stats-bar .stat strong { color: var(--ink); }
+
+/* ── FILTER TOOLBAR ── */
+.toolbar {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 1.25rem 1.5rem;
+  margin: 1.5rem 0;
+  box-shadow: 0 2px 12px var(--shadow);
+}
+.toolbar label {
+  font-family: 'Fira Code', monospace;
+  font-size: .72rem; letter-spacing: .1em;
+  text-transform: uppercase; color: var(--muted);
+  display: block; margin-bottom: .35rem;
+}
+.search-wrap { position: relative; }
+.search-wrap .bi-search {
+  position: absolute; left: 12px; top: 50%; transform: translateY(-50%);
+  color: var(--muted); font-size: 1rem; pointer-events: none;
+}
+#searchInput {
+  padding-left: 2.4rem;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: 'Source Serif 4', serif;
+  font-size: .95rem;
+  height: 42px;
+}
+#searchInput:focus {
+  outline: none;
+  border-color: var(--gold);
+  box-shadow: 0 0 0 3px rgba(184,136,42,0.15);
+}
+
+.filter-btn {
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: .32rem .9rem;
+  font-family: 'Fira Code', monospace;
+  font-size: .75rem; letter-spacing: .04em;
+  background: var(--paper); color: var(--muted);
+  cursor: pointer; transition: all .2s ease;
+  white-space: nowrap;
+}
+.filter-btn:hover { border-color: var(--gold); color: var(--gold); }
+.filter-btn.active {
+  background: var(--ink); color: var(--gold-lt);
+  border-color: var(--ink);
+}
+.filter-btn .count {
+  background: rgba(255,255,255,.12);
+  border-radius: 10px;
+  padding: .05rem .4rem;
+  font-size: .68rem;
+  margin-left: .3rem;
+}
+.filter-btn:not(.active) .count { background: var(--border); color: var(--muted); }
+
+/* ── RESULT COUNT ── */
+#resultCount {
+  font-family: 'Fira Code', monospace;
+  font-size: .78rem; color: var(--muted);
+  margin: .5rem 0 1rem;
+}
+#resultCount strong { color: var(--gold); }
+
+/* ── BLOCK HEADERS ── */
+.block-header {
+  display: flex; align-items: center; gap: 1rem;
+  margin: 2.5rem 0 1.25rem;
+  padding-bottom: .75rem;
+  border-bottom: 2px solid var(--ink);
+}
+.block-num {
+  font-family: 'DM Serif Display', serif;
+  font-size: 3rem; line-height: 1;
+  color: var(--gold); opacity: .35;
+  font-style: italic;
+  flex-shrink: 0;
+}
+.block-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.5rem; font-weight: 700;
+  color: var(--ink); margin: 0;
+}
+.block-sub {
+  font-size: .83rem; color: var(--muted);
+  font-style: italic; margin-top: .15rem;
+}
+
+/* ── SECTION LABEL ── */
+.section-label {
+  font-family: 'Fira Code', monospace;
+  font-size: .7rem; letter-spacing: .15em;
+  text-transform: uppercase; color: var(--teal);
+  border-left: 3px solid var(--teal);
+  padding-left: .65rem;
+  margin: 1.75rem 0 .85rem;
+}
+
+/* ── TECHNIQUE CARD ── */
+.tech-card {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  margin-bottom: .85rem;
+  overflow: hidden;
+  transition: box-shadow .2s, transform .2s, border-color .2s;
+  cursor: pointer;
+}
+.tech-card:hover {
+  box-shadow: 0 6px 24px var(--shadow);
+  transform: translateY(-2px);
+  border-color: var(--gold);
+}
+.tech-card.expanded { border-color: var(--gold); box-shadow: 0 6px 28px var(--shadow); }
+
+.card-header-row {
+  display: flex; align-items: center; gap: .8rem;
+  padding: .85rem 1.1rem;
+  user-select: none;
+}
+.card-num {
+  font-family: 'DM Serif Display', serif;
+  font-size: 1.5rem; font-style: italic;
+  color: var(--gold); opacity: .6;
+  min-width: 2.4rem; text-align: right;
+  flex-shrink: 0;
+}
+.card-name {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.05rem; font-weight: 700;
+  color: var(--ink); flex: 1;
+}
+.card-tag {
+  font-family: 'Fira Code', monospace;
+  font-size: .65rem; letter-spacing: .08em;
+  padding: .18rem .55rem;
+  border-radius: 12px;
+  flex-shrink: 0;
+  text-transform: uppercase;
+}
+.tag-morfosintaxis { background: #e8f0fb; color: #2a5ab5; }
+.tag-morfologia    { background: #fdf0e0; color: #9b5c00; }
+.tag-semantica     { background: #e8f5f0; color: #1d6b4a; }
+.tag-cohesion      { background: #f5e8f0; color: #7a2a8b; }
+.tag-prosodica     { background: #fff3e0; color: #a64d00; }
+.tag-fono          { background: #e0f5f5; color: #1d5c5c; }
+.tag-puntuacion    { background: #f0f0f5; color: #3d3d6b; }
+.tag-retorica      { background: #fdecea; color: #8b1a1a; }
+
+.card-chevron {
+  color: var(--muted); font-size: .9rem;
+  transition: transform .25s;
+  flex-shrink: 0;
+}
+.tech-card.expanded .card-chevron { transform: rotate(180deg); }
+
+.card-body-inner {
+  display: none;
+  padding: 0 1.1rem 1.1rem 3.9rem;
+  border-top: 1px dashed var(--border);
+  padding-top: .9rem;
+}
+.tech-card.expanded .card-body-inner { display: block; }
+
+.card-desc {
+  font-size: .92rem;
+  line-height: 1.75;
+  color: #3a2e22;
+  margin-bottom: .75rem;
+}
+.card-example {
+  background: var(--cream);
+  border-left: 3px solid var(--gold);
+  border-radius: 0 6px 6px 0;
+  padding: .65rem .9rem;
+  font-style: italic;
+  font-size: .9rem;
+  color: var(--ink);
+  line-height: 1.7;
+}
+.card-example::before {
+  content: 'Ejemplo: ';
+  font-family: 'Fira Code', monospace;
+  font-size: .7rem; font-style: normal;
+  color: var(--gold); letter-spacing: .05em;
+  text-transform: uppercase;
+  display: block; margin-bottom: .2rem;
+}
+
+/* ── NO RESULTS ── */
+#noResults {
+  text-align: center; padding: 4rem 2rem; display: none;
+}
+#noResults .icon { font-size: 3rem; color: var(--border); }
+#noResults p { color: var(--muted); margin-top: .75rem; font-style: italic; }
+
+/* ── PROGRESS TRACKER ── */
+.progress-pill {
+  position: fixed; bottom: 1.5rem; right: 1.5rem;
+  background: var(--ink); color: var(--gold-lt);
+  border-radius: 24px; padding: .55rem 1.1rem;
+  font-family: 'Fira Code', monospace;
+  font-size: .78rem; z-index: 999;
+  box-shadow: 0 4px 20px rgba(0,0,0,.3);
+  display: flex; align-items: center; gap: .5rem;
+  opacity: 0; transition: opacity .3s;
+  pointer-events: none;
+}
+.progress-pill.show { opacity: 1; pointer-events: auto; }
+.progress-pill .pip { width: 6px; height: 6px; background: var(--gold); border-radius: 50%; flex-shrink: 0; }
+
+/* ── TOOLTIP COPY ── */
+.btn-copy {
+  background: none; border: none;
+  font-size: .75rem; color: var(--muted);
+  padding: 0; cursor: pointer;
+  font-family: 'Fira Code', monospace;
+  transition: color .2s;
+}
+.btn-copy:hover { color: var(--gold); }
+
+/* ── FOOTER ── */
+.site-footer {
+  margin-top: 4rem;
+  padding: 2rem 0;
+  border-top: 1px solid var(--border);
+  text-align: center;
+  font-family: 'Fira Code', monospace;
+  font-size: .75rem; color: var(--muted);
+}
+
+/* ── ANIMATIONS ── */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.tech-card { animation: fadeUp .3s ease both; }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 576px) {
+  .card-body-inner { padding-left: 1.1rem; }
+  .block-num { font-size: 2rem; }
+  .filter-btn { font-size: .68rem; padding: .28rem .7rem; }
+}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="site-header">
+  <div class="header-deco"></div>
+  <div class="container">
+    <span class="label"><i class="bi bi-pen"></i> &nbsp;Guía de escritura · Lengua Castellana</span>
+    <h1>100 Técnicas de <em>Escritura</em></h1>
+    <p class="subtitle">Morfosintácticas &amp; Semánticas — consulta interactiva completa</p>
+  </div>
+</header>
+
+<!-- STATS BAR -->
+<div class="stats-bar">
+  <div class="container">
+    <span class="stat"><i class="bi bi-collection"></i> <strong>100</strong> técnicas</span>
+    <span class="stat"><i class="bi bi-tags"></i> <strong>2</strong> bloques</span>
+    <span class="stat"><i class="bi bi-bookmarks"></i> <strong>10</strong> secciones</span>
+    <span class="stat"><i class="bi bi-lightning"></i> Búsqueda instantánea</span>
+  </div>
+</div>
+
+<!-- MAIN -->
+<main class="container my-3">
+
+  <!-- TOOLBAR -->
+  <div class="toolbar">
+    <div class="row g-3 align-items-end">
+      <div class="col-md-5">
+        <label>Buscar técnica</label>
+        <div class="search-wrap">
+          <i class="bi bi-search"></i>
+          <input type="text" id="searchInput" class="form-control" placeholder="nombre, categoría, ejemplo…">
+        </div>
+      </div>
+      <div class="col-md-7">
+        <label>Filtrar por categoría</label>
+        <div class="d-flex flex-wrap gap-2">
+          <button class="filter-btn active" data-filter="all">Todas <span class="count">100</span></button>
+          <button class="filter-btn" data-filter="morfosintaxis">Morfosintaxis <span class="count">20</span></button>
+          <button class="filter-btn" data-filter="morfologia">Morfología <span class="count">15</span></button>
+          <button class="filter-btn" data-filter="semantica">Semántica <span class="count">30</span></button>
+          <button class="filter-btn" data-filter="cohesion">Cohesión <span class="count">10</span></button>
+          <button class="filter-btn" data-filter="prosodica">Prosodia <span class="count">10</span></button>
+          <button class="filter-btn" data-filter="fono">Fono-semántica <span class="count">5</span></button>
+          <button class="filter-btn" data-filter="puntuacion">Puntuación <span class="count">5</span></button>
+          <button class="filter-btn" data-filter="retorica">Retórica <span class="count">5</span></button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="resultCount"></div>
+  <div id="noResults">
+    <div class="icon"><i class="bi bi-search"></i></div>
+    <p>No se encontraron técnicas con ese criterio.<br>Prueba otra búsqueda.</p>
+  </div>
+
+  <!-- CONTENT -->
+  <div id="content"></div>
+
+</main>
+
+<!-- PROGRESS PILL -->
+<div class="progress-pill" id="progressPill">
+  <span class="pip"></span>
+  <span id="pillText">Técnica 1 / 100</span>
+</div>
+
+<!-- FOOTER -->
+<footer class="site-footer">
+  <p>100 Técnicas de Escritura · Morfosintácticas y Semánticas de la Lengua Castellana</p>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
+<script>
+// ── DATA ──────────────────────────────────────────────────────────────────────
+const TECNICAS = [
+  // BLOQUE A – MORFOSINTÁCTICAS
+  // A.1 Estructura y orden
+  { n:1,  nombre:"Hipérbaton",         cat:"morfosintaxis", bloque:"A", sec:"A.1 · Estructura y orden oracional",
+    desc:"Alteración del orden lógico de los elementos oracionales para generar énfasis o musicalidad.",
+    ej:"«Del salón en el ángulo oscuro, de su dueño tal vez olvidada…» (Bécquer)." },
+  { n:2,  nombre:"Anáfora",            cat:"morfosintaxis", bloque:"A", sec:"A.1 · Estructura y orden oracional",
+    desc:"Repetición de una o varias palabras al inicio de oraciones o cláusulas consecutivas para crear ritmo e insistencia.",
+    ej:"«No me olvides, no me abandones, no me dejes.»" },
+  { n:3,  nombre:"Epífora",            cat:"morfosintaxis", bloque:"A", sec:"A.1 · Estructura y orden oracional",
+    desc:"Repetición de una o varias palabras al final de oraciones sucesivas.",
+    ej:"«Llueve en Madrid, amanece en Madrid, duerme en Madrid.»" },
+  { n:4,  nombre:"Anadiplosis",        cat:"morfosintaxis", bloque:"A", sec:"A.1 · Estructura y orden oracional",
+    desc:"El término final de una unidad se convierte en el término inicial de la siguiente, creando una cadena de ideas.",
+    ej:"«El miedo engendra silencio; el silencio engendra olvido.»" },
+  { n:5,  nombre:"Polisíndeton",       cat:"morfosintaxis", bloque:"A", sec:"A.1 · Estructura y orden oracional",
+    desc:"Multiplicación de conjunciones para ralentizar el ritmo y conferir solemnidad o exhaustividad al enunciado.",
+    ej:"«Y ríe y llora y canta y vive y muere.»" },
+  { n:6,  nombre:"Asíndeton",          cat:"morfosintaxis", bloque:"A", sec:"A.1 · Estructura y orden oracional",
+    desc:"Supresión de conjunciones para acelerar el ritmo y crear sensación de rapidez, acumulación o urgencia.",
+    ej:"«Llegué, vi, vencí.»" },
+  { n:7,  nombre:"Paralelismo",        cat:"morfosintaxis", bloque:"A", sec:"A.1 · Estructura y orden oracional",
+    desc:"Repetición de estructuras gramaticales equivalentes en cláusulas o versos consecutivos que crean equilibrio y belleza.",
+    ej:"«Amaba el mar, adoraba el viento, veneraba la tormenta.»" },
+  { n:8,  nombre:"Quiasmo",            cat:"morfosintaxis", bloque:"A", sec:"A.1 · Estructura y orden oracional",
+    desc:"Disposición cruzada de elementos en dos oraciones paralelas (AB/BA) que invierte la estructura para crear contraste.",
+    ej:"«Hay que comer para vivir, no vivir para comer.»" },
+  { n:9,  nombre:"Zeugma",             cat:"morfosintaxis", bloque:"A", sec:"A.1 · Estructura y orden oracional",
+    desc:"Omisión de un elemento verbal ya mencionado que se sobreentiende en las oraciones siguientes, ganando concisión.",
+    ej:"«Ella eligió el silencio; él, la huida.»" },
+  { n:10, nombre:"Elipsis",            cat:"morfosintaxis", bloque:"A", sec:"A.1 · Estructura y orden oracional",
+    desc:"Supresión de elementos oracionales recuperables por contexto para ganar concisión, dinamismo y elegancia.",
+    ej:"«Yo estudié medicina; mi hermano, derecho.»" },
+
+  // A.2 Verbales
+  { n:11, nombre:"Presente histórico", cat:"morfologia", bloque:"A", sec:"A.2 · Modalidades verbales y tiempo",
+    desc:"Uso del presente de indicativo para relatar eventos pasados con inmediatez y vivacidad narrativa.",
+    ej:"«En 1492, Colón llega a América y cambia el mundo para siempre.»" },
+  { n:12, nombre:"Subjuntivo de duda", cat:"morfologia", bloque:"A", sec:"A.2 · Modalidades verbales y tiempo",
+    desc:"Uso del subjuntivo para expresar incertidumbre, hipótesis o deseos, dotando el enunciado de modestia epistémica.",
+    ej:"«Quizás sea demasiado tarde para enmendar el error.»" },
+  { n:13, nombre:"Infinitivo sustantivado", cat:"morfologia", bloque:"A", sec:"A.2 · Modalidades verbales y tiempo",
+    desc:"Conversión del infinitivo en sustantivo mediante el artículo masculino singular para abstraer acciones.",
+    ej:"«El vivir sin propósito pesa como una condena.»" },
+  { n:14, nombre:"Gerundio narrativo",  cat:"morfologia", bloque:"A", sec:"A.2 · Modalidades verbales y tiempo",
+    desc:"Uso del gerundio para describir acciones simultáneas o que acompañan a la acción principal con fluidez.",
+    ej:"«Caminaba entre la multitud, buscando un rostro familiar.»" },
+  { n:15, nombre:"Perífrasis aspectual", cat:"morfologia", bloque:"A", sec:"A.2 · Modalidades verbales y tiempo",
+    desc:"Combinación verbo auxiliar + infinitivo/gerundio/participio para matizar el aspecto de la acción.",
+    ej:"«Llevaba tres horas esperando cuando al fin apareció.»" },
+  { n:16, nombre:"Imperativo retórico",  cat:"morfologia", bloque:"A", sec:"A.2 · Modalidades verbales y tiempo",
+    desc:"Uso del imperativo no para ordenar, sino para invitar, sugerir o producir un efecto dramático sobre el lector.",
+    ej:"«Imagina un mundo sin fronteras. Constrúyelo.»" },
+  { n:17, nombre:"Voz pasiva refleja",  cat:"morfologia", bloque:"A", sec:"A.2 · Modalidades verbales y tiempo",
+    desc:"Construcción 'se + verbo' para despersonalizar el agente y dar objetividad o impersonalidad al enunciado.",
+    ej:"«Se publicó el informe sin que nadie lo leyera.»" },
+  { n:18, nombre:"Condicional de cortesía", cat:"morfologia", bloque:"A", sec:"A.2 · Modalidades verbales y tiempo",
+    desc:"Uso del condicional simple para suavizar solicitudes o afirmaciones dotándolas de elegancia formal.",
+    ej:"«Querría preguntarle, si no le molesta, su opinión sobre el asunto.»" },
+  { n:19, nombre:"Pluscuamperfecto narrativo", cat:"morfologia", bloque:"A", sec:"A.2 · Modalidades verbales y tiempo",
+    desc:"Uso del pluscuamperfecto para marcar una acción anterior a otra ya pasada, creando profundidad temporal.",
+    ej:"«Cuando llegué, ella ya había tomado la decisión.»" },
+  { n:20, nombre:"Imperfecto durativo", cat:"morfologia", bloque:"A", sec:"A.2 · Modalidades verbales y tiempo",
+    desc:"El imperfecto de indicativo describe acciones habituales o estados prolongados en el pasado con nostalgia.",
+    ej:"«Los domingos olían a pan recién hecho y a café.»" },
+
+  // A.3 Nominales
+  { n:21, nombre:"Adjetivación antepuesta", cat:"morfologia", bloque:"A", sec:"A.3 · Nominales, determinantes y concordancia",
+    desc:"Colocar el adjetivo antes del sustantivo aporta valor lírico y subjetivo; pospuesto es más descriptivo y objetivo.",
+    ej:"«La dulce memoria de los tiempos idos» vs. «la memoria dulce»."},
+  { n:22, nombre:"Acumulación adjetival", cat:"morfologia", bloque:"A", sec:"A.3 · Nominales, determinantes y concordancia",
+    desc:"Serie de adjetivos sin conjunción que intensifican la descripción con ritmo enumerativo acelerado.",
+    ej:"«Una voz oscura, grave, lenta, irreversible.»" },
+  { n:23, nombre:"Sustantivación del adjetivo", cat:"morfologia", bloque:"A", sec:"A.3 · Nominales, determinantes y concordancia",
+    desc:"Uso del adjetivo precedido de artículo para convertirlo en núcleo nominal con valor filosófico o abstracto.",
+    ej:"«Lo efímero nos define más que lo eterno.»" },
+  { n:24, nombre:"Aposición explicativa", cat:"morfosintaxis", bloque:"A", sec:"A.3 · Nominales, determinantes y concordancia",
+    desc:"Frase nominal entre comas que amplía o aclara el sustantivo al que se refiere, enriqueciendo el referente.",
+    ej:"«Madrid, capital del reino, no dormía aquella noche.»" },
+  { n:25, nombre:"Dequeísmo evitado",   cat:"morfosintaxis", bloque:"A", sec:"A.3 · Nominales, determinantes y concordancia",
+    desc:"Distinción precisa entre 'que' y 'de que' según si rige una oración sustantiva o un complemento preposicional.",
+    ej:"Correcto: «Creo que llegarás tarde.» / «Me alegra de que vengas.»" },
+  { n:26, nombre:"Género inclusivo literario", cat:"morfologia", bloque:"A", sec:"A.3 · Nominales, determinantes y concordancia",
+    desc:"Uso de sustantivos genéricos, colectivos o epicenos para abarcar universalidad sin marcar género biológico.",
+    ej:"«La humanidad avanza cuando cada individuo crece.»" },
+  { n:27, nombre:"Artículo enfático",   cat:"morfosintaxis", bloque:"A", sec:"A.3 · Nominales, determinantes y concordancia",
+    desc:"Uso enfático del artículo determinado para señalar exclusividad o máxima relevancia del referente en el contexto.",
+    ej:"«Esa fue la decisión que lo cambió todo.»" },
+  { n:28, nombre:"Cuantificador intensivo", cat:"morfologia", bloque:"A", sec:"A.3 · Nominales, determinantes y concordancia",
+    desc:"Uso de adverbios y cuantificadores que gradúan la intensidad del adjetivo o del verbo.",
+    ej:"«Absolutamente imprescindible.» «Jamás, bajo ningún concepto.»" },
+  { n:29, nombre:"Pronombre de intensidad", cat:"morfosintaxis", bloque:"A", sec:"A.3 · Nominales, determinantes y concordancia",
+    desc:"Uso de 'mismo', 'propio', 'solo' para reforzar semánticamente al sustantivo o pronombre al que acompañan.",
+    ej:"«El propio ministro reconoció el fracaso públicamente.»" },
+  { n:30, nombre:"Concordancia ad sensum", cat:"morfosintaxis", bloque:"A", sec:"A.3 · Nominales, determinantes y concordancia",
+    desc:"La concordancia sigue el sentido lógico y no la norma estricta, especialmente con sustantivos colectivos.",
+    ej:"«La mayoría de los lectores abandonaron el libro a mitad.»" },
+
+  // A.4 Puntuación
+  { n:31, nombre:"Punto y coma dramático", cat:"puntuacion", bloque:"A", sec:"A.4 · Puntuación como recurso expresivo",
+    desc:"El punto y coma divide dos cláusulas muy relacionadas creando una pausa tensa que genera suspenso o contraste.",
+    ej:"«Todo estaba en su lugar; solo faltaba ella.»" },
+  { n:32, nombre:"Coma vocativa",       cat:"puntuacion", bloque:"A", sec:"A.4 · Puntuación como recurso expresivo",
+    desc:"La coma aisla el vocativo subrayando el apelativo al destinatario y dotando de tono directo e íntimo al texto.",
+    ej:"«Escucha, amigo mío, lo que te voy a decir.»" },
+  { n:33, nombre:"Guión largo narrativo", cat:"puntuacion", bloque:"A", sec:"A.4 · Puntuación como recurso expresivo",
+    desc:"Introduce el discurso directo o aísla un inciso con énfasis superior al paréntesis; crea voz dramática.",
+    ej:"«—No vuelvas —dijo sin mirarle—. Ya no hay nada aquí para ti.»" },
+  { n:34, nombre:"Puntos suspensivos de silencio", cat:"puntuacion", bloque:"A", sec:"A.4 · Puntuación como recurso expresivo",
+    desc:"Sugieren lo no dicho, la duda, el peligro latente o lo inacabado; dejan al lector en tensión interpretativa.",
+    ej:"«Si no llega antes del amanecer…»" },
+  { n:35, nombre:"Dos puntos anunciadores", cat:"puntuacion", bloque:"A", sec:"A.4 · Puntuación como recurso expresivo",
+    desc:"Anticipan una enumeración, explicación o consecuencia creando expectativa y organización visible en el texto.",
+    ej:"«Tres cosas me importan en la vida: la verdad, la belleza y la justicia.»" },
+
+  // A.5 Construcciones especiales
+  { n:36, nombre:"Oración nominal pura", cat:"morfosintaxis", bloque:"A", sec:"A.5 · Construcciones sintácticas especiales",
+    desc:"Oración sin verbo conjugado que transmite inmediatez, fragmentación o urgencia expresiva máxima.",
+    ej:"«Silencio total. Oscuridad absoluta. El fin.»" },
+  { n:37, nombre:"Interrogación retórica", cat:"morfosintaxis", bloque:"A", sec:"A.5 · Construcciones sintácticas especiales",
+    desc:"Pregunta cuya respuesta está implícita, formulada para provocar reflexión o enfatizar una idea ya sostenida.",
+    ej:"«¿Acaso no somos todos extranjeros en algún lugar?»" },
+  { n:38, nombre:"Exclamación contenida", cat:"morfosintaxis", bloque:"A", sec:"A.5 · Construcciones sintácticas especiales",
+    desc:"Oración exclamativa de intensidad moderada que evita el melodramatismo y resulta emocionalmente más creíble.",
+    ej:"«¡Cuánto cuesta la verdad!»" },
+  { n:39, nombre:"Construcción disyuntiva", cat:"morfosintaxis", bloque:"A", sec:"A.5 · Construcciones sintácticas especiales",
+    desc:"Uso de 'o' para presentar alternativas excluyentes o complementarias con efecto de urgencia o dilema.",
+    ej:"«O te renuevas o pereces.»" },
+  { n:40, nombre:"Subordinada concesiva", cat:"morfosintaxis", bloque:"A", sec:"A.5 · Construcciones sintácticas especiales",
+    desc:"Cláusula que expresa un obstáculo que no impide la acción principal, generando una tensión lógica productiva.",
+    ej:"«Aunque el camino sea largo, llegaremos.»" },
+  { n:41, nombre:"Condicional irreal",  cat:"morfosintaxis", bloque:"A", sec:"A.5 · Construcciones sintácticas especiales",
+    desc:"Hipótesis que no se cumple ni se espera cumplir, con imperfecto o pluscuamperfecto de subjuntivo.",
+    ej:"«Si hubiera sabido la verdad, nunca habría partido.»" },
+  { n:42, nombre:"Relativa especificativa", cat:"morfosintaxis", bloque:"A", sec:"A.5 · Construcciones sintácticas especiales",
+    desc:"Cláusula relativa sin comas que restringe el significado del antecedente, definiéndolo con precisión.",
+    ej:"«Los libros que transforman son los que incomodan.»" },
+  { n:43, nombre:"Relativa explicativa", cat:"morfosintaxis", bloque:"A", sec:"A.5 · Construcciones sintácticas especiales",
+    desc:"Cláusula relativa entre comas que aporta información adicional sin restringir el antecedente.",
+    ej:"«La novela, que fue escrita en tres semanas, obtuvo el premio.»" },
+  { n:44, nombre:"Construcción impersonal", cat:"morfosintaxis", bloque:"A", sec:"A.5 · Construcciones sintácticas especiales",
+    desc:"Oraciones sin sujeto explícito posible para generalizar o evitar la responsabilidad del agente.",
+    ej:"«Se dice que el tiempo lo cura todo. Dicen que la memoria miente.»" },
+  { n:45, nombre:"Hipótesis con 'como si'", cat:"morfosintaxis", bloque:"A", sec:"A.5 · Construcciones sintácticas especiales",
+    desc:"Construcción comparativa irreal que introduce una situación imaginada con gran fuerza plástica y evocadora.",
+    ej:"«Hablaba como si el mundo no existiera fuera de esa habitación.»" },
+
+  // A.6 Morfología léxica
+  { n:46, nombre:"Prefijación intensiva", cat:"morfologia", bloque:"A", sec:"A.6 · Morfología léxica",
+    desc:"Uso de prefijos que intensifican el valor del término base: archi-, super-, hiper-, extra-, ultra-.",
+    ej:"«Una decisión archirrepetida; un error superpredecible.»" },
+  { n:47, nombre:"Sufijación diminutiva", cat:"morfologia", bloque:"A", sec:"A.6 · Morfología léxica",
+    desc:"Los sufijos -illo, -ito, -ico aportan carga emocional cálida, irónica o despectiva además de tamaño.",
+    ej:"«Venía con su maletita y su sombrerillo de los domingos.»" },
+  { n:48, nombre:"Sufijación aumentativa", cat:"morfologia", bloque:"A", sec:"A.6 · Morfología léxica",
+    desc:"Los sufijos -ón, -azo, -ote añaden tamaño real o metafórico y a veces connotaciones peyorativas.",
+    ej:"«Recibió un portazo que retumbó en todo el edificio.»" },
+  { n:49, nombre:"Neologismo contextualizado", cat:"morfologia", bloque:"A", sec:"A.6 · Morfología léxica",
+    desc:"Creación o adopción de un término nuevo, justificado por el contexto y definido implícitamente en él.",
+    ej:"«La pantallización de la infancia no tiene precedentes históricos.»" },
+  { n:50, nombre:"Compuesto léxico original", cat:"morfologia", bloque:"A", sec:"A.6 · Morfología léxica",
+    desc:"Creación de una voz compuesta que concentra en un término dos realidades o conceptos fusionados.",
+    ej:"«El hombre era un sombra-luz: brillante en público, apagado en privado.»" },
+
+  // BLOQUE B – SEMÁNTICAS
+  // B.1 Semejanza y contraste
+  { n:51, nombre:"Metáfora pura",       cat:"semantica", bloque:"B", sec:"B.1 · Figuras de semejanza y contraste",
+    desc:"Identificación directa entre dos realidades sin nexo comparativo, trasladando el significado de una a otra.",
+    ej:"«Sus ojos eran dos naufragios.»" },
+  { n:52, nombre:"Alegoría",            cat:"semantica", bloque:"B", sec:"B.1 · Figuras de semejanza y contraste",
+    desc:"Metáfora continuada a lo largo de un párrafo o texto que construye un plano simbólico coherente y sostenido.",
+    ej:"«La vida es un barco sin puerto de llegada: navegamos, tempestamos, a veces anclamos en bahías que creemos eternas.»" },
+  { n:53, nombre:"Símil o comparación", cat:"semantica", bloque:"B", sec:"B.1 · Figuras de semejanza y contraste",
+    desc:"Relación explícita de semejanza mediante nexos comparativos (como, cual, semejante a, igual que).",
+    ej:"«Sus manos temblaban como hojas en noviembre.»" },
+  { n:54, nombre:"Personificación",     cat:"semantica", bloque:"B", sec:"B.1 · Figuras de semejanza y contraste",
+    desc:"Atribución de cualidades, emociones o acciones humanas a seres inanimados, abstractos o animales.",
+    ej:"«El viento murmuraba secretos que nadie quería escuchar.»" },
+  { n:55, nombre:"Antítesis",           cat:"semantica", bloque:"B", sec:"B.1 · Figuras de semejanza y contraste",
+    desc:"Contraposición de dos ideas o términos de significado opuesto en estructuras paralelas que crean tensión.",
+    ej:"«Era el mejor de los tiempos; era el peor de los tiempos.»" },
+  { n:56, nombre:"Oxímoron",            cat:"semantica", bloque:"B", sec:"B.1 · Figuras de semejanza y contraste",
+    desc:"Unión de dos términos aparentemente contradictorios que generan una tensión semántica rica y productiva.",
+    ej:"«Un silencio ensordecedor llenó la sala.»" },
+  { n:57, nombre:"Paradoja",            cat:"semantica", bloque:"B", sec:"B.1 · Figuras de semejanza y contraste",
+    desc:"Enunciado que parece absurdo o contradictorio pero que esconde una verdad profunda sobre la realidad.",
+    ej:"«Cuanto más lo busco, menos lo encuentro. Cuando lo olvido, aparece.»" },
+  { n:58, nombre:"Ironía",              cat:"semantica", bloque:"B", sec:"B.1 · Figuras de semejanza y contraste",
+    desc:"Enunciado que dice lo contrario de lo que significa, apoyándose en el contexto para ser comprendido.",
+    ej:"«¡Qué puntual! Solo llegó dos horas tarde.»" },
+  { n:59, nombre:"Sarcasmo",            cat:"semantica", bloque:"B", sec:"B.1 · Figuras de semejanza y contraste",
+    desc:"Ironía extrema, cargada de mordacidad y a menudo con intención hiriente o crítica social.",
+    ej:"«Brillante gestión la suya: arruinó la empresa en tres meses justos.»" },
+  { n:60, nombre:"Lítote",              cat:"semantica", bloque:"B", sec:"B.1 · Figuras de semejanza y contraste",
+    desc:"Afirmación de una idea mediante la negación de su contrario, creando una atenuación elegante y sofisticada.",
+    ej:"«No es mala escritora» = es muy buena escritora." },
+
+  // B.2 Amplificación y condensación
+  { n:61, nombre:"Hipérbole",           cat:"semantica", bloque:"B", sec:"B.2 · Figuras de amplificación y condensación",
+    desc:"Exageración deliberada de las proporciones reales de algo para crear énfasis emocional o efecto humorístico.",
+    ej:"«Te lo he dicho mil veces y no lo entiendes.»" },
+  { n:62, nombre:"Eufemismo",           cat:"semantica", bloque:"B", sec:"B.2 · Figuras de amplificación y condensación",
+    desc:"Sustitución de un término tabú, hiriente o demasiado directo por una expresión más suave o indirecta.",
+    ej:"«Falleció» por «murió»; «conflicto armado» por «guerra»."},
+  { n:63, nombre:"Disfemismo",          cat:"semantica", bloque:"B", sec:"B.2 · Figuras de amplificación y condensación",
+    desc:"Efecto contrario al eufemismo: uso de términos más crudos o vulgares para intensificar el impacto expresivo.",
+    ej:"«Estiró la pata» por «murió»; «engullir» por «comer»."},
+  { n:64, nombre:"Perífrasis",          cat:"semantica", bloque:"B", sec:"B.2 · Figuras de amplificación y condensación",
+    desc:"Descripción indirecta de algo para evitar su nombre directo, aportando elegancia, misterio o énfasis.",
+    ej:"«El astro rey» por «el Sol»; «el rey de la selva» por «el león»."},
+  { n:65, nombre:"Enumeración clímax",  cat:"semantica", bloque:"B", sec:"B.2 · Figuras de amplificación y condensación",
+    desc:"Serie de elementos ordenados de menor a mayor intensidad que culmina en el punto de mayor impacto emocional.",
+    ej:"«Susurró, habló, gritó, bramó.»" },
+  { n:66, nombre:"Enumeración anticlímax", cat:"semantica", bloque:"B", sec:"B.2 · Figuras de amplificación y condensación",
+    desc:"Serie de menor a mayor que desemboca en algo menor, creando un efecto de decepción o ironía.",
+    ej:"«Luchó, resistió, sufrió… y al final se rindió.»" },
+  { n:67, nombre:"Sinonimia acumulativa", cat:"semantica", bloque:"B", sec:"B.2 · Figuras de amplificación y condensación",
+    desc:"Uso de varios sinónimos o cuasisinónimos para intensificar gradualmente el mismo concepto.",
+    ej:"«Era terco, obstinado, tozudo, inflexible, impenetrable.»" },
+  { n:68, nombre:"Amplificatio",        cat:"retorica", bloque:"B", sec:"B.2 · Figuras de amplificación y condensación",
+    desc:"Desarrollo exhaustivo de una idea mediante adición de detalles, ejemplos y matices que enriquecen la imagen inicial.",
+    ej:"Describe un objeto simple con todos sus ángulos sensoriales, históricos y emocionales posibles." },
+  { n:69, nombre:"Paráfrasis explicativa", cat:"semantica", bloque:"B", sec:"B.2 · Figuras de amplificación y condensación",
+    desc:"Reescritura con otras palabras de un enunciado para aclarar su sentido o adaptarlo al destinatario.",
+    ej:"«Es decir, lo que el autor quiere transmitir es que…»" },
+  { n:70, nombre:"Síntesis o brevitas", cat:"retorica", bloque:"B", sec:"B.2 · Figuras de amplificación y condensación",
+    desc:"Concentración máxima del sentido en el menor número de palabras, como el aforismo o el eslogan.",
+    ej:"«Pienso, luego existo.»" },
+
+  // B.3 Campo semántico y registro
+  { n:71, nombre:"Campo semántico cohesionado", cat:"semantica", bloque:"B", sec:"B.3 · Campo semántico, connotación y registro",
+    desc:"Uso sistemático de términos del mismo campo léxico para crear cohesión temática y ambiente en el texto.",
+    ej:"En un texto sobre el mar: oleaje, marejada, popa, proa, sal, espuma, gaviota." },
+  { n:72, nombre:"Isotopía",            cat:"semantica", bloque:"B", sec:"B.3 · Campo semántico, connotación y registro",
+    desc:"Recurrencia de rasgos semánticos comunes a lo largo del texto que garantizan coherencia e interpretación unitaria.",
+    ej:"En un texto policial: sospecha, rastro, coartada, evidencia, culpable." },
+  { n:73, nombre:"Connotación positiva", cat:"semantica", bloque:"B", sec:"B.3 · Campo semántico, connotación y registro",
+    desc:"Elección deliberada de términos con carga emocional positiva para predisponer favorablemente al lector.",
+    ej:"«Iniciativa» (positiva) vs. «ocurrencia» (más neutra o negativa)."},
+  { n:74, nombre:"Connotación negativa", cat:"semantica", bloque:"B", sec:"B.3 · Campo semántico, connotación y registro",
+    desc:"Elección de términos con carga emocional negativa para generar rechazo, desconfianza o alarma en el lector.",
+    ej:"«Régimen» en lugar de «gobierno»; «propaganda» en lugar de «campaña»."},
+  { n:75, nombre:"Registro culto",      cat:"semantica", bloque:"B", sec:"B.3 · Campo semántico, connotación y registro",
+    desc:"Uso de vocabulario técnico, latinismos o cultismos para conferir autoridad, solemnidad o distinción al texto.",
+    ej:"«La exégesis del texto revela una intertextualidad compleja y estratificada.»" },
+  { n:76, nombre:"Registro coloquial literario", cat:"semantica", bloque:"B", sec:"B.3 · Campo semántico, connotación y registro",
+    desc:"Incorporación controlada de expresiones cotidianas para crear cercanía, autenticidad o comicidad.",
+    ej:"«Y total, para lo que sirvió todo ese esfuerzo desplegado…»" },
+  { n:77, nombre:"Tecnicismo humanizado", cat:"semantica", bloque:"B", sec:"B.3 · Campo semántico, connotación y registro",
+    desc:"Uso de un término técnico seguido de su explicación accesible sin perder la precisión original.",
+    ej:"«La sinapsis —ese instante en que dos neuronas se tocan— es el fundamento del pensamiento.»" },
+  { n:78, nombre:"Arcaísmo expresivo",  cat:"semantica", bloque:"B", sec:"B.3 · Campo semántico, connotación y registro",
+    desc:"Uso de términos o giros en desuso para evocar un ambiente histórico, solemne o irónico en el texto.",
+    ej:"«Asaz conocido era su valor entre las gentes del lugar.»" },
+  { n:79, nombre:"Neologismo semántico", cat:"semantica", bloque:"B", sec:"B.3 · Campo semántico, connotación y registro",
+    desc:"Asignación de un significado nuevo a un término ya existente, generando polisemia controlada y fresca.",
+    ej:"«Navegar» en el sentido de explorar Internet; «viralizarse»."},
+  { n:80, nombre:"Polisemia controlada", cat:"semantica", bloque:"B", sec:"B.3 · Campo semántico, connotación y registro",
+    desc:"Uso intencionado de una palabra polisémica para que el lector active varios significados simultáneamente.",
+    ej:"«Tiene mucho peso en la organización.» (peso físico + autoridad)."},
+
+  // B.4 Recursos sonoros
+  { n:81, nombre:"Aliteración",         cat:"fono", bloque:"B", sec:"B.4 · Recursos sonoros y rítmicos",
+    desc:"Repetición de sonidos consonánticos iguales o semejantes que refuerzan el significado por su valor onomatopéyico.",
+    ej:"«El susurro suave del sauce sobre el suelo.»" },
+  { n:82, nombre:"Onomatopeya",         cat:"fono", bloque:"B", sec:"B.4 · Recursos sonoros y rítmicos",
+    desc:"Uso de palabras cuya pronunciación imita el sonido que designan, creando inmersión sensorial en el texto.",
+    ej:"«El trueno retumbó. El reloj tictaqueaba. El grifo goteaba.»" },
+  { n:83, nombre:"Paronomasia",         cat:"fono", bloque:"B", sec:"B.4 · Recursos sonoros y rítmicos",
+    desc:"Uso de palabras fonéticamente similares pero de distinto significado para crear un juego de palabras.",
+    ej:"«Quien mal anda, mal acaba.» «Amar y mar.»" },
+  { n:84, nombre:"Ritmo binario",       cat:"prosodica", bloque:"B", sec:"B.4 · Recursos sonoros y rítmicos",
+    desc:"Alternancia regular de sílabas tónicas y átonas que crea una cadencia binaria solemne y memorable.",
+    ej:"«Vine / y vi / y ven / cí.»" },
+  { n:85, nombre:"Ritmo ternario",      cat:"prosodica", bloque:"B", sec:"B.4 · Recursos sonoros y rítmicos",
+    desc:"Grupos de tres elementos (cláusulas, palabras o sílabas) que crean equilibrio, elegancia y solemnidad.",
+    ej:"«Lo pensó, lo dudó, lo dijo.»" },
+  { n:86, nombre:"Período oratorio",    cat:"retorica", bloque:"B", sec:"B.4 · Recursos sonoros y rítmicos",
+    desc:"Oración extensa y equilibrada con subordinadas que crean una curva de tensión y un desenlace climático.",
+    ej:"«Cuando el sol se ocultó y la ciudad entera cayó en silencio, él supo que el momento había llegado.»" },
+  { n:87, nombre:"Fragmento rítmico",   cat:"prosodica", bloque:"B", sec:"B.4 · Recursos sonoros y rítmicos",
+    desc:"Fragmentación en unidades breves y percutientes que imitan el pulso acelerado o la urgencia de la acción.",
+    ej:"«Se levantó. Respiró. Actuó.»" },
+  { n:88, nombre:"Encabalgamiento prosístico", cat:"prosodica", bloque:"B", sec:"B.4 · Recursos sonoros y rítmicos",
+    desc:"Ruptura de la unidad sintáctica esperada mediante la distribución del texto, creando efecto de inacabamiento.",
+    ej:"«El problema no era la duda. Era la certeza.»" },
+  { n:89, nombre:"Paralelismo fónico",  cat:"prosodica", bloque:"B", sec:"B.4 · Recursos sonoros y rítmicos",
+    desc:"Estructuras paralelas que comparten simetría sintáctica y sonidos iniciales o finales, creando musicalidad.",
+    ej:"«Vivir es saber perderse; amar es saber encontrarse.»" },
+  { n:90, nombre:"Rima interna en prosa", cat:"prosodica", bloque:"B", sec:"B.4 · Recursos sonoros y rítmicos",
+    desc:"Coincidencia de sonidos finales en palabras interiores del párrafo que aportan musicalidad sin versificación.",
+    ej:"«La luz del corazón late sin compás pero con verdad y lealtad.»" },
+
+  // B.5 Cohesión textual
+  { n:91, nombre:"Deixis anafórica",    cat:"cohesion", bloque:"B", sec:"B.5 · Cohesión, coherencia y deixis textual",
+    desc:"Pronombre o determinante que remite a un elemento ya mencionado, evitando repeticiones y creando cohesión.",
+    ej:"«El protagonista entró en la sala. Él no sabía que lo esperaban.»" },
+  { n:92, nombre:"Deixis catafórica",   cat:"cohesion", bloque:"B", sec:"B.5 · Cohesión, coherencia y deixis textual",
+    desc:"Pronombre o determinante que anticipa un elemento que se mencionará después, creando expectativa lectora.",
+    ej:"«Esto es lo que importa: la verdad.»" },
+  { n:93, nombre:"Conector de adición", cat:"cohesion", bloque:"B", sec:"B.5 · Cohesión, coherencia y deixis textual",
+    desc:"Marcadores que añaden información: además, asimismo, del mismo modo, también, igualmente, por otro lado.",
+    ej:"«El texto es claro; además, es elegante y preciso.»" },
+  { n:94, nombre:"Conector de oposición", cat:"cohesion", bloque:"B", sec:"B.5 · Cohesión, coherencia y deixis textual",
+    desc:"Marcadores que introducen contraste: sin embargo, no obstante, a pesar de, aunque, pero, mas.",
+    ej:"«Estudió durante años; sin embargo, no encontró respuestas.»" },
+  { n:95, nombre:"Conector conclusivo",  cat:"cohesion", bloque:"B", sec:"B.5 · Cohesión, coherencia y deixis textual",
+    desc:"Marcadores que expresan consecuencia o conclusión: por tanto, por consiguiente, de ahí que, así pues.",
+    ej:"«La evidencia es concluyente; por tanto, la decisión es inevitable.»" },
+  { n:96, nombre:"Reformulación clarificadora", cat:"cohesion", bloque:"B", sec:"B.5 · Cohesión, coherencia y deixis textual",
+    desc:"Marcadores que reinterpretan o precisan lo dicho: es decir, esto es, en otras palabras, o sea.",
+    ej:"«El texto es opaco, es decir, difícilmente accesible para el lector común.»" },
+  { n:97, nombre:"Progresión temática lineal", cat:"cohesion", bloque:"B", sec:"B.5 · Cohesión, coherencia y deixis textual",
+    desc:"El rema de una oración se convierte en el tema de la siguiente, creando una cadena informativa coherente.",
+    ej:"«El miedo paraliza. La parálisis alimenta el miedo. El miedo se convierte en prisión.»" },
+  { n:98, nombre:"Digresión controlada", cat:"retorica", bloque:"B", sec:"B.5 · Cohesión, coherencia y deixis textual",
+    desc:"Desvío temporal del hilo principal para ampliar un matiz, con retorno explícito al tema central.",
+    ej:"«—aunque esta reflexión merece un desarrollo aparte— lo esencial es que…»" },
+  { n:99, nombre:"Cierre circular",     cat:"cohesion", bloque:"B", sec:"B.5 · Cohesión, coherencia y deixis textual",
+    desc:"El párrafo o texto concluye con una imagen o idea que evoca el inicio, creando sensación de plenitud estructural.",
+    ej:"Si el párrafo abrió con «el amanecer», que cierre con «la primera luz»."},
+  { n:100, nombre:"Punch final",        cat:"retorica", bloque:"B", sec:"B.5 · Cohesión, coherencia y deixis textual",
+    desc:"La última oración es la más breve, contundente y memorable, dejando al lector con la mayor carga semántica.",
+    ej:"«Toda su vida la pasó buscando algo que nunca perdió. Solo necesitaba mirarse.»" },
+];
+
+// ── CATEGORÍA CONFIG ─────────────────────────────────────────────────────────
+const CAT_TAG = {
+  morfosintaxis: { cls: "tag-morfosintaxis", label: "Morfosintaxis" },
+  morfologia:    { cls: "tag-morfologia",    label: "Morfología" },
+  semantica:     { cls: "tag-semantica",     label: "Semántica" },
+  cohesion:      { cls: "tag-cohesion",      label: "Cohesión textual" },
+  prosodica:     { cls: "tag-prosodica",     label: "Prosodia" },
+  fono:          { cls: "tag-fono",          label: "Fono-semántica" },
+  puntuacion:    { cls: "tag-puntuacion",    label: "Puntuación" },
+  retorica:      { cls: "tag-retorica",      label: "Retórica" },
+};
+
+// ── STATE ────────────────────────────────────────────────────────────────────
+let activeFilter = "all";
+let searchQuery  = "";
+let expandedCards = new Set();
+
+// ── RENDER ───────────────────────────────────────────────────────────────────
+function matchesTecnica(t) {
+  const q = searchQuery.toLowerCase();
+  const matchCat = activeFilter === "all" || t.cat === activeFilter;
+  const matchQ   = !q || t.nombre.toLowerCase().includes(q)
+                      || t.desc.toLowerCase().includes(q)
+                      || t.ej.toLowerCase().includes(q)
+                      || t.cat.toLowerCase().includes(q)
+                      || String(t.n).includes(q);
+  return matchCat && matchQ;
+}
+
+function renderAll() {
+  const content = document.getElementById("content");
+  const noResults = document.getElementById("noResults");
+  const countEl  = document.getElementById("resultCount");
+
+  const visible = TECNICAS.filter(matchesTecnica);
+
+  if (visible.length === 0) {
+    content.innerHTML = "";
+    noResults.style.display = "block";
+    countEl.innerHTML = "Mostrando <strong>0</strong> de 100 técnicas";
+    return;
+  }
+  noResults.style.display = "none";
+  countEl.innerHTML = `Mostrando <strong>${visible.length}</strong> de 100 técnicas`;
+
+  // Group by bloque > sec
+  const groups = {};
+  visible.forEach(t => {
+    if (!groups[t.bloque]) groups[t.bloque] = {};
+    if (!groups[t.bloque][t.sec]) groups[t.bloque][t.sec] = [];
+    groups[t.bloque][t.sec].push(t);
+  });
+
+  const bloquesMeta = {
+    A: { num: "A", title: "Técnicas Morfosintácticas", sub: "Arquitectura del enunciado · Técnicas 1–50" },
+    B: { num: "B", title: "Técnicas Semánticas",       sub: "Significado, imagen y cohesión · Técnicas 51–100" },
+  };
+
+  let html = "";
+  Object.keys(groups).forEach(bloque => {
+    const m = bloquesMeta[bloque];
+    html += `<div class="block-header">
+      <div class="block-num">${m.num}</div>
+      <div>
+        <h2 class="block-title">${m.title}</h2>
+        <div class="block-sub">${m.sub}</div>
+      </div>
+    </div>`;
+    Object.keys(groups[bloque]).forEach(sec => {
+      html += `<div class="section-label"><i class="bi bi-grid-3x2-gap-fill me-1"></i>${sec}</div>`;
+      groups[bloque][sec].forEach((t, idx) => {
+        const tag = CAT_TAG[t.cat] || { cls: "", label: t.cat };
+        const isExp = expandedCards.has(t.n);
+        html += `
+        <div class="tech-card${isExp ? " expanded" : ""}" data-n="${t.n}" style="animation-delay:${idx*0.03}s">
+          <div class="card-header-row" onclick="toggleCard(${t.n})">
+            <div class="card-num">${t.n}</div>
+            <div class="card-name">${t.nombre}</div>
+            <span class="card-tag ${tag.cls}">${tag.label}</span>
+            <i class="bi bi-chevron-down card-chevron"></i>
+          </div>
+          <div class="card-body-inner">
+            <p class="card-desc">${t.desc}</p>
+            <div class="card-example">${t.ej}</div>
+          </div>
+        </div>`;
+      });
+    });
+  });
+
+  content.innerHTML = html;
+}
+
+function toggleCard(n) {
+  if (expandedCards.has(n)) expandedCards.delete(n);
+  else expandedCards.add(n);
+  renderAll();
+  // Re-scroll to card
+  setTimeout(() => {
+    const el = document.querySelector(`.tech-card[data-n="${n}"]`);
+    if (el) el.scrollIntoView({ behavior: "smooth", block: "nearest" });
+  }, 50);
+}
+
+// ── FILTER BUTTONS ────────────────────────────────────────────────────────────
+document.querySelectorAll(".filter-btn").forEach(btn => {
+  btn.addEventListener("click", () => {
+    document.querySelectorAll(".filter-btn").forEach(b => b.classList.remove("active"));
+    btn.classList.add("active");
+    activeFilter = btn.dataset.filter;
+    expandedCards.clear();
+    renderAll();
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  });
+});
+
+// ── SEARCH ───────────────────────────────────────────────────────────────────
+document.getElementById("searchInput").addEventListener("input", e => {
+  searchQuery = e.target.value;
+  expandedCards.clear();
+  renderAll();
+});
+
+// ── SCROLL PILL ──────────────────────────────────────────────────────────────
+const pill = document.getElementById("progressPill");
+const pillText = document.getElementById("pillText");
+window.addEventListener("scroll", () => {
+  const scrollPct = window.scrollY / (document.body.scrollHeight - window.innerHeight);
+  const techNum   = Math.max(1, Math.round(scrollPct * 100));
+  if (window.scrollY > 200) {
+    pill.classList.add("show");
+    pillText.textContent = `Técnica ${techNum} / 100`;
+  } else {
+    pill.classList.remove("show");
+  }
+});
+
+// ── INIT ─────────────────────────────────────────────────────────────────────
+renderAll();
+</script>
+</body>
+</html>

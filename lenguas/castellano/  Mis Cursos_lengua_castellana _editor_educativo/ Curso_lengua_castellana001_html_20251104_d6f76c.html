@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Aula Virtual de Castellano</title>
+    <script src="https://code.responsivevoice.org/responsivevoice.js"></script>
+</head>
+<body>
+    <div class="pizarra-virtual">
+        <h1>{{ leccion.titulo }}</h1>
+        <div class="explicacion">{{ leccion.contenido }}</div>
+        
+        <div class="ejercicios">
+            {% for ejercicio in leccion.ejercicios %}
+            <div class="ejercicio">
+                <h3>Ejercicio {{ loop.index }}: {{ ejercicio.enunciado }}</h3>
+                
+                {% if ejercicio.tipo == "clasificacion" %}
+                <select id="opciones-{{ loop.index0 }}">
+                    {% for opcion in ejercicio.opciones %}
+                    <option value="{{ loop.index0 }}">{{ opcion }}</option>
+                    {% endfor %}
+                </select>
+                <button onclick="evaluarClasificacion({{ loop.index0 }})">Comprobar</button>
+                
+                {% else %}
+                <input type="text" id="construccion-{{ loop.index0 }}" placeholder="Escribe tu oración...">
+                <button onclick="evaluarConstruccion({{ loop.index0 }})">Enviar</button>
+                {% endif %}
+                
+                <div id="feedback-{{ loop.index0 }}"></div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <script>
+        async function evaluarClasificacion(ejId) {
+            const selector = `#opciones-${ejId}`
+            const respuesta = document.querySelector(selector).value
+            const resultado = await enviarRespuesta(ejId, respuesta)
+            
+            const feedbackEl = document.querySelector(`#feedback-${ejId}`)
+            feedbackEl.innerHTML = resultado.feedback
+            responsiveVoice.speak(resultado.feedback, "Spanish Latin American Female")
+        }
+
+        async function evaluarConstruccion(ejId) {
+            const input = `#construccion-${ejId}`
+            const respuesta = document.querySelector(input).value
+            const resultado = await enviarRespuesta(ejId, respuesta)
+            
+            const feedbackEl = document.querySelector(`#feedback-${ejId}`)
+            feedbackEl.innerHTML = resultado.feedback + '<br>' + 
+                (resultado.audio ? `<audio controls src="${resultado.audio}"></audio>` : '')
+        }
+
+        async function enviarRespuesta(ejId, respuesta) {
+            const response = await fetch('/evaluar', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({
+                    ejercicio_id: ejId,
+                    respuesta: respuesta,
+                    oracion: "Muestra de oración" // En implementación real sería dinámico
+                })
+            })
+            return response.json()
+        }
+    </script>
+</body>
+</html>

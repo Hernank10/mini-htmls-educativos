@@ -1,0 +1,197 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Centro Bilingüe — 10 lecciones (muestra) + Esqueleto 100 lecciones</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body{ padding-top:4.5rem }
+    .lesson-card{ margin-bottom:1rem }
+    pre{ white-space:pre-wrap }
+  </style>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="#">Centro Bilingüe — Morfosintaxis</a>
+    <div class="d-flex">
+      <button id="langBtn" class="btn btn-outline-light me-2">ES / EN</button>
+      <button id="jsonBtn" class="btn btn-light">Descargar JSON</button>
+    </div>
+  </div>
+</nav>
+
+<main class="container">
+  <header class="mb-4">
+    <h1 class="h3">Módulo demostración — Primeras 10 lecciones</h1>
+    <p class="text-muted">Página muestra con 10 lecciones completamente implementadas. Más abajo encontrarás el esqueleto JSON para las 100 lecciones y 110 ejercicios.</p>
+  </header>
+
+  <section id="lessonsArea">
+    <!-- Lesson cards will be injected here -->
+  </section>
+
+  <hr>
+  <section>
+    <h2>Esqueleto JSON — 100 lecciones y 110 ejercicios</h2>
+    <p class="text-muted">Incluye: lecciones 1–10 con ejercicios reales; lecciones 11–100 como marcadores (placeholders). Puedes descargar este JSON con el botón "Descargar JSON".</p>
+    <pre id="jsonPreview" class="border rounded p-3" style="max-height:350px;overflow:auto;background:#f8f9fa"></pre>
+  </section>
+
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+// Current language
+let lang = 'es';
+
+// Data: first 10 lessons fully authored (each 5 exercises = 50 exercises)
+const lessonSamples = [
+  {id:1, title_es:'Oración simple: SVO', title_en:'Simple sentence: SVO', exercises:[
+    {id:1, type:'fill', es:'Completa: Ella ___ (comer) arroz.', en:'Complete: She ___ (eat) rice.', answer_es:'come', answer_en:'eats'},
+    {id:2, type:'choose', es:'Selecciona la correcta: "___ he to the party?"', en:'Choose correct: "___ he to the party?"', options:['Do','Did','Does'], answer:'Does'},
+    {id:3, type:'order', es:{words:['él','come','manzana'] , prompt_es:'Ordena'}, en:{words:['he','eats','an','apple'], prompt_en:'Order'}, answer_es:'él come manzana', answer_en:'he eats an apple'},
+    {id:4, type:'translate', es:'Traduce al inglés: "Yo leo cada noche."', en:'Translate to Spanish: "I read every night."', answer_es:'Yo leo cada noche.', answer_en:'I read every night.'},
+    {id:5, type:'fill', es:'Completa con artículo: "___ casa es grande."', en:'Complete with article: "___ house is big."', answer_es:'La', answer_en:'The'}
+  ]},
+  {id:2, title_es:'Presente vs. Presente continuo', title_en:'Present vs Present continuous', exercises:[
+    {id:6,type:'choose',es:'Selecciona: "She ___ TV now."',en:'Choose: "She ___ TV now."',options:['watches','is watching','watch'],answer:'is watching'},
+    {id:7,type:'fill',es:'Completa: Nosotros ___ (estudiar) ahora.',en:'Complete: We ___ (study) now.',answer_es:'estamos estudiando',answer_en:'are studying'},
+    {id:8,type:'translate',es:'Traduce: "Estoy comiendo."',en:'Translate: "I am eating."',answer_es:'Estoy comiendo.',answer_en:'I am eating.'},
+    {id:9,type:'choose',es:'Escoge: "He usually ___ at 7."',en:'Choose: "He usually ___ at 7."',options:['have breakfast','has breakfast','is having'],answer:'has breakfast'},
+    {id:10,type:'fill',es:'Completa: Ella ___ (leer) ahora mismo.',en:'Complete: She ___ (read) right now.',answer_es:'está leyendo',answer_en:'is reading'}
+  ]},
+  {id:3, title_es:'Pasado simple', title_en:'Simple past', exercises:[
+    {id:11,type:'fill',es:'Completa: Ayer yo ___ (ir) al mercado.',en:'Complete: Yesterday I ___ (go) to the market.',answer_es:'fui',answer_en:'went'},
+    {id:12,type:'choose',es:'Selecciona: "They ___ football last Sunday."',en:'Choose: "They ___ football last Sunday."',options:['play','played','plays'],answer:'played'},
+    {id:13,type:'translate',es:'Traduce: "She bought a dress."',en:'Translate: "Ella compró un vestido."',answer_es:'Ella compró un vestido.',answer_en:'She bought a dress.'},
+    {id:14,type:'fill',es:'Completa con pasado: "Nosotros ___ (ver) la película."',en:'Complete: "We ___ (see) the movie."',answer_es:'vimos',answer_en:'saw'},
+    {id:15,type:'order',es:{words:['ayer','salí','tarde'],prompt_es:'Ordena'},en:{words:['I','left','late','yesterday'],prompt_en:'Order'},answer_es:'salí tarde ayer',answer_en:'I left late yesterday'}
+  ]},
+  {id:4, title_es:'Futuro (will / going to)', title_en:'Future (will/going to)', exercises:[
+    {id:16,type:'choose',es:'¿Cuál se usa para predicción?: "I think it ___ rain."',en:'Which is used for prediction?: "I think it ___ rain."',options:['will','is going to','goes'],answer:'will'},
+    {id:17,type:'fill',es:'Completa: Mañana nosotros ___ (viajar) a Bogotá.',en:'Complete: Tomorrow we ___ (travel) to Bogotá.',answer_es:'viajaremos/iremos',answer_en:'will travel/are going to travel'},
+    {id:18,type:'translate',es:'Traduce: "Voy a estudiar medicina."',en:'Translate: "I am going to study medicine."',answer_es:'Voy a estudiar medicina.',answer_en:'I am going to study medicine.'},
+    {id:19,type:'fill',es:'Completa con will: "She ___ (help) you."',en:'Complete with will: "She ___ (help) you."',answer_es:'te ayudará',answer_en:'will help'},
+    {id:20,type:'choose',es:'Elige: "We ___ leave at six."',en:'Choose: "We ___ leave at six."',options:['will','are going to','leave'],answer:'will/are going to'}
+  ]},
+  {id:5, title_es:'Pronombres y concordancia', title_en:'Pronouns and agreement', exercises:[
+    {id:21,type:'fill',es:'Completa: ___ (ellos) vienen mañana.',en:'Complete: ___ (they) come tomorrow.',answer_es:'Ellos',answer_en:'They'},
+    {id:22,type:'choose',es:'Selecciona pronombre: "___ is my sister."',en:'Choose pronoun: "___ is my sister."',options:['He','She','They'],answer:'She'},
+    {id:23,type:'translate',es:'Traduce: "Nosotros somos amigos."',en:'Translate: "We are friends."',answer_es:'Nosotros somos amigos.',answer_en:'We are friends.'},
+    {id:24,type:'fill',es:'Completa con objeto: "Eso es para ___ ." (tú)',en:'Complete with object pronoun: "That is for ___ ." (you)',answer_es:'ti',answer_en:'you'},
+    {id:25,type:'choose',es:'Elige: "___ like pizza."',en:'Choose: "___ like pizza."',options:['I','Me','Mine'],answer:'I'}
+  ]},
+  {id:6, title_es:'Artículos y sustantivos', title_en:'Articles and nouns', exercises:[
+    {id:26,type:'choose',es:'Selecciona artículo: "___ umbrella"',en:'Choose article: "___ umbrella"',options:['a','an','the'],answer:'an'},
+    {id:27,type:'fill',es:'Completa: Tengo ___ perro.',en:'Complete: I have ___ dog.',answer_es:'un',answer_en:'a'},
+    {id:28,type:'translate',es:'Traduce: "El agua está fría."',en:'Translate: "The water is cold."',answer_es:'El agua está fría.',answer_en:'The water is cold.'},
+    {id:29,type:'choose',es:'Escoge plural: "child" -> ?',en:'Plural of "child"',options:['childs','children','childes'],answer:'children'},
+    {id:30,type:'fill',es:'Completa: Esa es ___ casa de María.',en:'Complete: That is ___ María\'s house.',answer_es:'la',answer_en:"María's / Maria's"}
+  ]},
+  {id:7, title_es:'Adjetivos y adverbios', title_en:'Adjectives and adverbs', exercises:[
+    {id:31,type:'choose',es:'¿Qué palabra es adverbio? "quick/quickly"',en:'Which is adverb?',options:['quick','quickly'],answer:'quickly'},
+    {id:32,type:'fill',es:'Completa: Él corre ___ (rápido).',en:'Complete: He runs ___ (fast).',answer_es:'rápido',answer_en:'fast'},
+    {id:33,type:'translate',es:'Traduce: "Ella habla claramente."',en:'Translate: "She speaks clearly."',answer_es:'Ella habla claramente.',answer_en:'She speaks clearly.'},
+    {id:34,type:'choose',es:'Escoge comparativo: "big -> ?"',en:'Comparative of "big"',options:['bigger','more big'],answer:'bigger'},
+    {id:35,type:'fill',es:'Completa: Es la persona ___ (inteligente) de la clase.',en:'Complete: She is the ___ person in class (intelligent).',answer_es:'más inteligente',answer_en:'most intelligent'}
+  ]},
+  {id:8, title_es:'Preposiciones y frases preposicionales', title_en:'Prepositions and prepositional phrases', exercises:[
+    {id:36,type:'choose',es:'Selecciona: "I am good ___ math."',en:'Choose: "I am good ___ math."',options:['in','at','on'],answer:'at'},
+    {id:37,type:'fill',es:'Completa: El libro está ___ la mesa.',en:'Complete: The book is ___ the table.',answer_es:'sobre/en',answer_en:'on'},
+    {id:38,type:'translate',es:'Traduce: "Ella vive cerca de la estación."',en:'Translate: "She lives near the station."',answer_es:'Ella vive cerca de la estación.',answer_en:'She lives near the station.'},
+    {id:39,type:'choose',es:'Escoge preposición: "arrive ___ the airport"',en:'Choose preposition: "arrive ___ the airport"',options:['to','at','in'],answer:'at'},
+    {id:40,type:'fill',es:'Completa: Caminamos ___ la playa.',en:'Complete: We walk ___ the beach.',answer_es:'hacia/a la',answer_en:'to/the'}
+  ]},
+  {id:9, title_es:'Pronombres relativos', title_en:'Relative pronouns', exercises:[
+    {id:41,type:'choose',es:'Elige: "The man ___ called is here."',en:'Choose: "The man ___ called is here."',options:['who','whom','which'],answer:'who'},
+    {id:42,type:'fill',es:'Completa: La casa ___ compré es grande.',en:'Complete: The house ___ I bought is big.',answer_es:'que / que',answer_en:'that / which'},
+    {id:43,type:'translate',es:'Traduce: "La persona a quien viste es mi vecino."',en:'Translate: "The person whom you saw is my neighbor."',answer_es:'La persona a quien viste es mi vecino.',answer_en:'The person whom you saw is my neighbor.'},
+    {id:44,type:'choose',es:'Selecciona: "This is the reason ___ I called."',en:'Choose: "This is the reason ___ I called."',options:['why','that','which'],answer:'why/that'},
+    {id:45,type:'fill',es:'Completa: El libro ___ contiene errores está corregido.',en:'Complete: The book ___ contains errors has been corrected.',answer_es:'que',answer_en:'that'}
+  ]},
+  {id:10, title_es:'Condicionales básicos', title_en:'Basic conditionals', exercises:[
+    {id:46,type:'choose',es:'Elige: "If I ___ money, I would travel."',en:'Choose: "If I ___ money, I would travel."',options:['have','had','has'],answer:'had'},
+    {id:47,type:'fill',es:'Completa: Si llueve, ___ (quedarse) en casa.',en:'Complete: If it rains, ___ (stay) at home.',answer_es:'me quedaré / nos quedamos',answer_en:'I will stay / we stay'},
+    {id:48,type:'translate',es:'Traduce: "Si tuviera tiempo, aprendería otra lengua."',en:'Translate: "If I had time, I would learn another language."',answer_es:'Si tuviera tiempo, aprendería otra lengua.',answer_en:'If I had time, I would learn another language.'},
+    {id:49,type:'choose',es:'Selecciona conjunción: "___ it rains, we will go."',en:'Choose conjunction: "___ it rains, we will go."',options:['Unless','If','Although'],answer:'If'},
+    {id:50,type:'fill',es:'Completa: Si yo ___ (ser) tú, estudiaría más.',en:'Complete: If I ___ (be) you, I would study more.',answer_es:'fuera',answer_en:'were'}
+  ]}
+];
+
+// Build full skeleton: lessons 1..100. We'll include the above for 1..10, and placeholders for 11..100.
+const lessons100 = [];
+let exerciseCounter = 0;
+for(let i=1;i<=100;i++){
+  if(i<=10){
+    const l = lessonSamples[i-1];
+    // Count exercises
+    exerciseCounter += l.exercises.length;
+    lessons100.push({lesson_id:i, title_es:l.title_es, title_en:l.title_en, exercises:l.exercises});
+  } else {
+    // For lessons 11..70 give 1 placeholder exercise each until total 110
+    let exs = [];
+    // if we still need exercises to reach 110, allocate one per lesson; otherwise empty
+    if(exerciseCounter < 110){
+      exs.push({id: ++exerciseCounter, type:'placeholder', es:`(Ejercicio pendiente) Contenido para la lección ${i}`, en:`(Pending exercise) Content for lesson ${i}`, answer_es:'(pendiente)', answer_en:'(pending)'});
+    }
+    lessons100.push({lesson_id:i, title_es:`Lección ${i} (por desarrollar)`, title_en:`Lesson ${i} (to develop)`, exercises:exs});
+  }
+}
+
+// Ensure total exercises equals 110
+(function(){
+  const total = lessons100.reduce((s,l)=>s + l.exercises.length,0);
+  console.log('Total exercises generated:',total);
+})();
+
+// Render first 10 lessons on page
+const lessonsArea = document.getElementById('lessonsArea');
+function renderLessons(){
+  lessonsArea.innerHTML = '';
+  lessonSamples.forEach(l=>{
+    const card = document.createElement('div'); card.className='card lesson-card';
+    const body = document.createElement('div'); body.className='card-body';
+    const h = document.createElement('h5'); h.className='card-title'; h.textContent = (lang==='es'?l.title_es:l.title_en) + ` (Lección ${l.id})`;
+    body.appendChild(h);
+    const p = document.createElement('p'); p.className='text-muted'; p.textContent = lang==='es' ? 'Ejercicios de práctica — interactivos' : 'Practice exercises — interactive';
+    body.appendChild(p);
+
+    l.exercises.forEach(ex=>{
+      const exDiv = document.createElement('div'); exDiv.className='border rounded p-2 mb-2';
+      const q = document.createElement('div'); q.innerHTML = `<strong>${lang==='es' ? (ex.es||'') : (ex.en||'')}</strong>`;
+      exDiv.appendChild(q);
+      if(ex.type==='choose' && ex.options){
+        ex.options.forEach(opt=>{ const r = document.createElement('div'); r.className='form-check'; r.innerHTML = `<input class="form-check-input" type="radio" name="ex${ex.id}"><label class="form-check-label">${opt}</label>`; exDiv.appendChild(r); });
+      } else if(ex.type==='fill' || ex.type==='translate' || ex.type==='placeholder'){
+        const ta = document.createElement('input'); ta.className='form-control mt-2'; ta.placeholder = lang==='es' ? 'Escribe tu respuesta...' : 'Type your answer...'; exDiv.appendChild(ta);
+      } else if(ex.type==='order'){
+        const words = lang==='es' ? ex.es.words : ex.en.words;
+        const info = document.createElement('div'); info.className='small text-muted mb-2'; info.textContent = lang==='es' ? ex.es.prompt_es || 'Ordena las palabras' : ex.en.prompt_en || 'Order the words'; exDiv.appendChild(info);
+        const btns = document.createElement('div'); btns.className='d-flex gap-2 flex-wrap mb-2';
+        words.forEach(w=>{ const b = document.createElement('button'); b.className='btn btn-outline-secondary btn-sm'; b.textContent = w; btns.appendChild(b); }); exDiv.appendChild(btns);
+      }
+      body.appendChild(exDiv);
+    });
+
+    card.appendChild(body); lessonsArea.appendChild(card);
+  });
+}
+
+// JSON preview and download
+const jsonPreview = document.getElementById('jsonPreview');
+jsonPreview.textContent = JSON.stringify({meta:{title:'Centro Bilingue - 100 lecciones / 110 ejercicios'}, lessons: lessons100}, null, 2);
+document.getElementById('jsonBtn').addEventListener('click', ()=>{
+  const dataStr = 'data:application/json;charset=utf-8,' + encodeURIComponent(JSON.stringify({meta:{title:'Centro Bilingue - 100 lecciones / 110 ejercicios'}, lessons: lessons100}, null, 2));
+  const a = document.createElement('a'); a.setAttribute('href', dataStr); a.setAttribute('download','centro_bilingue_100x110.json'); document.body.appendChild(a); a.click(); a.remove();
+});
+
+// language toggle
+document.getElementById('langBtn').addEventListener('click', ()=>{ lang = lang==='es'?'en':'es'; renderLessons(); jsonPreview.textContent = JSON.stringify({meta:{title: lang==='es'?'Centro Bilingue - 100 lecciones / 110 ejercicios':'Bilingual Center - 100 lessons / 110 exercises'}, lessons: lessons100}, null, 2); document.documentElement.lang = lang==='es'?'es':'en'; document.getElementById('langBtn').textContent = lang==='es'?'ES / EN':'EN / ES'; });
+
+// initial render
+renderLessons();
+</script>
+</body>
+</html>

@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Academia de Aforismos — Página Educativa</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<style>
+    body {
+        background-color: #faf5ef;
+        font-family: 'Georgia', serif;
+    }
+    .literary-bg {
+        background: #f1e7d6;
+        border-radius: 12px;
+        padding: 20px;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+    .category-card {
+        cursor: pointer;
+        transition: 0.3s;
+    }
+    .category-card:hover {
+        transform: scale(1.03);
+        box-shadow: 0 0 12px rgba(0,0,0,0.20);
+    }
+    textarea {
+        background: #fffaf3;
+        border: 1px solid #d1c4b1 !important;
+    }
+</style>
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="#"><strong>Academia de Aforismos</strong></a>
+  </div>
+</nav>
+
+<div class="container py-5">
+    <div class="row mb-5">
+        <div class="col-md-8 mx-auto text-center">
+            <h1 class="display-5 mb-3">Aprende a Escribir Aforismos</h1>
+            <p class="lead">Explora las categorías tradicionales del aforismo, estudia ejemplos literarios y practica con nuestro laboratorio interactivo. Además, disfruta los programas en Python convertidos para uso educativo.</p>
+        </div>
+    </div>
+
+    <!-- Sección de categorías -->
+    <div class="row g-4 mb-5">
+        <h2 class="mb-3">Categorías del Aforismo</h2>
+
+        <div id="categorias" class="row g-4"></div>
+    </div>
+
+    <!-- Ejercicio interactivo -->
+    <div class="row mb-5">
+        <div class="col-md-6">
+            <div class="literary-bg">
+                <h4>Ejemplo de la categoría</h4>
+                <p id="exampleText">Selecciona una categoría para ver un ejemplo literario.</p>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="literary-bg">
+                <h4>Escribe tu aforismo</h4>
+                <textarea id="userInput" class="form-control" rows="5" placeholder="Escribe aquí..."></textarea>
+                <button class="btn btn-dark mt-3" onclick="evaluar()">Evaluar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Evaluación -->
+    <div class="row mb-5">
+        <div class="col-md-12">
+            <div class="literary-bg">
+                <h4>Evaluación literaria</h4>
+                <p id="message">Aquí aparecerá la evaluación de tu aforismo.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sección educativa sobre Python -->
+    <div class="row mb-5">
+        <h2 class="mb-3">Aprende Python para crear tus propios generadores literarios</h2>
+        <p class="mb-4">Aquí puedes explorar versiones educativas de los programas anteriores (TKinter, Kivy, Pygame) para aprender a crear tus propios talleres, juegos literarios y generadores de aforismos.</p>
+
+        <div class="col-md-4">
+            <div class="card shadow-sm h-100">
+                <div class="card-body">
+                    <h5 class="card-title">Versión Tkinter</h5>
+                    <p class="card-text">Interfaz clásica de escritorio ideal para principiantes en Python.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card shadow-sm h-100">
+                <div class="card-body">
+                    <h5 class="card-title">Versión Kivy</h5>
+                    <p class="card-text">Interfaz moderna y adaptable para móviles y tablets.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card shadow-sm h-100">
+                <div class="card-body">
+                    <h5 class="card-title">Versión Pygame</h5>
+                    <p class="card-text">Diseño interactivo con estilo de videojuego literario.</p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script>
+// Ejemplos de aforismos
+const ejemplos = {
+    "Sentencias morales": [
+        "La virtud no hace ruido, pero se escucha lejos.",
+        "Quien se vence a sí mismo nunca pierde.",
+        "La codicia siempre tiene hambre."],
+    "Observaciones psicológicas": [
+        "La mente teme más a sus sombras que a la noche.",
+        "Recordamos lo que nos hiere con más nitidez que lo que nos alegra.",
+        "El deseo piensa más rápido que la razón."],
+    "Imágenes poéticas": [
+        "El alba abre los párpados del mundo.",
+        "La lluvia escribe cartas en la ventana.",
+        "El viento colecciona secretos."],
+    "Aforismos humorísticos": [
+        "La paciencia es una virtud... que nunca encuentro a tiempo.",
+        "Mi memoria tiene un excelente servicio de extravíos.",
+        "Si el mundo es un escenario, todavía espero mis luces."],
+    "Máximas filosóficas": [
+        "Ser es aprender a desaparecer con gracia.",
+        "Toda certeza es una pausa en la duda.",
+        "El tiempo siempre piensa antes que nosotros."]
+};
+
+let categoriaActual = null;
+
+// Crear tarjetas Bootstrap dinámicamente
+const categoriasDiv = document.getElementById("categorias");
+Object.keys(ejemplos).forEach(cat => {
+    categoriasDiv.innerHTML += `
+        <div class="col-md-4">
+            <div class="card category-card p-3" onclick="seleccionarCategoria('${cat}')">
+                <h5>${cat}</h5>
+            </div>
+        </div>`;
+});
+
+function seleccionarCategoria(cat) {
+    categoriaActual = cat;
+    const lista = ejemplos[cat];
+    const ejemplo = lista[Math.floor(Math.random() * lista.length)];
+
+    document.getElementById("exampleText").textContent = ejemplo;
+    document.getElementById("message").textContent = `Escribe un aforismo al estilo de '${cat}'.`;
+}
+
+function evaluar() {
+    const texto = document.getElementById("userInput").value.trim();
+    if (!categoriaActual) {
+        document.getElementById("message").textContent = "Primero selecciona una categoría.";
+        return;
+    }
+    if (texto.length < 5) {
+        document.getElementById("message").textContent = "Demasiado breve: intenta desarrollar una idea más clara.";
+        return;
+    }
+
+    let hints = [];
+    if ([",", ";", ":"].some(p => texto.includes(p))) hints.push("Buen uso de pausas reflexivas.");
+    if (["luz", "sombra", "viento", "tiempo"].some(w => texto.toLowerCase().includes(w))) hints.push("Aprecio por imágenes literarias.");
+    if (texto.split(" ").length >= 12) hints.push("Extensión adecuada para un aforismo elaborado.");
+
+    document.getElementById("message").textContent = hints.length ? hints.join(" | ") : "Puede ser más evocador o preciso.";
+}
+</script>
+
+</body>
+</html>

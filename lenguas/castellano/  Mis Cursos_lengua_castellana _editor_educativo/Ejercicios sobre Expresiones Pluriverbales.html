@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ejercicios sobre Expresiones Pluriverbales</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body {
+      background: linear-gradient(to bottom, #f8f9fa, #e9ecef);
+      font-family: 'Segoe UI', sans-serif;
+    }
+    .card {
+      border-radius: 15px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+    .correcta { background-color: #d4edda !important; }
+    .incorrecta { background-color: #f8d7da !important; }
+    .btn-opcion { width: 100%; text-align: left; }
+  </style>
+</head>
+<body class="py-4">
+
+<div class="container">
+  <h1 class="text-center mb-4">💬 Ejercicios sobre Expresiones Pluriverbales</h1>
+
+  <div id="nivelSeleccion" class="text-center mb-4">
+    <h4>Selecciona tu nivel</h4>
+    <button class="btn btn-primary m-2" onclick="iniciar('basico')">Básico</button>
+    <button class="btn btn-success m-2" onclick="iniciar('intermedio')">Intermedio</button>
+    <button class="btn btn-danger m-2" onclick="iniciar('avanzado')">Avanzado</button>
+  </div>
+
+  <div id="ejercicioContainer" class="card p-4 d-none">
+    <div class="mb-3">
+      <h5 id="enunciado"></h5>
+      <p class="text-muted" id="regla"></p>
+    </div>
+    <div id="opciones" class="list-group mb-3"></div>
+    <button class="btn btn-secondary" onclick="siguiente()">Siguiente</button>
+  </div>
+
+  <div id="resultadoFinal" class="text-center d-none">
+    <h3 id="mensajeFinal"></h3>
+    <p id="puntajeFinal"></p>
+    <button class="btn btn-outline-primary" onclick="reiniciar()">Reiniciar</button>
+  </div>
+</div>
+
+<script>
+const ejercicios = [
+  {
+    regla: "Uso de perífrasis con 'poner' en lugar de verbos simples.",
+    enunciado: "¿Cuál es la forma más común en español actual para expresar 'enfurecer'?",
+    opciones: ["poner furioso", "hacerse furioso", "ir furioso", "quedarse furioso"],
+    correcta: 0
+  },
+  {
+    regla: "Uso de perífrasis con 'dejar' para expresar emociones.",
+    enunciado: "¿Cómo se prefiere decir en español moderno 'me contentó la entrevista'?",
+    opciones: ["la entrevista me dejó contento", "la entrevista fue buena", "la entrevista me gustó", "me sentí contento por la entrevista"],
+    correcta: 0
+  },
+  {
+    regla: "Expresiones pluriverbales comunes.",
+    enunciado: "En vez de 'simular sorpresa', se dice comúnmente:",
+    opciones: ["hacer como que se sorprende", "parecer sorprendido", "decir que está sorprendido", "fingir sorpresa"],
+    correcta: 0
+  },
+  {
+    regla: "Tendencia a usar perífrasis en vez de adverbios univerbales.",
+    enunciado: "¿Cómo se diría comúnmente 'insensiblemente'?",
+    opciones: ["de manera insensible", "sin sentimientos", "insensible", "de forma indiferente"],
+    correcta: 0
+  },
+  {
+    regla: "Uso de expresiones pluriverbales en lugar de adjetivos.",
+    enunciado: "¿Qué forma se prefiere a 'actual'?",
+    opciones: ["de ahora", "moderno", "presente", "contemporáneo"],
+    correcta: 0
+  }
+];
+
+let seleccionados = [];
+let actual = 0;
+let puntaje = 0;
+
+function iniciar(nivel) {
+  document.getElementById("nivelSeleccion").classList.add("d-none");
+  document.getElementById("ejercicioContainer").classList.remove("d-none");
+  seleccionados = ejercicios.sort(() => 0.5 - Math.random()).slice(0, 3);
+  mostrarEjercicio();
+}
+
+function mostrarEjercicio() {
+  const e = seleccionados[actual];
+  document.getElementById("enunciado").textContent = e.enunciado;
+  document.getElementById("regla").textContent = "Regla: " + e.regla;
+  const contenedor = document.getElementById("opciones");
+  contenedor.innerHTML = "";
+
+  e.opciones.forEach((opcion, i) => {
+    const btn = document.createElement("button");
+    btn.className = "btn btn-outline-dark btn-opcion mb-2";
+    btn.textContent = opcion;
+    btn.onclick = () => verificar(i, btn);
+    contenedor.appendChild(btn);
+  });
+}
+
+function verificar(i, boton) {
+  const e = seleccionados[actual];
+  const opciones = document.querySelectorAll(".btn-opcion");
+  opciones.forEach(b => b.disabled = true);
+
+  if (i === e.correcta) {
+    boton.classList.add("correcta");
+    puntaje++;
+  } else {
+    boton.classList.add("incorrecta");
+    opciones[e.correcta].classList.add("correcta");
+  }
+}
+
+function siguiente() {
+  actual++;
+  if (actual < seleccionados.length) {
+    mostrarEjercicio();
+  } else {
+    finalizar();
+  }
+}
+
+function finalizar() {
+  document.getElementById("ejercicioContainer").classList.add("d-none");
+  document.getElementById("resultadoFinal").classList.remove("d-none");
+  document.getElementById("mensajeFinal").textContent = "🎯 Has completado el nivel";
+  document.getElementById("puntajeFinal").textContent = `Tu puntaje final es ${puntaje}/${seleccionados.length}`;
+}
+
+function reiniciar() {
+  actual = 0;
+  puntaje = 0;
+  document.getElementById("resultadoFinal").classList.add("d-none");
+  document.getElementById("nivelSeleccion").classList.remove("d-none");
+}
+</script>
+
+</body>
+</html>

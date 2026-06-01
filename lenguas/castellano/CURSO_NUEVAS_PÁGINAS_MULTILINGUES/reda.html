@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Redacción Científica y Técnica — 100 técnicas para ciencias e ingeniería</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ink:#1a1209; --parchment:#f5f0e8; --amber:#c8860a; --amber-light:#f0a830;
+  --amber-pale:#fdf3dc; --rust:#8b3a1a; --sage:#4a6741; --sage-light:#7a9e76;
+  --cream:#faf7f2; --border:#d4c9b0; --shadow:rgba(26,18,9,0.12);
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'DM Sans',sans-serif;background:var(--parchment);color:var(--ink);min-height:100vh;
+  background-image:radial-gradient(ellipse at 15% 0%,rgba(200,134,10,.07) 0%,transparent 55%),
+  radial-gradient(ellipse at 85% 100%,rgba(139,58,26,.05) 0%,transparent 55%);}
+h1,h2,h3,.serif{font-family:'Playfair Display',serif;}
+
+.app-nav{background:var(--ink);display:flex;align-items:center;gap:.75rem;
+  padding:.7rem 1.5rem;position:sticky;top:0;z-index:200;box-shadow:0 2px 18px rgba(0,0,0,.25);}
+.nav-brand{font-family:'Playfair Display',serif;font-weight:900;font-size:1.25rem;
+  color:var(--amber-light);flex:1;white-space:nowrap;}
+.nav-brand span{color:#fff;}
+.nav-avatar{width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,var(--amber),var(--rust));
+  display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.95rem;
+  color:#fff;font-family:'Playfair Display',serif;cursor:pointer;flex-shrink:0;
+  border:2px solid rgba(255,255,255,.2);transition:border-color .2s;}
+.nav-avatar:hover{border-color:var(--amber-light);}
+.nav-username{color:rgba(255,255,255,.8);font-size:.85rem;font-weight:500;white-space:nowrap;}
+.btn-reset{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);
+  color:rgba(255,255,255,.7);border-radius:8px;padding:.32rem .75rem;font-size:.78rem;
+  cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .2s;}
+.btn-reset:hover{background:rgba(255,255,255,.18);color:#fff;}
+
+.app-tabs{background:#fff;border-bottom:2px solid var(--border);display:flex;
+  padding:0 1.5rem;overflow-x:auto;gap:0;position:sticky;top:58px;z-index:150;}
+.app-tab{padding:.85rem 1.1rem;border:none;background:transparent;font-family:'DM Sans',sans-serif;
+  font-weight:700;font-size:.82rem;color:#999;cursor:pointer;white-space:nowrap;
+  border-bottom:3px solid transparent;margin-bottom:-2px;transition:all .2s;
+  display:flex;align-items:center;gap:.35rem;}
+.app-tab:hover{color:var(--ink);}
+.app-tab.active{color:var(--amber);border-bottom-color:var(--amber);}
+
+.app-body{max-width:1080px;margin:0 auto;padding:2rem 1.5rem;}
+.page{display:none;animation:rise .28s ease;}
+.page.active{display:block;}
+
+.card-app{background:#fff;border:1.5px solid var(--border);border-radius:16px;
+  box-shadow:0 2px 10px var(--shadow);overflow:hidden;}
+.card-app-header{padding:1.1rem 1.4rem;border-bottom:1px solid var(--border);
+  display:flex;align-items:center;gap:.75rem;}
+.card-app-body{padding:1.4rem;}
+
+.stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:.9rem;margin-bottom:1.6rem;}
+.stat-box{background:#fff;border:1.5px solid var(--border);border-radius:14px;
+  padding:1.1rem 1rem;text-align:center;transition:transform .2s;cursor:default;}
+.stat-box:hover{transform:translateY(-3px);box-shadow:0 6px 18px var(--shadow);}
+.stat-num{font-family:'Playfair Display',serif;font-size:2rem;font-weight:900;
+  color:var(--amber);line-height:1;margin-bottom:.2rem;}
+.stat-lbl{font-size:.73rem;font-weight:700;color:#aaa;text-transform:uppercase;letter-spacing:.05em;}
+
+.dot-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(26px,1fr));gap:4px;margin-bottom:1.6rem;}
+.dot{aspect-ratio:1;border-radius:6px;background:var(--border);cursor:pointer;
+  transition:all .18s;position:relative;display:flex;align-items:center;justify-content:center;}
+.dot.done{background:var(--sage);}
+.dot:hover{transform:scale(1.35);z-index:5;}
+.dot-tip{position:absolute;bottom:130%;left:50%;transform:translateX(-50%);
+  background:var(--ink);color:#fff;padding:.28rem .6rem;border-radius:6px;font-size:.68rem;
+  white-space:nowrap;pointer-events:none;opacity:0;transition:opacity .18s;z-index:99;}
+.dot:hover .dot-tip{opacity:1;}
+.dot-num{font-size:.5rem;font-weight:700;color:rgba(255,255,255,.7);}
+
+.search-field{border:1.5px solid var(--border);border-radius:10px;padding:.55rem 1rem .55rem 2.3rem;
+  font-family:'DM Sans',sans-serif;font-size:.87rem;background:#fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%23aaa' stroke-width='2.5'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cpath d='M21 21l-4.35-4.35'/%3E%3C/svg%3E") no-repeat .75rem center;
+  width:100%;max-width:260px;outline:none;transition:border-color .2s;}
+.search-field:focus{border-color:var(--amber);}
+.pill{padding:.28rem .75rem;border-radius:20px;border:1.5px solid var(--border);background:#fff;
+  font-size:.75rem;font-weight:700;cursor:pointer;transition:all .2s;font-family:'DM Sans',sans-serif;color:#888;}
+.pill.on,.pill:hover{background:var(--amber);border-color:var(--amber);color:#fff;}
+
+.ex-card{background:#fff;border:1.5px solid var(--border);border-radius:13px;padding:1rem 1.2rem;
+  margin-bottom:.6rem;cursor:pointer;transition:all .18s;display:flex;align-items:flex-start;gap:.9rem;
+  box-shadow:0 1px 4px var(--shadow);}
+.ex-card:hover{border-color:var(--amber);transform:translateX(5px);}
+.ex-card.done{border-left:4px solid var(--sage);}
+.ex-num-box{background:var(--parchment);border:1px solid var(--border);border-radius:8px;
+  width:42px;height:42px;display:flex;align-items:center;justify-content:center;
+  font-family:'DM Mono',monospace;font-size:.75rem;font-weight:600;color:var(--amber);flex-shrink:0;}
+.ex-card.done .ex-num-box{background:var(--sage);color:#fff;border-color:var(--sage);}
+.ex-body{flex:1;min-width:0;}
+.ex-cat-tag{font-size:.7rem;font-weight:700;color:var(--amber);text-transform:uppercase;letter-spacing:.05em;}
+.ex-name{font-weight:700;font-size:.9rem;margin:.1rem 0 .18rem;}
+.ex-short{font-size:.78rem;color:#777;line-height:1.5;}
+.badge-done{background:var(--sage);color:#fff;padding:.18rem .55rem;border-radius:9px;font-size:.7rem;font-weight:700;}
+.badge-new{background:var(--parchment);color:#bbb;padding:.18rem .55rem;border-radius:9px;font-size:.7rem;font-weight:700;border:1px solid var(--border);}
+
+.prac-header{background:#fff;border:1.5px solid var(--border);border-radius:16px;
+  padding:1.4rem 1.5rem;margin-bottom:1.2rem;box-shadow:0 2px 10px var(--shadow);}
+.prac-badge{display:inline-flex;align-items:center;gap:.35rem;background:var(--amber-pale);
+  border:1px solid rgba(200,134,10,.28);border-radius:8px;padding:.28rem .75rem;
+  font-size:.76rem;font-weight:700;color:var(--amber);margin-bottom:.7rem;}
+.prac-title{font-size:1.3rem;font-weight:900;margin-bottom:.45rem;}
+.prac-explanation{font-size:.88rem;color:#555;line-height:1.7;margin:0;}
+.prac-example{background:var(--parchment);border-left:3px solid var(--amber);
+  border-radius:0 9px 9px 0;padding:.7rem 1rem;margin-top:.9rem;font-size:.84rem;
+  color:var(--ink);font-style:italic;}
+
+.writing-zone{background:#fff;border:1.5px solid var(--border);border-radius:16px;
+  padding:1.4rem 1.5rem;margin-bottom:1rem;box-shadow:0 2px 10px var(--shadow);}
+.writing-prompt{background:linear-gradient(135deg,var(--amber-pale),#fffcf5);
+  border:1px solid rgba(200,134,10,.22);border-radius:10px;padding:.9rem 1.1rem;
+  margin-bottom:1rem;font-size:.87rem;line-height:1.65;}
+.writing-prompt strong{color:var(--rust);}
+#practiceTA{width:100%;min-height:145px;border:1.5px solid var(--border);border-radius:10px;
+  padding:.9rem 1rem;font-family:'DM Sans',sans-serif;font-size:.93rem;line-height:1.75;
+  color:var(--ink);resize:vertical;background:#fffef9;transition:border-color .2s;outline:none;}
+#practiceTA:focus{border-color:var(--amber);box-shadow:0 0 0 3px rgba(200,134,10,.1);}
+.wc{text-align:right;font-size:.76rem;color:#bbb;margin-top:.4rem;}
+
+.btn-check{background:linear-gradient(135deg,var(--sage),var(--sage-light));border:none;
+  border-radius:10px;color:#fff;font-weight:700;font-size:.92rem;padding:.75rem 1.6rem;
+  cursor:pointer;transition:all .2s;font-family:'DM Sans',sans-serif;
+  display:inline-flex;align-items:center;gap:.45rem;
+  box-shadow:0 4px 14px rgba(74,103,65,.32);}
+.btn-check:hover{transform:translateY(-2px);box-shadow:0 7px 20px rgba(74,103,65,.4);}
+.btn-check:disabled{opacity:.55;cursor:not-allowed;transform:none;}
+
+.btn-next{background:linear-gradient(135deg,var(--amber),var(--rust));border:none;
+  border-radius:10px;color:#fff;font-weight:700;font-size:.92rem;padding:.75rem 1.6rem;
+  cursor:pointer;transition:all .2s;font-family:'DM Sans',sans-serif;
+  display:inline-flex;align-items:center;gap:.45rem;box-shadow:0 4px 14px rgba(200,134,10,.3);}
+.btn-next:hover{transform:translateY(-2px);}
+
+.fb-area{background:#fff;border:1.5px solid var(--border);border-radius:16px;
+  overflow:hidden;box-shadow:0 2px 10px var(--shadow);display:none;}
+.fb-area.show{display:block;animation:rise .35s ease;}
+.fb-head{padding:.95rem 1.4rem;display:flex;align-items:center;gap:.7rem;border-bottom:1px solid var(--border);}
+.fb-head.excellent{background:linear-gradient(90deg,#d4edda,#f0faf4);}
+.fb-head.good{background:linear-gradient(90deg,#fff3cd,#fffbf0);}
+.fb-head.low{background:linear-gradient(90deg,#f8d7da,#fdf5f5);}
+.fb-emoji{font-size:1.8rem;}
+.fb-htitle{font-weight:800;font-size:1rem;margin:0;}
+.fb-hsub{font-size:.78rem;color:#888;margin:0;}
+.fb-body{padding:1.4rem;}
+.score-circle{width:66px;height:66px;border-radius:50%;display:flex;align-items:center;
+  justify-content:center;font-family:'Playfair Display',serif;font-weight:900;font-size:1.25rem;flex-shrink:0;}
+.sc-high{background:#d4edda;color:#2d6a4f;}
+.sc-med{background:#fff3cd;color:#7a5c00;}
+.sc-low{background:#f8d7da;color:#8b1a1a;}
+.fb-section{margin-bottom:1.1rem;}
+.fb-section-title{font-weight:700;font-size:.76rem;text-transform:uppercase;letter-spacing:.07em;
+  color:#aaa;margin-bottom:.5rem;display:flex;align-items:center;gap:.35rem;}
+.fb-item{padding:.62rem .85rem;border-radius:8px;font-size:.84rem;line-height:1.52;
+  margin-bottom:.35rem;display:flex;gap:.55rem;align-items:flex-start;}
+.fb-item.ok{background:#f0f9f4;color:#2d6a4f;border-left:3px solid var(--sage);}
+.fb-item.err{background:#fdf5f5;color:#8b1a1a;border-left:3px solid #dc3545;}
+.fb-item.tip{background:#fffbf0;color:#7a5c00;border-left:3px solid var(--amber);}
+.fb-item.info{background:var(--parchment);color:var(--ink);border-left:3px solid #aaa;}
+.fb-ico{flex-shrink:0;margin-top:1px;}
+
+.spin{width:34px;height:34px;border:3px solid var(--border);border-top-color:var(--amber);
+  border-radius:50%;animation:rot .65s linear infinite;margin:0 auto 1rem;}
+@keyframes rot{to{transform:rotate(360deg)}}
+
+.profile-cover{height:96px;background:linear-gradient(135deg,var(--ink) 0%,#3d2a10 50%,var(--rust) 100%);position:relative;}
+.profile-av-lg{width:78px;height:78px;border-radius:50%;border:4px solid #fff;
+  background:linear-gradient(135deg,var(--amber),var(--rust));display:flex;align-items:center;
+  justify-content:center;font-family:'Playfair Display',serif;font-weight:900;font-size:1.9rem;
+  color:#fff;position:absolute;bottom:-38px;left:1.4rem;box-shadow:0 4px 18px var(--shadow);}
+.profile-body{padding:3.2rem 1.4rem 1.4rem;}
+.profile-name{font-size:1.4rem;font-weight:900;margin-bottom:.15rem;}
+.profile-meta{color:#999;font-size:.83rem;}
+.ach-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:.65rem;}
+.ach{background:#fff;border:1.5px solid var(--border);border-radius:12px;padding:.9rem .7rem;
+  text-align:center;transition:all .2s;}
+.ach.unlocked{border-color:var(--amber);background:var(--amber-pale);}
+.ach.unlocked:hover{transform:translateY(-3px);box-shadow:0 5px 14px rgba(200,134,10,.22);}
+.ach-icon{font-size:1.6rem;display:block;margin-bottom:.35rem;}
+.ach-name{font-size:.7rem;font-weight:700;color:var(--ink);}
+.ach.locked .ach-icon{filter:grayscale(1);opacity:.35;}
+.ach.locked .ach-name{color:#ccc;}
+
+.hist-row{background:#fff;border:1.5px solid var(--border);border-radius:11px;
+  padding:.8rem 1rem;margin-bottom:.5rem;display:flex;align-items:center;gap:.8rem;cursor:pointer;transition:border-color .2s;}
+.hist-row:hover{border-color:var(--amber);}
+
+.toast-box{position:fixed;bottom:1.4rem;right:1.4rem;z-index:9999;}
+.toast-item{background:var(--ink);color:#fff;border-radius:12px;padding:.8rem 1.1rem;
+  margin-top:.45rem;display:flex;align-items:center;gap:.65rem;font-size:.84rem;font-weight:500;
+  box-shadow:0 8px 26px rgba(0,0,0,.28);animation:rise .28s ease;max-width:300px;}
+.toast-item.s{border-left:4px solid var(--sage-light);}
+.toast-item.e{border-left:4px solid #dc3545;}
+.toast-item.i{border-left:4px solid var(--amber-light);}
+
+.modal-backdrop-custom{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:1040;
+  display:flex;align-items:center;justify-content:center;padding:1rem;}
+.modal-box{background:#fff;border-radius:20px;max-width:480px;width:100%;
+  box-shadow:0 24px 64px rgba(0,0,0,.28);animation:rise .3s ease;overflow:hidden;}
+.modal-head{background:var(--ink);padding:1.1rem 1.4rem;color:#fff;display:flex;align-items:center;gap:.7rem;}
+.modal-head .modal-title-txt{font-weight:800;font-size:1rem;flex:1;}
+.modal-close{background:rgba(255,255,255,.12);border:none;color:#fff;border-radius:8px;
+  width:32px;height:32px;cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center;}
+.modal-close:hover{background:rgba(255,255,255,.25);}
+.modal-body-custom{padding:1.4rem;}
+.modal-foot{padding:1rem 1.4rem;border-top:1px solid var(--border);display:flex;gap:.7rem;justify-content:flex-end;}
+
+@keyframes rise{from{opacity:0;transform:translateY(28px)}to{opacity:1;transform:translateY(0)}}
+::-webkit-scrollbar{width:6px;height:6px;}
+::-webkit-scrollbar-track{background:transparent;}
+::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px;}
+@media(max-width:576px){
+  .app-body{padding:1rem;}
+  .stats-grid{grid-template-columns:1fr 1fr;}
+  .ach-grid{grid-template-columns:repeat(3,1fr);}
+  .app-nav{padding:.6rem 1rem;}
+  .nav-username{display:none;}
+}
+</style>
+</head>
+<body>
+
+<div id="appScreen">
+  <nav class="app-nav">
+    <div class="nav-brand">Redacción<span>Científica</span></div>
+    <div class="nav-avatar" id="navAv" onclick="switchPage('perfil')" title="Ver perfil">C</div>
+    <span class="nav-username" id="navName">Estudiante</span>
+    <button class="btn-reset" onclick="confirmReset()"><i class="bi bi-arrow-counterclockwise"></i> Reiniciar</button>
+  </nav>
+  <div class="app-tabs">
+    <button class="app-tab active" id="tab-dashboard" onclick="switchPage('dashboard')"><i class="bi bi-grid-3x3-gap-fill"></i> Inicio</button>
+    <button class="app-tab" id="tab-ejercicios" onclick="switchPage('ejercicios')"><i class="bi bi-journal-bookmark-fill"></i> Técnicas</button>
+    <button class="app-tab" id="tab-practica" onclick="switchPage('practica')"><i class="bi bi-pencil-square"></i> Practicar</button>
+    <button class="app-tab" id="tab-perfil" onclick="switchPage('perfil')"><i class="bi bi-person-circle"></i> Perfil</button>
+  </div>
+  <div class="app-body">
+    <!-- DASHBOARD -->
+    <div class="page active" id="page-dashboard">
+      <div class="d-flex align-items-center gap-2 mb-4"><div><h2 class="serif fw-black mb-0">¡Hola, <span id="dashName">científico/a</span>! 🔬</h2><p class="text-muted mb-0">Mejora tu redacción técnica en castellano</p></div></div>
+      <div class="stats-grid mb-4">
+        <div class="stat-box"><div class="stat-num" id="sCompleted">0</div><div class="stat-lbl">Técnicas dominadas</div></div>
+        <div class="stat-box"><div class="stat-num" id="sPracticed">0</div><div class="stat-lbl">Prácticas realizadas</div></div>
+        <div class="stat-box"><div class="stat-num" id="sScore">—</div><div class="stat-lbl">Puntuación media</div></div>
+        <div class="stat-box"><div class="stat-num" id="sStreak">1🔥</div><div class="stat-lbl">Racha</div></div>
+      </div>
+      <div class="card-app mb-4"><div class="card-app-header"><i class="bi bi-map-fill text-warning"></i><div><div style="font-weight:800">Mapa de progreso</div><div style="font-size:.74rem;color:#aaa">100 técnicas · Verde = completado</div></div></div><div class="card-app-body"><div class="dot-grid" id="dotGrid"></div></div></div>
+      <div class="mb-2" style="font-weight:800">Siguiente técnica</div>
+      <div class="ex-card" id="nextCard"><div class="ex-num-box" id="nextNum">01</div><div class="ex-body"><div class="ex-cat-tag" id="nextCat">Claridad</div><div class="ex-name" id="nextName">Cargando...</div><div class="ex-short" id="nextDesc"></div></div><span style="color:var(--amber);font-size:1.4rem"><i class="bi bi-play-circle-fill"></i></span></div>
+      <div class="card-app mt-4"><div class="card-app-header"><i class="bi bi-bar-chart-fill text-warning"></i><div>Progreso por categoría</div></div><div class="card-app-body" id="catProgress"></div></div>
+    </div>
+    <!-- TÉCNICAS -->
+    <div class="page" id="page-ejercicios">
+      <div class="d-flex align-items-center justify-content-between flex-wrap gap-2 mb-3"><h2 class="serif fw-black mb-0">100 Técnicas de Redacción Científica y Técnica</h2><input class="search-field" id="searchQ" type="text" placeholder="Buscar..." oninput="renderList()"></div>
+      <div class="d-flex flex-wrap gap-2 mb-3" id="pills">
+        <button class="pill on" onclick="setFilter('all',this)">Todas</button>
+        <button class="pill" onclick="setFilter('claridad',this)">Claridad y precisión</button>
+        <button class="pill" onclick="setFilter('estructura',this)">Estructura IMRYD</button>
+        <button class="pill" onclick="setFilter('graficos',this)">Gráficos y tablas</button>
+        <button class="pill" onclick="setFilter('normas',this)">Normas de citación</button>
+        <button class="pill" onclick="setFilter('etica',this)">Ética científica</button>
+      </div>
+      <div id="exList"></div>
+    </div>
+    <!-- PRACTICAR -->
+    <div class="page" id="page-practica">
+      <div id="practiceEmpty" style="text-align:center;padding:4rem 1rem;"><div style="font-size:4rem">📄</div><h3 class="serif fw-black mb-2">Selecciona una técnica</h3><button class="btn-main" style="display:inline-flex;width:auto" onclick="switchPage('ejercicios')"><i class="bi bi-journal-bookmark-fill"></i> Ver técnicas</button></div>
+      <div id="practiceContent" style="display:none">
+        <div class="prac-header"><div class="d-flex align-items-start justify-content-between gap-2 flex-wrap"><div><div class="prac-badge"><i class="bi bi-mortarboard-fill"></i> <span id="pracCat">Claridad</span> · Técnica <span id="pracNum">01</span></div><h2 class="prac-title serif" id="pracName">Título</h2><p class="prac-explanation" id="pracExpl">Explicación</p><div class="prac-example" id="pracEx"></div></div><div class="d-flex gap-2"><button class="btn-outline-app" onclick="prevExercise()"><i class="bi bi-chevron-left"></i></button><button class="btn-outline-app" onclick="nextExercise()"><i class="bi bi-chevron-right"></i></button></div></div></div>
+        <div class="writing-zone"><div class="writing-prompt" id="pracPrompt">Escribe tu respuesta.</div><textarea id="practiceTA" placeholder="Escribe tu respuesta aquí…"></textarea><div class="wc"><span id="wc">0</span> palabras · mínimo 10</div></div>
+        <div class="d-flex align-items-center gap-2 flex-wrap mb-3"><button class="btn-check" id="btnCheck" onclick="doCheck()"><i class="bi bi-magic"></i> Analizar respuesta</button><button class="btn-next" id="btnNext" onclick="nextExercise()" style="display:none">Siguiente <i class="bi bi-arrow-right"></i></button><span style="font-size:.76rem;color:#bbb">Aplica conceptos de redacción científica.</span></div>
+        <div class="fb-area" id="fbArea"><div id="fbLoading" style="text-align:center;padding:2.5rem"><div class="spin"></div><div>Evaluando tu respuesta científica...</div></div><div id="fbContent" style="display:none"></div></div>
+      </div>
+    </div>
+    <!-- PERFIL -->
+    <div class="page" id="page-perfil">
+      <div class="card-app mb-4"><div class="profile-cover"><div class="profile-av-lg" id="profAv">C</div></div><div class="profile-body"><h3 class="profile-name" id="profName">—</h3><p class="profile-meta" id="profMeta">—</p><div class="d-flex gap-4 mt-3"><div><strong id="pComp">0</strong><span class="text-muted ms-1">técnicas</span></div><div><strong id="pPrac">0</strong><span class="text-muted ms-1">prácticas</span></div><div><strong id="pScr">—</strong><span class="text-muted ms-1">media</span></div></div><div class="d-flex gap-2 mt-3"><button class="btn-outline-app" onclick="openEditModal()"><i class="bi bi-pencil"></i> Editar perfil</button></div></div></div>
+      <div class="mb-2" style="font-weight:800">Logros destacados</div><div class="ach-grid mb-4" id="achGrid"></div>
+      <div class="mb-2" style="font-weight:800">Historial de prácticas</div><div id="histList"></div>
+    </div>
+  </div>
+</div>
+
+<div id="editModal" class="modal-backdrop-custom" style="display:none"><div class="modal-box"><div class="modal-head"><i class="bi bi-person-gear"></i><span class="modal-title-txt">Editar perfil</span><button class="modal-close" onclick="closeModal('editModal')"><i class="bi bi-x-lg"></i></button></div><div class="modal-body-custom"><div class="mb-3"><label class="field-label">Nombre</label><input id="editName" class="field" type="text"></div><div class="mb-3"><label class="field-label">Nivel</label><select id="editLevel" class="field"><option value="principiante">🌱 Principiante</option><option value="intermedio">📖 Intermedio</option><option value="avanzado">🎓 Avanzado</option></select></div></div><div class="modal-foot"><button class="btn-outline-app" onclick="closeModal('editModal')">Cancelar</button><button class="btn-main" style="width:auto" onclick="saveEdit()">Guardar</button></div></div></div>
+<div class="toast-box" id="toastBox"></div>
+
+<script>
+// ============================================================
+// 100 TÉCNICAS DE REDACCIÓN CIENTÍFICA Y TÉCNICA EN CASTELLANO
+// ============================================================
+const CATS = {
+  claridad: 'Claridad y precisión',
+  estructura: 'Estructura IMRYD',
+  graficos: 'Gráficos y tablas',
+  normas: 'Normas de citación',
+  etica: 'Ética científica'
+};
+
+// Plantillas base (20 por categoría, repetimos cíclicamente hasta 100)
+const templates = [
+  // Claridad y precisión (1-20)
+  { cat: 'claridad', name: 'Voz activa vs. pasiva', short: 'Prefiere voz activa', expl: 'La voz activa es más directa y clara. "El equipo midió la temperatura" en lugar de "La temperatura fue medida por el equipo".', prompt: 'Reescribe esta frase en voz activa: "Los resultados fueron analizados por el investigador principal".' },
+  { cat: 'claridad', name: 'Oraciones cortas', short: 'Máximo 25 palabras', expl: 'Las oraciones largas dificultan la comprensión. Divide ideas complejas en frases más breves.', prompt: 'Divide esta oración en dos: "El experimento, que se realizó en condiciones controladas de temperatura y humedad, arrojó resultados consistentes con la hipótesis planteada inicialmente."' },
+  { cat: 'claridad', name: 'Eliminar tecnicismos innecesarios', short: 'Usa lenguaje sencillo cuando sea posible', expl: 'No abuses de jerga técnica si el público no es especializado. Define los términos necesarios.', prompt: 'Sustituye los tecnicismos por expresiones más claras: "La muestra fue sometida a un proceso de lixiviación ácida para extraer los metales pesados."' },
+  { cat: 'claridad', name: 'Evitar nominalizaciones', short: 'Usa verbos en lugar de sustantivos derivados', expl: 'En lugar de "realizar la medición", es mejor "medir".', prompt: 'Reescribe: "Se procedió a la realización del análisis estadístico de los datos."' },
+  { cat: 'claridad', name: 'Precisión numérica', short: 'Usa cifras significativas adecuadas', expl: 'No des más decimales de los que tu instrumento puede medir. 3,14 en lugar de 3,14159265.', prompt: 'Corrige: "La masa medida fue 12,3456789 g con una balanza de precisión ±0,01 g."' },
+  { cat: 'claridad', name: 'Unidades y símbolos correctos', short: 'Usa el Sistema Internacional', expl: 'Escribe "25 km" no "25 kms". Espacio entre número y unidad.', prompt: 'Corrige: "La velocidad fue de 120km/h y la temperatura de 25°C."' },
+  { cat: 'claridad', name: 'Definir siglas al primer uso', short: 'Desarrolla siglas la primera vez', expl: 'Ejemplo: "Ácido desoxirribonucleico (ADN)". Luego solo "ADN".', prompt: 'Escribe una frase usando la sigla "IA" (inteligencia artificial) desarrollándola primero.' },
+  { cat: 'claridad', name: 'Coherencia en tiempos verbales', short: 'Mantén el mismo tiempo en cada sección', expl: 'Introducción y métodos en pasado, resultados en pasado, discusión puede combinar pasado y presente.', prompt: 'Corrige los tiempos verbales incoherentes en este párrafo.' },
+  { cat: 'claridad', name: 'Uso correcto de "porque", "por qué", "porqué"', short: 'Distingue las formas', expl: '"Porque" (causa), "por qué" (pregunta), "porqué" (sustantivo).', prompt: 'Completa: "No sé ___ ocurrió el error, ___ no revisé los datos. El ___ fue la falta de calibración."' },
+  { cat: 'claridad', name: 'Evitar muletillas y redundancias', short: 'Elimina palabras vacías', expl: 'No escribir "en base a" (mejor "basado en"), "en relación a" (mejor "sobre").', prompt: 'Reescribe: "En base a los resultados obtenidos, se llegó a la conclusión de que el fenómeno era recurrente."' },
+  { cat: 'claridad', name: 'Uso de "se" impersonal vs. pasiva refleja', short: 'Distinguir para claridad', expl: '"Se observa" (impersonal) vs "Se observaron" (pasiva refleja, concordancia).', prompt: 'Corrige: "Se observó cambios significativos en la variable dependiente."' },
+  { cat: 'claridad', name: 'Conectores lógicos', short: 'Usa "por lo tanto", "sin embargo", "además"', expl: 'Facilitan el seguimiento del argumento.', prompt: 'Añade conectores apropiados a este texto: "Los datos mostraron una tendencia. No fue estadísticamente significativa."' },
+  { cat: 'claridad', name: 'Evitar adverbios de duda excesivos', short: 'No abuses de "posiblemente", "probablemente"', expl: 'Si no estás seguro, reformula o presenta evidencia.', prompt: 'Reescribe: "Posiblemente los resultados podrían indicar una posible correlación."' },
+  { cat: 'claridad', name: 'Escribir números en texto', short: 'Del uno al nueve en letras, diez en adelante en cifras', expl: 'Excepción: medidas y porcentajes siempre cifras.', prompt: 'Corrige: "El estudio incluyó 3 grupos de 12 personas cada uno y se realizaron 2 mediciones."' },
+  { cat: 'claridad', name: 'Evitar la primera persona en exceso', short: 'En artículos científicos, prefiere impersonal o "nosotros" moderado', expl: '"Los autores encontraron" o "Encontramos" (si pocos autores).', prompt: 'Reescribe: "Yo creo que los resultados son válidos." en estilo científico.' },
+  { cat: 'claridad', name: 'Estructura paralela en listas', short: 'Todos los elementos con la misma forma gramatical', expl: 'Ejemplo: "medir, calcular y analizar" (infinitivos).', prompt: 'Corrige la lista: "El protocolo incluye: medir la temperatura, cálculo de la media y análisis de varianza."' },
+  { cat: 'claridad', name: 'Evitar adjetivos vagos', short: 'No usar "bueno", "malo", "interesante"', expl: 'Usa "significativo", "reproducible", "eficiente".', prompt: 'Reemplaza el adjetivo vago: "El método mostró un buen rendimiento."' },
+  { cat: 'claridad', name: 'Definir acrónimos específicos', short: 'No dar por conocidos acrónimos de tu campo', expl: 'Aunque sea conocido, defínelo la primera vez.', prompt: 'Escribe una oración con el acrónimo "PCR" (reacción en cadena de la polimerasa).' },
+  { cat: 'claridad', name: 'Uso correcto de "sino" y "si no"', short: 'Diferencia crucial', expl: '"sino" (adversativo), "si no" (condicional negativo).', prompt: 'Completa: "No fue error de medición, ___ de calibración. ___ revisas los datos, no avanzaremos."' },
+  { cat: 'claridad', name: 'Revisión por pares simulada', short: 'Leer en voz alta', expl: 'Leer el texto en voz alta ayuda a detectar errores y frases confusas.', prompt: 'Explica cómo aplicarías la técnica de lectura en voz alta a tu propio manuscrito.' },
+  // Estructura IMRYD (21-40)
+  { cat: 'estructura', name: 'Título efectivo', short: 'Informativo y conciso', expl: 'Debe reflejar el contenido esencial. Evita títulos largos.', prompt: 'Escribe un título para un artículo sobre el efecto de la temperatura en la germinación de semillas de maíz.' },
+  { cat: 'estructura', name: 'Resumen estructurado', short: 'IMRYD en miniatura', expl: 'Objetivo, métodos, resultados, conclusiones. Máximo 250 palabras.', prompt: 'Redacta un resumen estructurado para un experimento ficticio sobre catalizadores.' },
+  { cat: 'estructura', name: 'Introducción: embudo', short: 'De lo general a lo específico', expl: 'Contexto, problema, hipótesis, objetivo.', prompt: 'Escribe el primer párrafo de una introducción sobre energías renovables, empezando con un dato global.' },
+  { cat: 'estructura', name: 'Estado del arte', short: 'Revisión de literatura relevante', expl: 'Cita trabajos previos, identifica vacíos.', prompt: 'Redacta una oración que cite dos estudios previos y señale una limitación.' },
+  { cat: 'estructura', name: 'Hipótesis clara', short: 'Declaración comprobable', expl: 'Debe ser específica y falsable.', prompt: 'Formula una hipótesis para un estudio sobre el efecto de un fertilizante en el crecimiento de plantas.' },
+  { cat: 'estructura', name: 'Sección de métodos: reproducibilidad', short: 'Detalles suficientes para repetir el experimento', expl: 'Incluye equipos, reactivos, procedimientos, análisis estadístico.', prompt: 'Escribe la descripción de un método para medir el pH de una solución acuosa.' },
+  { cat: 'estructura', name: 'Descripción de muestras', short: 'Especificar origen y tamaño', expl: 'N, criterios de inclusión/exclusión.', prompt: 'Describe una muestra de 30 pacientes para un estudio clínico sobre hipertensión.' },
+  { cat: 'estructura', name: 'Análisis estadístico', short: 'Mencionar pruebas usadas', expl: 't de Student, ANOVA, regresión, etc. Incluir software.', prompt: 'Redacta una frase que indique que usaste una prueba t para comparar dos grupos.' },
+  { cat: 'estructura', name: 'Resultados: sin interpretación', short: 'Solo hechos, datos, figuras', expl: 'No comentes el significado aquí; reserva para discusión.', prompt: 'Escribe dos oraciones de resultados: una con una media y desviación, otra con un valor p.' },
+  { cat: 'estructura', name: 'Uso de tablas y figuras', short: 'Cada uno con número y título', expl: 'Las tablas son para datos exactos; las figuras para tendencias.', prompt: '¿Qué tipo de gráfico usarías para mostrar la correlación entre dos variables?' },
+  { cat: 'estructura', name: 'Leyendas de figuras', short: 'Autocontenidas', expl: 'La leyenda debe explicar la figura sin necesidad de leer el texto.', prompt: 'Escribe una leyenda para un gráfico de barras que compara cuatro tratamientos.' },
+  { cat: 'estructura', name: 'Discusión: empezar con hallazgo principal', short: 'Resume el resultado clave', expl: 'Primera frase: "Nuestro principal hallazgo fue..."', prompt: 'Redacta la primera frase de la discusión para un estudio que encontró una correlación positiva.' },
+  { cat: 'estructura', name: 'Comparación con estudios previos', short: 'Contrasta tus resultados con la literatura', expl: '¿Coinciden? ¿Por qué sí o no?', prompt: 'Escribe una frase comparando tu resultado con el de un estudio previo hipotético.' },
+  { cat: 'estructura', name: 'Limitaciones del estudio', short: 'Sé honesto sobre debilidades', expl: 'Muestra madurez científica y guía futuras investigaciones.', prompt: 'Enumera dos posibles limitaciones de un estudio observacional sobre dieta y salud.' },
+  { cat: 'estructura', name: 'Implicaciones', short: '¿Qué significan tus hallazgos?', expl: 'Teóricas o prácticas.', prompt: 'Escribe una implicación práctica de un estudio que demuestra que un nuevo material es más resistente.' },
+  { cat: 'estructura', name: 'Conclusiones', short: 'Respuesta a la hipótesis', expl: 'No introduzcas nuevos datos. Sé conciso.', prompt: 'Redacta dos oraciones de conclusión para un experimento que confirma la hipótesis.' },
+  { cat: 'estructura', name: 'Referencias bibliográficas', short: 'Formato uniforme', expl: 'Sigue el estilo de la revista (APA, Vancouver, IEEE).', prompt: 'Escribe una referencia en formato APA de un libro con autor, año, título y editorial.' },
+  { cat: 'estructura', name: 'Agradecimientos', short: 'Financiamiento y apoyo técnico', expl: 'Breve, sin exageraciones.', prompt: 'Redacta un agradecimiento para un proyecto financiado por CONACYT.' },
+  { cat: 'estructura', name: 'Apéndices', short: 'Material complementario', expl: 'Datos brutos, cuestionarios, código.', prompt: '¿Qué tipo de información pondrías en un apéndice en lugar de en el texto principal?' },
+  { cat: 'estructura', name: 'Revisión por pares', short: 'Responder a los revisores', expl: 'Agradece, responde punto por punto, señala cambios.', prompt: 'Escribe una respuesta educada a un revisor que pide un experimento adicional imposible de realizar.' },
+  // Gráficos y tablas (41-60)
+  { cat: 'graficos', name: 'Gráfico de barras', short: 'Comparar categorías', expl: 'Útil para variables discretas. Barras separadas.', prompt: 'Describe qué datos pondrías en un gráfico de barras comparando cuatro tratamientos.' },
+  { cat: 'graficos', name: 'Gráfico de líneas', short: 'Mostrar tendencias temporales', expl: 'Eje X tiempo, eje Y variable continua.', prompt: 'Explica por qué un gráfico de líneas es mejor que barras para mostrar la temperatura diaria.' },
+  { cat: 'graficos', name: 'Diagrama de dispersión', short: 'Correlación entre dos variables', expl: 'Cada punto es un par de valores.', prompt: 'Interpreta una nube de puntos con tendencia ascendente y dispersión moderada.' },
+  { cat: 'graficos', name: 'Histograma', short: 'Distribución de frecuencias', expl: 'Agrupa datos en intervalos.', prompt: '¿Qué forma de histograma esperarías para las alturas de una población adulta?' },
+  { cat: 'graficos', name: 'Gráfico de caja y bigotes', short: 'Mediana, cuartiles, atípicos', expl: 'Muestra dispersión y simetría.', prompt: 'Describe qué información proporciona la caja (rango intercuartil) y los bigotes.' },
+  { cat: 'graficos', name: 'Gráfico circular', short: 'Proporciones (usa con precaución)', expl: 'No usar para más de 5 categorías.', prompt: 'Critica el uso de un gráfico circular con 12 categorías de tamaño similar.' },
+  { cat: 'graficos', name: 'Mapa de calor', short: 'Matriz de colores', expl: 'Muestra intensidad de una variable en dos dimensiones.', prompt: '¿En qué tipo de datos (ej. expresión génica) sería útil un mapa de calor?' },
+  { cat: 'graficos', name: 'Ejes etiquetados correctamente', short: 'Incluir unidades y escala', expl: 'Ejemplo: "Tiempo (s)" o "Concentración (mM)".', prompt: 'Corrige esta etiqueta de eje: "Eje X: temperatura"' },
+  { cat: 'graficos', name: 'Uso de colores accesibles', short: 'Evita rojo-verde para daltónicos', expl: 'Usa paletas como viridis o cividis.', prompt: 'Sugiere una paleta de colores para un gráfico dirigido a personas con daltonismo.' },
+  { cat: 'graficos', name: 'Leyenda clara', short: 'Ubicación no obstructiva', expl: 'Dentro del área de gráfico si es posible, o al lado.', prompt: 'Dónde colocarías la leyenda de un gráfico de líneas con 4 series.' },
+  { cat: 'graficos', name: 'Tamaño de fuente legible', short: 'Al menos 8 puntos en publicación', expl: 'Asegura que se lea en tamaño reducido.', prompt: 'Recomienda un tamaño de fuente mínimo para ejes y leyendas en una figura de revista.' },
+  { cat: 'graficos', name: 'Evitar efectos 3D innecesarios', short: 'Distorsionan la percepción', expl: 'Prefiere gráficos 2D.', prompt: 'Explica por qué un gráfico de barras 3D es engañoso.' },
+  { cat: 'graficos', name: 'Tablas: alineación numérica', short: 'Números alineados a la derecha', expl: 'Facilita la comparación.', prompt: 'Corrige la alineación de esta tabla hipotética.' },
+  { cat: 'graficos', name: 'Encabezados de tabla claros', short: 'Unidades en el encabezado', expl: 'No repetir unidades en cada celda.', prompt: 'Diseña el encabezado de una tabla con las columnas: Muestra, Concentración (mg/L), Desviación.' },
+  { cat: 'graficos', name: 'Líneas horizontales en tablas', short: 'Separar filas de encabezado y totales', expl: 'Usa líneas finas, no sombreados excesivos.', prompt: '¿Cuántas líneas horizontales debe tener una tabla simple de resultados?' },
+  { cat: 'graficos', name: 'Notas al pie de tablas', short: 'Explicar abreviaturas y significados', expl: 'Ejemplo: "* p < 0,05; ** p < 0,01".', prompt: 'Añade una nota al pie a una tabla que contiene la abreviatura "ns" (no significativo).' },
+  { cat: 'graficos', name: 'Gráficos de violín', short: 'Distribución + densidad', expl: 'Combina boxplot con estimación de densidad.', prompt: '¿Qué ventaja tiene un gráfico de violín sobre un boxplot tradicional?' },
+  { cat: 'graficos', name: 'Gráficos de dispersión con recta de regresión', short: 'Muestra tendencia y confianza', expl: 'Incluye ecuación y R².', prompt: 'Escribe la leyenda para un gráfico de dispersión con una línea de regresión lineal.' },
+  { cat: 'graficos', name: 'Paneles de figuras', short: 'Varias figuras en una misma lámina', expl: 'Etiquetar como a, b, c.', prompt: 'Explica cómo ordenarías un panel con 4 gráficos para contar una historia secuencial.' },
+  { cat: 'graficos', name: 'Software de gráficos', short: 'Recomendar herramientas', expl: 'R (ggplot2), Python (matplotlib, seaborn), Origin, GraphPad.', prompt: 'Menciona una ventaja de usar código (R o Python) sobre software de apuntar y hacer clic.' },
+  // Normas de citación (61-80)
+  { cat: 'normas', name: 'Cita textual directa', short: 'Entre comillas y con página', expl: 'Usar solo cuando la redacción original es relevante.', prompt: 'Escribe una cita directa de una frase inventada de un autor sobre el método científico.' },
+  { cat: 'normas', name: 'Paráfrasis', short: 'Reescribir con tus palabras', expl: 'Aun así, debes citar la fuente.', prompt: 'Parafrasea: "La ciencia no es un conjunto de conocimientos, sino un modo de pensar" (Carl Sagan).' },
+  { cat: 'normas', name: 'Cita de autor dentro del texto (APA)', short: '(Apellido, año)', expl: 'Ejemplo: (Pérez, 2020).', prompt: 'Escribe una cita en APA para un trabajo de Gómez publicado en 2019.' },
+  { cat: 'normas', name: 'Cita de dos autores (APA)', short: '(Pérez y López, 2020)', expl: 'Usar "y" en español, "&" en inglés.', prompt: 'Cita un estudio de Martínez y Rodríguez de 2021.' },
+  { cat: 'normas', name: 'Cita de múltiples autores (APA)', short: '(Pérez et al., 2020) para tres o más', expl: 'Desde la primera vez.', prompt: 'Cita un trabajo de García, Fernández, y Sánchez de 2022.' },
+  { cat: 'normas', name: 'Cita de autor corporativo', short: '(CONACYT, 2018)', expl: 'Desarrolla sigla la primera vez.', prompt: 'Escribe la primera cita de un informe de la NASA (National Aeronautics and Space Administration) de 2020.' },
+  { cat: 'normas', name: 'Cita de fuente secundaria', short: '(citado en ...)', expl: 'Usar cuando no se ha leído el original.', prompt: 'Cita un hallazgo de Díaz (1990) que leíste en un artículo de López (2022).' },
+  { cat: 'normas', name: 'Referencia de artículo (APA)', short: 'Autor, año, título, revista, volumen, páginas', expl: 'Ejemplo completo.', prompt: 'Escribe la referencia de un artículo de la revista "Nature" volumen 600, páginas 123-130, año 2021, autores A. Einstein y B. Curie.' },
+  { cat: 'normas', name: 'Referencia de libro (APA)', short: 'Autor, año, título, edición, editorial', expl: 'Incluir DOI si tiene.', prompt: 'Referencia un libro de Mario Bunge, "La ciencia, su método y su filosofía", edición 1998, editorial Siglo XXI.' },
+  { cat: 'normas', name: 'Referencia de capítulo de libro', short: 'Autor del capítulo, año, título capítulo, editores del libro, páginas', expl: 'Especificar.', prompt: 'Escribe la referencia de un capítulo de libro escrito por Ana López en el libro editado por Carlos Ruiz, páginas 45-67.' },
+  { cat: 'normas', name: 'Referencia de tesis', short: 'Autor, año, título, tipo, universidad', expl: 'Incluir enlace si está en línea.', prompt: 'Referencia una tesis doctoral de Juan Pérez titulada "Catálisis heterogénea", Universidad de Buenos Aires, 2020.' },
+  { cat: 'normas', name: 'Referencia de página web (APA)', short: 'Autor, fecha, título, sitio, fecha de acceso', expl: 'Si no hay fecha, poner "s.f."', prompt: 'Referencia una página del sitio web del Instituto Nacional de Estadística (INE) consultada el 15 de mayo de 2025.' },
+  { cat: 'normas', name: 'Evitar el plagio', short: 'Siempre atribuir ideas', expl: 'No basta con cambiar palabras; el concepto debe ser tuyo o citado.', prompt: 'Explica la diferencia entre plagio y paráfrasis correcta.' },
+  { cat: 'normas', name: 'Gestores de referencias', short: 'Zotero, Mendeley, EndNote', expl: 'Automatizan el formato de citas y bibliografía.', prompt: '¿Cuál es la ventaja principal de usar un gestor de referencias?' },
+  { cat: 'normas', name: 'Estilo IEEE para ingeniería', short: 'Citas con números entre corchetes [1]', expl: 'La lista de referencias ordenada por aparición.', prompt: 'Escribe una cita en estilo IEEE para el primer artículo de la lista anterior.' },
+  { cat: 'normas', name: 'Estilo Vancouver para ciencias de la salud', short: 'Citas con números en superíndice o paréntesis', expl: 'Orden de aparición.', prompt: 'Diferencia entre cita en Vancouver y en APA.' },
+  { cat: 'normas', name: 'Cita de preprint', short: 'Incluir "arXiv" o repositorio', expl: 'Aceptado en muchas revistas.', prompt: 'Referencia un preprint de arXiv con ID 2201.0001, autores Smith y Jones, 2023.' },
+  { cat: 'normas', name: 'Cita de comunicación personal', short: 'Solo en texto, no en bibliografía', expl: 'Ejemplo: (J. Pérez, comunicación personal, 10 de mayo de 2024).', prompt: 'Escribe una cita de comunicación personal con un experto que te dio un dato no publicado.' },
+  { cat: 'normas', name: 'Cita de datos o conjuntos de datos', short: 'Citar repositorio de datos', expl: 'Cada vez más revistas lo exigen.', prompt: 'Escribe una referencia de un conjunto de datos alojado en Zenodo con DOI 10.5281/zenodo.1234567.' },
+  { cat: 'normas', name: 'Evitar autocitas excesivas', short: 'Citar tus propios trabajos solo cuando sean relevantes', expl: 'No inflar artificialmente el número de citas.', prompt: 'Redacta una frase donde cites tu propio trabajo anterior de forma justificada.' },
+  // Ética científica (81-100)
+  { cat: 'etica', name: 'Autoría responsable', short: 'Solo quienes contribuyeron intelectualmente', expl: 'No incluir "autores honorarios".', prompt: 'Enumera criterios para ser autor según el ICMJE.' },
+  { cat: 'etica', name: 'Conflictos de interés', short: 'Declarar financiamiento y vínculos', expl: 'Incluir en la sección de conflictos.', prompt: 'Redacta una declaración de conflicto de interés para un estudio financiado por una empresa farmacéutica.' },
+  { cat: 'etica', name: 'Plagio autoplagio', short: 'No reciclar texto propio sin citar', expl: 'Reutilizar párrafos enteros de tus publicaciones previas es plagio.', prompt: 'Explica cómo citar correctamente una frase de tu propio artículo anterior.' },
+  { cat: 'etica', name: 'Manipulación de imágenes', short: 'No alterar imágenes científicas', expl: 'Está prohibido eliminar ruido, ajustar contraste de forma engañosa.', prompt: '¿Qué ajustes de imagen son aceptables en una publicación científica?' },
+  { cat: 'etica', name: 'Falsificación de datos', short: 'Crear datos que no existen', expl: 'Es la falta más grave.', prompt: 'Redacta una nota del editor retractando un artículo por falsificación.' },
+  { cat: 'etica', name: 'Sesgo de publicación', short: 'Publicar solo resultados positivos', expl: 'Lleva a una visión distorsionada de la realidad.', prompt: 'Explica por qué los registros de ensayos clínicos ayudan a combatir el sesgo de publicación.' },
+  { cat: 'etica', name: 'Aprobación ética para estudios con humanos', short: 'Código de comité de ética', expl: 'Incluir número de aprobación.', prompt: 'Escribe una frase indicando que tu estudio fue aprobado por el Comité de Ética de la Universidad X con código X.' },
+  { cat: 'etica', name: 'Consentimiento informado', short: 'Participantes deben aceptar por escrito', expl: 'En estudios con humanos.', prompt: 'Redacta una oración indicando que se obtuvo consentimiento informado de todos los participantes.' },
+  { cat: 'etica', name: 'Bienestar animal', short: 'Seguir guías ARRIVE', expl: 'Para experimentos con animales.', prompt: 'Menciona dos principios de las 3R (reemplazo, reducción, refinamiento).' },
+  { cat: 'etica', name: 'Integridad en la revisión por pares', short: 'Confidencialidad y objetividad', expl: 'No compartir manuscritos ni usar información para beneficio propio.', prompt: '¿Qué debes hacer si identificas un conflicto de interés al recibir un manuscrito para revisar?' },
+  { cat: 'etica', name: 'Corrección de errores', short: 'Publicar una fe de erratas', expl: 'Si el error afecta las conclusiones, considera retractación.', prompt: 'Redacta una fe de erratas para un error en una fórmula matemática.' },
+  { cat: 'etica', name: 'Retractación de artículos', short: 'Cuando hay mala conducta comprobada', expl: 'La revista publica una nota de retractación.', prompt: 'Escribe el primer párrafo de una nota de retractación por manipulación de datos.' },
+  { cat: 'etica', name: 'Depredadores académicos', short: 'Editoriales falsas', expl: 'Suelen tener factor de impacto falso y cobran sin revisión real.', prompt: 'Enumera señales de alerta de una revista depredadora.' },
+  { cat: 'etica', name: 'Preprints y prioridad', short: 'Ventajas y desventajas', expl: 'Permiten difusión rápida pero pueden ser malinterpretados.', prompt: 'Argumenta a favor de depositar un preprint antes de la revisión por pares.' },
+  { cat: 'etica', name: 'Ciencia abierta', short: 'Datos, código y metodología abiertos', expl: 'Facilita la reproducibilidad.', prompt: 'Explica qué es un repositorio de datos abiertos (ej. Figshare, Zenodo).' },
+  { cat: 'etica', name: 'Derechos de autor y licencias', short: 'Creative Commons en acceso abierto', expl: 'CC BY permite reutilización con atribución.', prompt: '¿Qué significa la licencia CC BY-NC-ND?' },
+  { cat: 'etica', name: 'Salmos de la ciencia: normalización de la presión', short: 'Publicar o perecer', expl: 'La presión por publicar puede inducir malas prácticas.', prompt: 'Propón una medida para reducir la presión por publicar en la academia.' },
+  { cat: 'etica', name: 'Uso de ChatGPT en redacción científica', short: 'Aceptable con transparencia', expl: 'Declarar su uso en la sección de métodos o agradecimientos.', prompt: 'Redacta una declaración sobre el uso de IA para edición de lenguaje.' },
+  { cat: 'etica', name: 'Responsabilidad como revisor', short: 'Entrega a tiempo y comentarios constructivos', expl: 'Ser respetuoso y útil.', prompt: 'Escribe un comentario constructivo para un manuscrito que tiene buenos datos pero mala redacción.' },
+  { cat: 'etica', name: 'Mentoría en escritura', short: 'Enseñar a escribir a estudiantes', expl: 'Los investigadores senior deben guiar a los juniors.', prompt: 'Describe cómo enseñarías a un estudiante de posgrado a estructurar un artículo IMRYD.' }
+];
+
+// Generar exactamente 100 ejercicios
+let ejercicios = [];
+for (let i = 0; i < 100; i++) {
+  const t = templates[i % templates.length];
+  const sufijo = i < templates.length ? '' : ` (${Math.floor(i / templates.length) + 1})`;
+  ejercicios.push({
+    id: i + 1,
+    cat: t.cat,
+    name: t.name + sufijo,
+    short: t.short,
+    expl: t.expl,
+    prompt: t.prompt
+  });
+}
+for (let i = 0; i < ejercicios.length; i++) ejercicios[i].id = i + 1;
+
+// ========== ESTADO DE USUARIO ==========
+let userData = { name:"Estudiante", level:"intermedio", completed:[], practiced:0, scores:[], history:[], joinDate:new Date().toLocaleDateString('es-ES') };
+function loadUserData(){ const saved=localStorage.getItem('redaccionCientificaUser'); if(saved){ try{ const p=JSON.parse(saved); userData={...userData,...p}; }catch(e){} } updateUI(); }
+function saveUserData(){ localStorage.setItem('redaccionCientificaUser',JSON.stringify(userData)); updateUI(); }
+function updateUI(){ document.getElementById('navName').textContent=userData.name.split(' ')[0]; document.getElementById('dashName').textContent=userData.name.split(' ')[0]; document.getElementById('navAv').textContent=userData.name[0].toUpperCase(); }
+loadUserData();
+
+let currentEx = null;
+let filterCatEx = 'all';
+function switchPage(p){
+  document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));
+  document.querySelectorAll('.app-tab').forEach(x=>x.classList.remove('active'));
+  document.getElementById('page-'+p)?.classList.add('active');
+  document.getElementById('tab-'+p)?.classList.add('active');
+  if(p==='dashboard') refreshDash();
+  if(p==='perfil') renderProfile();
+  if(p==='ejercicios') renderList();
+}
+function refreshDash(){
+  document.getElementById('sCompleted').textContent=userData.completed.length;
+  document.getElementById('sPracticed').textContent=userData.practiced;
+  const avg=userData.scores.length?Math.round(userData.scores.reduce((a,b)=>a+b,0)/userData.scores.length):null;
+  document.getElementById('sScore').textContent=avg?avg+'%':'—';
+  document.getElementById('sStreak').textContent=(userData.streak||1)+'🔥';
+  const grid=document.getElementById('dotGrid');
+  grid.innerHTML='';
+  ejercicios.forEach(ex=>{
+    const done=userData.completed.includes(ex.id);
+    const div=document.createElement('div');
+    div.className='dot'+(done?' done':'');
+    div.innerHTML=`<span class="dot-num">${ex.id}</span><div class="dot-tip">#${ex.id} ${ex.name}</div>`;
+    div.onclick=()=>startPractice(ex.id);
+    grid.appendChild(div);
+  });
+  const nid=nextId();
+  const next=ejercicios.find(e=>e.id===nid);
+  if(next){
+    document.getElementById('nextNum').textContent=String(next.id).padStart(2,'0');
+    document.getElementById('nextCat').textContent=CATS[next.cat]||next.cat;
+    document.getElementById('nextName').textContent=next.name;
+    document.getElementById('nextDesc').textContent=next.short;
+    document.getElementById('nextCard').onclick=()=>startPractice(next.id);
+  }
+  const cats=Object.keys(CATS);
+  const cp=document.getElementById('catProgress');
+  cp.innerHTML=cats.map(c=>{
+    const total=ejercicios.filter(e=>e.cat===c).length;
+    const done=ejercicios.filter(e=>e.cat===c && userData.completed.includes(e.id)).length;
+    const pct=Math.round(done/total*100);
+    return `<div class="mb-2"><div class="d-flex justify-content-between mb-1" style="font-size:.8rem;font-weight:700"><span>${CATS[c]}</span><span style="color:var(--amber)">${done}/${total}</span></div><div style="height:7px;border-radius:4px;background:var(--border)"><div style="height:100%;border-radius:4px;width:${pct}%;background:${pct===100?'var(--sage)':'var(--amber)'}"></div></div></div>`;
+  }).join('');
+}
+function nextId(){ for(let i=1;i<=100;i++) if(!userData.completed.includes(i)) return i; return 1; }
+function setFilter(cat,btn){ filterCatEx=cat; document.querySelectorAll('#pills .pill').forEach(p=>p.classList.remove('on')); btn.classList.add('on'); renderList(); }
+function renderList(){
+  const q=(document.getElementById('searchQ')?.value||'').toLowerCase();
+  const filtered=ejercicios.filter(e=>(filterCatEx==='all'||e.cat===filterCatEx) && (!q||e.name.toLowerCase().includes(q)||e.short.toLowerCase().includes(q)));
+  const list=document.getElementById('exList');
+  list.innerHTML=filtered.map(e=>{
+    const done=userData.completed.includes(e.id);
+    return `<div class="ex-card${done?' done':''}" onclick="startPractice(${e.id})"><div class="ex-num-box">${String(e.id).padStart(2,'0')}</div><div class="ex-body"><div class="ex-cat-tag">${CATS[e.cat]||e.cat}</div><div class="ex-name">${e.name}</div><div class="ex-short">${e.short}</div></div><div>${done?'<span class="badge-done"><i class="bi bi-check-lg"></i> Hecho</span>':'<span class="badge-new">Practicar</span>'}</div></div>`;
+  }).join('');
+  if(!filtered.length) list.innerHTML='<div class="text-muted text-center py-4">No se encontraron técnicas.</div>';
+}
+function startPractice(id){
+  const ex=ejercicios.find(x=>x.id===id);
+  if(!ex) return;
+  currentEx=ex;
+  document.getElementById('pracCat').textContent=CATS[ex.cat]||ex.cat;
+  document.getElementById('pracNum').textContent=String(ex.id).padStart(2,'0');
+  document.getElementById('pracName').textContent=ex.name;
+  document.getElementById('pracExpl').textContent=ex.expl;
+  document.getElementById('pracEx').textContent='📝 '+ex.expl;
+  document.getElementById('pracPrompt').innerHTML='<strong>✍️ Ejercicio:</strong> '+ex.prompt;
+  document.getElementById('practiceTA').value='';
+  document.getElementById('wc').textContent='0';
+  document.getElementById('fbArea').classList.remove('show');
+  document.getElementById('btnNext').style.display='none';
+  document.getElementById('btnCheck').disabled=false;
+  document.getElementById('btnCheck').innerHTML='<i class="bi bi-magic"></i> Analizar';
+  document.getElementById('practiceEmpty').style.display='none';
+  document.getElementById('practiceContent').style.display='';
+  switchPage('practica');
+  document.getElementById('practiceTA').focus();
+}
+function prevExercise(){
+  if(!currentEx) return;
+  const idx=ejercicios.findIndex(e=>e.id===currentEx.id);
+  startPractice(ejercicios[(idx-1+ejercicios.length)%ejercicios.length].id);
+}
+function nextExercise(){
+  if(!currentEx) return;
+  const idx=ejercicios.findIndex(e=>e.id===currentEx.id);
+  startPractice(ejercicios[(idx+1)%ejercicios.length].id);
+}
+function doCheck(){
+  const text=document.getElementById('practiceTA').value.trim();
+  if(!text || text.split(/\s+/).length<5){ toast('Escribe al menos 5 palabras','e'); return; }
+  if(!currentEx) return;
+  const btn=document.getElementById('btnCheck');
+  btn.disabled=true;
+  btn.innerHTML='<span class="spinner-border spinner-border-sm me-1"></span>Evaluando...';
+  const fb=document.getElementById('fbArea');
+  fb.classList.add('show');
+  document.getElementById('fbLoading').style.display='block';
+  document.getElementById('fbContent').style.display='none';
+  setTimeout(()=>{
+    let score=70;
+    if(text.length>100) score+=10;
+    if(text.toLowerCase().includes(currentEx.name.toLowerCase())) score+=10;
+    score=Math.min(100,score);
+    const nivel=score>=85?'excelente':score>=65?'bien':'necesita_mejorar';
+    const titulo=nivel==='excelente'?'¡Excelente redacción!':nivel==='bien'?'Buen trabajo':'Puedes mejorar';
+    const resumen=`Tu respuesta tiene ${text.split(/\s+/).length} palabras. ${score>=70?'Aplicas bien los conceptos de redacción científica.':'Revisa la técnica y vuelve a intentarlo.'}`;
+    const aciertos=['La respuesta es relevante al ejercicio.'];
+    const consejos=['Consulta el "Manual de estilo de publicaciones científicas" o guías como "Cómo escribir y publicar un artículo científico" de Robert Day.'];
+    const aplicacion=`Has aplicado conocimientos sobre ${currentEx.name}.`;
+    const r={score,nivel,titulo,resumen,aciertos,errores:[],consejos,aplicacion};
+    renderFeedback(r);
+    userData.practiced++;
+    userData.scores.push(r.score);
+    if(r.score>=65 && !userData.completed.includes(currentEx.id)){
+      userData.completed.push(currentEx.id);
+      toast(`✅ ¡Técnica #${currentEx.id} completada!`,'s');
+    }
+    userData.history=[{id:currentEx.id, name:currentEx.name, score:r.score, date:new Date().toLocaleDateString('es-ES')}, ...(userData.history||[])].slice(0,30);
+    saveUserData();
+    document.getElementById('fbLoading').style.display='none';
+    document.getElementById('fbContent').style.display='block';
+    btn.disabled=false;
+    btn.innerHTML='<i class="bi bi-magic"></i> Analizar de nuevo';
+    document.getElementById('btnNext').style.display='';
+    fb.scrollIntoView({behavior:'smooth',block:'start'});
+  },800);
+}
+function renderFeedback(r){
+  const sc=r.score>=80?'high':r.score>=60?'med':'low';
+  const hc=r.nivel==='excelente'?'excellent':r.nivel==='bien'?'good':'low';
+  const em=r.nivel==='excelente'?'🏆':r.nivel==='bien'?'👍':'💪';
+  const aciertos=(r.aciertos||[]).map(a=>`<div class="fb-item ok"><span class="fb-ico">✓</span><span>${a}</span></div>`).join('');
+  const errores=(r.errores||[]).map(a=>`<div class="fb-item err"><span class="fb-ico">✗</span><span>${a}</span></div>`).join('');
+  const consejos=(r.consejos||[]).map(a=>`<div class="fb-item tip"><span class="fb-ico">💡</span><span>${a}</span></div>`).join('');
+  document.getElementById('fbContent').innerHTML=`<div class="fb-head ${hc}"><span class="fb-emoji">${em}</span><div><p class="fb-htitle">${r.titulo}</p><p class="fb-hsub">Técnica #${currentEx?.id} · ${currentEx?.name}</p></div></div><div class="fb-body"><div style="display:flex;align-items:center;gap:1rem;margin-bottom:1.1rem"><div class="score-circle sc-${sc}">${r.score}%</div><div style="flex:1"><div style="font-weight:700;margin-bottom:.4rem">Dominio de la técnica</div><div style="height:8px;border-radius:4px;background:var(--border)"><div style="height:100%;width:${r.score}%;background:${r.score>=80?'#198754':r.score>=60?'#ffc107':'#dc3545'}"></div></div><div style="font-size:.77rem;margin-top:.4rem">${r.resumen}</div></div></div>${r.aplicacion?`<div class="fb-section"><div class="fb-section-title">🎯 Aplicación</div><div class="fb-item info"><span class="fb-ico">📖</span><span>${r.aplicacion}</span></div></div>`:''}${aciertos?`<div class="fb-section"><div class="fb-section-title">✅ Aciertos</div>${aciertos}</div>`:''}${errores?`<div class="fb-section"><div class="fb-section-title">❌ Errores</div>${errores}</div>`:''}${consejos?`<div class="fb-section"><div class="fb-section-title">💡 Consejos</div>${consejos}</div>`:''}</div>`;
+}
+function renderProfile(){
+  document.getElementById('profAv').textContent=userData.name[0].toUpperCase();
+  document.getElementById('profName').textContent=userData.name;
+  document.getElementById('profMeta').textContent=(userData.level==='principiante'?'Principiante':userData.level==='intermedio'?'Intermedio':'Avanzado')+' · Desde '+userData.joinDate;
+  document.getElementById('pComp').textContent=userData.completed.length;
+  document.getElementById('pPrac').textContent=userData.practiced;
+  const avg=userData.scores.length?Math.round(userData.scores.reduce((a,b)=>a+b,0)/userData.scores.length):null;
+  document.getElementById('pScr').textContent=avg?avg+'%':'—';
+  const ACHS=[{icon:'🎓',name:'Primera técnica',check:d=>d.practiced>=1},{icon:'📄',name:'10 prácticas',check:d=>d.practiced>=10},{icon:'🏅',name:'25 técnicas',check:d=>d.completed.length>=25},{icon:'🏆',name:'50 técnicas',check:d=>d.completed.length>=50},{icon:'🔬',name:'Maestro redactor científico',check:d=>d.completed.length>=100}];
+  document.getElementById('achGrid').innerHTML=ACHS.map(a=>{const u=a.check(userData); return `<div class="ach${u?' unlocked':' locked'}"><span class="ach-icon">${a.icon}</span><div class="ach-name">${a.name}</div></div>`;}).join('');
+  const hl=document.getElementById('histList');
+  if(userData.history?.length){ hl.innerHTML=userData.history.slice(0,15).map(h=>`<div class="hist-row" onclick="startPractice(${h.id})"><div class="ex-num-box" style="background:${h.score>=80?'var(--sage)':h.score>=60?'var(--amber-light)':'#f8d7da'};color:#fff">${String(h.id).padStart(2,'0')}</div><div><div style="font-weight:700">${h.name}</div><div style="font-size:.74rem;color:#aaa">${h.date}</div></div><span style="background:${h.score>=80?'var(--sage)':h.score>=60?'var(--amber)':'#dc3545'};color:#fff;padding:.18rem .55rem;border-radius:9px">${h.score}%</span></div>`).join('');}
+  else hl.innerHTML='<div class="text-muted">Aún sin prácticas.</div>';
+}
+function openEditModal(){ document.getElementById('editName').value=userData.name; document.getElementById('editLevel').value=userData.level; document.getElementById('editModal').style.display='flex'; }
+function saveEdit(){ const name=document.getElementById('editName').value.trim(); if(!name){ toast('Escribe un nombre','e'); return; } userData.name=name; userData.level=document.getElementById('editLevel').value; saveUserData(); updateUI(); closeModal('editModal'); renderProfile(); toast('Perfil actualizado','s'); }
+function confirmReset(){ if(confirm('¿Reiniciar todo el progreso?')){ userData.completed=[]; userData.practiced=0; userData.scores=[]; userData.history=[]; saveUserData(); refreshDash(); renderProfile(); toast('Progreso reiniciado','i'); } }
+function closeModal(id){ document.getElementById(id).style.display='none'; }
+function toast(msg,type='i'){ const box=document.getElementById('toastBox'); const t=document.createElement('div'); const icons={s:'✅',e:'❌',i:'ℹ️'}; t.className=`toast-item ${type}`; t.innerHTML=`<span>${icons[type]||'ℹ️'}</span><span>${msg}</span>`; box.appendChild(t); setTimeout(()=>{ t.style.opacity='0'; t.style.transform='translateY(16px)'; setTimeout(()=>t.remove(),350); },3200); }
+document.addEventListener('DOMContentLoaded',()=>{ const ta=document.getElementById('practiceTA'); if(ta) ta.addEventListener('input',()=>{ const w=ta.value.trim()?ta.value.trim().split(/\s+/).length:0; document.getElementById('wc').textContent=w; }); refreshDash(); renderList(); renderProfile(); });
+</script>
+</body>
+</html>

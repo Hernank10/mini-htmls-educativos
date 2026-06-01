@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>Mecánica Automotriz · Colombia · 100 conceptos</title>
+  <style>
+    /* ----- VARIABLES CSS: paleta automotriz (azul, gris, rojo) ----- */
+    :root {
+      --fondo: #f4f6f9;
+      --texto: #1e2a36;
+      --azul-mecanica: #1e5f8e;
+      --rojo-herramienta: #c0392b;
+      --gris-auto: #7f8c8d;
+      --acierto: #27ae60;
+      --fallo: #e67e22;
+      --sombra: rgba(0, 0, 0, 0.08);
+      --card-bg: #ffffff;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: var(--fondo);
+      color: var(--texto);
+      font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
+      line-height: 1.5;
+      padding: 1rem;
+    }
+
+    .app-container {
+      max-width: 1300px;
+      margin: 0 auto;
+      background: var(--card-bg);
+      border-radius: 2rem;
+      box-shadow: 0 12px 28px var(--sombra);
+      overflow: hidden;
+      border: 1px solid #dce5ec;
+    }
+
+    header {
+      background: #eaf0f5;
+      padding: 1.2rem 2rem;
+      border-bottom: 3px solid var(--azul-mecanica);
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 1rem;
+    }
+    h1 {
+      font-size: 1.7rem;
+      font-weight: 600;
+      color: #1e5f8e;
+      letter-spacing: -0.2px;
+    }
+    h1 small {
+      font-size: 0.7rem;
+      font-weight: normal;
+      color: #5f8a9e;
+    }
+
+    nav {
+      display: flex;
+      gap: 0.5rem;
+      background: #e2eaf2;
+      padding: 0.6rem 2rem;
+      border-bottom: 1px solid #d0dfe8;
+      flex-wrap: wrap;
+    }
+    .nav-btn {
+      background: transparent;
+      border: none;
+      font-size: 0.95rem;
+      padding: 0.5rem 1.2rem;
+      border-radius: 40px;
+      cursor: pointer;
+      font-weight: 500;
+      transition: all 0.2s;
+      color: #1e5f8e;
+    }
+    .nav-btn.active {
+      background-color: var(--azul-mecanica);
+      color: white;
+    }
+    .nav-btn:hover:not(.active) {
+      background-color: #cfdfea;
+    }
+
+    .view {
+      display: none;
+      padding: 2rem;
+      animation: fade 0.2s ease;
+    }
+    .active-view { display: block; }
+    @keyframes fade { from { opacity: 0; transform: translateY(5px);} to { opacity: 1; transform: translateY(0);} }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+    .stat-card {
+      background: var(--fondo);
+      border-radius: 1.5rem;
+      padding: 1rem;
+      text-align: center;
+      border-left: 6px solid var(--rojo-herramienta);
+      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    }
+    .stat-number {
+      font-size: 2.2rem;
+      font-weight: 700;
+      color: var(--azul-mecanica);
+    }
+    .progress-bar-bg {
+      background: #e2e8f0;
+      border-radius: 40px;
+      height: 12px;
+      overflow: hidden;
+      margin: 0.8rem 0;
+    }
+    .progress-fill {
+      background: var(--azul-mecanica);
+      width: 0%;
+      height: 100%;
+      transition: width 0.2s;
+    }
+
+    .conceptos-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+      gap: 1rem;
+      max-height: 65vh;
+      overflow-y: auto;
+      padding-right: 0.3rem;
+    }
+    .concepto-item {
+      background: white;
+      border-radius: 1.2rem;
+      padding: 0.8rem 1rem;
+      border-left: 5px solid var(--gris-auto);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+    .concepto-titulo {
+      font-weight: 700;
+      color: #1e5f8e;
+    }
+    .concepto-desc {
+      font-size: 0.85rem;
+      color: #4a627a;
+      margin-top: 6px;
+      border-top: 1px solid #eef2f6;
+      padding-top: 6px;
+    }
+    .badge-progreso {
+      font-size: 0.7rem;
+      background: #eef2f6;
+      border-radius: 20px;
+      padding: 2px 10px;
+      display: inline-block;
+      margin-top: 8px;
+    }
+
+    /* práctica */
+    .flashcard {
+      background: #ffffff;
+      border-radius: 2rem;
+      padding: 1.8rem;
+      text-align: center;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+      border: 1px solid #dce5ec;
+      max-width: 750px;
+      margin: 0 auto;
+    }
+    .pregunta {
+      font-size: 1.4rem;
+      font-weight: 500;
+      margin-bottom: 1.8rem;
+      background: #eaf0f5;
+      padding: 1.2rem;
+      border-radius: 1.5rem;
+    }
+    .respuesta-oculta {
+      background: #f4f8fc;
+      border-radius: 1.2rem;
+      padding: 1rem;
+      margin: 1rem 0;
+      display: none;
+    }
+    .palabras-baraja {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 0.6rem;
+      margin: 1.5rem 0;
+    }
+    .palabra-btn {
+      background: var(--azul-mecanica);
+      color: white;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 2rem;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: 0.1s;
+    }
+    .orden-actual {
+      background: #f8fafc;
+      border-radius: 1rem;
+      padding: 1rem;
+      min-height: 80px;
+      margin: 1rem 0;
+      text-align: left;
+      border: 1px dashed #cbd5e1;
+    }
+    .btn {
+      background: #e2e8f0;
+      border: none;
+      padding: 0.6rem 1.5rem;
+      border-radius: 3rem;
+      font-weight: 600;
+      margin: 0.3rem;
+      cursor: pointer;
+      font-family: inherit;
+    }
+    .btn-primary { background: var(--azul-mecanica); color: white; }
+    .btn-acierto { background: var(--acierto); color: white; }
+    .btn-fallo { background: var(--fallo); color: white; }
+    .modo-selector { display: flex; justify-content: center; gap: 0.8rem; margin-bottom: 1.5rem; flex-wrap: wrap; }
+    footer {
+      text-align: center;
+      padding: 1rem;
+      font-size: 0.75rem;
+      border-top: 1px solid #dce5ec;
+      background: #f8fbfe;
+    }
+    @media (max-width: 680px) {
+      .view { padding: 1rem; }
+      .pregunta { font-size: 1rem; }
+    }
+  </style>
+</head>
+<body>
+<div class="app-container">
+  <header>
+    <h1>🔧 Mecánica Automotriz · Colombia <small>100 conceptos para reparación y carrocería</small></h1>
+    <div style="font-size:0.8rem;">🚗 Motores · Transmisión · Frenos · Suspensión · Electricidad · Carrocería · Normativa</div>
+  </header>
+  <nav>
+    <button class="nav-btn active" data-view="dashboard">📊 Panel</button>
+    <button class="nav-btn" data-view="listado">📚 Compendio</button>
+    <button class="nav-btn" data-view="practica">🃏 Práctica</button>
+  </nav>
+
+  <section id="dashboard" class="view active-view">
+    <div class="stats-grid" id="statsContainer"></div>
+    <div class="card" style="background:white; border-radius:1.6rem; padding:1.2rem;">
+      <h3>📈 Progreso en mecánica automotriz</h3>
+      <div class="progress-bar-bg"><div class="progress-fill" id="globalProgressFill"></div></div>
+      <p id="globalProgressText"></p>
+      <button id="resetProgresoBtn" class="btn" style="background:#cfdfea;">🔄 Reiniciar progreso</button>
+    </div>
+  </section>
+
+  <section id="listado" class="view">
+    <input type="text" id="filtroListado" placeholder="🔍 Buscar concepto o definición..." style="width:100%; padding:10px; margin-bottom:15px; border-radius:40px; border:1px solid #cbd5e1;">
+    <div id="conceptosListadoContainer" class="conceptos-grid"></div>
+  </section>
+
+  <section id="practica" class="view">
+    <div class="modo-selector">
+      <button id="modoConceptoDef" class="btn btn-primary">📖 Concepto → Definición</button>
+      <button id="modoDefConcepto" class="btn">🔄 Definición → Concepto</button>
+      <button id="modoOrdenar" class="btn">🧩 Ordenar definición</button>
+    </div>
+    <div id="practicaContainer"></div>
+  </section>
+  <footer>Progreso guardado localmente · Ejercicio de ordenar definición · Basado en mecánica automotriz y normativa colombiana</footer>
+</div>
+
+<script>
+  // --------------------------------------------------------------
+  // 100 CONCEPTOS DE MECÁNICA AUTOMOTRIZ Y CARROCERÍA (Colombia)
+  // --------------------------------------------------------------
+  const conceptosData = [
+    [1, "Motor de combustión interna", "Máquina que convierte la energía química del combustible en energía mecánica mediante explosiones controladas."],
+    [2, "Motor 4 tiempos", "Ciclo: admisión, compresión, explosión (combustión), escape; la mayoría de autos modernos."],
+    [3, "Motor 2 tiempos", "Ciclo completo en una vuelta del cigüeñal; menos eficiente, usado en algunos scooter y motosierras."],
+    [4, "Cilindro", "Cámara donde se desplaza el pistón y ocurre la combustión."],
+    [5, "Pistón", "Componente que se mueve dentro del cilindro transmitiendo fuerza al cigüeñal."],
+    [6, "Cigüeñal", "Convierte el movimiento lineal del pistón en movimiento rotatorio."],
+    [7, "Biela", "Conecta el pistón con el cigüeñal."],
+    [8, "Culata", "Parte superior del motor que aloja las válvulas y la cámara de combustión."],
+    [9, "Bloque de motor", "Estructura principal que contiene los cilindros."],
+    [10, "Válvulas", "Permiten la entrada de mezcla (admisión) y salida de gases (escape)."],
+    [11, "Árbol de levas", "Controla la apertura y cierre de válvulas."],
+    [12, "Correa de distribución", "Sincroniza el cigüeñal con el árbol de levas."],
+    [13, "Cadena de distribución", "Similar a la correa pero metálica, más duradera."],
+    [14, "Tensior de distribución", "Mantiene la tensión de correa o cadena."],
+    [15, "Sistema de lubricación", "Distribuye aceite para reducir fricción y disipar calor."],
+    [16, "Bomba de aceite", "Impulsa el aceite a través del motor."],
+    [17, "Filtro de aceite", "Retiene partículas e impurezas del lubricante."],
+    [18, "Válvula PCV", "Ventilación positiva del cárter, recircula gases."],
+    [19, "Sistema de refrigeración", "Mantiene la temperatura del motor mediante líquido refrigerante."],
+    [20, "Radiador", "Intercambiador de calor que enfría el refrigerante."],
+    [21, "Termostato", "Regula el paso de refrigerante para mantener temperatura óptima."],
+    [22, "Bomba de agua", "Circula el refrigerante por el motor y radiador."],
+    [23, "Ventilador", "Aumenta el flujo de aire a través del radiador."],
+    [24, "Sistema de combustible", "Suministra gasolina o diésel al motor."],
+    [25, "Bomba de combustible", "Envía combustible desde el tanque al motor."],
+    [26, "Inyectores", "Dosifican y pulverizan combustible en la admisión o cilindro."],
+    [27, "Carburador", "Sistema antiguo de mezcla aire-combustible, reemplazado por inyección."],
+    [28, "Riel de inyección", "Distribuye combustible a los inyectores."],
+    [29, "Sensor de oxígeno (sonda lambda)", "Mide el oxígeno en los gases de escape para ajustar la mezcla."],
+    [30, "Sistema de encendido", "Genera la chispa para la combustión (bujías, bobinas, CDI)."],
+    [31, "Bujía", "Produce la chispa dentro del cilindro."],
+    [32, "Bobina de encendido", "Eleva el voltaje de la batería para crear la chispa."],
+    [33, "Cables de bujía", "Conducen alta tensión a las bujías."],
+    [34, "Sistema de escape", "Expulsa gases de combustión y reduce ruido."],
+    [35, "Colector de escape", "Recoge gases de los cilindros."],
+    [36, "Catalizador", "Convierte gases tóxicos (CO, HC, NOx) en menos dañinos."],
+    [37, "Sensor de oxígeno (lambda)", "Mide gases para ajustar la inyección."],
+    [38, "Silenciador (mofle)", "Reduce el ruido del escape."],
+    [39, "Sistema de transmisión", "Transfiere potencia del motor a las ruedas."],
+    [40, "Embrague", "Acopla o desacopla el motor de la transmisión (manual)."],
+    [41, "Caja de cambios manual", "Permite seleccionar relaciones de velocidad (1-5, reversa)."],
+    [42, "Caja de cambios automática", "Cambia de marchas automáticamente mediante convertidor de par."],
+    [43, "Transmisión CVT", "Variador continuo de velocidad, sin cambios fijos."],
+    [44, "Convertidor de par", "Acopla motor a transmisión automática mediante fluido."],
+    [45, "Eje de transmisión", "Lleva potencia a las ruedas traseras o a las delanteras en tracción."],
+    [46, "Diferencial", "Permite que las ruedas giren a distintas velocidades en curvas."],
+    [47, "Palieres", "Ejes que conectan el diferencial a las ruedas."],
+    [48, "Pastillas de freno", "Elemento de fricción que presiona el disco para detener el auto."],
+    [49, "Disco de freno", "Superficie metálica que gira con la rueda, frenada por las pastillas."],
+    [50, "Líquido de frenos", "Fluido hidráulico DOT 3 o DOT 4 que transmite presión."],
+    [51, "Bomba de freno (maestra)", "Genera presión hidráulica al pisar el pedal."],
+    [52, "Pinza de freno", "Aloja las pastillas y las presiona contra el disco."],
+    [53, "Servofreno", "Amplifica la fuerza del pedal mediante vacío del motor."],
+    [54, "ABS", "Sistema antibloqueo que evita el bloqueo de ruedas en frenadas bruscas."],
+    [55, "Suspensión delantera", "Amortigua impactos y mantiene contacto de los neumáticos."],
+    [56, "Suspensión trasera", "Similar a la delantera, puede ser independiente o eje rígido."],
+    [57, "Amortiguador", "Disipa energía de los muelles, evitando oscilaciones."],
+    [58, "Resorte (muelle)", "Almacena energía y absorbe impactos."],
+    [59, "Barra estabilizadora", "Reduce inclinación de la carrocería en curvas."],
+    [60, "Rótula", "Articulación que permite el giro de la rueda."],
+    [61, "Brazos de suspensión", "Conectan la rueda al chasis."],
+    [62, "Dirección", "Permite orientar las ruedas delanteras."],
+    [63, "Cremallera de dirección", "Convierte el giro del volante en movimiento lateral."],
+    [64, "Bomba de dirección hidráulica", "Asiste el giro del volante."],
+    [65, "Dirección eléctrica", "Asistencia mediante motor eléctrico, más eficiente."],
+    [66, "Ruedas y neumáticos", "Contacto con el suelo; transmiten fuerza y dirección."],
+    [67, "Presión de neumáticos", "Recomendada por fabricante (30-35 psi), influye en seguridad."],
+    [68, "Labrado (tread)", "Profundidad del dibujo; mínimo legal 1.6 mm en Colombia."],
+    [69, "Sistema eléctrico", "Batería, alternador, motor de arranque, luces, sensores."],
+    [70, "Batería 12V", "Almacena energía para arranque y sistema eléctrico."],
+    [71, "Alternador", "Genera corriente para cargar batería y alimentar componentes."],
+    [72, "Motor de arranque", "Gira el cigüeñal para iniciar la combustión."],
+    [73, "Solenoide de arranque", "Relé que conecta la batería al motor de arranque."],
+    [74, "Fusibles", "Protegen circuitos contra sobrecorrientes."],
+    [75, "Relés", "Interruptores electromagnéticos que controlan circuitos de alta corriente."],
+    [76, "Sistema de carga", "Alternador + regulador de voltaje."],
+    [77, "Regulador de voltaje", "Mantiene el voltaje entre 13.5-14.5 V."],
+    [78, "Sensor de temperatura", "Mide la temperatura del refrigerante."],
+    [79, "Sensor de posición del cigüeñal", "Sincroniza la inyección y encendido."],
+    [80, "ECU (Unidad de control del motor)", "Computadora que gestiona inyección, encendido y emisiones."],
+    [81, "Escáner automotriz", "Herramienta que lee códigos de falla OBD2."],
+    [82, "Código de falla DTC", "Código alfanumérico que indica un problema (ej. P0301 = fallo en cilindro 1)."],
+    [83, "Carrocería", "Estructura exterior que aloja pasajeros y componentes."],
+    [84, "Chasis", "Estructura que soporta motor, suspensión y carrocería."],
+    [85, "Monocasco", "Carrocería que también funciona como estructura, sin chasis separado."],
+    [86, "Panel de carrocería", "Partes metálicas o plásticas (puertas, capó, guardafangos)."],
+    [87, "Pintura automotriz", "Capa de protección y estética; puede ser base+claro, bicapa."],
+    [88, "Masilla para carrocería", "Rellena abolladuras antes de pintar."],
+    [89, "Martillo de carrocero", "Herramienta para enderezar paneles."],
+    [90, "Soplete", "Calienta paneles para trabajos de enderezado."],
+    [91, "Soldadura MIG", "Unión de paneles mediante arco eléctrico con alambre continuo."],
+    [92, "Reparación de abolladuras", "Método PDR (sin pintura) o enderezado tradicional."],
+    [93, "Pistola de pintura", "Aplica pintura uniforme en paneles."],
+    [94, "Cabina de pintura", "Recinto filtrado para pintar sin impurezas."],
+    [95, "Normativa RUNT", "Registro Único Nacional de Tránsito de Colombia, datos del vehículo."],
+    [96, "Revisión técnico-mecánica", "Inspección anual obligatoria: emisiones, frenos, luces, suspensión, dirección."],
+    [97, "Emisiones contaminantes", "Medición de CO, HC, NOx en gases de escape."],
+    [98, "SOAT", "Seguro Obligatorio para circular en Colombia."],
+    [99, "Certificado de revisión técnico-mecánica", "Documento que acredita que el auto pasa la inspección."],
+    [100, "Curso de mecánica automotriz SENA", "Formación técnica en mantenimiento y reparación de vehículos."]
+  ];
+
+  // --------------------- LOCALSTORAGE Y PROGRESO -------------------------
+  let progreso = {};
+  const STORAGE_KEY = "mecanicaAutomotrizProgreso";
+
+  function cargarProgreso() {
+    const guardado = localStorage.getItem(STORAGE_KEY);
+    if (guardado) progreso = JSON.parse(guardado);
+    else {
+      progreso = {};
+      for (let i = 1; i <= 100; i++) progreso[i] = { aciertos: 0, fallos: 0 };
+    }
+  }
+  function guardarProgreso() { localStorage.setItem(STORAGE_KEY, JSON.stringify(progreso)); }
+  function registrarResultado(id, acierto) {
+    if (!progreso[id]) progreso[id] = { aciertos: 0, fallos: 0 };
+    if (acierto) progreso[id].aciertos += 1;
+    else progreso[id].fallos += 1;
+    guardarProgreso();
+    renderDashboard();
+    renderListado(document.getElementById("filtroListado")?.value || "");
+    if (window.currentCardId === id && document.getElementById("infoProgresoCard")) {
+      document.getElementById("infoProgresoCard").innerHTML = `📊 Concepto ${id} · ✅ ${progreso[id].aciertos} aciertos · ❌ ${progreso[id].fallos} fallos`;
+    }
+  }
+
+  function renderDashboard() {
+    let totalAciertos = 0, totalFallos = 0, conceptosConAcierto = 0;
+    for (let i = 1; i <= 100; i++) {
+      const p = progreso[i] || { aciertos: 0, fallos: 0 };
+      totalAciertos += p.aciertos;
+      totalFallos += p.fallos;
+      if (p.aciertos > 0) conceptosConAcierto++;
+    }
+    const porcentaje = (conceptosConAcierto / 100) * 100;
+    document.getElementById("globalProgressFill").style.width = `${porcentaje}%`;
+    document.getElementById("globalProgressText").innerHTML = `${conceptosConAcierto} de 100 conceptos con al menos 1 acierto (${Math.round(porcentaje)}%).`;
+    document.getElementById("statsContainer").innerHTML = `
+      <div class="stat-card"><div class="stat-number">${totalAciertos}</div>✅ Aciertos totales</div>
+      <div class="stat-card"><div class="stat-number">${totalFallos}</div>❌ Fallos</div>
+      <div class="stat-card"><div class="stat-number">${conceptosConAcierto}</div>📘 Conceptos dominados</div>
+      <div class="stat-card"><div class="stat-number">${Math.round((totalAciertos/(totalAciertos+totalFallos+0.001))*100)}%</div>📊 Tasa éxito</div>
+    `;
+  }
+
+  function renderListado(filtro = "") {
+    const container = document.getElementById("conceptosListadoContainer");
+    container.innerHTML = "";
+    const filtroLower = filtro.toLowerCase();
+    for (let c of conceptosData) {
+      const [id, nombre, definicion] = c;
+      const prog = progreso[id] || { aciertos: 0, fallos: 0 };
+      if (filtro && !nombre.toLowerCase().includes(filtroLower) && !definicion.toLowerCase().includes(filtroLower)) continue;
+      const div = document.createElement("div");
+      div.className = "concepto-item";
+      div.innerHTML = `<div class="concepto-titulo">${id}. ${nombre}</div>
+                       <div class="concepto-desc">🚗 ${definicion.substring(0, 150)}${definicion.length > 150 ? '…' : ''}</div>
+                       <span class="badge-progreso">✅ ${prog.aciertos} aciertos · ❌ ${prog.fallos} fallos</span>`;
+      container.appendChild(div);
+    }
+  }
+
+  // --------------------- PRÁCTICA: TRES MODOS -------------------------
+  let currentMode = "concepto_def";
+  let cardsArray = [];
+  let currentCardIndex = 0;
+  let currentCardId = null;
+  let currentOrdenarPalabras = [];
+  let shuffledPalabras = [];
+  let selectedOrder = [];
+  let ordenarRespuestaCorrecta = "";
+
+  const practicaDiv = document.getElementById("practicaContainer");
+
+  function construirCards() {
+    cardsArray = conceptosData.map(item => {
+      const [id, concepto, definicion] = item;
+      if (currentMode === "concepto_def") {
+        return { id, pregunta: `🚗 Concepto: ${concepto}`, respuestaCorrecta: definicion };
+      } else if (currentMode === "def_concepto") {
+        let defCorta = definicion.length > 130 ? definicion.substring(0, 127) + "…" : definicion;
+        return { id, pregunta: `✍️ Definición: "${defCorta}"`, respuestaCorrecta: concepto };
+      } else {
+        return { id, concepto, definicion };
+      }
+    });
+  }
+
+  function renderFlashcardNormal() {
+    if (!cardsArray.length) return;
+    const card = cardsArray[currentCardIndex];
+    currentCardId = card.id;
+    practicaDiv.innerHTML = `
+      <div class="flashcard">
+        <div class="pregunta">${card.pregunta}</div>
+        <button id="mostrarRespuestaBtn" class="btn">📖 Mostrar respuesta</button>
+        <div id="respuestaDiv" class="respuesta-oculta"><strong>Respuesta:</strong><br>${card.respuestaCorrecta}</div>
+        <div style="margin-top:1rem;">
+          <button id="aciertoBtn" class="btn btn-acierto" disabled>✅ Acierto</button>
+          <button id="falloBtn" class="btn btn-fallo" disabled>❌ Fallo</button>
+        </div>
+        <button id="siguienteCardBtn" class="btn" style="margin-top:1rem;">⏩ Siguiente</button>
+        <p id="infoProgresoCard" style="margin-top:0.8rem;">📊 ${currentMode === "concepto_def" ? "Concepto" : "Definición"} ${card.id} · ✅ ${progreso[card.id]?.aciertos||0} aciertos · ❌ ${progreso[card.id]?.fallos||0} fallos</p>
+      </div>
+    `;
+    document.getElementById("mostrarRespuestaBtn").onclick = () => {
+      const respDiv = document.getElementById("respuestaDiv");
+      if (respDiv.style.display !== "block") {
+        respDiv.style.display = "block";
+        document.getElementById("aciertoBtn").disabled = false;
+        document.getElementById("falloBtn").disabled = false;
+      }
+    };
+    document.getElementById("aciertoBtn").onclick = () => { registrarResultado(currentCardId, true); siguienteNormal(); };
+    document.getElementById("falloBtn").onclick = () => { registrarResultado(currentCardId, false); siguienteNormal(); };
+    document.getElementById("siguienteCardBtn").onclick = () => siguienteNormal();
+  }
+
+  function siguienteNormal() {
+    currentCardIndex = (currentCardIndex + 1) % cardsArray.length;
+    renderFlashcardNormal();
+  }
+
+  function inicializarOrdenar() {
+    const card = cardsArray[currentCardIndex];
+    currentCardId = card.id;
+    const definicionOriginal = card.definicion;
+    ordenarRespuestaCorrecta = definicionOriginal;
+    let palabras = definicionOriginal.split(/\s+/).filter(p => p.length > 0);
+    currentOrdenarPalabras = [...palabras];
+    shuffledPalabras = [...palabras];
+    for (let i = shuffledPalabras.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [shuffledPalabras[i], shuffledPalabras[j]] = [shuffledPalabras[j], shuffledPalabras[i]];
+    }
+    selectedOrder = [];
+    renderOrdenarUI();
+  }
+
+  function renderOrdenarUI() {
+    const card = cardsArray[currentCardIndex];
+    const prog = progreso[currentCardId] || { aciertos:0, fallos:0 };
+    let palabrasHTML = shuffledPalabras.map(p => `<button class="palabra-btn" data-palabra="${p.replace(/"/g, '&quot;')}">${p}</button>`).join('');
+    let ordenHTML = selectedOrder.map(p => `<span style="background:#eaf0f5; padding:0.2rem 0.6rem; margin:0.2rem; border-radius:1rem;">${p}</span>`).join(' ');
+    if (ordenHTML === "") ordenHTML = "<em>Haz clic en las palabras en el orden correcto...</em>";
+    practicaDiv.innerHTML = `
+      <div class="flashcard">
+        <h3>🧩 Ordena la definición de:</h3>
+        <div class="pregunta" style="background:#eaf0f5;">📌 ${card.concepto}</div>
+        <div class="orden-actual"><strong>Tu orden actual:</strong><br> ${ordenHTML}</div>
+        <div class="palabras-baraja" id="palabrasBaraja">${palabrasHTML}</div>
+        <div>
+          <button id="resetOrdenBtn" class="btn" style="background:#cfdfea;">🔁 Reiniciar orden</button>
+          <button id="comprobarOrdenBtn" class="btn btn-primary">✓ Comprobar</button>
+        </div>
+        <button id="siguienteOrdenBtn" class="btn" style="margin-top:1rem;">⏩ Siguiente concepto</button>
+        <p id="infoProgresoCard">✅ ${prog.aciertos} aciertos · ❌ ${prog.fallos} fallos</p>
+        <div id="feedbackOrden" style="margin-top:0.8rem; font-weight:bold;"></div>
+      </div>
+    `;
+    document.querySelectorAll(".palabra-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const palabra = btn.getAttribute("data-palabra");
+        const idx = shuffledPalabras.indexOf(palabra);
+        if (idx !== -1) {
+          shuffledPalabras.splice(idx, 1);
+          selectedOrder.push(palabra);
+          renderOrdenarUI();
+        }
+      });
+    });
+    document.getElementById("resetOrdenBtn").onclick = () => {
+      shuffledPalabras = [...currentOrdenarPalabras];
+      for (let i = shuffledPalabras.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [shuffledPalabras[i], shuffledPalabras[j]] = [shuffledPalabras[j], shuffledPalabras[i]];
+      }
+      selectedOrder = [];
+      renderOrdenarUI();
+    };
+    document.getElementById("comprobarOrdenBtn").onclick = () => {
+      const ordenUsuario = selectedOrder.join(" ");
+      if (ordenUsuario === ordenarRespuestaCorrecta) {
+        document.getElementById("feedbackOrden").innerHTML = "<span style='color:#27ae60'>✅ ¡Correcto! Definición ordenada correctamente.</span>";
+        registrarResultado(currentCardId, true);
+        setTimeout(() => siguienteOrdenar(), 1200);
+      } else {
+        document.getElementById("feedbackOrden").innerHTML = `<span style='color:#e67e22'>❌ Incorrecto. La definición correcta es: "${ordenarRespuestaCorrecta}"</span>`;
+        registrarResultado(currentCardId, false);
+        setTimeout(() => siguienteOrdenar(), 2000);
+      }
+      document.getElementById("comprobarOrdenBtn").disabled = true;
+      document.querySelectorAll(".palabra-btn").forEach(b => b.style.pointerEvents = "none");
+      setTimeout(() => {
+        if (document.getElementById("comprobarOrdenBtn")) document.getElementById("comprobarOrdenBtn").disabled = false;
+        document.querySelectorAll(".palabra-btn").forEach(b => b.style.pointerEvents = "auto");
+      }, 2000);
+    };
+    document.getElementById("siguienteOrdenBtn").onclick = () => siguienteOrdenar();
+  }
+
+  function siguienteOrdenar() {
+    currentCardIndex = (currentCardIndex + 1) % cardsArray.length;
+    inicializarOrdenar();
+  }
+
+  function setMode(mode) {
+    currentMode = mode;
+    construirCards();
+    currentCardIndex = 0;
+    if (mode === "ordenar") inicializarOrdenar();
+    else renderFlashcardNormal();
+  }
+
+  function initUI() {
+    document.querySelectorAll(".nav-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const viewId = btn.getAttribute("data-view");
+        document.querySelectorAll(".view").forEach(v => v.classList.remove("active-view"));
+        document.getElementById(viewId).classList.add("active-view");
+        document.querySelectorAll(".nav-btn").forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+        if (viewId === "listado") renderListado(document.getElementById("filtroListado").value);
+        if (viewId === "dashboard") renderDashboard();
+        if (viewId === "practica") setMode(currentMode);
+      });
+    });
+    document.getElementById("modoConceptoDef").addEventListener("click", () => {
+      currentMode = "concepto_def";
+      setMode("concepto_def");
+      document.getElementById("modoConceptoDef").classList.add("btn-primary");
+      document.getElementById("modoDefConcepto").classList.remove("btn-primary");
+      document.getElementById("modoOrdenar").classList.remove("btn-primary");
+    });
+    document.getElementById("modoDefConcepto").addEventListener("click", () => {
+      currentMode = "def_concepto";
+      setMode("def_concepto");
+      document.getElementById("modoDefConcepto").classList.add("btn-primary");
+      document.getElementById("modoConceptoDef").classList.remove("btn-primary");
+      document.getElementById("modoOrdenar").classList.remove("btn-primary");
+    });
+    document.getElementById("modoOrdenar").addEventListener("click", () => {
+      currentMode = "ordenar";
+      setMode("ordenar");
+      document.getElementById("modoOrdenar").classList.add("btn-primary");
+      document.getElementById("modoConceptoDef").classList.remove("btn-primary");
+      document.getElementById("modoDefConcepto").classList.remove("btn-primary");
+    });
+    document.getElementById("resetProgresoBtn").addEventListener("click", () => {
+      if (confirm("¿Reiniciar todo el progreso? Se perderán aciertos y fallos.")) {
+        for (let i = 1; i <= 100; i++) progreso[i] = { aciertos: 0, fallos: 0 };
+        guardarProgreso();
+        renderDashboard();
+        renderListado(document.getElementById("filtroListado")?.value || "");
+        if (currentMode === "ordenar") inicializarOrdenar();
+        else if (currentMode !== "ordenar") renderFlashcardNormal();
+      }
+    });
+    document.getElementById("filtroListado").addEventListener("input", (e) => renderListado(e.target.value));
+  }
+
+  window.addEventListener("DOMContentLoaded", () => {
+    cargarProgreso();
+    construirCards();
+    setMode("concepto_def");
+    renderDashboard();
+    renderListado();
+    initUI();
+  });
+</script>
+</body>
+</html>

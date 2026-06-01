@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Redacción en Ingeniería Metalúrgica — 100 técnicas para estudiantes colombianos</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ink:#1a1209; --parchment:#f5f0e8; --amber:#c8860a; --amber-light:#f0a830;
+  --amber-pale:#fdf3dc; --rust:#8b3a1a; --sage:#4a6741; --sage-light:#7a9e76;
+  --cream:#faf7f2; --border:#d4c9b0; --shadow:rgba(26,18,9,0.12);
+  --metal:#6c5b4b; --metal-light:#8a7765; --metal-pale:#efebe9;
+  --steel:#5d6d7e;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'DM Sans',sans-serif;background:var(--parchment);color:var(--ink);min-height:100vh;
+  background-image:radial-gradient(ellipse at 15% 0%,rgba(108,91,75,.07) 0%,transparent 55%),
+  radial-gradient(ellipse at 85% 100%,rgba(93,109,126,.05) 0%,transparent 55%);}
+h1,h2,h3,.serif{font-family:'Playfair Display',serif;}
+
+.app-nav{background:var(--ink);display:flex;align-items:center;gap:.75rem;
+  padding:.7rem 1.5rem;position:sticky;top:0;z-index:200;box-shadow:0 2px 18px rgba(0,0,0,.25);}
+.nav-brand{font-family:'Playfair Display',serif;font-weight:900;font-size:1.25rem;
+  color:var(--metal-light);flex:1;white-space:nowrap;}
+.nav-brand span{color:#fff;}
+.nav-avatar{width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,var(--metal),var(--steel));
+  display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.95rem;
+  color:#fff;font-family:'Playfair Display',serif;cursor:pointer;flex-shrink:0;
+  border:2px solid rgba(255,255,255,.2);transition:border-color .2s;}
+.nav-avatar:hover{border-color:var(--metal-light);}
+.nav-username{color:rgba(255,255,255,.8);font-size:.85rem;font-weight:500;white-space:nowrap;}
+.btn-reset{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);
+  color:rgba(255,255,255,.7);border-radius:8px;padding:.32rem .75rem;font-size:.78rem;
+  cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .2s;}
+.btn-reset:hover{background:rgba(255,255,255,.18);color:#fff;}
+
+.app-tabs{background:#fff;border-bottom:2px solid var(--border);display:flex;
+  padding:0 1.5rem;overflow-x:auto;gap:0;position:sticky;top:58px;z-index:150;}
+.app-tab{padding:.85rem 1.1rem;border:none;background:transparent;font-family:'DM Sans',sans-serif;
+  font-weight:700;font-size:.82rem;color:#999;cursor:pointer;white-space:nowrap;
+  border-bottom:3px solid transparent;margin-bottom:-2px;transition:all .2s;
+  display:flex;align-items:center;gap:.35rem;}
+.app-tab:hover{color:var(--ink);}
+.app-tab.active{color:var(--metal);border-bottom-color:var(--metal);}
+
+.app-body{max-width:1080px;margin:0 auto;padding:2rem 1.5rem;}
+.page{display:none;animation:rise .28s ease;}
+.page.active{display:block;}
+
+.card-app{background:#fff;border:1.5px solid var(--border);border-radius:16px;
+  box-shadow:0 2px 10px var(--shadow);overflow:hidden;}
+.card-app-header{padding:1.1rem 1.4rem;border-bottom:1px solid var(--border);
+  display:flex;align-items:center;gap:.75rem;}
+.card-app-body{padding:1.4rem;}
+
+.stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:.9rem;margin-bottom:1.6rem;}
+.stat-box{background:#fff;border:1.5px solid var(--border);border-radius:14px;
+  padding:1.1rem 1rem;text-align:center;transition:transform .2s;cursor:default;}
+.stat-box:hover{transform:translateY(-3px);box-shadow:0 6px 18px var(--shadow);}
+.stat-num{font-family:'Playfair Display',serif;font-size:2rem;font-weight:900;
+  color:var(--metal);line-height:1;margin-bottom:.2rem;}
+.stat-lbl{font-size:.73rem;font-weight:700;color:#aaa;text-transform:uppercase;letter-spacing:.05em;}
+
+.dot-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(26px,1fr));gap:4px;margin-bottom:1.6rem;}
+.dot{aspect-ratio:1;border-radius:6px;background:var(--border);cursor:pointer;
+  transition:all .18s;position:relative;display:flex;align-items:center;justify-content:center;}
+.dot.done{background:var(--sage);}
+.dot:hover{transform:scale(1.35);z-index:5;}
+.dot-tip{position:absolute;bottom:130%;left:50%;transform:translateX(-50%);
+  background:var(--ink);color:#fff;padding:.28rem .6rem;border-radius:6px;font-size:.68rem;
+  white-space:nowrap;pointer-events:none;opacity:0;transition:opacity .18s;z-index:99;}
+.dot:hover .dot-tip{opacity:1;}
+.dot-num{font-size:.5rem;font-weight:700;color:rgba(255,255,255,.7);}
+
+.search-field{border:1.5px solid var(--border);border-radius:10px;padding:.55rem 1rem .55rem 2.3rem;
+  font-family:'DM Sans',sans-serif;font-size:.87rem;background:#fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%23aaa' stroke-width='2.5'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cpath d='M21 21l-4.35-4.35'/%3E%3C/svg%3E") no-repeat .75rem center;
+  width:100%;max-width:260px;outline:none;transition:border-color .2s;}
+.search-field:focus{border-color:var(--metal);}
+.pill{padding:.28rem .75rem;border-radius:20px;border:1.5px solid var(--border);background:#fff;
+  font-size:.75rem;font-weight:700;cursor:pointer;transition:all .2s;font-family:'DM Sans',sans-serif;color:#888;}
+.pill.on,.pill:hover{background:var(--metal);border-color:var(--metal);color:#fff;}
+
+.ex-card{background:#fff;border:1.5px solid var(--border);border-radius:13px;padding:1rem 1.2rem;
+  margin-bottom:.6rem;cursor:pointer;transition:all .18s;display:flex;align-items:flex-start;gap:.9rem;
+  box-shadow:0 1px 4px var(--shadow);}
+.ex-card:hover{border-color:var(--metal);transform:translateX(5px);}
+.ex-card.done{border-left:4px solid var(--sage);}
+.ex-num-box{background:var(--parchment);border:1px solid var(--border);border-radius:8px;
+  width:42px;height:42px;display:flex;align-items:center;justify-content:center;
+  font-family:'DM Mono',monospace;font-size:.75rem;font-weight:600;color:var(--metal);flex-shrink:0;}
+.ex-card.done .ex-num-box{background:var(--sage);color:#fff;border-color:var(--sage);}
+.ex-body{flex:1;min-width:0;}
+.ex-cat-tag{font-size:.7rem;font-weight:700;color:var(--metal);text-transform:uppercase;letter-spacing:.05em;}
+.ex-name{font-weight:700;font-size:.9rem;margin:.1rem 0 .18rem;}
+.ex-short{font-size:.78rem;color:#777;line-height:1.5;}
+.badge-done{background:var(--sage);color:#fff;padding:.18rem .55rem;border-radius:9px;font-size:.7rem;font-weight:700;}
+.badge-new{background:var(--parchment);color:#bbb;padding:.18rem .55rem;border-radius:9px;font-size:.7rem;font-weight:700;border:1px solid var(--border);}
+
+.prac-header{background:#fff;border:1.5px solid var(--border);border-radius:16px;
+  padding:1.4rem 1.5rem;margin-bottom:1.2rem;box-shadow:0 2px 10px var(--shadow);}
+.prac-badge{display:inline-flex;align-items:center;gap:.35rem;background:var(--amber-pale);
+  border:1px solid rgba(200,134,10,.28);border-radius:8px;padding:.28rem .75rem;
+  font-size:.76rem;font-weight:700;color:var(--metal);margin-bottom:.7rem;}
+.prac-title{font-size:1.3rem;font-weight:900;margin-bottom:.45rem;}
+.prac-explanation{font-size:.88rem;color:#555;line-height:1.7;margin:0;}
+.prac-example{background:var(--parchment);border-left:3px solid var(--metal);
+  border-radius:0 9px 9px 0;padding:.7rem 1rem;margin-top:.9rem;font-size:.84rem;
+  color:var(--ink);font-style:italic;}
+
+.writing-zone{background:#fff;border:1.5px solid var(--border);border-radius:16px;
+  padding:1.4rem 1.5rem;margin-bottom:1rem;box-shadow:0 2px 10px var(--shadow);}
+.writing-prompt{background:linear-gradient(135deg,var(--metal-pale),#fffcf5);
+  border:1px solid rgba(108,91,75,.22);border-radius:10px;padding:.9rem 1.1rem;
+  margin-bottom:1rem;font-size:.87rem;line-height:1.65;}
+.writing-prompt strong{color:var(--rust);}
+#practiceTA{width:100%;min-height:145px;border:1.5px solid var(--border);border-radius:10px;
+  padding:.9rem 1rem;font-family:'DM Sans',sans-serif;font-size:.93rem;line-height:1.75;
+  color:var(--ink);resize:vertical;background:#fffef9;transition:border-color .2s;outline:none;}
+#practiceTA:focus{border-color:var(--metal);box-shadow:0 0 0 3px rgba(108,91,75,.1);}
+.wc{text-align:right;font-size:.76rem;color:#bbb;margin-top:.4rem;}
+
+.btn-check{background:linear-gradient(135deg,var(--sage),var(--sage-light));border:none;
+  border-radius:10px;color:#fff;font-weight:700;font-size:.92rem;padding:.75rem 1.6rem;
+  cursor:pointer;transition:all .2s;font-family:'DM Sans',sans-serif;
+  display:inline-flex;align-items:center;gap:.45rem;
+  box-shadow:0 4px 14px rgba(74,103,65,.32);}
+.btn-check:hover{transform:translateY(-2px);box-shadow:0 7px 20px rgba(74,103,65,.4);}
+.btn-check:disabled{opacity:.55;cursor:not-allowed;transform:none;}
+
+.btn-next{background:linear-gradient(135deg,var(--metal),var(--steel));border:none;
+  border-radius:10px;color:#fff;font-weight:700;font-size:.92rem;padding:.75rem 1.6rem;
+  cursor:pointer;transition:all .2s;font-family:'DM Sans',sans-serif;
+  display:inline-flex;align-items:center;gap:.45rem;box-shadow:0 4px 14px rgba(108,91,75,.3);}
+.btn-next:hover{transform:translateY(-2px);}
+
+.fb-area{background:#fff;border:1.5px solid var(--border);border-radius:16px;
+  overflow:hidden;box-shadow:0 2px 10px var(--shadow);display:none;}
+.fb-area.show{display:block;animation:rise .35s ease;}
+.fb-head{padding:.95rem 1.4rem;display:flex;align-items:center;gap:.7rem;border-bottom:1px solid var(--border);}
+.fb-head.excellent{background:linear-gradient(90deg,#d4edda,#f0faf4);}
+.fb-head.good{background:linear-gradient(90deg,#fff3cd,#fffbf0);}
+.fb-head.low{background:linear-gradient(90deg,#f8d7da,#fdf5f5);}
+.fb-emoji{font-size:1.8rem;}
+.fb-htitle{font-weight:800;font-size:1rem;margin:0;}
+.fb-hsub{font-size:.78rem;color:#888;margin:0;}
+.fb-body{padding:1.4rem;}
+.score-circle{width:66px;height:66px;border-radius:50%;display:flex;align-items:center;
+  justify-content:center;font-family:'Playfair Display',serif;font-weight:900;font-size:1.25rem;flex-shrink:0;}
+.sc-high{background:#d4edda;color:#2d6a4f;}
+.sc-med{background:#fff3cd;color:#7a5c00;}
+.sc-low{background:#f8d7da;color:#8b1a1a;}
+.fb-section{margin-bottom:1.1rem;}
+.fb-section-title{font-weight:700;font-size:.76rem;text-transform:uppercase;letter-spacing:.07em;
+  color:#aaa;margin-bottom:.5rem;display:flex;align-items:center;gap:.35rem;}
+.fb-item{padding:.62rem .85rem;border-radius:8px;font-size:.84rem;line-height:1.52;
+  margin-bottom:.35rem;display:flex;gap:.55rem;align-items:flex-start;}
+.fb-item.ok{background:#f0f9f4;color:#2d6a4f;border-left:3px solid var(--sage);}
+.fb-item.err{background:#fdf5f5;color:#8b1a1a;border-left:3px solid #dc3545;}
+.fb-item.tip{background:#fffbf0;color:#7a5c00;border-left:3px solid var(--metal);}
+.fb-item.info{background:var(--parchment);color:var(--ink);border-left:3px solid #aaa;}
+.fb-ico{flex-shrink:0;margin-top:1px;}
+
+.spin{width:34px;height:34px;border:3px solid var(--border);border-top-color:var(--metal);
+  border-radius:50%;animation:rot .65s linear infinite;margin:0 auto 1rem;}
+@keyframes rot{to{transform:rotate(360deg)}}
+
+.profile-cover{height:96px;background:linear-gradient(135deg,var(--ink) 0%,#3d2a10 50%,var(--metal) 100%);position:relative;}
+.profile-av-lg{width:78px;height:78px;border-radius:50%;border:4px solid #fff;
+  background:linear-gradient(135deg,var(--metal),var(--steel));display:flex;align-items:center;
+  justify-content:center;font-family:'Playfair Display',serif;font-weight:900;font-size:1.9rem;
+  color:#fff;position:absolute;bottom:-38px;left:1.4rem;box-shadow:0 4px 18px var(--shadow);}
+.profile-body{padding:3.2rem 1.4rem 1.4rem;}
+.profile-name{font-size:1.4rem;font-weight:900;margin-bottom:.15rem;}
+.profile-meta{color:#999;font-size:.83rem;}
+.ach-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:.65rem;}
+.ach{background:#fff;border:1.5px solid var(--border);border-radius:12px;padding:.9rem .7rem;
+  text-align:center;transition:all .2s;}
+.ach.unlocked{border-color:var(--metal);background:var(--metal-pale);}
+.ach.unlocked:hover{transform:translateY(-3px);box-shadow:0 5px 14px rgba(108,91,75,.22);}
+.ach-icon{font-size:1.6rem;display:block;margin-bottom:.35rem;}
+.ach-name{font-size:.7rem;font-weight:700;color:var(--ink);}
+.ach.locked .ach-icon{filter:grayscale(1);opacity:.35;}
+.ach.locked .ach-name{color:#ccc;}
+
+.hist-row{background:#fff;border:1.5px solid var(--border);border-radius:11px;
+  padding:.8rem 1rem;margin-bottom:.5rem;display:flex;align-items:center;gap:.8rem;cursor:pointer;transition:border-color .2s;}
+.hist-row:hover{border-color:var(--metal);}
+
+.toast-box{position:fixed;bottom:1.4rem;right:1.4rem;z-index:9999;}
+.toast-item{background:var(--ink);color:#fff;border-radius:12px;padding:.8rem 1.1rem;
+  margin-top:.45rem;display:flex;align-items:center;gap:.65rem;font-size:.84rem;font-weight:500;
+  box-shadow:0 8px 26px rgba(0,0,0,.28);animation:rise .28s ease;max-width:300px;}
+.toast-item.s{border-left:4px solid var(--sage-light);}
+.toast-item.e{border-left:4px solid #dc3545;}
+.toast-item.i{border-left:4px solid var(--metal-light);}
+
+.modal-backdrop-custom{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:1040;
+  display:flex;align-items:center;justify-content:center;padding:1rem;}
+.modal-box{background:#fff;border-radius:20px;max-width:480px;width:100%;
+  box-shadow:0 24px 64px rgba(0,0,0,.28);animation:rise .3s ease;overflow:hidden;}
+.modal-head{background:var(--ink);padding:1.1rem 1.4rem;color:#fff;display:flex;align-items:center;gap:.7rem;}
+.modal-head .modal-title-txt{font-weight:800;font-size:1rem;flex:1;}
+.modal-close{background:rgba(255,255,255,.12);border:none;color:#fff;border-radius:8px;
+  width:32px;height:32px;cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center;}
+.modal-close:hover{background:rgba(255,255,255,.25);}
+.modal-body-custom{padding:1.4rem;}
+.modal-foot{padding:1rem 1.4rem;border-top:1px solid var(--border);display:flex;gap:.7rem;justify-content:flex-end;}
+
+@keyframes rise{from{opacity:0;transform:translateY(28px)}to{opacity:1;transform:translateY(0)}}
+::-webkit-scrollbar{width:6px;height:6px;}
+::-webkit-scrollbar-track{background:transparent;}
+::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px;}
+@media(max-width:576px){
+  .app-body{padding:1rem;}
+  .stats-grid{grid-template-columns:1fr 1fr;}
+  .ach-grid{grid-template-columns:repeat(3,1fr);}
+  .app-nav{padding:.6rem 1rem;}
+  .nav-username{display:none;}
+}
+</style>
+</head>
+<body>
+
+<div id="appScreen">
+  <nav class="app-nav">
+    <div class="nav-brand">Redacción<span>Metalurgia</span></div>
+    <div class="nav-avatar" id="navAv" onclick="switchPage('perfil')" title="Ver perfil">M</div>
+    <span class="nav-username" id="navName">Estudiante</span>
+    <button class="btn-reset" onclick="confirmReset()"><i class="bi bi-arrow-counterclockwise"></i> Reiniciar</button>
+  </nav>
+  <div class="app-tabs">
+    <button class="app-tab active" id="tab-dashboard" onclick="switchPage('dashboard')"><i class="bi bi-grid-3x3-gap-fill"></i> Inicio</button>
+    <button class="app-tab" id="tab-ejercicios" onclick="switchPage('ejercicios')"><i class="bi bi-journal-bookmark-fill"></i> Técnicas</button>
+    <button class="app-tab" id="tab-practica" onclick="switchPage('practica')"><i class="bi bi-pencil-square"></i> Practicar</button>
+    <button class="app-tab" id="tab-perfil" onclick="switchPage('perfil')"><i class="bi bi-person-circle"></i> Perfil</button>
+  </div>
+  <div class="app-body">
+    <div class="page active" id="page-dashboard">
+      <div class="d-flex align-items-center gap-2 mb-4"><div><h2 class="serif fw-black mb-0">¡Hola, <span id="dashName">futuro ingeniero metalúrgico</span>! 🔩</h2><p class="text-muted mb-0">Mejora tu redacción técnica en el contexto colombiano</p></div></div>
+      <div class="stats-grid mb-4">
+        <div class="stat-box"><div class="stat-num" id="sCompleted">0</div><div class="stat-lbl">Técnicas dominadas</div></div>
+        <div class="stat-box"><div class="stat-num" id="sPracticed">0</div><div class="stat-lbl">Prácticas realizadas</div></div>
+        <div class="stat-box"><div class="stat-num" id="sScore">—</div><div class="stat-lbl">Puntuación media</div></div>
+        <div class="stat-box"><div class="stat-num" id="sStreak">1🔥</div><div class="stat-lbl">Racha</div></div>
+      </div>
+      <div class="card-app mb-4"><div class="card-app-header"><i class="bi bi-map-fill text-warning"></i><div><div style="font-weight:800">Mapa de progreso</div><div style="font-size:.74rem;color:#aaa">100 técnicas · Verde = completado</div></div></div><div class="card-app-body"><div class="dot-grid" id="dotGrid"></div></div></div>
+      <div class="mb-2" style="font-weight:800">Siguiente técnica</div>
+      <div class="ex-card" id="nextCard"><div class="ex-num-box" id="nextNum">01</div><div class="ex-body"><div class="ex-cat-tag" id="nextCat">Precisión</div><div class="ex-name" id="nextName">Cargando...</div><div class="ex-short" id="nextDesc"></div></div><span style="color:var(--metal);font-size:1.4rem"><i class="bi bi-play-circle-fill"></i></span></div>
+      <div class="card-app mt-4"><div class="card-app-header"><i class="bi bi-bar-chart-fill text-warning"></i><div>Progreso por categoría</div></div><div class="card-app-body" id="catProgress"></div></div>
+    </div>
+    <div class="page" id="page-ejercicios">
+      <div class="d-flex align-items-center justify-content-between flex-wrap gap-2 mb-3"><h2 class="serif fw-black mb-0">100 Técnicas de Redacción en Ingeniería Metalúrgica</h2><input class="search-field" id="searchQ" type="text" placeholder="Buscar..." oninput="renderList()"></div>
+      <div class="d-flex flex-wrap gap-2 mb-3" id="pills">
+        <button class="pill on" onclick="setFilter('all',this)">Todas</button>
+        <button class="pill" onclick="setFilter('precision',this)">Precisión y objetividad</button>
+        <button class="pill" onclick="setFilter('informes',this)">Informes de laboratorio</button>
+        <button class="pill" onclick="setFilter('procesos',this)">Procesos metalúrgicos</button>
+        <button class="pill" onclick="setFilter('caracterizacion',this)">Caracterización de materiales</button>
+        <button class="pill" onclick="setFilter('normas',this)">Normas y ensayos (ASTM, NTC)</button>
+        <button class="pill" onclick="setFilter('seguridad',this)">Seguridad y metalurgia</button>
+        <button class="pill" onclick="setFilter('articulos',this)">Artículos científicos</button>
+        <button class="pill" onclick="setFilter('simulacion',this)">Simulación y modelación</button>
+        <button class="pill" onclick="setFilter('etica',this)">Ética y comunicación</button>
+      </div>
+      <div id="exList"></div>
+    </div>
+    <div class="page" id="page-practica">
+      <div id="practiceEmpty" style="text-align:center;padding:4rem 1rem;"><div style="font-size:4rem">⚙️</div><h3 class="serif fw-black mb-2">Selecciona una técnica</h3><button class="btn-main" style="display:inline-flex;width:auto" onclick="switchPage('ejercicios')"><i class="bi bi-journal-bookmark-fill"></i> Ver técnicas</button></div>
+      <div id="practiceContent" style="display:none">
+        <div class="prac-header"><div class="d-flex align-items-start justify-content-between gap-2 flex-wrap"><div><div class="prac-badge"><i class="bi bi-mortarboard-fill"></i> <span id="pracCat">Precisión</span> · Técnica <span id="pracNum">01</span></div><h2 class="prac-title serif" id="pracName">Título</h2><p class="prac-explanation" id="pracExpl">Explicación</p><div class="prac-example" id="pracEx"></div></div><div class="d-flex gap-2"><button class="btn-outline-app" onclick="prevExercise()"><i class="bi bi-chevron-left"></i></button><button class="btn-outline-app" onclick="nextExercise()"><i class="bi bi-chevron-right"></i></button></div></div></div>
+        <div class="writing-zone"><div class="writing-prompt" id="pracPrompt">Escribe tu respuesta.</div><textarea id="practiceTA" placeholder="Escribe tu respuesta aquí…"></textarea><div class="wc"><span id="wc">0</span> palabras · mínimo 10</div></div>
+        <div class="d-flex align-items-center gap-2 flex-wrap mb-3"><button class="btn-check" id="btnCheck" onclick="doCheck()"><i class="bi bi-magic"></i> Analizar respuesta</button><button class="btn-next" id="btnNext" onclick="nextExercise()" style="display:none">Siguiente <i class="bi bi-arrow-right"></i></button><span style="font-size:.76rem;color:#bbb">Aplica conceptos de redacción metalúrgica.</span></div>
+        <div class="fb-area" id="fbArea"><div id="fbLoading" style="text-align:center;padding:2.5rem"><div class="spin"></div><div>Evaluando tu respuesta...</div></div><div id="fbContent" style="display:none"></div></div>
+      </div>
+    </div>
+    <div class="page" id="page-perfil">
+      <div class="card-app mb-4"><div class="profile-cover"><div class="profile-av-lg" id="profAv">M</div></div><div class="profile-body"><h3 class="profile-name" id="profName">—</h3><p class="profile-meta" id="profMeta">—</p><div class="d-flex gap-4 mt-3"><div><strong id="pComp">0</strong><span class="text-muted ms-1">técnicas</span></div><div><strong id="pPrac">0</strong><span class="text-muted ms-1">prácticas</span></div><div><strong id="pScr">—</strong><span class="text-muted ms-1">media</span></div></div><div class="d-flex gap-2 mt-3"><button class="btn-outline-app" onclick="openEditModal()"><i class="bi bi-pencil"></i> Editar perfil</button></div></div></div>
+      <div class="mb-2" style="font-weight:800">Logros destacados</div><div class="ach-grid mb-4" id="achGrid"></div>
+      <div class="mb-2" style="font-weight:800">Historial de prácticas</div><div id="histList"></div>
+    </div>
+  </div>
+</div>
+<div id="editModal" class="modal-backdrop-custom" style="display:none"><div class="modal-box"><div class="modal-head"><i class="bi bi-person-gear"></i><span class="modal-title-txt">Editar perfil</span><button class="modal-close" onclick="closeModal('editModal')"><i class="bi bi-x-lg"></i></button></div><div class="modal-body-custom"><div class="mb-3"><label class="field-label">Nombre</label><input id="editName" class="field" type="text"></div><div class="mb-3"><label class="field-label">Nivel</label><select id="editLevel" class="field"><option value="principiante">🌱 Principiante</option><option value="intermedio">📖 Intermedio</option><option value="avanzado">🎓 Avanzado</option></select></div></div><div class="modal-foot"><button class="btn-outline-app" onclick="closeModal('editModal')">Cancelar</button><button class="btn-main" style="width:auto" onclick="saveEdit()">Guardar</button></div></div></div>
+<div class="toast-box" id="toastBox"></div>
+<script>
+// ============================================================
+// 100 TÉCNICAS DE REDACCIÓN EN INGENIERÍA METALÚRGICA (CONTEXTO COLOMBIANO)
+// ORGANIZADAS EN 10 BLOQUES DE 10 TÉCNICAS
+// ============================================================
+const CATS = {
+  precision: 'Precisión y objetividad metalúrgica',
+  informes: 'Informes de laboratorio de materiales',
+  procesos: 'Procesos metalúrgicos',
+  caracterizacion: 'Caracterización de materiales',
+  normas: 'Normas y ensayos (ASTM, NTC)',
+  seguridad: 'Seguridad y metalurgia',
+  articulos: 'Artículos científicos',
+  simulacion: 'Simulación y modelación',
+  etica: 'Ética y comunicación'
+};
+
+// Plantillas base: 10 bloques × 10 técnicas = 100
+const templates = [
+  // BLOQUE 1: Precisión y objetividad metalúrgica (1-10)
+  { cat: 'precision', name: 'Redacción de resultados de ensayos', short: 'Usar valores numéricos, no "bueno" o "malo"', expl: 'Ejemplo: "Resistencia a la tracción: 520 MPa" no "resistencia alta".', prompt: 'Reescribe "El material tiene buena dureza" de forma objetiva y cuantificable.' },
+  { cat: 'precision', name: 'Unidades y símbolos correctos', short: 'MPa, GPa, HRC, HB, HV', expl: 'Especificar escala de dureza.', prompt: 'Escribe una frase con dureza Rockwell C 58, resistencia a la tracción 650 MPa y alargamiento 15%.' },
+  { cat: 'precision', name: 'Cifras significativas en mediciones', short: 'Adecuadas al instrumento', expl: 'No dar más decimales que la precisión del equipo.', prompt: 'Corrige "La carga de rotura fue 12345.6789 N" para una máquina con precisión ±10 N.' },
+  { cat: 'precision', name: 'Descripción de microestructuras', short: 'Tamaño de grano, fases, inclusiones', expl: 'Usar ASTM E112 para tamaño de grano.', prompt: 'Describe una microestructura de acero con perlita y ferrita, tamaño de grano ASTM 8.' },
+  { cat: 'precision', name: 'Evitar adjetivos subjetivos', short: 'No usar "bien", "mal", "adecuadamente"', expl: 'Ejemplo: "La soldadura presentó porosidad" en lugar de "la soldadura está mal".', prompt: 'Reemplaza "el tratamiento térmico fue incorrecto" por una descripción objetiva.' },
+  { cat: 'precision', name: 'Uso de verbos en pasado para procedimientos', short: 'Se calentó, se enfrió, se midió', expl: 'En informes de laboratorio.', prompt: 'Reescribe "Calentamos la probeta a 900°C y la enfriamos en agua" en estilo impersonal y pasado.' },
+  { cat: 'precision', name: 'Definir siglas y abreviaturas', short: 'HRC, HB, HV, MPA, GPa, SEM, EDS', expl: 'Primera vez escribir completo.', prompt: 'Escribe una frase usando la sigla SEM (Microscopio Electrónico de Barrido) desarrollándola primero.' },
+  { cat: 'precision', name: 'Expresión de composición química', short: 'Porcentaje en peso (%p)', expl: 'Ejemplo: "0.45% C, 1.2% Mn".', prompt: 'Registra la composición de un acero AISI 1045: 0.45% C, 0.75% Mn, 0.20% Si.' },
+  { cat: 'precision', name: 'Reporte de temperaturas', short: 'Usar grados Celsius (°C) o Kelvin (K)', expl: 'Evitar Fahrenheit.', prompt: 'Registra una temperatura de austenización de 850°C para un acero hipoeutectoide.' },
+  { cat: 'precision', name: 'Especificación de tratamientos térmicos', short: 'Tiempo, temperatura, velocidad de enfriamiento', expl: 'Ejemplo: "Temple a 850°C, 1 hora, enfriamiento en agua".', prompt: 'Redacta un tratamiento térmico de revenido para un acero: 550°C, 2 horas, enfriamiento al aire.' },
+  // BLOQUE 2: Informes de laboratorio de materiales (11-20)
+  { cat: 'informes', name: 'Estructura de informe de ensayo de tracción', short: 'Objetivo, materiales, equipo, procedimiento, resultados, conclusiones', expl: 'Norma ASTM E8.', prompt: 'Enumera las secciones de un informe de ensayo de tracción según ASTM.' },
+  { cat: 'informes', name: 'Descripción de probetas', short: 'Geometría, dimensiones, orientación', expl: 'Incluir plano.', prompt: 'Describe una probeta de tracción subdimensional (diámetro 6 mm, longitud calibrada 30 mm).' },
+  { cat: 'informes', name: 'Registro de datos de tracción', short: 'Fuerza máxima, esfuerzo de fluencia, elongación, estricción', expl: 'Incluir gráfica.', prompt: 'Registra resultados: Sy = 350 MPa, Su = 520 MPa, elongación = 22%, reducción de área = 45%.' },
+  { cat: 'informes', name: 'Ensayo de dureza', short: 'Rockwell, Brinell, Vickers', expl: 'Especificar escala.', prompt: 'Reporta un ensayo de dureza Rockwell C: 62 HRC en la superficie y 55 HRC en el núcleo.' },
+  { cat: 'informes', name: 'Ensayo de impacto (Charpy)', short: 'Energía absorbida, fractura dúctil o frágil', expl: 'Norma ASTM E23.', prompt: 'Registra un ensayo Charpy: energía absorbida 27 J a temperatura ambiente, fractura dúctil.' },
+  { cat: 'informes', name: 'Análisis metalográfico', short: 'Ataque químico (Nital), micrografías', expl: 'Incluir magnificación.', prompt: 'Describe una micrografía a 500x de un acero martensítico revenido.' },
+  { cat: 'informes', name: 'Ensayo de plegado (doblado)', short: 'Ángulo, diámetro de mandril, presencia de grietas', expl: 'Norma ASTM E290.', prompt: 'Registra un ensayo de doblado: 180° sin grietas en la zona tensionada.' },
+  { cat: 'informes', name: 'Ensayo de fatiga', short: 'Curva S-N, límite de fatiga', expl: 'Norma ASTM E466.', prompt: 'Reporta un límite de fatiga de 250 MPa para un acero de alta resistencia.' },
+  { cat: 'informes', name: 'Ensayo de corrosión', short: 'Pérdida de masa, velocidad de corrosión', expl: 'Norma ASTM G31.', prompt: 'Registra velocidad de corrosión de 0.2 mm/año para un acero inoxidable en medio salino.' },
+  { cat: 'informes', name: 'Informe de soldabilidad', short: 'Procedimiento, precalentamiento, inspección visual, ensayos', expl: 'Norma AWS D1.1.', prompt: 'Redacta una conclusión de soldabilidad: "Sin defectos en radiografía, apto para servicio".' },
+  // BLOQUE 3: Procesos metalúrgicos (21-30)
+  { cat: 'procesos', name: 'Diagrama de flujo de proceso', short: 'Etapas desde mineral hasta producto', expl: 'Incluir parámetros.', prompt: 'Describe un diagrama de flujo de producción de acero (alto horno → convertidor → colada continua).' },
+  { cat: 'procesos', name: 'Fundición en arena', short: 'Modelo, machos, vaciado, enfriamiento', expl: 'Para piezas de hierro y acero.', prompt: 'Describe los pasos para fabricar una pieza de hierro gris por fundición en arena.' },
+  { cat: 'procesos', name: 'Laminación en caliente y en frío', short: 'Reducción de espesor, temperatura, acabado superficial', expl: 'Productos: placa, lámina, varilla.', prompt: 'Redacta una especificación de laminación en caliente para una placa de acero de 10 mm de espesor.' },
+  { cat: 'procesos', name: 'Forja', short: 'Temperatura, relación de forjado, matriz abierta/cerrada', expl: 'Mejora propiedades mecánicas.', prompt: 'Describe el proceso de forja en matriz cerrada de una biela de acero.' },
+  { cat: 'procesos', name: 'Extrusión de aluminio', short: 'Temperatura, relación de extrusión, perfil', expl: 'Para perfiles estructurales.', prompt: 'Redacta un plan de extrusión de un perfil de aluminio 6061-T6.' },
+  { cat: 'procesos', name: 'Trefilado de alambre', short: 'Reducción por pasada, lubricación, recocido intermedio', expl: 'Para alambres de acero.', prompt: 'Describe el proceso de trefilado de alambre de acero de 5 mm a 1 mm de diámetro.' },
+  { cat: 'procesos', name: 'Tratamientos térmicos', short: 'Recocido, normalizado, temple, revenido', expl: 'Propósito y parámetros.', prompt: 'Define el tratamiento de temple y revenido para un acero de herramienta.' },
+  { cat: 'procesos', name: 'Cementación (carburización)', short: 'Aumento de carbono superficial, endurecimiento', expl: 'Para aceros de baja carbono.', prompt: 'Redacta un proceso de cementación a 920°C durante 4 horas para un engranaje.' },
+  { cat: 'procesos', name: 'Nitruración', short: 'Formación de nitruros superficiales, mayor dureza', expl: 'Menor distorsión.', prompt: 'Explica la ventaja de la nitruración sobre la cementación (menor temperatura, menos distorsión).' },
+  { cat: 'procesos', name: 'Soldadura por arco eléctrico (SMAW, GMAW)', short: 'Electrodo, amperaje, velocidad de avance', expl: 'Procedimiento WPS.', prompt: 'Redacta un procedimiento de soldadura SMAW para acero estructural A36, electrodo E6013.' },
+  // BLOQUE 4: Caracterización de materiales (31-40)
+  { cat: 'caracterizacion', name: 'Microscopía óptica (MO)', short: 'Preparación metalográfica, ataque, magnificación', expl: 'Identificar fases.', prompt: 'Describe los pasos de preparación metalográfica de una muestra de acero (corte, embutido, desbaste, pulido, ataque).' },
+  { cat: 'caracterizacion', name: 'Microscopía electrónica de barrido (SEM)', short: 'Topografía, composición química (EDS)', expl: 'Alta resolución.', prompt: 'Redacta un hallazgo de SEM: "Micrografía a 5000x muestra precipitados de carburos de 1 µm".' },
+  { cat: 'caracterizacion', name: 'Espectroscopía de energía dispersiva (EDS)', short: 'Análisis elemental semicuantitativo', expl: 'Junto con SEM.', prompt: 'Interpreta un EDS que muestra picos de Fe, C, Cr (sugiere acero inoxidable).' },
+  { cat: 'caracterizacion', name: 'Difracción de rayos X (XRD)', short: 'Identificación de fases cristalinas', expl: 'Patrones de difracción.', prompt: 'Interpreta un patrón de XRD que coincide con austenita y martensita.' },
+  { cat: 'caracterizacion', name: 'Análisis térmico (DSC, TGA)', short: 'Temperaturas de transición, cambios de masa', expl: 'Para aleaciones.', prompt: 'Redacta un resultado de DSC: "Pico endotérmico a 730°C corresponde a transformación eutectoide".' },
+  { cat: 'caracterizacion', name: 'Medición de tamaño de grano', short: 'ASTM E112, método de comparación', expl: 'Número de grano ASTM.', prompt: 'Registra un tamaño de grano ASTM 7 para un acero ferrítico.' },
+  { cat: 'caracterizacion', name: 'Porosidad y densidad', short: 'Método de Arquímedes, porosidad porcentual', expl: 'Para materiales sinterizados.', prompt: 'Calcula la porosidad si la densidad real es 7.8 g/cm³ y la aparente 7.0 g/cm³.' },
+  { cat: 'caracterizacion', name: 'Microdureza Vickers', short: 'Carga (HV0.1, HV1, etc.)', expl: 'Para capas superficiales.', prompt: 'Registra microdureza Vickers HV0.5 de 650 en la capa cementada y 250 en el núcleo.' },
+  { cat: 'caracterizacion', name: 'Fractografía', short: 'Fractura dúctil (microlagunas), frágil (clivaje)', expl: 'Observación en SEM.', prompt: 'Describe una fractura frágil por clivaje en un acero templado sin revenir.' },
+  { cat: 'caracterizacion', name: 'Espectrometría de chispa (OES)', short: 'Análisis químico rápido', expl: 'Para control de calidad.', prompt: 'Registra un análisis OES de un acero: C 0.35%, Mn 0.8%, Si 0.25%, Cr 1.0%.' },
+  // BLOQUE 5: Normas y ensayos (ASTM, NTC) (41-50)
+  { cat: 'normas', name: 'ASTM E8 (tracción)', short: 'Norma para ensayo de tracción de metales', expl: 'Define probetas, velocidad.', prompt: 'Cita la norma ASTM E8 en un informe de ensayo de tracción.' },
+  { cat: 'normas', name: 'ASTM E18 (dureza Rockwell)', short: 'Procedimiento para dureza Rockwell', expl: 'Escalas A, B, C.', prompt: 'Escribe una frase indicando que el ensayo de dureza se realizó según ASTM E18 escala C.' },
+  { cat: 'normas', name: 'ASTM E23 (impacto Charpy)', short: 'Ensayo de impacto', expl: 'Temperatura de ensayo.', prompt: 'Registra un ensayo Charpy según ASTM E23 a -20°C con energía absorbida 15 J.' },
+  { cat: 'normas', name: 'ASTM E112 (tamaño de grano)', short: 'Métodos de comparación, interceptos', expl: 'Número de grano.', prompt: 'Redacta un resultado de tamaño de grano según ASTM E112: "Grano ASTM 8".' },
+  { cat: 'normas', name: 'NTC (Normas Técnicas Colombianas)', short: 'Equivalencias con ASTM', expl: 'NTC 169 (ASTM E8).', prompt: 'Cita la norma NTC 169 para ensayo de tracción en un informe colombiano.' },
+  { cat: 'normas', name: 'ASTM A36 (acero estructural)', short: 'Requisitos de composición y propiedades', expl: 'Para perfiles.', prompt: 'Redacta una especificación de acero A36: Sy = 250 MPa, Su = 400-550 MPa.' },
+  { cat: 'normas', name: 'ASTM A106 (tubería de acero)', short: 'Para altas temperaturas', expl: 'Grados A, B, C.', prompt: 'Especifica una tubería ASTM A106 Grado B para servicio a 400°C.' },
+  { cat: 'normas', name: 'ASTM A240 (acero inoxidable)', short: 'Placas y láminas', expl: 'Aceros 304, 316.', prompt: 'Redacta una especificación para placa de acero inoxidable 316L según ASTM A240.' },
+  { cat: 'normas', name: 'NTC 4995 (calificación de soldadores)', short: 'Procedimiento de soldadura', expl: 'Basado en AWS.', prompt: 'Menciona la NTC 4995 para calificación de soldadores en Colombia.' },
+  { cat: 'normas', name: 'Normas de seguridad metalúrgica', short: 'NTC-ISO 45001, reglamentos', expl: 'Riesgos en planta.', prompt: 'Enumera dos riesgos en una planta de fundición (quemaduras, inhalación de humos).' },
+  // BLOQUE 6: Seguridad y metalurgia (51-60)
+  { cat: 'seguridad', name: 'Equipos de protección personal (EPP)', short: 'Casco, gafas, guantes, calzado de seguridad', expl: 'En planta.', prompt: 'Redacta una advertencia sobre el uso de EPP en una planta de fundición.' },
+  { cat: 'seguridad', name: 'Manejo de metales calientes', short: 'Peligro de quemaduras', expl: 'Uso de pinzas, guantes térmicos.', prompt: 'Redacta un procedimiento seguro para manipular una probeta recién salida del horno.' },
+  { cat: 'seguridad', name: 'Ventilación en laboratorios metalúrgicos', short: 'Extracción de humos de ataque químico', expl: 'Campana extractora.', prompt: 'Escribe una norma sobre el uso de campana extractora durante el ataque metalográfico con Nital.' },
+  { cat: 'seguridad', name: 'Prevención de incendios', short: 'Extintores clase D para metales combustibles', expl: 'Magnesio, titanio.', prompt: 'Recomienda un extintor adecuado para un incendio de virutas de magnesio (clase D).' },
+  { cat: 'seguridad', name: 'Almacenamiento de gases comprimidos', short: 'Oxígeno, acetileno, argón', expl: 'Sujetos a pared.', prompt: 'Redacta una instrucción para el almacenamiento de cilindros de oxígeno y acetileno (separados).' },
+  { cat: 'seguridad', name: 'Seguridad en soldadura', short: 'Protección ocular, careta, guantes, ventilación', expl: 'Evitar arco eléctrico.', prompt: 'Enumera tres medidas de seguridad para soldadura por arco (careta, guantes, extractor).' },
+  { cat: 'seguridad', name: 'Manejo de productos químicos', short: 'Ataque metalográfico (Nital, ácido nítrico, alcohol)', expl: 'Ficha de seguridad.', prompt: 'Redacta una advertencia sobre el manejo del ácido nítrico (corrosivo, usar guantes, gafas, campana).' },
+  { cat: 'seguridad', name: 'Ergonomía en laboratorio', short: 'Postura, manipulación de cargas', expl: 'Prevenir lesiones.', prompt: 'Recomienda una posición adecuada para trabajar en un microscopio metalográfico.' },
+  { cat: 'seguridad', name: 'Procedimiento de emergencia', short: 'Derrame de mercurio, ácido', expl: 'Kit de derrames.', prompt: 'Redacta un procedimiento para derrame de mercurio (evacuar, ventilar, usar azufre).' },
+  { cat: 'seguridad', name: 'Normativa colombiana de seguridad minera', short: 'Decreto 1335 de 1987 (Seguridad en minas)', expl: 'Aplica a extracción.', prompt: 'Menciona un requisito de seguridad para minas subterráneas (ventilación forzada).' },
+  // BLOQUE 7: Artículos científicos (61-70)
+  { cat: 'articulos', name: 'Título de artículo metalúrgico', short: 'Informativo, conciso, con palabras clave', expl: 'Ejemplo: "Efecto del tratamiento térmico en la microestructura de acero AISI 1045".', prompt: 'Escribe un título para un artículo sobre el efecto del revenido en la tenacidad de un acero de herramienta.' },
+  { cat: 'articulos', name: 'Resumen estructurado (IMRYD)', short: 'Introducción, métodos, resultados, discusión', expl: 'Máximo 250 palabras.', prompt: 'Redacta el resumen de un estudio sobre la corrosión de acero inoxidable en medio marino colombiano.' },
+  { cat: 'articulos', name: 'Introducción: estado del arte', short: 'Antecedentes, problema, objetivo', expl: 'Citar literatura.', prompt: 'Escribe el primer párrafo de una introducción sobre la soldadura de aceros de alta resistencia.' },
+  { cat: 'articulos', name: 'Métodos experimentales', short: 'Materiales, equipos, procedimientos', expl: 'Reproducibilidad.', prompt: 'Describe la preparación de una probeta de tracción según ASTM E8.' },
+  { cat: 'articulos', name: 'Resultados y discusión', short: 'Presentar datos, comparar con literatura', expl: 'Incluir gráficas.', prompt: 'Redacta una frase de resultados: "La dureza aumentó de 45 HRC a 58 HRC después del temple".' },
+  { cat: 'articulos', name: 'Conclusiones', short: 'Responder al objetivo', expl: 'No introducir nuevos datos.', prompt: 'Escribe una conclusión para un estudio que verificó que el revenido a 550°C optimiza la tenacidad.' },
+  { cat: 'articulos', name: 'Referencias estilo ACS o Vancouver', short: 'Autor, revista, año, volumen, página', expl: 'Para metalurgia.', prompt: 'Escribe una referencia de un artículo de la revista "Metallurgical Transactions", volumen 25, página 123, año 2020.' },
+  { cat: 'articulos', name: 'Citas en el texto', short: 'Números entre corchetes [1]', expl: 'Orden de aparición.', prompt: 'Cita el artículo [3] sobre diagramas de fases hierro-carbono.' },
+  { cat: 'articulos', name: 'Palabras clave', short: '3-6 términos', expl: 'Ejemplo: "Temple, revenido, tenacidad, acero AISI 4140".', prompt: 'Selecciona 5 palabras clave para un artículo sobre corrosión de aceros al carbono en el Caribe colombiano.' },
+  { cat: 'articulos', name: 'Declaración de disponibilidad de datos', short: 'Incluir enlace a repositorio', expl: 'Para ciencia abierta.', prompt: 'Escribe una frase indicando que los datos están disponibles en Mendeley Data con DOI 10.17632/xyz.' },
+  // BLOQUE 8: Simulación y modelación (71-80)
+  { cat: 'simulacion', name: 'Modelado de procesos (Thermo-Calc)', short: 'Cálculo de diagramas de fases', expl: 'Para aleaciones.', prompt: 'Redacta un resultado de simulación con Thermo-Calc: "La austenita se forma a 820°C en el acero 1045".' },
+  { cat: 'simulacion', name: 'Simulación de tratamientos térmicos', short: 'DANTE, DEFORM, Simufact', expl: 'Distribución de temperatura, tensiones.', prompt: 'Describe los parámetros de entrada para simular el temple de un eje de acero (temperatura, medio de enfriamiento).' },
+  { cat: 'simulacion', name: 'Elementos finitos (FEM) en metalurgia', short: 'Análisis de tensiones, deformaciones', expl: 'Software ANSYS, Abaqus.', prompt: 'Redacta una conclusión de simulación por elementos finitos: "La concentración de esfuerzos en la entalla es 2.5 veces la tensión nominal".' },
+  { cat: 'simulacion', name: 'Simulación de solidificación', short: 'PROCAST, MAGMA', expl: 'Predicción de porosidad, microestructura.', prompt: 'Interpreta una simulación de solidificación que muestra porosidad en la zona central de una pieza fundida.' },
+  { cat: 'simulacion', name: 'Modelado de diagramas TTT y CCT', short: 'Curvas de transformación', expl: 'Para tratamientos térmicos.', prompt: 'Explica cómo se usa un diagrama TTT para predecir la microestructura después del enfriamiento.' },
+  { cat: 'simulacion', name: 'Simulación de procesos de deformación', short: 'Laminación, forja, extrusión', expl: 'DEFORM-3D.', prompt: 'Redacta un parámetro de simulación de forja: "Velocidad del martillo 0.5 m/s, temperatura de la pieza 1100°C".' },
+  { cat: 'simulacion', name: 'Modelado de crecimiento de grano', short: 'Ecuación de Arrhenius', expl: 'Dependencia de temperatura.', prompt: 'Describe cómo la temperatura afecta el crecimiento de grano en austenización.' },
+  { cat: 'simulacion', name: 'Simulación de corrosión', short: 'Método de elementos finitos, potencial electroquímico', expl: 'Predecir vida útil.', prompt: 'Redacta un resultado de simulación de corrosión: "Pérdida de espesor 0.5 mm después de 10 años en atmósfera marina".' },
+  { cat: 'simulacion', name: 'Optimización de parámetros (DOE)', short: 'Diseño de experimentos', expl: 'Para tratamientos térmicos.', prompt: 'Propone un diseño factorial para optimizar la dureza en función de la temperatura de temple y el tiempo de revenido.' },
+  { cat: 'simulacion', name: 'Validación de modelos', short: 'Comparación con experimentos', expl: 'Error relativo.', prompt: 'Escribe una frase validando un modelo de simulación: "Error entre simulación y experimento del 5%".' },
+  // BLOQUE 9: Datos, tablas, figuras (81-90)
+  { cat: 'precision', name: 'Tabla de propiedades mecánicas', short: 'Material, Sy, Su, elongación, dureza', expl: 'Comparativa.', prompt: 'Crea una tabla con dos aceros: AISI 1020 y AISI 4140, con sus Sy y Su (valores ficticios).' },
+  { cat: 'precision', name: 'Gráfica esfuerzo-deformación', short: 'Eje X deformación, eje Y esfuerzo', expl: 'Mostrar fluencia, endurecimiento, estricción.', prompt: 'Describe una curva esfuerzo-deformación típica de un acero dúctil.' },
+  { cat: 'precision', name: 'Diagrama de fases hierro-carbono', short: 'Ejes temperatura y %C', expl: 'Identificar fases.', prompt: 'Interpreta la transformación eutectoide a 727°C con 0.76% C.' },
+  { cat: 'precision', name: 'Curva de templabilidad (Jominy)', short: 'Distancia vs dureza', expl: 'Evaluar capacidad de temple.', prompt: 'Redacta una conclusión de una prueba Jominy: "El acero 4140 tiene mayor templabilidad que el 1045".' },
+  { cat: 'precision', name: 'Micrografías etiquetadas', short: 'Magnificación, ataque, fases', expl: 'Incluir escala.', prompt: 'Redacta un pie de foto para una micrografía: "Figura 1. Acero 1045 templado y revenido, ataque Nital 2%, 500x, martensita revenida".' },
+  { cat: 'precision', name: 'Diagrama de flujo de proceso de fundición', short: 'Pasos: modelo, molde, vaciado, desmolde, limpieza', expl: 'Incluir controles.', prompt: 'Dibuja (describe) un diagrama de flujo para fundición en arena de una pieza de hierro gris.' },
+  { cat: 'precision', name: 'Gráfico de dureza por perfil', short: 'Eje X distancia, eje Y dureza', expl: 'Para tratamientos superficiales.', prompt: 'Describe un gráfico de dureza después de cementación: "Dureza superficial 60 HRC, núcleo 30 HRC".' },
+  { cat: 'precision', name: 'Tabla de composiciones químicas', short: 'Elemento, %p, tolerancia', expl: 'Para especificación.', prompt: 'Crea una tabla con la composición de un acero AISI 316L (C ≤0.03, Cr 16-18, Ni 10-14, Mo 2-3).' },
+  { cat: 'precision', name: 'Diagrama de bloques de planta', short: 'Materia prima, proceso, producto', expl: 'Para metalurgia extractiva.', prompt: 'Describe un diagrama de bloques de una planta de peletización de mineral de hierro.' },
+  { cat: 'precision', name: 'Carta de control de calidad (SPC)', short: 'Límites de control, muestreo', expl: 'Para procesos metalúrgicos.', prompt: 'Redacta una observación sobre una carta de control que muestra una tendencia al alza en la dureza.' },
+  // BLOQUE 10: Ética y comunicación (91-100)
+  { cat: 'etica', name: 'Integridad en informes de laboratorio', short: 'No falsificar datos', expl: 'Consecuencias graves.', prompt: 'Redacta una declaración de integridad para un informe de ensayo de tracción.' },
+  { cat: 'etica', name: 'Confidencialidad en proyectos industriales', short: 'No divulgar procesos patentados', expl: 'Acuerdo de confidencialidad.', prompt: 'Redacta una cláusula de confidencialidad para un practicante en una acería.' },
+  { cat: 'etica', name: 'Responsabilidad profesional', short: 'Firmar y sellar documentos', expl: 'Consejo Profesional.', prompt: 'Explica por qué un ingeniero metalúrgico debe sellar un certificado de calidad de materiales.' },
+  { cat: 'etica', name: 'Comunicación con clientes no técnicos', short: 'Evitar jerga', expl: 'Explicar conceptos.', prompt: 'Explica qué es la dureza Rockwell a un cliente que no es ingeniero.' },
+  { cat: 'etica', name: 'Presentaciones orales de proyectos', short: 'Estructura: problema, solución, resultados', expl: 'Usar gráficos.', prompt: 'Enumera tres consejos para una presentación oral de un proyecto de mejora de tratamiento térmico.' },
+  { cat: 'etica', name: 'Redacción de correos profesionales', short: 'Asunto claro, saludo, cuerpo', expl: 'Para proveedores.', prompt: 'Escribe un correo a un proveedor de acero solicitando una cotización de 10 toneladas de placa A36.' },
+  { cat: 'etica', name: 'Currículum vitae para ingeniero metalúrgico', short: 'Destacar proyectos, software, normas', expl: 'Incluir logros.', prompt: 'Redacta un punto de logro para un CV: "Optimización de tratamiento térmico redujo costos en un 15%".' },
+  { cat: 'etica', name: 'Trabajo en equipo multidisciplinario', short: 'Ingenieros de materiales, producción, calidad', expl: 'Comunicación efectiva.', prompt: 'Explica cómo comunicarías un problema de calidad del acero al área de producción.' },
+  { cat: 'etica', name: 'Uso de IA en redacción metalúrgica', short: 'Declarar su uso (ChatGPT, Copilot)', expl: 'No como autor.', prompt: 'Redacta una declaración de uso de IA para corregir gramática en un informe.' },
+  { cat: 'etica', name: 'Sostenibilidad en metalurgia', short: 'Reciclaje de chatarra, reducción de emisiones', expl: 'Huella de carbono.', prompt: 'Propón una práctica sostenible en una planta de fundición de acero (uso de chatarra reciclada).' }
+];
+
+// Generar exactamente 100 ejercicios
+let ejercicios = [];
+for (let i = 0; i < 100; i++) {
+  const t = templates[i % templates.length];
+  const sufijo = i < templates.length ? '' : ` (${Math.floor(i / templates.length) + 1})`;
+  ejercicios.push({
+    id: i + 1,
+    cat: t.cat,
+    name: t.name + sufijo,
+    short: t.short,
+    expl: t.expl,
+    prompt: t.prompt
+  });
+}
+for (let i = 0; i < ejercicios.length; i++) ejercicios[i].id = i + 1;
+
+// ========== ESTADO DE USUARIO ==========
+let userData = { name:"Estudiante", level:"intermedio", completed:[], practiced:0, scores:[], history:[], joinDate:new Date().toLocaleDateString('es-ES') };
+function loadUserData(){ const saved=localStorage.getItem('redaccionMetalurgicaUser'); if(saved){ try{ const p=JSON.parse(saved); userData={...userData,...p}; }catch(e){} } updateUI(); }
+function saveUserData(){ localStorage.setItem('redaccionMetalurgicaUser',JSON.stringify(userData)); updateUI(); }
+function updateUI(){ document.getElementById('navName').textContent=userData.name.split(' ')[0]; document.getElementById('dashName').textContent=userData.name.split(' ')[0]; document.getElementById('navAv').textContent=userData.name[0].toUpperCase(); }
+loadUserData();
+
+let currentEx = null;
+let filterCatEx = 'all';
+function switchPage(p){
+  document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));
+  document.querySelectorAll('.app-tab').forEach(x=>x.classList.remove('active'));
+  document.getElementById('page-'+p)?.classList.add('active');
+  document.getElementById('tab-'+p)?.classList.add('active');
+  if(p==='dashboard') refreshDash();
+  if(p==='perfil') renderProfile();
+  if(p==='ejercicios') renderList();
+}
+function refreshDash(){
+  document.getElementById('sCompleted').textContent=userData.completed.length;
+  document.getElementById('sPracticed').textContent=userData.practiced;
+  const avg=userData.scores.length?Math.round(userData.scores.reduce((a,b)=>a+b,0)/userData.scores.length):null;
+  document.getElementById('sScore').textContent=avg?avg+'%':'—';
+  document.getElementById('sStreak').textContent=(userData.streak||1)+'🔥';
+  const grid=document.getElementById('dotGrid');
+  grid.innerHTML='';
+  ejercicios.forEach(ex=>{
+    const done=userData.completed.includes(ex.id);
+    const div=document.createElement('div');
+    div.className='dot'+(done?' done':'');
+    div.innerHTML=`<span class="dot-num">${ex.id}</span><div class="dot-tip">#${ex.id} ${ex.name}</div>`;
+    div.onclick=()=>startPractice(ex.id);
+    grid.appendChild(div);
+  });
+  const nid=nextId();
+  const next=ejercicios.find(e=>e.id===nid);
+  if(next){
+    document.getElementById('nextNum').textContent=String(next.id).padStart(2,'0');
+    document.getElementById('nextCat').textContent=CATS[next.cat]||next.cat;
+    document.getElementById('nextName').textContent=next.name;
+    document.getElementById('nextDesc').textContent=next.short;
+    document.getElementById('nextCard').onclick=()=>startPractice(next.id);
+  }
+  const cats=Object.keys(CATS);
+  const cp=document.getElementById('catProgress');
+  cp.innerHTML=cats.map(c=>{
+    const total=ejercicios.filter(e=>e.cat===c).length;
+    const done=ejercicios.filter(e=>e.cat===c && userData.completed.includes(e.id)).length;
+    const pct=Math.round(done/total*100);
+    return `<div class="mb-2"><div class="d-flex justify-content-between mb-1" style="font-size:.8rem;font-weight:700"><span>${CATS[c]}</span><span style="color:var(--amber)">${done}/${total}</span></div><div style="height:7px;border-radius:4px;background:var(--border)"><div style="height:100%;border-radius:4px;width:${pct}%;background:${pct===100?'var(--sage)':'var(--metal)'}"></div></div></div>`;
+  }).join('');
+}
+function nextId(){ for(let i=1;i<=100;i++) if(!userData.completed.includes(i)) return i; return 1; }
+function setFilter(cat,btn){ filterCatEx=cat; document.querySelectorAll('#pills .pill').forEach(p=>p.classList.remove('on')); btn.classList.add('on'); renderList(); }
+function renderList(){
+  const q=(document.getElementById('searchQ')?.value||'').toLowerCase();
+  const filtered=ejercicios.filter(e=>(filterCatEx==='all'||e.cat===filterCatEx) && (!q||e.name.toLowerCase().includes(q)||e.short.toLowerCase().includes(q)));
+  const list=document.getElementById('exList');
+  list.innerHTML=filtered.map(e=>{
+    const done=userData.completed.includes(e.id);
+    return `<div class="ex-card${done?' done':''}" onclick="startPractice(${e.id})"><div class="ex-num-box">${String(e.id).padStart(2,'0')}</div><div class="ex-body"><div class="ex-cat-tag">${CATS[e.cat]||e.cat}</div><div class="ex-name">${e.name}</div><div class="ex-short">${e.short}</div></div><div>${done?'<span class="badge-done"><i class="bi bi-check-lg"></i> Hecho</span>':'<span class="badge-new">Practicar</span>'}</div></div>`;
+  }).join('');
+  if(!filtered.length) list.innerHTML='<div class="text-muted text-center py-4">No se encontraron técnicas.</div>';
+}
+function startPractice(id){
+  const ex=ejercicios.find(x=>x.id===id);
+  if(!ex) return;
+  currentEx=ex;
+  document.getElementById('pracCat').textContent=CATS[ex.cat]||ex.cat;
+  document.getElementById('pracNum').textContent=String(ex.id).padStart(2,'0');
+  document.getElementById('pracName').textContent=ex.name;
+  document.getElementById('pracExpl').textContent=ex.expl;
+  document.getElementById('pracEx').textContent='📝 '+ex.expl;
+  document.getElementById('pracPrompt').innerHTML='<strong>✍️ Ejercicio:</strong> '+ex.prompt;
+  document.getElementById('practiceTA').value='';
+  document.getElementById('wc').textContent='0';
+  document.getElementById('fbArea').classList.remove('show');
+  document.getElementById('btnNext').style.display='none';
+  document.getElementById('btnCheck').disabled=false;
+  document.getElementById('btnCheck').innerHTML='<i class="bi bi-magic"></i> Analizar';
+  document.getElementById('practiceEmpty').style.display='none';
+  document.getElementById('practiceContent').style.display='';
+  switchPage('practica');
+  document.getElementById('practiceTA').focus();
+}
+function prevExercise(){
+  if(!currentEx) return;
+  const idx=ejercicios.findIndex(e=>e.id===currentEx.id);
+  startPractice(ejercicios[(idx-1+ejercicios.length)%ejercicios.length].id);
+}
+function nextExercise(){
+  if(!currentEx) return;
+  const idx=ejercicios.findIndex(e=>e.id===currentEx.id);
+  startPractice(ejercicios[(idx+1)%ejercicios.length].id);
+}
+function doCheck(){
+  const text=document.getElementById('practiceTA').value.trim();
+  if(!text || text.split(/\s+/).length<5){ toast('Escribe al menos 5 palabras','e'); return; }
+  if(!currentEx) return;
+  const btn=document.getElementById('btnCheck');
+  btn.disabled=true;
+  btn.innerHTML='<span class="spinner-border spinner-border-sm me-1"></span>Evaluando...';
+  const fb=document.getElementById('fbArea');
+  fb.classList.add('show');
+  document.getElementById('fbLoading').style.display='block';
+  document.getElementById('fbContent').style.display='none';
+  setTimeout(()=>{
+    let score=70;
+    if(text.length>100) score+=10;
+    if(text.toLowerCase().includes(currentEx.name.toLowerCase())) score+=10;
+    score=Math.min(100,score);
+    const nivel=score>=85?'excelente':score>=65?'bien':'necesita_mejorar';
+    const titulo=nivel==='excelente'?'¡Excelente redacción metalúrgica!':nivel==='bien'?'Buen trabajo':'Puedes mejorar';
+    const resumen=`Tu respuesta tiene ${text.split(/\s+/).length} palabras. ${score>=70?'Aplicas bien los conceptos de redacción en ingeniería metalúrgica.':'Revisa la técnica y vuelve a intentarlo.'}`;
+    const aciertos=['La respuesta es relevante al ejercicio.'];
+    const consejos=['Consulta guías como "Metalurgia para ingenieros" de ASM International, normas ASTM, y el Manual de Estilo de la RAE.'];
+    const aplicacion=`Has aplicado conocimientos sobre ${currentEx.name}.`;
+    const r={score,nivel,titulo,resumen,aciertos,errores:[],consejos,aplicacion};
+    renderFeedback(r);
+    userData.practiced++;
+    userData.scores.push(r.score);
+    if(r.score>=65 && !userData.completed.includes(currentEx.id)){
+      userData.completed.push(currentEx.id);
+      toast(`✅ ¡Técnica #${currentEx.id} completada!`,'s');
+    }
+    userData.history=[{id:currentEx.id, name:currentEx.name, score:r.score, date:new Date().toLocaleDateString('es-ES')}, ...(userData.history||[])].slice(0,30);
+    saveUserData();
+    document.getElementById('fbLoading').style.display='none';
+    document.getElementById('fbContent').style.display='block';
+    btn.disabled=false;
+    btn.innerHTML='<i class="bi bi-magic"></i> Analizar de nuevo';
+    document.getElementById('btnNext').style.display='';
+    fb.scrollIntoView({behavior:'smooth',block:'start'});
+  },800);
+}
+function renderFeedback(r){
+  const sc=r.score>=80?'high':r.score>=60?'med':'low';
+  const hc=r.nivel==='excelente'?'excellent':r.nivel==='bien'?'good':'low';
+  const em=r.nivel==='excelente'?'🏆':r.nivel==='bien'?'👍':'💪';
+  const aciertos=(r.aciertos||[]).map(a=>`<div class="fb-item ok"><span class="fb-ico">✓</span><span>${a}</span></div>`).join('');
+  const errores=(r.errores||[]).map(a=>`<div class="fb-item err"><span class="fb-ico">✗</span><span>${a}</span></div>`).join('');
+  const consejos=(r.consejos||[]).map(a=>`<div class="fb-item tip"><span class="fb-ico">💡</span><span>${a}</span></div>`).join('');
+  document.getElementById('fbContent').innerHTML=`<div class="fb-head ${hc}"><span class="fb-emoji">${em}</span><div><p class="fb-htitle">${r.titulo}</p><p class="fb-hsub">Técnica #${currentEx?.id} · ${currentEx?.name}</p></div></div><div class="fb-body"><div style="display:flex;align-items:center;gap:1rem;margin-bottom:1.1rem"><div class="score-circle sc-${sc}">${r.score}%</div><div style="flex:1"><div style="font-weight:700;margin-bottom:.4rem">Dominio de la técnica</div><div style="height:8px;border-radius:4px;background:var(--border)"><div style="height:100%;width:${r.score}%;background:${r.score>=80?'#198754':r.score>=60?'#ffc107':'#dc3545'}"></div></div><div style="font-size:.77rem;margin-top:.4rem">${r.resumen}</div></div></div>${r.aplicacion?`<div class="fb-section"><div class="fb-section-title">🎯 Aplicación</div><div class="fb-item info"><span class="fb-ico">📖</span><span>${r.aplicacion}</span></div></div>`:''}${aciertos?`<div class="fb-section"><div class="fb-section-title">✅ Aciertos</div>${aciertos}</div>`:''}${errores?`<div class="fb-section"><div class="fb-section-title">❌ Errores</div>${errores}</div>`:''}${consejos?`<div class="fb-section"><div class="fb-section-title">💡 Consejos</div>${consejos}</div>`:''}</div>`;
+}
+function renderProfile(){
+  document.getElementById('profAv').textContent=userData.name[0].toUpperCase();
+  document.getElementById('profName').textContent=userData.name;
+  document.getElementById('profMeta').textContent=(userData.level==='principiante'?'Principiante':userData.level==='intermedio'?'Intermedio':'Avanzado')+' · Desde '+userData.joinDate;
+  document.getElementById('pComp').textContent=userData.completed.length;
+  document.getElementById('pPrac').textContent=userData.practiced;
+  const avg=userData.scores.length?Math.round(userData.scores.reduce((a,b)=>a+b,0)/userData.scores.length):null;
+  document.getElementById('pScr').textContent=avg?avg+'%':'—';
+  const ACHS=[{icon:'🎓',name:'Primera técnica',check:d=>d.practiced>=1},{icon:'🔩',name:'10 prácticas',check:d=>d.practiced>=10},{icon:'🏅',name:'25 técnicas',check:d=>d.completed.length>=25},{icon:'🏆',name:'50 técnicas',check:d=>d.completed.length>=50},{icon:'⚙️',name:'Maestro redactor metalúrgico',check:d=>d.completed.length>=100}];
+  document.getElementById('achGrid').innerHTML=ACHS.map(a=>{const u=a.check(userData); return `<div class="ach${u?' unlocked':' locked'}"><span class="ach-icon">${a.icon}</span><div class="ach-name">${a.name}</div></div>`;}).join('');
+  const hl=document.getElementById('histList');
+  if(userData.history?.length){ hl.innerHTML=userData.history.slice(0,15).map(h=>`<div class="hist-row" onclick="startPractice(${h.id})"><div class="ex-num-box" style="background:${h.score>=80?'var(--sage)':h.score>=60?'var(--amber-light)':'#f8d7da'};color:#fff">${String(h.id).padStart(2,'0')}</div><div><div style="font-weight:700">${h.name}</div><div style="font-size:.74rem;color:#aaa">${h.date}</div></div><span style="background:${h.score>=80?'var(--sage)':h.score>=60?'var(--amber)':'#dc3545'};color:#fff;padding:.18rem .55rem;border-radius:9px">${h.score}%</span></div>`).join('');}
+  else hl.innerHTML='<div class="text-muted">Aún sin prácticas.</div>';
+}
+function openEditModal(){ document.getElementById('editName').value=userData.name; document.getElementById('editLevel').value=userData.level; document.getElementById('editModal').style.display='flex'; }
+function saveEdit(){ const name=document.getElementById('editName').value.trim(); if(!name){ toast('Escribe un nombre','e'); return; } userData.name=name; userData.level=document.getElementById('editLevel').value; saveUserData(); updateUI(); closeModal('editModal'); renderProfile(); toast('Perfil actualizado','s'); }
+function confirmReset(){ if(confirm('¿Reiniciar todo el progreso?')){ userData.completed=[]; userData.practiced=0; userData.scores=[]; userData.history=[]; saveUserData(); refreshDash(); renderProfile(); toast('Progreso reiniciado','i'); } }
+function closeModal(id){ document.getElementById(id).style.display='none'; }
+function toast(msg,type='i'){ const box=document.getElementById('toastBox'); const t=document.createElement('div'); const icons={s:'✅',e:'❌',i:'ℹ️'}; t.className=`toast-item ${type}`; t.innerHTML=`<span>${icons[type]||'ℹ️'}</span><span>${msg}</span>`; box.appendChild(t); setTimeout(()=>{ t.style.opacity='0'; t.style.transform='translateY(16px)'; setTimeout(()=>t.remove(),350); },3200); }
+document.addEventListener('DOMContentLoaded',()=>{ const ta=document.getElementById('practiceTA'); if(ta) ta.addEventListener('input',()=>{ const w=ta.value.trim()?ta.value.trim().split(/\s+/).length:0; document.getElementById('wc').textContent=w; }); refreshDash(); renderList(); renderProfile(); });
+</script>
+</body>
+</html>

@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generador de Materiales Fonéticos</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
+    <style>
+        .log-area {
+            height: 300px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+        }
+        .phase-badge {
+            font-size: 0.8em;
+        }
+        .syllable-card {
+            transition: transform 0.2s;
+        }
+        .syllable-card:hover {
+            transform: translateY(-2px);
+        }
+        .progress {
+            height: 10px;
+        }
+        .navbar-brand {
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container">
+            <a class="navbar-brand" href="#">
+                <i class="bi bi-mic-fill me-2"></i>
+                Generador de Materiales Fonéticos
+            </a>
+        </div>
+    </nav>
+
+    <div class="container my-4">
+        <!-- Header -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="card shadow-sm">
+                    <div class="card-body text-center">
+                        <h1 class="card-title h3">
+                            <i class="bi bi-mic me-2"></i>
+                            Sistema de Práctica Fonética
+                        </h1>
+                        <p class="card-text text-muted">
+                            Genera materiales completos para la enseñanza de fonética española
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <!-- Panel izquierdo - Configuración y Control -->
+            <div class="col-lg-4">
+                <!-- Configuración -->
+                <div class="card mb-4">
+                    <div class="card-header bg-light">
+                        <h5 class="card-title mb-0">
+                            <i class="bi bi-gear me-2"></i>
+                            Configuración
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <label for="projectName" class="form-label">Nombre del Proyecto</label>
+                            <input type="text" class="form-control" id="projectName" value="Materiales_Fonetica">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Estructuras a Incluir</label>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="cvCheck" checked>
+                                <label class="form-check-label" for="cvCheck">
+                                    CV (Consonante + Vocal)
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="vcCheck" checked>
+                                <label class="form-check-label" for="vcCheck">
+                                    VC (Vocal + Consonante)
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="cvcCheck" checked>
+                                <label class="form-check-label" for="cvcCheck">
+                                    CVC (Consonante-Vocal-Consonante)
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="ccvCheck" checked>
+                                <label class="form-check-label" for="ccvCheck">
+                                    CCV (Grupos Consonánticos)
+                                </label>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Número de Sílabas por Fase</label>
+                            <input type="range" class="form-range" id="syllablesRange" min="5" max="30" value="15">
+                            <div class="text-center" id="syllablesCount">15 sílabas por fase</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Acciones Rápidas -->
+                <div class="card mb-4">
+                    <div class="card-header bg-light">
+                        <h5 class="card-title mb-0">
+                            <i class="bi bi-lightning me-2"></i>
+                            Acciones Rápidas
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="d-grid gap-2">
+                            <button class="btn btn-primary" onclick="generacionCompleta()">
+                                <i class="bi bi-rocket-takeoff me-2"></i>
+                                Generación Completa
+                            </button>
+                            <button class="btn btn-outline-primary" onclick="generarEstructura()">
+                                <i class="bi bi-folder-plus me-2"></i>
+                                Solo Estructura
+                            </button>
+                            <button class="btn btn-outline-success" onclick="generarGuiasImpresas()">
+                                <i class="bi bi-file-text me-2"></i>
+                                Guías Impresas
+                            </button>
+                            <button class="btn btn-outline-info" onclick="generarMaterialDigital()">
+                                <i class="bi bi-code-slash me-2"></i>
+                                Material Digital
+                            </button>
+                            <button class="btn btn-outline-warning" onclick="generarPlantillas()">
+                                <i class="bi bi-clipboard-check me-2"></i>
+                                Plantillas
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Estadísticas -->
+                <div class="card">
+                    <div class="card-header bg-light">
+                        <h5 class="card-title mb-0">
+                            <i class="bi bi-graph-up me-2"></i>
+                            Estadísticas
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row text-center">
+                            <div class="col-6 mb-3">
+                                <div class="border rounded p-2">
+                                    <div class="h4 text-primary mb-0" id="totalSyllables">25</div>
+                                    <small class="text-muted">Sílabas Total</small>
+                                </div>
+                            </div>
+                            <div class="col-6 mb-3">
+                                <div class="border rounded p-2">
+                                    <div class="h4 text-success mb-0">4</div>
+                                    <small class="text-muted">Fases</small>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="border rounded p-2">
+                                    <div class="h4 text-warning mb-0">12</div>
+                                    <small class="text-muted">Semanas</small>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="border rounded p-2">
+                                    <div class="h4 text-info mb-0">5</div>
+                                    <small class="text-muted">Tipo Materiales</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Panel derecho - Progreso y Resultados -->
+            <div class="col-lg-8">
+                <!-- Progreso -->
+                <div class="card mb-4">
+                    <div class="card-header bg-light d-flex justify-content-between align-items-center">
+                        <h5 class="card-title mb-0">
+                            <i class="bi bi-clock-history me-2"></i>
+                            Progreso de Generación
+                        </h5>
+                        <span class="badge bg-primary" id="progressPercent">0%</span>
+                    </div>
+                    <div class="card-body">
+                        <div class="progress mb-3">
+                            <div id="progressBar" class="progress-bar progress-bar-striped progress-bar-animated" 
+                                 role="progressbar" style="width: 0%"></div>
+                        </div>
+                        <div class="text-center" id="currentTask">Listo para comenzar...</div>
+                    </div>
+                </div>
+
+                <!-- Vista Previa de Sílabas -->
+                <div class="card mb-4">
+                    <div class="card-header bg-light">
+                        <h5 class="card-title mb-0">
+                            <i class="bi bi-eye me-2"></i>
+                            Vista Previa - Sílabas Generadas
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row" id="syllablesPreview">
+                            <!-- Las sílabas se cargarán aquí dinámicamente -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Registro de Actividad -->
+                <div class="card">
+                    <div class="card-header bg-light d-flex justify-content-between align-items-center">
+                        <h5 class="card-title mb-0">
+                            <i class="bi bi-list-check me-2"></i>
+                            Registro de Actividad
+                        </h5>
+                        <div>
+                            <button class="btn btn-sm btn-outline-secondary me-2" onclick="limpiarLogs()">
+                                <i class="bi bi-trash me-1"></i>Limpiar
+                            </button>
+                            <button class="btn btn-sm btn-outline-primary" onclick="exportarLogs()">
+                                <i class="bi bi-download me-1"></i>Exportar
+                            </button>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="log-area border rounded p-3 bg-light" id="logArea">
+                            <div class="text-muted text-center">
+                                <i class="bi bi-info-circle me-1"></i>
+                                Los registros de actividad aparecerán aquí
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Resultados -->
+    <div class="modal fade" id="resultsModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header bg-success text-white">
+                    <h5 class="modal-title">
+                        <i class="bi bi-check-circle me-2"></i>
+                        Generación Completada
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div id="resultsContent">
+                        <!-- El contenido de resultados se cargará aquí -->
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    <button type="button" class="btn btn-primary" onclick="descargarTodo()">
+                        <i class="bi bi-download me-1"></i>Descargar Todo
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        // Datos de las sílabas
+        const silabas = [
+            // Fase 1: CV y VC
+            {silaba: "ba", ipa: "/ba/", estructura: "CV", dificultad: 1, fase: 1},
+            {silaba: "pe", ipa: "/pe/", estructura: "CV", dificultad: 1, fase: 1},
+            {silaba: "li", ipa: "/li/", estructura: "CV", dificultad: 1, fase: 1},
+            {silaba: "ro", ipa: "/ro/", estructura: "CV", dificultad: 1, fase: 1},
+            {silaba: "su", ipa: "/su/", estructura: "CV", dificultad: 1, fase: 1},
+            {silaba: "an", ipa: "/an/", estructura: "VC", dificultad: 1, fase: 1},
+            {silaba: "es", ipa: "/es/", estructura: "VC", dificultad: 1, fase: 1},
+            {silaba: "in", ipa: "/in/", estructura: "VC", dificultad: 1, fase: 1},
+            {silaba: "os", ipa: "/os/", estructura: "VC", dificultad: 1, fase: 1},
+            {silaba: "un", ipa: "/un/", estructura: "VC", dificultad: 1, fase: 1},
+            
+            // Fase 2: CVC
+            {silaba: "pan", ipa: "/pan/", estructura: "CVC", dificultad: 2, fase: 2},
+            {silaba: "sol", ipa: "/sol/", estructura: "CVC", dificultad: 2, fase: 2},
+            {silaba: "mar", ipa: "/mar/", estructura: "CVC", dificultad: 2, fase: 2},
+            {silaba: "pez", ipa: "/peθ/", estructura: "CVC", dificultad: 2, fase: 2},
+            {silaba: "luz", ipa: "/luθ/", estructura: "CVC", dificultad: 2, fase: 2},
+            
+            // Fase 3: CCV
+            {silaba: "pra", ipa: "/pɾa/", estructura: "CCV", dificultad: 3, fase: 3},
+            {silaba: "bli", ipa: "/bli/", estructura: "CCV", dificultad: 3, fase: 3},
+            {silaba: "tri", ipa: "/tɾi/", estructura: "CCV", dificultad: 3, fase: 3},
+            {silaba: "flo", ipa: "/flo/", estructura: "CCV", dificultad: 3, fase: 3},
+            {silaba: "gri", ipa: "/gɾi/", estructura: "CCV", dificultad: 3, fase: 3},
+            
+            // Fase 4: CCVC
+            {silaba: "tran", ipa: "/tɾan/", estructura: "CCVC", dificultad: 4, fase: 4},
+            {silaba: "blas", ipa: "/blas/", estructura: "CCVC", dificultad: 4, fase: 4},
+            {silaba: "clon", ipa: "/klon/", estructura: "CCVC", dificultad: 4, fase: 4},
+            {silaba: "fres", ipa: "/fɾes/", estructura: "CCVC", dificultad: 4, fase: 4},
+            {silaba: "gris", ipa: "/gɾis/", estructura: "CCVC", dificultad: 4, fase: 4},
+        ];
+
+        // Estado de la aplicación
+        let materialesGenerados = [];
+        let progresoActual = 0;
+
+        // Inicialización
+        document.addEventListener('DOMContentLoaded', function() {
+            actualizarVistaPrevia();
+            configurarEventos();
+        });
+
+        function configurarEventos() {
+            // Configurar el rango de sílabas
+            document.getElementById('syllablesRange').addEventListener('input', function(e) {
+                document.getElementById('syllablesCount').textContent = e.target.value + ' sílabas por fase';
+                actualizarVistaPrevia();
+            });
+
+            // Configurar checkboxes de estructuras
+            document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+                checkbox.addEventListener('change', actualizarVistaPrevia);
+            });
+        }
+
+        function actualizarVistaPrevia() {
+            const container = document.getElementById('syllablesPreview');
+            container.innerHTML = '';
+
+            const silabasFiltradas = filtrarSilabas();
+            
+            silabasFiltradas.forEach(silaba => {
+                const colorFase = obtenerColorFase(silaba.fase);
+                const card = document.createElement('div');
+                card.className = 'col-6 col-md-4 col-lg-3 mb-2';
+                card.innerHTML = `
+                    <div class="card syllable-card h-100">
+                        <div class="card-body text-center p-2">
+                            <h6 class="card-title mb-1">${silaba.silaba}</h6>
+                            <small class="text-muted d-block">${silaba.ipa}</small>
+                            <span class="badge ${colorFase} phase-badge">${silaba.estructura}</span>
+                        </div>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+
+            document.getElementById('totalSyllables').textContent = silabasFiltradas.length;
+        }
+
+        function filtrarSilabas() {
+            const estructurasActivas = [];
+            if (document.getElementById('cvCheck').checked) estructurasActivas.push('CV');
+            if (document.getElementById('vcCheck').checked) estructurasActivas.push('VC');
+            if (document.getElementById('cvcCheck').checked) estructurasActivas.push('CVC');
+            if (document.getElementById('ccvCheck').checked) estructurasActivas.push('CCV', 'CCVC');
+
+            return silabas.filter(s => estructurasActivas.includes(s.estructura));
+        }
+
+        function obtenerColorFase(fase) {
+            const colores = ['bg-primary', 'bg-success', 'bg-warning', 'bg-danger'];
+            return colores[fase - 1] || 'bg-secondary';
+        }
+
+        // Funciones de generación
+        function generacionCompleta() {
+            log('🚀 Iniciando generación completa de materiales...', 'info');
+            materialesGenerados = [];
+            progresoActual = 0;
+
+            simularProceso([
+                {tarea: 'Creando estructura de directorios...', duracion: 1000},
+                {tarea: 'Generando guías impresas...', duracion: 2000},
+                {tarea: 'Creando material digital...', duracion: 1500},
+                {tarea: 'Generando plantillas...', duracion: 1000},
+                {tarea: 'Creando resumen ejecutivo...', duracion: 500}
+            ], mostrarResultados);
+        }
+
+        function generarEstructura() {
+            log('📁 Creando estructura de directorios...', 'info');
+            simularProceso([
+                {tarea: 'Creando directorios base...', duracion: 800},
+                {tarea: 'Organizando carpetas por fases...', duracion: 600},
+                {tarea: 'Configurando estructura de materiales...', duracion: 400}
+            ], () => {
+                log('✅ Estructura de directorios creada exitosamente', 'success');
+                materialesGenerados.push('Estructura de directorios');
+            });
+        }
+
+        function generarGuiasImpresas() {
+            log('📄 Generando guías impresas...', 'info');
+            simularProceso([
+                {tarea: 'Preparando formato de guías...', duracion: 1000},
+                {tarea: 'Generando contenido fase 1...', duracion: 800},
+                {tarea: 'Generando contenido fase 2...', duracion: 800},
+                {tarea: 'Generando contenido fase 3...', duracion: 800},
+                {tarea: 'Generando contenido fase 4...', duracion: 800}
+            ], () => {
+                log('✅ Guías impresas generadas exitosamente', 'success');
+                materialesGenerados.push('Guías impresas (4 fases)');
+            });
+        }
+
+        function generarMaterialDigital() {
+            log('💻 Generando material digital...', 'info');
+            simularProceso([
+                {tarea: 'Creando archivos JSON...', duracion: 1000},
+                {tarea: 'Generando plantillas HTML...', duracion: 1200},
+                {tarea: 'Configurando Bootstrap...', duracion: 600},
+                {tarea: 'Preparando recursos multimedia...', duracion: 800}
+            ], () => {
+                log('✅ Material digital generado exitosamente', 'success');
+                materialesGenerados.push('Material digital (HTML, JSON)');
+            });
+        }
+
+        function generarPlantillas() {
+            log('📊 Generando plantillas...', 'info');
+            simularProceso([
+                {tarea: 'Creando plantillas de evaluación...', duracion: 800},
+                {tarea: 'Generando formatos de informe...', duracion: 600},
+                {tarea: 'Preparando rúbricas...', duracion: 600}
+            ], () => {
+                log('✅ Plantillas generadas exitosamente', 'success');
+                materialesGenerados.push('Plantillas de evaluación');
+            });
+        }
+
+        // Funciones de utilidad
+        function simularProceso(tareas, callback) {
+            let tareaIndex = 0;
+            const totalTareas = tareas.length;
+
+            function ejecutarSiguienteTarea() {
+                if (tareaIndex < totalTareas) {
+                    const tarea = tareas[tareaIndex];
+                    actualizarProgreso((tareaIndex / totalTareas) * 100, tarea.tarea);
+                    log(`⏳ ${tarea.tarea}`, 'info');
+                    
+                    setTimeout(() => {
+                        tareaIndex++;
+                        ejecutarSiguienteTarea();
+                    }, tarea.duracion);
+                } else {
+                    actualizarProgreso(100, 'Completado');
+                    if (callback) callback();
+                }
+            }
+
+            ejecutarSiguienteTarea();
+        }
+
+        function actualizarProgreso(porcentaje, tarea) {
+            const progressBar = document.getElementById('progressBar');
+            const progressPercent = document.getElementById('progressPercent');
+            const currentTask = document.getElementById('currentTask');
+
+            progresoActual = porcentaje;
+            progressBar.style.width = porcentaje + '%';
+            progressPercent.textContent = Math.round(porcentaje) + '%';
+            currentTask.textContent = tarea;
+
+            if (porcentaje === 100) {
+                progressBar.classList.remove('progress-bar-animated');
+            } else {
+                progressBar.classList.add('progress-bar-animated');
+            }
+        }
+
+        function log(mensaje, tipo = 'info') {
+            const logArea = document.getElementById('logArea');
+            const timestamp = new Date().toLocaleTimeString();
+            
+            let icono = '📝';
+            let clase = 'text-dark';
+            
+            if (tipo === 'error') {
+                icono = '❌';
+                clase = 'text-danger';
+            } else if (tipo === 'warning') {
+                icono = '⚠️';
+                clase = 'text-warning';
+            } else if (tipo === 'success') {
+                icono = '✅';
+                clase = 'text-success';
+            }
+
+            // Si es el primer mensaje, limpiar el placeholder
+            if (logArea.querySelector('.text-muted')) {
+                logArea.innerHTML = '';
+            }
+
+            const logEntry = document.createElement('div');
+            logEntry.className = clase;
+            logEntry.innerHTML = `<small>[${timestamp}]</small> ${icono} ${mensaje}`;
+            logArea.appendChild(logEntry);
+            logArea.scrollTop = logArea.scrollHeight;
+        }
+
+        function limpiarLogs() {
+            document.getElementById('logArea').innerHTML = 
+                '<div class="text-muted text-center"><i class="bi bi-info-circle me-1"></i>Los registros de actividad aparecerán aquí</div>';
+        }
+
+        function exportarLogs() {
+            const logArea = document.getElementById('logArea');
+            const contenido = logArea.textContent || logArea.innerText;
+            const blob = new Blob([contenido], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'logs_generador_fonetico.txt';
+            a.click();
+            URL.revokeObjectURL(url);
+            log('📥 Logs exportados exitosamente', 'success');
+        }
+
+        function mostrarResultados() {
+            const resultados = `
+                <div class="alert alert-success">
+                    <h6><i class="bi bi-check-circle-fill me-2"></i>Generación Completada Exitosamente</h6>
+                </div>
+                
+                <h6>Materiales Generados:</h6>
+                <ul class="list-group mb-3">
+                    ${materialesGenerados.map(material => 
+                        `<li class="list-group-item">
+                            <i class="bi bi-check text-success me-2"></i>${material}
+                        </li>`
+                    ).join('')}
+                </ul>
+                
+                <h6>Estadísticas Finales:</h6>
+                <div class="row text-center">
+                    <div class="col-3">
+                        <div class="border rounded p-2">
+                            <div class="h5 text-primary mb-0">${filtrarSilabas().length}</div>
+                            <small>Sílabas</small>
+                        </div>
+                    </div>
+                    <div class="col-3">
+                        <div class="border rounded p-2">
+                            <div class="h5 text-success mb-0">4</div>
+                            <small>Fases</small>
+                        </div>
+                    </div>
+                    <div class="col-3">
+                        <div class="border rounded p-2">
+                            <div class="h5 text-warning mb-0">5</div>
+                            <small>Tipos de Material</small>
+                        </div>
+                    </div>
+                    <div class="col-3">
+                        <div class="border rounded p-2">
+                            <div class="h5 text-info mb-0">${materialesGenerados.length}</div>
+                            <small>Archivos</small>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            document.getElementById('resultsContent').innerHTML = resultados;
+            const modal = new bootstrap.Modal(document.getElementById('resultsModal'));
+            modal.show();
+        }
+
+        function descargarTodo() {
+            log('📦 Preparando descarga de todos los materiales...', 'info');
+            
+            // Simular creación de archivos ZIP (en un caso real, esto se haría en el servidor)
+            setTimeout(() => {
+                log('✅ Paquete de materiales listo para descargar', 'success');
+                
+                // En una implementación real, aquí se descargaría el ZIP
+                alert('En una implementación completa, aquí se descargaría un archivo ZIP con todos los materiales generados.');
+            }, 1500);
+        }
+    </script>
+</body>
+</html>

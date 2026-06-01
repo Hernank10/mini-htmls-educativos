@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>Instalaciones Eléctricas · Colombia · Residencial e Industrial</title>
+  <style>
+    /* ----- VARIABLES CSS: paleta eléctrica (azul, amarillo, gris) ----- */
+    :root {
+      --fondo: #f0f4f8;
+      --texto: #1e2a3a;
+      --azul-electricidad: #1e5f8e;
+      --amarillo-alerta: #f39c12;
+      --gris-cable: #7f8c8d;
+      --acierto: #27ae60;
+      --fallo: #e74c3c;
+      --sombra: rgba(0, 0, 0, 0.08);
+      --card-bg: #ffffff;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: var(--fondo);
+      color: var(--texto);
+      font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
+      line-height: 1.5;
+      padding: 1rem;
+    }
+
+    .app-container {
+      max-width: 1300px;
+      margin: 0 auto;
+      background: var(--card-bg);
+      border-radius: 2rem;
+      box-shadow: 0 12px 28px var(--sombra);
+      overflow: hidden;
+      border: 1px solid #dce5ec;
+    }
+
+    header {
+      background: #e8f0f8;
+      padding: 1.2rem 2rem;
+      border-bottom: 3px solid var(--azul-electricidad);
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 1rem;
+    }
+    h1 {
+      font-size: 1.7rem;
+      font-weight: 600;
+      color: #1e5f8e;
+      letter-spacing: -0.2px;
+    }
+    h1 small {
+      font-size: 0.7rem;
+      font-weight: normal;
+      color: #5f8a9e;
+    }
+
+    nav {
+      display: flex;
+      gap: 0.5rem;
+      background: #e0eaf2;
+      padding: 0.6rem 2rem;
+      border-bottom: 1px solid #d0dfe8;
+      flex-wrap: wrap;
+    }
+    .nav-btn {
+      background: transparent;
+      border: none;
+      font-size: 0.95rem;
+      padding: 0.5rem 1.2rem;
+      border-radius: 40px;
+      cursor: pointer;
+      font-weight: 500;
+      transition: all 0.2s;
+      color: #1e5f8e;
+    }
+    .nav-btn.active {
+      background-color: var(--azul-electricidad);
+      color: white;
+    }
+    .nav-btn:hover:not(.active) {
+      background-color: #cfdfea;
+    }
+
+    .view {
+      display: none;
+      padding: 2rem;
+      animation: fade 0.2s ease;
+    }
+    .active-view { display: block; }
+    @keyframes fade { from { opacity: 0; transform: translateY(5px);} to { opacity: 1; transform: translateY(0);} }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+    .stat-card {
+      background: var(--fondo);
+      border-radius: 1.5rem;
+      padding: 1rem;
+      text-align: center;
+      border-left: 6px solid var(--amarillo-alerta);
+      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    }
+    .stat-number {
+      font-size: 2.2rem;
+      font-weight: 700;
+      color: var(--azul-electricidad);
+    }
+    .progress-bar-bg {
+      background: #e2e8f0;
+      border-radius: 40px;
+      height: 12px;
+      overflow: hidden;
+      margin: 0.8rem 0;
+    }
+    .progress-fill {
+      background: var(--azul-electricidad);
+      width: 0%;
+      height: 100%;
+      transition: width 0.2s;
+    }
+
+    .conceptos-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+      gap: 1rem;
+      max-height: 65vh;
+      overflow-y: auto;
+      padding-right: 0.3rem;
+    }
+    .concepto-item {
+      background: white;
+      border-radius: 1.2rem;
+      padding: 0.8rem 1rem;
+      border-left: 5px solid var(--gris-cable);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+    .concepto-titulo {
+      font-weight: 700;
+      color: #1e5f8e;
+    }
+    .concepto-desc {
+      font-size: 0.85rem;
+      color: #4a627a;
+      margin-top: 6px;
+      border-top: 1px solid #eef2f6;
+      padding-top: 6px;
+    }
+    .badge-progreso {
+      font-size: 0.7rem;
+      background: #eef2f6;
+      border-radius: 20px;
+      padding: 2px 10px;
+      display: inline-block;
+      margin-top: 8px;
+    }
+
+    /* práctica */
+    .flashcard {
+      background: #ffffff;
+      border-radius: 2rem;
+      padding: 1.8rem;
+      text-align: center;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+      border: 1px solid #dce5ec;
+      max-width: 750px;
+      margin: 0 auto;
+    }
+    .pregunta {
+      font-size: 1.4rem;
+      font-weight: 500;
+      margin-bottom: 1.8rem;
+      background: #e8f0f8;
+      padding: 1.2rem;
+      border-radius: 1.5rem;
+    }
+    .respuesta-oculta {
+      background: #f4f8fc;
+      border-radius: 1.2rem;
+      padding: 1rem;
+      margin: 1rem 0;
+      display: none;
+    }
+    .palabras-baraja {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 0.6rem;
+      margin: 1.5rem 0;
+    }
+    .palabra-btn {
+      background: var(--azul-electricidad);
+      color: white;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 2rem;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: 0.1s;
+    }
+    .orden-actual {
+      background: #f8fafc;
+      border-radius: 1rem;
+      padding: 1rem;
+      min-height: 80px;
+      margin: 1rem 0;
+      text-align: left;
+      border: 1px dashed #cbd5e1;
+    }
+    .btn {
+      background: #e2e8f0;
+      border: none;
+      padding: 0.6rem 1.5rem;
+      border-radius: 3rem;
+      font-weight: 600;
+      margin: 0.3rem;
+      cursor: pointer;
+      font-family: inherit;
+    }
+    .btn-primary { background: var(--azul-electricidad); color: white; }
+    .btn-acierto { background: var(--acierto); color: white; }
+    .btn-fallo { background: var(--fallo); color: white; }
+    .modo-selector { display: flex; justify-content: center; gap: 0.8rem; margin-bottom: 1.5rem; flex-wrap: wrap; }
+    footer {
+      text-align: center;
+      padding: 1rem;
+      font-size: 0.75rem;
+      border-top: 1px solid #dce5ec;
+      background: #f8fbfe;
+    }
+    @media (max-width: 680px) {
+      .view { padding: 1rem; }
+      .pregunta { font-size: 1rem; }
+    }
+  </style>
+</head>
+<body>
+<div class="app-container">
+  <header>
+    <h1>⚡ Instalaciones Eléctricas · Colombia <small>100 conceptos para residencias e industria</small></h1>
+    <div style="font-size:0.8rem;">🏠 Viviendas · 🏭 Industria · RETIE · RETILAP · Seguridad · Protecciones</div>
+  </header>
+  <nav>
+    <button class="nav-btn active" data-view="dashboard">📊 Panel</button>
+    <button class="nav-btn" data-view="listado">📚 Compendio</button>
+    <button class="nav-btn" data-view="practica">🃏 Práctica</button>
+  </nav>
+
+  <section id="dashboard" class="view active-view">
+    <div class="stats-grid" id="statsContainer"></div>
+    <div class="card" style="background:white; border-radius:1.6rem; padding:1.2rem;">
+      <h3>📈 Progreso en instalaciones eléctricas</h3>
+      <div class="progress-bar-bg"><div class="progress-fill" id="globalProgressFill"></div></div>
+      <p id="globalProgressText"></p>
+      <button id="resetProgresoBtn" class="btn" style="background:#cfdfea;">🔄 Reiniciar progreso</button>
+    </div>
+  </section>
+
+  <section id="listado" class="view">
+    <input type="text" id="filtroListado" placeholder="🔍 Buscar concepto o definición..." style="width:100%; padding:10px; margin-bottom:15px; border-radius:40px; border:1px solid #cbd5e1;">
+    <div id="conceptosListadoContainer" class="conceptos-grid"></div>
+  </section>
+
+  <section id="practica" class="view">
+    <div class="modo-selector">
+      <button id="modoConceptoDef" class="btn btn-primary">📖 Concepto → Definición</button>
+      <button id="modoDefConcepto" class="btn">🔄 Definición → Concepto</button>
+      <button id="modoOrdenar" class="btn">🧩 Ordenar definición</button>
+    </div>
+    <div id="practicaContainer"></div>
+  </section>
+  <footer>Progreso guardado localmente · Ejercicio de ordenar definición · Basado en normativa colombiana (RETIE, RETILAP, NTC 2050)</footer>
+</div>
+
+<script>
+  // --------------------------------------------------------------
+  // 100 CONCEPTOS DE INSTALACIONES ELÉCTRICAS (Colombia, residencial e industrial)
+  // --------------------------------------------------------------
+  const conceptosData = [
+    [1, "RETIE", "Reglamento Técnico de Instalaciones Eléctricas de Colombia; norma obligatoria para diseños y construcciones."],
+    [2, "RETILAP", "Reglamento Técnico de Iluminación y Alumbrado Público de Colombia."],
+    [3, "NTC 2050", "Código Eléctrico Nacional colombiano (basado en NEC), complementario al RETIE."],
+    [4, "Circuito eléctrico", "Trayectoria cerrada por donde circula corriente eléctrica, compuesta de generador, conductores y carga."],
+    [5, "Carga eléctrica", "Dispositivo que consume energía eléctrica (bombilla, motor, electrodoméstico)."],
+    [6, "Corriente continua (DC)", "Flujo de electrones en una sola dirección (baterías, paneles solares)."],
+    [7, "Corriente alterna (AC)", "Corriente que cambia de dirección periódicamente, usada en redes eléctricas."],
+    [8, "Voltaje", "Diferencia de potencial eléctrico, medido en voltios (V). Fuerza que impulsa la corriente."],
+    [9, "Intensidad de corriente", "Cantidad de electrones que fluye por un conductor, medida en amperios (A)."],
+    [10, "Resistencia eléctrica", "Oposición al paso de la corriente, medida en ohmios (Ω)."],
+    [11, "Potencia eléctrica", "Trabajo realizado por unidad de tiempo, medida en vatios (W) = V × I."],
+    [12, "Energía eléctrica", "Potencia multiplicada por tiempo, medida en kilovatios-hora (kWh)."],
+    [13, "Ley de Ohm", "Relación entre voltaje, corriente y resistencia: V = I × R."],
+    [14, "Conductor eléctrico", "Material que permite el flujo de electrones (cobre, aluminio)."],
+    [15, "Aislante", "Material que dificulta el paso de la corriente (plástico, goma, cerámica)."],
+    [16, "Cable", "Conductor recubierto de aislante, puede ser unipolar o multipolar."],
+    [17, "Calibre de cable", "Grosor del conductor, definido por AWG (American Wire Gauge). Menor número, mayor sección."],
+    [18, "Ampacidad", "Máxima corriente que puede transportar un conductor sin sobrecalentarse."],
+    [19, "Caída de tensión", "Disminución del voltaje a lo largo del conductor debido a su resistencia."],
+    [20, "Circuito derivado", "Parte de la instalación que alimenta uno o varios tomacorrientes o equipos."],
+    [21, "Tablero de distribución", "Panel que contiene interruptores y protecciones, distribuye la energía a los circuitos."],
+    [22, "Interruptor termomagnético", "Protege contra sobrecargas y cortocircuitos; se basa en calor y efecto magnético."],
+    [23, "Interruptor diferencial", "Protege contra fugas a tierra (contactos indirectos); se basa en diferencia de corrientes."],
+    [24, "Protección contra sobrecorriente", "Dispositivo (breakers, fusibles) que desconecta el circuito si la corriente excede lo seguro."],
+    [25, "Puesta a tierra", "Conexión de las partes metálicas de la instalación a tierra para seguridad."],
+    [26, "Barra de tierra", "Electrodo enterrado (varilla de cobre) que disipa corrientes de falla."],
+    [27, "Conductor de protección (PE)", "Cable verde/amarillo que conecta carcasas a tierra."],
+    [28, "Conductor neutro", "Conductor que retorna la corriente al transformador, normalmente aislado en blanco."],
+    [29, "Sistema TN", "Sistema de puesta a tierra donde el neutro y la tierra están conectados en la fuente."],
+    [30, "Sistema TT", "Sistema donde la tierra de las masas es independiente de la tierra del neutro."],
+    [31, "Sistema IT", "Sistema con neutro aislado o impedante, usado en quirófanos y minería."],
+    [32, "Acometida", "Cable que va desde la red pública hasta el medidor del usuario."],
+    [33, "Medidor de energía", "Equipo que registra el consumo eléctrico en kWh."],
+    [34, "Carga máxima demandada", "Potencia máxima que puede consumir una instalación en un momento dado."],
+    [35, "Factor de demanda", "Relación entre la carga máxima y la carga total instalada (menor o igual a 1)."],
+    [36, "Factor de potencia", "Relación entre potencia activa (kW) y potencia aparente (kVA); ideal cerca de 1."],
+    [37, "Corrección del factor de potencia", "Uso de capacitores para reducir la potencia reactiva y mejorar eficiencia."],
+    [38, "Armónicos", "Distorsiones en la onda de corriente causadas por cargas no lineales (electrónicas)."],
+    [39, "Cortocircuito", "Contacto accidental entre dos conductores de distinta fase o fase-neutro, produce corriente muy alta."],
+    [40, "Falla a tierra", "Contacto de una fase con partes metálicas puestas a tierra."],
+    [41, "Corriente de cortocircuito", "Corriente máxima que puede circular en un punto durante una falla."],
+    [42, "Poder de corte", "Capacidad máxima de un interruptor para interrumpir una corriente de falla."],
+    [43, "Coordinación de protecciones", "Ajuste de dispositivos para que solo el más cercano a la falla dispare."],
+    [44, "Selectividad", "Propiedad de un sistema de protecciones donde solo opera el interruptor aguas arriba si falla el de aguas abajo."],
+    [45, "Tablero general", "Tablero principal que recibe la acometida y distribuye a sub-tableros."],
+    [46, "Subtablero", "Tablero secundario ubicado en una zona específica (ej. piso, taller)."],
+    [47, "Circuito de alumbrado", "Circuito exclusivo para iluminación (lámparas)."],
+    [48, "Circuito de tomacorrientes", "Circuito para enchufes de uso general (110V en residencias)."],
+    [49, "Circuito de fuerza", "Circuito para equipos de alta potencia (motores, aires acondicionados, estufas)."],
+    [50, "Circuito de equipos especiales", "Circuito dedicado a electrodomésticos específicos (nevera, lavadora, horno)."],
+    [51, "Lámpara LED", "Fuente de luz de bajo consumo y larga vida útil."],
+    [52, "Lámpara fluorescente", "Tubo de descarga en gas, eficiente pero requiere balasto."],
+    [53, "Balasto", "Dispositivo que limita la corriente en lámparas de descarga."],
+    [54, "Luminaria", "Conjunto que incluye la lámpara, el portalámparas y el difusor."],
+    [55, "Nivel de iluminación (lux)", "Intensidad luminosa por unidad de área; RETILAP define mínimos."],
+    [56, "Requisitos de iluminación RETILAP", "Norma colombiana para eficiencia energética y niveles de iluminación."],
+    [57, "Motor eléctrico", "Máquina que convierte energía eléctrica en mecánica rotacional."],
+    [58, "Arrancador de motor", "Dispositivo que controla la puesta en marcha de un motor (contactores, relés)."],
+    [59, "Sobrecarga en motor", "Condición donde el motor consume más corriente de la nominal, causando daño."],
+    [60, "Relé térmico", "Protección contra sobrecarga en motores, basada en calor."],
+    [61, "Contactor", "Interruptor electromagnético para abrir/cerrar circuitos de potencia."],
+    [62, "Variador de frecuencia (VFD)", "Controlador que regula velocidad y torque de motores AC."],
+    [63, "Cableado de potencia", "Conductores que transportan grandes corrientes para maquinaria."],
+    [64, "Cableado de control", "Conductores de menor sección para señales y botoneras."],
+    [65, "Bandeja portacables", "Soporte metálico para tender cables en instalaciones industriales."],
+    [66, "Tubería conduit", "Tubo (PVC o metálico) que protege los cables."],
+    [67, "Canaleta", "Canal plástico o metálico para ocultar cables en viviendas."],
+    [68, "Caja de paso", "Caja donde se realizan empalmes y derivaciones."],
+    [69, "Empalme eléctrico", "Unión de dos o más conductores mediante conectores o soldadura."],
+    [70, "Planos eléctricos", "Documentos gráficos que muestran la distribución de circuitos, tableros y cargas."],
+    [71, "Diagrama unifilar", "Representación simplificada de la instalación con una sola línea por fase."],
+    [72, "Diagrama multifilar", "Representación detallada mostrando cada conductor individualmente."],
+    [73, "Cuadro de cargas", "Tabla que lista circuitos, protecciones, conductores y cargas."],
+    [74, "Memoria de cálculo", "Documento técnico que justifica las selecciones de componentes y dimensiones."],
+    [75, "Certificado de conformidad RETIE", "Documento exigido por la Superintendencia de Industria y Comercio para instalaciones."],
+    [76, "Inspección visual eléctrica", "Verificación de conexiones, protecciones y puesta a tierra antes de energizar."],
+    [77, "Prueba de aislamiento", "Medición con megóhmetro de resistencia de aislamiento entre conductores y tierra."],
+    [78, "Prueba de continuidad", "Verificación de que los conductores de tierra y neutro están correctamente conectados."],
+    [79, "Polo a tierra", "Electrodo enterrado; resistencia recomendada ≤ 10 ohmios en residencias."],
+    [80, "Resistividad del suelo", "Capacidad del terreno para conducir corriente eléctrica."],
+    [81, "Sistema de pararrayos", "Protección contra descargas atmosféricas (puntas, bajantes, malla de tierra)."],
+    [82, "SPD (Supresor de sobretensiones)", "Dispositivo que limita sobretensiones transitorias (rayos, maniobras)."],
+    [83, "Tablero de fuerza", "Tablero industrial con protección para motores y equipos."],
+    [84, "Centro de control de motores (CCM)", "Conjunto de gabinetes que agrupan arrancadores y protecciones."],
+    [85, "Batería de condensadores", "Banco de capacitores para corrección del factor de potencia."],
+    [86, "Transformador de distribución", "Equipo que reduce alta tensión a baja tensión (ej. 13.2 kV a 220/127V)."],
+    [87, "Subestación eléctrica", "Instalación que recibe, transforma y distribuye energía eléctrica."],
+    [88, "Celdas de media tensión", "Conjunto de interruptores, fusibles y seccionadores para tensiones superiores a 1 kV."],
+    [89, "Seccionador", "Dispositivo que abre un circuito sin carga, para seguridad en mantenimiento."],
+    [90, "Fusible", "Protección de un solo uso que se funde al exceder la corriente nominal."],
+    [91, "Tablero de distribución residencial", "Tablero empotrado de hasta 220V, con breakers termomagnéticos."],
+    [92, "Número de circuitos mínimos RETIE", "Vivienda: mínimo un circuito de iluminación, uno de tomas, uno de cocina."],
+    [93, "Protección diferencial (ID)", "Obligatoria en circuitos de tomacorrientes y zonas húmedas (30 mA)."],
+    [94, "Zonas húmedas", "Baños, cocinas, lavaderos, exteriores; requieren protección diferencial e IP adecuado."],
+    [95, "Grado de protección IP", "Código que indica protección contra sólidos (primer dígito) y líquidos (segundo)."],
+    [96, "Certificado RETIE de producto", "Certificación obligatoria para equipos eléctricos vendidos en Colombia."],
+    [97, "Organismo de certificación", "Entidad acreditada por ONAC para evaluar conformidad RETIE."],
+    [98, "Superintendencia de Industria y Comercio (SIC)", "Autoridad que vigila el cumplimiento del RETIE."],
+    [99, "Señalización de seguridad eléctrica", "Adhesivos y rótulos de advertencia (riesgo eléctrico, voltaje)."],
+    [100, "Eficiencia energética en instalaciones", "Uso de dispositivos de bajo consumo (LED, motores IE3) para reducir pérdidas."]
+  ];
+
+  // --------------------- LOCALSTORAGE Y PROGRESO -------------------------
+  let progreso = {};
+  const STORAGE_KEY = "instalacionesElectricasProgreso";
+
+  function cargarProgreso() {
+    const guardado = localStorage.getItem(STORAGE_KEY);
+    if (guardado) progreso = JSON.parse(guardado);
+    else {
+      progreso = {};
+      for (let i = 1; i <= 100; i++) progreso[i] = { aciertos: 0, fallos: 0 };
+    }
+  }
+  function guardarProgreso() { localStorage.setItem(STORAGE_KEY, JSON.stringify(progreso)); }
+  function registrarResultado(id, acierto) {
+    if (!progreso[id]) progreso[id] = { aciertos: 0, fallos: 0 };
+    if (acierto) progreso[id].aciertos += 1;
+    else progreso[id].fallos += 1;
+    guardarProgreso();
+    renderDashboard();
+    renderListado(document.getElementById("filtroListado")?.value || "");
+    if (window.currentCardId === id && document.getElementById("infoProgresoCard")) {
+      document.getElementById("infoProgresoCard").innerHTML = `📊 Concepto ${id} · ✅ ${progreso[id].aciertos} aciertos · ❌ ${progreso[id].fallos} fallos`;
+    }
+  }
+
+  function renderDashboard() {
+    let totalAciertos = 0, totalFallos = 0, conceptosConAcierto = 0;
+    for (let i = 1; i <= 100; i++) {
+      const p = progreso[i] || { aciertos: 0, fallos: 0 };
+      totalAciertos += p.aciertos;
+      totalFallos += p.fallos;
+      if (p.aciertos > 0) conceptosConAcierto++;
+    }
+    const porcentaje = (conceptosConAcierto / 100) * 100;
+    document.getElementById("globalProgressFill").style.width = `${porcentaje}%`;
+    document.getElementById("globalProgressText").innerHTML = `${conceptosConAcierto} de 100 conceptos con al menos 1 acierto (${Math.round(porcentaje)}%).`;
+    document.getElementById("statsContainer").innerHTML = `
+      <div class="stat-card"><div class="stat-number">${totalAciertos}</div>✅ Aciertos totales</div>
+      <div class="stat-card"><div class="stat-number">${totalFallos}</div>❌ Fallos</div>
+      <div class="stat-card"><div class="stat-number">${conceptosConAcierto}</div>📘 Conceptos dominados</div>
+      <div class="stat-card"><div class="stat-number">${Math.round((totalAciertos/(totalAciertos+totalFallos+0.001))*100)}%</div>📊 Tasa éxito</div>
+    `;
+  }
+
+  function renderListado(filtro = "") {
+    const container = document.getElementById("conceptosListadoContainer");
+    container.innerHTML = "";
+    const filtroLower = filtro.toLowerCase();
+    for (let c of conceptosData) {
+      const [id, nombre, definicion] = c;
+      const prog = progreso[id] || { aciertos: 0, fallos: 0 };
+      if (filtro && !nombre.toLowerCase().includes(filtroLower) && !definicion.toLowerCase().includes(filtroLower)) continue;
+      const div = document.createElement("div");
+      div.className = "concepto-item";
+      div.innerHTML = `<div class="concepto-titulo">${id}. ${nombre}</div>
+                       <div class="concepto-desc">⚡ ${definicion.substring(0, 150)}${definicion.length > 150 ? '…' : ''}</div>
+                       <span class="badge-progreso">✅ ${prog.aciertos} aciertos · ❌ ${prog.fallos} fallos</span>`;
+      container.appendChild(div);
+    }
+  }
+
+  // --------------------- PRÁCTICA: TRES MODOS -------------------------
+  let currentMode = "concepto_def";
+  let cardsArray = [];
+  let currentCardIndex = 0;
+  let currentCardId = null;
+  let currentOrdenarPalabras = [];
+  let shuffledPalabras = [];
+  let selectedOrder = [];
+  let ordenarRespuestaCorrecta = "";
+
+  const practicaDiv = document.getElementById("practicaContainer");
+
+  function construirCards() {
+    cardsArray = conceptosData.map(item => {
+      const [id, concepto, definicion] = item;
+      if (currentMode === "concepto_def") {
+        return { id, pregunta: `⚡ Concepto: ${concepto}`, respuestaCorrecta: definicion };
+      } else if (currentMode === "def_concepto") {
+        let defCorta = definicion.length > 130 ? definicion.substring(0, 127) + "…" : definicion;
+        return { id, pregunta: `✍️ Definición: "${defCorta}"`, respuestaCorrecta: concepto };
+      } else {
+        return { id, concepto, definicion };
+      }
+    });
+  }
+
+  function renderFlashcardNormal() {
+    if (!cardsArray.length) return;
+    const card = cardsArray[currentCardIndex];
+    currentCardId = card.id;
+    practicaDiv.innerHTML = `
+      <div class="flashcard">
+        <div class="pregunta">${card.pregunta}</div>
+        <button id="mostrarRespuestaBtn" class="btn">📖 Mostrar respuesta</button>
+        <div id="respuestaDiv" class="respuesta-oculta"><strong>Respuesta:</strong><br>${card.respuestaCorrecta}</div>
+        <div style="margin-top:1rem;">
+          <button id="aciertoBtn" class="btn btn-acierto" disabled>✅ Acierto</button>
+          <button id="falloBtn" class="btn btn-fallo" disabled>❌ Fallo</button>
+        </div>
+        <button id="siguienteCardBtn" class="btn" style="margin-top:1rem;">⏩ Siguiente</button>
+        <p id="infoProgresoCard" style="margin-top:0.8rem;">📊 ${currentMode === "concepto_def" ? "Concepto" : "Definición"} ${card.id} · ✅ ${progreso[card.id]?.aciertos||0} aciertos · ❌ ${progreso[card.id]?.fallos||0} fallos</p>
+      </div>
+    `;
+    document.getElementById("mostrarRespuestaBtn").onclick = () => {
+      const respDiv = document.getElementById("respuestaDiv");
+      if (respDiv.style.display !== "block") {
+        respDiv.style.display = "block";
+        document.getElementById("aciertoBtn").disabled = false;
+        document.getElementById("falloBtn").disabled = false;
+      }
+    };
+    document.getElementById("aciertoBtn").onclick = () => { registrarResultado(currentCardId, true); siguienteNormal(); };
+    document.getElementById("falloBtn").onclick = () => { registrarResultado(currentCardId, false); siguienteNormal(); };
+    document.getElementById("siguienteCardBtn").onclick = () => siguienteNormal();
+  }
+
+  function siguienteNormal() {
+    currentCardIndex = (currentCardIndex + 1) % cardsArray.length;
+    renderFlashcardNormal();
+  }
+
+  function inicializarOrdenar() {
+    const card = cardsArray[currentCardIndex];
+    currentCardId = card.id;
+    const definicionOriginal = card.definicion;
+    ordenarRespuestaCorrecta = definicionOriginal;
+    let palabras = definicionOriginal.split(/\s+/).filter(p => p.length > 0);
+    currentOrdenarPalabras = [...palabras];
+    shuffledPalabras = [...palabras];
+    for (let i = shuffledPalabras.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [shuffledPalabras[i], shuffledPalabras[j]] = [shuffledPalabras[j], shuffledPalabras[i]];
+    }
+    selectedOrder = [];
+    renderOrdenarUI();
+  }
+
+  function renderOrdenarUI() {
+    const card = cardsArray[currentCardIndex];
+    const prog = progreso[currentCardId] || { aciertos:0, fallos:0 };
+    let palabrasHTML = shuffledPalabras.map(p => `<button class="palabra-btn" data-palabra="${p.replace(/"/g, '&quot;')}">${p}</button>`).join('');
+    let ordenHTML = selectedOrder.map(p => `<span style="background:#e8f0f8; padding:0.2rem 0.6rem; margin:0.2rem; border-radius:1rem;">${p}</span>`).join(' ');
+    if (ordenHTML === "") ordenHTML = "<em>Haz clic en las palabras en el orden correcto...</em>";
+    practicaDiv.innerHTML = `
+      <div class="flashcard">
+        <h3>🧩 Ordena la definición de:</h3>
+        <div class="pregunta" style="background:#e8f0f8;">📌 ${card.concepto}</div>
+        <div class="orden-actual"><strong>Tu orden actual:</strong><br> ${ordenHTML}</div>
+        <div class="palabras-baraja" id="palabrasBaraja">${palabrasHTML}</div>
+        <div>
+          <button id="resetOrdenBtn" class="btn" style="background:#cfdfea;">🔁 Reiniciar orden</button>
+          <button id="comprobarOrdenBtn" class="btn btn-primary">✓ Comprobar</button>
+        </div>
+        <button id="siguienteOrdenBtn" class="btn" style="margin-top:1rem;">⏩ Siguiente concepto</button>
+        <p id="infoProgresoCard">✅ ${prog.aciertos} aciertos · ❌ ${prog.fallos} fallos</p>
+        <div id="feedbackOrden" style="margin-top:0.8rem; font-weight:bold;"></div>
+      </div>
+    `;
+    document.querySelectorAll(".palabra-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const palabra = btn.getAttribute("data-palabra");
+        const idx = shuffledPalabras.indexOf(palabra);
+        if (idx !== -1) {
+          shuffledPalabras.splice(idx, 1);
+          selectedOrder.push(palabra);
+          renderOrdenarUI();
+        }
+      });
+    });
+    document.getElementById("resetOrdenBtn").onclick = () => {
+      shuffledPalabras = [...currentOrdenarPalabras];
+      for (let i = shuffledPalabras.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [shuffledPalabras[i], shuffledPalabras[j]] = [shuffledPalabras[j], shuffledPalabras[i]];
+      }
+      selectedOrder = [];
+      renderOrdenarUI();
+    };
+    document.getElementById("comprobarOrdenBtn").onclick = () => {
+      const ordenUsuario = selectedOrder.join(" ");
+      if (ordenUsuario === ordenarRespuestaCorrecta) {
+        document.getElementById("feedbackOrden").innerHTML = "<span style='color:#27ae60'>✅ ¡Correcto! Definición ordenada correctamente.</span>";
+        registrarResultado(currentCardId, true);
+        setTimeout(() => siguienteOrdenar(), 1200);
+      } else {
+        document.getElementById("feedbackOrden").innerHTML = `<span style='color:#e74c3c'>❌ Incorrecto. La definición correcta es: "${ordenarRespuestaCorrecta}"</span>`;
+        registrarResultado(currentCardId, false);
+        setTimeout(() => siguienteOrdenar(), 2000);
+      }
+      document.getElementById("comprobarOrdenBtn").disabled = true;
+      document.querySelectorAll(".palabra-btn").forEach(b => b.style.pointerEvents = "none");
+      setTimeout(() => {
+        if (document.getElementById("comprobarOrdenBtn")) document.getElementById("comprobarOrdenBtn").disabled = false;
+        document.querySelectorAll(".palabra-btn").forEach(b => b.style.pointerEvents = "auto");
+      }, 2000);
+    };
+    document.getElementById("siguienteOrdenBtn").onclick = () => siguienteOrdenar();
+  }
+
+  function siguienteOrdenar() {
+    currentCardIndex = (currentCardIndex + 1) % cardsArray.length;
+    inicializarOrdenar();
+  }
+
+  function setMode(mode) {
+    currentMode = mode;
+    construirCards();
+    currentCardIndex = 0;
+    if (mode === "ordenar") inicializarOrdenar();
+    else renderFlashcardNormal();
+  }
+
+  function initUI() {
+    document.querySelectorAll(".nav-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const viewId = btn.getAttribute("data-view");
+        document.querySelectorAll(".view").forEach(v => v.classList.remove("active-view"));
+        document.getElementById(viewId).classList.add("active-view");
+        document.querySelectorAll(".nav-btn").forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+        if (viewId === "listado") renderListado(document.getElementById("filtroListado").value);
+        if (viewId === "dashboard") renderDashboard();
+        if (viewId === "practica") setMode(currentMode);
+      });
+    });
+    document.getElementById("modoConceptoDef").addEventListener("click", () => {
+      currentMode = "concepto_def";
+      setMode("concepto_def");
+      document.getElementById("modoConceptoDef").classList.add("btn-primary");
+      document.getElementById("modoDefConcepto").classList.remove("btn-primary");
+      document.getElementById("modoOrdenar").classList.remove("btn-primary");
+    });
+    document.getElementById("modoDefConcepto").addEventListener("click", () => {
+      currentMode = "def_concepto";
+      setMode("def_concepto");
+      document.getElementById("modoDefConcepto").classList.add("btn-primary");
+      document.getElementById("modoConceptoDef").classList.remove("btn-primary");
+      document.getElementById("modoOrdenar").classList.remove("btn-primary");
+    });
+    document.getElementById("modoOrdenar").addEventListener("click", () => {
+      currentMode = "ordenar";
+      setMode("ordenar");
+      document.getElementById("modoOrdenar").classList.add("btn-primary");
+      document.getElementById("modoConceptoDef").classList.remove("btn-primary");
+      document.getElementById("modoDefConcepto").classList.remove("btn-primary");
+    });
+    document.getElementById("resetProgresoBtn").addEventListener("click", () => {
+      if (confirm("¿Reiniciar todo el progreso? Se perderán aciertos y fallos.")) {
+        for (let i = 1; i <= 100; i++) progreso[i] = { aciertos: 0, fallos: 0 };
+        guardarProgreso();
+        renderDashboard();
+        renderListado(document.getElementById("filtroListado")?.value || "");
+        if (currentMode === "ordenar") inicializarOrdenar();
+        else if (currentMode !== "ordenar") renderFlashcardNormal();
+      }
+    });
+    document.getElementById("filtroListado").addEventListener("input", (e) => renderListado(e.target.value));
+  }
+
+  window.addEventListener("DOMContentLoaded", () => {
+    cargarProgreso();
+    construirCards();
+    setMode("concepto_def");
+    renderDashboard();
+    renderListado();
+    initUI();
+  });
+</script>
+</body>
+</html>

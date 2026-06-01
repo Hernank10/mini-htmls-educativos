@@ -1,0 +1,902 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Entrenador de Numerales Ordinales</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        .card {
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            border: none;
+            margin-bottom: 20px;
+        }
+        .navbar-brand {
+            font-weight: 600;
+        }
+        .section {
+            display: none;
+        }
+        .active-section {
+            display: block;
+        }
+        .question-card {
+            background-color: #e9ecef;
+            border-left: 5px solid #0d6efd;
+        }
+        .correct-answer {
+            color: #198754;
+            font-weight: bold;
+        }
+        .wrong-answer {
+            color: #dc3545;
+            font-weight: bold;
+        }
+        .stats-card {
+            background: linear-gradient(135deg, #0d6efd, #6610f2);
+            color: white;
+        }
+        .concept-card {
+            background-color: #e7f1ff;
+            border-left: 5px solid #0d6efd;
+        }
+        .btn-primary {
+            background-color: #0d6efd;
+            border-color: #0d6efd;
+        }
+        .btn-success {
+            background-color: #198754;
+            border-color: #198754;
+        }
+        .table-hover tbody tr:hover {
+            background-color: rgba(13, 110, 253, 0.1);
+        }
+        .badge-score {
+            font-size: 1.1rem;
+        }
+        .progress {
+            height: 10px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container">
+            <a class="navbar-brand" href="#">
+                <i class="bi bi-sort-numeric-up"></i> Entrenador de Numerales Ordinales
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link section-link active" href="#" data-section="home">Inicio</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link section-link" href="#" data-section="concepts">Conceptos</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link section-link" href="#" data-section="quiz-base">Cuestionario Base</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link section-link" href="#" data-section="quiz-custom">Cuestionario Personalizado</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link section-link" href="#" data-section="create">Crear Ejemplos</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link section-link" href="#" data-section="view">Ver Ejemplos</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Container -->
+    <div class="container my-4">
+        <!-- Home Section -->
+        <section id="home" class="section active-section">
+            <div class="row">
+                <div class="col-12 text-center mb-4">
+                    <h1 class="display-4">Entrenador de Numerales Ordinales</h1>
+                    <p class="lead">Aprende y practica el uso correcto de los numerales ordinales en español</p>
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100 text-center">
+                        <div class="card-body">
+                            <i class="bi bi-journal-text display-4 text-primary"></i>
+                            <h4 class="card-title mt-3">Conceptos Clave</h4>
+                            <p class="card-text">Aprende las reglas fundamentales para el uso correcto de numerales ordinales.</p>
+                            <a href="#" class="btn btn-primary section-link" data-section="concepts">Ver Conceptos</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100 text-center">
+                        <div class="card-body">
+                            <i class="bi bi-pencil-square display-4 text-success"></i>
+                            <h4 class="card-title mt-3">Cuestionarios</h4>
+                            <p class="card-text">Practica con nuestros cuestionarios interactivos y mejora tus habilidades.</p>
+                            <div class="d-grid gap-2">
+                                <a href="#" class="btn btn-success section-link" data-section="quiz-base">Base</a>
+                                <a href="#" class="btn btn-outline-success section-link" data-section="quiz-custom">Personalizado</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100 text-center">
+                        <div class="card-body">
+                            <i class="bi bi-plus-circle display-4 text-info"></i>
+                            <h4 class="card-title mt-3">Crea Ejemplos</h4>
+                            <p class="card-text">Añade tus propios ejemplos para personalizar tu experiencia de aprendizaje.</p>
+                            <a href="#" class="btn btn-info section-link" data-section="create">Crear Ejemplos</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="row mt-4">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header bg-primary text-white">
+                            <h4 class="mb-0">Estadísticas de Aprendizaje</h4>
+                        </div>
+                        <div class="card-body">
+                            <div class="row text-center">
+                                <div class="col-md-3 mb-3">
+                                    <h5 id="total-questions">0</h5>
+                                    <p class="text-muted">Preguntas Contestadas</p>
+                                </div>
+                                <div class="col-md-3 mb-3">
+                                    <h5 id="correct-answers">0</h5>
+                                    <p class="text-muted">Respuestas Correctas</p>
+                                </div>
+                                <div class="col-md-3 mb-3">
+                                    <h5 id="success-rate">0%</h5>
+                                    <p class="text-muted">Tasa de Éxito</p>
+                                </div>
+                                <div class="col-md-3 mb-3">
+                                    <h5 id="custom-examples">0</h5>
+                                    <p class="text-muted">Ejemplos Personalizados</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Concepts Section -->
+        <section id="concepts" class="section">
+            <div class="row">
+                <div class="col-12">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h2>Conceptos Clave</h2>
+                        <a href="#" class="btn btn-outline-primary section-link" data-section="home">
+                            <i class="bi bi-arrow-left"></i> Volver al Inicio
+                        </a>
+                    </div>
+                    
+                    <div class="card concept-card mb-4">
+                        <div class="card-body">
+                            <h4 class="card-title">Reglas de los Numerales Ordinales</h4>
+                            <p class="card-text">Los numerales ordinales en español denotan orden numérico y siguen reglas específicas:</p>
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item">
+                                    <strong>Solo "primero" en fechas:</strong> 1.º de enero
+                                </li>
+                                <li class="list-group-item">
+                                    <strong>Cardinales para días 2-31:</strong> 2 de mayo, 15 de septiembre
+                                </li>
+                                <li class="list-group-item">
+                                    <strong>Reyes y papas:</strong> ordinales hasta XII, luego cardinales
+                                </li>
+                                <li class="list-group-item">
+                                    <strong>Formas compuestas:</strong> trigésimo primero (31.º)
+                                </li>
+                                <li class="list-group-item">
+                                    <strong>Variantes válidas:</strong> séptimo/seteno, noveno/nono
+                                </li>
+                                <li class="list-group-item">
+                                    <strong>Siglos:</strong> ordinales (siglo XXI) o cardinales (siglo 21)
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="card concept-card">
+                        <div class="card-body">
+                            <h4 class="card-title">Ejemplos Comunes</h4>
+                            <div class="table-responsive">
+                                <table class="table table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th>Contexto</th>
+                                            <th>Número</th>
+                                            <th>Forma Correcta</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>Día del mes</td>
+                                            <td>1</td>
+                                            <td>primero</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Rey de España</td>
+                                            <td>6</td>
+                                            <td>sexto</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Siglo</td>
+                                            <td>21</td>
+                                            <td>vigésimo primero</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Ley</td>
+                                            <td>2</td>
+                                            <td>dos</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Papa</td>
+                                            <td>16</td>
+                                            <td>dieciséis</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Quiz Base Section -->
+        <section id="quiz-base" class="section">
+            <div class="row">
+                <div class="col-12">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h2>Cuestionario Base</h2>
+                        <a href="#" class="btn btn-outline-primary section-link" data-section="home">
+                            <i class="bi bi-arrow-left"></i> Volver al Inicio
+                        </a>
+                    </div>
+                    
+                    <div class="card mb-4">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <h5 class="card-title mb-0">Progreso del Cuestionario</h5>
+                                <span class="badge bg-primary badge-score" id="quiz-score">0 puntos</span>
+                            </div>
+                            <div class="progress mt-2">
+                                <div class="progress-bar" id="quiz-progress" role="progressbar" style="width: 0%"></div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="card question-card" id="question-container">
+                        <div class="card-body text-center">
+                            <h4 id="question-context" class="card-title">Contexto de la pregunta</h4>
+                            <h2 id="question-number" class="display-4 my-4">Número</h2>
+                            <div class="mb-3">
+                                <input type="text" class="form-control form-control-lg" id="answer-input" placeholder="Escribe el ordinal correcto">
+                            </div>
+                            <button class="btn btn-primary btn-lg" id="check-answer">Verificar Respuesta</button>
+                            <div id="feedback" class="mt-3"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="card d-none" id="results-container">
+                        <div class="card-body text-center">
+                            <h4 class="card-title">Resultados del Cuestionario</h4>
+                            <div class="display-4 my-4" id="final-score">0</div>
+                            <p class="lead" id="result-message"></p>
+                            <button class="btn btn-primary" id="restart-quiz">Reiniciar Cuestionario</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Quiz Custom Section -->
+        <section id="quiz-custom" class="section">
+            <div class="row">
+                <div class="col-12">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h2>Cuestionario Personalizado</h2>
+                        <a href="#" class="btn btn-outline-primary section-link" data-section="home">
+                            <i class="bi bi-arrow-left"></i> Volver al Inicio
+                        </a>
+                    </div>
+                    
+                    <div id="custom-quiz-setup" class="card mb-4">
+                        <div class="card-body">
+                            <h5 class="card-title">Configurar Cuestionario Personalizado</h5>
+                            <p id="custom-examples-count" class="card-text">Tienes 0 ejemplos personalizados disponibles.</p>
+                            <div class="mb-3">
+                                <label for="question-count" class="form-label">Número de preguntas:</label>
+                                <input type="number" class="form-control" id="question-count" min="1" max="50" value="10">
+                            </div>
+                            <button class="btn btn-primary" id="start-custom-quiz">Iniciar Cuestionario</button>
+                        </div>
+                    </div>
+                    
+                    <div class="card mb-4 d-none" id="custom-quiz-progress">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <h5 class="card-title mb-0">Progreso del Cuestionario</h5>
+                                <span class="badge bg-primary badge-score" id="custom-quiz-score">0 puntos</span>
+                            </div>
+                            <div class="progress mt-2">
+                                <div class="progress-bar" id="custom-quiz-progress-bar" role="progressbar" style="width: 0%"></div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="card question-card d-none" id="custom-question-container">
+                        <div class="card-body text-center">
+                            <h4 id="custom-question-context" class="card-title">Contexto de la pregunta</h4>
+                            <h2 id="custom-question-number" class="display-4 my-4">Número</h2>
+                            <div class="mb-3">
+                                <input type="text" class="form-control form-control-lg" id="custom-answer-input" placeholder="Escribe el ordinal correcto">
+                            </div>
+                            <button class="btn btn-primary btn-lg" id="check-custom-answer">Verificar Respuesta</button>
+                            <div id="custom-feedback" class="mt-3"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="card d-none" id="custom-results-container">
+                        <div class="card-body text-center">
+                            <h4 class="card-title">Resultados del Cuestionario Personalizado</h4>
+                            <div class="display-4 my-4" id="custom-final-score">0</div>
+                            <p class="lead" id="custom-result-message"></p>
+                            <button class="btn btn-primary" id="restart-custom-quiz">Reiniciar Cuestionario</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Create Examples Section -->
+        <section id="create" class="section">
+            <div class="row">
+                <div class="col-12">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h2>Crear Ejemplos Personalizados</h2>
+                        <a href="#" class="btn btn-outline-primary section-link" data-section="home">
+                            <i class="bi bi-arrow-left"></i> Volver al Inicio
+                        </a>
+                    </div>
+                    
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">Nuevo Ejemplo</h5>
+                            <p class="card-text">Crea tus propios ejemplos para practicar numerales ordinales en contextos específicos.</p>
+                            
+                            <form id="example-form">
+                                <div class="mb-3">
+                                    <label for="context-input" class="form-label">Contexto</label>
+                                    <input type="text" class="form-control" id="context-input" placeholder="Ej: Rey de España, Día del mes, Capítulo de libro">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="number-input" class="form-label">Número</label>
+                                    <input type="text" class="form-control" id="number-input" placeholder="Ej: 15, 21, 43">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="correct-input" class="form-label">Forma Correcta</label>
+                                    <input type="text" class="form-control" id="correct-input" placeholder="Ej: decimoquinto, vigésimo primero">
+                                </div>
+                                <button type="submit" class="btn btn-primary">Guardar Ejemplo</button>
+                            </form>
+                            
+                            <div id="form-feedback" class="mt-3"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- View Examples Section -->
+        <section id="view" class="section">
+            <div class="row">
+                <div class="col-12">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h2>Ejemplos Personalizados</h2>
+                        <a href="#" class="btn btn-outline-primary section-link" data-section="home">
+                            <i class="bi bi-arrow-left"></i> Volver al Inicio
+                        </a>
+                    </div>
+                    
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">Tus Ejemplos Guardados</h5>
+                            <p id="examples-count" class="card-text">Actualmente tienes 0 ejemplos personalizados guardados.</p>
+                            
+                            <div class="table-responsive">
+                                <table class="table table-hover" id="examples-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Contexto</th>
+                                            <th>Número</th>
+                                            <th>Forma Correcta</th>
+                                            <th>Acciones</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="examples-tbody">
+                                        <!-- Las filas se llenarán con JavaScript -->
+                                    </tbody>
+                                </table>
+                            </div>
+                            
+                            <button class="btn btn-outline-danger mt-3" id="clear-all-examples">Eliminar Todos los Ejemplos</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        // Datos iniciales de la aplicación
+        const ejemplosBase = [
+            { contexto: 'Día del mes', numero: '1', correcto: 'primero' },
+            { contexto: 'Rey de España', numero: '6', correcto: 'sexto' },
+            { contexto: 'Siglo', numero: '21', correcto: 'vigésimo primero' },
+            { contexto: 'Ley', numero: '2', correcto: 'dos' },
+            { contexto: 'Papa', numero: '16', correcto: 'dieciséis' },
+            { contexto: 'Capítulo de libro', numero: '7', correcto: 'séptimo' },
+            { contexto: 'Avenida', numero: '8', correcto: 'octava' },
+            { contexto: 'Piso de edificio', numero: '3', correcto: 'tercero' },
+            { contexto: 'Artículo de ley', numero: '1', correcto: 'primero' },
+            { contexto: 'Monarca francés', numero: '14', correcto: 'catorce' },
+            { contexto: 'Aniversario', numero: '25', correcto: 'vigésimo quinto' },
+            { contexto: 'Edición de festival', numero: '50', correcto: 'quincuagésima' },
+            { contexto: 'Concurso', numero: '2', correcto: 'segundo' },
+            { contexto: 'Tomo de enciclopedia', numero: '12', correcto: 'duodécimo' },
+            { contexto: 'Rey de Inglaterra', numero: '8', correcto: 'octavo' },
+            { contexto: 'Distrito', numero: '5', correcto: 'quinto' },
+            { contexto: 'Calle', numero: '17', correcto: 'diecisiete' },
+            { contexto: 'Guerra Mundial', numero: '2', correcto: 'segunda' },
+            { contexto: 'Década', numero: '90', correcto: 'noventa' },
+            { contexto: 'Competencia deportiva', numero: '33', correcto: 'trigésimo tercera' }
+        ];
+
+        // Estado de la aplicación
+        let ejemplosPersonalizados = [];
+        let estadisticas = {
+            totalPreguntas: 0,
+            respuestasCorrectas: 0,
+            ejemplosCreados: 0
+        };
+
+        // Elementos del DOM
+        const sectionLinks = document.querySelectorAll('.section-link');
+        const sections = document.querySelectorAll('.section');
+
+        // Inicialización
+        document.addEventListener('DOMContentLoaded', function() {
+            cargarDatos();
+            inicializarNavegacion();
+            inicializarCuestionarioBase();
+            inicializarCuestionarioPersonalizado();
+            inicializarFormularioCrear();
+            inicializarVistaEjemplos();
+            actualizarEstadisticas();
+        });
+
+        // Funciones de navegación
+        function inicializarNavegacion() {
+            sectionLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const targetSection = this.getAttribute('data-section');
+                    mostrarSeccion(targetSection);
+                });
+            });
+        }
+
+        function mostrarSeccion(sectionId) {
+            sections.forEach(section => {
+                section.classList.remove('active-section');
+            });
+            document.getElementById(sectionId).classList.add('active-section');
+            
+            // Actualizar enlaces activos
+            sectionLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('data-section') === sectionId) {
+                    link.classList.add('active');
+                }
+            });
+            
+            // Actualizar contenido específico de sección
+            if (sectionId === 'view') {
+                actualizarTablaEjemplos();
+            } else if (sectionId === 'quiz-custom') {
+                actualizarContadorEjemplosPersonalizados();
+            }
+        }
+
+        // Funciones de almacenamiento
+        function guardarDatos() {
+            localStorage.setItem('ejemplosPersonalizados', JSON.stringify(ejemplosPersonalizados));
+            localStorage.setItem('estadisticas', JSON.stringify(estadisticas));
+        }
+
+        function cargarDatos() {
+            const ejemplosGuardados = localStorage.getItem('ejemplosPersonalizados');
+            const estadisticasGuardadas = localStorage.getItem('estadisticas');
+            
+            if (ejemplosGuardados) {
+                ejemplosPersonalizados = JSON.parse(ejemplosGuardados);
+            }
+            
+            if (estadisticasGuardadas) {
+                estadisticas = JSON.parse(estadisticasGuardadas);
+            }
+        }
+
+        // Funciones de estadísticas
+        function actualizarEstadisticas() {
+            document.getElementById('total-questions').textContent = estadisticas.totalPreguntas;
+            document.getElementById('correct-answers').textContent = estadisticas.respuestasCorrectas;
+            document.getElementById('custom-examples').textContent = ejemplosPersonalizados.length;
+            
+            const tasaExito = estadisticas.totalPreguntas > 0 
+                ? Math.round((estadisticas.respuestasCorrectas / estadisticas.totalPreguntas) * 100) 
+                : 0;
+            document.getElementById('success-rate').textContent = `${tasaExito}%`;
+        }
+
+        function registrarRespuesta(correcta) {
+            estadisticas.totalPreguntas++;
+            if (correcta) {
+                estadisticas.respuestasCorrectas++;
+            }
+            guardarDatos();
+            actualizarEstadisticas();
+        }
+
+        // Funciones del cuestionario base
+        function inicializarCuestionarioBase() {
+            const checkAnswerBtn = document.getElementById('check-answer');
+            const restartQuizBtn = document.getElementById('restart-quiz');
+            const answerInput = document.getElementById('answer-input');
+            
+            let preguntas = [];
+            let preguntaActual = 0;
+            let puntuacion = 0;
+            
+            checkAnswerBtn.addEventListener('click', verificarRespuesta);
+            restartQuizBtn.addEventListener('click', reiniciarCuestionario);
+            
+            answerInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    verificarRespuesta();
+                }
+            });
+            
+            function iniciarCuestionario() {
+                preguntas = [...ejemplosBase].sort(() => Math.random() - 0.5).slice(0, 10);
+                preguntaActual = 0;
+                puntuacion = 0;
+                mostrarPregunta();
+                document.getElementById('question-container').classList.remove('d-none');
+                document.getElementById('results-container').classList.add('d-none');
+                actualizarProgreso();
+            }
+            
+            function mostrarPregunta() {
+                if (preguntaActual < preguntas.length) {
+                    const pregunta = preguntas[preguntaActual];
+                    document.getElementById('question-context').textContent = pregunta.contexto;
+                    document.getElementById('question-number').textContent = pregunta.numero;
+                    document.getElementById('answer-input').value = '';
+                    document.getElementById('feedback').textContent = '';
+                    document.getElementById('answer-input').focus();
+                } else {
+                    mostrarResultados();
+                }
+            }
+            
+            function verificarRespuesta() {
+                const respuesta = document.getElementById('answer-input').value.trim().toLowerCase();
+                const correcta = preguntas[preguntaActual].correcto;
+                
+                if (respuesta === '') return;
+                
+                if (respuesta === correcta) {
+                    document.getElementById('feedback').innerHTML = '<span class="correct-answer">¡Correcto! ✔️</span>';
+                    puntuacion += 2;
+                    registrarRespuesta(true);
+                } else {
+                    document.getElementById('feedback').innerHTML = 
+                        `<span class="wrong-answer">Incorrecto ❌. La respuesta correcta es: ${correcta}</span>`;
+                    puntuacion = Math.max(0, puntuacion - 1);
+                    registrarRespuesta(false);
+                }
+                
+                document.getElementById('quiz-score').textContent = `${puntuacion} puntos`;
+                preguntaActual++;
+                actualizarProgreso();
+                
+                setTimeout(() => {
+                    mostrarPregunta();
+                }, 1500);
+            }
+            
+            function mostrarResultados() {
+                document.getElementById('question-container').classList.add('d-none');
+                document.getElementById('results-container').classList.remove('d-none');
+                document.getElementById('final-score').textContent = puntuacion;
+                
+                let mensaje = '';
+                if (puntuacion >= 18) {
+                    mensaje = '¡Excelente! Dominas los numerales ordinales.';
+                } else if (puntuacion >= 12) {
+                    mensaje = 'Buen trabajo, pero aún puedes mejorar.';
+                } else {
+                    mensaje = 'Sigue practicando para mejorar.';
+                }
+                
+                document.getElementById('result-message').textContent = mensaje;
+            }
+            
+            function reiniciarCuestionario() {
+                iniciarCuestionario();
+            }
+            
+            function actualizarProgreso() {
+                const progreso = (preguntaActual / preguntas.length) * 100;
+                document.getElementById('quiz-progress').style.width = `${progreso}%`;
+            }
+            
+            // Iniciar el cuestionario al cargar la sección
+            iniciarCuestionario();
+        }
+
+        // Funciones del cuestionario personalizado
+        function inicializarCuestionarioPersonalizado() {
+            const startCustomQuizBtn = document.getElementById('start-custom-quiz');
+            const checkCustomAnswerBtn = document.getElementById('check-custom-answer');
+            const restartCustomQuizBtn = document.getElementById('restart-custom-quiz');
+            const customAnswerInput = document.getElementById('custom-answer-input');
+            
+            let preguntasPersonalizadas = [];
+            let preguntaActualPersonalizada = 0;
+            let puntuacionPersonalizada = 0;
+            
+            startCustomQuizBtn.addEventListener('click', iniciarCuestionarioPersonalizado);
+            checkCustomAnswerBtn.addEventListener('click', verificarRespuestaPersonalizada);
+            restartCustomQuizBtn.addEventListener('click', reiniciarCuestionarioPersonalizado);
+            
+            customAnswerInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    verificarRespuestaPersonalizada();
+                }
+            });
+            
+            function iniciarCuestionarioPersonalizado() {
+                if (ejemplosPersonalizados.length === 0) {
+                    alert('No tienes ejemplos personalizados. Crea algunos primero.');
+                    return;
+                }
+                
+                const numPreguntas = parseInt(document.getElementById('question-count').value);
+                preguntasPersonalizadas = [...ejemplosPersonalizados]
+                    .sort(() => Math.random() - 0.5)
+                    .slice(0, Math.min(numPreguntas, ejemplosPersonalizados.length));
+                
+                preguntaActualPersonalizada = 0;
+                puntuacionPersonalizada = 0;
+                
+                document.getElementById('custom-quiz-setup').classList.add('d-none');
+                document.getElementById('custom-quiz-progress').classList.remove('d-none');
+                document.getElementById('custom-question-container').classList.remove('d-none');
+                document.getElementById('custom-results-container').classList.add('d-none');
+                
+                mostrarPreguntaPersonalizada();
+                actualizarProgresoPersonalizado();
+            }
+            
+            function mostrarPreguntaPersonalizada() {
+                if (preguntaActualPersonalizada < preguntasPersonalizadas.length) {
+                    const pregunta = preguntasPersonalizadas[preguntaActualPersonalizada];
+                    document.getElementById('custom-question-context').textContent = pregunta.contexto;
+                    document.getElementById('custom-question-number').textContent = pregunta.numero;
+                    document.getElementById('custom-answer-input').value = '';
+                    document.getElementById('custom-feedback').textContent = '';
+                    document.getElementById('custom-answer-input').focus();
+                } else {
+                    mostrarResultadosPersonalizados();
+                }
+            }
+            
+            function verificarRespuestaPersonalizada() {
+                const respuesta = document.getElementById('custom-answer-input').value.trim().toLowerCase();
+                const correcta = preguntasPersonalizadas[preguntaActualPersonalizada].correcto;
+                
+                if (respuesta === '') return;
+                
+                if (respuesta === correcta) {
+                    document.getElementById('custom-feedback').innerHTML = '<span class="correct-answer">¡Correcto! ✔️</span>';
+                    puntuacionPersonalizada += 2;
+                    registrarRespuesta(true);
+                } else {
+                    document.getElementById('custom-feedback').innerHTML = 
+                        `<span class="wrong-answer">Incorrecto ❌. La respuesta correcta es: ${correcta}</span>`;
+                    puntuacionPersonalizada = Math.max(0, puntuacionPersonalizada - 1);
+                    registrarRespuesta(false);
+                }
+                
+                document.getElementById('custom-quiz-score').textContent = `${puntuacionPersonalizada} puntos`;
+                preguntaActualPersonalizada++;
+                actualizarProgresoPersonalizado();
+                
+                setTimeout(() => {
+                    mostrarPreguntaPersonalizada();
+                }, 1500);
+            }
+            
+            function mostrarResultadosPersonalizados() {
+                document.getElementById('custom-question-container').classList.add('d-none');
+                document.getElementById('custom-results-container').classList.remove('d-none');
+                document.getElementById('custom-final-score').textContent = puntuacionPersonalizada;
+                
+                let mensaje = '';
+                if (puntuacionPersonalizada >= preguntasPersonalizadas.length * 1.5) {
+                    mensaje = '¡Excelente! Dominas tus ejemplos personalizados.';
+                } else if (puntuacionPersonalizada >= preguntasPersonalizadas.length) {
+                    mensaje = 'Buen trabajo, pero aún puedes mejorar.';
+                } else {
+                    mensaje = 'Sigue practicando para mejorar.';
+                }
+                
+                document.getElementById('custom-result-message').textContent = mensaje;
+            }
+            
+            function reiniciarCuestionarioPersonalizado() {
+                document.getElementById('custom-quiz-setup').classList.remove('d-none');
+                document.getElementById('custom-quiz-progress').classList.add('d-none');
+                document.getElementById('custom-question-container').classList.add('d-none');
+                document.getElementById('custom-results-container').classList.add('d-none');
+                actualizarContadorEjemplosPersonalizados();
+            }
+            
+            function actualizarProgresoPersonalizado() {
+                const progreso = (preguntaActualPersonalizada / preguntasPersonalizadas.length) * 100;
+                document.getElementById('custom-quiz-progress-bar').style.width = `${progreso}%`;
+            }
+        }
+
+        function actualizarContadorEjemplosPersonalizados() {
+            document.getElementById('custom-examples-count').textContent = 
+                `Tienes ${ejemplosPersonalizados.length} ejemplos personalizados disponibles.`;
+        }
+
+        // Funciones para crear ejemplos
+        function inicializarFormularioCrear() {
+            const exampleForm = document.getElementById('example-form');
+            
+            exampleForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const contexto = document.getElementById('context-input').value.trim();
+                const numero = document.getElementById('number-input').value.trim();
+                const correcto = document.getElementById('correct-input').value.trim().toLowerCase();
+                
+                if (!contexto || !numero || !correcto) {
+                    mostrarMensajeFormulario('Por favor, completa todos los campos.', 'error');
+                    return;
+                }
+                
+                if (ejemplosPersonalizados.length >= 100) {
+                    mostrarMensajeFormulario('Has alcanzado el límite de 100 ejemplos personalizados.', 'error');
+                    return;
+                }
+                
+                const nuevoEjemplo = {
+                    contexto: contexto,
+                    numero: numero,
+                    correcto: correcto
+                };
+                
+                ejemplosPersonalizados.push(nuevoEjemplo);
+                guardarDatos();
+                actualizarEstadisticas();
+                
+                mostrarMensajeFormulario('Ejemplo guardado correctamente.', 'success');
+                exampleForm.reset();
+            });
+        }
+
+        function mostrarMensajeFormulario(mensaje, tipo) {
+            const feedbackElement = document.getElementById('form-feedback');
+            feedbackElement.textContent = mensaje;
+            feedbackElement.className = `alert alert-${tipo === 'success' ? 'success' : 'danger'} mt-3`;
+            
+            setTimeout(() => {
+                feedbackElement.textContent = '';
+                feedbackElement.className = '';
+            }, 3000);
+        }
+
+        // Funciones para ver ejemplos
+        function inicializarVistaEjemplos() {
+            const clearAllExamplesBtn = document.getElementById('clear-all-examples');
+            
+            clearAllExamplesBtn.addEventListener('click', function() {
+                if (confirm('¿Estás seguro de que quieres eliminar todos los ejemplos personalizados?')) {
+                    ejemplosPersonalizados = [];
+                    guardarDatos();
+                    actualizarEstadisticas();
+                    actualizarTablaEjemplos();
+                }
+            });
+        }
+
+        function actualizarTablaEjemplos() {
+            const tbody = document.getElementById('examples-tbody');
+            const examplesCount = document.getElementById('examples-count');
+            
+            tbody.innerHTML = '';
+            examplesCount.textContent = `Actualmente tienes ${ejemplosPersonalizados.length} ejemplos personalizados guardados.`;
+            
+            if (ejemplosPersonalizados.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="4" class="text-center">No hay ejemplos personalizados guardados.</td></tr>';
+                return;
+            }
+            
+            ejemplosPersonalizados.forEach((ejemplo, index) => {
+                const fila = document.createElement('tr');
+                fila.innerHTML = `
+                    <td>${ejemplo.contexto}</td>
+                    <td>${ejemplo.numero}</td>
+                    <td>${ejemplo.correcto}</td>
+                    <td>
+                        <button class="btn btn-sm btn-outline-danger delete-example" data-index="${index}">
+                            <i class="bi bi-trash"></i> Eliminar
+                        </button>
+                    </td>
+                `;
+                tbody.appendChild(fila);
+            });
+            
+            // Agregar eventos a los botones de eliminar
+            document.querySelectorAll('.delete-example').forEach(button => {
+                button.addEventListener('click', function() {
+                    const index = parseInt(this.getAttribute('data-index'));
+                    eliminarEjemplo(index);
+                });
+            });
+        }
+
+        function eliminarEjemplo(index) {
+            if (confirm('¿Estás seguro de que quieres eliminar este ejemplo?')) {
+                ejemplosPersonalizados.splice(index, 1);
+                guardarDatos();
+                actualizarEstadisticas();
+                actualizarTablaEjemplos();
+            }
+        }
+    </script>
+</body>
+</html>

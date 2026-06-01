@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>Mecánica de Motos · Colombia · 100 conceptos</title>
+  <style>
+    /* ----- VARIABLES CSS: paleta mecánica motos (rojo, gris, negro) ----- */
+    :root {
+      --fondo: #f5f5f5;
+      --texto: #1f1f1f;
+      --rojo-mecanica: #c0392b;
+      --gris-herramienta: #7f8c8d;
+      --negro-aceite: #2c3e50;
+      --acierto: #27ae60;
+      --fallo: #e67e22;
+      --sombra: rgba(0, 0, 0, 0.1);
+      --card-bg: #ffffff;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: var(--fondo);
+      color: var(--texto);
+      font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
+      line-height: 1.5;
+      padding: 1rem;
+    }
+
+    .app-container {
+      max-width: 1300px;
+      margin: 0 auto;
+      background: var(--card-bg);
+      border-radius: 2rem;
+      box-shadow: 0 12px 28px var(--sombra);
+      overflow: hidden;
+      border: 1px solid #e0e0e0;
+    }
+
+    header {
+      background: #f0f0f0;
+      padding: 1.2rem 2rem;
+      border-bottom: 3px solid var(--rojo-mecanica);
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 1rem;
+    }
+    h1 {
+      font-size: 1.7rem;
+      font-weight: 600;
+      color: #c0392b;
+      letter-spacing: -0.2px;
+    }
+    h1 small {
+      font-size: 0.7rem;
+      font-weight: normal;
+      color: #7f8c8d;
+    }
+
+    nav {
+      display: flex;
+      gap: 0.5rem;
+      background: #e8e8e8;
+      padding: 0.6rem 2rem;
+      border-bottom: 1px solid #d5d5d5;
+      flex-wrap: wrap;
+    }
+    .nav-btn {
+      background: transparent;
+      border: none;
+      font-size: 0.95rem;
+      padding: 0.5rem 1.2rem;
+      border-radius: 40px;
+      cursor: pointer;
+      font-weight: 500;
+      transition: all 0.2s;
+      color: #c0392b;
+    }
+    .nav-btn.active {
+      background-color: var(--rojo-mecanica);
+      color: white;
+    }
+    .nav-btn:hover:not(.active) {
+      background-color: #d5d5d5;
+    }
+
+    .view {
+      display: none;
+      padding: 2rem;
+      animation: fade 0.2s ease;
+    }
+    .active-view { display: block; }
+    @keyframes fade { from { opacity: 0; transform: translateY(5px);} to { opacity: 1; transform: translateY(0);} }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+    .stat-card {
+      background: var(--fondo);
+      border-radius: 1.5rem;
+      padding: 1rem;
+      text-align: center;
+      border-left: 6px solid var(--negro-aceite);
+      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    }
+    .stat-number {
+      font-size: 2.2rem;
+      font-weight: 700;
+      color: var(--rojo-mecanica);
+    }
+    .progress-bar-bg {
+      background: #e2e8f0;
+      border-radius: 40px;
+      height: 12px;
+      overflow: hidden;
+      margin: 0.8rem 0;
+    }
+    .progress-fill {
+      background: var(--rojo-mecanica);
+      width: 0%;
+      height: 100%;
+      transition: width 0.2s;
+    }
+
+    .conceptos-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+      gap: 1rem;
+      max-height: 65vh;
+      overflow-y: auto;
+      padding-right: 0.3rem;
+    }
+    .concepto-item {
+      background: white;
+      border-radius: 1.2rem;
+      padding: 0.8rem 1rem;
+      border-left: 5px solid var(--gris-herramienta);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+    .concepto-titulo {
+      font-weight: 700;
+      color: #c0392b;
+    }
+    .concepto-desc {
+      font-size: 0.85rem;
+      color: #4a4a4a;
+      margin-top: 6px;
+      border-top: 1px solid #eee;
+      padding-top: 6px;
+    }
+    .badge-progreso {
+      font-size: 0.7rem;
+      background: #f0f0f0;
+      border-radius: 20px;
+      padding: 2px 10px;
+      display: inline-block;
+      margin-top: 8px;
+    }
+
+    /* práctica */
+    .flashcard {
+      background: #ffffff;
+      border-radius: 2rem;
+      padding: 1.8rem;
+      text-align: center;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+      border: 1px solid #e0e0e0;
+      max-width: 750px;
+      margin: 0 auto;
+    }
+    .pregunta {
+      font-size: 1.4rem;
+      font-weight: 500;
+      margin-bottom: 1.8rem;
+      background: #f0f0f0;
+      padding: 1.2rem;
+      border-radius: 1.5rem;
+    }
+    .respuesta-oculta {
+      background: #fafafa;
+      border-radius: 1.2rem;
+      padding: 1rem;
+      margin: 1rem 0;
+      display: none;
+    }
+    .palabras-baraja {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 0.6rem;
+      margin: 1.5rem 0;
+    }
+    .palabra-btn {
+      background: var(--rojo-mecanica);
+      color: white;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 2rem;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: 0.1s;
+    }
+    .orden-actual {
+      background: #fefefe;
+      border-radius: 1rem;
+      padding: 1rem;
+      min-height: 80px;
+      margin: 1rem 0;
+      text-align: left;
+      border: 1px dashed #cccccc;
+    }
+    .btn {
+      background: #e2e8f0;
+      border: none;
+      padding: 0.6rem 1.5rem;
+      border-radius: 3rem;
+      font-weight: 600;
+      margin: 0.3rem;
+      cursor: pointer;
+      font-family: inherit;
+    }
+    .btn-primary { background: var(--rojo-mecanica); color: white; }
+    .btn-acierto { background: var(--acierto); color: white; }
+    .btn-fallo { background: var(--fallo); color: white; }
+    .modo-selector { display: flex; justify-content: center; gap: 0.8rem; margin-bottom: 1.5rem; flex-wrap: wrap; }
+    footer {
+      text-align: center;
+      padding: 1rem;
+      font-size: 0.75rem;
+      border-top: 1px solid #e0e0e0;
+      background: #f9f9f9;
+    }
+    @media (max-width: 680px) {
+      .view { padding: 1rem; }
+      .pregunta { font-size: 1rem; }
+    }
+  </style>
+</head>
+<body>
+<div class="app-container">
+  <header>
+    <h1>🏍️ Mecánica de Motos · Colombia <small>100 conceptos para reparación y mantenimiento</small></h1>
+    <div style="font-size:0.8rem;">🔧 Motores 2T/4T · Electricidad · Transmisión · Frenos · Suspensión · Normativa</div>
+  </header>
+  <nav>
+    <button class="nav-btn active" data-view="dashboard">📊 Panel</button>
+    <button class="nav-btn" data-view="listado">📚 Compendio</button>
+    <button class="nav-btn" data-view="practica">🃏 Práctica</button>
+  </nav>
+
+  <section id="dashboard" class="view active-view">
+    <div class="stats-grid" id="statsContainer"></div>
+    <div class="card" style="background:white; border-radius:1.6rem; padding:1.2rem;">
+      <h3>📈 Progreso en mecánica de motos</h3>
+      <div class="progress-bar-bg"><div class="progress-fill" id="globalProgressFill"></div></div>
+      <p id="globalProgressText"></p>
+      <button id="resetProgresoBtn" class="btn" style="background:#d5d5d5;">🔄 Reiniciar progreso</button>
+    </div>
+  </section>
+
+  <section id="listado" class="view">
+    <input type="text" id="filtroListado" placeholder="🔍 Buscar concepto o definición..." style="width:100%; padding:10px; margin-bottom:15px; border-radius:40px; border:1px solid #cccccc;">
+    <div id="conceptosListadoContainer" class="conceptos-grid"></div>
+  </section>
+
+  <section id="practica" class="view">
+    <div class="modo-selector">
+      <button id="modoConceptoDef" class="btn btn-primary">📖 Concepto → Definición</button>
+      <button id="modoDefConcepto" class="btn">🔄 Definición → Concepto</button>
+      <button id="modoOrdenar" class="btn">🧩 Ordenar definición</button>
+    </div>
+    <div id="practicaContainer"></div>
+  </section>
+  <footer>Progreso guardado localmente · Ejercicio de ordenar definición · Basado en mecánica de motocicletas y normativa colombiana</footer>
+</div>
+
+<script>
+  // --------------------------------------------------------------
+  // 100 CONCEPTOS DE MECÁNICA Y REPARACIÓN DE MOTOS (Colombia)
+  // --------------------------------------------------------------
+  const conceptosData = [
+    [1, "Motor 4 tiempos", "Motor de combustión interna que completa un ciclo en cuatro fases: admisión, compresión, explosión y escape."],
+    [2, "Motor 2 tiempos", "Motor que completa un ciclo en dos fases: compresión-admisión y explosión-escape, generando potencia en cada vuelta."],
+    [3, "Cilindrada", "Volumen total desplazado por los pistones dentro de los cilindros, medido en cc (ej. 125cc, 250cc)."],
+    [4, "Relación de compresión", "Relación entre el volumen máximo y mínimo dentro del cilindro; afecta potencia y requisito de octanaje."],
+    [5, "Carburador", "Dispositivo que mezcla aire y combustible en la proporción adecuada para la combustión."],
+    [6, "Inyección electrónica", "Sistema que dosifica el combustible mediante inyectores controlados por ECU, más preciso que el carburador."],
+    [7, "Bujía", "Componente que produce la chispa para encender la mezcla aire-combustible en la cámara de combustión."],
+    [8, "Calibración de bujía", "Distancia entre electrodo central y lateral; debe ajustarse según el fabricante (0.6-0.9 mm)."],
+    [9, "Sistema de encendido", "Conjunto que genera la chispa en el momento preciso (bobina, CDI, platinos, bujía)."],
+    [10, "CDI (Capacitor Discharge Ignition)", "Sistema electrónico de encendido que almacena energía en un capacitor y la descarga en la bobina."],
+    [11, "Bobina de encendido", "Transformador que eleva el voltaje de la batería (o del CDI) para producir la chispa en la bujía."],
+    [12, "Distribución", "Sincronización entre el movimiento del pistón y la apertura/cierre de válvulas (motor 4T)."],
+    [13, "Cadena de distribución", "Elemento metálico que conecta el cigüeñal con el árbol de levas para la distribución."],
+    [14, "Árbol de levas", "Eje con levas que abre y cierra las válvulas en el momento adecuado."],
+    [15, "Válvulas", "Componentes que permiten la entrada de mezcla y salida de gases (admisión y escape)."],
+    [16, "Ajuste de válvulas", "Procedimiento para mantener el juego correcto entre la leva y el taqué, usando calibradores."],
+    [17, "Cigüeñal", "Componente que convierte el movimiento lineal del pistón en movimiento rotatorio."],
+    [18, "Biela", "Pieza que conecta el pistón con el cigüeñal, transmitiendo la fuerza de la combustión."],
+    [19, "Pistón", "Pieza cilíndrica que se desplaza dentro del cilindro, comprimiendo la mezcla y recibiendo la explosión."],
+    [20, "Segmentos", "Anillos metálicos que sellan la cámara de combustión y controlan el aceite en las paredes del cilindro."],
+    [21, "Lubricación", "Sistema que reduce fricción y disipa calor mediante aceite (por cárter húmedo o seco)."],
+    [22, "Aceite de motor", "Lubricante que protege partes móviles; debe cambiarse según kilometraje (ej. 10W40, 20W50)."],
+    [23, "Filtro de aceite", "Elemento que retiene partículas contaminantes del aceite (en motores con bomba de aceite)."],
+    [24, "Refrigeración por aire", "Sistema que disipa calor mediante aletas en el cilindro y flujo de aire."],
+    [25, "Refrigeración líquida", "Sistema que circula refrigerante (con radiador) para mantener temperatura estable."],
+    [26, "Radiador", "Intercambiador de calor que enfría el refrigerante mediante flujo de aire."],
+    [27, "Termostato", "Válvula que regula el paso de refrigerante para mantener la temperatura óptima."],
+    [28, "Bomba de agua", "Impulsa el refrigerante a través del circuito de refrigeración."],
+    [29, "Sistema de escape", "Conducto que expulsa los gases de combustión y reduce ruido (silenciador)."],
+    [30, "Silenciador", "Componente del escape que reduce el ruido mediante cámaras y fibra acústica."],
+    [31, "Catalizador", "Dispositivo que convierte gases tóxicos (CO, HC, NOx) en menos dañinos (en motos modernas)."],
+    [32, "Sistema de arranque", "Mecanismo para poner en marcha el motor: eléctrico (motor de arranque) o patada (kick starter)."],
+    [33, "Motor de arranque", "Motor eléctrico que hace girar el cigüeñal para iniciar la combustión."],
+    [34, "Solenoide de arranque", "Relé que conecta la batería al motor de arranque al accionar el botón."],
+    [35, "Batería", "Acumulador de energía eléctrica (12V) que alimenta el arranque, luces y sistema de encendido."],
+    [36, "Alternador (estator)", "Generador eléctrico que produce corriente para cargar la batería y alimentar el sistema."],
+    [37, "Regulador de voltaje", "Dispositivo que mantiene el voltaje de la batería entre 13.5 y 14.5 voltios."],
+    [38, "Sistema de iluminación", "Conjunto de faros, direccionales, stop y luces de placa."],
+    [39, "Faro LED", "Luz de alta eficiencia, larga duración, común en motos modernas."],
+    [40, "Faro halógeno", "Iluminación tradicional con filamento de tungsteno y gas halógeno."],
+    [41, "Direccionales", "Luces intermitentes que indican cambios de dirección."],
+    [42, "Claxon", "Dispositivo sonoro de advertencia."],
+    [43, "Transmisión", "Sistema que transmite la potencia del motor a la rueda trasera (cadena, piñón, corona)."],
+    [44, "Cadena de transmisión", "Elemento de eslabones metálicos que conecta piñón y corona."],
+    [45, "Piñón", "Engranaje pequeño montado en el eje de salida del motor (cambiador)."],
+    [46, "Corona", "Engranaje grande montado en la rueda trasera."],
+    [47, "Tensión de cadena", "Ajuste de la holgura vertical de la cadena (según manual, 20-30 mm)."],
+    [48, "Lubricación de cadena", "Aplicación periódica de lubricante específico para evitar desgaste y óxido."],
+    [49, "Transmisión por correa", "Sistema silencioso y sin mantenimiento, usado en scooters."],
+    [50, "Variador", "Sistema de poleas que cambia la relación de transmisión automáticamente (scooters)."],
+    [51, "Caja de cambios", "Conjunto de engranajes que permite seleccionar diferentes relaciones de velocidad (N, 1,2,3,4,5...)."],
+    [52, "Embrague", "Dispositivo que acopla o desacopla el motor de la transmisión, manual o centrífugo."],
+    [53, "Embrague centrífugo", "Sistema que acopla automáticamente al aumentar RPM (scooters)."],
+    [54, "Maneral de embrague", "Palanca izquierda que acciona el embrague manual."],
+    [55, "Freno de disco", "Sistema de frenado con pinza y disco metálico, eficaz y de buen rendimiento."],
+    [56, "Freno de tambor", "Sistema con zapatas que se expanden contra un tambor, menos potente que disco."],
+    [57, "Pastillas de freno", "Elemento de fricción que presiona el disco para detener la moto."],
+    [58, "Líquido de frenos", "Fluido hidráulico DOT 3 o DOT 4 que transmite la presión desde la maneta a la pinza."],
+    [59, "Bomba de freno", "Cilindro maestro que genera presión hidráulica en el sistema."],
+    [60, "Pinza de freno", "Componente que aloja las pastillas y presiona el disco."],
+    [61, "Sistema ABS", "Freno antibloqueo que evita el bloqueo de ruedas en frenadas bruscas."],
+    [62, "Suspensión delantera", "Horquilla telescópica que absorbe impactos."],
+    [63, "Suspensión trasera", "Amortiguadores (mono o dual) que absorben irregularidades del suelo."],
+    [64, "Aceite de horquilla", "Líquido viscoso que amortigua los movimientos de la suspensión delantera."],
+    [65, "Retén de horquilla", "Sello que evita fugas de aceite en la horquilla."],
+    [66, "Neumático", "Cubierta de caucho con aire a presión, que proporciona adherencia."],
+    [67, "Presión de neumáticos", "Recomendada por fabricante (28-32 psi); influye en seguridad y desgaste."],
+    [68, "Labrado (tread)", "Profundidad del dibujo del neumático; mínimo legal 1 mm en Colombia."],
+    [69, "Cámara de aire", "En llantas con rayos, cámara que contiene el aire (frente a tubeless)."],
+    [70, "Sistema de dirección", "Conjunto de manillar, juego de dirección y tijera."],
+    [71, "Rodamiento de dirección", "Rodamientos que permiten el giro suave de la horquilla."],
+    [72, "Kit de arrastre", "Set de piñón, cadena y corona; se recomienda reemplazar los tres juntos."],
+    [73, "Carburación", "Ajuste de la mezcla aire-combustible en el carburador (choke, tornillo de aire)."],
+    [74, "Choke (cebador)", "Dispositivo que enriquece la mezcla para arranque en frío."],
+    [75, "Filtro de aire", "Elemento que evita que partículas entren al motor; debe limpiarse o reemplazarse."],
+    [76, "Compresión del motor", "Presión generada dentro del cilindro; se mide con manómetro."],
+    [77, "Prueba de compresión", "Diagnóstico que indica desgaste de segmentos o válvulas."],
+    [78, "Sincronización de carburadores", "Ajuste para que trabajen igual (motores multicilíndricos)."],
+    [79, "Reglaje de luces", "Ajuste del haz luminoso para no deslumbrar a otros conductores."],
+    [80, "Mantenimiento preventivo", "Revisiones periódicas (aceite, filtros, cadena, bujía) para evitar fallas."],
+    [81, "Mantenimiento correctivo", "Reparación de una falla ya existente."],
+    [82, "Escáner de diagnóstico", "Herramienta que lee códigos de falla en motos con inyección electrónica."],
+    [83, "Multímetro", "Instrumento para medir voltaje, resistencia y corriente en el sistema eléctrico."],
+    [84, "Compresor de aire", "Herramienta para inflar neumáticos y limpiar componentes."],
+    [85, "Llave de impacto", "Herramienta neumática o eléctrica para quitar tornillos muy ajustados."],
+    [86, "Torquímetro", "Llave que mide el par de apriete para evitar roturas (ej. bujías, tornillos de culata)."],
+    [87, "Saca bujías", "Herramienta especial para extraer e instalar bujías."],
+    [88, "Caballete", "Soporte que eleva la moto para trabajos en ruedas o cadena."],
+    [89, "Manual de taller", "Documento técnico con especificaciones, procedimientos y despiece de la moto."],
+    [90, "Códigos de falla", "Secuencias de luces del testigo de inyección que indican problemas (ej. 5 parpadeos = sensor de oxígeno)."],
+    [91, "RUNT (Registro Único Nacional de Tránsito)", "Sistema colombiano que registra vehículos, infracciones y conductores."],
+    [92, "Revisión técnico-mecánica", "Inspección obligatoria anual para motocicletas en Colombia (emisiones, frenos, luces, ruido)."],
+    [93, "Soat", "Seguro Obligatorio de Accidentes de Tránsito, obligatorio para circular en Colombia."],
+    [94, "Norma de emisiones", "Límites de gases contaminantes (CO, HC) para motos en Colombia (Resolución 910 de 2008)."],
+    [95, "Gases de escape", "Medición de CO y HC en la revisión técnico-mecánica."],
+    [96, "Kit de seguridad", "Elementos exigidos: casco certificado, chaleco reflectivo, botiquín, linterna."],
+    [97, "Casco", "Elemento de protección personal obligatorio; debe tener certificación."],
+    [98, "Herramientas básicas para moto", "Llaves de vaso, dados, alicates, destornilladores, extractor de bujías."],
+    [99, "Calibrador de pie de rey", "Instrumento para medir espesores y holguras con precisión."],
+    [100, "Curso de mecánica de motos en Colombia", "Formación técnica en el SENA o escuelas especializadas (ej. CETECOL)."]
+  ];
+
+  // --------------------- LOCALSTORAGE Y PROGRESO -------------------------
+  let progreso = {};
+  const STORAGE_KEY = "mecanicaMotosProgreso";
+
+  function cargarProgreso() {
+    const guardado = localStorage.getItem(STORAGE_KEY);
+    if (guardado) progreso = JSON.parse(guardado);
+    else {
+      progreso = {};
+      for (let i = 1; i <= 100; i++) progreso[i] = { aciertos: 0, fallos: 0 };
+    }
+  }
+  function guardarProgreso() { localStorage.setItem(STORAGE_KEY, JSON.stringify(progreso)); }
+  function registrarResultado(id, acierto) {
+    if (!progreso[id]) progreso[id] = { aciertos: 0, fallos: 0 };
+    if (acierto) progreso[id].aciertos += 1;
+    else progreso[id].fallos += 1;
+    guardarProgreso();
+    renderDashboard();
+    renderListado(document.getElementById("filtroListado")?.value || "");
+    if (window.currentCardId === id && document.getElementById("infoProgresoCard")) {
+      document.getElementById("infoProgresoCard").innerHTML = `📊 Concepto ${id} · ✅ ${progreso[id].aciertos} aciertos · ❌ ${progreso[id].fallos} fallos`;
+    }
+  }
+
+  function renderDashboard() {
+    let totalAciertos = 0, totalFallos = 0, conceptosConAcierto = 0;
+    for (let i = 1; i <= 100; i++) {
+      const p = progreso[i] || { aciertos: 0, fallos: 0 };
+      totalAciertos += p.aciertos;
+      totalFallos += p.fallos;
+      if (p.aciertos > 0) conceptosConAcierto++;
+    }
+    const porcentaje = (conceptosConAcierto / 100) * 100;
+    document.getElementById("globalProgressFill").style.width = `${porcentaje}%`;
+    document.getElementById("globalProgressText").innerHTML = `${conceptosConAcierto} de 100 conceptos con al menos 1 acierto (${Math.round(porcentaje)}%).`;
+    document.getElementById("statsContainer").innerHTML = `
+      <div class="stat-card"><div class="stat-number">${totalAciertos}</div>✅ Aciertos totales</div>
+      <div class="stat-card"><div class="stat-number">${totalFallos}</div>❌ Fallos</div>
+      <div class="stat-card"><div class="stat-number">${conceptosConAcierto}</div>📘 Conceptos dominados</div>
+      <div class="stat-card"><div class="stat-number">${Math.round((totalAciertos/(totalAciertos+totalFallos+0.001))*100)}%</div>📊 Tasa éxito</div>
+    `;
+  }
+
+  function renderListado(filtro = "") {
+    const container = document.getElementById("conceptosListadoContainer");
+    container.innerHTML = "";
+    const filtroLower = filtro.toLowerCase();
+    for (let c of conceptosData) {
+      const [id, nombre, definicion] = c;
+      const prog = progreso[id] || { aciertos: 0, fallos: 0 };
+      if (filtro && !nombre.toLowerCase().includes(filtroLower) && !definicion.toLowerCase().includes(filtroLower)) continue;
+      const div = document.createElement("div");
+      div.className = "concepto-item";
+      div.innerHTML = `<div class="concepto-titulo">${id}. ${nombre}</div>
+                       <div class="concepto-desc">🔧 ${definicion.substring(0, 150)}${definicion.length > 150 ? '…' : ''}</div>
+                       <span class="badge-progreso">✅ ${prog.aciertos} aciertos · ❌ ${prog.fallos} fallos</span>`;
+      container.appendChild(div);
+    }
+  }
+
+  // --------------------- PRÁCTICA: TRES MODOS -------------------------
+  let currentMode = "concepto_def";
+  let cardsArray = [];
+  let currentCardIndex = 0;
+  let currentCardId = null;
+  let currentOrdenarPalabras = [];
+  let shuffledPalabras = [];
+  let selectedOrder = [];
+  let ordenarRespuestaCorrecta = "";
+
+  const practicaDiv = document.getElementById("practicaContainer");
+
+  function construirCards() {
+    cardsArray = conceptosData.map(item => {
+      const [id, concepto, definicion] = item;
+      if (currentMode === "concepto_def") {
+        return { id, pregunta: `🔧 Concepto: ${concepto}`, respuestaCorrecta: definicion };
+      } else if (currentMode === "def_concepto") {
+        let defCorta = definicion.length > 130 ? definicion.substring(0, 127) + "…" : definicion;
+        return { id, pregunta: `✍️ Definición: "${defCorta}"`, respuestaCorrecta: concepto };
+      } else {
+        return { id, concepto, definicion };
+      }
+    });
+  }
+
+  function renderFlashcardNormal() {
+    if (!cardsArray.length) return;
+    const card = cardsArray[currentCardIndex];
+    currentCardId = card.id;
+    practicaDiv.innerHTML = `
+      <div class="flashcard">
+        <div class="pregunta">${card.pregunta}</div>
+        <button id="mostrarRespuestaBtn" class="btn">📖 Mostrar respuesta</button>
+        <div id="respuestaDiv" class="respuesta-oculta"><strong>Respuesta:</strong><br>${card.respuestaCorrecta}</div>
+        <div style="margin-top:1rem;">
+          <button id="aciertoBtn" class="btn btn-acierto" disabled>✅ Acierto</button>
+          <button id="falloBtn" class="btn btn-fallo" disabled>❌ Fallo</button>
+        </div>
+        <button id="siguienteCardBtn" class="btn" style="margin-top:1rem;">⏩ Siguiente</button>
+        <p id="infoProgresoCard" style="margin-top:0.8rem;">📊 ${currentMode === "concepto_def" ? "Concepto" : "Definición"} ${card.id} · ✅ ${progreso[card.id]?.aciertos||0} aciertos · ❌ ${progreso[card.id]?.fallos||0} fallos</p>
+      </div>
+    `;
+    document.getElementById("mostrarRespuestaBtn").onclick = () => {
+      const respDiv = document.getElementById("respuestaDiv");
+      if (respDiv.style.display !== "block") {
+        respDiv.style.display = "block";
+        document.getElementById("aciertoBtn").disabled = false;
+        document.getElementById("falloBtn").disabled = false;
+      }
+    };
+    document.getElementById("aciertoBtn").onclick = () => { registrarResultado(currentCardId, true); siguienteNormal(); };
+    document.getElementById("falloBtn").onclick = () => { registrarResultado(currentCardId, false); siguienteNormal(); };
+    document.getElementById("siguienteCardBtn").onclick = () => siguienteNormal();
+  }
+
+  function siguienteNormal() {
+    currentCardIndex = (currentCardIndex + 1) % cardsArray.length;
+    renderFlashcardNormal();
+  }
+
+  function inicializarOrdenar() {
+    const card = cardsArray[currentCardIndex];
+    currentCardId = card.id;
+    const definicionOriginal = card.definicion;
+    ordenarRespuestaCorrecta = definicionOriginal;
+    let palabras = definicionOriginal.split(/\s+/).filter(p => p.length > 0);
+    currentOrdenarPalabras = [...palabras];
+    shuffledPalabras = [...palabras];
+    for (let i = shuffledPalabras.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [shuffledPalabras[i], shuffledPalabras[j]] = [shuffledPalabras[j], shuffledPalabras[i]];
+    }
+    selectedOrder = [];
+    renderOrdenarUI();
+  }
+
+  function renderOrdenarUI() {
+    const card = cardsArray[currentCardIndex];
+    const prog = progreso[currentCardId] || { aciertos:0, fallos:0 };
+    let palabrasHTML = shuffledPalabras.map(p => `<button class="palabra-btn" data-palabra="${p.replace(/"/g, '&quot;')}">${p}</button>`).join('');
+    let ordenHTML = selectedOrder.map(p => `<span style="background:#f0f0f0; padding:0.2rem 0.6rem; margin:0.2rem; border-radius:1rem;">${p}</span>`).join(' ');
+    if (ordenHTML === "") ordenHTML = "<em>Haz clic en las palabras en el orden correcto...</em>";
+    practicaDiv.innerHTML = `
+      <div class="flashcard">
+        <h3>🧩 Ordena la definición de:</h3>
+        <div class="pregunta" style="background:#f0f0f0;">📌 ${card.concepto}</div>
+        <div class="orden-actual"><strong>Tu orden actual:</strong><br> ${ordenHTML}</div>
+        <div class="palabras-baraja" id="palabrasBaraja">${palabrasHTML}</div>
+        <div>
+          <button id="resetOrdenBtn" class="btn" style="background:#d5d5d5;">🔁 Reiniciar orden</button>
+          <button id="comprobarOrdenBtn" class="btn btn-primary">✓ Comprobar</button>
+        </div>
+        <button id="siguienteOrdenBtn" class="btn" style="margin-top:1rem;">⏩ Siguiente concepto</button>
+        <p id="infoProgresoCard">✅ ${prog.aciertos} aciertos · ❌ ${prog.fallos} fallos</p>
+        <div id="feedbackOrden" style="margin-top:0.8rem; font-weight:bold;"></div>
+      </div>
+    `;
+    document.querySelectorAll(".palabra-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const palabra = btn.getAttribute("data-palabra");
+        const idx = shuffledPalabras.indexOf(palabra);
+        if (idx !== -1) {
+          shuffledPalabras.splice(idx, 1);
+          selectedOrder.push(palabra);
+          renderOrdenarUI();
+        }
+      });
+    });
+    document.getElementById("resetOrdenBtn").onclick = () => {
+      shuffledPalabras = [...currentOrdenarPalabras];
+      for (let i = shuffledPalabras.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [shuffledPalabras[i], shuffledPalabras[j]] = [shuffledPalabras[j], shuffledPalabras[i]];
+      }
+      selectedOrder = [];
+      renderOrdenarUI();
+    };
+    document.getElementById("comprobarOrdenBtn").onclick = () => {
+      const ordenUsuario = selectedOrder.join(" ");
+      if (ordenUsuario === ordenarRespuestaCorrecta) {
+        document.getElementById("feedbackOrden").innerHTML = "<span style='color:#27ae60'>✅ ¡Correcto! Definición ordenada correctamente.</span>";
+        registrarResultado(currentCardId, true);
+        setTimeout(() => siguienteOrdenar(), 1200);
+      } else {
+        document.getElementById("feedbackOrden").innerHTML = `<span style='color:#e67e22'>❌ Incorrecto. La definición correcta es: "${ordenarRespuestaCorrecta}"</span>`;
+        registrarResultado(currentCardId, false);
+        setTimeout(() => siguienteOrdenar(), 2000);
+      }
+      document.getElementById("comprobarOrdenBtn").disabled = true;
+      document.querySelectorAll(".palabra-btn").forEach(b => b.style.pointerEvents = "none");
+      setTimeout(() => {
+        if (document.getElementById("comprobarOrdenBtn")) document.getElementById("comprobarOrdenBtn").disabled = false;
+        document.querySelectorAll(".palabra-btn").forEach(b => b.style.pointerEvents = "auto");
+      }, 2000);
+    };
+    document.getElementById("siguienteOrdenBtn").onclick = () => siguienteOrdenar();
+  }
+
+  function siguienteOrdenar() {
+    currentCardIndex = (currentCardIndex + 1) % cardsArray.length;
+    inicializarOrdenar();
+  }
+
+  function setMode(mode) {
+    currentMode = mode;
+    construirCards();
+    currentCardIndex = 0;
+    if (mode === "ordenar") inicializarOrdenar();
+    else renderFlashcardNormal();
+  }
+
+  function initUI() {
+    document.querySelectorAll(".nav-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const viewId = btn.getAttribute("data-view");
+        document.querySelectorAll(".view").forEach(v => v.classList.remove("active-view"));
+        document.getElementById(viewId).classList.add("active-view");
+        document.querySelectorAll(".nav-btn").forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+        if (viewId === "listado") renderListado(document.getElementById("filtroListado").value);
+        if (viewId === "dashboard") renderDashboard();
+        if (viewId === "practica") setMode(currentMode);
+      });
+    });
+    document.getElementById("modoConceptoDef").addEventListener("click", () => {
+      currentMode = "concepto_def";
+      setMode("concepto_def");
+      document.getElementById("modoConceptoDef").classList.add("btn-primary");
+      document.getElementById("modoDefConcepto").classList.remove("btn-primary");
+      document.getElementById("modoOrdenar").classList.remove("btn-primary");
+    });
+    document.getElementById("modoDefConcepto").addEventListener("click", () => {
+      currentMode = "def_concepto";
+      setMode("def_concepto");
+      document.getElementById("modoDefConcepto").classList.add("btn-primary");
+      document.getElementById("modoConceptoDef").classList.remove("btn-primary");
+      document.getElementById("modoOrdenar").classList.remove("btn-primary");
+    });
+    document.getElementById("modoOrdenar").addEventListener("click", () => {
+      currentMode = "ordenar";
+      setMode("ordenar");
+      document.getElementById("modoOrdenar").classList.add("btn-primary");
+      document.getElementById("modoConceptoDef").classList.remove("btn-primary");
+      document.getElementById("modoDefConcepto").classList.remove("btn-primary");
+    });
+    document.getElementById("resetProgresoBtn").addEventListener("click", () => {
+      if (confirm("¿Reiniciar todo el progreso? Se perderán aciertos y fallos.")) {
+        for (let i = 1; i <= 100; i++) progreso[i] = { aciertos: 0, fallos: 0 };
+        guardarProgreso();
+        renderDashboard();
+        renderListado(document.getElementById("filtroListado")?.value || "");
+        if (currentMode === "ordenar") inicializarOrdenar();
+        else if (currentMode !== "ordenar") renderFlashcardNormal();
+      }
+    });
+    document.getElementById("filtroListado").addEventListener("input", (e) => renderListado(e.target.value));
+  }
+
+  window.addEventListener("DOMContentLoaded", () => {
+    cargarProgreso();
+    construirCards();
+    setMode("concepto_def");
+    renderDashboard();
+    renderListado();
+    initUI();
+  });
+</script>
+</body>
+</html>

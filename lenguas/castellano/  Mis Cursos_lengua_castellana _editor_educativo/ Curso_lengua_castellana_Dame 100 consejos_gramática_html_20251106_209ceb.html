@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gramática del Español - Plataforma Educativa</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --accent-color: #e74c3c;
+        }
+        
+        .navbar-brand {
+            font-weight: bold;
+        }
+        
+        .hero-section {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 4rem 0;
+        }
+        
+        .feature-card {
+            transition: transform 0.3s;
+            height: 100%;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .progress-ring {
+            width: 120px;
+            height: 120px;
+        }
+        
+        .exercise-card {
+            border-left: 4px solid var(--secondary-color);
+        }
+        
+        .dialect-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+        }
+        
+        .analysis-result {
+            background-color: #f8f9fa;
+            border-radius: 5px;
+            padding: 15px;
+        }
+        
+        .verb-conjugation {
+            font-family: monospace;
+        }
+        
+        footer {
+            background-color: var(--primary-color);
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
+        <div class="container">
+            <a class="navbar-brand" href="#">
+                <i class="bi bi-translate me-2"></i>Gramática Española
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#analisis">Análisis</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#ejercicios">Ejercicios</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#progreso">Progreso</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#configuracion">Configuración</a>
+                    </li>
+                </ul>
+                <div class="navbar-text">
+                    <span id="user-level" class="badge bg-primary">Nivel: Principiante</span>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero-section text-center">
+        <div class="container">
+            <h1 class="display-4 fw-bold">Domina la Gramática Española</h1>
+            <p class="lead">Una plataforma interactiva para aprender y practicar las reglas gramaticales del español</p>
+            <div class="mt-4">
+                <button class="btn btn-light btn-lg me-2" onclick="scrollToSection('analisis')">Comenzar Análisis</button>
+                <button class="btn btn-outline-light btn-lg" onclick="scrollToSection('ejercicios')">Practicar Ejercicios</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <div class="container my-5">
+        <!-- Análisis de Texto Section -->
+        <section id="analisis" class="mb-5">
+            <h2 class="mb-4 border-bottom pb-2">
+                <i class="bi bi-search me-2"></i>Análisis de Texto
+            </h2>
+            
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label for="texto-analizar" class="form-label">Ingresa un texto para analizar:</label>
+                        <textarea class="form-control" id="texto-analizar" rows="5" placeholder="Escribe o pega un texto en español aquí..."></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="tipo-analisis" class="form-label">Tipo de análisis:</label>
+                        <select class="form-select" id="tipo-analisis">
+                            <option value="completo">Análisis completo</option>
+                            <option value="morfologico">Análisis morfológico</option>
+                            <option value="sintactico">Análisis sintáctico</option>
+                            <option value="verbos">Análisis de verbos</option>
+                        </select>
+                    </div>
+                    <button class="btn btn-primary" onclick="analizarTexto()">
+                        <i class="bi bi-play-fill me-1"></i>Analizar Texto
+                    </button>
+                </div>
+                
+                <div class="col-md-6">
+                    <div class="analysis-result">
+                        <h5>Resultados del análisis:</h5>
+                        <div id="resultados-analisis">
+                            <p class="text-muted">Los resultados del análisis aparecerán aquí...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Ejercicios Section -->
+        <section id="ejercicios" class="mb-5">
+            <h2 class="mb-4 border-bottom pb-2">
+                <i class="bi bi-pencil me-2"></i>Ejercicios Prácticos
+            </h2>
+            
+            <div class="row mb-4">
+                <div class="col-md-4">
+                    <div class="card feature-card">
+                        <div class="card-body">
+                            <h5 class="card-title">Artículos</h5>
+                            <p class="card-text">Practica el uso correcto de artículos definidos e indefinidos.</p>
+                            <button class="btn btn-outline-primary" onclick="cargarEjercicios('articulos')">Comenzar</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card feature-card">
+                        <div class="card-body">
+                            <h5 class="card-title">Verbos</h5>
+                            <p class="card-text">Ejercicios de conjugación verbal en diferentes tiempos.</p>
+                            <button class="btn btn-outline-primary" onclick="cargarEjercicios('verbos')">Comenzar</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card feature-card">
+                        <div class="card-body">
+                            <h5 class="card-title">Género y Número</h5>
+                            <p class="card-text">Aprende las reglas de concordancia de género y número.</p>
+                            <button class="btn btn-outline-primary" onclick="cargarEjercicios('genero')">Comenzar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="area-ejercicios" class="mt-4">
+                <!-- Los ejercicios se cargarán aquí dinámicamente -->
+                <div class="text-center text-muted">
+                    <p>Selecciona un tipo de ejercicio para comenzar</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Progreso Section -->
+        <section id="progreso" class="mb-5">
+            <h2 class="mb-4 border-bottom pb-2">
+                <i class="bi bi-graph-up me-2"></i>Tu Progreso
+            </h2>
+            
+            <div class="row">
+                <div class="col-md-4 text-center">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">Progreso General</h5>
+                            <div class="progress-ring mx-auto mb-3">
+                                <svg width="120" height="120" viewBox="0 0 120 120">
+                                    <circle cx="60" cy="60" r="54" fill="none" stroke="#e9ecef" stroke-width="8"/>
+                                    <circle cx="60" cy="60" r="54" fill="none" stroke="#3498db" stroke-width="8" 
+                                            stroke-dasharray="339.292" stroke-dashoffset="67.858" 
+                                            stroke-linecap="round" transform="rotate(-90 60 60)"/>
+                                    <text x="60" y="65" text-anchor="middle" font-size="20" font-weight="bold">80%</text>
+                                </svg>
+                            </div>
+                            <p class="card-text">80% completado</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-8">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">Estadísticas por Categoría</h5>
+                            <div class="mb-3">
+                                <label class="form-label">Artículos</label>
+                                <div class="progress mb-2">
+                                    <div class="progress-bar" role="progressbar" style="width: 75%">75%</div>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Verbos</label>
+                                <div class="progress mb-2">
+                                    <div class="progress-bar" role="progressbar" style="width: 60%">60%</div>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Género y Número</label>
+                                <div class="progress mb-2">
+                                    <div class="progress-bar" role="progressbar" style="width: 85%">85%</div>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Sintaxis</label>
+                                <div class="progress mb-2">
+                                    <div class="progress-bar" role="progressbar" style="width: 45%">45%</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="row mt-4">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">Logros Recientes</h5>
+                            <div class="d-flex flex-wrap gap-2">
+                                <span class="badge bg-success">10 ejercicios consecutivos correctos</span>
+                                <span class="badge bg-primary">Dominio de verbos regulares</span>
+                                <span class="badge bg-warning text-dark">Nivel intermedio alcanzado</span>
+                                <span class="badge bg-info">5 días de práctica seguidos</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Configuración Section -->
+        <section id="configuracion" class="mb-5">
+            <h2 class="mb-4 border-bottom pb-2">
+                <i class="bi bi-gear me-2"></i>Configuración
+            </h2>
+            
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">Preferencias de Dialecto</h5>
+                            <div class="mb-3">
+                                <label for="dialecto" class="form-label">Selecciona tu variante del español:</label>
+                                <select class="form-select" id="dialecto">
+                                    <option value="es">Español estándar (tuteo)</option>
+                                    <option value="voseo">Español rioplatense (voseo)</option>
+                                    <option value="mexico">Español mexicano</option>
+                                    <option value="caribe">Español caribeño</option>
+                                </select>
+                            </div>
+                            <button class="btn btn-primary" onclick="guardarConfiguracion()">Guardar Configuración</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">Preferencias de Ejercicios</h5>
+                            <div class="form-check mb-2">
+                                <input class="form-check-input" type="checkbox" id="mostrar-pistas">
+                                <label class="form-check-label" for="mostrar-pistas">
+                                    Mostrar pistas en ejercicios
+                                </label>
+                            </div>
+                            <div class="form-check mb-2">
+                                <input class="form-check-input" type="checkbox" id="explicaciones-detalladas" checked>
+                                <label class="form-check-label" for="explicaciones-detalladas">
+                                    Explicaciones detalladas
+                                </label>
+                            </div>
+                            <div class="form-check mb-2">
+                                <input class="form-check-input" type="checkbox" id="correccion-inmediata" checked>
+                                <label class="form-check-label" for="correccion-inmediata">
+                                    Corrección inmediata
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Footer -->
+    <footer class="py-4 mt-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <h5>Gramática del Español</h5>
+                    <p>Una plataforma educativa para el aprendizaje de la gramática española.</p>
+                </div>
+                <div class="col-md-3">
+                    <h5>Enlaces</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="#analisis" class="text-light">Análisis</a></li>
+                        <li><a href="#ejercicios" class="text-light">Ejercicios</a></li>
+                        <li><a href="#progreso" class="text-light">Progreso</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-3">
+                    <h5>Recursos</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="#" class="text-light">Diccionario RAE</a></li>
+                        <li><a href="#" class="text-light">Reglas gramaticales</a></li>
+                        <li><a href="#" class="text-light">Conjugador verbal</a></li>
+                    </ul>
+                </div>
+            </div>
+            <hr class="my-4">
+            <p class="text-center mb-0">&copy; 2023 Gramática del Español. Todos los derechos reservados.</p>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        // Datos de ejemplo para la demostración
+        const ejerciciosData = {
+            articulos: [
+                {
+                    id: 1,
+                    pregunta: "Completa con el artículo correcto: ___ casa es grande.",
+                    respuesta: "La",
+                    dificultad: 1,
+                    explicacion: "Se usa 'la' porque 'casa' es un sustantivo femenino singular."
+                },
+                {
+                    id: 2,
+                    pregunta: "Completa con el artículo correcto: ___ hombres trabajan.",
+                    respuesta: "Los",
+                    dificultad: 1,
+                    explicacion: "Se usa 'los' porque 'hombres' es un sustantivo masculino plural."
+                }
+            ],
+            verbos: [
+                {
+                    id: 1,
+                    pregunta: "Conjuga el verbo 'hablar' en presente para 'yo':",
+                    respuesta: "hablo",
+                    dificultad: 2,
+                    explicacion: "La conjugación correcta para 'yo' en presente es 'hablo'."
+                },
+                {
+                    id: 2,
+                    pregunta: "Conjuga el verbo 'comer' en pretérito para 'ellos':",
+                    respuesta: "comieron",
+                    dificultad: 3,
+                    explicacion: "La conjugación correcta para 'ellos' en pretérito es 'comieron'."
+                }
+            ],
+            genero: [
+                {
+                    id: 1,
+                    pregunta: "Forma el plural de 'libro':",
+                    respuesta: "libros",
+                    dificultad: 1,
+                    explicacion: "Los sustantivos que terminan en vocal forman el plural añadiendo 's'."
+                },
+                {
+                    id: 2,
+                    pregunta: "¿Cuál es el femenino de 'niño'?",
+                    respuesta: "niña",
+                    dificultad: 1,
+                    explicacion: "El femenino de 'niño' se forma cambiando la 'o' final por 'a'."
+                }
+            ]
+        };
+
+        // Función para desplazarse a una sección
+        function scrollToSection(sectionId) {
+            document.getElementById(sectionId).scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // Función para analizar texto
+        function analizarTexto() {
+            const texto = document.getElementById('texto-analizar').value;
+            const tipoAnalisis = document.getElementById('tipo-analisis').value;
+            const resultadosDiv = document.getElementById('resultados-analisis');
+            
+            if (!texto.trim()) {
+                resultadosDiv.innerHTML = '<div class="alert alert-warning">Por favor, ingresa un texto para analizar.</div>';
+                return;
+            }
+            
+            // Simulación de análisis (en una implementación real, esto se conectaría al backend)
+            resultadosDiv.innerHTML = `
+                <div class="alert alert-info">Analizando texto...</div>
+            `;
+            
+            setTimeout(() => {
+                let resultadosHTML = `
+                    <h6>Texto analizado: "${texto}"</h6>
+                    <div class="mt-3">
+                        <h6>Tokenización:</h6>
+                        <div class="d-flex flex-wrap gap-1 mb-3">
+                `;
+                
+                // Simular tokenización
+                const palabras = texto.split(/\s+/);
+                palabras.forEach(palabra => {
+                    if (palabra.trim()) {
+                        resultadosHTML += `<span class="badge bg-secondary">${palabra}</span>`;
+                    }
+                });
+                
+                resultadosHTML += `
+                        </div>
+                        <h6>Análisis morfológico:</h6>
+                        <ul class="list-group">
+                `;
+                
+                // Simular análisis morfológico
+                palabras.slice(0, 5).forEach(palabra => {
+                    if (palabra.trim()) {
+                        let categoria = "Sustantivo";
+                        let genero = "masculino";
+                        let numero = "singular";
+                        
+                        if (palabra.endsWith('s') && !palabra.endsWith('és')) {
+                            numero = "plural";
+                        }
+                        
+                        if (palabra.endsWith('a')) {
+                            genero = "femenino";
+                        }
+                        
+                        resultadosHTML += `
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                ${palabra}
+                                <span class="badge bg-primary rounded-pill">${categoria} - ${genero} ${numero}</span>
+                            </li>
+                        `;
+                    }
+                });
+                
+                resultadosHTML += `
+                        </ul>
+                        <div class="mt-3">
+                            <h6>Conjugaciones detectadas:</h6>
+                            <div class="verb-conjugation bg-light p-2 rounded">
+                                <strong>hablar</strong>: hablo, hablas, habla, hablamos, habláis, hablan<br>
+                                <strong>comer</strong>: como, comes, come, comemos, coméis, comen
+                            </div>
+                        </div>
+                    </div>
+                `;
+                
+                resultadosDiv.innerHTML = resultadosHTML;
+            }, 1500);
+        }
+
+        // Función para cargar ejercicios
+        function cargarEjercicios(tipo) {
+            const areaEjercicios = document.getElementById('area-ejercicios');
+            const ejercicios = ejerciciosData[tipo] || [];
+            
+            if (ejercicios.length === 0) {
+                areaEjercicios.innerHTML = '<div class="alert alert-warning">No hay ejercicios disponibles para esta categoría.</div>';
+                return;
+            }
+            
+            let ejerciciosHTML = `
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h4>Ejercicios de ${tipo}</h4>
+                    <button class="btn btn-sm btn-outline-secondary" onclick="cargarEjercicios('${tipo}')">
+                        <i class="bi bi-arrow-clockwise"></i> Recargar
+                    </button>
+                </div>
+            `;
+            
+            ejercicios.forEach(ejercicio => {
+                ejerciciosHTML += `
+                    <div class="card exercise-card mb-3 position-relative">
+                        <span class="dialect-badge badge bg-info">${ejercicio.dificultad}★</span>
+                        <div class="card-body">
+                            <h5 class="card-title">${ejercicio.pregunta}</h5>
+                            <div class="mb-3">
+                                <input type="text" class="form-control" id="respuesta-${ejercicio.id}" placeholder="Escribe tu respuesta aquí">
+                            </div>
+                            <button class="btn btn-primary" onclick="verificarRespuesta(${ejercicio.id}, '${ejercicio.respuesta}', '${tipo}')">
+                                Verificar
+                            </button>
+                            <div id="resultado-${ejercicio.id}" class="mt-2"></div>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            areaEjercicios.innerHTML = ejerciciosHTML;
+            scrollToSection('ejercicios');
+        }
+
+        // Función para verificar respuesta
+        function verificarRespuesta(id, respuestaCorrecta, tipo) {
+            const respuestaUsuario = document.getElementById(`respuesta-${id}`).value;
+            const resultadoDiv = document.getElementById(`resultado-${id}`);
+            
+            if (!respuestaUsuario) {
+                resultadoDiv.innerHTML = '<div class="alert alert-warning">Por favor, ingresa una respuesta.</div>';
+                return;
+            }
+            
+            const esCorrecta = respuestaUsuario.toLowerCase().trim() === respuestaCorrecta.toLowerCase().trim();
+            
+            if (esCorrecta) {
+                resultadoDiv.innerHTML = `
+                    <div class="alert alert-success">
+                        <i class="bi bi-check-circle-fill me-2"></i>¡Correcto! 
+                        ${ejerciciosData[tipo].find(e => e.id === id).explicacion}
+                    </div>
+                `;
+                
+                // Actualizar progreso visualmente
+                actualizarProgresoVisual(tipo, true);
+            } else {
+                resultadoDiv.innerHTML = `
+                    <div class="alert alert-danger">
+                        <i class="bi bi-x-circle-fill me-2"></i>Incorrecto. La respuesta correcta es: <strong>${respuestaCorrecta}</strong>.
+                        ${ejerciciosData[tipo].find(e => e.id === id).explicacion}
+                    </div>
+                `;
+                
+                // Actualizar progreso visualmente
+                actualizarProgresoVisual(tipo, false);
+            }
+        }
+
+        // Función para actualizar el progreso visualmente
+        function actualizarProgresoVisual(tipo, correcto) {
+            // En una implementación real, esto se conectaría al backend
+            console.log(`Ejercicio de ${tipo}: ${correcto ? 'correcto' : 'incorrecto'}`);
+            
+            // Actualizar badges de nivel
+            const userLevel = document.getElementById('user-level');
+            if (Math.random() > 0.7) {
+                userLevel.textContent = "Nivel: Intermedio";
+                userLevel.className = "badge bg-warning";
+            }
+        }
+
+        // Función para guardar configuración
+        function guardarConfiguracion() {
+            const dialecto = document.getElementById('dialecto').value;
+            
+            // En una implementación real, esto enviaría la configuración al backend
+            console.log(`Configuración guardada: dialecto = ${dialecto}`);
+            
+            // Mostrar confirmación
+            alert('Configuración guardada correctamente');
+        }
+
+        // Inicialización cuando se carga la página
+        document.addEventListener('DOMContentLoaded', function() {
+            // Configurar tooltips de Bootstrap
+            const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+            const tooltipList = tooltipTriggerList.map(function(tooltipTriggerEl) {
+                return new bootstrap.Tooltip(tooltipTriggerEl);
+            });
+        });
+    </script>
+</body>
+</html>

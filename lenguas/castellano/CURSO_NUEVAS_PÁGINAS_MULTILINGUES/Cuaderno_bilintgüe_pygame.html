@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Centro de Innovación Bilingüe</title>
+    <!-- Carga de Bootstrap 5.3 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" xintegrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6hsYi7b1yW01pX4gY8eD9Kq46gHj/P2dD3B" crossorigin="anonymous">
+    
+    <style>
+        /* Estilos para el Fondo Animado y la Interfaz Inmersiva */
+        @keyframes colorShift {
+            0% { background-color: #f8f9fa; }
+            25% { background-color: #e0f7fa; } /* Azul claro */
+            50% { background-color: #f3e5f5; } /* Violeta claro */
+            75% { background-color: #fff9e6; } /* Amarillo claro */
+            100% { background-color: #f8f9fa; }
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            animation: colorShift 20s infinite alternate; /* Fondo animado suave */
+            min-height: 100vh;
+        }
+
+        /* Glassmorphism para paneles principales */
+        .card {
+            background-color: rgba(255, 255, 255, 0.85) !important;
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(rgba(0, 0, 0, 0.1));
+            border-radius: 12px;
+        }
+        .container {
+            max-width: 800px;
+        }
+
+        /* Estilos de Rainbow Button (Glow y Press/Hover Effect) */
+        @keyframes rainbowGlow {
+            0% { filter: hue-rotate(0deg); box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
+            50% { box-shadow: 0 6px 12px rgba(0, 123, 255, 0.5); }
+            100% { filter: hue-rotate(360deg); box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
+        }
+        .rainbow-btn {
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.1s ease-out, box-shadow 0.3s ease-in-out;
+            animation: rainbowGlow 5s infinite alternate;
+        }
+        .rainbow-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 10px rgba(0, 0, 0, 0.3);
+        }
+        .rainbow-btn:active {
+            transform: translateY(1px);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        /* --- Reglón de Caligrafía (sin cambios) --- */
+        .reglon-container {
+            position: relative;
+            height: 120px;
+            margin-bottom: 20px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            background-color: #fff;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+        .reglon-line {
+            position: absolute;
+            left: 10px;
+            right: 10px;
+            height: 1px;
+        }
+        .reglon-line.top { top: 25px; background-color: #007bff; }
+        .reglon-line.middle {
+            top: 60px;
+            background-image: linear-gradient(to right, gray 50%, transparent 50%);
+            background-size: 10px 1px;
+            height: 1px;
+        }
+        .reglon-line.bottom { top: 95px; background-color: #007bff; }
+        .modelo-caligrafia {
+            position: absolute;
+            top: 30px;
+            left: 20px;
+            font-size: 3rem;
+            opacity: 0.3;
+            user-select: none;
+            font-family: monospace;
+            color: #6c757d;
+        }
+        .text-feedback {
+            font-weight: bold;
+            padding: 10px;
+            border-radius: 5px;
+            margin-top: 15px;
+        }
+        
+        /* --- Sistema de Partículas --- */
+        .particle-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1000;
+        }
+
+        .particle {
+            position: absolute;
+            font-size: 24px;
+            animation-duration: 3s;
+            animation-timing-function: cubic-bezier(0.1, 0.7, 1.0, 0.1);
+            opacity: 0;
+            transform: rotate(0deg);
+        }
+
+        @keyframes fallAndRotate {
+            0% { transform: translate(0, 0) rotate(0deg); opacity: 1; }
+            50% { opacity: 1; }
+            100% { transform: translate(var(--x-end), 100vh) rotate(var(--rotation)); opacity: 0; }
+        }
+    </style>
+</head>
+<body>
+
+    <header class="bg-primary text-white text-center py-3 mb-4 shadow-sm">
+        <div class="container">
+            <h1 class="h3">Centro de Innovación Bilingüe</h1>
+            <p id="app-subtitle" class="lead mb-0"></p>
+        </div>
+    </header>
+
+    <main class="container">
+        <!-- El contenido de la aplicación será renderizado aquí -->
+        <div id="app">
+            <!-- Contenido cargado por JavaScript -->
+        </div>
+    </main>
+
+    <!-- Contenedor para el Sistema de Partículas -->
+    <div id="particle-container" class="particle-container"></div>
+
+    <!-- Carga de Bootstrap 5.3 JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" xintegrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+
+    <script>
+        // ==============================================================================
+        // 1. ARQUITECTURA DE CONTENIDO Y LÓGICA (Adaptada de Python a JavaScript)
+        // ==============================================================================
+
+        const appElement = document.getElementById('app');
+        const subtitleElement = document.getElementById('app-subtitle');
+
+        let idioma = 'ES'; // Idioma por defecto
+        let umbralPrecision = 90;
+        let currentExercise = null;
+        let palabraModelo = '';
+        let score = 0; // Nuevo contador de estrellas
+
+        // --- SISTEMA DE PARTÍCULAS (GAMIFICACIÓN) ---
+        const EMOTICONS = ['🌟', '✨', '🚀', '🧠', '✅', '💯'];
+        const particleContainerId = 'particle-container';
+
+        class ParticleSystem {
+            constructor(containerId) {
+                this.container = document.getElementById(containerId);
+                if (!this.container) return;
+            }
+
+            burst(count = 20) {
+                // Obtiene el centro de la ventana (donde aparecerán las partículas)
+                const centerX = window.innerWidth / 2;
+                const centerY = window.innerHeight / 2;
+
+                for (let i = 0; i < count; i++) {
+                    const particle = document.createElement('div');
+                    particle.textContent = EMOTICONS[Math.floor(Math.random() * EMOTICONS.length)];
+                    particle.className = 'particle';
+
+                    // Posición inicial aleatoria cerca del centro
+                    const startX = centerX + (Math.random() - 0.5) * 50;
+                    const startY = centerY + (Math.random() - 0.5) * 50;
+
+                    // Propiedades de animación aleatorias
+                    const duration = 2.5 + Math.random() * 1.5;
+                    const xEnd = (Math.random() - 0.5) * window.innerWidth * 0.5;
+                    const rotation = (Math.random() > 0.5 ? 1 : -1) * (180 + Math.random() * 360);
+
+                    particle.style.left = `${startX}px`;
+                    particle.style.top = `${startY}px`;
+                    particle.style.animationName = 'fallAndRotate';
+                    particle.style.animationDuration = `${duration}s`;
+                    particle.style.setProperty('--x-end', `${xEnd}px`);
+                    particle.style.setProperty('--rotation', `${rotation}deg`);
+
+                    this.container.appendChild(particle);
+
+                    // Eliminar la partícula después de la animación
+                    setTimeout(() => {
+                        particle.remove();
+                    }, duration * 1000);
+                }
+            }
+        }
+        let particleSystem = null;
+
+        // Definición de Estructura de Contenido (Sintaxis Avanzada)
+        const EJERCICIOS_CRB = {
+            'CALIGRAFIA_ES': ["Caligrafía", "Redacción", "Aprendizaje", "Sintaxis", "Bilingüe"],
+            'CALIGRAFIA_EN': ["Calligraphy", "Composition", "Learning", "Syntax", "Bilingual"],
+
+            'GRAMATICA_ES': [
+                // Ejercicios Avanzados (12vo grado / Pre-U)
+                {'pregunta': "Corrige el dequeísmo: 'Pienso de que es necesario estudiar más.'", 'respuesta_correcta': "Pienso que es necesario estudiar más.", 'tipo': 'Dequeísmo'},
+                {'pregunta': "Completa con subjuntivo: 'No creo que él ____ (venir) mañana.'", 'respuesta_correcta': "venga", 'tipo': 'Subjuntivo'},
+                {'pregunta': "Transforma a voz pasiva: 'El público ovacionó a la orquesta.'", 'respuesta_correcta': "La orquesta fue ovacionada por el público.", 'tipo': 'Voz Pasiva'},
+                {'pregunta': "Completa el condicional perfecto: 'Si hubieras llegado antes, ____ (ver) la película.'", 'respuesta_correcta': "habrías visto", 'tipo': 'Condicionales'},
+                {'pregunta': "Forma correcta del verbo 'ir' en imperfecto de subjuntivo (él):", 'respuesta_correcta': "fuera", 'tipo': 'Subjuntivo Imperfecto'},
+            ],
+            'GRAMATICA_EN': [
+                // Advanced Syntax Exercises
+                {'pregunta': "Correct the sequence of tenses: 'If I would have known, I would have told you.'", 'respuesta_correcta': "If I had known, I would have told you.", 'tipo': 'Conditionals'},
+                {'pregunta': "Identify the dangling participle: 'Walking down the street, the bus hit the student.'", 'respuesta_correcta': "the bus hit the student", 'tipo': 'Dangling Participles'},
+                {'pregunta': "Change to passive voice: 'The committee approved the plan.'", 'respuesta_correcta': "The plan was approved by the committee.", 'tipo': 'Passive Voice'},
+                {'pregunta': "Use an idiomatic expression with 'wish': 'I wish I ____ (be) taller.'", 'respuesta_correcta': "were", 'tipo': 'Subjunctive/Mood'},
+                {'pregunta': "Correct the run-on sentence: 'The concert was great I bought a t-shirt.'", 'respuesta_correcta': "The concert was great; I bought a t-shirt.", 'tipo': 'Sentence Structure'},
+            ]
+        };
+
+        const TEXTOS = {
+            'ES': {
+                'subtitulo': "Autoaprendizaje de Reglas de la Lengua Castellana e Inglesa",
+                'caligrafia': "Práctica de Caligrafía Digital (Simulación de Trazo)",
+                'gramatica': "Ejercicios de Gramática y Sintaxis",
+                'menu_bienvenida': "Selecciona una modalidad de práctica para iniciar tu autoaprendizaje:",
+                'instruccion_caligrafia': "Instrucción: Escribe la palabra modelo con precisión absoluta para aprobar la caligrafía digital.",
+                'instruccion_gramatica': "Instrucción: Escribe tu respuesta o corrección en el campo de abajo.",
+                'btn_verificar': "Verificar",
+                'btn_menu': "Volver al Menú",
+                'btn_siguiente': "Siguiente Ejercicio",
+                'aprobado': (p) => `¡Caligrafía Aprobada! Precisión: ${p}%`,
+                'intenta': (u) => `Intenta de nuevo. Necesitas ${u}% de precisión.`,
+                'correcto': "¡CORRECTO! Estructura dominada. 🚀✨",
+                'incorrecto': (r) => `INCORRECTO. La respuesta correcta es: ${r}`,
+                'precisión': "Precisión requerida:",
+                'btn_cambiar_idioma': "Switch to English (EN)"
+            },
+            'EN': {
+                'subtitulo': "Self-Learning for Spanish and English Language Rules",
+                'caligrafia': "Digital Calligraphy Practice (Stroke Simulation)",
+                'gramatica': "Grammar and Syntax Exercises",
+                'menu_bienvenida': "Select a practice mode to start your self-learning:",
+                'instruccion_caligrafia': "Instruction: Type the model word with absolute accuracy to pass digital calligraphy.",
+                'instruccion_gramatica': "Instruction: Write your answer or correction in the field below.",
+                'btn_verificar': "Verify",
+                'btn_menu': "Return to Menu",
+                'btn_siguiente': "Next Exercise",
+                'aprobado': (p) => `Calligraphy Approved! Accuracy: ${p}%`,
+                'intenta': (u) => `Try again. You need ${u}% accuracy.`,
+                'correcto': "CORRECT! Structure mastered. 🚀✨",
+                'incorrecto': (r) => `INCORRECT. The correct answer is: ${r}`,
+                'precisión': "Required Accuracy:",
+                'btn_cambiar_idioma': "Cambiar a Español (ES)"
+            }
+        };
+
+        // --- LÓGICA DE CONTROL ---
+
+        function obtenerTexto(clave) {
+            return TEXTOS[idioma][clave] || `[${clave} Missing]`;
+        }
+
+        function setIdioma(newIdioma) {
+            idioma = newIdioma;
+            subtitleElement.textContent = obtenerTexto('subtitulo');
+            renderMenu();
+        }
+
+        /**
+         * Calcula el porcentaje de precisión caracter a caracter.
+         */
+        function calcularPrecision(target, user_input) {
+            const minLen = Math.min(target.length, user_input.length);
+            let correctChars = 0;
+            const targetLower = target.toLowerCase();
+            const userInputLower = user_input.toLowerCase();
+
+            for (let i = 0; i < minLen; i++) {
+                if (targetLower[i] === userInputLower[i]) {
+                    correctChars++;
+                }
+            }
+
+            // La precisión se basa en la longitud del objetivo
+            const precision = (correctChars / target.length) * 100;
+            return parseFloat(precision.toFixed(2));
+        }
+
+        // --- VISTAS / RENDERING ---
+
+        /** Renderiza la vista de selección de idioma y el menú inicial. */
+        function renderIdiomaSelection() {
+            appElement.innerHTML = `
+                <div class="card shadow-lg p-4 mb-4">
+                    <h2 class="h4 card-title text-center mb-4">Selecciona el Idioma / Select Language</h2>
+                    <div class="d-grid gap-3">
+                        <button class="btn btn-primary btn-lg rainbow-btn" onclick="setIdioma('ES')">Español (ES)</button>
+                        <button class="btn btn-primary btn-lg rainbow-btn" onclick="setIdioma('EN')">English (EN)</button>
+                    </div>
+                </div>
+            `;
+        }
+        
+        /** Renderiza el menú principal. */
+        function renderMenu() {
+            subtitleElement.textContent = obtenerTexto('subtitulo');
+            appElement.innerHTML = `
+                <div class="card shadow-lg p-4 mb-4">
+                    <div class="card-body text-center">
+                        <h2 class="h4 card-title">${obtenerTexto('menu_bienvenida')}</h2>
+                        <div class="d-grid gap-3 mt-4">
+                            <button class="btn btn-success btn-lg rainbow-btn" onclick="renderCaligrafia()">
+                                ${obtenerTexto('caligrafia')} ✍️
+                            </button>
+                            <button class="btn btn-info btn-lg rainbow-btn" onclick="renderGramatica()">
+                                ${obtenerTexto('gramatica')} 📚
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="text-center mt-4">
+                    <button class="btn btn-outline-secondary rainbow-btn" onclick="renderIdiomaSelection()">
+                        ${obtenerTexto('btn_cambiar_idioma')}
+                    </button>
+                </div>
+            `;
+        }
+        
+        /** Renderiza la práctica de caligrafía. */
+        function renderCaligrafia() {
+            const listaPalabras = EJERCICIOS_CRB[`CALIGRAFIA_${idioma}`];
+            palabraModelo = listaPalabras[Math.floor(Math.random() * listaPalabras.length)];
+
+            appElement.innerHTML = `
+                <div class="card shadow-lg p-4 mb-4">
+                    <h2 class="h4 card-title text-center">${obtenerTexto('caligrafia')}</h2>
+                    <p class="text-muted text-center">${obtenerTexto('instruccion_caligrafia')}</p>
+                    
+                    <div class="reglon-container">
+                        <div class="reglon-line top"></div>
+                        <div class="reglon-line middle"></div>
+                        <div class="reglon-line bottom"></div>
+                        <div class="modelo-caligrafia">${palabraModelo}</div>
+                    </div>
+
+                    <form id="caligrafia-form">
+                        <input type="text" id="caligrafia-input" class="form-control form-control-lg" 
+                                placeholder="Escribe la palabra aquí..." autofocus>
+                        <div class="d-grid gap-2 mt-3">
+                            <button type="submit" class="btn btn-success rainbow-btn">
+                                ${obtenerTexto('btn_verificar')}
+                            </button>
+                        </div>
+                    </form>
+                    
+                    <div id="caligrafia-feedback" class="text-feedback d-none text-center"></div>
+                </div>
+                <div class="text-center">
+                    <button class="btn btn-secondary mt-3 rainbow-btn" onclick="renderMenu()">
+                        ${obtenerTexto('btn_menu')}
+                    </button>
+                </div>
+            `;
+            
+            document.getElementById('caligrafia-form').addEventListener('submit', function(e) {
+                e.preventDefault();
+                verificarCaligrafia();
+            });
+        }
+        
+        /** Renderiza la práctica de gramática. */
+        function renderGramatica() {
+            const ejercicios = EJERCICIOS_CRB[`GRAMATICA_${idioma}`];
+            currentExercise = ejercicios[Math.floor(Math.random() * ejercicios.length)];
+
+            appElement.innerHTML = `
+                <div class="card shadow-lg p-4 mb-4">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h2 class="h4 card-title mb-0">${obtenerTexto('gramatica')}</h2>
+                        <span class="badge bg-warning text-dark fs-5 shadow-sm">
+                            🌟 Puntuación: <span id="score-display">${score}</span>
+                        </span>
+                    </div>
+                    
+                    <div class="card mb-3 bg-light p-3">
+                        <p class="mb-1 text-primary"><strong>[${currentExercise.tipo}]</strong></p>
+                        <h5 class="card-text">${currentExercise.pregunta}</h5>
+                    </div>
+
+                    <p class="text-muted text-center">${obtenerTexto('instruccion_gramatica')}</p>
+
+                    <form id="gramatica-form">
+                        <input type="text" id="gramatica-input" class="form-control form-control-lg" 
+                                placeholder="Tu respuesta/corrección..." autofocus>
+                        <div class="d-grid gap-2 mt-3">
+                            <button type="submit" class="btn btn-info rainbow-btn">
+                                ${obtenerTexto('btn_verificar')}
+                            </button>
+                        </div>
+                    </form>
+                    
+                    <div id="gramatica-feedback" class="text-feedback d-none text-center"></div>
+                </div>
+                <div class="d-grid gap-2 d-md-flex justify-content-md-center">
+                    <button class="btn btn-secondary mt-3 rainbow-btn" onclick="renderMenu()">
+                        ${obtenerTexto('btn_menu')}
+                    </button>
+                    <button id="siguiente-btn" class="btn btn-primary mt-3 d-none rainbow-btn" onclick="renderGramatica()">
+                        ${obtenerTexto('btn_siguiente')}
+                    </button>
+                </div>
+            `;
+            
+            document.getElementById('gramatica-form').addEventListener('submit', function(e) {
+                e.preventDefault();
+                verificarGramatica();
+            });
+        }
+
+        // --- LÓGICA DE VERIFICACIÓN ---
+
+        function verificarCaligrafia() {
+            const inputElement = document.getElementById('caligrafia-input');
+            const feedbackElement = document.getElementById('caligrafia-feedback');
+            const userInput = inputElement.value.trim();
+            const target = palabraModelo;
+            
+            const precision = calcularPrecision(target, userInput);
+            
+            feedbackElement.classList.remove('d-none', 'bg-success', 'bg-danger');
+
+            if (precision >= umbralPrecision) {
+                const msg = obtenerTexto('aprobado')(precision);
+                feedbackElement.textContent = msg;
+                feedbackElement.classList.add('bg-success', 'text-white');
+                // Carga el siguiente ejercicio automáticamente
+                setTimeout(renderCaligrafia, 1500); 
+            } else {
+                const msg = obtenerTexto('intenta')(umbralPrecision);
+                feedbackElement.textContent = `${msg} ${obtenerTexto('precisión')} ${precision}%`;
+                feedbackElement.classList.add('bg-danger', 'text-white');
+                inputElement.value = ''; // Limpia para reintento
+                inputElement.focus();
+            }
+        }
+        
+        function verificarGramatica() {
+            const inputElement = document.getElementById('gramatica-input');
+            const feedbackElement = document.getElementById('gramatica-feedback');
+            const siguienteBtn = document.getElementById('siguiente-btn');
+            const scoreDisplay = document.getElementById('score-display');
+            
+            const userInput = inputElement.value.trim();
+            const respuestaCorrecta = currentExercise.respuesta_correcta;
+
+            // Normalización para verificación
+            const entradaNormalizada = userInput.toLowerCase().replace(/[.,!?]/g, '').trim();
+            const correctaNormalizada = respuestaCorrecta.toLowerCase().replace(/[.,!?]/g, '').trim();
+            
+            feedbackElement.classList.remove('d-none', 'bg-success', 'bg-danger');
+            
+            // Deshabilita el input y el botón de verificar
+            inputElement.disabled = true;
+            document.querySelector('#gramatica-form button[type="submit"]').disabled = true;
+
+            if (entradaNormalizada === correctaNormalizada) {
+                const msg = obtenerTexto('correcto');
+                feedbackElement.textContent = msg;
+                feedbackElement.classList.add('bg-success', 'text-white');
+                siguienteBtn.classList.remove('d-none');
+                
+                // --- GAMIFICACIÓN: Incremento de Score y Partículas ---
+                score++;
+                if (scoreDisplay) scoreDisplay.textContent = score;
+                if (particleSystem) particleSystem.burst(20); // Lanzar partículas
+                // --------------------------------------------------------
+
+            } else {
+                const msg = obtenerTexto('incorrecto')(respuestaCorrecta);
+                feedbackElement.textContent = msg;
+                feedbackElement.classList.add('bg-danger', 'text-white');
+                // Permite reintentar si el usuario lo desea, pero muestra la respuesta correcta
+                siguienteBtn.classList.remove('d-none');
+            }
+        }
+
+        // --- INICIALIZACIÓN ---
+        document.addEventListener('DOMContentLoaded', () => {
+            // Inicializar el sistema de partículas después de que el DOM esté cargado
+            particleSystem = new ParticleSystem(particleContainerId);
+            renderIdiomaSelection();
+        });
+    </script>
+
+</body>
+</html>

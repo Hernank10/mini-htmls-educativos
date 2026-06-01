@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Editor Educativo de Consejos de Idiomas</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body { background-color: #f8f9fa; }
+    .sidebar { height: 100vh; background-color: #343a40; color: white; padding: 1rem; }
+    .sidebar h4 { color: #ffc107; }
+    .editor-area { height: 80vh; }
+  </style>
+</head>
+<body>
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-3 sidebar">
+      <h4>Idiomas</h4>
+      <select id="idiomaSelect" class="form-select mb-3">
+        <option value="frances">Francés</option>
+        <option value="portugues">Portugués</option>
+        <option value="coreano">Coreano</option>
+        <option value="hindi">Hindi</option>
+        <option value="arabe">Árabe</option>
+        <option value="hebreo">Hebreo</option>
+        <option value="ruso">Ruso / Eslavas</option>
+        <option value="chino">Chino (Mandarín y Cantonés)</option>
+        <option value="japones">Japonés</option>
+      </select>
+      <button class="btn btn-warning w-100 mb-2" id="cargarBtn">Cargar guardado</button>
+      <button class="btn btn-success w-100 mb-2" id="guardarBtn">Guardar</button>
+      <button class="btn btn-primary w-100 mb-2" id="combinarBtn">Combinar con predeterminados</button>
+      <button class="btn btn-danger w-100 mb-2" id="restablecerBtn">Restablecer editor</button>
+      <button class="btn btn-info w-100 mb-2" id="exportarBtn">Exportar JSON</button>
+      <button class="btn btn-secondary w-100" id="imprimirBtn">Imprimir</button>
+    </div>
+    <div class="col-md-9 p-4">
+      <h2 class="text-center mb-4">Editor Educativo de Consejos</h2>
+      <textarea id="editor" class="form-control editor-area" placeholder="Escribe o edita aquí tus consejos (uno por línea)"></textarea>
+      <div class="mt-3 text-end">
+        <input type="text" id="nuevoConsejo" class="form-control d-inline-block w-75" placeholder="Nuevo consejo...">
+        <button class="btn btn-outline-success" id="agregarConsejoBtn">Añadir al final</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const consejos = {
+  japones: [/* 100 consejos del idioma japonés */],
+  chino: [/* 100 consejos del chino mandarín y cantonés */],
+  ruso: [/* 100 consejos del ruso y lenguas eslavas */],
+  hebreo: [/* 100 consejos del hebreo */],
+  arabe: [/* 100 consejos del árabe */],
+  hindi: [/* 100 consejos del hindi */],
+  coreano: [/* 100 consejos del coreano */],
+  portugues: [/* 100 consejos del portugués */],
+  frances: [
+    "Aprende el alfabeto francés, compuesto por 26 letras.",
+    "Familiarízate con los acentos diacríticos: aigu (é), grave (è, à, ù), circonflexe (â, ê, î, ô, û), tréma (ë, ï, ü) y cedilla (ç).",
+    "Domina las reglas de uso de mayúsculas: en francés, los días de la semana, meses y gentilicios no llevan mayúscula.",
+    "Aprende a diferenciar entre 'à' (preposición) y 'a' (verbo avoir).",
+    // ... y así hasta los 100 consejos del francés
+  ]
+};
+
+const editor = document.getElementById('editor');
+const idiomaSelect = document.getElementById('idiomaSelect');
+
+idiomaSelect.addEventListener('change', () => cargarConsejos());
+
+document.getElementById('cargarBtn').addEventListener('click', () => {
+  const idioma = idiomaSelect.value;
+  const guardado = localStorage.getItem('consejos_' + idioma);
+  editor.value = guardado ? JSON.parse(guardado).join('\n') : '';
+});
+
+document.getElementById('guardarBtn').addEventListener('click', () => {
+  const idioma = idiomaSelect.value;
+  const texto = editor.value.split('\n').filter(l => l.trim() !== '');
+  localStorage.setItem('consejos_' + idioma, JSON.stringify(texto));
+  alert('Consejos guardados correctamente.');
+});
+
+document.getElementById('combinarBtn').addEventListener('click', () => {
+  const idioma = idiomaSelect.value;
+  const actuales = editor.value.split('\n');
+  const combinados = Array.from(new Set([...consejos[idioma], ...actuales]));
+  editor.value = combinados.join('\n');
+});
+
+document.getElementById('restablecerBtn').addEventListener('click', () => {
+  if (confirm('¿Seguro que deseas restablecer el editor?')) {
+    editor.value = '';
+  }
+});
+
+document.getElementById('exportarBtn').addEventListener('click', () => {
+  const idioma = idiomaSelect.value;
+  const blob = new Blob([JSON.stringify(editor.value.split('\n'))], { type: 'application/json' });
+  const link = document.createElement('a');
+  link.href = URL.createObjectURL(blob);
+  link.download = `consejos_${idioma}.json`;
+  link.click();
+});
+
+document.getElementById('imprimirBtn').addEventListener('click', () => {
+  window.print();
+});
+
+document.getElementById('agregarConsejoBtn').addEventListener('click', () => {
+  const nuevo = document.getElementById('nuevoConsejo').value.trim();
+  if (nuevo) {
+    editor.value += (editor.value ? '\n' : '') + nuevo;
+    document.getElementById('nuevoConsejo').value = '';
+  }
+});
+
+function cargarConsejos() {
+  const idioma = idiomaSelect.value;
+  editor.value = consejos[idioma].join('\n');
+}
+
+window.onload = () => cargarConsejos();
+</script>
+
+</body>
+</html>

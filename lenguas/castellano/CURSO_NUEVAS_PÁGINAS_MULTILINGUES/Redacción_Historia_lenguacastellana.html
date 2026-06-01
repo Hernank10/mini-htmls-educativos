@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>HistoriaLingua · 100 técnicas de redacción para Historia de la Lengua Castellana</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700;800&family=Merriweather:ital,wght@0,300;0,400;0,700;1,400&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #8B4513;
+      --primary-dark: #5C2E0B;
+      --secondary: #D4A373;
+      --bg-dark: #1a1a1a;
+      --bg-light: #FDF8F0;
+      --card-dark: #252525;
+      --card-light: #FFFFFF;
+    }
+    body {
+      font-family: 'Inter', 'Merriweather', serif;
+      background: var(--bg-dark);
+      color: #E5E5E5;
+      transition: all 0.3s;
+    }
+    body.light-mode {
+      background: var(--bg-light);
+      color: #1E1E1E;
+    }
+    .sidebar {
+      background: #1E1E1E;
+      border-radius: 1.5rem;
+      padding: 1rem;
+      height: fit-content;
+      position: sticky;
+      top: 20px;
+    }
+    body.light-mode .sidebar { background: #FFF; }
+    .nav-item-custom {
+      padding: 0.8rem 1rem;
+      border-radius: 1rem;
+      cursor: pointer;
+      margin-bottom: 0.5rem;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: #AAA;
+    }
+    .nav-item-custom i { width: 24px; }
+    .nav-item-custom.active { background: var(--primary); color: white; }
+    .cat-filter {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+    }
+    .filter-btn {
+      background: transparent;
+      border: 1px solid #3A3A3A;
+      border-radius: 30px;
+      padding: 0.2rem 0.8rem;
+      font-size: 0.7rem;
+      cursor: pointer;
+    }
+    .filter-btn.active { background: var(--primary); border-color: var(--primary); color: white; }
+    body.light-mode .filter-btn { border-color: #D0D0D0; }
+    .tecnica-card {
+      background: var(--card-dark);
+      border-radius: 1rem;
+      padding: 1rem;
+      margin-bottom: 0.8rem;
+      border: 1px solid #3A3A3A;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+    body.light-mode .tecnica-card { background: var(--card-light); border-color: #E0E0E0; }
+    .tecnica-card.completed { border-left: 4px solid var(--primary); background: rgba(139,69,19,0.15); }
+    .flashcard-container { perspective: 1000px; min-height: 520px; cursor: pointer; }
+    .flashcard { width: 100%; height: 580px; position: relative; transform-style: preserve-3d; transition: transform 0.6s; border-radius: 1.5rem; }
+    .flashcard.flipped { transform: rotateY(180deg); }
+    .flashcard-front, .flashcard-back {
+      position: absolute; width: 100%; height: 100%; backface-visibility: hidden;
+      border-radius: 1.5rem; padding: 1.5rem; display: flex; flex-direction: column;
+      background: var(--card-dark); border: 1px solid #3A3A3A; overflow-y: auto;
+    }
+    body.light-mode .flashcard-front, body.light-mode .flashcard-back { background: var(--card-light); }
+    .flashcard-back { transform: rotateY(180deg); background: var(--primary); color: white; }
+    .old-spanish { font-family: 'Merriweather', serif; font-style: italic; }
+    .option-btn { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); padding: 0.5rem 1rem; border-radius: 2rem; margin: 0.3rem; cursor: pointer; }
+    .option-btn:hover { background: rgba(255,255,255,0.2); }
+    .option-btn.correct { background: #27ae60; }
+    .option-btn.incorrect { background: #e74c3c; }
+    .progress-custom { height: 4px; background: #3A3A3A; border-radius: 2px; }
+    .progress-fill-custom { height: 100%; background: var(--primary); width: 0%; transition: width 0.3s; }
+    footer { background: #141414; padding: 1rem 0; margin-top: 2rem; text-align: center; }
+    .badge-cat { background: var(--secondary); color: #2C2A29; padding: 0.2rem 0.6rem; border-radius: 20px; font-size: 0.7rem; }
+    .search-box { width: 100%; padding: 0.5rem; border-radius: 2rem; border: 1px solid #3A3A3A; background: var(--card-dark); color: #E5E5E5; }
+    body.light-mode .search-box { background: var(--card-light); color: #1E1E1E; border-color: #D0D0D0; }
+  </style>
+</head>
+<body>
+
+<div class="container-fluid px-4 py-3">
+  <div class="row g-4">
+    
+    <!-- SIDEBAR -->
+    <div class="col-lg-3 col-md-4">
+      <div class="sidebar">
+        <div class="text-center py-3">
+          <i class="bi bi-book-half" style="font-size: 2rem; color: var(--primary);"></i>
+          <h5 class="mt-2">HistoriaLingua</h5>
+          <small class="text-muted">100 técnicas · Historia de la Lengua Castellana</small>
+        </div>
+        <hr>
+        <div class="nav-item-custom active" data-view="lista">
+          <i class="bi bi-list-ul"></i> <span>📋 Técnicas</span>
+        </div>
+        <div class="nav-item-custom" data-view="flashcards">
+          <i class="bi bi-stack"></i> <span>🃏 Flashcards</span>
+        </div>
+        <hr>
+        <div class="mt-3">
+          <div class="d-flex justify-content-between small"><span>Técnicas completadas</span><span id="completedCount">0</span><span>/100</span></div>
+          <div class="progress-custom mt-1"><div class="progress-fill-custom" id="progressFill"></div></div>
+        </div>
+        <hr>
+        <button id="themeToggleBtn" class="btn btn-sm w-100 mt-2"><i class="bi bi-moon-stars-fill"></i> Modo oscuro</button>
+      </div>
+    </div>
+    
+    <!-- CONTENIDO PRINCIPAL -->
+    <div class="col-lg-9 col-md-8">
+      
+      <!-- VISTA LISTA DE TÉCNICAS -->
+      <div id="listaView">
+        <h3><i class="bi bi-book-half me-2"></i>100 técnicas de redacción para Historia de la Lengua Castellana</h3>
+        <p class="text-muted small">Evolución fonética · Morfosintaxis histórica · Lexicología diacrónica · Paleografía · Periodización</p>
+        <div class="d-flex gap-2 my-3 flex-wrap">
+          <input type="text" id="searchInput" class="search-box" placeholder="🔍 Buscar técnica..." style="width: 200px;">
+          <select id="catFilter" class="form-select form-select-sm" style="width: 200px;">
+            <option value="all">Todas las categorías</option>
+            <option value="Evolución fonética">🔊 Evolución fonética</option>
+            <option value="Morfosintaxis histórica">📝 Morfosintaxis histórica</option>
+            <option value="Lexicología diacrónica">📖 Lexicología diacrónica</option>
+            <option value="Paleografía y crítica textual">✍️ Paleografía y crítica textual</option>
+            <option value="Periodización de la lengua">📅 Periodización de la lengua</option>
+          </select>
+        </div>
+        <div id="tecnicasList" style="max-height: 70vh; overflow-y: auto;"></div>
+        <div class="d-flex justify-content-center mt-4"><ul class="pagination" id="pagination"></ul></div>
+      </div>
+      
+      <!-- VISTA FLASHCARDS -->
+      <div id="flashcardsView" style="display: none;">
+        <div class="d-flex justify-content-between mb-3">
+          <h3><i class="bi bi-stack me-2"></i>Flashcards · Aprende historia de la lengua</h3>
+        </div>
+        <div class="flashcard-container"><div class="flashcard" id="flashcard">
+          <div class="flashcard-front">
+            <div class="d-flex justify-content-between"><span class="badge-cat" id="frontCat">Categoría</span><span id="frontNum">#1</span></div>
+            <h5 id="frontTitle" class="mt-2">Técnica</h5>
+            <p id="frontConcept" class="mt-3" style="flex:1;">Concepto</p>
+            <small>🖱️ Haz clic para ver el ejemplo histórico</small>
+          </div>
+          <div class="flashcard-back">
+            <div class="d-flex justify-content-between"><span class="badge-cat">📖 Ejemplo diacrónico</span><span id="backNum">#1</span></div>
+            <h5 id="backTitle" class="mt-2">Ejemplo práctico</h5>
+            <p id="backExample" class="mt-2" style="flex:1;"></p>
+            <div id="exerciseArea" class="mt-3"></div>
+          </div>
+        </div></div>
+        <div class="d-flex justify-content-between mt-4">
+          <button id="prevCardBtn" class="btn btn-outline-light">◀ Anterior</button>
+          <div><span id="cardCounter">1 / 100</span><button id="markCompleteBtn" class="btn btn-sm btn-success ms-2">✅ Aprendida</button></div>
+          <button id="nextCardBtn" class="btn btn-outline-light">Siguiente ▶</button>
+        </div>
+        <div class="text-center mt-3"><button id="randomCardBtn" class="btn btn-sm btn-secondary me-2">🎲 Aleatorio</button><button id="flipCardBtn" class="btn btn-sm btn-secondary">🔄 Voltear</button></div>
+      </div>
+    </div>
+  </div>
+</div>
+<footer><div class="container"><small>📚 HistoriaLingua · 100 técnicas de redacción para Historia de la Lengua Castellana · Filología · Diacronía</small></div></footer>
+
+<script>
+  // ============================================================
+  // 100 TÉCNICAS DE REDACCIÓN PARA HISTORIA DE LA LENGUA CASTELLANA
+  // ============================================================
+  
+  const tecnicas = [];
+  
+  const tecnicasPorCategoria = {
+    "Evolución fonética": [
+      [1, "Usa la ley fonética", "Regularidad en el cambio de sonidos.", "Ejemplo: 'La /f/ inicial latina > /h/ aspirada (siglos X-XI) > Ø (pérdida): lat. FILIU > cast. antiguo 'fijo' > moderno 'hijo'."],
+      [2, "Explica la sonorización de oclusivas sordas", "Entre vocales, /p t k/ > /b d g/.", "Ejemplo: 'lat. APICULA > 'abeja'; lat. CATENA > 'cadena'; lat. SECURU > 'seguro'."],
+      [3, "Describe la diptongación", "E > ie / O > ue en sílaba tónica.", "Ejemplo: 'lat. TERRA > 'tierra'; lat. PORTA > 'puerta'."],
+      [4, "Explica la pérdida de consonantes intervocálicas", "Especialmente /d/ y /g/.", "Ejemplo: 'lat. VIDERE > 'ver' (pérdida de -d-); lat. LEGERE > 'leer' (pérdida de -g-).'"],
+      [5, "Describe la evolución de las sibilantes", "Hasta el siglo XVI.", "Ejemplo: 'Las sibilantes medievales (ç, z, ss, s, x, j, g) se reestructuraron en el español moderno.'"],
+      [6, "Usa el rotacismo", "Cambio de -l- a -r- en algunos dialectos.", "Ejemplo: 'lat. COELU > 'cielo' (no rotacismo), pero en algunas variedades: 'cuelo' > 'cuelro' (rotacismo).'"],
+      [7, "Explica la palatalización", "Consonantes + yod.", "Ejemplo: 'lat. MULTU > 'mucho' (palatalización de /lt/ > /tʃ/).'"],
+      [8, "Describe el yeísmo", "Pérdida de oposición entre /ʎ/ y /ʝ/.", "Ejemplo: 'En el español actual, 'cayó' (verbo caer) y 'calló' (verbo callar) son homófonos en zonas yeístas.'"],
+      [9, "Diferencia seseo y ceceo", "Neutralización de /s/ y /θ/.", "Ejemplo: 'En Andalucía occidental y América, existe seseo; en zonas de Andalucía oriental, ceceo.'"],
+      [10, "Explica la metátesis", "Cambio de orden de sonidos.", "Ejemplo: 'lat. PARABOLA > 'palabra' (metátesis de la r y l).'"],
+      [11, "Describe la aféresis", "Pérdida de sonido al inicio.", "Ejemplo: 'lat. APOTHECA > 'bodega' (pérdida de a-); 'horrible' > 'rrible' en habla coloquial.'"],
+      [12, "Usa la síncopa", "Pérdida de sonido interior.", "Ejemplo: 'lat. CALIDU > 'caldo'; lat. INTEGRU > 'entero'?'"],
+      [13, "Explica la prótesis", "Adición de sonido al inicio.", "Ejemplo: 'lat. SPATULA > 'espada' (prótesis de e- ante s-+consonante).'"],
+      [14, "Describe la epéntesis", "Adición de sonido interior.", "Ejemplo: 'lat. HOMINE > 'hombre' (epéntesis de b).'"],
+      [15, "Explica la asimilación", "Un sonido se vuelve similar al vecino.", "Ejemplo: 'lat. OCTO > 'ocho' (asimilación de ct > ch).'"],
+      [16, "Describe la disimilación", "Un sonido se vuelve diferente.", "Ejemplo: 'lat. ARBORE > 'árbol' (disimilación de dos erres).'"],
+      [17, "Usa la evolución de los grupos cultos", "Mantenimiento sin reducir.", "Ejemplo: 'lat. DOCTU > 'docto' (cultismo) frente a 'ducho' (popular).'"],
+      [18, "Explica la betacismo", "Fusión de /b/ y /v/.", "Ejemplo: 'En español actual, 'baca' y 'vaca' son homófonos.'"],
+      [19, "Describe la evolución de las vocales", "Del latín al romance.", "Ejemplo: 'El latín tenía 10 vocales (breves y largas); el romance redujo a 7, luego a 5.'"],
+      [20, "Explica el cierre de e>i en hiato", "En algunos contextos.", "Ejemplo: 'lat. MULIER > 'mujer' (cierre de e > i por influencia de la yod).'"]
+    ],
+    "Morfosintaxis histórica": [
+      [21, "Describe la evolución del sistema verbal", "Del latín a las formas romances.", "Ejemplo: 'El latín tenía formas sintéticas de futuro (cantabo); el romance creó formas perifrásticas (cantar he > cantaré).'"],
+      [22, "Explica la pérdida del sistema de casos", "Sustitución por preposiciones.", "Ejemplo: 'El latín tenía declinaciones (nominativo, acusativo, etc.). El castellano reemplazó con orden SVO y preposiciones (de, a, con).'"],
+      [23, "Usa la evolución de los demostrativos", "Ídem, iste, ille.", "Ejemplo: 'Ille dio el artículo 'el/la'; iste dio 'este/esta/eso'; ipse dio 'ese/esa' (en el español medieval).'"],
+      [24, "Describe la evolución de los posesivos", "Formas plenas y átonas.", "Ejemplo: 'En español medieval había 'meo, mea, meos meas' (plenos) y 'mi, mis' (átonos).'"],
+      [25, "Explica la formación del futuro", "Infinitivo + haber.", "Ejemplo: 'Cantar he > cantar he > cantaré. Igual para condicional: cantar había > cantaría.'"],
+      [26, "Describe la evolución de la conjunción 'que'", "Del latín QUOD/QUE.", "Ejemplo: 'El latín clásico 'quod' dio 'que' como conjunción completiva y relativa.'"],
+      [27, "Usa la evolución de los pronombres átonos", "Leísmo, laísmo, loísmo.", "Ejemplo: 'El leísmo (le por lo) es aceptado por la RAE para persona masculina.'"],
+      [28, "Explica la colocación de pronombres enclíticos", "Posposición al verbo.", "Ejemplo: 'En español medieval: 'díxolo' en lugar de 'lo dijo'.'"],
+      [29, "Describe la evolución del orden de palabras", "Del latín SOV al romance SVO.", "Ejemplo: 'El latín podía decir 'Maria amat Petrum'; el español 'María ama a Pedro' (SVO).'"],
+      [30, "Explica el uso del artículo determinado", "Inexistente en latín.", "Ejemplo: 'El artículo 'el/la' proviene de 'ille/illa' con valor demostrativo debilitado.'"],
+      [31, "Describe la evolución del subjuntivo", "Usos modalidades.", "Ejemplo: 'El subjuntivo latino expresaba deseo; en español expresa irrealidad, duda, emoción.'"],
+      [32, "Usa el voseo", "Uso de 'vos' como tratamiento.", "Ejemplo: 'En el español medieval 'vos' era tratamiento formal; en regiones de América perdura como voseo.'"],
+      [33, "Explica la evolución de las preposiciones", "Del latín al romance.", "Ejemplo: 'lat. AD > 'a'; lat. CUM > 'con'; lat. DE > 'de'; lat. IN > 'en'; lat. PER > 'por'.'"],
+      [34, "Describe la evolución de los numerales", "Del latín al romance.", "Ejemplo: 'lat. OCTO > 'ocho'; lat. NOVEM > 'nueve'; lat. CENTUM > 'cien'."],
+      [35, "Explica la evolución del género", "Neutro latino perdido.", "Ejemplo: 'Los neutros latinos pasaron a masculino (vinum > vino) o femenino (folium > hoja).'"],
+      [36, "Describe la evolución de los comparativos", "Sintéticos a analíticos.", "Ejemplo: 'lat. MELIOR > 'mejor', pero 'más bueno' en lugar de 'optimus'.'"],
+      [37, "Usa el análisis de variantes medievales", "Documentos notariales.", "Ejemplo: 'En el Becerro de las Behetrías, se encuentra 'fazer' junto a 'hacer'.'"],
+      [38, "Explica la evolución de los adverbios en -mente", "Del latín 'mente'.", "Ejemplo: 'Clara + mente > claramente (adverbio derivado).'"],
+      [39, "Describe el futuro de subjuntivo", "Uso actual restringido.", "Ejemplo: 'El futuro de subjuntivo ('cantare') sobrevive en textos legales y refranes: 'Donde fueres, haz lo que vieres'.'"],
+      [40, "Explica la evolución de los verbos irregulares", "Analogías.", "Ejemplo: 'El latín 'esse' > 'ser'; 'habere' > 'haber'; 'ire' > 'ir' (con formas supletivas).'"]
+    ],
+    "Lexicología diacrónica": [
+      [41, "Define cultismo", "Palabra que no sufrió evolución fonética regular.", "Ejemplo: 'lat. DIRECTU > 'directo' (cultismo) vs 'derecho' (patrimonial).'"],
+      [42, "Define patrimonial", "Palabra que evolucionó regularmente.", "Ejemplo: 'lat. FOCU > 'fuego' (patrimonial); 'foco' (cultismo).'"],
+      [43, "Describe arabismos", "Palabras de origen árabe.", "Ejemplo: 'almohada, alfombra, aceituna, alcalde' (más de 4000 arabismos en español).'"],
+      [44, "Describe americanismos", "Palabras de lenguas indígenas americanas.", "Ejemplo: 'chocolate (náhuatl), papa (quechua), hamaca (taíno), canoa (taíno).'"],
+      [45, "Explica germanismos", "Préstamos del germánico.", "Ejemplo: 'guerra, ropa, espía, ganar, guardar' del germánico durante la invasión visigoda.'"],
+      [46, "Describe los galicismos", "Préstamos del francés.", "Ejemplo: 'hotel, coraje, parque, jaula' (influencia de la literatura francesa medieval).'"],
+      [47, "Explica los italianismos", "Préstamos del italiano.", "Ejemplo: 'soneto, fachada, diseño, fragata' (especialmente en el Renacimiento).'"],
+      [48, "Describe los anglicismos", "Préstamos del inglés moderno.", "Ejemplo: 'fútbol, internet, chat, email' (desde el siglo XX).'"],
+      [49, "Usa etimologías dobles", "Cultismo y patrimonial.", "Ejemplo: 'cátedra (culto) - cadera (patrimonial); líquido - lecho; pleno - lleno.'"],
+      [50, "Explica la evolución semántica", "Cambios de significado.", "Ejemplo: 'lat. CABALLU > 'caballo' (originalmente 'rocín, caballo de baja calidad' pasó al significado general).'"],
+      [51, "Describe la especialización", "Significado restringido.", "Ejemplo: 'lat. CARNE > 'carne' (en latín cualquier alimento sólido, luego solo carne comestible).'"],
+      [52, "Explica la generalización", "Significado ampliado.", "Ejemplo: 'lat. CASA > 'casa' (en latín 'cabaña'), pasó a cualquier vivienda.'"],
+      [53, "Describe la metáfora", "Cambio semántico por semejanza.", "Ejemplo: 'lat. CAPUT > 'cabeza' (también 'cabo' de territorio, 'cabo' militar).'"],
+      [54, "Usa la etimología popular", "Reinterpretación del origen.", "Ejemplo: 'rosario' (de 'rosa' no de 'rosarium' latino); 'vagamundo' por 'vagabundo'.'"],
+      [55, "Explica la lexicalización", "Palabra compuesta fijada.", "Ejemplo: 'mediodía, cumpleaños, paraguas, sacacorchos.'"],
+      [56, "Describe la derivación histórica", "Sufijos -ble, -ción, -dad.", "Ejemplo: '-ción' del latín '-tione(m)': nación, canción.'"],
+      [57, "Explica la composición", "Palabras compuestas.", "Ejemplo: 'aguardiente, limpiaparabrisas, hazmerreír.'"],
+      [58, "Usa la neología histórica", "Palabras creadas por necesidades.", "Ejemplo: 'Ordenador (España) vs computadora (América); ambas son del siglo XX.'"],
+      [59, "Describe los arcaísmos", "Palabras en desuso.", "Ejemplo: 'yantar (comer), fijo (hijo), agora (ahora), oluidia (olvida).'"],
+      [60, "Explica el estudio de corpus diacrónico", "CORDE, CREA, CORPES.", "Ejemplo: 'El Corpus del Nuevo Diccionario Histórico (NDHE) rastrea usos desde el siglo XI.'"]
+    ],
+    "Paleografía y crítica textual": [
+      [61, "Describe escritura visigótica", "Usada en España medieval.", "Ejemplo: 'La escritura visigótica redonda se usó en los siglos VIII-XII.'"],
+      [62, "Reconoce la carolina", "Introduced por Carlomagno.", "Ejemplo: 'La minúscula carolina se adoptó en la Península a partir del siglo XI.'"],
+      [63, "Describe la gótica textual", "Escritura de libros universitarios.", "Ejemplo: 'La gótica textual (littera textualis) se usó desde el siglo XIII.'"],
+      [64, "Reconoce la cancilleresca", "Escritura de documentos oficiales.", "Ejemplo: 'La escritura cancilleresca fue usada por las cancillerías reales.'"],
+      [65, "Describe la humanística", "A partir del siglo XV.", "Ejemplo: 'La escritura humanística imitaba la carolina, más clara y legible.'"],
+      [66, "Explica abreviaturas medievales", "Signos de abreviatura.", "Ejemplo: 'La 'p' con raya horizontal es 'per', 'pro', 'pre', 'par' según contexto.'"],
+      [67, "Usa el signo 'tironiano'", 'Abreviatura de "et".', "Ejemplo: 'El signo ⁊ (et tironiano) es una abreviatura común en manuscritos medievales.'"],
+      [68, "Describe la escritura diplomática", "De documentos legales.", "Ejemplo: 'La diplomática estudia la falsedad o autenticidad de documentos.'"],
+      [69, "Explica la colación de manuscritos", "Comparación de versiones.", "Ejemplo: 'Al editar el Cantar del Mío Cid, se cotejaron el manuscrito único con versiones perdidas.'"],
+      [70, "Usa el stemma codicum", "Árbol genealógico de manuscritos.", "Ejemplo: 'El stemma permite reconstruir el arquetipo perdido.'"],
+      [71, "Describe variantes accidentales", "De copia.", "Ejemplo: 'Las variantes de copia son errores de lectura, omisiones, duplicaciones.'"],
+      [72, "Explica variantes deliberadas", "Modificaciones intencionales.", "Ejemplo: 'El copista 'moderniza' el lenguaje o sustituye palabras tabú.'"],
+      [73, "Describe el aparato crítico", "Notas a pie de página.", "Ejemplo: 'El aparato crítico muestra las variantes entre manuscritos.'"],
+      [74, "Usa la crítica textual", "Decidir la lectura correcta.", "Ejemplo: 'La lectio difficilior (más difícil) suele ser la original.'"],
+      [75, "Explica el 'codex unicus'", "Único manuscrito conservado.", "Ejemplo: 'El Cantar del Mío Cid se conserva en un solo manuscrito (códice de Per Abbat).'"],
+      [76, "Describe la datación paleográfica", "Por forma de letras.", "Ejemplo: 'La escritura carolina permite datar manuscritos del siglo XI al XII.'"],
+      [77, "Reconoce las abreviaturas por suspensión", "Se escribe la primera letra.", "Ejemplo: 'p' por 'pater', 'n' por 'noster', 's' por 'sanctus'.'"],
+      [78, "Explica abreviaturas por contracción", "Se mantienen inicial y final.", "Ejemplo: 'dñs' = 'dominus', 'xpo' = 'Christo'.'"],
+      [79, "Describe los signos de puntuación históricos", "Punto, virgula, etc.", "Ejemplo: 'En la Edad Media, la 'virgula' (/) indicaba pausa breve.'"],
+      [80, "Usa la transcripción paleográfica", "Normas de edición.", "Ejemplo: 'Se usan corchetes para letras ilegibles, paréntesis para desarrollos de abreviaturas.'"]
+    ],
+    "Periodización de la lengua": [
+      [81, "Define el latín vulgar", "Latín hablado, base de las lenguas romances.", "Ejemplo: 'El latín vulgar era el latín de los soldados, colonos y mercaderes.'"],
+      [82, "Describe el periodo prerrománico", "Siglos VIII-X.", "Ejemplo: 'El asturleonés, navarroaragonés, castellano, gallego-portugués, catalán tienen origen común.'"],
+      [83, "Explica el español medieval", "Siglos X-XV.", "Ejemplo: 'El español medieval (castellano) se consolida con Alfonso X el Sabio (siglo XIII).'"],
+      [84, "Describe el español clásico (Siglos de Oro)", "XVI-XVII.", "Ejemplo: 'Cervantes, Garcilaso, Quevedo, Góngora escriben en el español clásico.'"],
+      [85, "Explica el español moderno", "Siglo XVIII hasta hoy.", "Ejemplo: 'La RAE fundada en 1713 fija y unifica la lengua.'"],
+      [86, "Describe las Glosas Emilianenses y Silenses", "Primeros testimonios romance.", "Ejemplo: 'Las glosas del siglo X/XI son las primeras palabras escritas en romance en la península.'"],
+      [87, "Usa el Cantar del Mío Cid como hito", "Primera obra extensa.", "Ejemplo: 'El Cantar del Mío Cid (aprox. 1200) es el primer poema épico en castellano.'"],
+      [88, "Explica la influencia de Alfonso X", 'Normativización.', "Ejemplo: 'Alfonso X el Sabio impulsó el castellano como lengua oficial y de cultura.'"],
+      [89, "Describe la llegada del español a América", "1492.", "Ejemplo: 'Colón, Nebrija y el español en América: 1492 marca el primer viaje.'"],
+      [90, "Explica la fundación de la RAE", 'Limpia, fija y da esplendor.', "Ejemplo: 'La RAE publicó el Diccionario de Autoridades (1726-1739).'"],
+      [91, "Describe las normas ortográficas", 'De la RAE.', "Ejemplo: 'La ortografía se simplifica en el siglo XVIII: eliminación de 'ph', 'th', uso de 'c/z', 'qu'."],
+      [92, "Usa el concepto de influencia literaria", "Autores que crean escuela.", "Ejemplo: 'Cervantes influye en la prosa del Siglo de Oro y en el español posterior.'"],
+      [93, "Explica las lenguas de España", "Cooficiales.", "Ejemplo: 'El castellano, catalán, gallego y vasco son lenguas oficiales en sus respectivas CCAA.'"],
+      [94, "Describe el español en Filipinas", "Posterior independencia.", "Ejemplo: 'El español fue lengua oficial de Filipinas hasta 1987, hoy es minoritaria.'"],
+      [95, "Explica el español en Estados Unidos", "Más de 50 millones.", "Ejemplo: 'El español es la segunda lengua más hablada en EE.UU.'"],
+      [96, "Usa conceptos de dialectología histórica", "Evolución de los dialectos.", "Ejemplo: 'El andaluz, el murciano, el extremeño, el canario tienen rasgos históricos.'"],
+      [97, "Describe la lengua en la Edad Media", "Oralidad y escritura.", "Ejemplo: 'Los juglares transmitían oralmente el Cantar del Cid; la iglesia escribía documentos.'"],
+      [98, "Explica los primeros diccionarios", "Nebrija (1492).", "Ejemplo: 'El 'Vocabulario español-latino' (1495) de Nebrija es el primer diccionario.'"],
+      [99, "Describe el indigenismo lingüístico", "De lenguas americanas.", "Ejemplo: 'El nahuatlismo 'chocolate', 'tomate', 'chile' ingresan al español en el siglo XVI.'"],
+      [100, "Usa el concepto de panhispanismo", "Español como lengua global.", "Ejemplo: 'La ASALE (Asociación de Academias de la Lengua Española) promueve la unidad.'"]
+    ]
+  };
+  
+  // Construir array de técnicas
+  for(let categoria in tecnicasPorCategoria) {
+    for(let tec of tecnicasPorCategoria[categoria]) {
+      tecnicas.push({
+        id: tec[0],
+        categoria: categoria,
+        titulo: tec[1],
+        concepto: tec[2],
+        ejemplo: tec[3]
+      });
+    }
+  }
+  
+  tecnicas.sort((a,b) => a.id - b.id);
+  
+  let progress = {};
+  let currentCatFilter = "all";
+  let currentSearch = "";
+  let currentPage = 1;
+  let itemsPerPage = 12;
+  let filteredTecnicas = [...tecnicas];
+  let currentCardIndex = 0;
+  let filteredFlashcards = [...tecnicas];
+  const STORAGE_KEY = "historialingua_100_tecnicas";
+  
+  function loadProgress() {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if(saved) progress = JSON.parse(saved);
+    for(let i=0; i<tecnicas.length; i++) if(progress[tecnicas[i].id]===undefined) progress[tecnicas[i].id] = false;
+    updateStats();
+  }
+  function saveProgress() { localStorage.setItem(STORAGE_KEY, JSON.stringify(progress)); updateStats(); }
+  function updateStats() {
+    let c = Object.values(progress).filter(v=>v===true).length;
+    document.getElementById("completedCount").innerText = c;
+    document.getElementById("progressFill").style.width = `${(c/100)*100}%`;
+  }
+  function markComplete(id, isComplete) {
+    if(isComplete && !progress[id]) { progress[id] = true; saveProgress(); renderLista(); }
+  }
+  
+  function renderLista() {
+    let filtered = tecnicas.filter(t => {
+      if(currentCatFilter !== "all" && t.categoria !== currentCatFilter) return false;
+      if(currentSearch && !t.titulo.toLowerCase().includes(currentSearch) && !t.concepto.toLowerCase().includes(currentSearch)) return false;
+      return true;
+    });
+    filteredTecnicas = filtered;
+    const totalPages = Math.ceil(filtered.length / itemsPerPage);
+    const start = (currentPage-1) * itemsPerPage;
+    const paginated = filtered.slice(start, start+itemsPerPage);
+    
+    const container = document.getElementById("tecnicasList");
+    container.innerHTML = paginated.map(t => `
+      <div class="tecnica-card ${progress[t.id] ? 'completed' : ''}" data-id="${t.id}">
+        <div class="d-flex justify-content-between">
+          <div><span class="badge-cat">${t.categoria}</span><span class="ms-2">#${t.id}</span></div>
+          <input class="form-check-input" type="checkbox" ${progress[t.id] ? 'checked' : ''} onchange="event.stopPropagation(); markComplete(${t.id}, this.checked)">
+        </div>
+        <h6 class="mt-2">${t.titulo}</h6>
+        <p class="small text-muted">${t.concepto.substring(0, 100)}...</p>
+      </div>
+    `).join('');
+    
+    document.querySelectorAll(".tecnica-card").forEach(card => {
+      card.addEventListener("click", (e) => {
+        if(!e.target.classList.contains("form-check-input")) {
+          let id = parseInt(card.dataset.id);
+          let idx = filteredTecnicas.findIndex(t => t.id === id);
+          if(idx !== -1) { currentCardIndex = idx; switchToFlashcards(); updateFlashcard(); }
+        }
+      });
+    });
+    
+    let pagHtml = ''; for(let i=1;i<=totalPages;i++) pagHtml += `<li class="page-item ${i===currentPage?'active':''}"><a class="page-link" href="#" data-page="${i}">${i}</a></li>`;
+    document.getElementById("pagination").innerHTML = pagHtml;
+    document.querySelectorAll("#pagination .page-link").forEach(l=>l.addEventListener("click", e=>{ e.preventDefault(); currentPage=parseInt(l.dataset.page); renderLista(); }));
+  }
+  
+  function filterFlashcards() {
+    if(currentCatFilter === "all") filteredFlashcards = [...tecnicas];
+    else filteredFlashcards = tecnicas.filter(t => t.categoria === currentCatFilter);
+    currentCardIndex = Math.min(currentCardIndex, filteredFlashcards.length-1);
+    if(currentCardIndex < 0) currentCardIndex = 0;
+    updateFlashcard();
+  }
+  
+  function updateFlashcard() {
+    let t = filteredFlashcards[currentCardIndex];
+    if(!t) return;
+    document.getElementById("frontCat").innerHTML = t.categoria;
+    document.getElementById("frontNum").innerHTML = `#${t.id}`;
+    document.getElementById("frontTitle").innerHTML = t.titulo;
+    document.getElementById("frontConcept").innerHTML = t.concepto;
+    document.getElementById("backNum").innerHTML = `#${t.id}`;
+    document.getElementById("backTitle").innerHTML = t.titulo;
+    document.getElementById("backExample").innerHTML = t.ejemplo;
+    document.getElementById("cardCounter").innerHTML = `${currentCardIndex+1}/${filteredFlashcards.length}`;
+    document.getElementById("flashcard").classList.remove("flipped");
+    
+    let qText = t.concepto.split('.')[0] || t.concepto;
+    let ejercicioHtml = `<div class="small fw-bold mb-2">📝 Ejercicio: ¿Cuál es el objetivo de esta técnica?</div>
+      <div class="d-flex flex-wrap gap-2">
+        <button class="option-btn ejercicio-opt" data-value="${qText}">${qText}</button>
+        <button class="option-btn ejercicio-opt" data-value="Desconocer la evolución">Desconocer la evolución</button>
+        <button class="option-btn ejercicio-opt" data-value="Ignorar la diacronía">Ignorar la diacronía</button>
+      </div>
+      <div id="ejercicioFeedback" class="mt-2 small"></div>`;
+    document.getElementById("exerciseArea").innerHTML = ejercicioHtml;
+    
+    document.querySelectorAll(".ejercicio-opt").forEach(btn => {
+      btn.onclick = () => {
+        let isCorrect = btn.getAttribute("data-value") === qText;
+        let fb = document.getElementById("ejercicioFeedback");
+        if(isCorrect) { fb.innerHTML = "<span class='text-success'>✅ Correcto!</span>"; markComplete(t.id, true); renderLista(); }
+        else { fb.innerHTML = "<span class='text-danger'>❌ Incorrecto. Vuelve a leer la técnica.</span>"; }
+        document.querySelectorAll(".ejercicio-opt").forEach(b=>b.disabled=true);
+      };
+    });
+  }
+  
+  function nextCard(){ if(currentCardIndex<filteredFlashcards.length-1){currentCardIndex++; updateFlashcard();} }
+  function prevCard(){ if(currentCardIndex>0){currentCardIndex--; updateFlashcard();} }
+  function randomCard(){ currentCardIndex=Math.floor(Math.random()*filteredFlashcards.length); updateFlashcard(); }
+  function flipCard(){ document.getElementById("flashcard").classList.toggle("flipped"); }
+  function markCurrentComplete(){
+    let t = filteredFlashcards[currentCardIndex];
+    if(t && !progress[t.id]) { progress[t.id]=true; saveProgress(); renderLista(); updateFlashcard(); }
+  }
+  
+  function switchToLista() {
+    document.getElementById("listaView").style.display = "block";
+    document.getElementById("flashcardsView").style.display = "none";
+    document.querySelectorAll(".nav-item-custom").forEach(i=>i.classList.remove("active"));
+    document.querySelector(".nav-item-custom[data-view='lista']").classList.add("active");
+    renderLista();
+  }
+  function switchToFlashcards() {
+    document.getElementById("listaView").style.display = "none";
+    document.getElementById("flashcardsView").style.display = "block";
+    document.querySelectorAll(".nav-item-custom").forEach(i=>i.classList.remove("active"));
+    document.querySelector(".nav-item-custom[data-view='flashcards']").classList.add("active");
+    filterFlashcards();
+  }
+  
+  document.getElementById("prevCardBtn")?.addEventListener("click", prevCard);
+  document.getElementById("nextCardBtn")?.addEventListener("click", nextCard);
+  document.getElementById("randomCardBtn")?.addEventListener("click", randomCard);
+  document.getElementById("flipCardBtn")?.addEventListener("click", flipCard);
+  document.getElementById("markCompleteBtn")?.addEventListener("click", markCurrentComplete);
+  document.getElementById("themeToggleBtn")?.addEventListener("click", () => document.body.classList.toggle("light-mode"));
+  document.querySelector(".nav-item-custom[data-view='lista']")?.addEventListener("click", switchToLista);
+  document.querySelector(".nav-item-custom[data-view='flashcards']")?.addEventListener("click", switchToFlashcards);
+  
+  document.getElementById("searchInput")?.addEventListener("input", e => { currentSearch = e.target.value.toLowerCase(); currentPage = 1; renderLista(); });
+  document.getElementById("catFilter")?.addEventListener("change", e => { currentCatFilter = e.target.value; currentPage = 1; renderLista(); filterFlashcards(); });
+  
+  loadProgress();
+  renderLista();
+  switchToLista();
+</script>
+</body>
+</html>

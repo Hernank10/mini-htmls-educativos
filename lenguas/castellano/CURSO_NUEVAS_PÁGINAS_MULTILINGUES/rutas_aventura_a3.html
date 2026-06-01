@@ -1,0 +1,927 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>Rutas y Aventura · Senderismo · Cascadas · Balnearios · Cerca de Bucaramanga · A3 Bilingual</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --fondo: #eef5f0;
+      --texto: #1e3a2f;
+      --verde-naturaleza: #2a7a4b;
+      --azul-agua: #2980b9;
+      --naranja-aventura: #e67e22;
+      --amarillo-sol: #f1c40f;
+      --acierto: #27ae60;
+      --fallo: #e74c3c;
+      --sombra: rgba(0, 0, 0, 0.08);
+      --card-bg: #ffffff;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: var(--fondo);
+      color: var(--texto);
+      font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
+      line-height: 1.5;
+      padding: 1rem;
+    }
+
+    .app-container {
+      max-width: 1300px;
+      margin: 0 auto;
+      background: var(--card-bg);
+      border-radius: 2rem;
+      box-shadow: 0 12px 28px var(--sombra);
+      overflow: hidden;
+      border: 1px solid #d4e6da;
+    }
+
+    header {
+      background: #e8f3ec;
+      padding: 1rem 2rem;
+      border-bottom: 3px solid var(--verde-naturaleza);
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+    }
+    h1 {
+      font-size: 1.6rem;
+      font-weight: 600;
+      color: #2a7a4b;
+      letter-spacing: -0.2px;
+    }
+    h1 small {
+      font-size: 0.65rem;
+      font-weight: normal;
+      color: #6c9e7a;
+    }
+
+    .lang-selector {
+      display: flex;
+      gap: 0.5rem;
+      background: white;
+      padding: 0.3rem;
+      border-radius: 40px;
+      border: 1px solid #d4e6da;
+    }
+    .lang-btn {
+      background: transparent;
+      border: none;
+      padding: 0.4rem 1rem;
+      border-radius: 30px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.2s;
+      font-size: 0.85rem;
+    }
+    .lang-btn.active {
+      background: var(--verde-naturaleza);
+      color: white;
+    }
+
+    nav {
+      display: flex;
+      gap: 0.5rem;
+      background: #deecd9;
+      padding: 0.6rem 2rem;
+      border-bottom: 1px solid #cde0ce;
+      flex-wrap: wrap;
+    }
+    .nav-btn {
+      background: transparent;
+      border: none;
+      font-size: 0.95rem;
+      padding: 0.5rem 1.2rem;
+      border-radius: 40px;
+      cursor: pointer;
+      font-weight: 500;
+      transition: all 0.2s;
+      color: #2a7a4b;
+    }
+    .nav-btn.active {
+      background-color: var(--verde-naturaleza);
+      color: white;
+    }
+    .nav-btn:hover:not(.active) {
+      background-color: #cfdec9;
+    }
+
+    .view {
+      display: none;
+      padding: 2rem;
+      animation: fade 0.2s ease;
+    }
+    .active-view { display: block; }
+    @keyframes fade { from { opacity: 0; transform: translateY(5px);} to { opacity: 1; transform: translateY(0);} }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+    .stat-card {
+      background: var(--fondo);
+      border-radius: 1.5rem;
+      padding: 1rem;
+      text-align: center;
+      border-left: 6px solid var(--azul-agua);
+      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    }
+    .stat-number {
+      font-size: 2.2rem;
+      font-weight: 700;
+      color: var(--verde-naturaleza);
+    }
+
+    .progress-bar-bg {
+      background: #e2e8f0;
+      border-radius: 40px;
+      height: 12px;
+      overflow: hidden;
+      margin: 0.8rem 0;
+    }
+    .progress-fill {
+      background: var(--verde-naturaleza);
+      width: 0%;
+      height: 100%;
+      transition: width 0.2s;
+    }
+
+    .category-badge {
+      display: inline-block;
+      padding: 0.2rem 0.6rem;
+      border-radius: 20px;
+      font-size: 0.7rem;
+      font-weight: bold;
+      margin-left: 0.5rem;
+    }
+    .category-hiking { background: var(--verde-naturaleza); color: white; }
+    .category-waterfall { background: var(--azul-agua); color: white; }
+    .category-transport { background: var(--naranja-aventura); color: white; }
+    .category-town { background: var(--amarillo-sol); color: #1e3a2f; }
+    .category-weekend { background: #8e44ad; color: white; }
+
+    .conceptos-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(420px, 1fr));
+      gap: 1rem;
+      max-height: 65vh;
+      overflow-y: auto;
+      padding-right: 0.3rem;
+    }
+    .concepto-item {
+      background: white;
+      border-radius: 1.2rem;
+      padding: 0.8rem 1rem;
+      border-left: 5px solid var(--naranja-aventura);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+    .concepto-titulo {
+      font-weight: 700;
+      color: #2a7a4b;
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+    .concepto-desc {
+      font-size: 0.85rem;
+      color: #5a6e55;
+      margin-top: 6px;
+      border-top: 1px solid #e2ecd9;
+      padding-top: 6px;
+    }
+    .badge-progreso {
+      font-size: 0.7rem;
+      background: #eaf3e5;
+      border-radius: 20px;
+      padding: 2px 10px;
+      display: inline-block;
+      margin-top: 8px;
+    }
+
+    .flashcard {
+      background: #ffffff;
+      border-radius: 2rem;
+      padding: 1.8rem;
+      text-align: center;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+      border: 1px solid #cde0ce;
+      max-width: 750px;
+      margin: 0 auto;
+    }
+    .pregunta {
+      font-size: 1.2rem;
+      font-weight: 500;
+      margin-bottom: 1.8rem;
+      background: #e8f3ec;
+      padding: 1.2rem;
+      border-radius: 1.5rem;
+    }
+    .respuesta-oculta {
+      background: #f8fbf4;
+      border-radius: 1.2rem;
+      padding: 1rem;
+      margin: 1rem 0;
+      display: none;
+    }
+    .orden-palabras {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 0.6rem;
+      margin: 1.5rem 0;
+    }
+    .palabra-btn {
+      background: var(--verde-naturaleza);
+      color: white;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 2rem;
+      font-size: 0.9rem;
+      cursor: pointer;
+    }
+    .orden-actual {
+      background: #fefef9;
+      border-radius: 1rem;
+      padding: 1rem;
+      min-height: 80px;
+      margin: 1rem 0;
+      text-align: left;
+      border: 1px dashed #cde0ce;
+      font-size: 1rem;
+    }
+    .btn {
+      background: #e2e8f0;
+      border: none;
+      padding: 0.6rem 1.5rem;
+      border-radius: 3rem;
+      font-weight: 600;
+      margin: 0.3rem;
+      cursor: pointer;
+      font-family: inherit;
+    }
+    .btn-primary { background: var(--verde-naturaleza); color: white; }
+    .btn-acierto { background: var(--acierto); color: white; }
+    .btn-fallo { background: var(--fallo); color: white; }
+    .modo-selector {
+      display: flex;
+      justify-content: center;
+      gap: 0.8rem;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+    }
+    .modo-btn {
+      background: #e2e8f0;
+      border: none;
+      padding: 0.5rem 1.2rem;
+      border-radius: 40px;
+      cursor: pointer;
+      font-weight: 500;
+      transition: all 0.2s;
+    }
+    .modo-btn.active {
+      background: var(--verde-naturaleza);
+      color: white;
+    }
+    footer {
+      text-align: center;
+      padding: 1rem;
+      font-size: 0.75rem;
+      border-top: 1px solid #cde0ce;
+      background: #fafdf7;
+    }
+    .category-filter {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+      flex-wrap: wrap;
+    }
+    .category-filter-btn {
+      background: #e2ecd9;
+      border: none;
+      padding: 0.3rem 1rem;
+      border-radius: 20px;
+      cursor: pointer;
+      font-size: 0.8rem;
+    }
+    .category-filter-btn.active {
+      background: var(--verde-naturaleza);
+      color: white;
+    }
+    .translation-direction {
+      margin: 0.5rem 0;
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: var(--naranja-aventura);
+    }
+    input {
+      padding: 0.8rem;
+      border-radius: 2rem;
+      border: 1px solid #cbd5e1;
+      font-size: 1rem;
+      width: 80%;
+      margin: 1rem auto;
+      display: block;
+      text-align: center;
+      font-family: inherit;
+    }
+    @media (max-width: 680px) {
+      .view { padding: 1rem; }
+      .pregunta { font-size: 1rem; }
+      .lang-selector { order: 2; width: 100%; justify-content: center; }
+      header { flex-direction: column; align-items: stretch; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+<div class="app-container">
+  <header>
+    <div>
+      <h1>🥾🌊 Rutas y Aventura <small>Senderismo · Cascadas · Balnearios · A3 Bilingual</small></h1>
+      <div style="font-size:0.75rem;">Bucaramanga · Floridablanca · Girón · Piedecuesta · Municipios turísticos</div>
+    </div>
+    <div class="lang-selector">
+      <button id="langEsBtn" class="lang-btn active">🇪🇸 Español</button>
+      <button id="langEnBtn" class="lang-btn">🇬🇧 English</button>
+      <button id="langBothBtn" class="lang-btn">🌐 Bilingüe</button>
+    </div>
+  </header>
+  <nav>
+    <button class="nav-btn active" data-view="dashboard">📊 Panel</button>
+    <button class="nav-btn" data-view="listado">🗺️ 100 Rutas</button>
+    <button class="nav-btn" data-view="practica">🃏 Práctica</button>
+  </nav>
+
+  <section id="dashboard" class="view active-view">
+    <div class="stats-grid" id="statsContainer"></div>
+    <div class="card" style="background:white; border-radius:1.6rem; padding:1.2rem;">
+      <h3 id="progressTitle">📈 Progreso en rutas y destinos</h3>
+      <div class="progress-bar-bg"><div class="progress-fill" id="globalProgressFill"></div></div>
+      <p id="globalProgressText"></p>
+      <button id="resetProgresoBtn" class="btn" style="background:#cfdec9;">🔄 Reiniciar progreso</button>
+    </div>
+  </section>
+
+  <section id="listado" class="view">
+    <input type="text" id="filtroListado" placeholder="🔍 Buscar ruta / destino / Search..." style="width:100%; padding:10px; margin-bottom:15px; border-radius:40px; border:1px solid #cde0ce;">
+    <div class="category-filter" id="categoryFilter">
+      <button data-cat="all" class="category-filter-btn active">🌄 Todas</button>
+      <button data-cat="hiking" class="category-filter-btn">🥾 Senderismo</button>
+      <button data-cat="waterfall" class="category-filter-btn">💦 Cascadas / Ríos</button>
+      <button data-cat="transport" class="category-filter-btn">🚌 Cómo llegar (bus/moto/carro)</button>
+      <button data-cat="town" class="category-filter-btn">🏘️ Municipios turísticos</button>
+      <button data-cat="weekend" class="category-filter-btn">🎒 Planes fin de semana</button>
+    </div>
+    <div id="conceptosListadoContainer" class="conceptos-grid"></div>
+  </section>
+
+  <section id="practica" class="view">
+    <div class="modo-selector" id="modoSelector">
+      <button id="modoTraduccionDirecta" class="modo-btn active">📖 Ruta → Traducción</button>
+      <button id="modoTraduccionInversa" class="modo-btn">🔄 Traducción → Ruta</button>
+      <button id="modoOrdenar" class="modo-btn">🧩 Ordenar idea</button>
+      <button id="modoEspEng" class="modo-btn">🌐 ESP ↔ ENG</button>
+    </div>
+    <div id="practicaContainer"></div>
+  </section>
+  <footer>Progreso guardado localmente · 100 rutas e ideas para podcasts · Senderismo, cascadas, balnearios y transporte desde Bucaramanga y Floridablanca</footer>
+</div>
+
+<script>
+  // --------------------------------------------------------------
+  // 100 RUTAS E IDEAS PARA PODCASTS - A3 Nivel
+  // Enfoque: senderismo, cascadas, balnearios, cómo llegar (bus/moto/carro), municipios turísticos
+  // Cerca de Bucaramanga y Floridablanca, Santander, Colombia
+  // --------------------------------------------------------------
+  const conceptosData = [
+    // 🥾 SENDERISMO (Hiking)
+    [1, "Sendero del Cañón del Chicamocha", "Chicamocha Canyon Trail", "Caminata de 2 horas con vistas increíbles. Lleva agua y zapatos cómodos.", "2-hour hike with amazing views. Bring water and comfortable shoes.", "hiking"],
+    [2, "Camino a la Mesa de los Santos", "Path to Mesa de los Santos", "Sendero entre neblina y cactus gigantes. Nivel moderado.", "Trail through fog and giant cacti. Moderate level.", "hiking"],
+    [3, "Subida al Cerro del Santísimo", "Cerro del Santísimo climb", "Senderos de 1 hora hasta la estatua. Buena vista de Bucaramanga.", "1-hour trails to the statue. Great view of Bucaramanga.", "hiking"],
+    [4, "Recorrido por el Páramo de Santurbán", "Santurbán Páramo route", "Naturaleza pura a 4 horas. Lleva ropa abrigada.", "Pure nature 4 hours away. Bring warm clothes.", "hiking"],
+    [5, "Sendero ecológico de Floridablanca", "Floridablanca ecological trail", "Zona verde para caminar cerca de la ciudad. Fácil.", "Green area to walk near the city. Easy.", "hiking"],
+    [6, "Caminata a la cueva del Nitro", "Nitro Cave hike", "Sendero de 3 horas, linterna necesaria.", "3-hour trail, flashlight needed.", "hiking"],
+    [7, "Ruta de los árboles gigantes en Los Santos", "Giant trees route in Los Santos", "Caminata para ver árboles centenarios.", "Walk to see century-old trees.", "hiking"],
+    [8, "Sendero La Llanada", "La Llanada Trail", "Camino rural entre fincas cafeteras.", "Rural path between coffee farms.", "hiking"],
+    [9, "Ascenso al Alto del Águila", "Ascend to Alto del Águila", "Vista panorámica de los Santanderes.", "Panoramic view of Santander region.", "hiking"],
+    [10, "Sendero Quebrada La Iglesia", "La Iglesia Creek Trail", "Pequeño cañón con pozos naturales.", "Small canyon with natural pools.", "hiking"],
+    [11, "Ruta de las orquídeas en Girón", "Orchid route in Girón", "Camino para ver flores silvestres.", "Path to see wildflowers.", "hiking"],
+    [12, "Caminata nocturna al mirador del Ángel", "Night walk to Ángel viewpoint", "Amanecer desde la montaña.", "Sunrise from the mountain.", "hiking"],
+    [13, "Sendero del silencio Piedecuesta", "Silence trail Piedecuesta", "Bosque tranquilo para meditar.", "Quiet forest to meditate.", "hiking"],
+    [14, "Ruta ancestral de los Guanes", "Guane ancestral route", "Sendero con historia indígena.", "Trail with indigenous history.", "hiking"],
+    [15, "Camino real entre Bucaramanga y Girón", "Royal road between Bucaramanga and Girón", "Antigua vía colonial.", "Old colonial road.", "hiking"],
+    [16, "Sendero del río Suratá", "Suratá River Trail", "Caminata junto al agua fresca.", "Walk next to fresh water.", "hiking"],
+    [17, "Cascada escondida en Ruitoque", "Hidden waterfall in Ruitoque", "Pequeña caída de agua secreta.", "Small secret waterfall.", "hiking"],
+    [18, "Sendero Los Pinos en Piedecuesta", "Los Pinos trail in Piedecuesta", "Caminata entre pinos.", "Walk among pine trees.", "hiking"],
+    [19, "Ruta de las mariposas en Tona", "Butterfly route in Tona", "Sendero colorido con muchas mariposas.", "Colorful trail with many butterflies.", "hiking"],
+    [20, "Ascenso al cerro de La Cantera", "La Cantera hill ascent", "Ejercicio intenso, recompensa visual.", "Intense exercise, visual reward.", "hiking"],
+    [21, "Sendero del balneario de Umpalá", "Umpalá hot spring trail", "Camino a aguas termales naturales.", "Path to natural hot springs.", "hiking"],
+    [22, "Caminata por el filo del Chicamocha", "Walk on Chicamocha's edge", "Sendero peligroso pero hermoso.", "Dangerous but beautiful trail.", "hiking"],
+    [23, "Ruta de los frailejones", "Frailejones route", "Página única del páramo.", "Unique high-altitude plant route.", "hiking"],
+    [24, "Sendero familiar al parque del Agua", "Family trail to Water Park", "Caminata corta para niños.", "Short walk for children.", "hiking"],
+    [25, "Cascada Chiflón en Betulia", "Chiflón waterfall in Betulia", "Caída de 20 metros, escondida en la selva.", "20-meter drop hidden in the jungle.", "hiking"],
+    
+    // 💦 CASCADAS, RÍOS Y BALNEARIOS (Waterfalls, rivers, swimming holes)
+    [26, "Cascada Juan Curí", "Juan Curí Waterfall", "Caída de 70 metros. Viaje desde Bucaramanga: 2 horas en bus.", "70-meter drop. Trip from Bucaramanga: 2 hours by bus.", "waterfall"],
+    [27, "Piscinas naturales del río Frío", "Frío river natural pools", "Pozos de agua cristalina en Floridablanca.", "Crystal-clear pools in Floridablanca.", "waterfall"],
+    [28, "Balneario El Carmen en Girón", "El Carmen swimming spot in Girón", "Piscinas familiares con restaurantes.", "Family pools with restaurants.", "waterfall"],
+    [29, "Charco de la Vieja en Los Santos", "La Vieja Pool in Los Santos", "Agua tibia por actividad volcánica.", "Warm water due to volcanic activity.", "waterfall"],
+    [30, "Cascada El Salto de los Micos", "Monkeys Jump Waterfall", "Nombre curioso, agua muy fría.", "Curious name, very cold water.", "waterfall"],
+    [31, "Balneario La Molienda", "La Molienda pool", "Lugar típico para domingos familiares.", "Typical spot for family Sundays.", "waterfall"],
+    [32, "Charco Azul en San Vicente", "Blue pool in San Vicente", "Agua color turquesa natural.", "Natural turquoise water.", "waterfall"],
+    [33, "Río de Oro en California", "Río de Oro in California (Santander)", "Corriente suave para nadar.", "Gentle current for swimming.", "waterfall"],
+    [34, "Cascada La Perla", "La Perla Waterfall", "Acceso difícil pero hermosa.", "Difficult access but beautiful.", "waterfall"],
+    [35, "Balneario El Pescadero", "El Pescadero swimming area", "Piscinas artificiales en el río.", "Artificial pools in the river.", "waterfall"],
+    [36, "Queseras del río Suratá", "Suratá river cheese spots", "Lugares para comprar queso fresco junto al río.", "Places to buy fresh cheese by the river.", "waterfall"],
+    [37, "Cascada en la vereda Lisboa", "Lisboa village waterfall", "Pequeña cascada oculta.", "Small hidden waterfall.", "waterfall"],
+    [38, "Pozo del Amor en Matecaña", "Love pool in Matecaña", "Leyenda de parejas que se bañan aquí.", "Legend of couples bathing here.", "waterfall"],
+    [39, "Balneario Comunitario de Ruitoque", "Ruitoque community pool", "Gestionado por la comunidad.", "Managed by the community.", "waterfall"],
+    [40, "Río de las Vueltas", "Meanders River", "Río con pozos profundos.", "River with deep pools.", "waterfall"],
+    [41, "Ojo de Agua en el Cañón", "Water spring in the canyon", "Manantial fresco para hidratarse.", "Fresh spring to hydrate.", "waterfall"],
+    [42, "Cascada del Indio", "Indian Waterfall", "Con forma de rostro en la roca.", "Face-shaped rock formation.", "waterfall"],
+    [43, "Balneario La Honda", "La Honda swimming area", "Agua limpia de montaña.", "Clean mountain water.", "waterfall"],
+    [44, "Piscinas de Villapinzón", "Villapinzón pools", "A 1 hora de Bucaramanga.", "1 hour from Bucaramanga.", "waterfall"],
+    [45, "Charco Escondido en Cepitá", "Hidden pool in Cepitá", "Requiere guía local.", "Requires a local guide.", "waterfall"],
+    
+    // 🚌 CÓMO LLEGAR (Transporte - bus, moto, carro)
+    [46, "Cómo llegar a San Gil en bus", "How to get to San Gil by bus", "Buses desde Terminal de Bucaramanga cada hora.", "Buses from Bucaramanga Terminal every hour.", "transport"],
+    [47, "Ruta en moto a Barichara", "Motorcycle route to Barichara", "Carretera pavimentada, 45 minutos.", "Paved road, 45 minutes.", "transport"],
+    [48, "En carro a la cascada Juan Curí", "By car to Juan Curí waterfall", "Vía a San Vicente, luego desvío de 15 km.", "Road to San Vicente, then 15 km detour.", "transport"],
+    [49, "Bus a Los Santos desde Bucaramanga", "Bus to Los Santos from Bucaramanga", "Buses salen desde el mercado Los Campus.", "Buses depart from Los Campus market.", "transport"],
+    [50, "Moto al Cañón del Chicamocha", "Motorcycle to Chicamocha Canyon", "Carretera en buen estado. Parador de la Mesa.", "Good condition road. La Mesa stop.", "transport"],
+    [51, "Cómo llegar a Charala en bus", "How to get to Charala by bus", "Bus desde Bucaramanga, 2 horas.", "Bus from Bucaramanga, 2 hours.", "transport"],
+    [52, "Ruta en carro a Girón", "Car route to Girón", "Solo 15 minutos desde Floridablanca.", "Only 15 minutes from Floridablanca.", "transport"],
+    [53, "Bus express a Piedecuesta", "Express bus to Piedecuesta", "Ruta 52 desde Bucaramanga cada 10 minutos.", "Route 52 from Bucaramanga every 10 minutes.", "transport"],
+    [54, "Mapa de carreteras para moto", "Motorcycle road map", "Rutas secundarias menos transitadas.", "Secondary less crowded roads.", "transport"],
+    [55, "Vías cerradas por lluvia", "Roads closed due to rain", "Revisar estado antes de salir.", "Check conditions before leaving.", "transport"],
+    
+    // 🏘️ MUNICIPIOS TURÍSTICOS (Towns to visit)
+    [56, "San Gil: aventura y ríos", "San Gil: adventure and rivers", "Rafting, parapente y parques.", "Rafting, paragliding and parks.", "town"],
+    [57, "Barichara: pueblo bonito", "Barichara: beautiful town", "Arquitectura colonial y calles de piedra.", "Colonial architecture and stone streets.", "town"],
+    [58, "Zapatoca: pueblo de las nubes", "Zapatoca: cloud town", "Miradores y cuevas naturales.", "Viewpoints and natural caves.", "town"],
+    [59, "Curití: cascadas y café", "Curití: waterfalls and coffee", "Cerca de San Gil, menos turistas.", "Near San Gil, fewer tourists.", "town"],
+    [60, "Villanueva: puerta del Chicamocha", "Villanueva: gateway to Chicamocha", "Acuario y parque nacional.", "Aquarium and national park.", "town"],
+    [61, "Aratoca: balcones santandereanos", "Aratoca: Santander balconies", "Vista del cañón y clima templado.", "Canyon view and mild weather.", "town"],
+    [62, "San Vicente de Chucurí", "San Vicente de Chucurí", "Pueblo del aceite de palma.", "Palm oil town.", "town"],
+    [63, "El Socorro: cuna de la libertad", "El Socorro: birthplace of freedom", "Museo de don Quijote.", "Don Quixote museum.", "town"],
+    [64, "Cepitá: calor y dulces", "Cepitá: heat and sweets", "Ciudad de las obleas.", "Waffle city.", "town"],
+    [65, "Mogotes: campo y cascadas", "Mogotes: countryside and waterfalls", "Rutas para cabalgatas.", "Horseback riding routes.", "town"],
+    [66, "Guane: comida típica", "Guane: typical food", "Progloditas (hormigas) y pan artesanal.", "Ants and artisan bread.", "town"],
+    [67, "Oiba: cerros pintados", "Oiba: painted hills", "Formaciones rocosas únicas.", "Unique rock formations.", "town"],
+    [68, "Suaita: historia textil", "Suaita: textile history", "Antiguas fábricas de telas.", "Old fabric factories.", "town"],
+    [69, "La Paz: tranquilidad total", "La Paz: total peace", "Pueblo pequeño sin grandes atracciones.", "Small town with no big attractions.", "town"],
+    [70, "Jordán Sube", "Jordán Sube", "Famoso por su carnaval.", "Famous for its carnival.", "town"],
+    
+    // 🎒 PLANES FIN DE SEMANA CON FAMILIA O AMIGOS (Weekend trips)
+    [71, "Domingo de piscina en Girón", "Sunday pool day in Girón", "Lleva comida para compartir.", "Bring food to share.", "weekend"],
+    [72, "Picnic en el parque del Agua", "Picnic at Water Park", "Juegos infantiles gratuitos.", "Free children's games.", "weekend"],
+    [73, "Visita a granja educativa", "Visit to educational farm", "Niños aprenden sobre animales.", "Kids learn about animals.", "weekend"],
+    [74, "Paseo de olla a río Frío", "Pot trip to Frío river", "Preparar sancocho a la orilla.", "Prepare stew by the shore.", "weekend"],
+    [75, "Glamping en Los Santos", "Glamping in Los Santos", "Carpa de lujo bajo las estrellas.", "Luxury tent under the stars.", "weekend"],
+    [76, "Tour de café en Betulia", "Coffee tour in Betulia", "Recorrer finca, catar tinto.", "Walk farm, taste coffee.", "weekend"],
+    [77, "Cabalgata por el cañón", "Horseback riding through the canyon", "Nos llevan guías locales.", "Local guides take us.", "weekend"],
+    [78, "Fin de semana en Barichara", "Weekend in Barichara", "Hoteles campestres y piscinas.", "Country hotels and pools.", "weekend"],
+    [79, "Rafting en San Gil (familias)", "Family rafting in San Gil", "Río Fonce nivel suave.", "Fonce river easy level.", "weekend"],
+    [80, "Camping en el páramo", "Camping in the páramo", "Llevar carpa y saco de dormir.", "Bring tent and sleeping bag.", "weekend"],
+    [81, "Día de balneario en Umpalá", "Hot spring day in Umpalá", "Aguas termales medicinales.", "Medicinal thermal waters.", "weekend"],
+    [82, "Mercado campesino en Floridablanca", "Farmers market in Floridablanca", "Sábados en el parque principal.", "Saturdays at the main park.", "weekend"],
+    [83, "Tour en bicicleta por Girón", "Bicycle tour of Girón", "Alquiler de bicicletas en el parque.", "Bike rental at the park.", "weekend"],
+    [84, "Escalada en roca en el Chicamocha", "Rock climbing in Chicamocha", "Equipo incluido, nivel principiante.", "Equipment included, beginner level.", "weekend"],
+    [85, "Tarde de juegos en el parque", "Afternoon games at the park", "Llevar fútbol, cartas, comida.", "Bring soccer, cards, food.", "weekend"],
+    [86, "Avistamiento de aves en Ruitoque", "Bird watching in Ruitoque", "Binoculares y guía local.", "Binoculars and local guide.", "weekend"],
+    [87, "Paseo a caballo a cascada", "Horseback ride to waterfall", "Una hora de camino hasta caída.", "One hour path to waterfall.", "weekend"],
+    [88, "Día de campo en la vereda Lisboa", "Countryside day in Lisboa village", "Asado y baño en quebrada.", "BBQ and creek bath.", "weekend"],
+    [89, "Ruta nocturna de luciérnagas", "Firefly night route", "Senderismo de noche en bosque.", "Night hike in forest.", "weekend"],
+    [90, "Termales de Aguas Calientes", "Aguas Calientes hot springs", "Piscinas de agua sulfurosa.", "Sulfur water pools.", "weekend"],
+    [91, "Parque extremo en San Gil", "Extreme park in San Gil", "Tirolesa y puentes colgantes.", "Zip line and hanging bridges.", "weekend"],
+    [92, "Museo de la Guaneidad", "Guane identity museum", "Historia indígena en el Socorro.", "Indigenous history in Socorro.", "weekend"],
+    [93, "Taller de alfarería en Zapatoca", "Pottery workshop in Zapatoca", "Aprende a hacer vasijas.", "Learn to make pots.", "weekend"],
+    [94, "Senderismo y pesca en el río", "Hiking and fishing in the river", "Pesca de truchas permitida.", "Trout fishing allowed.", "weekend"],
+    [95, "Ruta de las frutas tropicales", "Tropical fruit route", "Comer mangos, guayabas, nísperos.", "Eat mangoes, guavas, loquats.", "weekend"],
+    [96, "Balneario Los Pozos en Cepitá", "Los Pozos swimming area in Cepitá", "Diversión para niños y adultos.", "Fun for kids and adults.", "weekend"],
+    [97, "Moto ruta a la laguna de Ortices", "Motorcycle route to Ortices lagoon", "Subida empinada, vistas increíbles.", "Steep climb, amazing views.", "weekend"],
+    [98, "Búsqueda del tesoro familiar", "Family treasure hunt", "Juego de pistas en el bosque.", "Clue game in the forest.", "weekend"],
+    [99, "Fotografía de paisajes al atardecer", "Landscape photography at sunset", "Lleva cámara o celular.", "Bring camera or phone.", "weekend"],
+    [100, "Desayuno campestre en la finca", "Country breakfast at the farm", "Calentado, huevos campesinos, café.", "Leftover stew, farm eggs, coffee.", "weekend"]
+  ];
+
+  // --------------------- LOCALSTORAGE Y PROGRESO -------------------------
+  let progreso = {};
+  let currentLang = "es";
+  let currentPracticeMode = "traduccion_directa";
+  let currentCardId = null;
+  let currentOrdenarPalabras = [];
+  let shuffledPalabras = [];
+  let selectedOrder = [];
+  let ordenarRespuestaCorrecta = "";
+  let currentCategoryFilter = "all";
+  let currentFiltroTexto = "";
+
+  const STORAGE_KEY = "rutasAventuraA3Progreso";
+
+  function cargarProgreso() {
+    const guardado = localStorage.getItem(STORAGE_KEY);
+    if (guardado) progreso = JSON.parse(guardado);
+    else {
+      progreso = {};
+      for (let i = 1; i <= 100; i++) progreso[i] = { aciertos: 0, fallos: 0 };
+    }
+  }
+  function guardarProgreso() { localStorage.setItem(STORAGE_KEY, JSON.stringify(progreso)); }
+  function registrarResultado(id, acierto) {
+    if (!progreso[id]) progreso[id] = { aciertos: 0, fallos: 0 };
+    if (acierto) progreso[id].aciertos += 1;
+    else progreso[id].fallos += 1;
+    guardarProgreso();
+    renderDashboard();
+    renderListado(currentCategoryFilter, currentFiltroTexto);
+  }
+
+  function obtenerTexto(item, tipo) {
+    if (currentLang === 'es') return tipo === 'palabra' ? item[1] : item[3];
+    if (currentLang === 'en') return tipo === 'palabra' ? item[2] : item[4];
+    return tipo === 'palabra' ? `${item[1]} / ${item[2]}` : `${item[3]} / ${item[4]}`;
+  }
+
+  function getCategoryClass(cat) {
+    const classes = {
+      'hiking': 'category-hiking',
+      'waterfall': 'category-waterfall',
+      'transport': 'category-transport',
+      'town': 'category-town',
+      'weekend': 'category-weekend'
+    };
+    return classes[cat] || '';
+  }
+
+  function getCategoryText(cat) {
+    const texts = {
+      'hiking': '🥾 Senderismo',
+      'waterfall': '💦 Cascada / Río',
+      'transport': '🚌 Transporte',
+      'town': '🏘️ Municipio',
+      'weekend': '🎒 Fin de semana'
+    };
+    return texts[cat] || '';
+  }
+
+  function renderDashboard() {
+    let totalAciertos = 0, totalFallos = 0, conceptosConAcierto = 0;
+    for (let i = 1; i <= 100; i++) {
+      const p = progreso[i] || { aciertos: 0, fallos: 0 };
+      totalAciertos += p.aciertos;
+      totalFallos += p.fallos;
+      if (p.aciertos > 0) conceptosConAcierto++;
+    }
+    const porcentaje = (conceptosConAcierto / 100) * 100;
+    document.getElementById("globalProgressFill").style.width = `${porcentaje}%`;
+    document.getElementById("globalProgressText").innerHTML = `${conceptosConAcierto} de 100 rutas/ideas con al menos 1 acierto (${Math.round(porcentaje)}%).`;
+    document.getElementById("statsContainer").innerHTML = `
+      <div class="stat-card"><div class="stat-number">${totalAciertos}</div>✅ Aciertos totales</div>
+      <div class="stat-card"><div class="stat-number">${totalFallos}</div>❌ Fallos</div>
+      <div class="stat-card"><div class="stat-number">${conceptosConAcierto}</div>🥾 Rutas dominadas</div>
+      <div class="stat-card"><div class="stat-number">${Math.round((totalAciertos/(totalAciertos+totalFallos+0.001))*100)}%</div>📊 Tasa éxito</div>
+    `;
+  }
+
+  function renderListado(category = currentCategoryFilter, filtro = "") {
+    const container = document.getElementById("conceptosListadoContainer");
+    container.innerHTML = "";
+    const filtroLower = filtro.toLowerCase();
+    for (let c of conceptosData) {
+      const id = c[0];
+      const idea = obtenerTexto(c, 'palabra');
+      const descripcion = obtenerTexto(c, 'definicion');
+      const prog = progreso[id] || { aciertos: 0, fallos: 0 };
+      const cat = c[5];
+      if (category !== "all" && cat !== category) continue;
+      if (filtro && !idea.toLowerCase().includes(filtroLower) && !descripcion.toLowerCase().includes(filtroLower)) continue;
+      const div = document.createElement("div");
+      div.className = "concepto-item";
+      div.innerHTML = `<div class="concepto-titulo">
+                         ${id}. ${idea}
+                         <span class="category-badge ${getCategoryClass(cat)}">${getCategoryText(cat)}</span>
+                       </div>
+                       <div class="concepto-desc">🏞️ ${descripcion}</div>
+                       <span class="badge-progreso">✅ ${prog.aciertos} aciertos · ❌ ${prog.fallos} fallos</span>`;
+      container.appendChild(div);
+    }
+  }
+
+  function getRandomItemByCategory() {
+    let filtered = conceptosData;
+    if (currentCategoryFilter !== "all") {
+      filtered = conceptosData.filter(item => item[5] === currentCategoryFilter);
+    }
+    if (filtered.length === 0) filtered = conceptosData;
+    const randomIndex = Math.floor(Math.random() * filtered.length);
+    return filtered[randomIndex];
+  }
+
+  const practicaDiv = document.getElementById("practicaContainer");
+
+  function modoTraduccionDirecta() {
+    const item = getRandomItemByCategory();
+    currentCardId = item[0];
+    const pregunta = obtenerTexto(item, 'palabra');
+    const respuestaCorrecta = obtenerTexto(item, 'palabra') === item[1] ? item[2] : item[1];
+    const catClass = getCategoryClass(item[5]);
+    const catText = getCategoryText(item[5]);
+    
+    practicaDiv.innerHTML = `
+      <div class="flashcard">
+        <div style="display: flex; justify-content: center; gap: 1rem; margin-bottom: 0.5rem;">
+          <span class="category-badge ${catClass}">${catText}</span>
+        </div>
+        <div class="pregunta">🥾 <strong>${pregunta}</strong></div>
+        <input type="text" id="respuestaInput" placeholder="Escribe la traducción / Type the translation...">
+        <button id="comprobarBtn" class="btn btn-primary">✓ Comprobar</button>
+        <div id="feedbackMsg" style="margin:1rem 0; font-weight:bold;"></div>
+        <button id="siguienteBtn" class="btn">⏩ Siguiente ruta</button>
+        <p id="infoProgresoCard" style="margin-top:0.8rem;">📊 Ruta ${currentCardId} · ✅ ${progreso[currentCardId]?.aciertos||0} aciertos · ❌ ${progreso[currentCardId]?.fallos||0} fallos</p>
+      </div>
+    `;
+    
+    document.getElementById("comprobarBtn").onclick = () => {
+      const userAnswer = document.getElementById("respuestaInput").value.trim().toLowerCase();
+      const correct = respuestaCorrecta.toLowerCase();
+      const isCorrect = userAnswer === correct;
+      const feedback = document.getElementById("feedbackMsg");
+      if (isCorrect) {
+        feedback.innerHTML = `<span style='color:#27ae60'>✅ ¡Correcto! "${respuestaCorrecta}"</span>`;
+        registrarResultado(currentCardId, true);
+      } else {
+        feedback.innerHTML = `<span style='color:#e67e22'>❌ Incorrecto. La traducción correcta es: "${respuestaCorrecta}"</span>`;
+        registrarResultado(currentCardId, false);
+      }
+      document.getElementById("comprobarBtn").disabled = true;
+      setTimeout(() => { document.getElementById("comprobarBtn").disabled = false; }, 1500);
+    };
+    document.getElementById("siguienteBtn").onclick = () => modoTraduccionDirecta();
+  }
+
+  function modoTraduccionInversa() {
+    const item = getRandomItemByCategory();
+    currentCardId = item[0];
+    const traduccion = obtenerTexto(item, 'palabra') === item[1] ? item[2] : item[1];
+    const respuestaCorrecta = obtenerTexto(item, 'palabra');
+    const catClass = getCategoryClass(item[5]);
+    const catText = getCategoryText(item[5]);
+    
+    practicaDiv.innerHTML = `
+      <div class="flashcard">
+        <div style="display: flex; justify-content: center; gap: 1rem; margin-bottom: 0.5rem;">
+          <span class="category-badge ${catClass}">${catText}</span>
+        </div>
+        <div class="pregunta">🔄 <strong>${traduccion}</strong></div>
+        <input type="text" id="respuestaInput" placeholder="Escribe el nombre de la ruta en español / Type the route name in Spanish...">
+        <button id="comprobarBtn" class="btn btn-primary">✓ Comprobar</button>
+        <div id="feedbackMsg" style="margin:1rem 0; font-weight:bold;"></div>
+        <button id="siguienteBtn" class="btn">⏩ Siguiente ruta</button>
+        <p id="infoProgresoCard" style="margin-top:0.8rem;">📊 Ruta ${currentCardId} · ✅ ${progreso[currentCardId]?.aciertos||0} aciertos · ❌ ${progreso[currentCardId]?.fallos||0} fallos</p>
+      </div>
+    `;
+    
+    document.getElementById("comprobarBtn").onclick = () => {
+      const userAnswer = document.getElementById("respuestaInput").value.trim().toLowerCase();
+      const correct = respuestaCorrecta.toLowerCase();
+      const isCorrect = userAnswer === correct;
+      const feedback = document.getElementById("feedbackMsg");
+      if (isCorrect) {
+        feedback.innerHTML = `<span style='color:#27ae60'>✅ ¡Correcto! "${respuestaCorrecta}"</span>`;
+        registrarResultado(currentCardId, true);
+      } else {
+        feedback.innerHTML = `<span style='color:#e67e22'>❌ Incorrecto. La ruta correcta es: "${respuestaCorrecta}"</span>`;
+        registrarResultado(currentCardId, false);
+      }
+      document.getElementById("comprobarBtn").disabled = true;
+      setTimeout(() => { document.getElementById("comprobarBtn").disabled = false; }, 1500);
+    };
+    document.getElementById("siguienteBtn").onclick = () => modoTraduccionInversa();
+  }
+
+  function modoOrdenarPalabras() {
+    const item = getRandomItemByCategory();
+    currentCardId = item[0];
+    const fraseOriginal = obtenerTexto(item, 'palabra');
+    ordenarRespuestaCorrecta = fraseOriginal;
+    let palabras = fraseOriginal.split(/\s+/).filter(p => p.length > 0);
+    currentOrdenarPalabras = [...palabras];
+    shuffledPalabras = [...palabras];
+    for (let i = shuffledPalabras.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [shuffledPalabras[i], shuffledPalabras[j]] = [shuffledPalabras[j], shuffledPalabras[i]];
+    }
+    selectedOrder = [];
+    const catClass = getCategoryClass(item[5]);
+    const catText = getCategoryText(item[5]);
+    
+    const renderUI = () => {
+      let palabrasHTML = shuffledPalabras.map(p => `<button class="palabra-btn" data-palabra="${p.replace(/"/g, '&quot;')}">${p}</button>`).join('');
+      let ordenHTML = selectedOrder.map(p => `<span style="background:#e8f3ec; padding:0.2rem 0.6rem; margin:0.2rem; border-radius:1rem;">${p}</span>`).join(' ');
+      if (ordenHTML === "") ordenHTML = "<em>Haz clic en las palabras en el orden correcto...</em>";
+      practicaDiv.innerHTML = `
+        <div class="flashcard">
+          <div style="display: flex; justify-content: center; gap: 1rem; margin-bottom: 0.5rem;">
+            <span class="category-badge ${catClass}">${catText}</span>
+          </div>
+          <h3>🧩 Ordena el nombre de la ruta:</h3>
+          <div class="pregunta" style="background:#e8f3ec;">📌 ${obtenerTexto(item, 'definicion')}</div>
+          <div class="orden-actual"><strong>Tu orden:</strong><br> ${ordenHTML}</div>
+          <div class="orden-palabras" id="palabrasContainer">${palabrasHTML}</div>
+          <div>
+            <button id="resetBtn" class="btn" style="background:#cfdec9;">🔁 Reiniciar</button>
+            <button id="comprobarBtn" class="btn btn-primary">✓ Comprobar</button>
+          </div>
+          <button id="siguienteBtn" class="btn" style="margin-top:1rem;">⏩ Siguiente ruta</button>
+          <p id="infoProgresoCard">📊 Ruta ${currentCardId} · ✅ ${progreso[currentCardId]?.aciertos||0} aciertos · ❌ ${progreso[currentCardId]?.fallos||0} fallos</p>
+          <div id="feedbackMsg" style="margin-top:0.8rem; font-weight:bold;"></div>
+        </div>
+      `;
+      document.querySelectorAll(".palabra-btn").forEach(btn => {
+        btn.addEventListener("click", () => {
+          const palabra = btn.getAttribute("data-palabra");
+          const idx = shuffledPalabras.indexOf(palabra);
+          if (idx !== -1) {
+            shuffledPalabras.splice(idx, 1);
+            selectedOrder.push(palabra);
+            renderUI();
+          }
+        });
+      });
+      document.getElementById("resetBtn").onclick = () => {
+        shuffledPalabras = [...currentOrdenarPalabras];
+        for (let i = shuffledPalabras.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [shuffledPalabras[i], shuffledPalabras[j]] = [shuffledPalabras[j], shuffledPalabras[i]];
+        }
+        selectedOrder = [];
+        renderUI();
+      };
+      document.getElementById("comprobarBtn").onclick = () => {
+        const ordenUsuario = selectedOrder.join(" ");
+        if (ordenUsuario === ordenarRespuestaCorrecta) {
+          document.getElementById("feedbackMsg").innerHTML = "<span style='color:#27ae60'>✅ ¡Correcto! Ruta ordenada correctamente.</span>";
+          registrarResultado(currentCardId, true);
+          setTimeout(() => modoOrdenarPalabras(), 1500);
+        } else {
+          document.getElementById("feedbackMsg").innerHTML = `<span style='color:#e67e22'>❌ Incorrecto. El nombre correcto es: "${ordenarRespuestaCorrecta}"</span>`;
+          registrarResultado(currentCardId, false);
+          setTimeout(() => modoOrdenarPalabras(), 2000);
+        }
+        document.getElementById("comprobarBtn").disabled = true;
+        setTimeout(() => { if(document.getElementById("comprobarBtn")) document.getElementById("comprobarBtn").disabled = false; }, 2000);
+      };
+      document.getElementById("siguienteBtn").onclick = () => modoOrdenarPalabras();
+    };
+    renderUI();
+  }
+
+  function modoEspEng() {
+    const item = getRandomItemByCategory();
+    currentCardId = item[0];
+    const direction = Math.random() < 0.5 ? "esp2eng" : "eng2esp";
+    const [pregunta, respuestaCorrecta] = direction === "esp2eng" ? [item[1], item[2]] : [item[2], item[1]];
+    const directionText = direction === "esp2eng" ? "🇪🇸 → 🇬🇧 Español a Inglés" : "🇬🇧 → 🇪🇸 English to Spanish";
+    const catClass = getCategoryClass(item[5]);
+    const catText = getCategoryText(item[5]);
+    
+    practicaDiv.innerHTML = `
+      <div class="flashcard">
+        <div style="display: flex; justify-content: center; gap: 1rem; margin-bottom: 0.5rem;">
+          <span class="category-badge ${catClass}">${catText}</span>
+        </div>
+        <div class="translation-direction">${directionText}</div>
+        <div class="pregunta">📝 <strong>${pregunta}</strong></div>
+        <input type="text" id="respuestaInput" placeholder="Escribe la traducción / Type the translation...">
+        <button id="comprobarBtn" class="btn btn-primary">✓ Comprobar</button>
+        <div id="feedbackMsg" style="margin:1rem 0; font-weight:bold;"></div>
+        <button id="siguienteBtn" class="btn">⏩ Siguiente ruta</button>
+        <p id="infoProgresoCard" style="margin-top:0.8rem;">📊 Ruta ${currentCardId} · ✅ ${progreso[currentCardId]?.aciertos||0} aciertos · ❌ ${progreso[currentCardId]?.fallos||0} fallos</p>
+      </div>
+    `;
+    
+    document.getElementById("comprobarBtn").onclick = () => {
+      const userAnswer = document.getElementById("respuestaInput").value.trim().toLowerCase();
+      const correct = respuestaCorrecta.toLowerCase();
+      const isCorrect = userAnswer === correct;
+      const feedback = document.getElementById("feedbackMsg");
+      if (isCorrect) {
+        feedback.innerHTML = `<span style='color:#27ae60'>✅ ¡Correcto! "${respuestaCorrecta}"</span>`;
+        registrarResultado(currentCardId, true);
+      } else {
+        feedback.innerHTML = `<span style='color:#e67e22'>❌ Incorrecto. La respuesta correcta es: "${respuestaCorrecta}"</span>`;
+        registrarResultado(currentCardId, false);
+      }
+      document.getElementById("comprobarBtn").disabled = true;
+      setTimeout(() => { document.getElementById("comprobarBtn").disabled = false; }, 1500);
+    };
+    document.getElementById("siguienteBtn").onclick = () => modoEspEng();
+  }
+
+  function setPracticeMode(mode) {
+    currentPracticeMode = mode;
+    document.querySelectorAll(".modo-btn").forEach(btn => btn.classList.remove("active"));
+    if (mode === "traduccion_directa") document.getElementById("modoTraduccionDirecta").classList.add("active");
+    if (mode === "traduccion_inversa") document.getElementById("modoTraduccionInversa").classList.add("active");
+    if (mode === "ordenar") document.getElementById("modoOrdenar").classList.add("active");
+    if (mode === "esp_eng") document.getElementById("modoEspEng").classList.add("active");
+    
+    if (mode === "traduccion_directa") modoTraduccionDirecta();
+    else if (mode === "traduccion_inversa") modoTraduccionInversa();
+    else if (mode === "ordenar") modoOrdenarPalabras();
+    else if (mode === "esp_eng") modoEspEng();
+  }
+
+  function setLanguage(lang) {
+    currentLang = lang;
+    document.getElementById("langEsBtn").classList.toggle("active", lang === 'es');
+    document.getElementById("langEnBtn").classList.toggle("active", lang === 'en');
+    document.getElementById("langBothBtn").classList.toggle("active", lang === 'both');
+    document.getElementById("progressTitle").innerHTML = lang === 'es' ? "📈 Progreso en rutas y destinos" : 
+                                                         (lang === 'en' ? "📈 Routes & Destinations Progress" : "📈 Progreso / Progress");
+    const placeholder = document.querySelector("#listado input");
+    if (placeholder) {
+      placeholder.placeholder = lang === 'es' ? "🔍 Buscar ruta / destino..." :
+                                (lang === 'en' ? "🔍 Search route / destination..." : "🔍 Buscar / Search...");
+    }
+    renderListado(currentCategoryFilter, currentFiltroTexto);
+    setPracticeMode(currentPracticeMode);
+  }
+
+  function initUI() {
+    document.querySelectorAll(".nav-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const viewId = btn.getAttribute("data-view");
+        document.querySelectorAll(".view").forEach(v => v.classList.remove("active-view"));
+        document.getElementById(viewId).classList.add("active-view");
+        document.querySelectorAll(".nav-btn").forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+        if (viewId === "listado") renderListado(currentCategoryFilter, currentFiltroTexto);
+        if (viewId === "dashboard") renderDashboard();
+        if (viewId === "practica") setPracticeMode(currentPracticeMode);
+      });
+    });
+    
+    document.getElementById("modoTraduccionDirecta").addEventListener("click", () => setPracticeMode("traduccion_directa"));
+    document.getElementById("modoTraduccionInversa").addEventListener("click", () => setPracticeMode("traduccion_inversa"));
+    document.getElementById("modoOrdenar").addEventListener("click", () => setPracticeMode("ordenar"));
+    document.getElementById("modoEspEng").addEventListener("click", () => setPracticeMode("esp_eng"));
+    
+    document.getElementById("resetProgresoBtn").addEventListener("click", () => {
+      if (confirm("¿Reiniciar todo el progreso? Se perderán aciertos y fallos. / Reset all progress?")) {
+        for (let i = 1; i <= 100; i++) progreso[i] = { aciertos: 0, fallos: 0 };
+        guardarProgreso();
+        renderDashboard();
+        renderListado(currentCategoryFilter, currentFiltroTexto);
+        setPracticeMode(currentPracticeMode);
+      }
+    });
+    
+    const filtroInput = document.getElementById("filtroListado");
+    filtroInput.addEventListener("input", (e) => {
+      currentFiltroTexto = e.target.value;
+      renderListado(currentCategoryFilter, currentFiltroTexto);
+    });
+    
+    document.querySelectorAll(".category-filter-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const cat = btn.getAttribute("data-cat");
+        currentCategoryFilter = cat;
+        document.querySelectorAll(".category-filter-btn").forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+        renderListado(currentCategoryFilter, currentFiltroTexto);
+      });
+    });
+    
+    document.getElementById("langEsBtn").addEventListener("click", () => setLanguage('es'));
+    document.getElementById("langEnBtn").addEventListener("click", () => setLanguage('en'));
+    document.getElementById("langBothBtn").addEventListener("click", () => setLanguage('both'));
+  }
+
+  window.addEventListener("DOMContentLoaded", () => {
+    cargarProgreso();
+    renderDashboard();
+    renderListado("all", "");
+    initUI();
+    setPracticeMode("traduccion_directa");
+  });
+</script>
+</body>
+</html>

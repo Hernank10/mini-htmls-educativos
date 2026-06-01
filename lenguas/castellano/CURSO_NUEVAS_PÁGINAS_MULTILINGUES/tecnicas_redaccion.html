@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>100 Técnicas de Redacción Castellana</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css" rel="stylesheet"/>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.3/font/bootstrap-icons.min.css" rel="stylesheet"/>
+  <style>
+    :root {
+      --bs-body-bg: #0f1117;
+      --bs-body-color: #e2e8f0;
+      --card-bg: #1e2230;
+      --card-border: #2d3448;
+      --input-bg: #252a3a;
+    }
+    body { background: var(--bs-body-bg); color: var(--bs-body-color); font-family: 'Segoe UI', system-ui, sans-serif; }
+    .screen { display: none; }
+    .screen.active { display: block; }
+
+    /* ── Navbar ── */
+    .navbar { background: #161b27 !important; border-bottom: 1px solid #2d3448; }
+
+    /* ── Hero ── */
+    .hero-badge { background: linear-gradient(135deg,#6366f1,#8b5cf6); border-radius: 50%; width: 80px; height: 80px; display: flex; align-items: center; justify-content: center; font-size: 2.2rem; margin: 0 auto 1rem; box-shadow: 0 0 40px #6366f155; }
+
+    /* ── Category cards ── */
+    .cat-card { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 16px; transition: transform .2s, box-shadow .2s; cursor: default; }
+    .cat-card:hover { transform: translateY(-4px); }
+    .cat-emoji { font-size: 2rem; }
+    .cat-badge { font-size: .7rem; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; padding: 3px 10px; border-radius: 20px; }
+
+    /* ── Progress ── */
+    .progress { background: #1e2230; border-radius: 8px; height: 8px; }
+
+    /* ── Learn / Quiz card ── */
+    .main-card { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 20px; }
+    .tecnica-num { font-size: .7rem; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; }
+    .definicion-box { background: #252a3a; border-radius: 12px; border-left: 3px solid #6366f1; line-height: 1.75; }
+
+    /* ── Input quiz ── */
+    .quiz-input { background: var(--input-bg); border: 1px solid #3d4560; color: #fff; border-radius: 10px; }
+    .quiz-input:focus { background: var(--input-bg); border-color: #6366f1; color: #fff; box-shadow: 0 0 0 3px #6366f133; }
+    .quiz-input::placeholder { color: #4a5070; }
+
+    /* ── Result rows ── */
+    .result-row { background: var(--card-bg); border-radius: 12px; border: 1px solid var(--card-border); }
+    .result-row.correcto { border-color: #22c55e55; background: #22c55e08; }
+    .result-row.incorrecto { border-color: #ef444455; background: #ef444408; }
+
+    /* ── Score circle ── */
+    .score-circle { width: 120px; height: 120px; border-radius: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center; margin: 0 auto; font-weight: 900; }
+
+    /* ── Buttons ── */
+    .btn-indigo { background: #6366f1; color: #fff; border: none; }
+    .btn-indigo:hover { background: #4f46e5; color: #fff; }
+    .btn-outline-secondary { border-color: #3d4560; color: #94a3b8; }
+    .btn-outline-secondary:hover { background: #252a3a; color: #e2e8f0; border-color: #6366f1; }
+
+    /* ── Misc ── */
+    .divider { border-color: #2d3448; }
+    .text-muted { color: #64748b !important; }
+    .small-label { font-size: .7rem; letter-spacing: 2px; text-transform: uppercase; color: #64748b; }
+    .tip-box { background: #1a1f2e; border: 1px solid #2d3448; border-radius: 10px; font-size: .85rem; color: #64748b; }
+  </style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════════════════
+     NAVBAR
+════════════════════════════════════════════════════════ -->
+<nav class="navbar navbar-dark px-3 py-2">
+  <span class="navbar-brand fw-bold d-flex align-items-center gap-2">
+    <i class="bi bi-pencil-fill text-indigo" style="color:#6366f1"></i>
+    100 Técnicas de Redacción
+  </span>
+  <div id="nav-info" class="text-muted small"></div>
+</nav>
+
+<!-- ═══════════════════════════════════════════════════════
+     PANTALLA: MENÚ
+════════════════════════════════════════════════════════ -->
+<div id="screen-menu" class="screen active">
+  <div class="container py-5">
+
+    <!-- Hero -->
+    <div class="text-center mb-5">
+      <div class="hero-badge">📝</div>
+      <h1 class="fw-black fs-2 mb-1">100 Técnicas de Redacción Castellana</h1>
+      <p class="text-muted">Aprende · Practica · Domina — 8 categorías completas</p>
+      <div class="d-flex gap-2 justify-content-center flex-wrap mt-4">
+        <button class="btn btn-indigo btn-lg px-4 rounded-pill" onclick="iniciarAprender(null)">
+          <i class="bi bi-book-half me-2"></i>Aprender las 100 técnicas
+        </button>
+        <button class="btn btn-outline-light btn-lg px-4 rounded-pill" onclick="iniciarQuiz(null)">
+          <i class="bi bi-lightning-charge-fill me-2"></i>Quiz completo (100)
+        </button>
+      </div>
+    </div>
+
+    <hr class="divider mb-4"/>
+
+    <!-- Por categoría -->
+    <p class="small-label mb-3">Por categoría</p>
+    <div class="row g-3" id="grid-categorias"></div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════
+     PANTALLA: APRENDER
+════════════════════════════════════════════════════════ -->
+<div id="screen-aprender" class="screen">
+  <div class="container py-4" style="max-width:680px">
+    <button class="btn btn-outline-secondary btn-sm mb-4 rounded-pill" onclick="irMenu()">
+      <i class="bi bi-arrow-left me-1"></i>Volver al menú
+    </button>
+
+    <!-- Progreso -->
+    <div class="mb-4">
+      <div class="d-flex justify-content-between small-label mb-2">
+        <span id="apr-cat-label"></span>
+        <span id="apr-counter"></span>
+      </div>
+      <div class="progress"><div id="apr-bar" class="progress-bar bg-indigo" style="background:#6366f1"></div></div>
+    </div>
+
+    <!-- Tarjeta técnica -->
+    <div class="main-card p-4 p-md-5 text-center mb-4">
+      <p id="apr-num" class="tecnica-num mb-3" style="color:#6366f1"></p>
+      <h2 id="apr-nombre" class="fw-bold fs-3 mb-4"></h2>
+      <div id="apr-btn-ver">
+        <button class="btn btn-indigo px-4 rounded-pill" onclick="verDefinicion()">
+          <i class="bi bi-eye me-2"></i>Ver definición
+        </button>
+      </div>
+      <div id="apr-definicion" class="definicion-box p-3 text-start d-none">
+        <p id="apr-desc" class="mb-0"></p>
+      </div>
+    </div>
+
+    <!-- Navegación -->
+    <div class="d-flex gap-2">
+      <button id="apr-btn-prev" class="btn btn-outline-secondary flex-fill rounded-pill d-none" onclick="anteriorTecnica()">
+        <i class="bi bi-chevron-left me-1"></i>Anterior
+      </button>
+      <button class="btn btn-success flex-fill rounded-pill fw-semibold" onclick="siguienteTecnica()">
+        <span id="apr-btn-label">Siguiente <i class="bi bi-chevron-right ms-1"></i></span>
+      </button>
+    </div>
+
+    <p class="text-center text-muted small mt-3 tip-box p-2">
+      <i class="bi bi-lightbulb me-1"></i>Intenta recordar el nombre antes de ver la definición
+    </p>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════
+     PANTALLA: QUIZ
+════════════════════════════════════════════════════════ -->
+<div id="screen-quiz" class="screen">
+  <div class="container py-4" style="max-width:680px">
+    <button class="btn btn-outline-secondary btn-sm mb-4 rounded-pill" onclick="irMenu()">
+      <i class="bi bi-arrow-left me-1"></i>Volver al menú
+    </button>
+
+    <!-- Progreso -->
+    <div class="mb-4">
+      <div class="d-flex justify-content-between small-label mb-2">
+        <span id="quiz-cat-label"></span>
+        <span id="quiz-counter"></span>
+      </div>
+      <div class="progress"><div id="quiz-bar" class="progress-bar" style="background:#8b5cf6"></div></div>
+    </div>
+
+    <!-- Pregunta -->
+    <div class="main-card p-4 p-md-5 mb-4">
+      <p id="quiz-cat-tag" class="small-label mb-2"></p>
+      <p id="quiz-num" class="small text-muted mb-3"></p>
+      <div class="definicion-box p-3 mb-4">
+        <p id="quiz-desc" class="mb-0" style="line-height:1.75"></p>
+      </div>
+      <label class="small-label mb-2 d-block">¿Cómo se llama esta técnica?</label>
+      <div class="input-group">
+        <input id="quiz-input" type="text" class="form-control quiz-input"
+          placeholder="Escribe el nombre de la técnica..."
+          onkeydown="if(event.key==='Enter') enviarRespuesta()"/>
+        <button class="btn btn-indigo px-3" onclick="enviarRespuesta()">
+          <i class="bi bi-arrow-right-short fs-5"></i>
+        </button>
+      </div>
+    </div>
+
+    <p class="text-center tip-box p-2">
+      <i class="bi bi-keyboard me-1"></i>Presiona <kbd class="bg-transparent border text-muted">Enter</kbd> para continuar
+    </p>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════
+     PANTALLA: RESULTADO
+════════════════════════════════════════════════════════ -->
+<div id="screen-resultado" class="screen">
+  <div class="container py-4" style="max-width:800px">
+
+    <!-- Score header -->
+    <div class="text-center mb-5">
+      <div id="res-emoji" class="display-3 mb-2"></div>
+      <div id="res-score-circle" class="score-circle mb-3">
+        <span id="res-score-num" class="display-5 fw-black lh-1"></span>
+        <span class="small text-muted">puntaje</span>
+      </div>
+      <p id="res-msg" class="fs-5 fw-semibold mb-4"></p>
+
+      <!-- Stats row -->
+      <div class="row g-3 justify-content-center mb-4">
+        <div class="col-auto">
+          <div class="main-card px-4 py-3 text-center">
+            <div id="res-correctas" class="fs-4 fw-black text-success"></div>
+            <div class="small text-muted">Correctas ≥80%</div>
+          </div>
+        </div>
+        <div class="col-auto">
+          <div class="main-card px-4 py-3 text-center">
+            <div id="res-parciales" class="fs-4 fw-black text-warning"></div>
+            <div class="small text-muted">Parciales 50–79%</div>
+          </div>
+        </div>
+        <div class="col-auto">
+          <div class="main-card px-4 py-3 text-center">
+            <div id="res-incorrectas" class="fs-4 fw-black text-danger"></div>
+            <div class="small text-muted">Por mejorar &lt;50%</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="d-flex gap-2 justify-content-center flex-wrap">
+        <button class="btn btn-indigo px-4 rounded-pill" onclick="repetirQuiz()">
+          <i class="bi bi-arrow-repeat me-2"></i>Repetir quiz
+        </button>
+        <button class="btn btn-outline-secondary px-4 rounded-pill" onclick="irMenu()">
+          <i class="bi bi-house me-2"></i>Menú principal
+        </button>
+      </div>
+    </div>
+
+    <hr class="divider mb-4"/>
+    <p class="small-label mb-3">Detalle de respuestas</p>
+
+    <!-- Filtros -->
+    <div class="d-flex gap-2 mb-3 flex-wrap">
+      <button class="btn btn-sm btn-indigo rounded-pill active" id="filtro-todos" onclick="filtrar('todos')">Todas</button>
+      <button class="btn btn-sm btn-outline-secondary rounded-pill" id="filtro-correctas" onclick="filtrar('correctas')">✅ Correctas</button>
+      <button class="btn btn-sm btn-outline-secondary rounded-pill" id="filtro-errores" onclick="filtrar('errores')">❌ Por mejorar</button>
+    </div>
+
+    <div id="lista-resultados" class="d-flex flex-column gap-2"></div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/js/bootstrap.bundle.min.js"></script>
+<script>
+// ═══════════════════════════════════════════════════════════
+// DATOS
+// ═══════════════════════════════════════════════════════════
+const CATEGORIAS = [
+  { id:1, nombre:"Claridad y Precisión", emoji:"🎯", color:"#fbbf24",
+    tecnicas:[
+      {id:1,  nombre:"La economía verbal",               desc:"Eliminar todo lo que no aporta significado. Cada palabra debe ganarse su lugar en la oración. 'En este momento actual de hoy' → 'hoy'."},
+      {id:2,  nombre:"La precisión léxica",              desc:"Elegir la palabra exacta y no su pariente aproximado. No es lo mismo 'casa' que 'hogar', ni 'mirar' que 'contemplar'."},
+      {id:3,  nombre:"La claridad sintáctica",           desc:"Privilegiar el orden natural sujeto-verbo-objeto cuando la claridad lo requiere, reservando las inversiones para efectos expresivos deliberados."},
+      {id:4,  nombre:"Evitar la redundancia",            desc:"Depurar el texto de repeticiones innecesarias de una misma idea expresada con palabras distintas."},
+      {id:5,  nombre:"El uso activo del verbo",          desc:"Usar la voz activa: 'María redactó el informe' es más fuerte que 'El informe fue redactado por María'. Imprime dinamismo y responsabilidad."},
+      {id:6,  nombre:"La concreción sobre la abstracción",desc:"En lugar de 'situaciones de índole problemática', decir directamente 'problemas'. Lo concreto siempre comunica mejor."},
+      {id:7,  nombre:"Una idea por párrafo",             desc:"Organizar el pensamiento asignando una sola idea central a cada párrafo. Facilita la comprensión y la estructura lógica."},
+      {id:8,  nombre:"La coherencia referencial",        desc:"Mantener un hilo claro de quién hace qué a lo largo del texto, evitando ambigüedades en los pronombres y referencias."},
+      {id:9,  nombre:"El uso adecuado de tiempos verbales",desc:"Establecer relaciones temporales con exactitud: pretérito perfecto para acciones recientes, indefinido para concluidas, imperfecto para estados habituales."},
+      {id:10, nombre:"Definir antes de desarrollar",     desc:"Presentar primero el concepto y luego explicarlo. Técnica expositiva fundamental que orienta al lector desde el inicio."},
+      {id:11, nombre:"De lo simple a lo complejo",       desc:"Graduar la información guiando al lector desde los conceptos más accesibles hasta los más elaborados, sin abrumarlo."},
+      {id:12, nombre:"Eliminar gerundios mal usados",    desc:"El gerundio expresa simultaneidad o anterioridad inmediata, no consecuencia ni posterioridad. Sanar el texto de su uso incorrecto."},
+      {id:13, nombre:"El uso correcto de los relativos", desc:"Usar adecuadamente que, quien, el cual, cuyo para evitar ambigüedades en las oraciones subordinadas."},
+      {id:14, nombre:"Concordancia de género y número",  desc:"Respetar la concordancia en adjetivos, pronombres y verbos. Es la condición básica de corrección gramatical."},
+      {id:15, nombre:"La puntuación como respiración",   desc:"La coma, el punto y coma, el punto y los dos puntos no son decoración, sino instrucciones de lectura para el lector."},
+    ]},
+  { id:2, nombre:"Arquitectura del Párrafo", emoji:"🏛️", color:"#34d399",
+    tecnicas:[
+      {id:16, nombre:"La oración temática",           desc:"Abrir el párrafo anunciando su contenido central. El resto del párrafo la desarrolla, matiza o ejemplifica."},
+      {id:17, nombre:"El párrafo deductivo",          desc:"Ir de lo general a lo particular: presentar la idea central y luego sustentarla con argumentos o ejemplos."},
+      {id:18, nombre:"El párrafo inductivo",          desc:"Acumular evidencias hasta llegar a la conclusión. Genera expectativa y resulta eficaz en textos argumentativos."},
+      {id:19, nombre:"El párrafo de contraste",       desc:"Organizar el contenido en torno a una oposición usando: por un lado / por otro, a diferencia de, mientras que."},
+      {id:20, nombre:"El párrafo ejemplificador",     desc:"Apoyar afirmaciones abstractas con casos concretos, anécdotas o datos específicos que ilustren la idea."},
+      {id:21, nombre:"El párrafo narrativo",          desc:"Contar una pequeña historia o secuencia de eventos para ilustrar una idea dentro de un texto expositivo o argumentativo."},
+      {id:22, nombre:"La transición entre párrafos",  desc:"Usar palabras y frases de enlace —sin embargo, por consiguiente, cabe añadir— para hacer fluir el texto con naturalidad."},
+      {id:23, nombre:"Variar la longitud de párrafos",desc:"Generar ritmo alternando párrafos extensos con breves. Un párrafo corto tras varios largos funciona como golpe de efecto."},
+      {id:24, nombre:"El párrafo de cierre",          desc:"No repetir, sino elevar: sintetizar, proyectar o dejar al lector con una imagen o pregunta que perdura en su mente."},
+      {id:25, nombre:"Evitar el párrafo monolítico",  desc:"Evitar la masa de texto sin respiración, tan perjudicial como la fragmentación excesiva. Buscar el equilibrio."},
+      {id:26, nombre:"La unidad temática",            desc:"Todas las oraciones del párrafo deben girar en torno a la misma idea central sin desviarse hacia otros temas."},
+      {id:27, nombre:"La cohesión interna",           desc:"Conseguir cohesión mediante repetición controlada de términos clave, uso de sinónimos y referencia pronominal."},
+      {id:28, nombre:"El conector de apertura",       desc:"Usar conectores como 'a menudo', 'cabe señalar que', 'conviene recordar' para ubicar al lector en el mapa del argumento."},
+    ]},
+  { id:3, nombre:"El Arte de Argumentar", emoji:"⚖️", color:"#fb923c",
+    tecnicas:[
+      {id:29, nombre:"La tesis clara y explícita",      desc:"La columna vertebral del texto argumentativo. El lector debe saber desde el principio qué posición se va a defender."},
+      {id:30, nombre:"La anticipación de objeciones",   desc:"La prolepsis: reconocer las debilidades de la propia postura y responderlas demuestra rigor intelectual y fortalece el argumento."},
+      {id:31, nombre:"El argumento por analogía",       desc:"Iluminar lo desconocido a través de lo familiar. Es poderoso cuando las similitudes son pertinentes y honestas."},
+      {id:32, nombre:"El argumento de autoridad",       desc:"Apoyar la posición propia con opiniones o datos de fuentes reconocidas, pero nunca como único recurso."},
+      {id:33, nombre:"La evidencia empírica",           desc:"Dar peso al argumento con estadísticas y datos citados con precisión y contexto. La evidencia concreta convence."},
+      {id:34, nombre:"La refutación",                   desc:"Destruir el argumento contrario atacando la lógica o la evidencia, nunca a la persona. Evitar la falacia ad hominem."},
+      {id:35, nombre:"La concesión estratégica",        desc:"Admitir que el punto contrario tiene algo de verdad antes de mostrar la superioridad de la posición propia. Genera credibilidad."},
+      {id:36, nombre:"El argumento a contrario",        desc:"Si X es verdad, entonces lo contrario de X produce el resultado opuesto. Razonamiento por contraposición lógica."},
+      {id:37, nombre:"El argumento pragmático",         desc:"Evaluar las consecuencias prácticas de adoptar una posición. Apelar a los resultados reales y tangibles."},
+      {id:38, nombre:"La estructura del ensayo",        desc:"Introducción con tesis, desarrollo con argumentos y contra-argumentos, conclusión que recapitula y proyecta hacia el futuro."},
+      {id:39, nombre:"Evitar las falacias lógicas",     desc:"Huir de la generalización apresurada, la falsa dicotomía y la pendiente resbaladiza. Condición de honestidad intelectual."},
+      {id:40, nombre:"La gradación de argumentos",      desc:"Presentar primero los argumentos de menor peso y culminar con el más sólido. Genera una curva de convicción ascendente."},
+      {id:41, nombre:"La interrogación retórica",       desc:"Involucrar al lector en el razonamiento a través de preguntas que no esperan respuesta sino reflexión."},
+      {id:42, nombre:"El cierre con proyección",        desc:"Cerrar el argumento con una llamada a la acción o implicación de largo alcance que transforme el texto en instrumento de cambio."},
+    ]},
+  { id:4, nombre:"Ritmo y Música de la Prosa", emoji:"🎵", color:"#a78bfa",
+    tecnicas:[
+      {id:43, nombre:"La variación sintáctica",            desc:"Alternar oraciones largas con cortas, subordinadas con coordinadas, para evitar la monotonía y mantener el ritmo vivo."},
+      {id:44, nombre:"La aliteración controlada",          desc:"Repetición de sonidos consonánticos afines que puede dar musicalidad sin caer en el artificio o el efectismo."},
+      {id:45, nombre:"La anáfora",                         desc:"Repetir la misma palabra o estructura al comienzo de oraciones sucesivas. 'Escribimos para existir. Escribimos para recordar.'"},
+      {id:46, nombre:"El paralelismo sintáctico",          desc:"Imponer orden y elegancia: 'leer sin pensar es peligroso; pensar sin leer es insuficiente'. Estructuras simétricas."},
+      {id:47, nombre:"La enumeración climática",           desc:"Organizar una serie de elementos de menor a mayor intensidad, culminando siempre en el elemento más impactante."},
+      {id:48, nombre:"El asíndeton",                       desc:"Eliminar los nexos entre elementos de una enumeración para acelerar el ritmo: 'llegó, vio, venció'."},
+      {id:49, nombre:"El polisíndeton",                    desc:"Multiplicar los nexos para enlentecer el ritmo y crear solemnidad: 'y el viento y la lluvia y el frío y la oscuridad'."},
+      {id:50, nombre:"La frase corta dramática",           desc:"Romper la cadencia larga con una frase breve para crear impacto. A veces, una sola palabra. El efecto es poderoso."},
+      {id:51, nombre:"La cadencia final",                  desc:"El modo en que termina la oración determina la energía del lector. Las terminaciones agudas dan resolución; las esdrújulas, suspensión."},
+      {id:52, nombre:"Leer en voz alta",                   desc:"La prueba definitiva del ritmo. El oído detecta torpezas, repeticiones y frases que se atascan que el ojo pasa por alto."},
+      {id:53, nombre:"El contraste tonal",                 desc:"Alternar lo grave con lo leve, lo abstracto con lo concreto dentro del mismo texto para mantener vivo el interés del lector."},
+      {id:54, nombre:"La gradación ascendente",            desc:"El clímax: llevar al lector hacia un punto de máxima tensión o expresividad de forma progresiva y deliberada."},
+      {id:55, nombre:"El uso del guion largo",             desc:"La raya permite intercalar aclaraciones o digresiones con elegancia —como esta— sin romper el flujo principal."},
+      {id:56, nombre:"Exclamación e interrogación",        desc:"Deben usarse con parsimonia. Su poder disminuye con el uso excesivo; reservarlos para momentos de verdadero impacto."},
+      {id:57, nombre:"Punto y seguido vs. punto y aparte", desc:"El punto y seguido es más dinámico; el punto y aparte, más enfático. Saber cuándo usar cada uno es dominar el ritmo."},
+    ]},
+  { id:5, nombre:"Figuras Retóricas", emoji:"🌀", color:"#38bdf8",
+    tecnicas:[
+      {id:58, nombre:"La metáfora",      desc:"Identifica dos realidades distintas creando una imagen nueva: 'el tiempo es un río sin orillas'. Audaz y poderosa."},
+      {id:59, nombre:"El símil",         desc:"Establece la comparación de forma explícita: 'escribe como si el papel fuera a arder'. Más didáctico que la metáfora."},
+      {id:60, nombre:"La metonimia",     desc:"Sustituir un término por otro con el que tiene relación de contigüidad: 'leer a Cervantes' por 'leer la obra de Cervantes'."},
+      {id:61, nombre:"La sinécdoque",    desc:"Tomar la parte por el todo o viceversa: 'cien velas surcaban el mar' para decir 'cien barcos navegaban'."},
+      {id:62, nombre:"La personificación",desc:"Atribuir cualidades humanas a entidades abstractas o inanimadas: 'la ciudad dormía', 'el viento gemía'. Prosopopeya."},
+      {id:63, nombre:"La hipérbole",     desc:"Exagerar con propósito expresivo, no engañoso: 'te lo he dicho mil veces'. Amplifica para crear énfasis o humor."},
+      {id:64, nombre:"La ironía",        desc:"Decir lo contrario de lo que se piensa, confiando en que el lector descifre la distancia entre la letra y la intención."},
+      {id:65, nombre:"La antítesis",     desc:"Confrontar ideas opuestas en estructuras paralelas: 'era el mejor de los tiempos, era el peor de los tiempos'."},
+      {id:66, nombre:"El oxímoron",      desc:"Fusionar dos términos contradictorios en una unidad expresiva: 'silencio elocuente', 'claridad oscura', 'dulce amargura'."},
+      {id:67, nombre:"La elipsis",       desc:"Omitir elementos que el lector puede reconstruir por contexto, agilizando el texto sin perder significado."},
+      {id:68, nombre:"La litotes",       desc:"Afirmar algo mediante la negación de su contrario: 'no es mal escritor' para decir que es bueno. Modestia expresiva."},
+      {id:69, nombre:"La perífrasis",    desc:"Rodear el concepto con una descripción cuando el término directo resulta insuficiente o conviene evitarlo por razones estilísticas."},
+      {id:70, nombre:"El eufemismo",     desc:"Suavizar una realidad dura o tabú. Conviene usarlo cuando sirve a la sensibilidad, no para esconder verdades incómodas."},
+      {id:71, nombre:"La alusión",       desc:"Referencia implícita a un texto, evento o figura cultural asumiendo que el lector la reconocerá. Enriquece pero puede excluir."},
+      {id:72, nombre:"La sinestesia",    desc:"Mezclar sensaciones de distintos sentidos en una misma imagen: 'un color estridente', 'una voz azul', 'silencio cálido'."},
+    ]},
+  { id:6, nombre:"Géneros Textuales", emoji:"📚", color:"#f472b6",
+    tecnicas:[
+      {id:73, nombre:"El artículo de opinión",  desc:"La voz personal es un activo: el lector quiere saber qué piensa el autor, no solo qué dicen los expertos ajenos."},
+      {id:74, nombre:"El ensayo académico",     desc:"La objetividad aparente y el aparato crítico —citas, notas, referencias— construyen la autoridad del texto."},
+      {id:75, nombre:"La crónica periodística", desc:"El detalle sensorial y la narración en tiempo presente crean inmersión. El lector debe sentir que está ahí, presente."},
+      {id:76, nombre:"El relato breve",         desc:"La economía es ley: cada palabra lleva carga máxima. Los finales abiertos invitan a la reinterpretación del lector."},
+      {id:77, nombre:"La carta formal",         desc:"Tono cortés pero directo, tratamiento adecuado —usted— y estructura clara son los pilares de su eficacia."},
+      {id:78, nombre:"El correo profesional",   desc:"El asunto anticipa el contenido; el cuerpo es conciso; el cierre es concreto en cuanto a la acción esperada del destinatario."},
+      {id:79, nombre:"El texto divulgativo",    desc:"La analogía y el ejemplo son los mejores aliados para hacer accesible lo complejo al lector no especializado."},
+      {id:80, nombre:"La reseña",               desc:"Describir antes de valorar, y valorar con criterios explícitos. El lector necesita la descripción para evaluar el juicio."},
+      {id:81, nombre:"El discurso oral transcrito",desc:"Las repeticiones y marcas de oralidad son recursos expresivos, no errores. La oralidad tiene su propia gramática."},
+      {id:82, nombre:"La autobiografía",        desc:"La selección de episodios es en sí misma una argumentación sobre el propio sentido de la vida y la identidad."},
+      {id:83, nombre:"El texto publicitario",   desc:"La brevedad y el gancho emocional priman sobre cualquier otra consideración. Cada palabra vale su peso en oro."},
+      {id:84, nombre:"El ensayo filosófico",    desc:"La definición precisa de los términos es condición previa de cualquier avance argumental en el pensamiento abstracto."},
+    ]},
+  { id:7, nombre:"Revisión y Edición", emoji:"✏️", color:"#4ade80",
+    tecnicas:[
+      {id:85, nombre:"La distancia temporal",        desc:"Dejar reposar el texto al menos una noche antes de revisar. La distancia permite leer con ojos más objetivos y frescos."},
+      {id:86, nombre:"Leer en voz alta para editar", desc:"Revela torpezas de ritmo, repeticiones involuntarias y frases que se atascan que la lectura silenciosa no detecta."},
+      {id:87, nombre:"Revisión en pasadas temáticas",desc:"Una pasada para estructura, otra para claridad, otra para léxico, otra para puntuación. No corregir todo a la vez."},
+      {id:88, nombre:"El test del '¿y qué?'",        desc:"Cada párrafo debe justificar su presencia. Si al eliminarlo el texto no pierde nada esencial, el párrafo sobra."},
+      {id:89, nombre:"Eliminar comodines léxicos",   desc:"Buscar y erradicar 'cosa', 'tema', 'aspecto', 'hacer' que funcionan como parches de imprecisión en el texto."},
+      {id:90, nombre:"Reducir adverbios en -mente",  desc:"A menudo pueden sustituirse por un verbo más preciso. 'Caminó lentamente' → 'arrastró los pasos'."},
+      {id:91, nombre:"Controlar la densidad metafórica",desc:"Demasiadas imágenes en poco espacio producen ruido. Las metáforas necesitan espacio para respirar y brillar."},
+      {id:92, nombre:"Buscar inconsistencias de tono",desc:"Un texto que pasa del registro coloquial al académico sin transición pierde credibilidad ante el lector."},
+      {id:93, nombre:"Verificar la progresión temática",desc:"El lector debe sentir que avanza, que cada sección añade algo que la anterior no contenía. Evitar la regresión."},
+      {id:94, nombre:"El corte valiente",            desc:"Eliminar párrafos enteros que, aunque bien escritos, no sirven al propósito. Matar a los propios favoritos."},
+    ]},
+  { id:8, nombre:"Voz Propia y Estilo", emoji:"🌟", color:"#fb7185",
+    tecnicas:[
+      {id:95,  nombre:"Leer con atención analítica",          desc:"Preguntarse no solo qué dice el texto sino cómo lo dice. El análisis del estilo ajeno desarrolla el propio."},
+      {id:96,  nombre:"Imitar a los maestros",                desc:"Ejercicio legítimo de aprendizaje: no para plagiar, sino para interiorizar mecanismos y luego trascenderlos con voz propia."},
+      {id:97,  nombre:"Escribir con regularidad",             desc:"El diario, el cuaderno de notas, el borrador sin pretensiones son gimnasios del estilo. El músculo se construye así."},
+      {id:98,  nombre:"Encontrar los temas obsesivos",        desc:"Lo que uno vuelve a escribir siempre es el territorio donde la voz propia es más auténtica y poderosa."},
+      {id:99,  nombre:"Atreverse a la frase larga y breve",   desc:"Atreverse a la subordinada cuando el pensamiento lo exige, y atreverse también a la frase brevísima. A veces, así."},
+      {id:100, nombre:"La escritura como aprendizaje permanente",desc:"No existe el escritor terminado. Cada texto es una nueva oportunidad de fracasar mejor. La técnica es el mapa; el territorio, siempre mayor."},
+    ]},
+];
+
+const TODAS = CATEGORIAS.flatMap(c => c.tecnicas);
+
+// ─── Estado ───────────────────────────────────────────────
+let estado = {
+  pantalla: "menu",
+  catActual: null,
+  tecnicasLista: [],
+  idx: 0,
+  mostrarDef: false,
+  quizLista: [],
+  respuestas: {},
+  resultados: [],
+};
+
+// ─── Utilidades ───────────────────────────────────────────
+function mostrar(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById('screen-' + id).classList.add('active');
+  window.scrollTo(0,0);
+}
+
+function puntaje(a, b) {
+  a = a.toLowerCase().trim(); b = b.toLowerCase().trim();
+  if (a === b) return 100;
+  const wa = a.split(/\s+/), wb = b.split(/\s+/);
+  const comunes = wa.filter(w => wb.some(x => x.includes(w) || w.includes(x)));
+  const wScore = Math.round((comunes.length / Math.max(wa.length, wb.length)) * 100);
+  let matches = 0;
+  const shorter = a.length < b.length ? a : b, longer = a.length < b.length ? b : a;
+  for (let c of shorter) if (longer.includes(c)) matches++;
+  const cScore = Math.round((matches / longer.length) * 100);
+  return Math.max(wScore, cScore);
+}
+
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length-1; i > 0; i--) {
+    const j = Math.floor(Math.random()*(i+1));
+    [a[i],a[j]] = [a[j],a[i]];
+  }
+  return a;
+}
+
+function catDe(t) { return CATEGORIAS.find(c => c.tecnicas.some(x => x.id === t.id)); }
+
+function scoreColor(s) { return s >= 80 ? 'success' : s >= 50 ? 'warning' : 'danger'; }
+
+// ═══════════════════════════════════════════════════════════
+// MENÚ
+// ═══════════════════════════════════════════════════════════
+function renderMenu() {
+  const grid = document.getElementById('grid-categorias');
+  grid.innerHTML = CATEGORIAS.map(cat => `
+    <div class="col-sm-6 col-lg-4 col-xl-3">
+      <div class="cat-card h-100 p-4">
+        <div class="cat-emoji mb-2">${cat.emoji}</div>
+        <h6 class="fw-bold mb-1" style="color:${cat.color}">${cat.nombre}</h6>
+        <p class="text-muted small mb-3">${cat.tecnicas.length} técnicas</p>
+        <div class="d-flex gap-2">
+          <button class="btn btn-sm btn-outline-secondary flex-fill rounded-pill" onclick="iniciarAprender(${cat.id})">
+            <i class="bi bi-book me-1"></i>Aprender
+          </button>
+          <button class="btn btn-sm btn-indigo flex-fill rounded-pill" onclick="iniciarQuiz(${cat.id})">
+            <i class="bi bi-lightning me-1"></i>Quiz
+          </button>
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function irMenu() { mostrar('menu'); document.getElementById('nav-info').textContent = ''; }
+
+// ═══════════════════════════════════════════════════════════
+// APRENDER
+// ═══════════════════════════════════════════════════════════
+function iniciarAprender(catId) {
+  estado.catActual = catId ? CATEGORIAS.find(c => c.id === catId) : null;
+  estado.tecnicasLista = estado.catActual ? estado.catActual.tecnicas : TODAS;
+  estado.idx = 0;
+  estado.mostrarDef = false;
+  renderAprender();
+  mostrar('aprender');
+}
+
+function renderAprender() {
+  const lista = estado.tecnicasLista;
+  const t = lista[estado.idx];
+  const cat = catDe(t);
+  const progreso = Math.round(((estado.idx + 1) / lista.length) * 100);
+
+  document.getElementById('apr-cat-label').innerHTML = `<span style="color:${cat.color}">${cat.emoji} ${cat.nombre}</span>`;
+  document.getElementById('apr-counter').textContent = `${estado.idx + 1} / ${lista.length}`;
+  document.getElementById('apr-bar').style.width = progreso + '%';
+  document.getElementById('apr-num').textContent = `Técnica #${t.id}`;
+  document.getElementById('apr-num').style.color = cat.color;
+  document.getElementById('apr-nombre').textContent = t.nombre;
+  document.getElementById('apr-desc').textContent = t.desc;
+
+  // Definición
+  document.getElementById('apr-btn-ver').classList.toggle('d-none', estado.mostrarDef);
+  document.getElementById('apr-definicion').classList.toggle('d-none', !estado.mostrarDef);
+
+  // Prev
+  const prev = document.getElementById('apr-btn-prev');
+  estado.idx > 0 ? prev.classList.remove('d-none') : prev.classList.add('d-none');
+
+  // Label siguiente
+  document.getElementById('apr-btn-label').innerHTML =
+    estado.idx < lista.length - 1
+      ? 'Siguiente <i class="bi bi-chevron-right ms-1"></i>'
+      : '<i class="bi bi-check-lg me-1"></i>Terminar';
+
+  document.getElementById('nav-info').textContent = `${estado.idx + 1}/${lista.length} — Aprendiendo`;
+}
+
+function verDefinicion() { estado.mostrarDef = true; renderAprender(); }
+
+function siguienteTecnica() {
+  if (estado.idx < estado.tecnicasLista.length - 1) {
+    estado.idx++; estado.mostrarDef = false; renderAprender();
+  } else { irMenu(); }
+}
+
+function anteriorTecnica() {
+  if (estado.idx > 0) { estado.idx--; estado.mostrarDef = false; renderAprender(); }
+}
+
+// ═══════════════════════════════════════════════════════════
+// QUIZ
+// ═══════════════════════════════════════════════════════════
+function iniciarQuiz(catId) {
+  estado.catActual = catId ? CATEGORIAS.find(c => c.id === catId) : null;
+  const lista = estado.catActual ? estado.catActual.tecnicas : TODAS;
+  estado.quizLista = shuffle(lista);
+  estado.idx = 0;
+  estado.respuestas = {};
+  renderQuiz();
+  mostrar('quiz');
+  setTimeout(() => document.getElementById('quiz-input').focus(), 150);
+}
+
+function renderQuiz() {
+  const lista = estado.quizLista;
+  const t = lista[estado.idx];
+  const cat = catDe(t);
+  const progreso = Math.round((estado.idx / lista.length) * 100);
+
+  document.getElementById('quiz-cat-label').innerHTML = `<span style="color:${cat.color}">${cat.emoji} ${estado.catActual ? estado.catActual.nombre : 'Quiz Completo'}</span>`;
+  document.getElementById('quiz-counter').textContent = `${estado.idx + 1} / ${lista.length}`;
+  document.getElementById('quiz-bar').style.width = progreso + '%';
+  document.getElementById('quiz-cat-tag').innerHTML = `<span style="color:${cat.color}">${cat.emoji} ${cat.nombre}</span>`;
+  document.getElementById('quiz-num').textContent = `Técnica #${t.id}`;
+  document.getElementById('quiz-desc').textContent = t.desc;
+  document.getElementById('quiz-input').value = '';
+  document.getElementById('nav-info').textContent = `${estado.idx + 1}/${lista.length} — Quiz`;
+}
+
+function enviarRespuesta() {
+  const inp = document.getElementById('quiz-input');
+  const resp = inp.value.trim();
+  if (!resp) return;
+  const t = estado.quizLista[estado.idx];
+  const sc = puntaje(resp, t.nombre);
+  estado.respuestas[t.id] = { respuesta: resp, score: sc };
+  if (estado.idx < estado.quizLista.length - 1) {
+    estado.idx++;
+    renderQuiz();
+    setTimeout(() => inp.focus(), 80);
+  } else {
+    estado.resultados = estado.quizLista.map(x => ({
+      tecnica: x,
+      respuesta: estado.respuestas[x.id]?.respuesta || '',
+      score: estado.respuestas[x.id]?.score || 0,
+    }));
+    renderResultado();
+    mostrar('resultado');
+  }
+}
+
+// ═══════════════════════════════════════════════════════════
+// RESULTADO
+// ═══════════════════════════════════════════════════════════
+function renderResultado() {
+  const res = estado.resultados;
+  const total = Math.round(res.reduce((a,r) => a + r.score, 0) / res.length);
+  const correctas = res.filter(r => r.score >= 80).length;
+  const parciales = res.filter(r => r.score >= 50 && r.score < 80).length;
+  const incorrectas = res.filter(r => r.score < 50).length;
+
+  const emoji = total >= 80 ? '🏆' : total >= 60 ? '📈' : total >= 40 ? '💪' : '📚';
+  const msg = total >= 80 ? '¡Excelente dominio!' : total >= 60 ? '¡Muy buen progreso!' : total >= 40 ? 'Sigue practicando' : '¡Repasa y vuelve!';
+  const scoreCol = total >= 80 ? '#22c55e' : total >= 60 ? '#fbbf24' : '#ef4444';
+
+  document.getElementById('res-emoji').textContent = emoji;
+  document.getElementById('res-score-num').textContent = total + '%';
+  document.getElementById('res-score-num').style.color = scoreCol;
+  document.getElementById('res-score-circle').style.border = `5px solid ${scoreCol}`;
+  document.getElementById('res-msg').textContent = msg;
+  document.getElementById('res-correctas').textContent = correctas;
+  document.getElementById('res-parciales').textContent = parciales;
+  document.getElementById('res-incorrectas').textContent = incorrectas;
+  document.getElementById('nav-info').textContent = `Puntaje: ${total}%`;
+
+  renderListaResultados('todos');
+}
+
+function renderListaResultados(filtro) {
+  let lista = estado.resultados;
+  if (filtro === 'correctas') lista = lista.filter(r => r.score >= 80);
+  if (filtro === 'errores') lista = lista.filter(r => r.score < 80);
+
+  document.getElementById('lista-resultados').innerHTML = lista.map(r => {
+    const cat = catDe(r.tecnica);
+    const ok = r.score >= 80;
+    const col = scoreColor(r.score);
+    return `
+      <div class="result-row ${ok ? 'correcto' : 'incorrecto'} p-3">
+        <div class="d-flex justify-content-between align-items-start gap-3">
+          <div class="flex-grow-1">
+            <div class="small mb-1" style="color:${cat.color}">${cat.emoji} Técnica #${r.tecnica.id}</div>
+            <div class="fw-semibold mb-1">
+              <i class="bi bi-${ok ? 'check-circle-fill text-success' : 'x-circle-fill text-danger'} me-1"></i>
+              ${r.tecnica.nombre}
+            </div>
+            <div class="small text-muted">
+              Tu respuesta: <span class="text-${col}">"${r.respuesta || '(en blanco)'}"</span>
+            </div>
+          </div>
+          <span class="badge bg-${col} fs-6 fw-black align-self-center">${r.score}%</span>
+        </div>
+        <div class="progress mt-2" style="height:6px">
+          <div class="progress-bar bg-${col}" style="width:${r.score}%;transition:width .8s"></div>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+function filtrar(tipo) {
+  ['todos','correctas','errores'].forEach(f => {
+    const btn = document.getElementById('filtro-' + f);
+    btn.className = 'btn btn-sm rounded-pill ' + (f === tipo ? 'btn-indigo' : 'btn-outline-secondary');
+  });
+  renderListaResultados(tipo);
+}
+
+function repetirQuiz() { iniciarQuiz(estado.catActual?.id || null); }
+
+// ─── Init ─────────────────────────────────────────────────
+renderMenu();
+</script>
+</body>
+</html>

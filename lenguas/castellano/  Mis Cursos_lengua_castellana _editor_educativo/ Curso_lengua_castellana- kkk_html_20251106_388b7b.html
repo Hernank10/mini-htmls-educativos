@@ -1,0 +1,93 @@
+{% extends "base.html" %}
+
+{% block title %}Proyectos - Sistema Guía Pedagógica{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="h2 mb-0">
+        <i class="bi bi-folder me-2"></i>Gestión de Proyectos
+    </h1>
+    <a href="{{ url_for('crear_proyecto') }}" class="btn btn-primary">
+        <i class="bi bi-plus-circle me-2"></i>Nuevo Proyecto
+    </a>
+</div>
+
+<div class="card">
+    <div class="card-header bg-light">
+        <div class="row align-items-center">
+            <div class="col-md-6">
+                <h5 class="card-title mb-0">Lista de Proyectos</h5>
+            </div>
+            <div class="col-md-6">
+                <input type="text" class="form-control table-search" placeholder="Buscar proyectos...">
+            </div>
+        </div>
+    </div>
+    <div class="card-body">
+        {% if proyectos %}
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Contexto</th>
+                        <th>Autor</th>
+                        <th>Módulos</th>
+                        <th>Ejercicios</th>
+                        <th>Fecha</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for proyecto in proyectos %}
+                    <tr class="fade-in">
+                        <td class="fw-bold">{{ proyecto.nombre }}</td>
+                        <td>
+                            <span class="badge bg-{{ 'success' if proyecto.contexto_principal.value == 'rural' else 'primary' }}">
+                                {{ proyecto.contexto_principal.value|title }}
+                            </span>
+                        </td>
+                        <td>{{ proyecto.autor }}</td>
+                        <td>
+                            <span class="badge bg-secondary">{{ proyecto.modulos|length }}</span>
+                        </td>
+                        <td>
+                            <span class="badge bg-warning">
+                                {{ proyecto.modulos|sum(attribute='ejercicios')|length }}
+                            </span>
+                        </td>
+                        <td>{{ proyecto.fecha_creacion[:10] }}</td>
+                        <td>
+                            <div class="btn-group btn-group-sm">
+                                <a href="{{ url_for('modulos', proyecto_id=loop.index0) }}" 
+                                   class="btn btn-outline-primary" 
+                                   data-bs-toggle="tooltip" 
+                                   title="Gestionar Módulos">
+                                    <i class="bi bi-journals"></i>
+                                </a>
+                                <a href="{{ url_for('reportes', proyecto_id=loop.index0) }}" 
+                                   class="btn btn-outline-info"
+                                   data-bs-toggle="tooltip"
+                                   title="Ver Reporte">
+                                    <i class="bi bi-graph-up"></i>
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="text-center py-5">
+            <i class="bi bi-folder-x display-1 text-muted"></i>
+            <h4 class="text-muted mt-3">No hay proyectos creados</h4>
+            <p class="text-muted">Comienza creando tu primer proyecto educativo</p>
+            <a href="{{ url_for('crear_proyecto') }}" class="btn btn-primary">
+                <i class="bi bi-plus-circle me-2"></i>Crear Primer Proyecto
+            </a>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

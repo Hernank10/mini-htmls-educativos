@@ -1,0 +1,721 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EduPython - Aprendizaje Interactivo</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Roboto+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #3498db;
+            --secondary: #2ecc71;
+            --accent: #e74c3c;
+            --dark: #2c3e50;
+            --light: #ecf0f1;
+            --rainbow: linear-gradient(90deg, #ff5252, #ff9800, #ffeb3b, #4caf50, #2196f3, #9c27b0);
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f8f9fa;
+            color: #333;
+            overflow-x: hidden;
+        }
+        
+        .code-font {
+            font-family: 'Roboto Mono', monospace;
+        }
+        
+        .navbar-brand {
+            font-weight: 700;
+            font-size: 1.5rem;
+        }
+        
+        .hero-section {
+            background: linear-gradient(135deg, var(--dark) 0%, #34495e 100%);
+            color: white;
+            padding: 100px 0;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hero-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="none"><path d="M0,0 L100,0 L100,100 Z" fill="rgba(255,255,255,0.05)"/></svg>');
+            background-size: cover;
+        }
+        
+        .module-card {
+            transition: transform 0.3s, box-shadow 0.3s;
+            border: none;
+            border-radius: 15px;
+            overflow: hidden;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+        
+        .module-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.15);
+        }
+        
+        .card-header {
+            background: var(--rainbow);
+            color: white;
+            font-weight: 600;
+            padding: 15px 20px;
+            border: none;
+        }
+        
+        .rainbow-button {
+            background: var(--rainbow);
+            border: none;
+            color: white;
+            font-weight: 600;
+            padding: 12px 25px;
+            border-radius: 50px;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .rainbow-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        
+        .rainbow-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: 0.5s;
+        }
+        
+        .rainbow-button:hover::before {
+            left: 100%;
+        }
+        
+        .emoji {
+            font-size: 1.2em;
+            margin: 0 5px;
+        }
+        
+        .syntax-card {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 15px 0;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            border-left: 5px solid var(--primary);
+        }
+        
+        .game-preview {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 15px;
+            padding: 30px;
+            color: white;
+            margin: 30px 0;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .game-preview::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            animation: float 6s infinite linear;
+        }
+        
+        @keyframes float {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .particle {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: rgba(255,255,255,0.7);
+            border-radius: 50%;
+            animation: particle-float 5s infinite linear;
+        }
+        
+        @keyframes particle-float {
+            0% { transform: translateY(100px) rotate(0deg); opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { transform: translateY(-100px) rotate(360deg); opacity: 0; }
+        }
+        
+        .interactive-code {
+            background: #2d3748;
+            color: #e2e8f0;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            font-family: 'Roboto Mono', monospace;
+            position: relative;
+        }
+        
+        .code-comment {
+            color: #a0aec0;
+        }
+        
+        .code-keyword {
+            color: #ff79c6;
+        }
+        
+        .code-string {
+            color: #f1fa8c;
+        }
+        
+        .code-function {
+            color: #50fa7b;
+        }
+        
+        .progress-bar-rainbow {
+            background: var(--rainbow);
+        }
+        
+        footer {
+            background: var(--dark);
+            color: white;
+            padding: 40px 0 20px;
+        }
+        
+        .floating-emoji {
+            font-size: 2rem;
+            position: absolute;
+            animation: bounce 2s infinite alternate;
+        }
+        
+        @keyframes bounce {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(-20px); }
+        }
+        
+        .connector-badge {
+            background: var(--rainbow);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-weight: 600;
+            display: inline-block;
+            margin: 5px;
+        }
+        
+        .glass-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 20px;
+            margin: 15px 0;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
+        <div class="container">
+            <a class="navbar-brand" href="#">
+                <i class="fas fa-code me-2"></i>EduPython
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#inicio">Inicio</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#modulos">Módulos</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#juegos">Juegos</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#recursos">Recursos</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#contacto">Contacto</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="inicio" class="hero-section">
+        <div class="container position-relative">
+            <div class="row align-items-center">
+                <div class="col-lg-6">
+                    <h1 class="display-4 fw-bold mb-4">Aprende Programación y Lenguajes de Forma Divertida</h1>
+                    <p class="lead mb-4">Domina Python, crea aplicaciones educativas y mejora tu inglés y español con nuestro método interactivo y gamificado.</p>
+                    <a href="#modulos" class="rainbow-button">Comenzar Aprendizaje <i class="fas fa-arrow-right ms-2"></i></a>
+                </div>
+                <div class="col-lg-6 text-center">
+                    <div class="position-relative" style="height: 300px;">
+                        <div class="floating-emoji" style="top: 20px; left: 50px;">🐍</div>
+                        <div class="floating-emoji" style="top: 80px; right: 70px;">🎮</div>
+                        <div class="floating-emoji" style="bottom: 40px; left: 80px;">📚</div>
+                        <div class="floating-emoji" style="bottom: 100px; right: 40px;">💡</div>
+                        <div class="game-preview mx-auto" style="width: 80%; height: 200px;">
+                            <h4><i class="fas fa-gamepad me-2"></i>Syntax Master</h4>
+                            <p>Juego interactivo para aprender sintaxis Python</p>
+                            <button class="btn btn-light btn-sm">Probar Demo</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Floating Particles -->
+        <div class="particle" style="top: 20%; left: 10%; animation-delay: 0s;"></div>
+        <div class="particle" style="top: 60%; left: 80%; animation-delay: 1s;"></div>
+        <div class="particle" style="top: 40%; left: 40%; animation-delay: 2s;"></div>
+        <div class="particle" style="top: 80%; left: 30%; animation-delay: 3s;"></div>
+        <div class="particle" style="top: 30%; left: 70%; animation-delay: 4s;"></div>
+    </section>
+
+    <!-- Modules Section -->
+    <section id="modulos" class="py-5">
+        <div class="container">
+            <div class="row mb-5">
+                <div class="col-12 text-center">
+                    <h2 class="fw-bold mb-3">Plan de Estudios de 10 Módulos</h2>
+                    <p class="lead">Avanza desde Python básico hasta crear plataformas educativas completas</p>
+                </div>
+            </div>
+            
+            <div class="row">
+                <!-- Module 1 -->
+                <div class="col-md-6 col-lg-4">
+                    <div class="module-card card">
+                        <div class="card-header">
+                            <span class="emoji">🐍</span> Módulo 1: Fundamentos de Python
+                        </div>
+                        <div class="card-body">
+                            <p class="card-text">Variables, estructuras de datos, funciones y manejo de archivos con enfoque educativo.</p>
+                            <div class="mb-3">
+                                <small class="text-muted">Duración: 2 semanas</small>
+                                <div class="progress mt-2">
+                                    <div class="progress-bar progress-bar-rainbow" style="width: 100%">Completado</div>
+                                </div>
+                            </div>
+                            <button class="btn btn-outline-primary btn-sm" data-bs-toggle="modal" data-bs-target="#module1Modal">Ver Contenido</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Module 2 -->
+                <div class="col-md-6 col-lg-4">
+                    <div class="module-card card">
+                        <div class="card-header">
+                            <span class="emoji">🎨</span> Módulo 2: Interfaces con Tkinter
+                        </div>
+                        <div class="card-body">
+                            <p class="card-text">Creación de aplicaciones educativas con interfaces gráficas modernas.</p>
+                            <div class="mb-3">
+                                <small class="text-muted">Duración: 2 semanas</small>
+                                <div class="progress mt-2">
+                                    <div class="progress-bar progress-bar-rainbow" style="width: 100%">Completado</div>
+                                </div>
+                            </div>
+                            <button class="btn btn-outline-primary btn-sm" data-bs-toggle="modal" data-bs-target="#module2Modal">Ver Contenido</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Module 3 -->
+                <div class="col-md-6 col-lg-4">
+                    <div class="module-card card">
+                        <div class="card-header">
+                            <span class="emoji">📚</span> Módulo 3: Pedagogía Digital
+                        </div>
+                        <div class="card-body">
+                            <p class="card-text">Diseño de contenido educativo efectivo y teorías de aprendizaje aplicadas.</p>
+                            <div class="mb-3">
+                                <small class="text-muted">Duración: 1 semana</small>
+                                <div class="progress mt-2">
+                                    <div class="progress-bar progress-bar-rainbow" style="width: 80%">En Progreso</div>
+                                </div>
+                            </div>
+                            <button class="btn btn-outline-primary btn-sm">Continuar</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- More modules would go here -->
+                <div class="col-12 text-center mt-4">
+                    <a href="#" class="rainbow-button">Ver Todos los Módulos</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Games Section -->
+    <section id="juegos" class="py-5 bg-light">
+        <div class="container">
+            <div class="row mb-5">
+                <div class="col-12 text-center">
+                    <h2 class="fw-bold mb-3">Juegos Educativos Interactivos</h2>
+                    <p class="lead">Aprende programación y lenguaje mediante juegos inmersivos</p>
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class="col-lg-6 mb-4">
+                    <div class="game-preview">
+                        <h3><i class="fas fa-code me-2"></i>Syntax Master</h3>
+                        <p class="mb-3">Identifica si la sintaxis Python es correcta o incorrecta mientras practicas inglés y español.</p>
+                        
+                        <div class="glass-card mb-3">
+                            <h5>Ejemplo de Pregunta:</h5>
+                            <div class="syntax-card">
+                                <code class="code-font">
+                                    <span class="code-keyword">for</span> i <span class="code-keyword">in</span> <span class="code-function">range</span>(<span class="code-string">10</span>)<span class="code-keyword">:</span><br>
+                                    &nbsp;&nbsp;&nbsp;&nbsp;<span class="code-function">print</span>(i)
+                                </code>
+                            </div>
+                            <p class="mb-2"><small>🇺🇸 Loop that prints numbers 0 through 9</small></p>
+                            <p class="mb-0"><small>🇪🇸 Bucle que imprime números del 0 al 9</small></p>
+                        </div>
+                        
+                        <div class="d-flex gap-2 flex-wrap">
+                            <button class="btn btn-success"><i class="fas fa-check me-1"></i> Correcto</button>
+                            <button class="btn btn-danger"><i class="fas fa-times me-1"></i> Incorrecto</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-lg-6 mb-4">
+                    <div class="game-preview" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
+                        <h3><i class="fas fa-language me-2"></i>Compound Sentence Master</h3>
+                        <p class="mb-3">Aprende a crear oraciones compuestas en español e inglés con conectores adecuados.</p>
+                        
+                        <div class="glass-card mb-3">
+                            <h5>Conectores Disponibles:</h5>
+                            <div class="d-flex flex-wrap">
+                                <span class="connector-badge">porque 🇪🇸<br><small>because 🇺🇸</small></span>
+                                <span class="connector-badge">así que 🇪🇸<br><small>so 🇺🇸</small></span>
+                                <span class="connector-badge">cuando 🇪🇸<br><small>when 🇺🇸</small></span>
+                                <span class="connector-badge">por lo tanto 🇪🇸<br><small>therefore 🇺🇸</small></span>
+                            </div>
+                        </div>
+                        
+                        <div class="glass-card">
+                            <h5>Ejemplo de Oración:</h5>
+                            <p class="mb-1">🇪🇸 Estudié mucho. Aprobé el examen.</p>
+                            <p class="mb-2">🇺🇸 I studied hard. I passed the exam.</p>
+                            <p class="mb-0 fw-bold text-success">→ Estudié mucho, por lo tanto aprobé el examen.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Resources Section -->
+    <section id="recursos" class="py-5">
+        <div class="container">
+            <div class="row mb-5">
+                <div class="col-12 text-center">
+                    <h2 class="fw-bold mb-3">Recursos de Aprendizaje</h2>
+                    <p class="lead">Material complementario para mejorar tus habilidades</p>
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100">
+                        <div class="card-body text-center">
+                            <i class="fas fa-file-code display-4 text-primary mb-3"></i>
+                            <h5 class="card-title">Ejemplos de Código</h5>
+                            <p class="card-text">Accede a todos los ejemplos de código de los módulos para practicar.</p>
+                            <a href="#" class="btn btn-primary">Descargar</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100">
+                        <div class="card-body text-center">
+                            <i class="fas fa-gamepad display-4 text-success mb-3"></i>
+                            <h5 class="card-title">Juegos Descargables</h5>
+                            <p class="card-text">Versiones completas de los juegos educativos para usar offline.</p>
+                            <a href="#" class="btn btn-success">Descargar Juegos</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100">
+                        <div class="card-body text-center">
+                            <i class="fas fa-video display-4 text-info mb-3"></i>
+                            <h5 class="card-title">Video Tutoriales</h5>
+                            <p class="card-text">Tutoriales en video que explican cada concepto paso a paso.</p>
+                            <a href="#" class="btn btn-info">Ver Tutoriales</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Interactive Code Example -->
+            <div class="row mt-5">
+                <div class="col-12">
+                    <h4 class="mb-3">Prueba Python Directamente en el Navegador</h4>
+                    <div class="interactive-code">
+                        <div class="mb-3">
+                            <span class="code-comment"># Ejemplo: Sistema de aprendizaje de vocabulario</span><br>
+                            <span class="code-keyword">def</span> <span class="code-function">practicar_vocabulario</span>():<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;diccionario = {<span class="code-string">"casa"</span>: <span class="code-string">"house"</span>, <span class="code-string">"perro"</span>: <span class="code-string">"dog"</span>}<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;aciertos = <span class="code-string">0</span><br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;<span class="code-keyword">for</span> español, inglés <span class="code-keyword">in</span> diccionario.<span class="code-function">items</span>():<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;respuesta = <span class="code-function">input</span>(<span class="code-string">f"¿Cómo se dice '</span>{español}<span class="code-string">' en inglés?"</span>)<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="code-keyword">if</span> respuesta.<span class="code-function">lower</span>() == inglés:<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="code-function">print</span>(<span class="code-string">"¡Correcto! 🎉"</span>)<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;aciertos += <span class="code-string">1</span><br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="code-keyword">else</span>:<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="code-function">print</span>(<span class="code-string">f"La respuesta correcta es: {inglés}"</span>)<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;<span class="code-function">print</span>(<span class="code-string">f"Puntuación: {aciertos}/{len(diccionario)}"</span>)<br>
+                            <br>
+                            <span class="code-comment"># Ejecutar la función</span><br>
+                            <span class="code-function">practicar_vocabulario</span>()
+                        </div>
+                        <button class="btn btn-light">Ejecutar Código</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contacto" class="py-5 bg-dark text-white">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 mx-auto text-center">
+                    <h2 class="fw-bold mb-3">¿Listo para Comenzar tu Aprendizaje?</h2>
+                    <p class="lead mb-4">Únete a nuestra comunidad de estudiantes y profesores que están transformando la educación con tecnología.</p>
+                    <a href="#" class="rainbow-button me-3">Registrarse Gratis</a>
+                    <a href="#" class="btn btn-outline-light">Contactar Soporte</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4 mb-4">
+                    <h5><i class="fas fa-code me-2"></i>EduPython</h5>
+                    <p>Plataforma educativa para aprender programación y lenguajes de forma interactiva y divertida.</p>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <h5>Enlaces Rápidos</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="#inicio" class="text-white-50">Inicio</a></li>
+                        <li><a href="#modulos" class="text-white-50">Módulos</a></li>
+                        <li><a href="#juegos" class="text-white-50">Juegos</a></li>
+                        <li><a href="#recursos" class="text-white-50">Recursos</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <h5>Conecta con Nosotros</h5>
+                    <div class="d-flex gap-3">
+                        <a href="#" class="text-white-50"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="text-white-50"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="text-white-50"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="text-white-50"><i class="fab fa-github"></i></a>
+                    </div>
+                </div>
+            </div>
+            <hr class="my-4 bg-white-50">
+            <div class="row">
+                <div class="col-md-6">
+                    <p class="mb-0">&copy; 2023 EduPython. Todos los derechos reservados.</p>
+                </div>
+                <div class="col-md-6 text-md-end">
+                    <a href="#" class="text-white-50 me-3">Política de Privacidad</a>
+                    <a href="#" class="text-white-50">Términos de Servicio</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Module 1 Modal -->
+    <div class="modal fade" id="module1Modal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"><span class="emoji">🐍</span> Módulo 1: Fundamentos de Python</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <h6>Contenido del Módulo:</h6>
+                    <ul>
+                        <li>Variables y tipos de datos</li>
+                        <li>Estructuras de datos (listas, diccionarios)</li>
+                        <li>Funciones y control de flujo</li>
+                        <li>Manejo de archivos JSON</li>
+                        <li>Proyecto: Sistema de aprendizaje de vocabulario</li>
+                    </ul>
+                    
+                    <h6 class="mt-4">Ejemplo de Código:</h6>
+                    <div class="interactive-code">
+                        <span class="code-comment"># Diccionario bilingüe español-inglés</span><br>
+                        diccionario = {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="code-string">"casa"</span>: <span class="code-string">"house"</span>,<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="code-string">"perro"</span>: <span class="code-string">"dog"</span>,<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="code-string">"gato"</span>: <span class="code-string">"cat"</span><br>
+                        }<br>
+                        <br>
+                        <span class="code-comment"># Función para practicar vocabulario</span><br>
+                        <span class="code-keyword">def</span> <span class="code-function">practicar_vocabulario</span>():<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;aciertos = <span class="code-string">0</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="code-keyword">for</span> palabra <span class="code-keyword">in</span> diccionario:<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;respuesta = <span class="code-function">input</span>(<span class="code-string">f"¿Cómo se dice '</span>{palabra}<span class="code-string">' en inglés?"</span>)<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="code-keyword">if</span> respuesta == diccionario[palabra]:<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="code-function">print</span>(<span class="code-string">"¡Correcto!"</span>)<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;aciertos += <span class="code-string">1</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="code-function">print</span>(<span class="code-string">f"Puntuación final: {aciertos}"</span>)
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    <button type="button" class="btn btn-primary">Acceder al Módulo</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Module 2 Modal -->
+    <div class="modal fade" id="module2Modal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"><span class="emoji">🎨</span> Módulo 2: Interfaces con Tkinter</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <h6>Contenido del Módulo:</h6>
+                    <ul>
+                        <li>Fundamentos de Tkinter y widgets</li>
+                        <li>Diseño de interfaces modernas</li>
+                        <li>Manejo de eventos y interactividad</li>
+                        <li>Integración con sistemas de archivos</li>
+                        <li>Proyecto: Aplicación educativa completa</li>
+                    </ul>
+                    
+                    <h6 class="mt-4">Características de la Aplicación:</h6>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="card mb-3">
+                                <div class="card-body">
+                                    <h6><i class="fas fa-gamepad text-primary me-2"></i>Modo Práctica</h6>
+                                    <p class="small">Ejercicios interactivos de vocabulario con feedback inmediato.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card mb-3">
+                                <div class="card-body">
+                                    <h6><i class="fas fa-book text-success me-2"></i>Gestión de Diccionario</h6>
+                                    <p class="small">Añade y gestiona tu propio vocabulario personalizado.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card mb-3">
+                                <div class="card-body">
+                                    <h6><i class="fas fa-chart-line text-info me-2"></i>Seguimiento de Progreso</h6>
+                                    <p class="small">Visualiza tu avance con estadísticas y gráficos.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card mb-3">
+                                <div class="card-body">
+                                    <h6><i class="fas fa-palette text-warning me-2"></i>Interfaz Moderna</h6>
+                                    <p class="small">Diseño atractivo con colores vibrantes y emoticonos.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    <button type="button" class="btn btn-primary">Acceder al Módulo</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        // Simple interactive elements
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add floating particles dynamically
+            const particlesContainer = document.querySelector('.hero-section');
+            for (let i = 0; i < 10; i++) {
+                const particle = document.createElement('div');
+                particle.classList.add('particle');
+                particle.style.top = `${Math.random() * 100}%`;
+                particle.style.left = `${Math.random() * 100}%`;
+                particle.style.animationDelay = `${Math.random() * 5}s`;
+                particlesContainer.appendChild(particle);
+            }
+            
+            // Simple game simulation for Syntax Master
+            const correctButtons = document.querySelectorAll('.btn-success');
+            const incorrectButtons = document.querySelectorAll('.btn-danger');
+            
+            correctButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    alert('¡Correcto! 🎉\nEsta sintaxis Python es válida.');
+                });
+            });
+            
+            incorrectButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    alert('Incorrecto ❌\nEsta sintaxis Python es válida.');
+                });
+            });
+            
+            // Rainbow button hover effect enhancement
+            const rainbowButtons = document.querySelectorAll('.rainbow-button');
+            rainbowButtons.forEach(button => {
+                button.addEventListener('mouseenter', function() {
+                    this.style.background = 'linear-gradient(90deg, #9c27b0, #2196f3, #4caf50, #ffeb3b, #ff9800, #ff5252)';
+                });
+                
+                button.addEventListener('mouseleave', function() {
+                    this.style.background = 'linear-gradient(90deg, #ff5252, #ff9800, #ffeb3b, #4caf50, #2196f3, #9c27b0)';
+                });
+            });
+        });
+    </script>
+</body>
+</html>

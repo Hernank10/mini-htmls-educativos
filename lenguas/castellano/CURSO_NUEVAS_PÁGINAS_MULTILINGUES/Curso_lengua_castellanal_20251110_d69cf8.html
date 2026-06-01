@@ -1,0 +1,745 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aprendizaje de Adverbios - Plataforma Educativa</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #4361ee;
+            --secondary: #3f37c9;
+            --accent: #4895ef;
+            --light: #f8f9fa;
+            --success: #4cc9f0;
+            --warning: #f72585;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f7fb;
+            color: #333;
+        }
+        
+        .navbar {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        
+        .hero-section {
+            background: linear-gradient(rgba(67, 97, 238, 0.85), rgba(63, 55, 201, 0.9)), 
+                        url('https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80');
+            background-size: cover;
+            background-position: center;
+            color: white;
+            padding: 100px 0;
+            border-radius: 0 0 30px 30px;
+            margin-bottom: 50px;
+        }
+        
+        .card {
+            border: none;
+            border-radius: 15px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+            transition: transform 0.3s, box-shadow 0.3s;
+            margin-bottom: 25px;
+            overflow: hidden;
+        }
+        
+        .card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 25px rgba(0, 0, 0, 0.15);
+        }
+        
+        .card-header {
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            color: white;
+            border-bottom: none;
+            font-weight: 600;
+        }
+        
+        .category-card {
+            height: 100%;
+        }
+        
+        .progress {
+            height: 10px;
+            border-radius: 10px;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border: none;
+            border-radius: 50px;
+            padding: 10px 25px;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 7px 15px rgba(67, 97, 238, 0.4);
+        }
+        
+        .btn-outline-primary {
+            border-color: var(--primary);
+            color: var(--primary);
+            border-radius: 50px;
+            padding: 10px 25px;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+        
+        .btn-outline-primary:hover {
+            background-color: var(--primary);
+            transform: translateY(-3px);
+        }
+        
+        .badge-category {
+            background: linear-gradient(135deg, var(--accent), var(--success));
+            color: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+        }
+        
+        .example-card {
+            border-left: 5px solid var(--primary);
+        }
+        
+        .quiz-option {
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .quiz-option:hover {
+            background-color: rgba(67, 97, 238, 0.1);
+        }
+        
+        .quiz-option.selected {
+            background-color: rgba(67, 97, 238, 0.2);
+            border: 2px solid var(--primary);
+        }
+        
+        .correct-answer {
+            background-color: rgba(76, 201, 240, 0.2);
+            border: 2px solid var(--success);
+        }
+        
+        .wrong-answer {
+            background-color: rgba(247, 37, 133, 0.2);
+            border: 2px solid var(--warning);
+        }
+        
+        .section-title {
+            position: relative;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+        }
+        
+        .section-title:after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 80px;
+            height: 4px;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            border-radius: 2px;
+        }
+        
+        .floating-btn {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 100;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s;
+        }
+        
+        .floating-btn:hover {
+            transform: scale(1.1);
+            color: white;
+        }
+        
+        .tab-content {
+            padding: 20px 0;
+        }
+        
+        .nav-pills .nav-link {
+            border-radius: 50px;
+            margin: 5px;
+            padding: 10px 20px;
+            color: #555;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+        
+        .nav-pills .nav-link.active {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+        }
+        
+        .stats-card {
+            text-align: center;
+            padding: 20px;
+        }
+        
+        .stats-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 0;
+        }
+        
+        footer {
+            background: linear-gradient(135deg, #2a2d3e, #1a1d2e);
+            color: white;
+            padding: 50px 0 20px;
+            margin-top: 80px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark sticky-top">
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center" href="#">
+                <i class="fas fa-book-open me-2"></i>
+                <span>Aprendizaje de Adverbios</span>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#inicio">Inicio</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#teoria">Teoría</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#practica">Práctica</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#cuestionario">Cuestionario</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#ejemplos">Mis Ejemplos</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="inicio" class="hero-section">
+        <div class="container text-center">
+            <h1 class="display-4 fw-bold mb-4">Domina el uso de los adverbios</h1>
+            <p class="lead mb-4">Aprende, practica y mejora tu comprensión de los adverbios en español con nuestra plataforma educativa interactiva</p>
+            <div class="d-flex justify-content-center flex-wrap gap-3">
+                <a href="#teoria" class="btn btn-light btn-lg px-4 py-2">Comenzar a aprender</a>
+                <a href="#cuestionario" class="btn btn-outline-light btn-lg px-4 py-2">Evaluar mis conocimientos</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Estadísticas -->
+    <section class="container mb-5">
+        <div class="row g-4">
+            <div class="col-md-3 col-sm-6">
+                <div class="card stats-card">
+                    <h3 class="stats-number">9</h3>
+                    <p class="text-muted">Categorías de adverbios</p>
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-6">
+                <div class="card stats-card">
+                    <h3 class="stats-number">50+</h3>
+                    <p class="text-muted">Ejemplos para practicar</p>
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-6">
+                <div class="card stats-card">
+                    <h3 class="stats-number">100</h3>
+                    <p class="text-muted">Ejemplos personalizados</p>
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-6">
+                <div class="card stats-card">
+                    <h3 class="stats-number">4.8</h3>
+                    <p class="text-muted">Valoración de usuarios</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Teoría -->
+    <section id="teoria" class="container mb-5">
+        <h2 class="section-title">Teoría: Clasificación de Adverbios</h2>
+        <p class="lead mb-4">Los adverbios son palabras invariables que modifican verbos, adjetivos u otros adverbios. A continuación, te presentamos las principales categorías:</p>
+        
+        <div class="row g-4">
+            <!-- Categoría 1 -->
+            <div class="col-lg-4 col-md-6">
+                <div class="card category-card">
+                    <div class="card-header">
+                        <h5 class="mb-0">Adverbios de Lugar</h5>
+                    </div>
+                    <div class="card-body">
+                        <p>Indican ubicación o dirección en el espacio.</p>
+                        <div class="mb-3">
+                            <span class="badge-category">cerca</span>
+                            <span class="badge-category">lejos</span>
+                            <span class="badge-category">arriba</span>
+                            <span class="badge-category">dentro</span>
+                        </div>
+                        <p class="small text-muted">Ejemplo: "El parque está <strong>cerca</strong> de mi casa."</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Categoría 2 -->
+            <div class="col-lg-4 col-md-6">
+                <div class="card category-card">
+                    <div class="card-header">
+                        <h5 class="mb-0">Adverbios de Tiempo</h5>
+                    </div>
+                    <div class="card-body">
+                        <p>Señalan cuándo ocurre una acción.</p>
+                        <div class="mb-3">
+                            <span class="badge-category">antes</span>
+                            <span class="badge-category">después</span>
+                            <span class="badge-category">nunca</span>
+                            <span class="badge-category">siempre</span>
+                        </div>
+                        <p class="small text-muted">Ejemplo: "<strong>Nunca</strong> olvidaré ese viaje a la montaña."</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Categoría 3 -->
+            <div class="col-lg-4 col-md-6">
+                <div class="card category-card">
+                    <div class="card-header">
+                        <h5 class="mb-0">Adverbios de Modo</h5>
+                    </div>
+                    <div class="card-body">
+                        <p>Describen cómo se realiza una acción.</p>
+                        <div class="mb-3">
+                            <span class="badge-category">bien</span>
+                            <span class="badge-category">mal</span>
+                            <span class="badge-category">despacio</span>
+                            <span class="badge-category">claramente</span>
+                        </div>
+                        <p class="small text-muted">Ejemplo: "Los pájaros cantaban <strong>dulcemente</strong> al amanecer."</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Más categorías... -->
+            <div class="col-lg-4 col-md-6">
+                <div class="card category-card">
+                    <div class="card-header">
+                        <h5 class="mb-0">Adverbios de Cantidad</h5>
+                    </div>
+                    <div class="card-body">
+                        <p>Expresan grado o medida.</p>
+                        <div class="mb-3">
+                            <span class="badge-category">mucho</span>
+                            <span class="badge-category">poco</span>
+                            <span class="badge-category">demasiado</span>
+                            <span class="badge-category">casi</span>
+                        </div>
+                        <p class="small text-muted">Ejemplo: "El pastel está <strong>demasiado</strong> dulce."</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-lg-4 col-md-6">
+                <div class="card category-card">
+                    <div class="card-header">
+                        <h5 class="mb-0">Adverbios de Afirmación</h5>
+                    </div>
+                    <div class="card-body">
+                        <p>Confirman o afirman algo.</p>
+                        <div class="mb-3">
+                            <span class="badge-category">sí</span>
+                            <span class="badge-category">ciertamente</span>
+                            <span class="badge-category">efectivamente</span>
+                            <span class="badge-category">claro</span>
+                        </div>
+                        <p class="small text-muted">Ejemplo: "<strong>Sí</strong>, iré contigo al concierto."</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-lg-4 col-md-6">
+                <div class="card category-card">
+                    <div class="card-header">
+                        <h5 class="mb-0">Adverbios de Negación</h5>
+                    </div>
+                    <div class="card-body">
+                        <p>Niegan o contradicen algo.</p>
+                        <div class="mb-3">
+                            <span class="badge-category">no</span>
+                            <span class="badge-category">nunca</span>
+                            <span class="badge-category">jamás</span>
+                            <span class="badge-category">tampoco</span>
+                        </div>
+                        <p class="small text-muted">Ejemplo: "<strong>No</strong> hay nada como un buen libro."</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="text-center mt-4">
+            <a href="#practica" class="btn btn-primary btn-lg">Practicar con ejercicios</a>
+        </div>
+    </section>
+
+    <!-- Práctica -->
+    <section id="practica" class="container mb-5">
+        <h2 class="section-title">Práctica Guiada</h2>
+        <p class="lead mb-4">Identifica la categoría de cada adverbio en los siguientes ejemplos:</p>
+        
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">Ejercicio 1 de 5</h5>
+                <div class="progress" style="width: 200px;">
+                    <div class="progress-bar" role="progressbar" style="width: 20%;" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100"></div>
+                </div>
+            </div>
+            <div class="card-body">
+                <h4 class="mb-4">"El parque está <span class="text-primary fw-bold">cerca</span> de mi casa."</h4>
+                
+                <p class="mb-3">¿A qué categoría pertenece el adverbio destacado?</p>
+                
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <div class="quiz-option p-3 border rounded" data-category="lugar">
+                            <strong>Lugar</strong> - Indica ubicación espacial
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="quiz-option p-3 border rounded" data-category="tiempo">
+                            <strong>Tiempo</strong> - Señala momento temporal
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="quiz-option p-3 border rounded" data-category="modo">
+                            <strong>Modo</strong> - Describe forma de acción
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="quiz-option p-3 border rounded" data-category="cantidad">
+                            <strong>Cantidad</strong> - Expresa grado o medida
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="mt-4 text-end">
+                    <button class="btn btn-primary" id="check-answer">Comprobar respuesta</button>
+                    <button class="btn btn-outline-primary ms-2" id="next-example" disabled>Siguiente ejercicio</button>
+                </div>
+                
+                <div id="feedback" class="mt-3 alert d-none"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Cuestionario -->
+    <section id="cuestionario" class="container mb-5">
+        <h2 class="section-title">Cuestionario Interactivo</h2>
+        <p class="lead mb-4">Pon a prueba tus conocimientos con este cuestionario de 10 preguntas:</p>
+        
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">Pregunta 1 de 10</h5>
+            </div>
+            <div class="card-body">
+                <h4 class="mb-4">"<span class="text-primary fw-bold">Nunca</span> olvidaré ese viaje a la montaña."</h4>
+                
+                <p class="mb-3">¿Qué tipo de adverbio es "nunca"?</p>
+                
+                <div class="list-group">
+                    <a href="#" class="list-group-item list-group-item-action quiz-option">Adverbio de lugar</a>
+                    <a href="#" class="list-group-item list-group-item-action quiz-option">Adverbio de tiempo</a>
+                    <a href="#" class="list-group-item list-group-item-action quiz-option">Adverbio de modo</a>
+                    <a href="#" class="list-group-item list-group-item-action quiz-option">Adverbio de cantidad</a>
+                </div>
+                
+                <div class="mt-4 d-flex justify-content-between">
+                    <button class="btn btn-outline-primary" disabled>Anterior</button>
+                    <button class="btn btn-primary">Siguiente</button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card mt-4">
+            <div class="card-header">
+                <h5 class="mb-0">Tu progreso</h5>
+            </div>
+            <div class="card-body">
+                <div class="d-flex justify-content-between mb-2">
+                    <span>Preguntas contestadas:</span>
+                    <span>0/10</span>
+                </div>
+                <div class="progress mb-3">
+                    <div class="progress-bar" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">0%</div>
+                </div>
+                <div class="d-flex justify-content-between mb-2">
+                    <span>Respuestas correctas:</span>
+                    <span>0</span>
+                </div>
+                <div class="text-center">
+                    <button class="btn btn-success">Finalizar cuestionario</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Mis Ejemplos -->
+    <section id="ejemplos" class="container mb-5">
+        <h2 class="section-title">Crear y Gestionar Ejemplos</h2>
+        <p class="lead mb-4">Añade tus propios ejemplos para practicar y repasarlos después:</p>
+        
+        <div class="row">
+            <div class="col-lg-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0">Crear nuevo ejemplo</h5>
+                    </div>
+                    <div class="card-body">
+                        <form id="example-form">
+                            <div class="mb-3">
+                                <label for="example-text" class="form-label">Escribe tu oración:</label>
+                                <textarea class="form-control" id="example-text" rows="3" placeholder="Ej: El niño corrió rápidamente hacia su madre."></textarea>
+                            </div>
+                            <div class="mb-3">
+                                <label for="example-category" class="form-label">Selecciona la categoría:</label>
+                                <select class="form-select" id="example-category">
+                                    <option value="lugar">Lugar</option>
+                                    <option value="tiempo">Tiempo</option>
+                                    <option value="modo">Modo</option>
+                                    <option value="cantidad">Cantidad</option>
+                                    <option value="afirmacion">Afirmación</option>
+                                    <option value="negacion">Negación</option>
+                                    <option value="duda">Duda</option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label for="example-adverb" class="form-label">Adverbio destacado:</label>
+                                <input type="text" class="form-control" id="example-adverb" placeholder="Ej: rápidamente">
+                            </div>
+                            <button type="submit" class="btn btn-primary">Guardar ejemplo</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-lg-6">
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0">Mis ejemplos guardados</h5>
+                        <span class="badge bg-primary">3/100</span>
+                    </div>
+                    <div class="card-body">
+                        <div class="example-card p-3 mb-3 bg-light rounded">
+                            <p class="mb-1">"El niño corrió <strong>rápidamente</strong> hacia su madre."</p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="badge-category">modo</span>
+                                <div>
+                                    <button class="btn btn-sm btn-outline-primary"><i class="fas fa-edit"></i></button>
+                                    <button class="btn btn-sm btn-outline-danger"><i class="fas fa-trash"></i></button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="example-card p-3 mb-3 bg-light rounded">
+                            <p class="mb-1">"<strong>Ayer</strong> visité a mis abuelos en el campo."</p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="badge-category">tiempo</span>
+                                <div>
+                                    <button class="btn btn-sm btn-outline-primary"><i class="fas fa-edit"></i></button>
+                                    <button class="btn btn-sm btn-outline-danger"><i class="fas fa-trash"></i></button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="example-card p-3 mb-3 bg-light rounded">
+                            <p class="mb-1">"La tienda está muy <strong>lejos</strong> de aquí."</p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="badge-category">lugar</span>
+                                <div>
+                                    <button class="btn btn-sm btn-outline-primary"><i class="fas fa-edit"></i></button>
+                                    <button class="btn btn-sm btn-outline-danger"><i class="fas fa-trash"></i></button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="text-center mt-3">
+                            <button class="btn btn-outline-primary">Ver todos mis ejemplos</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4 mb-4">
+                    <h5 class="mb-3">Aprendizaje de Adverbios</h5>
+                    <p>Plataforma educativa interactiva para dominar el uso de los adverbios en español.</p>
+                    <div class="d-flex gap-3">
+                        <a href="#" class="text-light"><i class="fab fa-facebook fa-lg"></i></a>
+                        <a href="#" class="text-light"><i class="fab fa-twitter fa-lg"></i></a>
+                        <a href="#" class="text-light"><i class="fab fa-instagram fa-lg"></i></a>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-md-6 mb-4">
+                    <h5 class="mb-3">Enlaces</h5>
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><a href="#inicio" class="text-light text-decoration-none">Inicio</a></li>
+                        <li class="mb-2"><a href="#teoria" class="text-light text-decoration-none">Teoría</a></li>
+                        <li class="mb-2"><a href="#practica" class="text-light text-decoration-none">Práctica</a></li>
+                        <li class="mb-2"><a href="#cuestionario" class="text-light text-decoration-none">Cuestionario</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <h5 class="mb-3">Recursos</h5>
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><a href="#" class="text-light text-decoration-none">Descargar ejercicios</a></li>
+                        <li class="mb-2"><a href="#" class="text-light text-decoration-none">Guía de estudio</a></li>
+                        <li class="mb-2"><a href="#" class="text-light text-decoration-none">Diccionario de adverbios</a></li>
+                        <li class="mb-2"><a href="#" class="text-light text-decoration-none">Blog educativo</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-3 mb-4">
+                    <h5 class="mb-3">Suscríbete</h5>
+                    <p>Recibe actualizaciones y nuevos recursos educativos.</p>
+                    <div class="input-group">
+                        <input type="email" class="form-control" placeholder="Tu correo electrónico">
+                        <button class="btn btn-primary" type="button">Enviar</button>
+                    </div>
+                </div>
+            </div>
+            <hr class="mt-4 mb-4">
+            <div class="text-center">
+                <p class="mb-0">&copy; 2023 Aprendizaje de Adverbios. Todos los derechos reservados.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Botón flotante -->
+    <a href="#inicio" class="floating-btn">
+        <i class="fas fa-arrow-up"></i>
+    </a>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Ejemplo de funcionalidad JavaScript para la página
+        document.addEventListener('DOMContentLoaded', function() {
+            // Navegación suave
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const target = document.querySelector(this.getAttribute('href'));
+                    if (target) {
+                        target.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                    }
+                });
+            });
+            
+            // Selección de opciones en ejercicios
+            const quizOptions = document.querySelectorAll('.quiz-option');
+            quizOptions.forEach(option => {
+                option.addEventListener('click', function() {
+                    // Quitar selección anterior
+                    quizOptions.forEach(opt => {
+                        opt.classList.remove('selected');
+                    });
+                    
+                    // Seleccionar actual
+                    this.classList.add('selected');
+                    
+                    // Habilitar botón de comprobar
+                    document.getElementById('check-answer').disabled = false;
+                });
+            });
+            
+            // Comprobar respuesta
+            document.getElementById('check-answer').addEventListener('click', function() {
+                const selectedOption = document.querySelector('.quiz-option.selected');
+                if (!selectedOption) {
+                    alert('Por favor, selecciona una opción antes de comprobar.');
+                    return;
+                }
+                
+                const selectedCategory = selectedOption.getAttribute('data-category');
+                const feedback = document.getElementById('feedback');
+                
+                if (selectedCategory === 'lugar') {
+                    feedback.innerHTML = '<i class="fas fa-check-circle text-success me-2"></i> ¡Correcto! "Cerca" es un adverbio de lugar.';
+                    feedback.classList.remove('d-none', 'alert-danger');
+                    feedback.classList.add('alert-success');
+                    selectedOption.classList.add('correct-answer');
+                } else {
+                    feedback.innerHTML = '<i class="fas fa-times-circle text-danger me-2"></i> Incorrecto. "Cerca" es un adverbio de lugar.';
+                    feedback.classList.remove('d-none', 'alert-success');
+                    feedback.classList.add('alert-danger');
+                    selectedOption.classList.add('wrong-answer');
+                    
+                    // Mostrar la opción correcta
+                    quizOptions.forEach(opt => {
+                        if (opt.getAttribute('data-category') === 'lugar') {
+                            opt.classList.add('correct-answer');
+                        }
+                    });
+                }
+                
+                // Deshabilitar botón de comprobar y habilitar siguiente
+                this.disabled = true;
+                document.getElementById('next-example').disabled = false;
+            });
+            
+            // Manejo del formulario de ejemplos
+            document.getElementById('example-form').addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const exampleText = document.getElementById('example-text').value;
+                const exampleCategory = document.getElementById('example-category').value;
+                const exampleAdverb = document.getElementById('example-adverb').value;
+                
+                if (!exampleText || !exampleAdverb) {
+                    alert('Por favor, completa todos los campos.');
+                    return;
+                }
+                
+                // Aquí normalmente enviaríamos los datos al servidor
+                alert('Ejemplo guardado correctamente. En una aplicación real, esto se guardaría en una base de datos.');
+                
+                // Limpiar formulario
+                this.reset();
+            });
+        });
+    </script>
+</body>
+</html>

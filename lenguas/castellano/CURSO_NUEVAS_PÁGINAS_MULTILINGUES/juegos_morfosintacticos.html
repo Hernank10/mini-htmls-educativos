@@ -1,0 +1,1071 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>30 Juegos Morfosintácticos · ES/EN</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #0d0d0d;
+    --paper: #f5f0e8;
+    --accent: #c8391a;
+    --gold: #d4a017;
+    --teal: #1a7a6e;
+    --blue: #1a3a6e;
+    --light: #faf7f2;
+    --border: #0d0d0d;
+    --correct: #1a7a6e;
+    --wrong: #c8391a;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: 'IBM Plex Sans', sans-serif;
+    min-height: 100vh;
+  }
+
+  /* HEADER */
+  header {
+    background: var(--ink);
+    color: var(--paper);
+    padding: 2rem 2rem 1.5rem;
+    border-bottom: 4px solid var(--accent);
+    position: relative;
+    overflow: hidden;
+  }
+  header::before {
+    content: 'ES · EN';
+    position: absolute;
+    right: -1rem;
+    top: 50%;
+    transform: translateY(-50%) rotate(90deg);
+    font-family: 'Playfair Display', serif;
+    font-size: 5rem;
+    opacity: 0.07;
+    color: var(--gold);
+    white-space: nowrap;
+    pointer-events: none;
+  }
+  header h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.6rem, 4vw, 2.8rem);
+    font-weight: 900;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+  }
+  header h1 span { color: var(--gold); }
+  header p {
+    margin-top: 0.5rem;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.75rem;
+    opacity: 0.6;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+  .header-meta {
+    display: flex;
+    gap: 1.5rem;
+    margin-top: 1.2rem;
+    flex-wrap: wrap;
+  }
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    background: rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.2);
+    padding: 0.3rem 0.8rem;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    border-radius: 2px;
+  }
+  .badge.red { background: var(--accent); border-color: var(--accent); }
+
+  /* SCORE BAR */
+  #scorebar {
+    background: var(--ink);
+    color: var(--paper);
+    padding: 0.6rem 2rem;
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.75rem;
+    letter-spacing: 0.06em;
+    border-bottom: 2px solid var(--gold);
+  }
+  .score-item { display: flex; align-items: center; gap: 0.5rem; }
+  .score-val { font-weight: 600; font-size: 1.1rem; }
+  .score-val.green { color: #4ecdc4; }
+  .score-val.red { color: var(--accent); }
+  .progress-wrap {
+    flex: 1;
+    height: 6px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+  #progress-bar {
+    height: 100%;
+    background: var(--gold);
+    width: 0%;
+    transition: width 0.4s ease;
+  }
+
+  /* GRID */
+  .category-section {
+    padding: 0;
+  }
+  .category-header {
+    background: var(--blue);
+    color: white;
+    padding: 0.8rem 2rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.72rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    border-top: 2px solid rgba(255,255,255,0.1);
+  }
+  .category-header .cat-num {
+    background: var(--gold);
+    color: var(--ink);
+    width: 22px; height: 22px;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 700;
+    font-size: 0.65rem;
+    border-radius: 2px;
+    flex-shrink: 0;
+  }
+  .cat-teal { background: var(--teal); }
+  .cat-accent { background: var(--accent); }
+  .cat-dark { background: #1a1a2e; }
+  .cat-brown { background: #5c3d2e; }
+
+  .games-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    gap: 0;
+    border-top: 1px solid #ccc;
+  }
+
+  /* GAME CARD */
+  .game-card {
+    border: 1px solid #ccc;
+    border-top: none;
+    border-left: none;
+    background: var(--light);
+    padding: 1.5rem;
+    position: relative;
+    transition: background 0.2s;
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+  }
+  .game-card:hover { background: white; }
+  .game-card.completed { border-left: 4px solid var(--correct); }
+  .game-card.failed { border-left: 4px solid var(--wrong); }
+
+  .game-number {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.65rem;
+    color: #999;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+  .game-title-es {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.05rem;
+    font-weight: 700;
+    line-height: 1.2;
+    color: var(--ink);
+  }
+  .game-title-en {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.72rem;
+    color: #666;
+    letter-spacing: 0.04em;
+  }
+  .game-type-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.62rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 0.2rem 0.5rem;
+    border: 1px solid currentColor;
+    border-radius: 2px;
+    width: fit-content;
+  }
+  .type-morfo { color: var(--blue); }
+  .type-sintax { color: var(--teal); }
+  .type-lexico { color: var(--accent); }
+  .type-both { color: var(--gold); background: rgba(212,160,23,0.08); }
+
+  .game-instruction {
+    font-size: 0.82rem;
+    line-height: 1.5;
+    color: #444;
+    font-style: italic;
+  }
+
+  /* GAME INTERACTIVE AREA */
+  .game-area { display: flex; flex-direction: column; gap: 0.6rem; }
+
+  /* TYPE: DRAG/CLICK ORDER */
+  .sentence-pieces {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    min-height: 2.5rem;
+    padding: 0.6rem;
+    background: white;
+    border: 1.5px dashed #ccc;
+    border-radius: 3px;
+  }
+  .piece {
+    background: var(--ink);
+    color: var(--paper);
+    padding: 0.3rem 0.7rem;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.8rem;
+    border-radius: 2px;
+    cursor: pointer;
+    user-select: none;
+    transition: transform 0.15s, background 0.15s;
+    border: 2px solid transparent;
+  }
+  .piece:hover { transform: translateY(-2px); background: #333; }
+  .piece.selected { background: var(--blue); border-color: var(--gold); }
+  .piece.correct { background: var(--correct); }
+  .piece.wrong { background: var(--wrong); }
+  .drop-zone {
+    min-height: 2.5rem;
+    padding: 0.4rem;
+    background: rgba(26,122,110,0.05);
+    border: 1.5px dashed var(--teal);
+    border-radius: 3px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    align-items: center;
+  }
+  .drop-zone .piece { cursor: pointer; }
+  .drop-zone-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.62rem;
+    color: #aaa;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    margin-bottom: 0.2rem;
+  }
+
+  /* TYPE: MULTIPLE CHOICE */
+  .options-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.4rem;
+  }
+  .opt-btn {
+    padding: 0.5rem 0.7rem;
+    background: white;
+    border: 1.5px solid #ccc;
+    border-radius: 3px;
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 0.82rem;
+    cursor: pointer;
+    text-align: left;
+    transition: all 0.15s;
+    line-height: 1.3;
+  }
+  .opt-btn:hover:not(:disabled) { border-color: var(--ink); background: var(--ink); color: white; }
+  .opt-btn.correct { background: var(--correct); border-color: var(--correct); color: white; font-weight: 600; }
+  .opt-btn.wrong { background: var(--wrong); border-color: var(--wrong); color: white; }
+  .opt-btn:disabled { cursor: not-allowed; opacity: 0.7; }
+
+  /* TYPE: FILL BLANK */
+  .fill-sentence {
+    font-size: 0.9rem;
+    line-height: 1.8;
+    color: #333;
+  }
+  .fill-input {
+    border: none;
+    border-bottom: 2px solid var(--ink);
+    background: transparent;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.9rem;
+    padding: 0 0.3rem;
+    width: 110px;
+    outline: none;
+    color: var(--blue);
+    text-align: center;
+  }
+  .fill-input:focus { border-bottom-color: var(--gold); }
+  .fill-input.correct { border-bottom-color: var(--correct); color: var(--correct); }
+  .fill-input.wrong { border-bottom-color: var(--wrong); color: var(--wrong); }
+
+  /* TYPE: MATCH */
+  .match-cols {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.4rem;
+  }
+  .match-item {
+    padding: 0.4rem 0.6rem;
+    border: 1.5px solid #ccc;
+    border-radius: 3px;
+    font-size: 0.82rem;
+    cursor: pointer;
+    background: white;
+    transition: all 0.15s;
+    text-align: center;
+    font-family: 'IBM Plex Mono', monospace;
+  }
+  .match-item:hover:not(.matched):not(:disabled) { border-color: var(--ink); background: var(--ink); color: white; }
+  .match-item.active { background: var(--blue); color: white; border-color: var(--blue); }
+  .match-item.matched { background: var(--correct); border-color: var(--correct); color: white; opacity: 0.7; cursor: default; }
+  .match-item.wrong-match { background: var(--wrong); border-color: var(--wrong); color: white; }
+
+  /* TYPE: CLASSIFY */
+  .classify-options { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-bottom: 0.4rem; }
+  .classify-bins { display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; }
+  .classify-bin {
+    border: 1.5px solid #ccc;
+    border-radius: 3px;
+    padding: 0.5rem;
+    min-height: 60px;
+    background: white;
+  }
+  .classify-bin-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.62rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: #888;
+    margin-bottom: 0.3rem;
+    font-weight: 600;
+  }
+  .classify-bin .piece { margin: 2px; }
+
+  /* FEEDBACK */
+  .feedback {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.72rem;
+    padding: 0.4rem 0.7rem;
+    border-radius: 2px;
+    display: none;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .feedback.show { display: flex; }
+  .feedback.ok { background: rgba(26,122,110,0.12); color: var(--correct); border: 1px solid var(--correct); }
+  .feedback.fail { background: rgba(200,57,26,0.1); color: var(--wrong); border: 1px solid var(--wrong); }
+
+  /* CHECK BTN */
+  .check-btn {
+    align-self: flex-start;
+    padding: 0.4rem 1.2rem;
+    background: var(--ink);
+    color: white;
+    border: none;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.72rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    cursor: pointer;
+    border-radius: 2px;
+    transition: background 0.15s;
+  }
+  .check-btn:hover { background: var(--accent); }
+  .check-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+  .reset-btn {
+    padding: 0.3rem 0.8rem;
+    background: transparent;
+    color: #999;
+    border: 1px solid #ccc;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.06em;
+    cursor: pointer;
+    border-radius: 2px;
+  }
+  .reset-btn:hover { border-color: var(--ink); color: var(--ink); }
+
+  .btn-row { display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap; }
+
+  /* STATUS ICON */
+  .status-icon {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    width: 24px; height: 24px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.8rem;
+    display: none;
+  }
+  .status-icon.show { display: flex; }
+  .status-icon.ok { background: var(--correct); color: white; }
+  .status-icon.fail { background: var(--wrong); color: white; }
+
+  /* SCRAMBLE */
+  .scramble-container { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+  .answer-zone {
+    border: 1.5px dashed var(--blue);
+    border-radius: 3px;
+    min-height: 2.5rem;
+    padding: 0.4rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    align-items: center;
+    background: rgba(26,58,110,0.03);
+  }
+  .answer-zone .piece { background: var(--blue); cursor: pointer; }
+  .answer-zone .piece:hover { background: #2a4a8e; }
+
+  @media(max-width:640px){
+    .games-grid { grid-template-columns: 1fr; }
+    .options-grid { grid-template-columns: 1fr; }
+    .match-cols { grid-template-columns: 1fr; }
+    .classify-bins { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>30 Juegos <span>Morfosintácticos</span><br>Bilingües</h1>
+  <p>Español · English — Gramática interactiva</p>
+  <div class="header-meta">
+    <span class="badge red">30 Ejercicios</span>
+    <span class="badge">Morfología · Sintaxis</span>
+    <span class="badge">ES ⇔ EN</span>
+    <span class="badge">Interactivo</span>
+  </div>
+</header>
+
+<div id="scorebar">
+  <div class="score-item">PROGRESO <span class="score-val" id="s-done">0</span>/30</div>
+  <div class="progress-wrap"><div id="progress-bar"></div></div>
+  <div class="score-item">✓ <span class="score-val green" id="s-correct">0</span></div>
+  <div class="score-item">✗ <span class="score-val red" id="s-wrong">0</span></div>
+</div>
+
+<div id="app"></div>
+
+<script>
+// ============================================================
+// DATA — 30 JUEGOS MORFOSINTÁCTICOS BILINGUES
+// ============================================================
+const GAMES = [
+
+// ── CATEGORÍA 1: CLASES DE PALABRAS / PARTS OF SPEECH ──────
+
+{id:1, cat:'Clases de palabras · Parts of Speech', catStyle:'',
+ es:'Sustantivo o Adjetivo', en:'Noun or Adjective',
+ type:'classify', typeLabel:'Clasificar', typeCls:'type-morfo',
+ instruction:'Clasifica cada palabra: ¿es sustantivo (N) o adjetivo (Adj)?<br><em>Classify each word: noun (N) or adjective (Adj)?</em>',
+ items:['freedom/libertad','tall/alto','book/libro','beautiful/hermosa','dream/sueño','cold/frío'],
+ bins:[{label:'Sustantivo · Noun',correct:['freedom/libertad','book/libro','dream/sueño']},
+       {label:'Adjetivo · Adjective',correct:['tall/alto','beautiful/hermosa','cold/frío']}]
+},
+
+{id:2, cat:'Clases de palabras · Parts of Speech', catStyle:'',
+ es:'Verbos regulares e irregulares', en:'Regular & Irregular Verbs',
+ type:'classify', typeLabel:'Clasificar', typeCls:'type-morfo',
+ instruction:'Clasifica los verbos: ¿regulares o irregulares en inglés?<br><em>Classify the verbs: regular or irregular in English?</em>',
+ items:['walk/caminar','go/ir','play/jugar','be/ser','talk/hablar','have/tener'],
+ bins:[{label:'Regular · Regular',correct:['walk/caminar','play/jugar','talk/hablar']},
+       {label:'Irregular · Irregular',correct:['go/ir','be/ser','have/tener']}]
+},
+
+{id:3, cat:'Clases de palabras · Parts of Speech', catStyle:'',
+ es:'Pronombres personales', en:'Personal Pronouns',
+ type:'match', typeLabel:'Emparejar', typeCls:'type-morfo',
+ instruction:'Empareja el pronombre en español con su equivalente en inglés.<br><em>Match the Spanish pronoun with its English equivalent.</em>',
+ pairs:[['Yo','I'],['Tú','You'],['Él','He'],['Nosotros','We'],['Ellos','They']]
+},
+
+{id:4, cat:'Clases de palabras · Parts of Speech', catStyle:'',
+ es:'El artículo correcto', en:'Choose the Right Article',
+ type:'multi', typeLabel:'Opción múltiple', typeCls:'type-morfo',
+ instruction:'¿Qué artículo completa correctamente la frase en inglés?<br><em>Which article correctly completes the phrase?</em>',
+ question:'___ university is a great place to learn.',
+ options:['A','An','The','—'],
+ correct:0, explanation:'«A» because "university" starts with a /j/ sound, not a vowel sound.'
+},
+
+{id:5, cat:'Clases de palabras · Parts of Speech', catStyle:'',
+ es:'Preposiciones de lugar', en:'Prepositions of Place',
+ type:'multi', typeLabel:'Opción múltiple', typeCls:'type-morfo',
+ instruction:'Selecciona la preposición correcta / Select the correct preposition:',
+ question:'El gato está ___ la mesa. · The cat is ___ the table.',
+ options:['on / sobre','in / dentro de','under / debajo de','next to / junto a'],
+ correct:0, explanation:'«On/sobre» indica que algo está encima de una superficie.'
+},
+
+{id:6, cat:'Clases de palabras · Parts of Speech', catStyle:'',
+ es:'Adverbios de frecuencia', en:'Adverbs of Frequency',
+ type:'order', typeLabel:'Ordenar', typeCls:'type-morfo',
+ instruction:'Ordena los adverbios de MENOR a MAYOR frecuencia.<br><em>Order adverbs from LEAST to MOST frequent.</em>',
+ words:['never/nunca','sometimes/a veces','often/a menudo','always/siempre'],
+ correct:['never/nunca','sometimes/a veces','often/a menudo','always/siempre']
+},
+
+// ── CATEGORÍA 2: MORFOLOGÍA / MORPHOLOGY ───────────────────
+
+{id:7, cat:'Morfología · Morphology', catStyle:'cat-teal',
+ es:'Prefijos negativos', en:'Negative Prefixes',
+ type:'fill', typeLabel:'Completar', typeCls:'type-morfo',
+ instruction:'Añade el prefijo negativo correcto (un-, in-, im-, dis-).<br><em>Add the correct negative prefix.</em>',
+ sentences:[
+   {text:'___ + happy = unhappy · ___ + feliz = infeliz', answer:'un'},
+   {text:'___ + possible / imposible', answer:'im'},
+   {text:'___ + agree / no estar de acuerdo', answer:'dis'},
+ ]
+},
+
+{id:8, cat:'Morfología · Morphology', catStyle:'cat-teal',
+ es:'Sufijos para formar sustantivos', en:'Noun-forming Suffixes',
+ type:'match', typeLabel:'Emparejar', typeCls:'type-morfo',
+ instruction:'Empareja la palabra base con su sustantivo derivado.<br><em>Match the base word with its derived noun.</em>',
+ pairs:[['happy → ___ness','happiness'],['create → ___ion','creation'],['kind → ___ness','kindness'],['educate → ___ion','education'],['free → ___dom','freedom']]
+},
+
+{id:9, cat:'Morfología · Morphology', catStyle:'cat-teal',
+ es:'Género en español', en:'Gender in Spanish',
+ type:'classify', typeLabel:'Clasificar', typeCls:'type-morfo',
+ instruction:'Clasifica las palabras por género gramatical (masculino / femenino).<br><em>Classify by grammatical gender (masc/fem).</em>',
+ items:['el libro','la mesa','el sol','la luna','el árbol','la flor'],
+ bins:[{label:'Masculino · Masc.',correct:['el libro','el sol','el árbol']},
+       {label:'Femenino · Fem.',correct:['la mesa','la luna','la flor']}]
+},
+
+{id:10, cat:'Morfología · Morphology', catStyle:'cat-teal',
+ es:'Plural irregular en inglés', en:'Irregular English Plurals',
+ type:'multi', typeLabel:'Opción múltiple', typeCls:'type-morfo',
+ instruction:'¿Cuál es el plural correcto de "child" en inglés?<br><em>What is the correct plural of "child"?</em>',
+ question:'One child → many ___',
+ options:['childs','children','childrens','child'],
+ correct:1, explanation:'"Children" is an irregular plural, like foot→feet, man→men.'
+},
+
+{id:11, cat:'Morfología · Morphology', catStyle:'cat-teal',
+ es:'Conjugación: presente simple', en:'Simple Present Conjugation',
+ type:'fill', typeLabel:'Completar', typeCls:'type-morfo',
+ instruction:'Conjuga el verbo «hablar/to speak» en presente. Escribe la forma correcta.<br><em>Conjugate "speak/hablar" in present tense.</em>',
+ sentences:[
+   {text:'She ___ English every day. (speak)', answer:'speaks'},
+   {text:'They ___ Spanish at home. (speak)', answer:'speak'},
+   {text:'Ella ___ inglés todos los días. (hablar)', answer:'habla'},
+ ]
+},
+
+{id:12, cat:'Morfología · Morphology', catStyle:'cat-teal',
+ es:'Comparativos y superlativos', en:'Comparatives & Superlatives',
+ type:'match', typeLabel:'Emparejar', typeCls:'type-morfo',
+ instruction:'Empareja el adjetivo con su forma comparativa o superlativa.<br><em>Match the adjective with its comparative/superlative.</em>',
+ pairs:[['good','better / best'],['bad','worse / worst'],['far','farther / farthest'],['grande','más grande / el más grande'],['bueno','mejor / el mejor']]
+},
+
+// ── CATEGORÍA 3: SINTAXIS / SYNTAX ─────────────────────────
+
+{id:13, cat:'Sintaxis · Syntax', catStyle:'cat-accent',
+ es:'Orden de palabras: inglés', en:'Word Order in English',
+ type:'order', typeLabel:'Ordenar', typeCls:'type-sintax',
+ instruction:'Ordena las palabras para formar una oración correcta en inglés.<br><em>Arrange the words to form a correct English sentence.</em>',
+ words:['every','She','morning','runs'],
+ correct:['She','runs','every','morning']
+},
+
+{id:14, cat:'Sintaxis · Syntax', catStyle:'cat-accent',
+ es:'Orden de palabras: español', en:'Word Order in Spanish',
+ type:'order', typeLabel:'Ordenar', typeCls:'type-sintax',
+ instruction:'Ordena las palabras para formar una oración correcta en español.<br><em>Order the words to form a correct Spanish sentence.</em>',
+ words:['todos','los','días','come','María','pizza'],
+ correct:['María','come','pizza','todos','los','días']
+},
+
+{id:15, cat:'Sintaxis · Syntax', catStyle:'cat-accent',
+ es:'Sujeto y predicado', en:'Subject and Predicate',
+ type:'classify', typeLabel:'Clasificar', typeCls:'type-sintax',
+ instruction:'Identifica si el fragmento es SUJETO o PREDICADO.<br><em>Identify if each fragment is SUBJECT or PREDICATE.</em>',
+ items:['The old cat','runs fast','My best friend','loves ice cream','A tall tree','fell down'],
+ bins:[{label:'Sujeto · Subject',correct:['The old cat','My best friend','A tall tree']},
+       {label:'Predicado · Predicate',correct:['runs fast','loves ice cream','fell down']}]
+},
+
+{id:16, cat:'Sintaxis · Syntax', catStyle:'cat-accent',
+ es:'Oraciones simples vs. compuestas', en:'Simple vs. Compound Sentences',
+ type:'multi', typeLabel:'Opción múltiple', typeCls:'type-sintax',
+ instruction:'¿Qué tipo de oración es la siguiente?<br><em>What type of sentence is this?</em>',
+ question:'"I like coffee and she likes tea."',
+ options:['Simple / Simple','Compound / Compuesta','Complex / Compleja','Fragment / Fragmento'],
+ correct:1, explanation:'Two independent clauses joined by "and" = compound sentence / oración compuesta.'
+},
+
+{id:17, cat:'Sintaxis · Syntax', catStyle:'cat-accent',
+ es:'Negación en inglés', en:'Negation in English',
+ type:'multi', typeLabel:'Opción múltiple', typeCls:'type-sintax',
+ instruction:'Selecciona la forma negativa CORRECTA del verbo.<br><em>Select the CORRECT negative form.</em>',
+ question:'She goes to school. → (negative)',
+ options:['She not goes to school.','She does not go to school.','She do not goes to school.','She doesn\'t goes to school.'],
+ correct:1, explanation:'With 3rd person singular in simple present: doesn\'t + base form.'
+},
+
+{id:18, cat:'Sintaxis · Syntax', catStyle:'cat-accent',
+ es:'Preguntas: inversión sujeto-verbo', en:'Question Formation',
+ type:'order', typeLabel:'Ordenar', typeCls:'type-sintax',
+ instruction:'Forma la pregunta correcta en inglés ordenando las palabras.<br><em>Form the correct English question.</em>',
+ words:['you','do','speak','Spanish','?'],
+ correct:['do','you','speak','Spanish','?']
+},
+
+{id:19, cat:'Sintaxis · Syntax', catStyle:'cat-accent',
+ es:'Tiempos verbales: pasado', en:'Past Tense',
+ type:'fill', typeLabel:'Completar', typeCls:'type-sintax',
+ instruction:'Escribe el verbo en pasado simple (inglés y español).<br><em>Write the verb in simple past (both languages).</em>',
+ sentences:[
+   {text:'Yesterday I ___ a movie. (watch)', answer:'watched'},
+   {text:'Ayer yo ___ una película. (ver)', answer:'vi'},
+   {text:'She ___ to Paris last year. (travel)', answer:'travelled'},
+ ]
+},
+
+// ── CATEGORÍA 4: CONCORDANCIA / AGREEMENT ──────────────────
+
+{id:20, cat:'Concordancia · Agreement', catStyle:'cat-dark',
+ es:'Concordancia de género y número', en:'Gender & Number Agreement',
+ type:'multi', typeLabel:'Opción múltiple', typeCls:'type-both',
+ instruction:'Elige la forma correcta del adjetivo en español.<br><em>Choose the correct adjective form in Spanish.</em>',
+ question:'Las casas son muy ___ (old / viejo).',
+ options:['viejo','vieja','viejos','viejas'],
+ correct:3, explanation:'"Casas" es femenino plural → el adjetivo debe ser "viejas".'
+},
+
+{id:21, cat:'Concordancia · Agreement', catStyle:'cat-dark',
+ es:'Concordancia sujeto-verbo en inglés', en:'Subject-Verb Agreement',
+ type:'multi', typeLabel:'Opción múltiple', typeCls:'type-sintax',
+ instruction:'Selecciona el verbo correcto / Select the correct verb:',
+ question:'The news ___ interesting today.',
+ options:['are','is','were','be'],
+ correct:1, explanation:'"News" is uncountable in English → singular verb "is".'
+},
+
+{id:22, cat:'Concordancia · Agreement', catStyle:'cat-dark',
+ es:'El adjetivo en inglés no varía', en:'Adjectives Don\'t Change in English',
+ type:'classify', typeLabel:'Clasificar', typeCls:'type-both',
+ instruction:'¿Cuál es correcto en inglés? Clasifícalo.<br><em>Which is correct in English? Classify it.</em>',
+ items:['a tall man','a talls men','two beautiful flowers','two beautifuls flowers','an old car','an olds cars'],
+ bins:[{label:'✓ Correcto · Correct',correct:['a tall man','two beautiful flowers','an old car']},
+       {label:'✗ Incorrecto · Incorrect',correct:['a talls men','two beautifuls flowers','an olds cars']}]
+},
+
+// ── CATEGORÍA 5: LÉXICO GRAMATICAL / GRAMMATICAL VOCABULARY ─
+
+{id:23, cat:'Léxico gramatical · Grammatical Vocabulary', catStyle:'cat-brown',
+ es:'Sinónimos y antónimos', en:'Synonyms & Antonyms',
+ type:'match', typeLabel:'Emparejar', typeCls:'type-lexico',
+ instruction:'Empareja cada palabra con su antónimo bilingüe.<br><em>Match each word with its bilingual antonym.</em>',
+ pairs:[['hot/caliente','cold/frío'],['fast/rápido','slow/lento'],['big/grande','small/pequeño'],['dark/oscuro','light/claro'],['happy/feliz','sad/triste']]
+},
+
+{id:24, cat:'Léxico gramatical · Grammatical Vocabulary', catStyle:'cat-brown',
+ es:'Falsos amigos', en:'False Friends',
+ type:'multi', typeLabel:'Opción múltiple', typeCls:'type-lexico',
+ instruction:'¿Qué significa realmente "embarrassed" en inglés?<br><em>What does "embarrassed" actually mean?</em>',
+ question:'"I was so embarrassed when I fell." Significa:',
+ options:['Embarazada (pregnant)','Avergonzado/a (ashamed)','Enojado/a (angry)','Enfermo/a (sick)'],
+ correct:1, explanation:'¡Falso amigo! "Embarrassed" = avergonzado. "Pregnant" = embarazada.'
+},
+
+{id:25, cat:'Léxico gramatical · Grammatical Vocabulary', catStyle:'cat-brown',
+ es:'Verbos frasales', en:'Phrasal Verbs',
+ type:'match', typeLabel:'Emparejar', typeCls:'type-lexico',
+ instruction:'Empareja el phrasal verb con su equivalente en español.<br><em>Match the phrasal verb with its Spanish equivalent.</em>',
+ pairs:[['give up','rendirse'],['look for','buscar'],['put off','posponer'],['run out of','quedarse sin'],['take off','despegar / quitarse']]
+},
+
+{id:26, cat:'Léxico gramatical · Grammatical Vocabulary', catStyle:'cat-brown',
+ es:'Conectores discursivos', en:'Discourse Connectors',
+ type:'fill', typeLabel:'Completar', typeCls:'type-lexico',
+ instruction:'Elige el conector correcto (however, therefore, although, moreover, because).<br><em>Choose the correct connector.</em>',
+ sentences:[
+   {text:'She studied hard; ___, she failed the test. (contraste)', answer:'however'},
+   {text:'He was tired. ___, he kept working. (adición)', answer:'moreover'},
+   {text:'___ it was raining, we went out. (concesión)', answer:'although'},
+ ]
+},
+
+{id:27, cat:'Léxico gramatical · Grammatical Vocabulary', catStyle:'cat-brown',
+ es:'Palabras interrogativas', en:'Question Words',
+ type:'match', typeLabel:'Emparejar', typeCls:'type-lexico',
+ instruction:'Empareja la palabra interrogativa con su uso correcto.<br><em>Match the question word with its correct use.</em>',
+ pairs:[['¿Cuándo? / When?','Tiempo · Time'],['¿Dónde? / Where?','Lugar · Place'],['¿Por qué? / Why?','Causa · Reason'],['¿Cómo? / How?','Modo · Manner'],['¿Cuánto? / How much?','Cantidad · Quantity']]
+},
+
+// ── CATEGORÍA 6: FUNCIONES COMUNICATIVAS / COMMUNICATIVE ───
+
+{id:28, cat:'Funciones comunicativas · Communicative Functions', catStyle:'',
+ es:'Formalidad del registro', en:'Register & Formality',
+ type:'classify', typeLabel:'Clasificar', typeCls:'type-both',
+ instruction:'Clasifica cada expresión como FORMAL o INFORMAL.<br><em>Classify each expression as FORMAL or INFORMAL.</em>',
+ items:['Wassup!','Good morning, Sir.','Gonna do it later.','I would like to inquire...','See ya!','Please accept my apologies.'],
+ bins:[{label:'Formal',correct:['Good morning, Sir.','I would like to inquire...','Please accept my apologies.']},
+       {label:'Informal / Coloquial',correct:['Wassup!','Gonna do it later.','See ya!']}]
+},
+
+{id:29, cat:'Funciones comunicativas · Communicative Functions', catStyle:'',
+ es:'Oraciones condicionales', en:'Conditional Sentences',
+ type:'multi', typeLabel:'Opción múltiple', typeCls:'type-sintax',
+ instruction:'¿Cuál es la estructura correcta del condicional tipo 1 (real/possible)?<br><em>Which is the correct Type 1 Conditional structure?</em>',
+ question:'"If it ___ tomorrow, we ___ stay home."',
+ options:['rains / will','rained / would','rains / would','will rain / will'],
+ correct:0, explanation:'Type 1: If + present simple → will + infinitive. Real/possible future condition.'
+},
+
+{id:30, cat:'Funciones comunicativas · Communicative Functions', catStyle:'',
+ es:'Estilo directo e indirecto', en:'Direct & Reported Speech',
+ type:'multi', typeLabel:'Opción múltiple', typeCls:'type-sintax',
+ instruction:'Convierte al estilo indirecto / Convert to reported speech:',
+ question:'«I am hungry» → She said that she ___ hungry.',
+ options:['is','was','were','will be'],
+ correct:1, explanation:'Reported speech: backshift — present "am" → past "was".'
+}
+
+];
+
+// ============================================================
+// STATE
+// ============================================================
+let scores = { done: 0, correct: 0, wrong: 0 };
+let matchState = {}; // per game id
+
+function updateScore(won) {
+  scores.done++;
+  if (won) scores.correct++; else scores.wrong++;
+  document.getElementById('s-done').textContent = scores.done;
+  document.getElementById('s-correct').textContent = scores.correct;
+  document.getElementById('s-wrong').textContent = scores.wrong;
+  document.getElementById('progress-bar').style.width = (scores.done/30*100)+'%';
+}
+
+// ============================================================
+// RENDER
+// ============================================================
+function render() {
+  const app = document.getElementById('app');
+  const cats = {};
+  GAMES.forEach(g => {
+    if (!cats[g.cat]) cats[g.cat] = { style: g.catStyle, games: [] };
+    cats[g.cat].games.push(g);
+  });
+
+  let html = '';
+  let catIdx = 1;
+  for (const [catName, catData] of Object.entries(cats)) {
+    html += `<div class="category-section">
+      <div class="category-header ${catData.style}">
+        <span class="cat-num">${catIdx++}</span>
+        ${catName}
+      </div>
+      <div class="games-grid">
+        ${catData.games.map(g => renderCard(g)).join('')}
+      </div>
+    </div>`;
+  }
+  app.innerHTML = html;
+  attachEvents();
+}
+
+function renderCard(g) {
+  return `<div class="game-card" id="card-${g.id}">
+    <div class="status-icon" id="status-${g.id}"></div>
+    <div class="game-number">Juego ${g.id} / Game ${g.id}</div>
+    <div>
+      <div class="game-title-es">${g.es}</div>
+      <div class="game-title-en">${g.en}</div>
+    </div>
+    <span class="game-type-badge ${g.typeCls}">${g.typeLabel} · ${g.type}</span>
+    <div class="game-instruction">${g.instruction}</div>
+    <div class="game-area" id="area-${g.id}">
+      ${renderGameArea(g)}
+    </div>
+    <div class="btn-row">
+      ${g.type !== 'multi' && g.type !== 'match' ? `<button class="check-btn" id="check-${g.id}" onclick="checkGame(${g.id})">Verificar · Check</button>` : ''}
+      <button class="reset-btn" onclick="resetGame(${g.id})">↺ Reset</button>
+    </div>
+    <div class="feedback" id="fb-${g.id}"></div>
+  </div>`;
+}
+
+function renderGameArea(g) {
+  switch(g.type) {
+    case 'classify': return renderClassify(g);
+    case 'match': return renderMatch(g);
+    case 'multi': return renderMulti(g);
+    case 'fill': return renderFill(g);
+    case 'order': return renderOrder(g);
+    default: return '';
+  }
+}
+
+// — CLASSIFY —
+function renderClassify(g) {
+  const items = [...g.items].sort(() => Math.random()-0.5);
+  return `
+    <div class="drop-zone-label">Palabras · Words — haz clic para mover:</div>
+    <div class="classify-options" id="pool-${g.id}">
+      ${items.map(w => `<span class="piece" data-word="${w}" onclick="classifyClick(${g.id},'${w}',this)">${w}</span>`).join('')}
+    </div>
+    <div class="classify-bins">
+      ${g.bins.map((b,i) => `
+        <div class="classify-bin" id="bin-${g.id}-${i}">
+          <div class="classify-bin-label">${b.label}</div>
+        </div>`).join('')}
+    </div>`;
+}
+
+// — MATCH —
+function renderMatch(g) {
+  const lefts = g.pairs.map(p=>p[0]);
+  const rights = [...g.pairs.map(p=>p[1])].sort(()=>Math.random()-0.5);
+  matchState[g.id] = { selected: null, lefts, rights, matched: [] };
+  return `
+    <div class="match-cols">
+      <div>${lefts.map((l,i)=>`<div class="match-item" id="ml-${g.id}-${i}" onclick="matchClick(${g.id},'left',${i})">${l}</div>`).join('')}</div>
+      <div>${rights.map((r,i)=>`<div class="match-item" id="mr-${g.id}-${i}" onclick="matchClick(${g.id},'right',${i})">${r}</div>`).join('')}</div>
+    </div>`;
+}
+
+// — MULTI —
+function renderMulti(g) {
+  return `
+    <div style="font-size:0.9rem;font-style:italic;color:#333;padding:0.5rem 0;">${g.question}</div>
+    <div class="options-grid">
+      ${g.options.map((o,i)=>`<button class="opt-btn" onclick="multiClick(${g.id},${i},this)">${o}</button>`).join('')}
+    </div>`;
+}
+
+// — FILL —
+function renderFill(g) {
+  return g.sentences.map((s,i)=>`
+    <div class="fill-sentence">${s.text.replace('___',`<input class="fill-input" id="fill-${g.id}-${i}" placeholder="...">`)} </div>
+  `).join('');
+}
+
+// — ORDER —
+function renderOrder(g) {
+  const shuffled = [...g.words].sort(()=>Math.random()-0.5);
+  return `
+    <div class="drop-zone-label">Banco de palabras · Word bank (clic para añadir):</div>
+    <div class="scramble-container" id="bank-${g.id}">
+      ${shuffled.map(w=>`<span class="piece" onclick="orderPick(${g.id},'${w}',this)">${w}</span>`).join('')}
+    </div>
+    <div class="drop-zone-label" style="margin-top:0.5rem">Tu respuesta · Your answer (clic para quitar):</div>
+    <div class="answer-zone" id="ans-${g.id}"></div>`;
+}
+
+// ============================================================
+// EVENTS
+// ============================================================
+function attachEvents() {}
+
+// CLASSIFY
+let classifySelected = {};
+function classifyClick(gid, word, el) {
+  const pool = document.getElementById('pool-'+gid);
+  const bins = document.querySelectorAll(`[id^="bin-${gid}-"]`);
+  // is it in a bin already? move back to pool
+  const inBin = el.closest('.classify-bin');
+  if (inBin) {
+    pool.appendChild(el);
+    return;
+  }
+  // which bin to put in? cycle through bins on each click or ask user
+  // Simple UX: clicking shows a small menu — instead, clicking toggles between bin 0 and 1
+  if (!classifySelected[gid]) classifySelected[gid] = {};
+  const state = classifySelected[gid][word];
+  if (state === undefined || state === 1) {
+    document.getElementById(`bin-${gid}-0`).appendChild(el);
+    classifySelected[gid][word] = 0;
+  } else {
+    document.getElementById(`bin-${gid}-1`).appendChild(el);
+    classifySelected[gid][word] = 1;
+  }
+}
+
+// MATCH
+function matchClick(gid, side, idx) {
+  const s = matchState[gid];
+  if (s.matched.some(m => (side==='left'&&m.li===idx)||(side==='right'&&m.ri===idx))) return;
+  if (!s.selected) {
+    s.selected = { side, idx };
+    document.getElementById(side==='left'?`ml-${gid}-${idx}`:`mr-${gid}-${idx}`).classList.add('active');
+  } else {
+    if (s.selected.side === side) {
+      document.getElementById(s.selected.side==='left'?`ml-${gid}-${s.selected.idx}`:`mr-${gid}-${s.selected.idx}`).classList.remove('active');
+      s.selected = { side, idx };
+      document.getElementById(side==='left'?`ml-${gid}-${idx}`:`mr-${gid}-${idx}`).classList.add('active');
+      return;
+    }
+    const li = side==='right' ? s.selected.idx : idx;
+    const ri = side==='right' ? idx : s.selected.idx;
+    const leftVal = s.lefts[li];
+    const rightVal = s.rights[ri];
+    const game = GAMES.find(g=>g.id===gid);
+    const isCorrect = game.pairs.some(p=>p[0]===leftVal&&p[1]===rightVal);
+    const lEl = document.getElementById(`ml-${gid}-${li}`);
+    const rEl = document.getElementById(`mr-${gid}-${ri}`);
+    lEl.classList.remove('active');
+    if (isCorrect) {
+      lEl.classList.add('matched'); rEl.classList.add('matched');
+      s.matched.push({li,ri});
+      if (s.matched.length === game.pairs.length) {
+        showFeedback(gid, true, '¡Perfecto! All pairs matched correctly!');
+        markCard(gid, true);
+        updateScore(true);
+      }
+    } else {
+      lEl.classList.add('wrong-match'); rEl.classList.add('wrong-match');
+      setTimeout(()=>{ lEl.classList.remove('wrong-match'); rEl.classList.remove('wrong-match'); }, 800);
+    }
+    s.selected = null;
+  }
+}
+
+// MULTI
+function multiClick(gid, idx, el) {
+  const game = GAMES.find(g=>g.id===gid);
+  const btns = el.closest('.options-grid').querySelectorAll('.opt-btn');
+  btns.forEach(b=>b.disabled=true);
+  if (idx === game.correct) {
+    el.classList.add('correct');
+    showFeedback(gid, true, '✓ Correcto · Correct! ' + (game.explanation||''));
+    markCard(gid, true);
+    updateScore(true);
+  } else {
+    el.classList.add('wrong');
+    btns[game.correct].classList.add('correct');
+    showFeedback(gid, false, '✗ Incorrecto. ' + (game.explanation||''));
+    markCard(gid, false);
+    updateScore(false);
+  }
+}
+
+// ORDER pick
+function orderPick(gid, word, el) {
+  const bank = document.getElementById('bank-'+gid);
+  const ans = document.getElementById('ans-'+gid);
+  if (el.parentElement.id === 'bank-'+gid) {
+    const piece = document.createElement('span');
+    piece.className = 'piece';
+    piece.textContent = word;
+    piece.onclick = () => { bank.appendChild(piece); piece.onclick = () => orderPick(gid,word,piece); };
+    ans.appendChild(piece);
+    el.style.opacity = '0.3';
+    el.onclick = null;
+  }
+}
+
+// CHECK for fill, order, classify
+function checkGame(gid) {
+  const game = GAMES.find(g=>g.id===gid);
+  let won = false;
+  if (game.type === 'fill') {
+    let all = true;
+    game.sentences.forEach((s,i)=>{
+      const inp = document.getElementById(`fill-${gid}-${i}`);
+      if (!inp) return;
+      const val = inp.value.trim().toLowerCase();
+      const ans = s.answer.toLowerCase();
+      inp.disabled = true;
+      if (val === ans) { inp.classList.add('correct'); }
+      else { inp.classList.add('wrong'); all = false; }
+    });
+    won = all;
+    showFeedback(gid, won, won ? '¡Todas correctas! All correct!' : `Algunas respuestas son incorrectas. Respuestas: ${game.sentences.map(s=>s.answer).join(', ')}`);
+  }
+  else if (game.type === 'order') {
+    const ans = document.getElementById('ans-'+gid);
+    const pieces = [...ans.querySelectorAll('.piece')].map(p=>p.textContent);
+    won = JSON.stringify(pieces) === JSON.stringify(game.correct);
+    pieces.forEach((p,i) => {
+      const el = ans.querySelectorAll('.piece')[i];
+      if (el) el.classList.add(game.correct[i]===p?'correct':'wrong');
+    });
+    showFeedback(gid, won, won ? '¡Orden correcto! Correct order!' : `Orden correcto: ${game.correct.join(' ')}`);
+  }
+  else if (game.type === 'classify') {
+    let all = true;
+    game.bins.forEach((bin,bi) => {
+      const binEl = document.getElementById(`bin-${gid}-${bi}`);
+      const pieces = [...binEl.querySelectorAll('.piece')];
+      pieces.forEach(p => {
+        const correct = bin.correct.includes(p.dataset.word);
+        p.classList.add(correct ? 'correct' : 'wrong');
+        if (!correct) all = false;
+      });
+    });
+    won = all;
+    showFeedback(gid, won, won ? '¡Clasificación perfecta! Perfect classification!' : 'Algunas palabras están en la categoría incorrecta.');
+  }
+  if (game.type !== 'match' && game.type !== 'multi') {
+    markCard(gid, won);
+    updateScore(won);
+    document.getElementById('check-'+gid).disabled = true;
+  }
+}
+
+function resetGame(gid) {
+  const game = GAMES.find(g=>g.id===gid);
+  const area = document.getElementById('area-'+gid);
+  const card = document.getElementById('card-'+gid);
+  card.className = 'game-card';
+  document.getElementById('status-'+gid).className = 'status-icon';
+  hideFeedback(gid);
+  const checkBtn = document.getElementById('check-'+gid);
+  if (checkBtn) checkBtn.disabled = false;
+  if (matchState[gid]) {
+    const ms = matchState[gid];
+    const lefts = ms.lefts;
+    const rights = [...game.pairs.map(p=>p[1])].sort(()=>Math.random()-0.5);
+    matchState[gid] = { selected: null, lefts, rights, matched: [] };
+  }
+  if (classifySelected[gid]) delete classifySelected[gid];
+  area.innerHTML = renderGameArea(game);
+}
+
+function showFeedback(gid, ok, msg) {
+  const fb = document.getElementById('fb-'+gid);
+  fb.className = 'feedback show ' + (ok?'ok':'fail');
+  fb.innerHTML = (ok?'✓ ':'✗ ') + msg;
+}
+function hideFeedback(gid) {
+  document.getElementById('fb-'+gid).className = 'feedback';
+}
+function markCard(gid, ok) {
+  const card = document.getElementById('card-'+gid);
+  card.classList.add(ok?'completed':'failed');
+  const si = document.getElementById('status-'+gid);
+  si.className = 'status-icon show ' + (ok?'ok':'fail');
+  si.textContent = ok?'✓':'✗';
+}
+
+render();
+</script>
+</body>
+</html>

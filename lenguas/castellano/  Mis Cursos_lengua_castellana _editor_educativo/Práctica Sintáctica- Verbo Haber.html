@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Práctica Sintáctica: Verbo "Haber"</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body { background-color: #f4f7fa; }
+    .card { border-radius: 1rem; }
+    .btn { border-radius: 0.5rem; }
+    .puntuacion { font-weight: bold; color: #2a6; }
+  </style>
+</head>
+<body>
+
+  <div class="container py-5">
+    <h1 class="text-center mb-4">🌟 Práctica Sintáctica: Verbo “Haber”</h1>
+    <div class="text-center mb-3">
+      <p class="puntuacion">Puntuación: <span id="puntuacion">0</span></p>
+    </div>
+
+    <!-- TEORÍA -->
+    <div class="card mb-4 shadow-sm">
+      <div class="card-body">
+        <h4>📘 Teoría</h4>
+        <p>
+          En español, el verbo <b>haber</b> puede usarse de forma <b>impersonal</b>, especialmente en construcciones con infinitivo:
+          <br>Ejemplo: <i>Hay que estudiar</i> = Es necesario estudiar.
+        </p>
+        <p>
+          Cuando aplicamos negación, en lugar de decir <i>“Hay que no desanimarse”</i> —que sería la forma lógica—, 
+          decimos <b>“No hay que desanimarse”</b>, aplicando la negación al verbo auxiliar <i>haber</i>.
+        </p>
+        <p><b>Significado:</b> Es necesario no desanimarse.</p>
+      </div>
+    </div>
+
+    <!-- CUESTIONARIO -->
+    <div class="card mb-4 shadow-sm">
+      <div class="card-body">
+        <h4>❓ Cuestionario</h4>
+        <p>¿Qué significa la oración “No hay que rendirse”?</p>
+        <select id="respuesta" class="form-select mb-3">
+          <option value="">Selecciona una opción</option>
+          <option value="a">a) No es necesario rendirse</option>
+          <option value="b">b) Es necesario no rendirse</option>
+          <option value="c">c) Nadie debe rendirse</option>
+        </select>
+        <button class="btn btn-primary" onclick="verificarRespuesta()">Comprobar</button>
+      </div>
+    </div>
+
+    <!-- EJERCICIO DE REDACCIÓN -->
+    <div class="card mb-4 shadow-sm">
+      <div class="card-body">
+        <h4>✍️ Ejercicio de Redacción</h4>
+        <p>Transforma la oración: <i>Hay que no preocuparse</i></p>
+        <input type="text" id="redaccion" class="form-control mb-3" placeholder="Escribe tu versión...">
+        <button class="btn btn-success" onclick="verificarRedaccion()">Verificar</button>
+      </div>
+    </div>
+
+    <!-- CREAR Y GUARDAR EJEMPLOS -->
+    <div class="card mb-4 shadow-sm">
+      <div class="card-body">
+        <h4>➕ Crear tus propios ejemplos</h4>
+        <input type="text" id="nuevoEjemplo" class="form-control mb-2" placeholder="Escribe una oración con 'haber'">
+        <select id="esCorrecto" class="form-select mb-3">
+          <option value="true">Correcto</option>
+          <option value="false">Incorrecto</option>
+        </select>
+        <button class="btn btn-outline-primary" onclick="guardarEjemplo()">Guardar ejemplo</button>
+      </div>
+    </div>
+
+    <!-- LISTAR EJEMPLOS -->
+    <div class="card shadow-sm">
+      <div class="card-body">
+        <h4>📚 Ejemplos guardados</h4>
+        <ul id="listaEjemplos" class="list-group"></ul>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let puntuacion = parseInt(localStorage.getItem('puntuacion') || 0);
+    document.getElementById('puntuacion').innerText = puntuacion;
+
+    function actualizarPuntuacion(puntos) {
+      puntuacion += puntos;
+      localStorage.setItem('puntuacion', puntuacion);
+      document.getElementById('puntuacion').innerText = puntuacion;
+    }
+
+    function verificarRespuesta() {
+      const respuesta = document.getElementById('respuesta').value;
+      if (respuesta === 'b') {
+        alert("✔️ Correcto: 'Es necesario no rendirse'.");
+        actualizarPuntuacion(10);
+      } else if (respuesta === '') {
+        alert("⚠️ Debes seleccionar una opción.");
+      } else {
+        alert("❌ Incorrecto. La respuesta correcta era 'b) Es necesario no rendirse'.");
+      }
+    }
+
+    function verificarRedaccion() {
+      const texto = document.getElementById('redaccion').value.trim().toLowerCase();
+      if (texto === 'no hay que preocuparse') {
+        alert("✅ Muy bien. Has aplicado la negación correctamente.");
+        actualizarPuntuacion(10);
+      } else if (texto === '') {
+        alert("⚠️ Escribe tu respuesta antes de verificar.");
+      } else {
+        alert("❌ La forma esperada era: 'No hay que preocuparse'.");
+      }
+    }
+
+    function guardarEjemplo() {
+      let ejemplos = JSON.parse(localStorage.getItem('ejemplos') || '[]');
+      if (ejemplos.length >= 100) {
+        alert("⚠️ Ya has alcanzado el límite de 100 ejemplos.");
+        return;
+      }
+      const texto = document.getElementById('nuevoEjemplo').value.trim();
+      const esCorrecto = document.getElementById('esCorrecto').value === 'true';
+      if (!texto) {
+        alert("⚠️ Escribe un ejemplo antes de guardar.");
+        return;
+      }
+      ejemplos.push({ texto, esCorrecto });
+      localStorage.setItem('ejemplos', JSON.stringify(ejemplos));
+      alert("✅ Ejemplo guardado correctamente.");
+      mostrarEjemplos();
+      document.getElementById('nuevoEjemplo').value = '';
+    }
+
+    function mostrarEjemplos() {
+      const lista = document.getElementById('listaEjemplos');
+      lista.innerHTML = '';
+      const ejemplos = JSON.parse(localStorage.getItem('ejemplos') || '[]');
+      ejemplos.forEach((e, i) => {
+        const li = document.createElement('li');
+        li.className = 'list-group-item';
+        li.textContent = `${i + 1}. ${e.texto} (${e.esCorrecto ? 'Correcto' : 'Incorrecto'})`;
+        lista.appendChild(li);
+      });
+    }
+
+    mostrarEjemplos();
+  </script>
+
+</body>
+</html>

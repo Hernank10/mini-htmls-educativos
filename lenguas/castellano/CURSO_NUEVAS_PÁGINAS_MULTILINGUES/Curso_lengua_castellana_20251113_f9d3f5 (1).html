@@ -1,0 +1,1259 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mantenimiento de Llantas - Aprende y Practica</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --accent-color: #e74c3c;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8f9fa;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .navbar {
+            background-color: var(--primary-color) !important;
+        }
+        
+        .hero-section {
+            background: linear-gradient(rgba(44, 62, 80, 0.8), rgba(44, 62, 80, 0.9)), url('https://images.unsplash.com/photo-1558618666-fcd25c85cd64?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80');
+            background-size: cover;
+            background-position: center;
+            color: white;
+            padding: 100px 0;
+            margin-bottom: 40px;
+        }
+        
+        .section-title {
+            position: relative;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+        }
+        
+        .section-title:after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 60px;
+            height: 3px;
+            background-color: var(--secondary-color);
+        }
+        
+        .card {
+            border: none;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+            margin-bottom: 20px;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+        }
+        
+        .feature-icon {
+            font-size: 2.5rem;
+            color: var(--secondary-color);
+            margin-bottom: 15px;
+        }
+        
+        .practice-section {
+            background-color: white;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+        
+        .step-indicator {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 30px;
+        }
+        
+        .step {
+            text-align: center;
+            flex: 1;
+            position: relative;
+        }
+        
+        .step:not(:last-child):after {
+            content: '';
+            position: absolute;
+            top: 20px;
+            right: -50%;
+            width: 100%;
+            height: 2px;
+            background-color: #dee2e6;
+            z-index: 1;
+        }
+        
+        .step-number {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: #dee2e6;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 10px;
+            font-weight: bold;
+            z-index: 2;
+            position: relative;
+        }
+        
+        .step.active .step-number {
+            background-color: var(--secondary-color);
+            color: white;
+        }
+        
+        .step.completed .step-number {
+            background-color: #28a745;
+            color: white;
+        }
+        
+        .quiz-option {
+            border: 1px solid #dee2e6;
+            border-radius: 5px;
+            padding: 15px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .quiz-option:hover {
+            background-color: #f8f9fa;
+        }
+        
+        .quiz-option.selected {
+            border-color: var(--secondary-color);
+            background-color: rgba(52, 152, 219, 0.1);
+        }
+        
+        .quiz-option.correct {
+            border-color: #28a745;
+            background-color: rgba(40, 167, 69, 0.1);
+        }
+        
+        .quiz-option.incorrect {
+            border-color: #dc3545;
+            background-color: rgba(220, 53, 69, 0.1);
+        }
+        
+        .simulation-container {
+            border: 1px solid #dee2e6;
+            border-radius: 10px;
+            padding: 20px;
+            background-color: #f8f9fa;
+            margin-bottom: 20px;
+        }
+        
+        .progress-container {
+            margin-bottom: 20px;
+        }
+        
+        .tire-visual {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            background-color: #333;
+            margin: 0 auto 20px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .tire-tread {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            right: 20px;
+            bottom: 20px;
+            background-color: #555;
+            border-radius: 50%;
+        }
+        
+        .tire-wear {
+            position: absolute;
+            top: 30px;
+            left: 30px;
+            right: 30px;
+            bottom: 30px;
+            background-color: #777;
+            border-radius: 50%;
+        }
+        
+        .notification {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            padding: 15px 20px;
+            background-color: var(--accent-color);
+            color: white;
+            border-radius: 5px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+            z-index: 1000;
+            display: none;
+        }
+        
+        .badge-custom {
+            background-color: var(--secondary-color);
+        }
+        
+        .concept-card {
+            border-left: 4px solid var(--secondary-color);
+        }
+        
+        .warning-card {
+            border-left: 4px solid var(--accent-color);
+        }
+        
+        .tip-card {
+            border-left: 4px solid #28a745;
+        }
+        
+        footer {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 40px 0;
+            margin-top: 50px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
+            <a class="navbar-brand" href="#">
+                <i class="bi bi-tools me-2"></i>
+                Mantenimiento de Llantas
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#conceptos">Conceptos</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#practica">Práctica</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#simulador">Simulador</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#evaluacion">Evaluación</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero-section text-center">
+        <div class="container">
+            <h1 class="display-4 fw-bold">Aprende Mantenimiento de Llantas</h1>
+            <p class="lead">Domina los conceptos esenciales y practica con nuestro simulador interactivo</p>
+            <a href="#conceptos" class="btn btn-primary btn-lg mt-3">Comenzar a Aprender</a>
+        </div>
+    </section>
+
+    <!-- Conceptos Section -->
+    <section id="conceptos" class="py-5">
+        <div class="container">
+            <h2 class="section-title">Conceptos Fundamentales</h2>
+            <p class="lead mb-4">Comprende los principios básicos del mantenimiento de llantas para motocicletas.</p>
+            
+            <div class="row">
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100 concept-card">
+                        <div class="card-body">
+                            <div class="feature-icon">
+                                <i class="bi bi-speedometer2"></i>
+                            </div>
+                            <h4 class="card-title">Presión de Aire</h4>
+                            <p class="card-text">La presión correcta de las llantas es crucial para la seguridad, el rendimiento y la duración. Una presión incorrecta puede causar desgaste irregular y reducir la estabilidad.</p>
+                            <div class="mt-3">
+                                <span class="badge badge-custom">Recomendación</span>
+                                <p class="mt-2">Verifica la presión al menos una vez por semana y antes de viajes largos.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100 concept-card">
+                        <div class="card-body">
+                            <div class="feature-icon">
+                                <i class="bi bi-eye"></i>
+                            </div>
+                            <h4 class="card-title">Inspección Visual</h4>
+                            <p class="card-text">Examina regularmente las llantas en busca de signos de desgaste, daños, objetos incrustados y deformaciones. El dibujo de la llanta debe tener al menos 1.6 mm de profundidad.</p>
+                            <div class="mt-3">
+                                <span class="badge badge-custom">Consejo</span>
+                                <p class="mt-2">Busca indicadores de desgaste (TWI) en los surcos de la llanta.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100 concept-card">
+                        <div class="card-body">
+                            <div class="feature-icon">
+                                <i class="bi bi-calendar-check"></i>
+                            </div>
+                            <h4 class="card-title">Mantenimiento Programado</h4>
+                            <p class="card-text">Establece un programa regular de mantenimiento que incluve rotación, balanceo y alineación según las recomendaciones del fabricante y tu patrón de uso.</p>
+                            <div class="mt-3">
+                                <span class="badge badge-custom">Periodicidad</span>
+                                <p class="mt-2">Realiza mantenimiento cada 5,000-8,000 km o cada 6 meses.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="row mt-4">
+                <div class="col-md-6 mb-4">
+                    <div class="card h-100 warning-card">
+                        <div class="card-body">
+                            <h4 class="card-title"><i class="bi bi-exclamation-triangle me-2"></i>Señales de Alerta</h4>
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item">Desgaste irregular en los hombros de la llanta</li>
+                                <li class="list-group-item">Vibraciones anormales al conducir</li>
+                                <li class="list-group-item">Pérdida constante de presión</li>
+                                <li class="list-group-item">Abultamientos o deformaciones visibles</li>
+                                <li class="list-group-item">Ruidos inusuales provenientes de las llantas</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-6 mb-4">
+                    <div class="card h-100 tip-card">
+                        <div class="card-body">
+                            <h4 class="card-title"><i class="bi bi-lightbulb me-2"></i>Consejos Prácticos</h4>
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item">Revisa la presión con las llantas frías</li>
+                                <li class="list-group-item">Usa un medidor de presión confiable</li>
+                                <li class="list-group-item">Lleva un registro de mantenimiento</li>
+                                <li class="list-group-item">Considera el clima al ajustar la presión</li>
+                                <li class="list-group-item">Inspecciona las válvulas y tapones</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Práctica Section -->
+    <section id="practica" class="py-5 bg-light">
+        <div class="container">
+            <h2 class="section-title">Aprende Practicando</h2>
+            <p class="lead mb-4">Sigue estos pasos interactivos para dominar el mantenimiento de llantas.</p>
+            
+            <div class="practice-section">
+                <div class="step-indicator">
+                    <div class="step active" id="step1">
+                        <div class="step-number">1</div>
+                        <div class="step-label">Inspección Visual</div>
+                    </div>
+                    <div class="step" id="step2">
+                        <div class="step-number">2</div>
+                        <div class="step-label">Medición de Presión</div>
+                    </div>
+                    <div class="step" id="step3">
+                        <div class="step-number">3</div>
+                        <div class="step-label">Registro de Datos</div>
+                    </div>
+                    <div class="step" id="step4">
+                        <div class="step-number">4</div>
+                        <div class="step-label">Análisis de Resultados</div>
+                    </div>
+                </div>
+                
+                <div id="step-content">
+                    <!-- Step 1 Content -->
+                    <div class="step-panel active" id="panel1">
+                        <h3>Paso 1: Inspección Visual</h3>
+                        <p>Realiza una inspección visual completa de la llanta. Busca signos de desgaste irregular, daños, objetos incrustados y deformaciones.</p>
+                        
+                        <div class="simulation-container">
+                            <h5>Simulador de Inspección Visual</h5>
+                            <div class="tire-visual">
+                                <div class="tire-tread"></div>
+                                <div class="tire-wear" id="tireWear"></div>
+                            </div>
+                            
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label for="tireCondition" class="form-label">Condición de la Llanta:</label>
+                                        <select class="form-select" id="tireCondition">
+                                            <option value="excellent">Excelente</option>
+                                            <option value="good">Buena</option>
+                                            <option value="fair">Regular</option>
+                                            <option value="poor">Mala</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label for="treadDepth" class="form-label">Profundidad del Dibujo (mm):</label>
+                                        <input type="range" class="form-range" id="treadDepth" min="0" max="8" step="0.1" value="5">
+                                        <div class="d-flex justify-content-between">
+                                            <small>0 mm</small>
+                                            <small id="treadValue">5.0 mm</small>
+                                            <small>8 mm</small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label class="form-label">Problemas Detectados:</label>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="damageCheck">
+                                    <label class="form-check-label" for="damageCheck">Daños visibles</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="objectsCheck">
+                                    <label class="form-check-label" for="objectsCheck">Objetos incrustados</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="wearCheck">
+                                    <label class="form-check-label" for="wearCheck">Desgaste irregular</label>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <button class="btn btn-primary mt-3" onclick="nextStep(2)">Continuar al Paso 2</button>
+                    </div>
+                    
+                    <!-- Step 2 Content -->
+                    <div class="step-panel" id="panel2">
+                        <h3>Paso 2: Medición de Presión</h3>
+                        <p>Utiliza un medidor de presión confiable para verificar la presión de la llanta. Compara con la presión recomendada por el fabricante.</p>
+                        
+                        <div class="simulation-container">
+                            <h5>Simulador de Medición de Presión</h5>
+                            
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label for="recommendedPressure" class="form-label">Presión Recomendada (PSI):</label>
+                                        <input type="number" class="form-control" id="recommendedPressure" value="32" min="20" max="50">
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label for="measuredPressure" class="form-label">Presión Medida (PSI):</label>
+                                        <input type="number" class="form-control" id="measuredPressure" value="28" min="10" max="60">
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="progress-container">
+                                <label class="form-label">Estado de la Presión:</label>
+                                <div class="progress" style="height: 25px;">
+                                    <div class="progress-bar bg-danger" id="pressureBar" style="width: 50%;"></div>
+                                </div>
+                                <div class="d-flex justify-content-between mt-1">
+                                    <small>Baja</small>
+                                    <small id="pressureStatus">Presión baja</small>
+                                    <small>Alta</small>
+                                </div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <button class="btn btn-outline-primary" onclick="adjustPressure()">Ajustar Presión</button>
+                                <button class="btn btn-outline-secondary" onclick="remeasurePressure()">Volver a Medir</button>
+                            </div>
+                        </div>
+                        
+                        <div class="d-flex justify-content-between mt-3">
+                            <button class="btn btn-secondary" onclick="prevStep(1)">Volver al Paso 1</button>
+                            <button class="btn btn-primary" onclick="nextStep(3)">Continuar al Paso 3</button>
+                        </div>
+                    </div>
+                    
+                    <!-- Step 3 Content -->
+                    <div class="step-panel" id="panel3">
+                        <h3>Paso 3: Registro de Datos</h3>
+                        <p>Documenta los hallazgos de la inspección y medición para llevar un historial de mantenimiento.</p>
+                        
+                        <div class="simulation-container">
+                            <h5>Registro de Mantenimiento</h5>
+                            
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label for="maintenanceDate" class="form-label">Fecha de Mantenimiento:</label>
+                                        <input type="date" class="form-control" id="maintenanceDate">
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label for="odometer" class="form-label">Kilometraje (km):</label>
+                                        <input type="number" class="form-control" id="odometer" value="15000">
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="observations" class="form-label">Observaciones:</label>
+                                <textarea class="form-control" id="observations" rows="3" placeholder="Describe cualquier hallazgo importante..."></textarea>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label class="form-label">Acciones Realizadas:</label>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="action1">
+                                    <label class="form-check-label" for="action1">Inspección visual</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="action2">
+                                    <label class="form-check-label" for="action2">Medición de presión</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="action3">
+                                    <label class="form-check-label" for="action3">Ajuste de presión</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="action4">
+                                    <label class="form-check-label" for="action4">Limpieza de llanta</label>
+                                </div>
+                            </div>
+                            
+                            <button class="btn btn-success" onclick="saveMaintenance()">Guardar Registro</button>
+                        </div>
+                        
+                        <div class="d-flex justify-content-between mt-3">
+                            <button class="btn btn-secondary" onclick="prevStep(2)">Volver al Paso 2</button>
+                            <button class="btn btn-primary" onclick="nextStep(4)">Continuar al Paso 4</button>
+                        </div>
+                    </div>
+                    
+                    <!-- Step 4 Content -->
+                    <div class="step-panel" id="panel4">
+                        <h3>Paso 4: Análisis de Resultados</h3>
+                        <p>Revisa los datos recopilados y recibe recomendaciones basadas en el estado de tus llantas.</p>
+                        
+                        <div class="simulation-container">
+                            <h5>Resumen del Mantenimiento</h5>
+                            
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="card mb-3">
+                                        <div class="card-body">
+                                            <h6 class="card-title">Estado de la Llanta</h6>
+                                            <p id="tireStatusSummary" class="card-text">-</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="card mb-3">
+                                        <div class="card-body">
+                                            <h6 class="card-title">Presión</h6>
+                                            <p id="pressureSummary" class="card-text">-</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="card">
+                                <div class="card-body">
+                                    <h6 class="card-title">Recomendaciones</h6>
+                                    <div id="recommendations">
+                                        <!-- Las recomendaciones se generarán dinámicamente -->
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="mt-3">
+                                <button class="btn btn-primary" onclick="generateReport()">Generar Reporte Completo</button>
+                                <button class="btn btn-outline-secondary" onclick="restartPractice()">Repetir Práctica</button>
+                            </div>
+                        </div>
+                        
+                        <div class="d-flex justify-content-between mt-3">
+                            <button class="btn btn-secondary" onclick="prevStep(3)">Volver al Paso 3</button>
+                            <button class="btn btn-success" onclick="completePractice()">Completar Práctica</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Simulador Section -->
+    <section id="simulador" class="py-5">
+        <div class="container">
+            <h2 class="section-title">Simulador de Mantenimiento</h2>
+            <p class="lead mb-4">Gestiona el mantenimiento de llantas de una motocicleta virtual con este simulador interactivo.</p>
+            
+            <div class="practice-section">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="card">
+                            <div class="card-header bg-primary text-white">
+                                <h5 class="mb-0">Información de la Motocicleta</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="mb-3">
+                                    <label for="motoMarca" class="form-label">Marca:</label>
+                                    <input type="text" class="form-control" id="motoMarca" value="Yamaha">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="motoModelo" class="form-label">Modelo:</label>
+                                    <input type="text" class="form-control" id="motoModelo" value="MT-07">
+                                </div>
+                                <button class="btn btn-primary w-100" onclick="saveMotorcycleInfo()">Guardar Información</button>
+                            </div>
+                        </div>
+                        
+                        <div class="card mt-4">
+                            <div class="card-header bg-success text-white">
+                                <h5 class="mb-0">Registrar Mantenimiento</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="mb-3">
+                                    <label for="tireSelect" class="form-label">Llanta:</label>
+                                    <select class="form-select" id="tireSelect">
+                                        <option value="delantera">Delantera</option>
+                                        <option value="trasera">Trasera</option>
+                                        <option value="ambas">Ambas</option>
+                                    </select>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="simPressure" class="form-label">Presión Medida (PSI):</label>
+                                    <input type="number" class="form-control" id="simPressure" value="32">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="simObservations" class="form-label">Observaciones:</label>
+                                    <textarea class="form-control" id="simObservations" rows="2"></textarea>
+                                </div>
+                                <button class="btn btn-success w-100" onclick="addMaintenanceRecord()">Agregar Registro</button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-8">
+                        <div class="card">
+                            <div class="card-header bg-info text-white">
+                                <h5 class="mb-0">Historial de Mantenimiento</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-striped" id="maintenanceTable">
+                                        <thead>
+                                            <tr>
+                                                <th>Fecha</th>
+                                                <th>Llanta</th>
+                                                <th>Presión (PSI)</th>
+                                                <th>Observaciones</th>
+                                                <th>Acciones</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <!-- Las filas se generarán dinámicamente -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="text-center mt-3" id="emptyHistoryMessage">
+                                    <p class="text-muted">No hay registros de mantenimiento. Agrega el primero.</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="card mt-4">
+                            <div class="card-header bg-warning text-dark">
+                                <h5 class="mb-0">Notificaciones</h5>
+                            </div>
+                            <div class="card-body">
+                                <div id="notificationsList">
+                                    <!-- Las notificaciones se generarán dinámicamente -->
+                                </div>
+                                <button class="btn btn-warning mt-2" onclick="checkNotifications()">Verificar Notificaciones</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Evaluación Section -->
+    <section id="evaluacion" class="py-5 bg-light">
+        <div class="container">
+            <h2 class="section-title">Evalúa tu Conocimiento</h2>
+            <p class="lead mb-4">Comprueba lo que has aprendido con este cuestionario interactivo.</p>
+            
+            <div class="practice-section">
+                <div id="quizContainer">
+                    <div class="mb-4">
+                        <h4 id="quizQuestion">Pregunta 1: ¿Con qué frecuencia debes verificar la presión de las llantas?</h4>
+                        
+                        <div class="quiz-option" onclick="selectOption(this)">
+                            <strong>A)</strong> Una vez al año
+                        </div>
+                        <div class="quiz-option" onclick="selectOption(this)">
+                            <strong>B)</strong> Cada 6 meses
+                        </div>
+                        <div class="quiz-option correct" onclick="selectOption(this)">
+                            <strong>C)</strong> Al menos una vez por semana
+                        </div>
+                        <div class="quiz-option" onclick="selectOption(this)">
+                            <strong>D)</strong> Solo cuando notes un problema
+                        </div>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <h4 id="quizQuestion">Pregunta 2: ¿Cuál es la profundidad mínima del dibujo de una llanta de motocicleta?</h4>
+                        
+                        <div class="quiz-option" onclick="selectOption(this)">
+                            <strong>A)</strong> 0.5 mm
+                        </div>
+                        <div class="quiz-option correct" onclick="selectOption(this)">
+                            <strong>B)</strong> 1.6 mm
+                        </div>
+                        <div class="quiz-option" onclick="selectOption(this)">
+                            <strong>C)</strong> 3.0 mm
+                        </div>
+                        <div class="quiz-option" onclick="selectOption(this)">
+                            <strong>D)</strong> 5.0 mm
+                        </div>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <h4 id="quizQuestion">Pregunta 3: ¿Cuándo es el mejor momento para medir la presión de las llantas?</h4>
+                        
+                        <div class="quiz-option" onclick="selectOption(this)">
+                            <strong>A)</strong> Después de un largo viaje
+                        </div>
+                        <div class="quiz-option" onclick="selectOption(this)">
+                            <strong>B)</strong> Al mediodía cuando hace calor
+                        </div>
+                        <div class="quiz-option correct" onclick="selectOption(this)">
+                            <strong>C)</strong> Con las llantas frías
+                        </div>
+                        <div class="quiz-option" onclick="selectOption(this)">
+                            <strong>D)</strong> No importa el momento
+                        </div>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <h4 id="quizQuestion">Pregunta 4: ¿Qué indica el desgaste irregular en los hombros de la llanta?</h4>
+                        
+                        <div class="quiz-option" onclick="selectOption(this)">
+                            <strong>A)</strong> Es normal y no requiere atención
+                        </div>
+                        <div class="quiz-option" onclick="selectOption(this)">
+                            <strong>B)</strong> La llanta es de alta calidad
+                        </div>
+                        <div class="quiz-option" onclick="selectOption(this)">
+                            <strong>C)</strong> La motocicleta tiene buen rendimiento
+                        </div>
+                        <div class="quiz-option correct" onclick="selectOption(this)">
+                            <strong>D)</strong> Presión incorrecta o problemas de alineación
+                        </div>
+                    </div>
+                    
+                    <div class="text-center">
+                        <button class="btn btn-primary btn-lg" onclick="submitQuiz()">Enviar Respuestas</button>
+                        <button class="btn btn-outline-secondary ms-2" onclick="resetQuiz()">Reiniciar Cuestionario</button>
+                    </div>
+                </div>
+                
+                <div id="quizResults" class="text-center mt-4" style="display: none;">
+                    <h3>Resultados del Cuestionario</h3>
+                    <div class="display-4 fw-bold text-primary" id="quizScore">0/4</div>
+                    <p id="quizFeedback" class="lead mt-3">¡Sigue practicando!</p>
+                    <button class="btn btn-primary mt-3" onclick="retakeQuiz()">Volver a Intentar</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Notification -->
+    <div class="notification" id="notification">
+        <i class="bi bi-exclamation-triangle-fill me-2"></i>
+        <span id="notificationText">¡Recuerda verificar la presión de tus llantas!</span>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container text-center">
+            <p>&copy; 2023 Aprendizaje de Mantenimiento de Llantas. Todos los derechos reservados.</p>
+            <p>Este contenido es educativo y forma parte de un programa de aprendizaje interactivo.</p>
+            <div class="mt-3">
+                <a href="#" class="text-white me-3"><i class="bi bi-house-fill"></i> Inicio</a>
+                <a href="#conceptos" class="text-white me-3"><i class="bi bi-book"></i> Conceptos</a>
+                <a href="#practica" class="text-white me-3"><i class="bi bi-tools"></i> Práctica</a>
+                <a href="#simulador" class="text-white me-3"><i class="bi bi-gear"></i> Simulador</a>
+                <a href="#evaluacion" class="text-white"><i class="bi bi-check-circle"></i> Evaluación</a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Variables globales
+        let currentStep = 1;
+        let maintenanceRecords = [];
+        let quizAnswers = [];
+        
+        // Inicialización
+        document.addEventListener('DOMContentLoaded', function() {
+            // Establecer fecha actual en el formulario de mantenimiento
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('maintenanceDate').value = today;
+            
+            // Actualizar visualización de la profundidad del dibujo
+            document.getElementById('treadDepth').addEventListener('input', function() {
+                document.getElementById('treadValue').textContent = this.value + ' mm';
+                updateTireWearVisual(this.value);
+            });
+            
+            // Actualizar barra de presión
+            document.getElementById('measuredPressure').addEventListener('input', updatePressureBar);
+            document.getElementById('recommendedPressure').addEventListener('input', updatePressureBar);
+            
+            // Cargar datos guardados si existen
+            loadSavedData();
+            
+            // Mostrar notificación después de 5 segundos
+            setTimeout(showNotification, 5000);
+        });
+        
+        // Funciones para la práctica paso a paso
+        function nextStep(step) {
+            document.getElementById('panel' + currentStep).classList.remove('active');
+            document.getElementById('step' + currentStep).classList.remove('active');
+            
+            currentStep = step;
+            
+            document.getElementById('panel' + currentStep).classList.add('active');
+            document.getElementById('step' + currentStep).classList.add('active');
+            
+            // Si estamos en el paso 4, generar el resumen
+            if (currentStep === 4) {
+                generateSummary();
+            }
+        }
+        
+        function prevStep(step) {
+            document.getElementById('panel' + currentStep).classList.remove('active');
+            document.getElementById('step' + currentStep).classList.remove('active');
+            
+            currentStep = step;
+            
+            document.getElementById('panel' + currentStep).classList.add('active');
+            document.getElementById('step' + currentStep).classList.add('active');
+        }
+        
+        function updateTireWearVisual(depth) {
+            const wearElement = document.getElementById('tireWear');
+            const percentage = (depth / 8) * 100;
+            wearElement.style.backgroundColor = depth > 3 ? '#777' : (depth > 1.6 ? '#e74c3c' : '#c0392b');
+        }
+        
+        function updatePressureBar() {
+            const recommended = parseInt(document.getElementById('recommendedPressure').value);
+            const measured = parseInt(document.getElementById('measuredPressure').value);
+            const bar = document.getElementById('pressureBar');
+            const status = document.getElementById('pressureStatus');
+            
+            const difference = Math.abs(recommended - measured);
+            let percentage, color, text;
+            
+            if (difference <= 2) {
+                percentage = 50;
+                color = 'bg-success';
+                text = 'Presión correcta';
+            } else if (difference <= 5) {
+                percentage = measured < recommended ? 25 : 75;
+                color = measured < recommended ? 'bg-warning' : 'bg-warning';
+                text = measured < recommended ? 'Presión ligeramente baja' : 'Presión ligeramente alta';
+            } else {
+                percentage = measured < recommended ? 10 : 90;
+                color = 'bg-danger';
+                text = measured < recommended ? 'Presión muy baja' : 'Presión muy alta';
+            }
+            
+            bar.style.width = percentage + '%';
+            bar.className = 'progress-bar ' + color;
+            status.textContent = text;
+        }
+        
+        function adjustPressure() {
+            const recommended = parseInt(document.getElementById('recommendedPressure').value);
+            document.getElementById('measuredPressure').value = recommended;
+            updatePressureBar();
+        }
+        
+        function remeasurePressure() {
+            // Simular una nueva medición con un valor aleatorio cercano al recomendado
+            const recommended = parseInt(document.getElementById('recommendedPressure').value);
+            const randomVariation = (Math.random() * 6) - 3; // -3 a +3
+            const newPressure = Math.round(recommended + randomVariation);
+            document.getElementById('measuredPressure').value = newPressure;
+            updatePressureBar();
+        }
+        
+        function saveMaintenance() {
+            alert('Registro de mantenimiento guardado correctamente.');
+            // En una implementación real, aquí se guardarían los datos
+        }
+        
+        function generateSummary() {
+            const condition = document.getElementById('tireCondition').value;
+            const treadDepth = document.getElementById('treadDepth').value;
+            const recommendedPressure = document.getElementById('recommendedPressure').value;
+            const measuredPressure = document.getElementById('measuredPressure').value;
+            
+            // Actualizar estado de la llanta
+            let tireStatus = '';
+            if (condition === 'excellent') {
+                tireStatus = 'Excelente - La llanta está en perfectas condiciones.';
+            } else if (condition === 'good') {
+                tireStatus = 'Buena - La llanta presenta desgaste normal.';
+            } else if (condition === 'fair') {
+                tireStatus = 'Regular - La llanta necesita atención pronto.';
+            } else {
+                tireStatus = 'Mala - La llanta requiere reemplazo inmediato.';
+            }
+            
+            document.getElementById('tireStatusSummary').textContent = tireStatus;
+            
+            // Actualizar resumen de presión
+            const pressureDiff = Math.abs(recommendedPressure - measuredPressure);
+            let pressureText = '';
+            if (pressureDiff <= 2) {
+                pressureText = `Óptima (${measuredPressure} PSI) - Dentro del rango recomendado.`;
+            } else if (pressureDiff <= 5) {
+                pressureText = `Aceptable (${measuredPressure} PSI) - Se recomienda ajustar a ${recommendedPressure} PSI.`;
+            } else {
+                pressureText = `Inadecuada (${measuredPressure} PSI) - Requiere corrección inmediata.`;
+            }
+            
+            document.getElementById('pressureSummary').textContent = pressureText;
+            
+            // Generar recomendaciones
+            const recommendationsContainer = document.getElementById('recommendations');
+            recommendationsContainer.innerHTML = '';
+            
+            // Recomendación basada en la condición
+            if (condition === 'poor' || treadDepth < 1.6) {
+                addRecommendation('Reemplazar la llanta inmediatamente por seguridad.', 'high');
+            }
+            
+            // Recomendación basada en la presión
+            if (pressureDiff > 5) {
+                addRecommendation(`Ajustar la presión a ${recommendedPressure} PSI.`, 'high');
+            } else if (pressureDiff > 2) {
+                addRecommendation(`Considerar ajustar la presión a ${recommendedPressure} PSI.`, 'medium');
+            }
+            
+            // Recomendación basada en la profundidad del dibujo
+            if (treadDepth < 2.0) {
+                addRecommendation('Monitorizar el desgaste del dibujo cuidadosamente.', 'medium');
+            }
+            
+            // Recomendación general
+            addRecommendation('Verificar la presión semanalmente y antes de viajes largos.', 'low');
+            
+            if (recommendationsContainer.children.length === 0) {
+                addRecommendation('¡Buen trabajo! Las llantas están en excelente estado.', 'low');
+            }
+        }
+        
+        function addRecommendation(text, priority) {
+            const recommendationsContainer = document.getElementById('recommendations');
+            const div = document.createElement('div');
+            div.className = `alert ${priority === 'high' ? 'alert-danger' : (priority === 'medium' ? 'alert-warning' : 'alert-info')} mt-2`;
+            div.textContent = text;
+            recommendationsContainer.appendChild(div);
+        }
+        
+        function generateReport() {
+            alert('Reporte generado. En una implementación real, se descargaría un PDF con toda la información.');
+        }
+        
+        function restartPractice() {
+            currentStep = 1;
+            
+            // Resetear todos los pasos
+            document.querySelectorAll('.step-panel').forEach(panel => {
+                panel.classList.remove('active');
+            });
+            document.querySelectorAll('.step').forEach(step => {
+                step.classList.remove('active', 'completed');
+            });
+            
+            // Activar primer paso
+            document.getElementById('panel1').classList.add('active');
+            document.getElementById('step1').classList.add('active');
+            
+            // Resetear formularios
+            document.getElementById('tireCondition').value = 'excellent';
+            document.getElementById('treadDepth').value = 5;
+            document.getElementById('treadValue').textContent = '5.0 mm';
+            updateTireWearVisual(5);
+            
+            document.getElementById('recommendedPressure').value = 32;
+            document.getElementById('measuredPressure').value = 28;
+            updatePressureBar();
+            
+            document.getElementById('observations').value = '';
+            document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+                checkbox.checked = false;
+            });
+        }
+        
+        function completePractice() {
+            alert('¡Felicidades! Has completado la práctica de mantenimiento de llantas.');
+            // Marcar todos los pasos como completados
+            document.querySelectorAll('.step').forEach(step => {
+                step.classList.add('completed');
+            });
+        }
+        
+        // Funciones para el simulador
+        function saveMotorcycleInfo() {
+            const marca = document.getElementById('motoMarca').value;
+            const modelo = document.getElementById('motoModelo').value;
+            
+            alert(`Información de la motocicleta guardada: ${marca} ${modelo}`);
+            saveToLocalStorage('motorcycleInfo', { marca, modelo });
+        }
+        
+        function addMaintenanceRecord() {
+            const tire = document.getElementById('tireSelect').value;
+            const pressure = document.getElementById('simPressure').value;
+            const observations = document.getElementById('simObservations').value;
+            const date = new Date().toLocaleDateString();
+            
+            const record = {
+                id: Date.now(),
+                date: date,
+                tire: tire,
+                pressure: pressure,
+                observations: observations
+            };
+            
+            maintenanceRecords.push(record);
+            updateMaintenanceTable();
+            saveToLocalStorage('maintenanceRecords', maintenanceRecords);
+            
+            // Limpiar formulario
+            document.getElementById('simObservations').value = '';
+            
+            // Verificar notificaciones
+            checkNotifications();
+        }
+        
+        function updateMaintenanceTable() {
+            const tableBody = document.querySelector('#maintenanceTable tbody');
+            const emptyMessage = document.getElementById('emptyHistoryMessage');
+            
+            if (maintenanceRecords.length === 0) {
+                tableBody.innerHTML = '';
+                emptyMessage.style.display = 'block';
+                return;
+            }
+            
+            emptyMessage.style.display = 'none';
+            tableBody.innerHTML = '';
+            
+            maintenanceRecords.forEach(record => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${record.date}</td>
+                    <td>${record.tire}</td>
+                    <td>${record.pressure} PSI</td>
+                    <td>${record.observations || '-'}</td>
+                    <td>
+                        <button class="btn btn-sm btn-outline-danger" onclick="deleteRecord(${record.id})">
+                            <i class="bi bi-trash"></i>
+                        </button>
+                    </td>
+                `;
+                tableBody.appendChild(row);
+            });
+        }
+        
+        function deleteRecord(id) {
+            maintenanceRecords = maintenanceRecords.filter(record => record.id !== id);
+            updateMaintenanceTable();
+            saveToLocalStorage('maintenanceRecords', maintenanceRecords);
+        }
+        
+        function checkNotifications() {
+            const notificationsList = document.getElementById('notificationsList');
+            notificationsList.innerHTML = '';
+            
+            // Verificar si hay registros recientes
+            const today = new Date();
+            const lastMaintenance = maintenanceRecords.length > 0 ? 
+                new Date(maintenanceRecords[maintenanceRecords.length - 1].date) : null;
+            
+            if (!lastMaintenance) {
+                addNotification('No hay registros de mantenimiento. Agrega el primero.', 'info');
+                return;
+            }
+            
+            // Calcular días desde el último mantenimiento
+            const daysSinceMaintenance = Math.floor((today - lastMaintenance) / (1000 * 60 * 60 * 24));
+            
+            if (daysSinceMaintenance > 30) {
+                addNotification(`Ha pasado ${daysSinceMaintenance} días desde el último mantenimiento. Se recomienda verificar las llantas.`, 'warning');
+            } else {
+                addNotification(`El último mantenimiento fue hace ${daysSinceMaintenance} días. Todo en orden.`, 'success');
+            }
+            
+            // Verificar presión en registros recientes
+            const recentRecords = maintenanceRecords.slice(-2);
+            recentRecords.forEach(record => {
+                const pressure = parseInt(record.pressure);
+                if (pressure < 28 || pressure > 38) {
+                    addNotification(`Presión inusual en llanta ${record.tire}: ${pressure} PSI. Verificar.`, 'danger');
+                }
+            });
+            
+            if (notificationsList.children.length === 0) {
+                addNotification('No hay notificaciones pendientes. Todo parece estar en orden.', 'info');
+            }
+        }
+        
+        function addNotification(text, type) {
+            const notificationsList = document.getElementById('notificationsList');
+            const alert = document.createElement('div');
+            alert.className = `alert alert-${type} alert-dismissible fade show`;
+            alert.innerHTML = `
+                ${text}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            `;
+            notificationsList.appendChild(alert);
+        }
+        
+        function showNotification() {
+            const notification = document.getElementById('notification');
+            const notificationText = document.getElementById('notificationText');
+            
+            // Mensajes aleatorios
+            const messages = [
+                "¡Recuerda verificar la presión de tus llantas!",
+                "¿Has inspeccionado visualmente tus llantas esta semana?",
+                "Mantén un registro de mantenimiento para mayor seguridad",
+                "La presión correcta mejora el rendimiento y ahorra combustible"
+            ];
+            
+            notificationText.textContent = messages[Math.floor(Math.random() * messages.length)];
+            notification.style.display = 'block';
+            
+            // Ocultar después de 5 segundos
+            setTimeout(() => {
+                notification.style.display = 'none';
+            }, 5000);
+        }
+        
+        // Funciones para el cuestionario
+        function selectOption(element) {
+            // Quitar selección de todas las opciones en la misma pregunta
+            const parent = element.parentElement;
+            parent.querySelectorAll('.quiz-option').forEach(opt => {
+                opt.classList.remove('selected');
+            });
+            
+            // Seleccionar la opción clickeada
+            element.classList.add('selected');
+        }
+        
+        function submitQuiz() {
+            const questions = document.querySelectorAll('#quizContainer > div');
+            let score = 0;
+            
+            questions.forEach((question, index) => {
+                const selectedOption = question.querySelector('.quiz-option.selected');
+                
+                if (selectedOption && selectedOption.classList.contains('correct')) {
+                    score++;
+                    selectedOption.classList.add('correct-answered');
+                } else if (selectedOption) {
+                    selectedOption.classList.add('incorrect-answered');
+                    // Mostrar la respuesta correcta
+                    question.querySelector('.quiz-option.correct').classList.add('show-correct');
+                }
+            });
+            
+            // Mostrar resultados
+            document.getElementById('quizContainer').style.display = 'none';
+            document.getElementById('quizResults').style.display = 'block';
+            document.getElementById('quizScore').textContent = `${score}/${questions.length}`;
+            
+            // Mensaje según el puntaje
+            let feedback = '';
+            if (score === questions.length) {
+                feedback = '¡Excelente! Dominas el mantenimiento de llantas.';
+            } else if (score >= questions.length / 2) {
+                feedback = 'Buen trabajo, pero aún puedes mejorar. Repasa los conceptos.';
+            } else {
+                feedback = 'Necesitas estudiar más los conceptos de mantenimiento de llantas.';
+            }
+            
+            document.getElementById('quizFeedback').textContent = feedback;
+        }
+        
+        function resetQuiz() {
+            document.querySelectorAll('.quiz-option').forEach(opt => {
+                opt.classList.remove('selected', 'correct-answered', 'incorrect-answered', 'show-correct');
+            });
+        }
+        
+        function retakeQuiz() {
+            resetQuiz();
+            document.getElementById('quizResults').style.display = 'none';
+            document.getElementById('quizContainer').style.display = 'block';
+        }
+        
+        // Funciones de almacenamiento local
+        function saveToLocalStorage(key, data) {
+            localStorage.setItem(key, JSON.stringify(data));
+        }
+        
+        function loadFromLocalStorage(key) {
+            const data = localStorage.getItem(key);
+            return data ? JSON.parse(data) : null;
+        }
+        
+        function loadSavedData() {
+            // Cargar información de la motocicleta
+            const motorcycleInfo = loadFromLocalStorage('motorcycleInfo');
+            if (motorcycleInfo) {
+                document.getElementById('motoMarca').value = motorcycleInfo.marca;
+                document.getElementById('motoModelo').value = motorcycleInfo.modelo;
+            }
+            
+            // Cargar registros de mantenimiento
+            const savedRecords = loadFromLocalStorage('maintenanceRecords');
+            if (savedRecords) {
+                maintenanceRecords = savedRecords;
+                updateMaintenanceTable();
+            }
+        }
+    </script>
+</body>
+</html>

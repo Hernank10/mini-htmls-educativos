@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Aprende Enumeración y Puntuación</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body {
+      background: #f8f9fa;
+    }
+    .card {
+      border-radius: 1rem;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    .correcta {
+      background-color: #d4edda !important;
+    }
+    .incorrecta {
+      background-color: #f8d7da !important;
+    }
+  </style>
+</head>
+<body>
+  <div class="container py-4">
+    <header class="text-center mb-4">
+      <h1 class="fw-bold">📝 Taller Educativo: Enumeración y Puntuación</h1>
+      <p class="lead">Aprende a usar correctamente las comas y las enumeraciones en español con teoría y práctica interactiva.</p>
+    </header>
+
+    <!-- Teoría -->
+    <section class="card mb-4 p-4">
+      <h2 class="h4 text-primary">📘 Teoría: La enumeración en la escritura</h2>
+      <p>La <strong>enumeración</strong> es una figura del lenguaje que consiste en listar o agrupar elementos semejantes. En la escritura, se usa para ordenar ideas o elementos de un conjunto.</p>
+      <ul>
+        <li>Se separan los elementos de una enumeración con <strong>comas</strong>.</li>
+        <li>No se coloca coma antes de la conjunción <em>y</em> o <em>o</em> (a menos que sea parte de una pausa expresiva).</li>
+        <li>Si los elementos de la enumeración incluyen comas internas, se pueden separar con <strong>punto y coma</strong>.</li>
+      </ul>
+      <p><strong>Ejemplo correcto:</strong> Compré manzanas, naranjas, peras y plátanos.</p>
+    </section>
+
+    <!-- Ejercicios -->
+    <section class="card mb-4 p-4">
+      <h2 class="h4 text-success">🧩 Ejercicios Interactivos</h2>
+      <p>Lee cada pregunta y selecciona la respuesta correcta.</p>
+
+      <div id="quiz-container"></div>
+
+      <button class="btn btn-primary mt-3" id="btnResultado">Ver resultado</button>
+      <div id="resultado" class="mt-3"></div>
+    </section>
+
+    <!-- Reporte -->
+    <section class="card p-4">
+      <h2 class="h4 text-info">📊 Tu progreso</h2>
+      <p>Guarda tus resultados y analiza tus errores para mejorar tu aprendizaje.</p>
+      <button class="btn btn-outline-secondary" id="btnExportar">Exportar Reporte JSON</button>
+      <pre id="reporte" class="mt-3 bg-light p-3 rounded"></pre>
+    </section>
+  </div>
+
+  <script>
+    // Simula el contenido de preguntas.json
+    const preguntas = [
+      { "pregunta": "¿Cuál oración tiene una enumeración correcta?", "opciones": ["Compré manzanas naranjas plátanos y uvas.", "Compré manzanas, naranjas, plátanos y uvas.", "Compré manzanas naranjas, plátanos y uvas."], "respuesta": 1 },
+      { "pregunta": "¿Cuál oración respeta las reglas de enumeración sintáctica?", "opciones": ["Los alumnos trajeron lápices cuadernos libros y reglas.", "Los alumnos, trajeron lápices, cuadernos, libros, y reglas.", "Los alumnos trajeron lápices, cuadernos, libros y reglas."], "respuesta": 2 },
+      { "pregunta": "¿Qué oración está correctamente puntuada?", "opciones": ["Los niños juegan, corren saltan y ríen.", "Los niños, juegan, corren, saltan, y ríen.", "Los niños juegan, corren, saltan y ríen."], "respuesta": 2 },
+      { "pregunta": "¿Cuál oración tiene una enumeración correcta con incisos?", "opciones": ["El instituto ofrece cursos de inglés, (francés, italiano) y alemán.", "El instituto ofrece cursos de inglés (francés, italiano) y alemán.", "El instituto ofrece cursos de inglés, (francés, italiano) y, alemán."], "respuesta": 1 },
+      { "pregunta": "¿Cuál de estas oraciones tiene una enumeración correcta?", "opciones": ["Visité España, Francia, Italia y Portugal.", "Visité España Francia, Italia, y Portugal.", "Visité España, Francia Italia, y Portugal."], "respuesta": 0 },
+      { "pregunta": "¿Qué oración está correctamente enumerada?", "opciones": ["Tengo una casa, un coche, y un perro.", "Tengo, una casa, un coche y, un perro.", "Tengo una casa un coche y un perro."], "respuesta": 0 },
+      { "pregunta": "¿Cuál es la enumeración correcta en la oración?", "opciones": ["Le dieron a María, un regalo, un libro, y una carta.", "Le dieron a María un regalo, un libro y una carta.", "Le dieron, a María un regalo, un libro y una carta."], "respuesta": 1 },
+      { "pregunta": "¿Cuál es la forma correcta de la enumeración?", "opciones": ["Compré plátanos, naranjas, manzanas y uvas.", "Compré, plátanos, naranjas, manzanas y, uvas.", "Compré plátanos naranjas manzanas, y uvas."], "respuesta": 0 },
+      { "pregunta": "¿Cuál oración respeta la norma de no separar el sujeto del verbo?", "opciones": ["El profesor, explicó la lección a los estudiantes.", "El profesor explicó, la lección a los estudiantes.", "El profesor explicó la lección a los estudiantes."], "respuesta": 2 },
+      { "pregunta": "¿Cuál de estas oraciones es la correcta?", "opciones": ["Ana, María, Luis y Juan fueron al cine.", "Ana María Luis y Juan, fueron al cine.", "Ana, María Luis y Juan fueron, al cine."], "respuesta": 0 }
+    ];
+
+    const container = document.getElementById("quiz-container");
+
+    preguntas.forEach((p, index) => {
+      const div = document.createElement("div");
+      div.className = "mb-3";
+      div.innerHTML = `
+        <h5>${index + 1}. ${p.pregunta}</h5>
+        ${p.opciones.map((op, i) => `
+          <div class="form-check">
+            <input class="form-check-input" type="radio" name="pregunta${index}" value="${i}">
+            <label class="form-check-label">${op}</label>
+          </div>
+        `).join("")}
+      `;
+      container.appendChild(div);
+    });
+
+    document.getElementById("btnResultado").addEventListener("click", () => {
+      let correctas = 0;
+      let errores = [];
+
+      preguntas.forEach((p, i) => {
+        const seleccionado = document.querySelector(`input[name='pregunta${i}']:checked`);
+        if (seleccionado) {
+          const valor = parseInt(seleccionado.value);
+          if (valor === p.respuesta) {
+            correctas++;
+          } else {
+            errores.push({
+              pregunta: p.pregunta,
+              tu_respuesta: p.opciones[valor],
+              correcta: p.opciones[p.respuesta]
+            });
+          }
+        }
+      });
+
+      const total = preguntas.length;
+      const porcentaje = (correctas / total * 100).toFixed(1);
+
+      document.getElementById("resultado").innerHTML = `
+        <div class="alert alert-info">
+          Has respondido correctamente <strong>${correctas}</strong> de ${total} preguntas. 
+          <br>Tu puntaje es: <strong>${porcentaje}%</strong>
+        </div>
+      `;
+
+      document.getElementById("reporte").textContent = JSON.stringify({ correctas, errores, porcentaje }, null, 2);
+    });
+
+    document.getElementById("btnExportar").addEventListener("click", () => {
+      const reporte = document.getElementById("reporte").textContent;
+      const blob = new Blob([reporte], { type: "application/json" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "reporte_enumeracion.json";
+      a.click();
+    });
+  </script>
+</body>
+</html>

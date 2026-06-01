@@ -1,0 +1,892 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aprendizaje Morfosintáctico Multilingüe</title>
+    <style>
+        :root {
+            --primary: #3498db;
+            --primary-dark: #2980b9;
+            --secondary: #2c3e50;
+            --accent: #e74c3c;
+            --success: #27ae60;
+            --light: #ecf0f1;
+            --dark: #34495e;
+            --text: #2c3e50;
+            --text-light: #7f8c8d;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --radius: 8px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: var(--text);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .app-card {
+            background: white;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+        }
+
+        /* Banner */
+        .banner {
+            background: linear-gradient(to right, var(--secondary), var(--dark));
+            color: white;
+            padding: 30px 20px;
+            text-align: center;
+        }
+
+        .banner h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        .banner p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        /* Idioma Selector */
+        .language-selector {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+            background: var(--light);
+            border-bottom: 1px solid #ddd;
+        }
+
+        .current-language {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: bold;
+        }
+
+        .flag {
+            font-size: 1.5rem;
+        }
+
+        .change-language-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: var(--radius);
+            cursor: pointer;
+            font-weight: bold;
+            transition: background 0.3s;
+        }
+
+        .change-language-btn:hover {
+            background: var(--primary-dark);
+        }
+
+        /* Main Content */
+        .main-content {
+            padding: 30px 20px;
+            min-height: 500px;
+        }
+
+        /* Menu Principal */
+        .menu-principal h2 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: var(--secondary);
+        }
+
+        .menu-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .menu-card {
+            background: var(--light);
+            border-radius: var(--radius);
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: transform 0.3s, box-shadow 0.3s;
+            border-left: 4px solid var(--primary);
+        }
+
+        .menu-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow);
+        }
+
+        .menu-card h3 {
+            margin-bottom: 10px;
+            color: var(--secondary);
+        }
+
+        .menu-card p {
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
+
+        .funciones-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .funcion-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: var(--radius);
+            cursor: pointer;
+            font-weight: bold;
+            transition: background 0.3s;
+        }
+
+        .funcion-btn:hover {
+            background: var(--primary-dark);
+        }
+
+        /* Practicar Categoria */
+        .categoria-header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .categoria-header h2 {
+            color: var(--secondary);
+            margin-bottom: 10px;
+        }
+
+        .categoria-header p {
+            color: var(--text-light);
+            margin-bottom: 5px;
+        }
+
+        .patron {
+            font-style: italic;
+            background: #f8f9fa;
+            padding: 8px 15px;
+            border-radius: var(--radius);
+            display: inline-block;
+            margin-top: 10px;
+        }
+
+        .ejemplo-area {
+            background: var(--light);
+            padding: 25px;
+            border-radius: var(--radius);
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .ejemplo-texto {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            font-weight: bold;
+            min-height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .traduccion-texto {
+            font-size: 1.3rem;
+            color: var(--success);
+            font-weight: bold;
+            min-height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .botones-ejemplo {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: var(--radius);
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+        }
+
+        .btn-secondary {
+            background: var(--secondary);
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: var(--dark);
+        }
+
+        .btn-success {
+            background: var(--success);
+            color: white;
+        }
+
+        /* Modo Repaso */
+        .repaso-info {
+            text-align: center;
+            margin-bottom: 20px;
+            font-weight: bold;
+            color: var(--secondary);
+        }
+
+        /* Comparacion Idiomas */
+        .comparacion-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .idioma-card {
+            background: var(--light);
+            border-radius: var(--radius);
+            padding: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .idioma-flag {
+            font-size: 1.8rem;
+        }
+
+        .idioma-nombre {
+            font-weight: bold;
+            color: var(--secondary);
+        }
+
+        .idioma-texto {
+            margin-top: 5px;
+        }
+
+        /* Estadisticas */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: var(--light);
+            border-radius: var(--radius);
+            padding: 20px;
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--primary);
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
+
+        .progreso-bar {
+            height: 10px;
+            background: #e0e0e0;
+            border-radius: 5px;
+            margin: 20px 0;
+            overflow: hidden;
+        }
+
+        .progreso-fill {
+            height: 100%;
+            background: var(--success);
+            border-radius: 5px;
+            transition: width 0.5s;
+        }
+
+        /* Selector de Idioma Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: var(--radius);
+            padding: 30px;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: var(--shadow);
+        }
+
+        .modal h2 {
+            margin-bottom: 20px;
+            text-align: center;
+            color: var(--secondary);
+        }
+
+        .idiomas-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .idioma-option {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: var(--radius);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .idioma-option:hover {
+            border-color: var(--primary);
+            background: #f5f9ff;
+        }
+
+        .idioma-option.selected {
+            border-color: var(--primary);
+            background: #e3f2fd;
+        }
+
+        .modal-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .banner h1 {
+                font-size: 2rem;
+            }
+            
+            .menu-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .funciones-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .botones-ejemplo {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="app-card">
+            <!-- Banner -->
+            <div class="banner">
+                <h1>🌍 Aprendizaje Morfosintáctico Multilingüe</h1>
+                <p>Domina las estructuras gramaticales del español en 7 idiomas</p>
+            </div>
+            
+            <!-- Selector de Idioma -->
+            <div class="language-selector">
+                <div class="current-language">
+                    <span class="flag" id="current-flag">🇺🇸</span>
+                    <span id="current-language">Inglés</span>
+                </div>
+                <button class="change-language-btn" id="change-language-btn">Cambiar Idioma</button>
+            </div>
+            
+            <!-- Contenido Principal -->
+            <div class="main-content" id="main-content">
+                <!-- El contenido se cargará dinámicamente aquí -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para seleccionar idioma -->
+    <div class="modal" id="language-modal">
+        <div class="modal-content">
+            <h2>Selecciona tu idioma objetivo</h2>
+            <div class="idiomas-grid" id="idiomas-grid">
+                <!-- Las opciones de idioma se cargarán dinámicamente -->
+            </div>
+            <div class="modal-buttons">
+                <button class="btn btn-secondary" id="cancel-language">Cancelar</button>
+                <button class="btn btn-primary" id="apply-language">Aplicar</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Datos de la aplicación
+        const IDIOMAS = {
+            'es': { nombre: 'Español', bandera: '🇪🇸' },
+            'en': { nombre: 'Inglés', bandera: '🇺🇸' },
+            'pt': { nombre: 'Portugués', bandera: '🇧🇷' },
+            'fr': { nombre: 'Francés', bandera: '🇫🇷' },
+            'hi': { nombre: 'Hindi', bandera: '🇮🇳' },
+            'zh': { nombre: 'Chino', bandera: '🇨🇳' },
+            'ja': { nombre: 'Japonés', bandera: '🇯🇵' }
+        };
+
+        const CATEGORIAS = {
+            1: {
+                nombre: "Verbo 'Ser' y 'Estar'",
+                descripcion: "Distinción entre esencia permanente (ser) y estado transitorio (estar)",
+                ejemplos: [
+                    { es: "Él es aburrido", en: "He is a boring person", pt: "Ele é uma pessoa chata", fr: "Il est une personne ennuyeuse", hi: "वह एक उबाऊ व्यक्ति है", zh: "他是个无聊的人", ja: "彼は退屈な人です" },
+                    { es: "Él está aburrido", en: "He is bored", pt: "Ele está entediado", fr: "Il s'ennuie", hi: "वह ऊब गया है", zh: "他感到无聊", ja: "彼は退屈しています" },
+                    { es: "La manzana es verde", en: "The apple is a green variety", pt: "A maçã é verde", fr: "La pomme est verte", hi: "सेब हरा है", zh: "苹果是绿色的", ja: "リンゴは緑色です" },
+                    { es: "La manzana está verde", en: "The apple is unripe", pt: "A maçã está verde", fr: "La pomme est verte (non mûre)", hi: "सेब कच्चा है", zh: "苹果还没熟", ja: "リンゴは未熟です" }
+                ],
+                patron: "SER para características permanentes, ESTAR para estados temporales"
+            },
+            2: {
+                nombre: "Diminutivos y Aumentativos",
+                descripcion: "Sufijos que expresan tamaño, afecto, desdén o ironía",
+                ejemplos: [
+                    { es: "Ven aquí, hijito", en: "Come here, my dear son", pt: "Vem aqui, filhinho", fr: "Viens ici, mon cher fils", hi: "यहाँ आओ, प्यारे बेटे", zh: "过来，亲爱的儿子", ja: "こちらに来て、愛する息子よ" },
+                    { es: "¡Qué cochezazo!", en: "What an amazing car!", pt: "Que carrão!", fr: "Quelle voiture géniale!", hi: "क्या शानदार कार है!", zh: "多棒的车啊！", ja: "なんて素晴らしい車なんだ！" },
+                    { es: "Dame un momentito", en: "Give me just a second", pt: "Me dá um momentinho", fr: "Donne-moi juste une seconde", hi: "मुझे बस एक पल दो", zh: "给我一秒钟", ja: "ちょっと待ってください" },
+                    { es: "Es un problemilla", en: "It's a small issue", pt: "É um probleminha", fr: "C'est un petit problème", hi: "यह एक छोटी समस्या है", zh: "这是个小问题", ja: "小さな問題です" }
+                ],
+                patron: "raíz + sufijo(-ito/-ita, -ón/-ona) + carga emocional"
+            },
+            3: {
+                nombre: "Flexibilidad del Orden",
+                descripcion: "Cambio del orden sintáctico para enfatizar elementos",
+                ejemplos: [
+                    { es: "A María le regalé un libro", en: "I gave a book to Maria", pt: "À Maria eu dei um livro", fr: "À Marie, j'ai donné un livre", hi: "मैंने मारिया को एक किताब दी", zh: "我给了玛丽亚一本书", ja: "マリアに本をあげました" },
+                    { es: "Cansados llegaron a casa", en: "They arrived home tired", pt: "Cansados chegaram em casa", fr: "Fatigués, ils sont arrivés à la maison", hi: "थके हुए वे घर पहुँचे", zh: "他们疲惫地回到家", ja: "疲れて家に着きました" },
+                    { es: "El examen lo aprobó todo el mundo", en: "Everyone passed the exam", pt: "A prova todo mundo passou", fr: "Tout le monde a réussi l'examen", hi: "सभी ने परीक्षा पास की", zh: "每个人都通过了考试", ja: "全員が試験に合格しました" },
+                    { es: "De eso no quiero hablar", en: "I don't want to talk about that", pt: "Disso eu não quero falar", fr: "Je ne veux pas parler de ça", hi: "मैं उस बारे में बात नहीं करना चाहता", zh: "我不想谈那个", ja: "それについては話したくありません" }
+                ],
+                patron: "Elemento enfatizado + verbo conjugado + resto"
+            }
+        };
+
+        // Estado de la aplicación
+        const estado = {
+            idiomaObjetivo: 'en',
+            categoriaActual: null,
+            ejemploActual: null,
+            modoRepaso: false,
+            categoriasRepaso: [],
+            repasoActual: 0,
+            estadisticas: {
+                sesiones: 1,
+                ejemplosPracticados: 0,
+                categoriasCompletadas: [],
+                fechaUltimaPractica: new Date().toLocaleDateString()
+            }
+        };
+
+        // Elementos DOM
+        const mainContent = document.getElementById('main-content');
+        const currentFlag = document.getElementById('current-flag');
+        const currentLanguage = document.getElementById('current-language');
+        const changeLanguageBtn = document.getElementById('change-language-btn');
+        const languageModal = document.getElementById('language-modal');
+        const idiomasGrid = document.getElementById('idiomas-grid');
+        const cancelLanguageBtn = document.getElementById('cancel-language');
+        const applyLanguageBtn = document.getElementById('apply-language');
+
+        // Inicialización
+        document.addEventListener('DOMContentLoaded', () => {
+            mostrarMenuPrincipal();
+            configurarEventos();
+        });
+
+        function configurarEventos() {
+            changeLanguageBtn.addEventListener('click', mostrarModalIdiomas);
+            cancelLanguageBtn.addEventListener('click', cerrarModalIdiomas);
+            applyLanguageBtn.addEventListener('click', aplicarIdiomaSeleccionado);
+        }
+
+        function mostrarMenuPrincipal() {
+            let html = `
+                <div class="menu-principal">
+                    <h2>¿Qué te gustaría practicar hoy?</h2>
+                    <div class="menu-grid">
+            `;
+
+            // Botones de categorías
+            for (const [id, categoria] of Object.entries(CATEGORIAS)) {
+                html += `
+                    <div class="menu-card" onclick="practicarCategoria(${id})">
+                        <h3>${id}. ${categoria.nombre}</h3>
+                        <p>${categoria.descripcion}</p>
+                    </div>
+                `;
+            }
+
+            html += `
+                    </div>
+                    <div class="funciones-grid">
+                        <button class="funcion-btn" onclick="modoRepasoAleatorio()">🔄 Repaso Aleatorio</button>
+                        <button class="funcion-btn" onclick="testCompleto()">📝 Test Completo</button>
+                        <button class="funcion-btn" onclick="generadorEjemplos()">🆕 Generar Ejemplos</button>
+                        <button class="funcion-btn" onclick="mostrarEstadisticas()">📊 Ver Estadísticas</button>
+                        <button class="funcion-btn" onclick="compararIdiomas()">🌍 Comparar Idiomas</button>
+                    </div>
+                </div>
+            `;
+
+            mainContent.innerHTML = html;
+        }
+
+        function practicarCategoria(id) {
+            estado.categoriaActual = CATEGORIAS[id];
+            estado.modoRepaso = false;
+            
+            let html = `
+                <div class="categoria-header">
+                    <h2>${estado.categoriaActual.nombre}</h2>
+                    <p>${estado.categoriaActual.descripcion}</p>
+                    <div class="patron">${estado.categoriaActual.patron}</div>
+                </div>
+                <div id="ejemplo-container">
+                    <!-- El ejemplo se cargará aquí -->
+                </div>
+                <div class="botones-ejemplo">
+                    <button class="btn btn-primary" onclick="mostrarNuevoEjemplo()">Nuevo Ejemplo</button>
+                    <button class="btn btn-secondary" onclick="mostrarMenuPrincipal()">Volver al Menú</button>
+                </div>
+            `;
+            
+            mainContent.innerHTML = html;
+            mostrarNuevoEjemplo();
+        }
+
+        function mostrarNuevoEjemplo() {
+            if (!estado.categoriaActual) return;
+            
+            estado.ejemploActual = estado.categoriaActual.ejemplos[
+                Math.floor(Math.random() * estado.categoriaActual.ejemplos.length)
+            ];
+            
+            estado.estadisticas.ejemplosPracticados++;
+            
+            const ejemploContainer = document.getElementById('ejemplo-container');
+            ejemploContainer.innerHTML = `
+                <div class="ejemplo-area">
+                    <div class="ejemplo-texto">"${estado.ejemploActual.es}"</div>
+                    <button class="btn btn-success" onclick="mostrarTraduccion()">Revelar Traducción</button>
+                    <div class="traduccion-texto" id="traduccion-texto" style="display: none;"></div>
+                </div>
+            `;
+        }
+
+        function mostrarTraduccion() {
+            const traduccionTexto = document.getElementById('traduccion-texto');
+            traduccionTexto.textContent = `"${estado.ejemploActual[estado.idiomaObjetivo]}"`;
+            traduccionTexto.style.display = 'flex';
+        }
+
+        function modoRepasoAleatorio() {
+            estado.modoRepaso = true;
+            estado.categoriasRepaso = Object.entries(CATEGORIAS);
+            // Mezclar las categorías
+            for (let i = estado.categoriasRepaso.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [estado.categoriasRepaso[i], estado.categoriasRepaso[j]] = [estado.categoriasRepaso[j], estado.categoriasRepaso[i]];
+            }
+            estado.repasoActual = 0;
+            
+            mostrarSiguienteEjemploRepaso();
+        }
+
+        function mostrarSiguienteEjemploRepaso() {
+            if (estado.repasoActual >= estado.categoriasRepaso.length) {
+                mainContent.innerHTML = `
+                    <div style="text-align: center; padding: 50px;">
+                        <h2>🎊 ¡Repaso Completado!</h2>
+                        <p>Has repasado todas las categorías</p>
+                        <button class="btn btn-primary" onclick="mostrarMenuPrincipal()" style="margin-top: 20px;">Volver al Menú</button>
+                    </div>
+                `;
+                return;
+            }
+            
+            const [id, categoria] = estado.categoriasRepaso[estado.repasoActual];
+            const ejemplo = categoria.ejemplos[Math.floor(Math.random() * categoria.ejemplos.length)];
+            
+            let html = `
+                <div class="repaso-info">Repaso Aleatorio - Categoría: ${categoria.nombre}</div>
+                <div class="ejemplo-area">
+                    <div class="ejemplo-texto">"${ejemplo.es}"</div>
+                    <button class="btn btn-success" onclick="mostrarTraduccionRepaso()">Revelar Traducción</button>
+                    <div class="traduccion-texto" id="traduccion-repaso" style="display: none;">"${ejemplo[estado.idiomaObjetivo]}"</div>
+                </div>
+                <div class="botones-ejemplo">
+                    <button class="btn btn-primary" onclick="siguienteEjemploRepaso()">Siguiente Ejemplo</button>
+                    <button class="btn btn-secondary" onclick="mostrarMenuPrincipal()">Volver al Menú</button>
+                </div>
+            `;
+            
+            mainContent.innerHTML = html;
+            estado.estadisticas.ejemplosPracticados++;
+        }
+
+        function mostrarTraduccionRepaso() {
+            const traduccion = document.getElementById('traduccion-repaso');
+            traduccion.style.display = 'flex';
+        }
+
+        function siguienteEjemploRepaso() {
+            estado.repasoActual++;
+            mostrarSiguienteEjemploRepaso();
+        }
+
+        function testCompleto() {
+            // Implementación simplificada
+            alert("Función de test completo en desarrollo. Próximamente disponible.");
+        }
+
+        function generadorEjemplos() {
+            let html = `
+                <h2 style="text-align: center; margin-bottom: 20px;">🆕 Generador de Ejemplos</h2>
+                <div style="text-align: center; margin-bottom: 30px;">
+                    <p>Selecciona una categoría para ver ejemplos:</p>
+                    <select id="categoria-select" style="padding: 10px; border-radius: 5px; border: 1px solid #ddd; margin-top: 10px;">
+            `;
+            
+            for (const [id, categoria] of Object.entries(CATEGORIAS)) {
+                html += `<option value="${id}">${categoria.nombre}</option>`;
+            }
+            
+            html += `
+                    </select>
+                    <button class="btn btn-primary" onclick="generarEjemplos()" style="margin-left: 10px;">Generar</button>
+                </div>
+                <div id="ejemplos-generados"></div>
+                <div class="botones-ejemplo">
+                    <button class="btn btn-secondary" onclick="mostrarMenuPrincipal()">Volver al Menú</button>
+                </div>
+            `;
+            
+            mainContent.innerHTML = html;
+        }
+
+        function generarEjemplos() {
+            const select = document.getElementById('categoria-select');
+            const categoriaId = select.value;
+            const categoria = CATEGORIAS[categoriaId];
+            
+            let html = `
+                <h3 style="text-align: center; margin: 20px 0;">Ejemplos de ${categoria.nombre}</h3>
+                <div class="comparacion-grid">
+            `;
+            
+            // Mostrar 3 ejemplos aleatorios
+            const ejemplos = [...categoria.ejemplos];
+            for (let i = 0; i < Math.min(3, ejemplos.length); i++) {
+                const ejemplo = ejemplos[Math.floor(Math.random() * ejemplos.length)];
+                
+                html += `
+                    <div class="idioma-card">
+                        <div class="idioma-flag">🇪🇸</div>
+                        <div>
+                            <div class="idioma-nombre">Español</div>
+                            <div class="idioma-texto">${ejemplo.es}</div>
+                        </div>
+                    </div>
+                    <div class="idioma-card">
+                        <div class="idioma-flag">${IDIOMAS[estado.idiomaObjetivo].bandera}</div>
+                        <div>
+                            <div class="idioma-nombre">${IDIOMAS[estado.idiomaObjetivo].nombre}</div>
+                            <div class="idioma-texto">${ejemplo[estado.idiomaObjetivo]}</div>
+                        </div>
+                    </div>
+                `;
+                
+                // Eliminar el ejemplo para no repetirlo
+                const index = ejemplos.indexOf(ejemplo);
+                if (index > -1) {
+                    ejemplos.splice(index, 1);
+                }
+            }
+            
+            html += `</div>`;
+            
+            document.getElementById('ejemplos-generados').innerHTML = html;
+        }
+
+        function mostrarEstadisticas() {
+            const progreso = (estado.estadisticas.categoriasCompletadas.length / Object.keys(CATEGORIAS).length) * 100;
+            
+            let html = `
+                <h2 style="text-align: center; margin-bottom: 30px;">📊 Tus Estadísticas de Aprendizaje</h2>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-value">${estado.estadisticas.sesiones}</div>
+                        <div class="stat-label">Sesiones</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">${estado.estadisticas.ejemplosPracticados}</div>
+                        <div class="stat-label">Ejemplos Practicados</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">${estado.estadisticas.categoriasCompletadas.length}/${Object.keys(CATEGORIAS).length}</div>
+                        <div class="stat-label">Categorías Completadas</div>
+                    </div>
+                </div>
+                <div style="margin: 30px 0;">
+                    <h3 style="text-align: center; margin-bottom: 10px;">Progreso General</h3>
+                    <div class="progreso-bar">
+                        <div class="progreso-fill" style="width: ${progreso}%"></div>
+                    </div>
+                    <p style="text-align: center; margin-top: 10px; font-weight: bold;">${progreso.toFixed(1)}%</p>
+                </div>
+                <div class="botones-ejemplo">
+                    <button class="btn btn-secondary" onclick="mostrarMenuPrincipal()">Volver al Menú</button>
+                </div>
+            `;
+            
+            mainContent.innerHTML = html;
+        }
+
+        function compararIdiomas() {
+            // Seleccionar una categoría y ejemplo aleatorio
+            const categoriaId = Math.floor(Math.random() * Object.keys(CATEGORIAS).length) + 1;
+            const categoria = CATEGORIAS[categoriaId];
+            const ejemplo = categoria.ejemplos[Math.floor(Math.random() * categoria.ejemplos.length)];
+            
+            let html = `
+                <h2 style="text-align: center; margin-bottom: 20px;">🌍 Comparación entre Idiomas</h2>
+                <div class="categoria-header">
+                    <h3>${categoria.nombre}</h3>
+                    <p>${categoria.descripcion}</p>
+                    <div class="patron">${categoria.patron}</div>
+                </div>
+                <div style="text-align: center; margin: 20px 0;">
+                    <div style="font-size: 1.2rem; font-weight: bold; margin-bottom: 10px;">Ejemplo en Español:</div>
+                    <div style="font-size: 1.5rem; font-weight: bold; color: var(--primary);">"${ejemplo.es}"</div>
+                </div>
+                <div class="comparacion-grid">
+            `;
+            
+            for (const [codigo, info] of Object.entries(IDIOMAS)) {
+                if (codigo !== 'es') {
+                    html += `
+                        <div class="idioma-card">
+                            <div class="idioma-flag">${info.bandera}</div>
+                            <div>
+                                <div class="idioma-nombre">${info.nombre}</div>
+                                <div class="idioma-texto">${ejemplo[codigo]}</div>
+                            </div>
+                        </div>
+                    `;
+                }
+            }
+            
+            html += `
+                </div>
+                <div class="botones-ejemplo">
+                    <button class="btn btn-primary" onclick="compararIdiomas()">Nueva Comparación</button>
+                    <button class="btn btn-secondary" onclick="mostrarMenuPrincipal()">Volver al Menú</button>
+                </div>
+            `;
+            
+            mainContent.innerHTML = html;
+        }
+
+        function mostrarModalIdiomas() {
+            // Limpiar el grid de idiomas
+            idiomasGrid.innerHTML = '';
+            
+            // Agregar opciones de idioma (excluyendo español)
+            for (const [codigo, info] of Object.entries(IDIOMAS)) {
+                if (codigo !== 'es') {
+                    const isSelected = codigo === estado.idiomaObjetivo;
+                    const idiomaOption = document.createElement('div');
+                    idiomaOption.className = `idioma-option ${isSelected ? 'selected' : ''}`;
+                    idiomaOption.innerHTML = `
+                        <div class="idioma-flag">${info.bandera}</div>
+                        <div class="idioma-nombre">${info.nombre}</div>
+                    `;
+                    idiomaOption.dataset.idioma = codigo;
+                    idiomaOption.addEventListener('click', () => seleccionarIdioma(codigo));
+                    idiomasGrid.appendChild(idiomaOption);
+                }
+            }
+            
+            languageModal.style.display = 'flex';
+        }
+
+        function cerrarModalIdiomas() {
+            languageModal.style.display = 'none';
+        }
+
+        function seleccionarIdioma(codigo) {
+            // Quitar selección anterior
+            document.querySelectorAll('.idioma-option').forEach(option => {
+                option.classList.remove('selected');
+            });
+            
+            // Aplicar selección nueva
+            document.querySelector(`.idioma-option[data-idioma="${codigo}"]`).classList.add('selected');
+            estado.idiomaObjetivo = codigo;
+        }
+
+        function aplicarIdiomaSeleccionado() {
+            const idiomaSeleccionado = estado.idiomaObjetivo;
+            const infoIdioma = IDIOMAS[idiomaSeleccionado];
+            
+            currentFlag.textContent = infoIdioma.bandera;
+            currentLanguage.textContent = infoIdioma.nombre;
+            
+            cerrarModalIdiomas();
+            
+            // Mostrar mensaje de confirmación
+            alert(`Idioma cambiado a: ${infoIdioma.nombre}`);
+        }
+    </script>
+</body>
+</html>

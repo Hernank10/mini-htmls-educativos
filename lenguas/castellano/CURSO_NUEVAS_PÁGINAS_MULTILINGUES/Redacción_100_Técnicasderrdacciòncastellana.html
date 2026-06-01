@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>Suite de Redacción · 100 técnicas de redacción castellana · MultivoZ</title>
+  <!-- Bootstrap 5 + Iconos -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700;800&family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #2A7A4B;
+      --primary-dark: #1E5F3A;
+      --secondary: #D9A13B;
+      --bg-dark: #1a1a1a;
+      --bg-light: #F5F0E8;
+      --card-dark: #252525;
+      --card-light: #FFFFFF;
+    }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg-dark);
+      color: #E5E5E5;
+      transition: all 0.3s;
+    }
+    body.light-mode {
+      background: var(--bg-light);
+      color: #1E1E1E;
+    }
+    .sidebar {
+      background: #1E1E1E;
+      border-radius: 1.5rem;
+      padding: 1rem;
+      height: fit-content;
+      position: sticky;
+      top: 20px;
+    }
+    body.light-mode .sidebar { background: #FFF; box-shadow: 0 4px 20px rgba(0,0,0,0.05); }
+    .nav-item-custom {
+      padding: 0.8rem 1rem;
+      border-radius: 1rem;
+      cursor: pointer;
+      margin-bottom: 0.5rem;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: #AAA;
+    }
+    .nav-item-custom i { width: 24px; font-size: 1.2rem; }
+    .nav-item-custom.active { background: var(--primary); color: white; }
+    .nav-item-custom:hover:not(.active) { background: rgba(255,255,255,0.05); color: white; }
+    body.light-mode .nav-item-custom:hover:not(.active) { background: rgba(0,0,0,0.05); color: #1E1E1E; }
+    .flashcard-container { perspective: 1000px; cursor: pointer; min-height: 320px; }
+    .flashcard { width: 100%; height: 320px; position: relative; transform-style: preserve-3d; transition: transform 0.6s; border-radius: 1.5rem; }
+    .flashcard.flipped { transform: rotateY(180deg); }
+    .flashcard-front, .flashcard-back {
+      position: absolute; width: 100%; height: 100%; backface-visibility: hidden;
+      border-radius: 1.5rem; padding: 1.5rem; display: flex; flex-direction: column;
+      justify-content: center; background: var(--card-dark); border: 1px solid #3A3A3A;
+    }
+    body.light-mode .flashcard-front, body.light-mode .flashcard-back { background: var(--card-light); border-color: #E0E0E0; }
+    .flashcard-back { transform: rotateY(180deg); background: var(--primary); color: white; }
+    .badge-cat {
+      background: var(--secondary);
+      color: #2C2A29;
+      padding: 0.2rem 0.6rem;
+      border-radius: 20px;
+      font-size: 0.7rem;
+    }
+    footer { background: #141414; padding: 1rem 0; margin-top: 2rem; text-align: center; }
+    body.light-mode footer { background: #DDD; color: #333; }
+    .filter-btn { background: transparent; border: 1px solid #3A3A3A; border-radius: 30px; padding: 0.2rem 0.8rem; font-size: 0.7rem; margin: 0.2rem; cursor: pointer; }
+    .filter-btn.active { background: var(--primary); border-color: var(--primary); color: white; }
+    .tts-controls { background: rgba(0,0,0,0.2); border-radius: 1rem; padding: 0.8rem; margin-top: 1rem; }
+    .progress-custom { height: 4px; background: #3A3A3A; border-radius: 2px; overflow: hidden; }
+    .progress-fill-custom { height: 100%; background: var(--primary); width: 0%; transition: width 0.1s linear; }
+    select option { background: var(--card-dark); color: #E5E5E5; }
+    body.light-mode select option { background: var(--card-light); color: #1E1E1E; }
+  </style>
+</head>
+<body>
+
+<div class="container-fluid px-4 py-3">
+  <div class="row g-4">
+    
+    <!-- SIDEBAR -->
+    <div class="col-lg-3 col-md-4">
+      <div class="sidebar">
+        <div class="text-center py-3">
+          <i class="bi bi-pencil-square" style="font-size: 2rem; color: var(--primary);"></i>
+          <h5 class="mt-2">Redacción Pro</h5>
+          <small class="text-muted">100 técnicas + MultivoZ</small>
+        </div>
+        <hr>
+        <div class="nav-item-custom active" data-view="flashcards">
+          <i class="bi bi-stack"></i> <span>📇 100 Técnicas</span>
+        </div>
+        <hr>
+        <div class="mt-3">
+          <div class="d-flex justify-content-between small"><span>Técnicas aprendidas</span><span id="masteredCount">0</span><span>/100</span></div>
+          <div class="progress-custom mt-1"><div class="progress-fill-custom" id="progressFill" style="width:0%"></div></div>
+        </div>
+        <hr>
+        <button id="themeToggleBtn" class="btn btn-sm w-100 mt-2" style="background: rgba(255,255,255,0.05);">
+          <i class="bi bi-moon-stars-fill"></i> Modo oscuro
+        </button>
+      </div>
+    </div>
+    
+    <!-- CONTENIDO PRINCIPAL -->
+    <div class="col-lg-9 col-md-8">
+      
+      <!-- VISTA FLASHCARDS CON 100 TÉCNICAS DE REDACCIÓN CASTELLANA -->
+      <div id="flashcardsView">
+        <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+          <h3><i class="bi bi-card-list me-2"></i>100 técnicas de redacción en castellano</h3>
+        </div>
+        
+        <!-- Filtros por categoría -->
+        <div class="mb-3 d-flex flex-wrap gap-1" id="catFilters">
+          <button class="filter-btn active" data-cat="all">📚 Todas</button>
+          <button class="filter-btn" data-cat="estructura">📐 Estructura</button>
+          <button class="filter-btn" data-cat="lenguaje">🗣️ Lenguaje</button>
+          <button class="filter-btn" data-cat="estilo">✍️ Estilo</button>
+          <button class="filter-btn" data-cat="narrativa">📖 Narrativa</button>
+          <button class="filter-btn" data-cat="correccion">✅ Corrección</button>
+          <button class="filter-btn" data-cat="persuasion">🎯 Persuasión</button>
+        </div>
+        
+        <div class="row justify-content-center">
+          <div class="col-lg-8">
+            <!-- Tarjeta flashcard -->
+            <div class="flashcard-container">
+              <div class="flashcard" id="flashcard">
+                <div class="flashcard-front">
+                  <div class="flashcard-label" id="frontLabel">TÉCNICA</div>
+                  <p id="frontText" style="font-size: 1rem; line-height: 1.5;">Cargando...</p>
+                  <small class="text-muted mt-auto">🖱️ Clic para ver el ejemplo</small>
+                </div>
+                <div class="flashcard-back">
+                  <div class="flashcard-label" id="backLabel">📖 EJEMPLO PRÁCTICO</div>
+                  <p id="backText" style="font-size: 0.9rem; line-height: 1.5;">...</p>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Controles de navegación -->
+            <div class="d-flex justify-content-between mt-4">
+              <button id="prevCardBtn" class="btn btn-outline-light"><i class="bi bi-chevron-left"></i> Anterior</button>
+              <div class="d-flex gap-2">
+                <span id="cardCounter">1 / 100</span>
+                <button id="markLearnedBtn" class="btn btn-sm btn-success"><i class="bi bi-check-lg"></i> Marcar aprendida</button>
+              </div>
+              <button id="nextCardBtn" class="btn btn-outline-light">Siguiente <i class="bi bi-chevron-right"></i></button>
+            </div>
+            <div class="text-center mt-3">
+              <button id="randomCardBtn" class="btn btn-sm btn-secondary me-2"><i class="bi bi-shuffle"></i> Aleatorio</button>
+              <button id="flipCardBtn" class="btn btn-sm btn-secondary"><i class="bi bi-arrow-repeat"></i> Voltear</button>
+            </div>
+            
+            <!-- LECTOR DE TEXTO MULTIVOZ MEJORADO -->
+            <div class="tts-controls mt-4">
+              <div class="d-flex flex-wrap gap-2 align-items-center justify-content-between">
+                <div class="fw-bold"><i class="bi bi-soundwave"></i> Lector multivoZ</div>
+                <div class="d-flex gap-2 flex-wrap">
+                  <select id="voiceSelect" class="form-select form-select-sm" style="width: 200px;"></select>
+                  <select id="rateSelect" class="form-select form-select-sm" style="width: 80px;">
+                    <option value="0.5">0.5x</option><option value="0.75">0.75x</option><option value="1" selected>1x</option>
+                    <option value="1.25">1.25x</option><option value="1.5">1.5x</option><option value="2">2x</option>
+                  </select>
+                  <select id="pitchSelect" class="form-select form-select-sm" style="width: 90px;">
+                    <option value="0.5">Bajo</option><option value="0.75">Medio-bajo</option><option value="1" selected>Normal</option>
+                    <option value="1.25">Medio-alto</option><option value="1.5">Alto</option>
+                  </select>
+                </div>
+              </div>
+              <div class="d-flex gap-2 mt-2 justify-content-center">
+                <button id="speakFlashBtn" class="btn btn-sm btn-primary"><i class="bi bi-play-circle-fill"></i> Leer técnica</button>
+                <button id="pauseSpeechBtn" class="btn btn-sm btn-warning"><i class="bi bi-pause-circle-fill"></i> Pausar</button>
+                <button id="resumeSpeechBtn" class="btn btn-sm btn-success"><i class="bi bi-play-circle-fill"></i> Reanudar</button>
+                <button id="stopSpeechBtn" class="btn btn-sm btn-danger"><i class="bi bi-stop-circle-fill"></i> Detener</button>
+                <button id="previewVoiceBtn" class="btn btn-sm btn-outline-secondary"><i class="bi bi-earbuds"></i> Probar voz</button>
+              </div>
+              <div class="mt-2">
+                <div class="progress-custom"><div class="progress-fill-custom" id="speechProgress"></div></div>
+                <div class="small text-muted text-center mt-1" id="speechStatus">Listo</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer class="text-center">
+  <div class="container"><small>✍️ Redacción Pro · 100 técnicas de redacción en castellano · Aprende y practica con flashcards interactivas</small></div>
+</footer>
+
+<script>
+  // ============================================================
+  // 100 TÉCNICAS DE REDACCIÓN EN CASTELLANO
+  // (número, título, ejemplo práctico, categoría)
+  // ============================================================
+  const tecnicas = [
+    [1, "Usa la pirámide invertida", "Coloca la información más importante al inicio del texto. Ejemplo: 'El nuevo horario de atención será de 8 a 6', no 'Informamos que a partir del lunes...'", "estructura"],
+    [2, "Redacta oraciones cortas", "Limita cada oración a 15-20 palabras. Ejemplo: 'Llegó tarde. El tráfico era denso. No pudo entrar.'", "lenguaje"],
+    [3, "Evita la voz pasiva", "Prefiere 'El equipo presentó el informe' sobre 'El informe fue presentado por el equipo'.", "lenguaje"],
+    [4, "Usa conectores lógicos", "Emplea 'sin embargo', 'por lo tanto', 'en consecuencia' para guiar al lector.", "estructura"],
+    [5, "Elimina muletillas", "Suprime 'o sea', 'como que', 'en plan' en textos formales.", "correccion"],
+    [6, "Muestra, no digas", "No 'estaba enojado', escribe 'Golpeó la mesa y salió sin mirar atrás'.", "estilo"],
+    [7, "Usa metáforas con mesura", "Una metáfora potente: 'La ciudad era un hormiguero de luces', no más de una por párrafo.", "estilo"],
+    [8, "Varía la longitud de las oraciones", "Alterna frases cortas y largas para crear ritmo: 'Llegó. La esperaban desde hacía horas. Finalmente, cruzó el umbral.'", "estilo"],
+    [9, "Inicia con un gancho", "Primera frase impactante: 'Nadie creyó que fuera posible hasta que lo vieron.'", "persuasion"],
+    [10, "Usa la regla de tres", "Tres elementos generan mejor estructura: 'Llegar, ver, vencer'.", "estructura"],
+    [11, "Apela a las emociones", "No solo datos: 'La noticia devastó a la familia', crea empatía.", "persuasion"],
+    [12, "Sé específico, no vago", "Mejor 'tres manzanas rojas' que 'algunas frutas'.", "lenguaje"],
+    [13, "Evita adjetivos vacíos", "Sustituye 'muy bueno' por 'excelente', 'óptimo', 'sobresaliente'.", "lenguaje"],
+    [14, "Usa ejemplos concretos", "Tras una idea abstracta, ilustra: '...como cuando en 1995 la empresa quebró'.", "estructura"],
+    [15, "Crea expectativa", "Anuncia lo que viene: 'A continuación, las tres claves del éxito'.", "estructura"],
+    [16, "Termina con fuerza", "El cierre debe resonar: 'Y así, sin más, comenzó la revolución.'", "estructura"],
+    [17, "Revisa la concordanciA", "Sujeto y verbo deben coincidir: 'Los niños juegan' no 'Los niños juega'.", "correccion"],
+    [18, "Evita dequeísmo", "No digas 'pienso de que...', correcto: 'pienso que...'.", "correccion"],
+    [19, "No abusar de yo y nosotros", "Prefiere construcciones impersonales en textos académicos.", "lenguaje"],
+    [20, "Usa el presente histórico", "Da viveza: 'En 1492, Colón descubre América' en lugar de 'descubrió'.", "narrativa"],
+    [21, "Incorpora diálogos", "Los diálogos directos agilizan la narrativa: '—No lo haré —dijo—, es peligroso.'", "narrativa"],
+    [22, "Crea un titular irresistible", "8-12 palabras, incluye beneficio: 'Cómo perder peso en 10 días sin dieta'", "persuasion"],
+    [23, "Usa analogías", "Explica lo complejo con lo familiar: 'La memoria RAM es como un escritorio...'", "estilo"],
+    [24, "Divide en párrafos breves", "Idealmente 3-5 líneas por párrafo en pantalla.", "estructura"],
+    [25, "Emplea listas y viñetas", "Facilitan la lectura: puntos clave, pasos, características.", "estructura"],
+    [26, "Destaca frases clave", "Usa negritas o cursivas para enfatizar ideas principales.", "lenguaje"],
+    [27, "Lee en voz alta", "Detectarás frases extrañas o demasiado largas.", "correccion"],
+    [28, "Usa contracciones naturales", "'pa' que' en lugar de 'para que' en diálogos coloquiales.", "lenguaje"],
+    [29, "Evita extranjerismos", "Prefiere 'video' a 'vídeo', 'computadora' a 'ordenador' (válido en Colombia).", "lenguaje"],
+    [30, "Cuida la puntuación", "Una coma puede cambiar el sentido: 'No, lo sé' vs 'No lo sé'.", "correccion"],
+    [31, "Elimina redundancias", "No digas 'subir arriba' o 'bajar abajo'.", "correccion"],
+    [32, "Usa sinónimos variados", "Evita repetir la misma palabra, emplea un tesauro.", "estilo"],
+    [33, "Activa los sentidos", "Describe olores, sonidos, texturas: 'El café aromático inundaba la cocina.'", "narrativa"],
+    [34, "Construye un arco narrativo", "Introducción, desarrollo, clímax, desenlace en textos largos.", "estructura"],
+    [35, "Usa preguntas retóricas", "Involucran al lector: '¿Quién no ha soñado con viajar al espacio?'", "persuasion"],
+    [36, "Incorpora datos estadísticos", "Aportan credibilidad: 'El 85% de los lectores prefiere...'", "persuasion"],
+    [37, "Cita fuentes autorizadas", "Respalda afirmaciones: 'Según la RAE, ...'", "persuasion"],
+    [38, "Crea un cliffhanger", "Deja intriga al final de un capítulo o sección.", "narrativa"],
+    [39, "Usa el estilo directo", "Prefiere 'Juan dijo...' sobre 'Fue dicho por Juan'.", "lenguaje"],
+    [40, "Evita el gerundio excesivo", "No 'estuvimos caminando y después comiendo', mejor 'caminamos y luego comimos'.", "correccion"],
+    [41, "Elimina la palabra 'cosa'", "Sustituye por el nombre exacto: 'el problema', 'el asunto', 'el objeto'.", "lenguaje"],
+    [42, "Usa un lenguaje inclusivo", "Prefiere 'las personas', 'la ciudadanía' sobre 'los ciudadanos'.", "lenguaje"],
+    [43, "Emplea elipsis", "Omite lo sobreentendido: 'María estudia medicina; Pedro, derecho.'", "estilo"],
+    [44, "Crea un lema o frase memorable", "Frases cortas que se quedan en la mente: 'Justicia para todos'.", "persuasion"],
+    [45, "Usa anáforas", "Repite palabras al inicio para dar ritmo: '#NiUnaMenos, #NiUnaMuerte'.", "estilo"],
+    [46, "Incorpora preguntas directas al lector", "'¿Alguna vez te has sentido así?' genera conexión.", "persuasion"],
+    [47, "Diferencia hechos de opiniones", "Los hechos se respaldan; las opiniones se argumentan.", "correccion"],
+    [48, "Evita el humor forzado", "Si no eres gracioso naturalmente, mejor sé serio.", "estilo"],
+    [49, "Usa la segunda persona", "El 'tú' crea cercanía: 'Tú puedes lograrlo'.", "persuasion"],
+    [50, "Crea imágenes mentales", "Usa palabras evocadoras: 'la lluvia golpeaba los vidrios como lágrimas'", "narrativa"],
+    [51, "Aplica la ley de la primera y última oración", "Son las más recordadas. Dedícales tiempo extra.", "estructura"],
+    [52, "Varía las palabras de apertura", "No todas las oraciones comienzan igual: 'El, La, Ellos' se repite mucho.", "estilo"],
+    [53, "Usa un lenguaje positivo", "Prefiere 'ahorra energía' sobre 'no desperdicies energía'.", "persuasion"],
+    [54, "Crea subtítulos informativos", "Que se puedan leer solos y entienda el tema.", "estructura"],
+    [55, "Escribe un lead de 25 palabras", "Las primeras 25 palabras deben vender el texto completo.", "persuasion"],
+    [56, "Incluye una llamada a la acción", "Invita: 'Comparte este artículo', 'Déjanos tu comentario'.", "persuasion"],
+    [57, "Usa el orden cronológico", "Para narraciones: primero pasó esto, luego esto, después esto.", "narrativa"],
+    [58, "Da contexto al lector", "No des por sabido lo que ignoran: explica siglas y referencias.", "estructura"],
+    [59, "Evita los adverbios en -mente", "No 'realmente emocionante', mejor 'apasionante'.", "lenguaje"],
+    [60, "Usa verbos fuertes", "Prefiere 'destrozó' sobre 'rompió', 'imploró' sobre 'pidió'.", "estilo"],
+    [61, "Cuida la acentuación", "Confundir 'té' con 'te', 'más' con 'mas' cambia el significado.", "correccion"],
+    [62, "Usa comillas para ironía", "El 'viveza' criolla no es un cumplido.", "lenguaje"],
+    [63, "Evita el sensacionalismo", "No exageres: 'Lo peor que te pasará' si no es tan grave.", "etica"],
+    [64, "Respeta al lector", "No des por sentada su ignorancia ni su conocimiento.", "etica"],
+    [65, "Verifica datos antes de publicar", "Un error destruye credibilidad.", "etica"],
+    [66, "Usa la paráfrasis", "Repite ideas con otras palabras: 'En otras palabras, lo que intento decir...'", "estructura"],
+    [67, "Incluye contraargumentos", "Muestra que conoces otras posturas y las refutas.", "persuasion"],
+    [68, "Crea un resumen ejecutivo", "Al inicio del texto, las ideas clave para lectores con poco tiempo.", "estructura"],
+    [69, "Usa mayúsculas solo donde toca", "Nombres propios, inicio de oración. NO TODO EN MAYÚSCULA.", "correccion"],
+    [70, "Separa correctamente las palabras", "'Porque' (causa), 'por qué' (pregunta), 'porqué' (sustantivo).", "correccion"],
+    [71, "Evita las cacofonías", "No repitas sílabas molestas: 'La bella vela vela' mejor evitarlo.", "estilo"],
+    [72, "Lee a otros autores", "Aprende estilos leyendo buena literatura.", "estilo"],
+    [73, "Descansa antes de revisar", "Relee al día siguiente con mente fresca.", "correccion"],
+    [74, "Pide a otro que lea tu texto", "Una segunda opinión detecta errores que no ves.", "correccion"],
+    [75, "Mide la legibilidad", "Textos muy densos aburren. Alterna párrafos largos y cortos.", "estructura"],
+    [76, "Usa el poder del silencio", "En narrativa, una línea en blanco puede ser más potente que palabras.", "estilo"],
+    [77, "Crea un personaje con quien empatizar", "El lector se involucra si se identifica con alguien.", "narrativa"],
+    [78, "Usa el monólogo interior", "Permite conocer los pensamientos del personaje.", "narrativa"],
+    [79, "Juega con el tiempo narrativo", "Flashbacks, flashforwards, analepsis.", "narrativa"],
+    [80, "Apoya tus tesis con testimonios", "La experiencia real de otros convence.", "persuasion"],
+    [81, "Usa números cuando sea posible", "'3 de cada 4' es más impactante que 'la mayoría'.", "persuasion"],
+    [82, "Evita el lenguaje soez sin propósito", "Solo si aporta al personaje o contexto.", "lenguaje"],
+    [83, "Sé conciso", "Una palabra vale más que dos. Elimina lo innecesario.", "lenguaje"],
+    [84, "Usa analogías visuales", "'Como un castillo de naipes, todo se derrumbó'.", "estilo"],
+    [85, "Emplea la hipérbole con cuidado", "Exagerar para enfatizar: 'Te lo he dicho un millón de veces'.", "estilo"],
+    [86, "Construye personajes redondos", "Con virtudes, defectos, contradicciones.", "narrativa"],
+    [87, "Usa un narrador confiable", "El lector debe creerle. No lo engañes.", "narrativa"],
+    [88, "Crea diálogos auténticos", "La gente no habla con gramática perfecta. Usa muletillas.", "narrativa"],
+    [89, "Evita los clichés", 'No "como agua y aceite", busca metáforas frescas.', "estilo"],
+    [90, "Sé humilde", "Admite cuando no sabes algo. El lector valora la honestidad.", "etica"],
+    [91, "Actualiza tu contenido", "Lo que era cierto hace 10 años puede no serlo ahora.", "etica"],
+    [92, "Agradece a tus lectores", "Una línea de agradecimiento genera cercanía.", "etica"],
+    [93, "Usa un lenguaje accesible", "No escribas para impresionar, escribe para comunicar.", "lenguaje"],
+    [94, "Prueba a leerlo una semana después", "Si aún te gusta, es bueno. Si no, revisa.", "correccion"],
+    [95, "Crea un esquema antes de escribir", "Organiza ideas en mapa o lista.", "estructura"],
+    [96, "Define a tu público", "No es lo mismo escribir para adolescentes que para académicos.", "estructura"],
+    [97, "Establece un propósito claro", "¿Qué quieres que el lector haga/sienta después de leer?", "estructura"],
+    [98, "Graba mientras escribes", "Luego escúchate: lo que suena natural, funciona.", "correccion"],
+    [99, "Escribe con regularidad", "La redacción es como un músculo: se entrena.", "persuasion"],
+    [100, "Disfruta el proceso", "Si escribes con gusto, se nota.", "etica"]
+  ];
+
+  // Variables de estado
+  let currentFilter = "all";
+  let filteredTecnicas = [...tecnicas];
+  let currentTecIndex = 0;
+  let mastered = {};
+  let voices = [];
+  let currentUtterance = null;
+  let speechProgressInterval = null;
+
+  const STORAGE_KEY = "redaccion_100_tecnicas";
+
+  // Cargar progreso guardado
+  function loadMastered() {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if(saved) {
+      const data = JSON.parse(saved);
+      if(data.mastered) mastered = data.mastered;
+    }
+    for(let i=1;i<=100;i++) if(mastered[i]===undefined) mastered[i]=false;
+    updateMasteredDisplay();
+  }
+
+  function saveMastered() {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify({ mastered }));
+  }
+
+  function updateMasteredDisplay() {
+    let masteredCount = Object.values(mastered).filter(v=>v===true).length;
+    document.getElementById("masteredCount").innerText = masteredCount;
+    document.getElementById("progressFill").style.width = `${(masteredCount/100)*100}%`;
+  }
+
+  // Filtrar técnicas
+  function filterTecnicas() {
+    if(currentFilter === "all") filteredTecnicas = [...tecnicas];
+    else filteredTecnicas = tecnicas.filter(t => t[3] === currentFilter);
+    currentTecIndex = Math.min(currentTecIndex, filteredTecnicas.length-1);
+    if(currentTecIndex < 0) currentTecIndex = 0;
+    updateFlashcardDisplay();
+  }
+
+  function updateFlashcardDisplay() {
+    if(!filteredTecnicas.length) return;
+    const tec = filteredTecnicas[currentTecIndex];
+    document.getElementById("frontLabel").innerHTML = `🎯 ${tec[1]}`;
+    document.getElementById("frontText").innerHTML = tec[2];
+    document.getElementById("backLabel").innerHTML = `📖 EJEMPLO PRÁCTICO`;
+    document.getElementById("backText").innerHTML = tec[2];
+    document.getElementById("cardCounter").innerHTML = `${currentTecIndex+1} / ${filteredTecnicas.length}`;
+    document.getElementById("flashcard").classList.remove("flipped");
+  }
+
+  function nextCard() { if(currentTecIndex < filteredTecnicas.length-1) { currentTecIndex++; updateFlashcardDisplay(); } }
+  function prevCard() { if(currentTecIndex > 0) { currentTecIndex--; updateFlashcardDisplay(); } }
+  function randomCard() { currentTecIndex = Math.floor(Math.random() * filteredTecnicas.length); updateFlashcardDisplay(); }
+  function flipCard() { document.getElementById("flashcard").classList.toggle("flipped"); }
+
+  function markLearned() {
+    const tec = filteredTecnicas[currentTecIndex];
+    if(tec) {
+      mastered[tec[0]] = !mastered[tec[0]];
+      saveMastered();
+      updateMasteredDisplay();
+    }
+  }
+
+  // ============================================================
+  // LECTOR DE VOZ MULTIVOZ
+  // ============================================================
+  function populateVoices() {
+    voices = speechSynthesis.getVoices();
+    const select = document.getElementById("voiceSelect");
+    if(select) {
+      const currentVal = select.value;
+      select.innerHTML = '<option value="">🔊 Selecciona una voz...</option>';
+      voices.forEach(voice => {
+        select.innerHTML += `<option value="${voice.name}" data-lang="${voice.lang}">${voice.name} (${voice.lang})</option>`;
+      });
+      if(currentVal) select.value = currentVal;
+    }
+  }
+
+  if(typeof speechSynthesis !== 'undefined') {
+    speechSynthesis.onvoiceschanged = populateVoices;
+    setTimeout(populateVoices, 200);
+  }
+
+  function stopSpeaking() {
+    if(currentUtterance) {
+      speechSynthesis.cancel();
+      currentUtterance = null;
+    }
+    if(speechProgressInterval) clearInterval(speechProgressInterval);
+    document.getElementById("speechProgress").style.width = "0%";
+    document.getElementById("speechStatus").innerHTML = "✅ Detenido";
+  }
+
+  function pauseSpeaking() {
+    if(currentUtterance && speechSynthesis.speaking) {
+      speechSynthesis.pause();
+      document.getElementById("speechStatus").innerHTML = "⏸️ Pausado";
+    }
+  }
+
+  function resumeSpeaking() {
+    if(currentUtterance && speechSynthesis.paused) {
+      speechSynthesis.resume();
+      document.getElementById("speechStatus").innerHTML = "🔊 Reproduciendo...";
+    }
+  }
+
+  function updateSpeechProgress() {
+    if(speechProgressInterval) clearInterval(speechProgressInterval);
+    if(!currentUtterance) return;
+    let startTime = Date.now();
+    let duration = (currentUtterance.text.length / 15) * 1000;
+    speechProgressInterval = setInterval(() => {
+      let elapsed = Date.now() - startTime;
+      let percent = Math.min(100, (elapsed / duration) * 100);
+      document.getElementById("speechProgress").style.width = `${percent}%`;
+      if(percent >= 100) {
+        clearInterval(speechProgressInterval);
+        document.getElementById("speechStatus").innerHTML = "✅ Lectura completa";
+      }
+    }, 100);
+  }
+
+  function speakCurrent() {
+    stopSpeaking();
+    const tec = filteredTecnicas[currentTecIndex];
+    if(!tec) { alert("No hay técnica para leer"); return; }
+    const text = `${tec[1]}. ${tec[2]}`;
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.lang = "es-ES";
+    utterance.rate = parseFloat(document.getElementById("rateSelect")?.value || 1);
+    utterance.pitch = parseFloat(document.getElementById("pitchSelect")?.value || 1);
+    const voiceName = document.getElementById("voiceSelect")?.value;
+    if(voiceName && voices.length) {
+      const selected = voices.find(v => v.name === voiceName);
+      if(selected) utterance.voice = selected;
+    }
+    utterance.onstart = () => {
+      document.getElementById("speechStatus").innerHTML = "🔊 Reproduciendo...";
+      updateSpeechProgress();
+    };
+    utterance.onend = () => {
+      clearInterval(speechProgressInterval);
+      document.getElementById("speechProgress").style.width = "100%";
+      document.getElementById("speechStatus").innerHTML = "✅ Lectura completa";
+      currentUtterance = null;
+    };
+    utterance.onerror = () => {
+      document.getElementById("speechStatus").innerHTML = "❌ Error";
+      currentUtterance = null;
+    };
+    currentUtterance = utterance;
+    speechSynthesis.speak(utterance);
+  }
+
+  function previewVoice() {
+    stopSpeaking();
+    const testText = "Hola, esta es una prueba de la voz seleccionada para las técnicas de redacción.";
+    const utterance = new SpeechSynthesisUtterance(testText);
+    utterance.lang = "es-ES";
+    utterance.rate = 1;
+    utterance.pitch = 1;
+    const voiceName = document.getElementById("voiceSelect")?.value;
+    if(voiceName && voices.length) {
+      const selected = voices.find(v => v.name === voiceName);
+      if(selected) utterance.voice = selected;
+    }
+    speechSynthesis.speak(utterance);
+    document.getElementById("speechStatus").innerHTML = "🔊 Probando voz...";
+    setTimeout(() => {
+      if(document.getElementById("speechStatus").innerHTML === "🔊 Probando voz...")
+        document.getElementById("speechStatus").innerHTML = "Listo";
+    }, 2000);
+  }
+
+  // Eventos
+  document.getElementById("prevCardBtn")?.addEventListener("click", prevCard);
+  document.getElementById("nextCardBtn")?.addEventListener("click", nextCard);
+  document.getElementById("randomCardBtn")?.addEventListener("click", randomCard);
+  document.getElementById("flipCardBtn")?.addEventListener("click", flipCard);
+  document.getElementById("markLearnedBtn")?.addEventListener("click", markLearned);
+  document.getElementById("speakFlashBtn")?.addEventListener("click", speakCurrent);
+  document.getElementById("pauseSpeechBtn")?.addEventListener("click", pauseSpeaking);
+  document.getElementById("resumeSpeechBtn")?.addEventListener("click", resumeSpeaking);
+  document.getElementById("stopSpeechBtn")?.addEventListener("click", stopSpeaking);
+  document.getElementById("previewVoiceBtn")?.addEventListener("click", previewVoice);
+  document.getElementById("themeToggleBtn")?.addEventListener("click", () => {
+    document.body.classList.toggle("light-mode");
+  });
+
+  document.querySelectorAll(".filter-btn").forEach(btn => {
+    btn.addEventListener("click", () => {
+      currentFilter = btn.getAttribute("data-cat");
+      document.querySelectorAll(".filter-btn").forEach(b => b.classList.remove("active"));
+      btn.classList.add("active");
+      filterTecnicas();
+    });
+  });
+
+  // Inicializar
+  loadMastered();
+  filterTecnicas();
+</script>
+</body>
+</html>

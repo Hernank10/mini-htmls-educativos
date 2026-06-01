@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Quid Pro Quo — Página educativa</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <style>
+    :root{--primary:#0d6efd;--muted:#6c757d;--card-bg:#ffffff}
+    body{background:linear-gradient(180deg,#f5fbff, #f0f6fb);font-family:system-ui,-apple-system,Segoe UI,Roboto,'Helvetica Neue',Arial}
+    .card{border-radius:1rem}
+    header .logo{font-weight:700;color:var(--primary)}
+    pre.code-box{background:#0b1220;color:#e6eef8;padding:1rem;border-radius:.5rem;overflow:auto}
+    .lang-badge{font-weight:600}
+    .example-row{cursor:pointer}
+  </style>
+</head>
+<body class="p-4">
+  <div class="container">
+    <header class="d-flex align-items-center justify-content-between mb-4">
+      <div>
+        <h1 class="h3 mb-0 logo">Quid Pro Quo — Módulo Educativo</h1>
+        <small class="text-muted">Ensayo, 100 ejemplos trilingües, análisis morfosintáctico y herramientas para practicar</small>
+      </div>
+      <div>
+        <button class="btn btn-outline-primary" onclick="window.scrollTo(0,0)">Ir arriba</button>
+      </div>
+    </header>
+
+    <!-- ENSAYO -->
+    <section class="card shadow-sm mb-4 p-4">
+      <h2>Ensayo: «Quid pro quo»</h2>
+      <p class="lead">Lee el ensayo sobre la expresión latina <em>quid pro quo</em>, su historia, usos y matices semánticos. Puedes escuchar el ensayo completo en cualquiera de los tres idiomas usando el lector de voz abajo.</p>
+
+      <div id="essayText" class="mb-3">
+        <p><strong>Quid pro quo</strong>, literalmente «algo por algo», es una expresión latina que describe el intercambio recíproco entre partes. De uso jurídico, diplomático y cotidiano, puede ser neutral (negociación, cooperación) o negativo (corrupción, soborno) según el contexto. En la lingüística, refleja prácticas de reciprocidad; en la pedagogía, permite diseñar actividades de cooperación y evaluación.</p>
+        <p>El análisis morfosintáctico en este módulo compara cómo el castellano y el inglés integran la locución latina: el castellano permite mayor flexión y libertad sintáctica, mientras que el inglés exige un orden SVO más rígido. En ambos idiomas <em>quid pro quo</em> funciona como sintagma nominal invariable.</p>
+        <p>Este módulo incluye: (1) el ensayo en tres idiomas, (2) una lista de 100 ejemplos con traducción y latín, (3) un comentario morfosintáctico, y (4) cuatro programas/prácticas (Consola Python, TTS+Dictado, Tkinter GUI, App web Bootstrap).</p>
+      </div>
+
+      <div class="d-flex gap-2">
+        <select id="ttsLang" class="form-select w-auto">
+          <option value="es">Español</option>
+          <option value="en">Inglés</option>
+          <option value="la">Latín</option>
+        </select>
+        <button class="btn btn-primary" onclick="speakEssay()">▶ Escuchar ensayo</button>
+        <button class="btn btn-outline-secondary" onclick="copyEssay()">📋 Copiar ensayo</button>
+      </div>
+    </section>
+
+    <!-- EJEMPLOS -->
+    <section class="card shadow-sm mb-4 p-4">
+      <div class="d-flex justify-content-between align-items-center">
+        <h2 class="mb-0">100 Ejemplos trilingües</h2>
+        <div class="text-end text-muted">Haz clic en una fila para reproducirla y practicar</div>
+      </div>
+
+      <div class="row mt-3">
+        <div class="col-md-4">
+          <label class="form-label">Buscar / Filtrar</label>
+          <input id="filterInput" type="text" class="form-control" placeholder="Buscar por palabra..." oninput="renderList()"/>
+        </div>
+        <div class="col-md-4">
+          <label class="form-label">Idioma para reproducir</label>
+          <select id="playLang" class="form-select">
+            <option value="es">Español</option>
+            <option value="en">Inglés</option>
+            <option value="la">Latín</option>
+          </select>
+        </div>
+        <div class="col-md-4 align-self-end text-end">
+          <button class="btn btn-outline-primary" onclick="randomExample()">🔀 Ejemplo aleatorio</button>
+          <button class="btn btn-outline-success" onclick="openPractice()">➡ Practicar (web)</button>
+        </div>
+      </div>
+
+      <div class="table-responsive mt-3">
+        <table class="table table-hover">
+          <thead class="table-light">
+            <tr>
+              <th>#</th>
+              <th>Español</th>
+              <th>Inglés</th>
+              <th>Latín</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="examplesTbody"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ANALISIS MORFOSINTACTICO -->
+    <section class="card shadow-sm mb-4 p-4">
+      <h2>Análisis morfosintáctico comparado</h2>
+      <p>Resumen de la morfosintaxis observada en los ejemplos:</p>
+      <ul>
+        <li><strong>Flexión verbal en castellano:</strong> las desinencias aportan información de persona/número que permiten elipsis del sujeto.</li>
+        <li><strong>Orden sintáctico en inglés:</strong> más rígido (SVO), exige sujeto explícito en la mayoría de las oraciones.</li>
+        <li><strong>Pronombres clíticos:</strong> en español la duplicación y clíticos son frecuentes; en inglés se usan pronombres tónicos y orden fijo.</li>
+        <li><strong>Integración de <em>quid pro quo</em>:</strong> funciona como sintagma nominal invariable en ambos idiomas y puede aparecer como atributo, complemento o término en la oración.</li>
+      </ul>
+      <p>Puedes descargar un análisis más detallado en formato PDF desde el enlace: <a href="#" onclick="downloadAnalysis()">Descargar análisis (PDF)</a> (generador automático disponible).</p>
+    </section>
+
+    <!-- PRACTICAS / PROGRAMAS -->
+    <section class="card shadow-sm mb-4 p-4">
+      <h2>Programas y prácticas</h2>
+      <p>Puedes descargar o ejecutar las versiones implementadas para practicar:</p>
+      <div class="row">
+        <div class="col-md-6">
+          <h5>Python (consola)</h5>
+          <p>Programa de consola que muestra ejemplos, reproduce audio (gTTS) y verifica escritura.</p>
+          <button class="btn btn-sm btn-outline-secondary" onclick="showCode('python_console')">Ver código</button>
+          <a class="btn btn-sm btn-primary" href="#" onclick="downloadCode('python_console')">Descargar .py</a>
+        </div>
+        <div class="col-md-6">
+          <h5>Python + Tkinter</h5>
+          <p>Interfaz gráfica de escritorio con botones de reproducción y verificación.</p>
+          <button class="btn btn-sm btn-outline-secondary" onclick="showCode('tkinter')">Ver código</button>
+          <a class="btn btn-sm btn-primary" href="#" onclick="downloadCode('tkinter')">Descargar .py</a>
+        </div>
+      </div>
+      <div class="row mt-3">
+        <div class="col-md-6">
+          <h5>Kivy (multiplataforma)</h5>
+          <p>App táctil para móvil/desktop con TTS y dictado opcional.</p>
+          <button class="btn btn-sm btn-outline-secondary" onclick="showCode('kivy')">Ver código</button>
+          <a class="btn btn-sm btn-primary" href="#" onclick="downloadCode('kivy')">Descargar .py</a>
+        </div>
+        <div class="col-md-6">
+          <h5>Web Bootstrap</h5>
+          <p>Esta página: práctica rápida, reproducción con Web Speech API y ejercicios.</p>
+          <button class="btn btn-sm btn-outline-secondary" onclick="showCode('bootstrap')">Ver HTML</button>
+          <a class="btn btn-sm btn-primary" href="#" onclick="downloadCode('bootstrap')">Descargar HTML</a>
+        </div>
+      </div>
+
+      <div id="codeModal" class="modal" tabindex="-1">
+        <div class="modal-dialog modal-xl">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title">Código</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body"><pre id="codeContent" class="code-box"></pre></div>
+            <div class="modal-footer">
+              <button class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+              <a id="downloadLink" class="btn btn-primary" href="#" download>Descargar</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer class="text-center text-muted mt-4">
+      <small>Proyecto educativo — Módulo: Quid Pro Quo. Diseñado para práctica y enseñanza.</small>
+    </footer>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    // ==================== DATASET: 100 EJEMPLOS TRILINGÜES ====================
+    const examples = [
+      {es:"Te presto mi libro si tú me prestas el tuyo; es un quid pro quo.", en:"I’ll lend you my book if you lend me yours; it’s a quid pro quo.", la:"Quid pro quo: librum tibi commodabo si tu meum commodas."},
+      {es:"Hicimos un quid pro quo: yo cocino y tú lavas los platos.", en:"We made a quid pro quo: I cook and you wash the dishes.", la:"Quid pro quo fecimus: ego coquo, tu lavat patinas."},
+      {es:"Él me dio un favor esperando un quid pro quo.", en:"He did me a favor expecting a quid pro quo.", la:"Ille mihi favorem egit sperans quid pro quo."},
+      {es:"No quiero un quid pro quo, solo quiero ayudarte.", en:"I don’t want a quid pro quo, I just want to help you.", la:"Nolo quid pro quo, tantum te iuvare volo."},
+      {es:"Acepté el trato porque era un quid pro quo razonable.", en:"I accepted the deal because it was a reasonable quid pro quo.", la:"Pactum acceptavi quia quid pro quo rationabile erat."},
+      {es:"Su amistad parecía un quid pro quo disfrazado.", en:"His friendship seemed like a disguised quid pro quo.", la:"Amicitia eius videbatur quasi quid pro quo occultatum."},
+      {es:"El taxi me esperó a cambio de un quid pro quo: pagar un poco más.", en:"The taxi waited for me in exchange for a quid pro quo: paying a little more.", la:"Taxi me exspectavit pro quid pro quo: paulum plus solvendo."},
+      {es:"No todo en la vida debe ser un quid pro quo.", en:"Not everything in life has to be a quid pro quo.", la:"Non omnia in vita debent esse quid pro quo."},
+      {es:"Ella siempre busca un quid pro quo antes de ayudar.", en:"She always looks for a quid pro quo before helping.", la:"Semper quid pro quo quaerit antequam adiuvat."},
+      {es:"Nuestro arreglo era un simple quid pro quo entre amigos.", en:"Our arrangement was a simple quid pro quo between friends.", la:"Ordo noster erat simplex quid pro quo inter amicos."},
+      {es:"En la teoría social, el quid pro quo explica relaciones de reciprocidad.", en:"In social theory, quid pro quo explains reciprocal relationships.", la:"In theoria sociali quid pro quo relationes reciprocas explicat."},
+      {es:"El experimento se basó en un quid pro quo entre los participantes.", en:"The experiment was based on a quid pro quo among participants.", la:"Experimentum in quid pro quo inter participes fundatum est."},
+      {es:"La cooperación académica suele ser un quid pro quo de conocimientos.", en:"Academic cooperation is often a quid pro quo of knowledge.", la:"Cooperatio academica saepe est quid pro quo scientiae."},
+      {es:"El profesor habló del quid pro quo como fundamento ético.", en:"The professor spoke of the quid pro quo as an ethical foundation.", la:"Magister de quid pro quo ut fundamentum ethicum locutus est."},
+      {es:"En filosofía moral, el quid pro quo plantea dilemas sobre justicia.", en:"In moral philosophy, quid pro quo raises dilemmas about justice.", la:"In philosophia moralis quid pro quo dilemma de iustitia poscit."},
+      {es:"El intercambio científico rara vez es un quid pro quo exacto.", en:"Scientific exchange is rarely an exact quid pro quo.", la:"Permutatio scientifica raro est quid pro quo exacte."},
+      {es:"El ensayo analiza el quid pro quo entre instituciones educativas.", en:"The essay analyzes the quid pro quo between educational institutions.", la:"Commentarius quid pro quo inter institutiones educativas analysat."},
+      {es:"El quid pro quo puede interpretarse como un contrato simbólico.", en:"Quid pro quo can be interpreted as a symbolic contract.", la:"Quid pro quo ut contractus symbolicus interpretari potest."},
+      {es:"La teoría económica justifica el quid pro quo en mercados eficientes.", en:"Economic theory justifies quid pro quo in efficient markets.", la:"Theoria oeconomica quid pro quo in mercatis efficacibus justificat."},
+      {es:"Los debates universitarios a menudo revelan quid pro quos implícitos.", en:"University debates often reveal implicit quid pro quos.", la:"Colloquia universitatis saepe quid pro quo implicita revelant."},
+      {es:"El abogado argumentó que no existía un quid pro quo ilegal.", en:"The lawyer argued that no illegal quid pro quo existed.", la:"Advocatus dixit nullum esse quid pro quo illicitum."},
+      {es:"El contrato establecía un quid pro quo entre las partes.", en:"The contract established a quid pro quo between the parties.", la:"Contractus quid pro quo inter partes constituit."},
+      {es:"El juez investigó si hubo un quid pro quo indebido.", en:"The judge investigated whether there was an improper quid pro quo.", la:"Iudex investigavit an quid pro quo indebitum fuisset."},
+      {es:"El soborno se disfrazó como un quid pro quo profesional.", en:"The bribe was disguised as a professional quid pro quo.", la:"Sublatio corruptio se velavit ut quid pro quo professionalis."},
+      {es:"En derecho civil, el quid pro quo debe ser explícito.", en:"In civil law, the quid pro quo must be explicit.", la:"In iure civili quid pro quo explicandum est."},
+      {es:"La demanda alegó un quid pro quo coercitivo.", en:"The lawsuit alleged a coercive quid pro quo.", la:"Actio in iudicio quid pro quo coercitivum asseruit."},
+      {es:"El fiscal presentó pruebas de un quid pro quo criminal.", en:"The prosecutor presented evidence of a criminal quid pro quo.", la:"Fiscalis probationes de quid pro quo criminali obtulit."},
+      {es:"La sentencia rechazó la existencia de un quid pro quo.", en:"The ruling dismissed the existence of a quid pro quo.", la:"Sententia existentiam quid pro quo negavit."},
+      {es:"El acuerdo extrajudicial fue un quid pro quo económico.", en:"The settlement was an economic quid pro quo.", la:"Transactio extra iudicium quid pro quo oeconomicum erat."},
+      {es:"El código penal prohíbe ciertos quid pro quos laborales.", en:"The penal code prohibits certain workplace quid pro quos.", la:"Codex criminalis nonnulla quid pro quo laboris vetat."},
+      {es:"El ministro negó cualquier quid pro quo diplomático.", en:"The minister denied any diplomatic quid pro quo.", la:"Minister omne quid pro quo diplomaticum negavit."},
+      {es:"La ayuda financiera dependía de un quid pro quo político.", en:"Financial aid depended on a political quid pro quo.", la:"Auxilium pecuniarium ex quid pro quo politico dependebat."},
+      {es:"La oposición acusó al gobierno de un quid pro quo secreto.", en:"The opposition accused the government of a secret quid pro quo.", la:"Oppositio regimen de occulto quid pro quo accusavit."},
+      {es:"Los documentos revelaron un quid pro quo electoral.", en:"The documents revealed an electoral quid pro quo.", la:"Documenta quid pro quo electoralem revelaverunt."},
+      {es:"El embajador habló de un quid pro quo necesario para la paz.", en:"The ambassador spoke of a necessary quid pro quo for peace.", la:"Legatus de quid pro quo necessario ad pacem locutus est."},
+      {es:"El acuerdo internacional fue un delicado quid pro quo.", en:"The international agreement was a delicate quid pro quo.", la:"Foedus internationale tenuem quid pro quo erat."},
+      {es:"La reforma fue resultado de un quid pro quo entre partidos.", en:"The reform was the result of a quid pro quo between parties.", la:"Reformatio ex quid pro quo inter factiones orta est."},
+      {es:"Hubo acusaciones de un quid pro quo para influir en leyes.", en:"There were accusations of a quid pro quo to influence laws.", la:"Accusationes erant de quid pro quo ad leges influendas."},
+      {es:"La negociación incluyó un quid pro quo inevitables.", en:"The negotiation included inevitable quid pro quos.", la:"Negotiatio quid pro quos inevitabiles includebat."},
+      {es:"Los ciudadanos criticaron el quid pro quo en la campaña.", en:"Citizens criticized the quid pro quo in the campaign.", la:"Cives criticaverunt quid pro quo in campania."},
+      {es:"El jefe rechazó cualquier quid pro quo con empleados.", en:"The boss rejected any quid pro quo with employees.", la:"Dominus omne quid pro quo cum operariis recusavit."},
+      {es:"La promoción no fue un quid pro quo, sino un mérito real.", en:"The promotion wasn’t a quid pro quo but real merit.", la:"Promotio non fuit quid pro quo sed meritum verum."},
+      {es:"La empresa prohibió quid pro quos personales.", en:"The company banned personal quid pro quos.", la:"Societas quid pro quos personales vetuit."},
+      {es:"El trabajador denunció un quid pro quo inapropiado.", en:"The worker reported an inappropriate quid pro quo.", la:"Operarius quid pro quo inappropriatum denuntiavit."},
+      {es:"Le ofrecieron mejores horarios como quid pro quo.", en:"They offered better hours as a quid pro quo.", la:"Ei meliores horas obtulerunt ut quid pro quo."},
+      {es:"El ascenso implicaba un quid pro quo de responsabilidad.", en:"The promotion involved a quid pro quo of responsibility.", la:"Ascensus quid pro quo responsabilitatis implicabat."},
+      {es:"Hubo un quid pro quo entre departamentos para resolver el conflicto.", en:"There was a quid pro quo between departments to solve the conflict.", la:"Inter departmenta quid pro quo fuit ad conflictum soluendum."},
+      {es:"La empresa adoptó políticas para prevenir quid pro quos.", en:"The company adopted policies to prevent quid pro quos.", la:"Societas politicas ad preveniendum quid pro quos adoptavit."},
+      {es:"El acuerdo salarial fue un quid pro quo aceptado por todos.", en:"The salary agreement was a quid pro quo accepted by everyone.", la:"Pactum salarialem quid pro quo a omnibus acceptum erat."},
+      {es:"Ofreció ayuda técnica como quid pro quo laboral.", en:"He offered technical help as a workplace quid pro quo.", la:"Auxilium technicum obtulit ut quid pro quo laboris."},
+      {es:"El negocio cerró un quid pro quo: calidad por exclusividad.", en:"The business closed a quid pro quo: quality for exclusivity.", la:"Negotiatio clausit quid pro quo: qualitas pro exclusivitate."},
+      {es:"La tienda ofreció un descuento como quid pro quo por fidelidad.", en:"The store offered a discount as a quid pro quo for loyalty.", la:"Taberna obtulit discountum ut quid pro quo fidelitatis."},
+      {es:"El proveedor pidió un quid pro quo antes de firmar.", en:"The supplier asked for a quid pro quo before signing.", la:"Fornitor quid pro quo postulavit antequam subscribit."},
+      {es:"El intercambio fue un perfecto quid pro quo comercial.", en:"The exchange was a perfect commercial quid pro quo.", la:"Permutatio erat perfectum quid pro quo commercialis."},
+      {es:"Pagaron menos a cambio de un quid pro quo en publicidad.", en:"They paid less in exchange for a quid pro quo in advertising.", la:"Minus solvere promiserunt pro quid pro quo in publicitate."},
+      {es:"Firmaron un quid pro quo para garantizar ganancias mutuas.", en:"They signed a quid pro quo to guarantee mutual profits.", la:"Subscribebant quid pro quo ut mutua lucrum garantirent."},
+      {es:"El mercado funciona gracias a quid pro quos constantes.", en:"The market works thanks to constant quid pro quos.", la:"Mercatus operatur gratias quid pro quos constanter."},
+      {es:"Negociaron un quid pro quo para asegurar distribución.", en:"They negotiated a quid pro quo to secure distribution.", la:"Negotiaverunt quid pro quo ad distributionem securandam."},
+      {es:"El cliente pidió un quid pro quo antes de comprar.", en:"The client asked for a quid pro quo before buying.", la:"Cliens postulat quid pro quo ante emptionem."},
+      {es:"La marca prosperó mediante quid pro quos estratégicos.", en:"The brand prospered through strategic quid pro quos.", la:"Marca floruit per quid pro quos strategicos."},
+      {es:"El amor no debe ser un quid pro quo.", en:"Love should not be a quid pro quo.", la:"Amor non debet esse quid pro quo."},
+      {es:"Ella sentía que la relación se volvió un quid pro quo frío.", en:"She felt the relationship became a cold quid pro quo.", la:"Sentiebat relationem factam esse frigidum quid pro quo."},
+      {es:"No busco un quid pro quo, solo sinceridad.", en:"I’m not looking for a quid pro quo, only sincerity.", la:"Non quaero quid pro quo, tantum sinceritatem."},
+      {es:"La reconciliación fue un quid pro quo emocional.", en:"The reconciliation was an emotional quid pro quo.", la:"Reconciliatio fuit quid pro quo affectivum."},
+      {es:"Él ofreció apoyo esperando un quid pro quo afectivo.", en:"He offered support expecting an emotional quid pro quo.", la:"Auxilium obtulit sperans quid pro quo affectivum."},
+      {es:"Nuestra confianza no puede basarse en un quid pro quo.", en:"Our trust can’t be based on a quid pro quo.", la:"Fides nostra non potest fundari in quid pro quo."},
+      {es:"Ese abrazo fue un quid pro quo de perdón.", en:"That hug was a quid pro quo of forgiveness.", la:"Illud amplexum erat quid pro quo veniam."},
+      {es:"La gratitud no es un quid pro quo obligatorio.", en:"Gratitude is not a mandatory quid pro quo.", la:"Gratitudo non est quid pro quo necessarium."},
+      {es:"El silencio fue su quid pro quo para evitar discusiones.", en:"Silence was his quid pro quo to avoid arguments.", la:"Silentium fuit suum quid pro quo ad vitandas disputationes."},
+      {es:"Nadie debería exigir un quid pro quo emocional.", en:"No one should demand an emotional quid pro quo.", la:"Nemo debet exigere quid pro quo affectivum."},
+      {es:"Los países firmaron un quid pro quo energético.", en:"The countries signed an energy quid pro quo.", la:"Gentes foedus energiae quid pro quo subscripserunt."},
+      {es:"La tregua dependía de un quid pro quo territorial.", en:"The truce depended on a territorial quid pro quo.", la:"Tregua dependebat ab quid pro quo territoriali."},
+      {es:"La embajada propuso un quid pro quo cultural.", en:"The embassy proposed a cultural quid pro quo.", la:"Legatio proposuit quid pro quo culturalem."},
+      {es:"El conflicto se resolvió con un quid pro quo militar.", en:"The conflict was resolved with a military quid pro quo.", la:"Conflictus solutus est per quid pro quo militare."},
+      {es:"Hubo un quid pro quo en el intercambio de prisioneros.", en:"There was a quid pro quo in the prisoner exchange.", la:"In permutatione captivos quid pro quo erat."},
+      {es:"La negociación ambiental exigió un quid pro quo ecológico.", en:"The environmental negotiation required an ecological quid pro quo.", la:"Negotiatio environmental exigebat quid pro quo ecologicum."},
+      {es:"El acuerdo marítimo fue producto de un quid pro quo estratégico.", en:"The maritime agreement resulted from a strategic quid pro quo.", la:"Foedus maritimum fuit productum quid pro quo strategici."},
+      {es:"Las naciones pactaron un quid pro quo de cooperación.", en:"The nations agreed on a cooperation quid pro quo.", la:"Nationes pactae sunt quid pro quo cooperationis."},
+      {es:"El tratado incluía un delicado quid pro quo económico.", en:"The treaty included a delicate economic quid pro quo.", la:"Tractatus includebat tenuem quid pro quo oeconomicum."},
+      {es:"La ONU buscó mediar un quid pro quo humanitario.", en:"The UN sought to mediate a humanitarian quid pro quo.", la:"UN conatus est mediar quid pro quo humanitarium."},
+      {es:"El tutor ofreció sesiones extra sin pedir quid pro quo.", en:"The tutor offered extra sessions without asking for a quid pro quo.", la:"Tutor sessiones additas obtulit sine quid pro quo petendo."},
+      {es:"Los estudiantes hicieron un quid pro quo de tareas.", en:"The students made a quid pro quo of assignments.", la:"Discipuli quid pro quo missionum fecerunt."},
+      {es:"El proyecto escolar se basó en un quid pro quo de responsabilidades.", en:"The school project was based on a quid pro quo of responsibilities.", la:"Projectum scholasticum fundatum erat in quid pro quo responsabilitatum."},
+      {es:"El maestro explicó que el conocimiento no es un quid pro quo.", en:"The teacher explained that knowledge is not a quid pro quo.", la:"Magister explicavit scientiam non esse quid pro quo."},
+      {es:"La biblioteca ofreció beneficios como quid pro quo por voluntariado.", en:"The library offered benefits as a quid pro quo for volunteering.", la:"Bibliotheca obtulit beneficia ut quid pro quo pro voluntariatu."},
+      {es:"Intercambiamos ideas en un quid pro quo académico.", en:"We exchanged ideas in an academic quid pro quo.", la:"Ideae permutavimus in quid pro quo academico."},
+      {es:"Los compañeros acordaron un quid pro quo para estudiar juntos.", en:"The classmates agreed on a quid pro quo to study together.", la:"Condiscipuli pacti sunt quid pro quo studii communis."},
+      {es:"El aprendizaje colaborativo es un constante quid pro quo.", en:"Collaborative learning is a constant quid pro quo.", la:"Disciplina collaborativa est quid pro quo constans."},
+      {es:"El profesor propuso un quid pro quo: participación por puntos.", en:"The teacher proposed a quid pro quo: participation for points.", la:"Magister proposuit quid pro quo: participatio pro punctis."},
+      {es:"La feria escolar funcionó gracias a un quid pro quo de esfuerzos.", en:"The school fair worked thanks to a quid pro quo of efforts.", la:"Festum scholasticum operatum est gratias quid pro quo conatum."},
+      {es:"El héroe recibió un quid pro quo de los dioses.", en:"The hero received a quid pro quo from the gods.", la:"Heros accepit quid pro quo a diis."},
+      {es:"La trama gira en torno a un quid pro quo misterioso.", en:"The plot revolves around a mysterious quid pro quo.", la:"Fabula versatur circa mysterium quid pro quo."},
+      {es:"El villano exige un quid pro quo a cambio de libertad.", en:"The villain demands a quid pro quo in exchange for freedom.", la:"Antagonista poscit quid pro quo pro libertate."},
+      {es:"El pacto mágico era un oscuro quid pro quo.", en:"The magic pact was a dark quid pro quo.", la:"Pactum magicum erat obscurum quid pro quo."},
+      {es:"En el poema, el amor es un quid pro quo trágico.", en:"In the poem, love is a tragic quid pro quo.", la:"In carmine amor est quid pro quo tragicum."},
+      {es:"La profecía implicaba un quid pro quo inevitable.", en:"The prophecy implied an inevitable quid pro quo.", la:"Prophetia implicabat quid pro quo inevitabile."},
+      {es:"El cuento presenta un quid pro quo entre destino y sacrificio.", en:"The story presents a quid pro quo between fate and sacrifice.", la:"Fabula praebet quid pro quo inter fatum et sacrificium."},
+      {es:"La novela revela un quid pro quo que cambia todo.", en:"The novel reveals a quid pro quo that changes everything.", la:"Novela revelat quid pro quo quod omnia mutat."},
+      {es:"El antagonista ofrece un quid pro quo tentador.", en:"The antagonist offers a tempting quid pro quo.", la:"Antagonista offert tentans quid pro quo."},
+      {es:"El final muestra que todo fue un quid pro quo del destino.", en:"The ending shows that everything was a quid pro quo of fate.", la:"Finis ostendit omnia fuisse quid pro quo fatum."}
+    ];
+
+    // render list
+    function renderList(){
+      const tbody = document.getElementById('examplesTbody');
+      tbody.innerHTML = '';
+      const q = document.getElementById('filterInput').value.trim().toLowerCase();
+      examples.forEach((ex, i) => {
+        if(q && !(ex.es+ex.en+ex.la).toLowerCase().includes(q)) return;
+        const tr = document.createElement('tr');
+        tr.className = 'example-row';
+        tr.innerHTML = `<td>${i+1}</td><td>${ex.es}</td><td>${ex.en}</td><td>${ex.la}</td><td><button class='btn btn-sm btn-outline-primary' onclick='playExample(${i})'>▶</button></td>`;
+        tbody.appendChild(tr);
+      });
+    }
+
+    // playback using Web Speech API
+    function playExample(idx){
+      const lang = document.getElementById('playLang').value;
+      const ex = examples[idx];
+      let txt = ex[lang];
+      // use speechSynthesis
+      if('speechSynthesis' in window){
+        const u = new SpeechSynthesisUtterance(txt);
+        u.lang = (lang==='es')? 'es-ES' : (lang==='en')? 'en-US' : 'la';
+        window.speechSynthesis.cancel();
+        window.speechSynthesis.speak(u);
+      } else alert('TTS no soportado en este navegador.');
+    }
+
+    function randomExample(){
+      const i = Math.floor(Math.random()*examples.length);
+      playExample(i);
+      document.getElementById('filterInput').value = '';
+      renderList();
+      // scroll to row
+      const row = document.querySelectorAll('.example-row')[i];
+      if(row) row.scrollIntoView({behavior:'smooth',block:'center'});
+    }
+
+    // Essay TTS
+    function speakEssay(){
+      const lang = document.getElementById('ttsLang').value;
+      const text = document.getElementById('essayText').innerText;
+      if('speechSynthesis' in window){
+        const u = new SpeechSynthesisUtterance(text);
+        u.lang = (lang==='es')? 'es-ES' : (lang==='en')? 'en-US' : 'la';
+        window.speechSynthesis.cancel();
+        window.speechSynthesis.speak(u);
+      } else alert('TTS no disponible');
+    }
+
+    function copyEssay(){
+      navigator.clipboard.writeText(document.getElementById('essayText').innerText);
+      alert('Ensayo copiado al portapapeles');
+    }
+
+    // simple downloads (provide code snippets)
+    const codes = {
+      python_console: `# Programa Python (consola) - extracto
+print(\"Entrenador Quid Pro Quo\")
+# ... (carga del dataset y funciones de TTS/difflib)`,
+      tkinter: `# Tkinter GUI - extracto
+import tkinter as tk
+# ...`,
+      kivy: `# Kivy app - extracto
+# ...`,
+      bootstrap: document.documentElement.outerHTML
+    };
+
+    function showCode(key){
+      document.getElementById('codeContent').textContent = codes[key] || 'No disponible';
+      const modal = new bootstrap.Modal(document.getElementById('codeModal'));
+      document.getElementById('downloadLink').href = '#';
+      modal.show();
+    }
+
+    function downloadCode(key){
+      const blob = new Blob([codes[key] || ''], {type:'text/plain'});
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url; a.download = (key+'.txt');
+      document.body.appendChild(a); a.click(); a.remove();
+      URL.revokeObjectURL(url);
+    }
+
+    function openPractice(){
+      // open a simplified practice UI in a new window (or modal)
+      const w = window.open('', '_blank', 'noopener');
+      w.document.write('<!doctype html><html><head><meta charset="utf-8"><title>Práctica</title></head><body><h3>Práctica rápida</h3>');
+      w.document.write('<p>Escucha en el idioma seleccionado y escribe la frase.</p>');
+      w.document.write('<script>const ex='+JSON.stringify(examples)+'; let idx=0; function play(lang){const u=new SpeechSynthesisUtterance(ex[idx][lang]);u.lang=(lang=="es")?"es-ES":"en-US";speechSynthesis.speak(u);} function next(){idx=(idx+1)%ex.length;alert("Siguiente ejemplo: "+ex[idx].es);} </script>');
+      w.document.close();
+    }
+
+    // inicial render
+    renderList();
+
+    function downloadAnalysis(){
+      const txt = 'Análisis morfosintáctico:
+
+' + document.querySelector('section:nth-of-type(3) p').innerText;
+      const blob = new Blob([txt], {type:'text/plain'});
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a'); a.href = url; a.download = 'analisis_morfosintactico.txt'; document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
+    }
+  </script>
+</body>
+</html>

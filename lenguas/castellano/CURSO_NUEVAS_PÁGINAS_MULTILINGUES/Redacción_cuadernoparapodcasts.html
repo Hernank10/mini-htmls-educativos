@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>📻 Cuaderno de Podcast · Escribe, edita, guarda, lee al aire y ESCUCHA</title>
+  <!-- Bootstrap 5 + Iconos + Fuentes -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700;800&family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #2A7A4B;
+      --primary-dark: #1E5F3A;
+      --secondary: #F39C12;
+      --bg-light: #FEF9E6;
+      --paper: #FFFDF7;
+      --text-dark: #2C2A29;
+      --text-muted: #6B5B4F;
+    }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg-light);
+      color: var(--text-dark);
+    }
+    .navbar-brand {
+      font-weight: 800;
+      color: var(--primary-dark);
+    }
+    .btn-primary-custom {
+      background: var(--primary);
+      border-color: var(--primary);
+      color: white;
+    }
+    .btn-primary-custom:hover {
+      background: var(--primary-dark);
+    }
+    .btn-outline-primary-custom {
+      border-color: var(--primary);
+      color: var(--primary);
+    }
+    .btn-outline-primary-custom:hover {
+      background: var(--primary);
+      color: white;
+    }
+    .card {
+      border-radius: 1.2rem;
+      border: none;
+      background: var(--paper);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    }
+    .card-header {
+      background: transparent;
+      border-bottom: 2px solid var(--secondary);
+      font-weight: 700;
+      padding: 1rem 1.5rem;
+    }
+    textarea, input {
+      border: 1px solid #e0d5c0;
+      border-radius: 0.8rem;
+      padding: 0.75rem;
+      background: var(--paper);
+    }
+    textarea:focus, input:focus {
+      border-color: var(--primary);
+      outline: none;
+      box-shadow: 0 0 0 2px rgba(42,122,75,0.2);
+    }
+    textarea {
+      font-family: 'Courier Prime', monospace;
+      font-size: 0.9rem;
+      line-height: 1.6;
+      resize: vertical;
+    }
+    .libreto-preview {
+      background: #2C2A29;
+      color: #F0F0F0;
+      font-family: 'Courier Prime', monospace;
+      padding: 1.5rem;
+      border-radius: 1rem;
+      font-size: 0.9rem;
+      line-height: 1.7;
+      max-height: 500px;
+      overflow-y: auto;
+      white-space: pre-wrap;
+    }
+    .badge-time {
+      background: var(--secondary);
+      color: #2C2A29;
+      padding: 0.3rem 0.8rem;
+      border-radius: 30px;
+      font-weight: 600;
+      font-size: 0.8rem;
+    }
+    footer {
+      background: #2C2A29;
+      color: #ccc;
+      padding: 1.5rem 0;
+      margin-top: 2rem;
+    }
+    .section-icon {
+      font-size: 1.2rem;
+      margin-right: 8px;
+      color: var(--secondary);
+    }
+    .word-count {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+    }
+    .tts-controls {
+      background: #f0f0f0;
+      border-radius: 50px;
+      padding: 0.3rem 0.8rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .speech-btn {
+      background: none;
+      border: none;
+      font-size: 1.2rem;
+      cursor: pointer;
+      transition: 0.1s;
+    }
+    .speech-btn:hover {
+      transform: scale(1.05);
+      color: var(--primary);
+    }
+    .selectable-text {
+      cursor: pointer;
+      transition: 0.1s;
+    }
+    .selectable-text:hover {
+      background: rgba(243,156,18,0.1);
+      border-radius: 0.5rem;
+    }
+  </style>
+</head>
+<body>
+
+<!-- Barra de navegación -->
+<nav class="navbar navbar-expand-lg bg-white shadow-sm sticky-top">
+  <div class="container">
+    <a class="navbar-brand" href="#">
+      <i class="bi bi-journal-bookmark-fill me-2" style="color: var(--primary);"></i>
+      <strong>PodCast Notebook</strong> <span style="font-size:0.75rem;">Escribe, edita, guarda, lee y ESCUCHA</span>
+    </a>
+    <button class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav ms-auto">
+        <li class="nav-item"><a class="nav-link active" href="#" data-view="editor">✍️ Editor</a></li>
+        <li class="nav-item"><a class="nav-link" href="#" data-view="libreto">📖 Libreto + Lector de voz</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<div class="container py-4" id="app">
+  
+  <!-- VISTA EDITOR -->
+  <div id="editorView">
+    <div class="row">
+      <div class="col-lg-12">
+        <div class="card mb-4">
+          <div class="card-header">
+            <i class="bi bi-pencil-square me-2"></i>Información general del episodio
+          </div>
+          <div class="card-body">
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label class="form-label fw-bold">🎙️ Título del podcast</label>
+                <input type="text" class="form-control" id="podcastTitle" placeholder="Ej: Voces del Chicamocha">
+              </div>
+              <div class="col-md-6 mb-3">
+                <label class="form-label fw-bold">📅 Número / Título del episodio</label>
+                <input type="text" class="form-control" id="episodeTitle" placeholder="Ej: Episodio 12: El agua que se lleva el río">
+              </div>
+              <div class="col-md-6 mb-3">
+                <label class="form-label fw-bold">🎤 Locutor(es)</label>
+                <input type="text" class="form-control" id="hostName" placeholder="Ej: Carolina Rodríguez">
+              </div>
+              <div class="col-md-6 mb-3">
+                <label class="form-label fw-bold">📝 Invitado (si aplica)</label>
+                <input type="text" class="form-control" id="guestName" placeholder="Ej: Alberto Lleras, campesino de Los Santos">
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- SECCIONES DEL PODCAST -->
+        <div class="card mb-4">
+          <div class="card-header"><i class="bi bi-mic-fill me-2"></i>Guion · Partes del podcast</div>
+          <div class="card-body">
+            
+            <div class="mb-4">
+              <div class="d-flex justify-content-between align-items-center">
+                <label class="fw-bold"><i class="bi bi-music-note-beamed me-2"></i>1. INTRO MUSICAL</label>
+                <span class="badge-time"><i class="bi bi-clock"></i> ~5-15 seg</span>
+              </div>
+              <textarea class="form-control mt-2" id="introMusic" rows="2" placeholder="Describe la música o efecto de apertura"></textarea>
+              <div class="word-count mt-1" id="introMusicCount">0 palabras</div>
+            </div>
+            
+            <div class="mb-4">
+              <label class="fw-bold"><i class="bi bi-megaphone-fill me-2"></i>2. SALUDO / PRESENTACIÓN</label>
+              <textarea class="form-control mt-2" id="greeting" rows="3" placeholder="Ej: ¡Bienvenidos a Voces del Chicamocha!..."></textarea>
+              <div class="word-count mt-1" id="greetingCount">0 palabras</div>
+            </div>
+            
+            <div class="mb-4">
+              <label class="fw-bold"><i class="bi bi-bullseye me-2"></i>3. GANCHO (engancha al oyente)</label>
+              <textarea class="form-control mt-2" id="hook" rows="3" placeholder="Ej: ¿Sabías que el río de Oro pierde 30 litros por segundo cada año?..."></textarea>
+              <div class="word-count mt-1" id="hookCount">0 palabras</div>
+            </div>
+            
+            <div class="mb-4">
+              <label class="fw-bold"><i class="bi bi-1-square-fill me-2"></i>4. DESARROLLO (Segmento 1)</label>
+              <textarea class="form-control mt-2" id="segment1" rows="4" placeholder="Contexto, datos, historia principal..."></textarea>
+              <div class="word-count mt-1" id="segment1Count">0 palabras</div>
+            </div>
+            
+            <div class="mb-4">
+              <label class="fw-bold"><i class="bi bi-chat-dots-fill me-2"></i>5. ENTREVISTA / TESTIMONIO</label>
+              <textarea class="form-control mt-2" id="interview" rows="4" placeholder="Preguntas y respuestas clave"></textarea>
+              <div class="word-count mt-1" id="interviewCount">0 palabras</div>
+            </div>
+            
+            <div class="mb-4">
+              <label class="fw-bold"><i class="bi bi-2-square-fill me-2"></i>6. DESARROLLO (Segmento 2)</label>
+              <textarea class="form-control mt-2" id="segment2" rows="4" placeholder="Análisis, soluciones, reflexiones..."></textarea>
+              <div class="word-count mt-1" id="segment2Count">0 palabras</div>
+            </div>
+            
+            <div class="mb-4">
+              <label class="fw-bold"><i class="bi bi-envelope-paper-fill me-2"></i>7. CIERRE Y CALL TO ACTION</label>
+              <textarea class="form-control mt-2" id="closing" rows="3" placeholder="Ej: Recuerda seguirnos en redes, escribirnos a WhatsApp..."></textarea>
+              <div class="word-count mt-1" id="closingCount">0 palabras</div>
+            </div>
+            
+            <div class="mb-4">
+              <label class="fw-bold"><i class="bi bi-credit-card-fill me-2"></i>8. CRÉDITOS / DESPEDIDA</label>
+              <textarea class="form-control mt-2" id="credits" rows="2" placeholder="Ej: Producido por Radio Comunitaria El Fonce..."></textarea>
+              <div class="word-count mt-1" id="creditsCount">0 palabras</div>
+            </div>
+            
+            <div class="alert alert-light mt-3">
+              <i class="bi bi-stopwatch-fill me-2"></i>
+              <strong>Duración estimada:</strong> 
+              <span id="estimatedDuration">-- min</span>
+              <small class="text-muted ms-2">(~130 palabras/minuto)</small>
+            </div>
+            
+          </div>
+        </div>
+        
+        <div class="d-flex flex-wrap gap-3 justify-content-between align-items-center mt-3 mb-4">
+          <div>
+            <button id="saveBtn" class="btn btn-primary-custom"><i class="bi bi-save-fill"></i> Guardar borrador</button>
+            <button id="exportTxtBtn" class="btn btn-outline-primary-custom"><i class="bi bi-file-text-fill"></i> Exportar a TXT</button>
+            <button id="copyScriptBtn" class="btn btn-outline-secondary"><i class="bi bi-clipboard-fill"></i> Copiar libreto</button>
+          </div>
+          <div class="text-muted small">
+            <i class="bi bi-database-fill"></i> Guardado automático cada 30 seg
+          </div>
+        </div>
+        
+        <div class="alert alert-success" id="saveAlert" style="display:none;">
+          <i class="bi bi-check-circle-fill"></i> ¡Episodio guardado correctamente!
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- VISTA LIBRETO + LECTOR DE TEXTO -->
+  <div id="libretoView" style="display: none;">
+    <div class="row">
+      <div class="col-lg-12">
+        <div class="card mb-4">
+          <div class="card-header">
+            <i class="bi bi-eyeglasses me-2"></i>Libreto completo · Listo para leer al aire
+          </div>
+          <div class="card-body">
+            <div class="d-flex flex-wrap gap-2 justify-content-between align-items-center mb-3">
+              <div class="d-flex gap-2">
+                <button id="copyFullLibretoBtn" class="btn btn-sm btn-outline-primary-custom"><i class="bi bi-clipboard"></i> Copiar todo</button>
+                <button id="printLibretoBtn" class="btn btn-sm btn-outline-secondary"><i class="bi bi-printer"></i> Imprimir</button>
+              </div>
+              <div class="tts-controls">
+                <i class="bi bi-soundwave"></i>
+                <select id="voiceSelect" class="form-select form-select-sm" style="width: auto;">
+                  <option value="">Voz por defecto</option>
+                </select>
+                <select id="rateSelect" class="form-select form-select-sm" style="width: auto;">
+                  <option value="0.5">0.5x</option>
+                  <option value="0.75">0.75x</option>
+                  <option value="1" selected>1x</option>
+                  <option value="1.25">1.25x</option>
+                  <option value="1.5">1.5x</option>
+                  <option value="2">2x</option>
+                </select>
+                <button id="speakFullBtn" class="btn btn-sm btn-primary-custom"><i class="bi bi-play-circle-fill"></i> Leer TODO</button>
+                <button id="stopSpeakingBtn" class="btn btn-sm btn-outline-danger"><i class="bi bi-stop-circle-fill"></i> Detener</button>
+              </div>
+            </div>
+            <div id="libretoContent" class="libreto-preview selectable-text">
+              <!-- Aquí se genera el libreto con IDs para selección -->
+            </div>
+            <div class="alert alert-info mt-3 small">
+              <i class="bi bi-info-circle-fill"></i> <strong>🎧 Lectura selectiva:</strong> Haz clic en CUALQUIER párrafo del libreto para escuchar SOLO esa parte.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer class="footer text-center">
+  <div class="container">
+    <p class="mb-0">📻 Cuaderno profesional para crear podcasts · Escribe, edita, guarda, lee al aire y ESCUCHA con texto a voz</p>
+  </div>
+</footer>
+
+<script>
+  // Elementos del DOM
+  const fields = {
+    podcastTitle: document.getElementById("podcastTitle"),
+    episodeTitle: document.getElementById("episodeTitle"),
+    hostName: document.getElementById("hostName"),
+    guestName: document.getElementById("guestName"),
+    introMusic: document.getElementById("introMusic"),
+    greeting: document.getElementById("greeting"),
+    hook: document.getElementById("hook"),
+    segment1: document.getElementById("segment1"),
+    interview: document.getElementById("interview"),
+    segment2: document.getElementById("segment2"),
+    closing: document.getElementById("closing"),
+    credits: document.getElementById("credits")
+  };
+  
+  // Contadores de palabras
+  function countWords(text) { return text.trim().split(/\s+/).filter(w => w.length > 0).length; }
+  function updateAllWordCounts() {
+    document.getElementById("introMusicCount").innerText = countWords(fields.introMusic.value) + " palabras";
+    document.getElementById("greetingCount").innerText = countWords(fields.greeting.value) + " palabras";
+    document.getElementById("hookCount").innerText = countWords(fields.hook.value) + " palabras";
+    document.getElementById("segment1Count").innerText = countWords(fields.segment1.value) + " palabras";
+    document.getElementById("interviewCount").innerText = countWords(fields.interview.value) + " palabras";
+    document.getElementById("segment2Count").innerText = countWords(fields.segment2.value) + " palabras";
+    document.getElementById("closingCount").innerText = countWords(fields.closing.value) + " palabras";
+    document.getElementById("creditsCount").innerText = countWords(fields.credits.value) + " palabras";
+    updateDuration();
+  }
+  
+  function updateDuration() {
+    let totalWords = 0;
+    for(let key in fields) if(fields[key] && fields[key].value) totalWords += countWords(fields[key].value);
+    const minutes = Math.round(totalWords / 130);
+    document.getElementById("estimatedDuration").innerHTML = minutes < 1 ? "< 1 min" : `${minutes} minutos`;
+  }
+  
+  // Guardar en localStorage
+  function saveToLocalStorage() {
+    const data = {};
+    for(let key in fields) if(fields[key]) data[key] = fields[key].value;
+    localStorage.setItem("podcast_borrador", JSON.stringify(data));
+    const alert = document.getElementById("saveAlert");
+    alert.style.display = "block";
+    setTimeout(() => alert.style.display = "none", 2000);
+  }
+  
+  function loadFromLocalStorage() {
+    const saved = localStorage.getItem("podcast_borrador");
+    if(saved) {
+      const data = JSON.parse(saved);
+      for(let key in data) if(fields[key]) fields[key].value = data[key];
+    } else {
+      // Ejemplo por defecto
+      fields.podcastTitle.value = "Voces del Chicamocha";
+      fields.episodeTitle.value = "Episodio 1: El agua que se nos va";
+      fields.hostName.value = "Carolina Rodríguez";
+      fields.guestName.value = "Alberto Lleras, campesino de Los Santos";
+      fields.introMusic.value = "[SUENA GUITARRA SANTANDEREANA - 10 segundos]";
+      fields.greeting.value = "¡Bienvenidos y bienvenidas a Voces del Chicamocha! Soy Carolina Rodríguez. Hoy hablaremos de un tema que nos duele a todos: el agua que se está llevando el río de nuestras montañas.";
+      fields.hook.value = "¿Sabías que el río de Oro pierde 30 litros por segundo cada año? Eso equivale a 50 piscinas olímpicas al mes. ¿Por qué está pasando?";
+      fields.segment1.value = "El río de Oro nace en el páramo de Santurbán. De allí dependen 12 veredas para beber y cultivar. La minería ilegal ha reducido su caudal en un 40%.";
+      fields.interview.value = "P: Don Alberto, ¿cómo ha visto cambiar el río? R: Antes este río cantaba, ahora apenas susurra. La mitad de los cultivos se han perdido.";
+      fields.segment2.value = "Hay soluciones: reforestar, denunciar minería ilegal y crear comités ciudadanos. La comunidad puede unirse los domingos a jornadas de limpieza.";
+      fields.closing.value = "Te invitamos a compartir este episodio, escribirnos a nuestro WhatsApp y participar en la minga de este sábado.";
+      fields.credits.value = "Producido por Radio Comunitaria El Fonce. Música: Banda Campesina de Los Santos. ¡Gracias por escuchar!";
+    }
+    updateAllWordCounts();
+  }
+  
+  // Generar libreto con identificadores para selección por párrafo
+  function generateLibretoHTML() {
+    let html = "";
+    html += `<div><strong>🎙️ ${escapeHtml(fields.podcastTitle.value || "Sin título")}</strong></div>`;
+    html += `<div>📌 ${escapeHtml(fields.episodeTitle.value || "Episodio")}</div>`;
+    html += `<div>🎤 Locutor(a): ${escapeHtml(fields.hostName.value || "—")}</div>`;
+    if(fields.guestName.value) html += `<div>👤 Invitado(a): ${escapeHtml(fields.guestName.value)}</div>`;
+    html += `<hr>`;
+    
+    const sections = [
+      { id: "intro", label: "🎶 INTRO MUSICAL", text: fields.introMusic.value },
+      { id: "greeting", label: "🎙️ SALUDO", text: fields.greeting.value },
+      { id: "hook", label: "🔴 GANCHO", text: fields.hook.value },
+      { id: "segment1", label: "📖 DESARROLLO 1", text: fields.segment1.value },
+      { id: "interview", label: "🎙️ ENTREVISTA", text: fields.interview.value },
+      { id: "segment2", label: "📖 DESARROLLO 2", text: fields.segment2.value },
+      { id: "closing", label: "🔚 CIERRE / CTA", text: fields.closing.value },
+      { id: "credits", label: "🎧 CRÉDITOS", text: fields.credits.value }
+    ];
+    
+    for(let sec of sections) {
+      if(sec.text && sec.text.trim()) {
+        html += `<div class="mb-3 p-2 rounded" data-speech-text="${escapeHtml(sec.text)}" style="cursor:pointer; transition:0.1s;" onclick="speakSelectedText(this)">`;
+        html += `<div class="fw-bold small text-warning">${sec.label}</div>`;
+        html += `<div class="ms-2">${escapeHtml(sec.text)}</div>`;
+        html += `</div>`;
+      }
+    }
+    html += `<hr><div>⏱️ Duración estimada: ${document.getElementById("estimatedDuration").innerText}</div>`;
+    return html;
+  }
+  
+  function escapeHtml(str) { if(!str) return ""; return str.replace(/[&<>]/g, function(m){ if(m==='&') return '&amp;'; if(m==='<') return '&lt;'; if(m==='>') return '&gt;'; return m;}); }
+  
+  function refreshLibreto() {
+    const container = document.getElementById("libretoContent");
+    if(container) container.innerHTML = generateLibretoHTML();
+  }
+  
+  // --- LECTOR DE TEXTO (TTS) ---
+  let currentUtterance = null;
+  let voices = [];
+  
+  function populateVoices() {
+    voices = speechSynthesis.getVoices();
+    const select = document.getElementById("voiceSelect");
+    if(!select) return;
+    const currentVal = select.value;
+    select.innerHTML = '<option value="">Voz por defecto</option>';
+    voices.forEach(voice => {
+      if(voice.lang.startsWith("es")) {
+        const option = document.createElement("option");
+        option.value = voice.name;
+        option.textContent = `${voice.name} (${voice.lang})`;
+        select.appendChild(option);
+      }
+    });
+    if(currentVal) select.value = currentVal;
+  }
+  
+  if (typeof speechSynthesis !== 'undefined') {
+    speechSynthesis.onvoiceschanged = populateVoices;
+    setTimeout(populateVoices, 200);
+  }
+  
+  function stopSpeaking() {
+    if (currentUtterance) {
+      speechSynthesis.cancel();
+      currentUtterance = null;
+    }
+  }
+  
+  function speakText(text) {
+    if (!text || text.trim() === "") return;
+    stopSpeaking();
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.lang = "es-ES";
+    utterance.rate = parseFloat(document.getElementById("rateSelect")?.value || 1);
+    const voiceName = document.getElementById("voiceSelect")?.value;
+    if(voiceName && voices.length) {
+      const selected = voices.find(v => v.name === voiceName);
+      if(selected) utterance.voice = selected;
+    }
+    utterance.onend = () => { currentUtterance = null; };
+    currentUtterance = utterance;
+    speechSynthesis.speak(utterance);
+  }
+  
+  function speakFullLibreto() {
+    let fullText = "";
+    const sections = [
+      fields.introMusic.value, fields.greeting.value, fields.hook.value,
+      fields.segment1.value, fields.interview.value, fields.segment2.value,
+      fields.closing.value, fields.credits.value
+    ];
+    for(let sec of sections) if(sec) fullText += sec + " ";
+    if(fullText.trim()) speakText(fullText);
+    else alert("No hay contenido para leer. Escribe algo en el editor primero.");
+  }
+  
+  function speakSelectedText(element) {
+    const text = element.getAttribute("data-speech-text");
+    if(text) speakText(text);
+  }
+  
+  window.speakSelectedText = speakSelectedText;
+  
+  // Exportar a TXT plano
+  function generatePlainText() {
+    let text = "";
+    text += `${fields.podcastTitle.value || "Sin título"}\n`;
+    text += `${fields.episodeTitle.value || "Episodio"}\n`;
+    text += `Locutor(a): ${fields.hostName.value || "—"}\n`;
+    if(fields.guestName.value) text += `Invitado(a): ${fields.guestName.value}\n`;
+    text += `\n${"=".repeat(60)}\n\n`;
+    if(fields.introMusic.value) text += `[INTRO MUSICAL]\n${fields.introMusic.value}\n\n`;
+    if(fields.greeting.value) text += `SALUDO:\n${fields.greeting.value}\n\n`;
+    if(fields.hook.value) text += `GANCHO:\n${fields.hook.value}\n\n`;
+    if(fields.segment1.value) text += `DESARROLLO 1:\n${fields.segment1.value}\n\n`;
+    if(fields.interview.value) text += `ENTREVISTA:\n${fields.interview.value}\n\n`;
+    if(fields.segment2.value) text += `DESARROLLO 2:\n${fields.segment2.value}\n\n`;
+    if(fields.closing.value) text += `CIERRE:\n${fields.closing.value}\n\n`;
+    if(fields.credits.value) text += `CRÉDITOS:\n${fields.credits.value}\n\n`;
+    text += `${"=".repeat(60)}\n`;
+    text += `Duración estimada: ${document.getElementById("estimatedDuration").innerText}`;
+    return text;
+  }
+  
+  function exportToTxt() {
+    const content = generatePlainText();
+    const blob = new Blob([content], {type: "text/plain;charset=utf-8"});
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(blob);
+    link.download = `podcast_${fields.episodeTitle.value.replace(/[^a-z0-9]/gi, '_') || "episodio"}.txt`;
+    link.click();
+    URL.revokeObjectURL(link.href);
+  }
+  
+  async function copyToClipboard() {
+    const content = generatePlainText();
+    await navigator.clipboard.writeText(content);
+    alert("📋 Libreto copiado al portapapeles.");
+  }
+  
+  function printLibreto() {
+    const content = generatePlainText();
+    const win = window.open('', '_blank');
+    win.document.write(`
+      <html><head><title>Libreto - ${fields.episodeTitle.value}</title>
+      <style>body { font-family: 'Courier New', monospace; padding: 2cm; line-height: 1.6; white-space: pre-wrap; }</style>
+      </head><body><pre>${content}</pre></body></html>
+    `);
+    win.document.close();
+    win.print();
+  }
+  
+  // Auto-save
+  let autoSaveInterval;
+  function startAutoSave() {
+    if(autoSaveInterval) clearInterval(autoSaveInterval);
+    autoSaveInterval = setInterval(() => { saveToLocalStorage(); }, 30000);
+  }
+  
+  // Event listeners
+  function initEventListeners() {
+    for(let key in fields) if(fields[key]) {
+      fields[key].addEventListener("input", () => {
+        updateAllWordCounts();
+        if(document.getElementById("libretoView").style.display !== "none") refreshLibreto();
+      });
+    }
+    document.getElementById("saveBtn").addEventListener("click", saveToLocalStorage);
+    document.getElementById("exportTxtBtn").addEventListener("click", exportToTxt);
+    document.getElementById("copyScriptBtn").addEventListener("click", copyToClipboard);
+    document.getElementById("copyFullLibretoBtn")?.addEventListener("click", copyToClipboard);
+    document.getElementById("printLibretoBtn")?.addEventListener("click", printLibreto);
+    document.getElementById("speakFullBtn")?.addEventListener("click", speakFullLibreto);
+    document.getElementById("stopSpeakingBtn")?.addEventListener("click", stopSpeaking);
+    
+    document.querySelectorAll("[data-view]").forEach(link => {
+      link.addEventListener("click", (e) => {
+        e.preventDefault();
+        const view = link.getAttribute("data-view");
+        document.getElementById("editorView").style.display = view === "editor" ? "block" : "none";
+        document.getElementById("libretoView").style.display = view === "libreto" ? "block" : "none";
+        if(view === "libreto") refreshLibreto();
+        if(view === "libreto") stopSpeaking();
+      });
+    });
+  }
+  
+  // Inicialización
+  loadFromLocalStorage();
+  initEventListeners();
+  startAutoSave();
+  updateAllWordCounts();
+</script>
+</body>
+</html>

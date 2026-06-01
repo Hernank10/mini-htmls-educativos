@@ -1,0 +1,319 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Calculadoras Financieras - Buffetología aplicada</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body { padding: 2rem; background:#f8f9fa; }
+    .card { border-radius: .9rem; }
+    .example-btn { margin-right:.5rem; }
+    pre { background:#eef2f7; padding:1rem; border-radius:.5rem; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header class="mb-4">
+      <h1 class="h3">Suite pedagógica: Análisis financiero aplicado</h1>
+      <p class="text-muted">Calculadoras interactivas (ROE, P/E, Valor intrínseco y costo de combustible) adaptadas a: finca raíz, vehículos usados, entrega en moto y productos agrícolas.</p>
+    </header>
+
+    <div class="row gy-4">
+      <!-- ROE & P/E Card -->
+      <div class="col-12 col-lg-6">
+        <div class="card shadow-sm">
+          <div class="card-body">
+            <h5 class="card-title">ROE y P/E</h5>
+            <p class="card-text">Calcula rentabilidad sobre el capital (ROE) y relación Precio/Ganancia (P/E). Ajusta ganancias por costos (combustible, mantenimiento).</p>
+
+            <div class="mb-3">
+              <label class="form-label">Tipo de negocio</label>
+              <select id="tipoNegocio1" class="form-select" onchange="ajustarEtiquetas1()">
+                <option value="inmobiliario">Finca raíz</option>
+                <option value="vehiculos">Venta de automotores/motos</option>
+                <option value="entregas">Entrega en moto</option>
+                <option value="agricola">Productos agrícolas</option>
+              </select>
+            </div>
+
+            <div class="row">
+              <div class="col-12 col-md-6 mb-2">
+                <label class="form-label" id="labelGanancias1">Ganancias netas anuales</label>
+                <input type="number" id="ganancias1" class="form-control" step="0.01" value="12000">
+              </div>
+              <div class="col-12 col-md-6 mb-2">
+                <label class="form-label" id="labelCapital1">Capital invertido</label>
+                <input type="number" id="capital1" class="form-control" step="0.01" value="50000">
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-12 col-md-6 mb-2">
+                <label class="form-label">Valor del activo / negocio</label>
+                <input type="number" id="valor1" class="form-control" step="0.01" value="100000">
+              </div>
+              <div class="col-12 col-md-6 mb-2">
+                <label class="form-label">Costos operativos extra (combustible, reparaciones)</label>
+                <input type="number" id="costos1" class="form-control" step="0.01" value="1200">
+              </div>
+            </div>
+
+            <div class="d-flex align-items-center mt-2">
+              <button class="btn btn-primary me-2" onclick="calcularRoePe()">Calcular</button>
+              <button class="btn btn-outline-secondary example-btn" onclick="cargarEjemploRoe(1)">Ejemplo</button>
+              <button class="btn btn-outline-secondary" onclick="limpiarRoePe()">Limpiar</button>
+            </div>
+
+            <hr>
+            <div id="resultadoRoePe" style="min-height:3.2rem"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Valor Intrínseco Card -->
+      <div class="col-12 col-lg-6">
+        <div class="card shadow-sm">
+          <div class="card-body">
+            <h5 class="card-title">Valor Intrínseco (fórmula simple)</h5>
+            <p class="card-text">Fórmula: (Ingresos o beneficio × (1 + g)) / tasa_descuento. Útil para estimar valor de negocio/activo.</p>
+
+            <div class="mb-3">
+              <label class="form-label">Tipo de ingreso</label>
+              <select id="tipoNegocio2" class="form-select">
+                <option value="ingresosAnuales">Ingresos netos anuales (recomendado)</option>
+                <option value="gananciaVenta">Ganancia por venta puntual</option>
+              </select>
+            </div>
+
+            <div class="row">
+              <div class="col-12 col-md-4 mb-2">
+                <label class="form-label">Ingreso / Beneficio</label>
+                <input type="number" id="ingreso2" class="form-control" step="0.01" value="12000">
+              </div>
+              <div class="col-6 col-md-4 mb-2">
+                <label class="form-label">Tasa crecimiento (g)</label>
+                <input type="number" id="g2" class="form-control" step="0.001" value="0.04">
+              </div>
+              <div class="col-6 col-md-4 mb-2">
+                <label class="form-label">Tasa descuento</label>
+                <input type="number" id="r2" class="form-control" step="0.001" value="0.08">
+              </div>
+            </div>
+
+            <div class="d-flex align-items-center mt-2">
+              <button class="btn btn-primary me-2" onclick="calcularValorIntrinseco()">Calcular</button>
+              <button class="btn btn-outline-secondary example-btn" onclick="cargarEjemploValor()">Ejemplo</button>
+              <button class="btn btn-outline-secondary" onclick="limpiarValor()">Limpiar</button>
+            </div>
+
+            <hr>
+            <div id="resultadoValor" style="min-height:3.2rem"></div>
+
+            <details class="mt-3">
+              <summary>Ejercicio avanzado: crecimiento por etapas</summary>
+              <p class="small text-muted mt-2">Puedes usar el modo avanzado para proyectar n años con g1 y luego crecimiento perpetuo g2. (Incluido en la documentación).</p>
+            </details>
+          </div>
+        </div>
+      </div>
+
+      <!-- Costo Combustible Card -->
+      <div class="col-12 col-lg-6">
+        <div class="card shadow-sm">
+          <div class="card-body">
+            <h5 class="card-title">Costo del Combustible (Gasolina / ACPM)</h5>
+            <p class="card-text">Calcula el gasto en combustible por viaje o por período. Útil para restar a ganancias.</p>
+
+            <div class="row">
+              <div class="col-6 mb-2">
+                <label class="form-label">Consumo (litros / km)</label>
+                <input type="number" id="consumo3" class="form-control" step="0.001" value="0.08">
+              </div>
+              <div class="col-6 mb-2">
+                <label class="form-label">Precio por litro</label>
+                <input type="number" id="precio3" class="form-control" step="0.01" value="5.00">
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-6 mb-2">
+                <label class="form-label">Distancia (km)</label>
+                <input type="number" id="distancia3" class="form-control" step="0.1" value="100">
+              </div>
+              <div class="col-6 mb-2">
+                <label class="form-label">Viajes / periodos</label>
+                <input type="number" id="veces3" class="form-control" step="1" value="1">
+              </div>
+            </div>
+
+            <div class="d-flex align-items-center mt-2">
+              <button class="btn btn-primary me-2" onclick="calcularCombustible()">Calcular</button>
+              <button class="btn btn-outline-secondary example-btn" onclick="cargarEjemploCombustible()">Ejemplo</button>
+              <button class="btn btn-outline-secondary" onclick="limpiarCombustible()">Limpiar</button>
+            </div>
+
+            <hr>
+            <div id="resultadoCombustible" style="min-height:3.2rem"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Panel de ejercicios y descargas -->
+      <div class="col-12 col-lg-6">
+        <div class="card shadow-sm">
+          <div class="card-body">
+            <h5 class="card-title">Ejercicios y ejemplos listos</h5>
+            <p class="card-text">Carga ejemplos preconfigurados para cada sector o descarga los datos en CSV para experimentar en Python o Excel.</p>
+            <div class="mb-3">
+              <label class="form-label">Sector / Ejemplo</label>
+              <select id="exampleSelector" class="form-select">
+                <option value="inmobiliario">Finca raíz - ejemplo</option>
+                <option value="vehiculos">Venta vehículos usados - ejemplo</option>
+                <option value="entregas">Entrega en moto - ejemplo</option>
+                <option value="agricola">Productos agrícolas - ejemplo</option>
+              </select>
+            </div>
+            <div class="d-flex">
+              <button class="btn btn-success me-2" onclick="cargarEjemploGlobal()">Cargar ejemplo global</button>
+              <button class="btn btn-outline-primary" onclick="descargarCSV()">Descargar CSV</button>
+            </div>
+
+            <hr>
+            <h6>Instrucciones rápidas</h6>
+            <ol class="small">
+              <li>Elige el sector y ajusta las cifras (ganancias, inversiones, consumos).</li>
+              <li>Calcula ROE/P-E para ver rentabilidad y "años de recuperación".</li>
+              <li>Calcula valor intrínseco y compáralo con el precio/valor del activo.</li>
+              <li>Incluye el costo de combustible para obtener ganancias netas reales.</li>
+            </ol>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <footer class="mt-4 text-center text-muted small">Creado para fines pedagógicos. Ajusta tasas y supuestos según tu contexto.</footer>
+  </div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+function formatMoney(x){ return Number(x).toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2}); }
+
+function ajustarEtiquetas1(){
+  const t = document.getElementById('tipoNegocio1').value;
+  const labG = document.getElementById('labelGanancias1');
+  const labC = document.getElementById('labelCapital1');
+  if(t==='inmobiliario'){
+    labG.innerText='Ingresos netos anuales por alquiler';
+    labC.innerText='Capital propio invertido (finca)';
+  } else if(t==='vehiculos'){
+    labG.innerText='Ganancia neta por venta / periodo';
+    labC.innerText='Capital invertido en compra del vehículo';
+  } else if(t==='entregas'){
+    labG.innerText='Ganancias netas mensuales por entregas';
+    labC.innerText='Capital invertido (moto y equipo)';
+  } else {
+    labG.innerText='Ganancia neta anual de la producción';
+    labC.innerText='Capital invertido en producción y operaciones';
+  }
+}
+
+function calcularRoePe(){
+  const ganancias = parseFloat(document.getElementById('ganancias1').value) || 0;
+  const capital = parseFloat(document.getElementById('capital1').value) || 0;
+  const valor = parseFloat(document.getElementById('valor1').value) || 0;
+  const costos = parseFloat(document.getElementById('costos1').value) || 0;
+
+  const gananciasAjustadas = ganancias - costos;
+  const roe = capital>0 ? (gananciasAjustadas / capital) : NaN;
+  const pe = gananciasAjustadas>0 ? (valor / gananciasAjustadas) : NaN;
+
+  let html = '';
+  html += `<p><strong>Ganancias ajustadas:</strong> $${formatMoney(gananciasAjustadas)}</p>`;
+  html += `<p><strong>ROE:</strong> ${isFinite(roe)? (roe*100).toFixed(2) + '%':'--'}</p>`;
+  html += `<p><strong>P/E (años):</strong> ${isFinite(pe)? pe.toFixed(2) + ' años':'--'}</p>`;
+
+  if(isFinite(roe) && roe>0.15 && isFinite(pe) && pe<15){
+    html += `<div class="alert alert-success mt-2 p-2">Cumple criterio simplificado "Buffetología": ROE alto y P/E bajo.</div>`;
+  } else {
+    html += `<div class="alert alert-warning mt-2 p-2">No cumple ambos criterios simultáneamente. Revisa supuestos.</div>`;
+  }
+
+  document.getElementById('resultadoRoePe').innerHTML = html;
+}
+
+function limpiarRoePe(){ document.getElementById('ganancias1').value=''; document.getElementById('capital1').value=''; document.getElementById('valor1').value=''; document.getElementById('costos1').value=''; document.getElementById('resultadoRoePe').innerHTML=''; }
+
+function calcularValorIntrinseco(){
+  const ingreso = parseFloat(document.getElementById('ingreso2').value) || 0;
+  const g = parseFloat(document.getElementById('g2').value) || 0;
+  const r = parseFloat(document.getElementById('r2').value) || 0;
+  if(r<=0){ document.getElementById('resultadoValor').innerHTML='<div class="alert alert-danger">La tasa de descuento debe ser mayor que 0.</div>'; return; }
+  const ingresoA = ingreso * (1 + g);
+  const valor = ingresoA / r;
+  let html = `<p><strong>Ingreso ajustado:</strong> $${formatMoney(ingresoA)}</p>`;
+  html += `<p><strong>Valor intrínseco (fórmula simple):</strong> $${formatMoney(valor)}</p>`;
+  document.getElementById('resultadoValor').innerHTML = html;
+}
+
+function limpiarValor(){ document.getElementById('ingreso2').value=''; document.getElementById('g2').value=''; document.getElementById('r2').value=''; document.getElementById('resultadoValor').innerHTML=''; }
+
+function calcularCombustible(){
+  const cpkm = parseFloat(document.getElementById('consumo3').value) || 0;
+  const precio = parseFloat(document.getElementById('precio3').value) || 0;
+  const distancia = parseFloat(document.getElementById('distancia3').value) || 0;
+  const veces = parseInt(document.getElementById('veces3').value) || 1;
+  const litros = cpkm * distancia * veces;
+  const costo = litros * precio;
+  let html = `<p><strong>Litros consumidos:</strong> ${litros.toFixed(2)} L</p>`;
+  html += `<p><strong>Costo total combustible:</strong> $${formatMoney(costo)}</p>`;
+  document.getElementById('resultadoCombustible').innerHTML = html;
+}
+
+function limpiarCombustible(){ document.getElementById('consumo3').value=''; document.getElementById('precio3').value=''; document.getElementById('distancia3').value=''; document.getElementById('veces3').value='1'; document.getElementById('resultadoCombustible').innerHTML=''; }
+
+// Ejemplos y CSV
+function cargarEjemploRoe(idx){
+  // simple example values
+  document.getElementById('ganancias1').value = 20000;
+  document.getElementById('capital1').value = 150000;
+  document.getElementById('valor1').value = 250000;
+  document.getElementById('costos1').value = 2000;
+  calcularRoePe();
+}
+function cargarEjemploValor(){ document.getElementById('ingreso2').value=20000; document.getElementById('g2').value=0.03; document.getElementById('r2').value=0.07; calcularValorIntrinseco(); }
+function cargarEjemploCombustible(){ document.getElementById('consumo3').value=0.08; document.getElementById('precio3').value=5.00; document.getElementById('distancia3').value=120; document.getElementById('veces3').value=2; calcularCombustible(); }
+
+function cargarEjemploGlobal(){
+  const sel = document.getElementById('exampleSelector').value;
+  if(sel==='inmobiliario'){
+    document.getElementById('tipoNegocio1').value='inmobiliario'; ajustarEtiquetas1(); document.getElementById('ganancias1').value=24000; document.getElementById('capital1').value=180000; document.getElementById('valor1').value=300000; document.getElementById('costos1').value=3000; calcularRoePe();
+    document.getElementById('ingreso2').value=24000; document.getElementById('g2').value=0.03; document.getElementById('r2').value=0.07; calcularValorIntrinseco();
+  } else if(sel==='vehiculos'){
+    document.getElementById('tipoNegocio1').value='vehiculos'; ajustarEtiquetas1(); document.getElementById('ganancias1').value=3000; document.getElementById('capital1').value=8000; document.getElementById('valor1').value=12000; document.getElementById('costos1').value=400; calcularRoePe();
+    document.getElementById('ingreso2').value=3000; document.getElementById('g2').value=0.05; document.getElementById('r2').value=0.10; calcularValorIntrinseco();
+  } else if(sel==='entregas'){
+    document.getElementById('tipoNegocio1').value='entregas'; ajustarEtiquetas1(); document.getElementById('ganancias1').value=1800; document.getElementById('capital1').value=7000; document.getElementById('valor1').value=9000; document.getElementById('costos1').value=250; calcularRoePe();
+    document.getElementById('ingreso2').value=1800; document.getElementById('g2').value=0.06; document.getElementById('r2').value=0.09; calcularValorIntrinseco();
+  } else {
+    document.getElementById('tipoNegocio1').value='agricola'; ajustarEtiquetas1(); document.getElementById('ganancias1').value=15000; document.getElementById('capital1').value=60000; document.getElementById('valor1').value=90000; document.getElementById('costos1').value=2000; calcularRoePe();
+    document.getElementById('ingreso2').value=15000; document.getElementById('g2').value=0.04; document.getElementById('r2').value=0.08; calcularValorIntrinseco();
+  }
+}
+
+function descargarCSV(){
+  const rows = [
+    ['sector','ganancias_ajustadas','capital','valor_activo','costos_operativos','valor_intrinseco'],
+    ['ejemplo', document.getElementById('ganancias1').value || 0, document.getElementById('capital1').value || 0, document.getElementById('valor1').value || 0, document.getElementById('costos1').value || 0, document.getElementById('ingreso2').value || 0]
+  ];
+  let csv = rows.map(r=>r.join(',')).join('\n');
+  const blob = new Blob([csv],{type:'text/csv'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a'); a.href=url; a.download='datos_ejemplo.csv'; a.click(); URL.revokeObjectURL(url);
+}
+
+// inicializar
+ajustarEtiquetas1();
+</script>
+</body>
+</html>

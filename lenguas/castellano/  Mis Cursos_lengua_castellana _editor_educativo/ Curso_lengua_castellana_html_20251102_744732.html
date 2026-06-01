@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="menu-screen">
+    <h2>Menú Principal</h2>
+    
+    <div class="game-stats">
+        <p>Racha actual: {{ player.streak }} | Mejor racha: {{ player.max_streak }}</p>
+    </div>
+    
+    <div class="menu-options">
+        <h3>Niveles Principales</h3>
+        {% for level in range(1, 4) %}
+        <div class="menu-item">
+            {% if player.unlocked_levels.get(level, False) %}
+                <a href="{{ url_for('play_level', level_id=level) }}" class="btn btn-level">
+                    Nivel {{ level }} {% if level in player.completed_levels %}✓{% endif %}
+                </a>
+            {% else %}
+                <button class="btn btn-level locked" disabled>
+                    Nivel {{ level }} 🔒
+                </button>
+            {% endif %}
+        </div>
+        {% endfor %}
+        
+        <h3>Módulos de Práctica</h3>
+        <div class="menu-item">
+            <a href="{{ url_for('practice_module', module_name='do_does') }}" class="btn btn-practice">
+                Preguntas con Do/Does
+            </a>
+        </div>
+        <div class="menu-item">
+            <a href="{{ url_for('practice_module', module_name='wh_questions') }}" class="btn btn-practice">
+                Wh- Questions
+            </a>
+        </div>
+        
+        <h3>Otras Opciones</h3>
+        <div class="menu-item">
+            <a href="{{ url_for('shop') }}" class="btn btn-shop">Tienda</a>
+            <a href="{{ url_for('stats') }}" class="btn btn-stats">Estadísticas</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

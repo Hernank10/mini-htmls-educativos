@@ -1,0 +1,1967 @@
+<!DOCTYPE html>
+<html lang="es" data-bs-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Futuro Lingua - Práctica Bilingüe de Futuro</title>
+    
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
+    
+    <!-- Chart.js para estadísticas -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- Animate.css para animaciones -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    
+    <style>
+        :root {
+            --primary-color: #4a6fa5;
+            --secondary-color: #166088;
+            --accent-color: #ff6b6b;
+            --success-color: #06d6a0;
+            --warning-color: #ffd166;
+            --light-color: #f8f9fa;
+            --dark-color: #343a40;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+        }
+        
+        .navbar-brand {
+            font-weight: 700;
+            font-size: 1.5rem;
+            color: var(--primary-color) !important;
+        }
+        
+        .hero-section {
+            background: linear-gradient(rgba(74, 111, 165, 0.9), rgba(22, 96, 136, 0.9)), url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="%23ffffff" fill-opacity="1" d="M0,224L48,213.3C96,203,192,181,288,181.3C384,181,480,203,576,202.7C672,203,768,181,864,160C960,139,1056,117,1152,112C1248,107,1344,117,1392,122.7L1440,128L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path></svg>');
+            background-size: cover;
+            background-position: center;
+            color: white;
+            padding: 5rem 0;
+            margin-bottom: 3rem;
+            background-repeat: no-repeat;
+            background-position: bottom;
+        }
+        
+        .category-card {
+            transition: all 0.3s ease;
+            border: none;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            height: 100%;
+        }
+        
+        .category-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.2);
+        }
+        
+        .practice-card {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+        
+        .voice-btn {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 50px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .voice-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        
+        .language-badge {
+            font-size: 0.8rem;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+        }
+        
+        .es-badge {
+            background-color: #ff6b6b;
+            color: white;
+        }
+        
+        .en-badge {
+            background-color: #4a6fa5;
+            color: white;
+        }
+        
+        .example-text {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            border-left: 4px solid var(--primary-color);
+            padding-left: 1rem;
+            background-color: rgba(74, 111, 165, 0.05);
+            padding: 1rem;
+            border-radius: 0 10px 10px 0;
+        }
+        
+        .result-correct {
+            color: var(--success-color);
+            font-weight: bold;
+        }
+        
+        .result-incorrect {
+            color: var(--accent-color);
+            font-weight: bold;
+        }
+        
+        .progress-ring {
+            width: 120px;
+            height: 120px;
+        }
+        
+        .stats-card {
+            background: white;
+            border-radius: 15px;
+            padding: 1.5rem;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            height: 100%;
+        }
+        
+        .dictation-input {
+            font-size: 1.2rem;
+            min-height: 150px;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            padding: 1rem;
+            transition: all 0.3s ease;
+        }
+        
+        .dictation-input:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 0.25rem rgba(74, 111, 165, 0.25);
+        }
+        
+        .error-highlight {
+            background-color: rgba(255, 107, 107, 0.2);
+            border-bottom: 2px dashed var(--accent-color);
+        }
+        
+        .success-highlight {
+            background-color: rgba(6, 214, 160, 0.2);
+            border-bottom: 2px solid var(--success-color);
+        }
+        
+        .mode-selector .btn {
+            border-radius: 50px;
+            margin: 0.25rem;
+        }
+        
+        .theme-toggle {
+            cursor: pointer;
+            font-size: 1.2rem;
+        }
+        
+        .dark-mode {
+            background: #1a1a2e;
+            color: #e6e6e6;
+        }
+        
+        .dark-mode .practice-card,
+        .dark-mode .stats-card,
+        .dark-mode .category-card {
+            background: #16213e;
+            color: #e6e6e6;
+            border: 1px solid #2d4059;
+        }
+        
+        .dark-mode .example-text {
+            background-color: rgba(255, 255, 255, 0.05);
+        }
+        
+        .dark-mode .dictation-input {
+            background-color: #0f3460;
+            color: #e6e6e6;
+            border-color: #2d4059;
+        }
+        
+        @media (max-width: 768px) {
+            .hero-section {
+                padding: 3rem 0;
+            }
+            
+            .practice-card {
+                padding: 1rem;
+            }
+        }
+        
+        .pulse-animation {
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="#">
+                <i class="bi bi-translate me-2"></i>Futuro Lingua
+            </a>
+            
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#inicio">Inicio</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#categorias">Categorías</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#practica">Práctica</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#dictado">Dictado</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#estadisticas">Estadísticas</a>
+                    </li>
+                </ul>
+                
+                <div class="d-flex align-items-center">
+                    <div class="theme-toggle me-3" id="themeToggle">
+                        <i class="bi bi-moon-fill"></i>
+                    </div>
+                    
+                    <div class="dropdown">
+                        <button class="btn btn-outline-primary dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                            <i class="bi bi-person-circle me-1"></i> Estudiante
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="#"><i class="bi bi-gear me-2"></i>Configuración</a></li>
+                            <li><a class="dropdown-item" href="#"><i class="bi bi-info-circle me-2"></i>Ayuda</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="#"><i class="bi bi-box-arrow-right me-2"></i>Cerrar sesión</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="inicio" class="hero-section pt-5 mt-5">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-6">
+                    <h1 class="display-4 fw-bold mb-4 animate__animated animate__fadeInLeft">Domina las expresiones de futuro en español e inglés</h1>
+                    <p class="lead mb-4 animate__animated animate__fadeInLeft animate__delay-1s">
+                        Una plataforma educativa completa con 100 ejemplos bilingües organizados en 10 categorías gramaticales. 
+                        Practica con ejercicios interactivos, dictados por voz y seguimiento de progreso.
+                    </p>
+                    <div class="d-flex flex-wrap gap-3 animate__animated animate__fadeInUp animate__delay-2s">
+                        <a href="#practica" class="btn btn-light btn-lg px-4">
+                            <i class="bi bi-play-circle me-2"></i>Comenzar a practicar
+                        </a>
+                        <a href="#categorias" class="btn btn-outline-light btn-lg px-4">
+                            <i class="bi bi-book me-2"></i>Ver categorías
+                        </a>
+                    </div>
+                </div>
+                <div class="col-lg-6 d-none d-lg-block">
+                    <div class="text-center">
+                        <div class="position-relative d-inline-block">
+                            <div class="position-absolute top-0 start-0 translate-middle bg-success rounded-circle pulse-animation" style="width: 20px; height: 20px;"></div>
+                            <div class="position-absolute top-100 start-100 translate-middle bg-warning rounded-circle pulse-animation" style="width: 20px; height: 20px; animation-delay: 0.5s;"></div>
+                            <div class="position-absolute top-100 start-0 translate-middle bg-primary rounded-circle pulse-animation" style="width: 20px; height: 20px; animation-delay: 1s;"></div>
+                            <i class="bi bi-megaphone-fill text-white" style="font-size: 15rem; opacity: 0.8;"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Categorías Section -->
+    <section id="categorias" class="py-5">
+        <div class="container">
+            <div class="row mb-5">
+                <div class="col-12 text-center">
+                    <h2 class="fw-bold mb-3">10 Categorías de Expresiones de Futuro</h2>
+                    <p class="lead text-muted">Aprende y practica todas las formas de expresar el futuro en español e inglés</p>
+                </div>
+            </div>
+            
+            <div class="row g-4" id="categories-container">
+                <!-- Las categorías se cargarán dinámicamente aquí -->
+            </div>
+            
+            <!-- Teoría de Categorías -->
+            <div class="row mt-5">
+                <div class="col-12">
+                    <div class="practice-card">
+                        <h3 class="mb-4"><i class="bi bi-info-circle-fill text-primary me-2"></i>Teoría de Categorías</h3>
+                        
+                        <div class="accordion" id="theoryAccordion">
+                            <!-- El contenido se cargará dinámicamente -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Práctica Section -->
+    <section id="practica" class="py-5 bg-light">
+        <div class="container">
+            <div class="row mb-5">
+                <div class="col-12 text-center">
+                    <h2 class="fw-bold mb-3">Modo Práctica</h2>
+                    <p class="lead text-muted">Elige una categoría y comienza a practicar con ejercicios interactivos</p>
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class="col-lg-4">
+                    <div class="practice-card">
+                        <h4 class="mb-4"><i class="bi bi-sliders text-primary me-2"></i>Configuración</h4>
+                        
+                        <div class="mb-4">
+                            <label class="form-label fw-bold">Seleccionar categoría</label>
+                            <select class="form-select" id="categorySelect">
+                                <option value="0">Todas las categorías</option>
+                                <!-- Las opciones se cargarán dinámicamente -->
+                            </select>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <label class="form-label fw-bold">Modo de práctica</label>
+                            <div class="mode-selector">
+                                <div class="d-flex flex-wrap">
+                                    <button class="btn btn-outline-primary active" data-mode="text">Solo texto</button>
+                                    <button class="btn btn-outline-primary" data-mode="listen">Escuchar</button>
+                                    <button class="btn btn-outline-primary" data-mode="dictate">Dictar</button>
+                                    <button class="btn btn-outline-primary" data-mode="mixed">Mixto</button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <label class="form-label fw-bold">Dirección de traducción</label>
+                            <div class="form-check mb-2">
+                                <input class="form-check-input" type="radio" name="direction" id="esToEn" checked>
+                                <label class="form-check-label" for="esToEn">
+                                    Español → Inglés
+                                </label>
+                            </div>
+                            <div class="form-check mb-2">
+                                <input class="form-check-input" type="radio" name="direction" id="enToEs">
+                                <label class="form-check-label" for="enToEs">
+                                    Inglés → Español
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="direction" id="mixedDirection">
+                                <label class="form-check-label" for="mixedDirection">
+                                    Alternar automáticamente
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <label class="form-label fw-bold">Número de ejercicios</label>
+                            <input type="range" class="form-range" min="1" max="20" value="5" id="exerciseCount">
+                            <div class="d-flex justify-content-between">
+                                <span>1</span>
+                                <span id="currentCount">5</span>
+                                <span>20</span>
+                            </div>
+                        </div>
+                        
+                        <button class="btn btn-primary w-100 py-3" id="startPracticeBtn">
+                            <i class="bi bi-play-fill me-2"></i>Comenzar práctica
+                        </button>
+                    </div>
+                    
+                    <!-- Estadísticas rápidas -->
+                    <div class="practice-card mt-4">
+                        <h5 class="mb-3"><i class="bi bi-graph-up text-primary me-2"></i>Tu progreso</h5>
+                        <div class="d-flex justify-content-around text-center">
+                            <div>
+                                <div class="fs-3 fw-bold" id="completedExercises">0</div>
+                                <div class="text-muted">Completados</div>
+                            </div>
+                            <div>
+                                <div class="fs-3 fw-bold" id="correctAnswers">0</div>
+                                <div class="text-muted">Correctas</div>
+                            </div>
+                            <div>
+                                <div class="fs-3 fw-bold" id="accuracyRate">0%</div>
+                                <div class="text-muted">Precisión</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-lg-8">
+                    <!-- Área de práctica -->
+                    <div class="practice-card">
+                        <div id="practiceArea">
+                            <div class="text-center py-5">
+                                <i class="bi bi-translate text-muted" style="font-size: 4rem;"></i>
+                                <h4 class="mt-3 text-muted">Configura tu práctica y haz clic en "Comenzar práctica"</h4>
+                                <p class="text-muted">Selecciona una categoría, modo y dirección para empezar</p>
+                            </div>
+                        </div>
+                        
+                        <div id="practiceResults" class="d-none">
+                            <h4 class="mb-3">Resultados de la práctica</h4>
+                            <div class="mb-4">
+                                <div class="d-flex justify-content-between mb-2">
+                                    <span>Progreso</span>
+                                    <span id="progressText">0/0</span>
+                                </div>
+                                <div class="progress" style="height: 10px;">
+                                    <div class="progress-bar" id="progressBar" style="width: 0%"></div>
+                                </div>
+                            </div>
+                            
+                            <div id="resultsContent">
+                                <!-- Los resultados se mostrarán aquí -->
+                            </div>
+                            
+                            <div class="d-flex justify-content-between mt-4">
+                                <button class="btn btn-outline-secondary" id="prevExerciseBtn" disabled>
+                                    <i class="bi bi-chevron-left me-1"></i>Anterior
+                                </button>
+                                <button class="btn btn-primary" id="nextExerciseBtn">
+                                    Siguiente<i class="bi bi-chevron-right ms-1"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Controles de voz -->
+                    <div class="practice-card mt-4">
+                        <h5 class="mb-3"><i class="bi bi-mic-fill text-primary me-2"></i>Controles de voz</h5>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <div class="d-grid gap-2">
+                                    <button class="voice-btn" id="listenBtn">
+                                        <i class="bi bi-volume-up me-2"></i>Escuchar frase
+                                    </button>
+                                    <small class="text-muted text-center">Reproduce la frase actual</small>
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <div class="d-grid gap-2">
+                                    <button class="voice-btn" id="dictateBtn">
+                                        <i class="bi bi-mic me-2"></i>Dictar respuesta
+                                    </button>
+                                    <small class="text-muted text-center">Dicta tu respuesta por voz</small>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="alert alert-info mt-3">
+                            <i class="bi bi-info-circle me-2"></i>
+                            <strong>Nota:</strong> Las funciones de voz requieren un navegador compatible (Chrome, Edge) y permisos de micrófono.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Dictado Section -->
+    <section id="dictado" class="py-5">
+        <div class="container">
+            <div class="row mb-5">
+                <div class="col-12 text-center">
+                    <h2 class="fw-bold mb-3">Modo Dictado de Escritura</h2>
+                    <p class="lead text-muted">Practica tu escritura y ortografía con dictados por voz</p>
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class="col-lg-8">
+                    <div class="practice-card">
+                        <div class="row mb-4">
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold">Idioma del dictado</label>
+                                <select class="form-select" id="dictationLanguage">
+                                    <option value="es">Español</option>
+                                    <option value="en">Inglés</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold">Velocidad</label>
+                                <select class="form-select" id="dictationSpeed">
+                                    <option value="slow">Lento (para principiantes)</option>
+                                    <option value="normal" selected>Normal</option>
+                                    <option value="fast">Rápido (avanzado)</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <label class="form-label fw-bold">Frase a escribir</label>
+                            <div class="example-text mb-3" id="dictationText">
+                                Selecciona una categoría y haz clic en "Nuevo dictado"
+                            </div>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <label class="form-label fw-bold">Tu escritura</label>
+                            <textarea class="dictation-input w-100" id="dictationInput" placeholder="Escribe aquí lo que escuches..."></textarea>
+                        </div>
+                        
+                        <div class="d-flex flex-wrap gap-3">
+                            <button class="voice-btn" id="newDictationBtn">
+                                <i class="bi bi-plus-circle me-2"></i>Nuevo dictado
+                            </button>
+                            <button class="btn btn-outline-primary" id="playDictationBtn">
+                                <i class="bi bi-play-fill me-2"></i>Reproducir
+                            </button>
+                            <button class="btn btn-success" id="checkDictationBtn">
+                                <i class="bi bi-check-circle me-2"></i>Verificar
+                            </button>
+                            <button class="btn btn-outline-secondary" id="clearDictationBtn">
+                                <i class="bi bi-x-circle me-2"></i>Limpiar
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Resultados del dictado -->
+                    <div class="practice-card mt-4 d-none" id="dictationResults">
+                        <h4 class="mb-3">Resultado del dictado</h4>
+                        
+                        <div class="row mb-4">
+                            <div class="col-md-6">
+                                <div class="text-center">
+                                    <div class="fs-1 fw-bold" id="dictationScore">0</div>
+                                    <div class="text-muted">Puntuación</div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="text-center">
+                                    <div class="fs-1 fw-bold" id="dictationErrors">0</div>
+                                    <div class="text-muted">Errores</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <h5>Comparación</h5>
+                            <div class="mb-3">
+                                <div class="text-muted small">Texto original:</div>
+                                <div class="example-text" id="originalText"></div>
+                            </div>
+                            <div class="mb-3">
+                                <div class="text-muted small">Tu escritura:</div>
+                                <div class="example-text" id="userText"></div>
+                            </div>
+                        </div>
+                        
+                        <div id="dictationAnalysis">
+                            <!-- El análisis se mostrará aquí -->
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-lg-4">
+                    <div class="practice-card">
+                        <h4 class="mb-4"><i class="bi bi-trophy text-primary me-2"></i>Desafíos de Dictado</h4>
+                        
+                        <div class="mb-4">
+                            <div class="d-flex align-items-center mb-3">
+                                <div class="flex-shrink-0">
+                                    <i class="bi bi-clock-history fs-4 text-primary"></i>
+                                </div>
+                                <div class="flex-grow-1 ms-3">
+                                    <h6 class="mb-0">Dictado rápido</h6>
+                                    <small class="text-muted">Completa 5 dictados en 3 minutos</small>
+                                </div>
+                                <div>
+                                    <span class="badge bg-warning">En progreso</span>
+                                </div>
+                            </div>
+                            
+                            <div class="d-flex align-items-center mb-3">
+                                <div class="flex-shrink-0">
+                                    <i class="bi bi-check-circle fs-4 text-success"></i>
+                                </div>
+                                <div class="flex-grow-1 ms-3">
+                                    <h6 class="mb-0">Precisión perfecta</h6>
+                                    <small class="text-muted">10 dictados con 100% de precisión</small>
+                                </div>
+                                <div>
+                                    <span class="badge bg-success">5/10</span>
+                                </div>
+                            </div>
+                            
+                            <div class="d-flex align-items-center">
+                                <div class="flex-shrink-0">
+                                    <i class="bi bi-globe fs-4 text-info"></i>
+                                </div>
+                                <div class="flex-grow-1 ms-3">
+                                    <h6 class="mb-0">Bilingüe experto</h6>
+                                    <small class="text-muted">20 dictados en ambos idiomas</small>
+                                </div>
+                                <div>
+                                    <span class="badge bg-info">8/20</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <button class="btn btn-outline-primary w-100" id="startChallengeBtn">
+                            <i class="bi bi-lightning-charge me-2"></i>Iniciar desafío
+                        </button>
+                    </div>
+                    
+                    <!-- Estadísticas de dictado -->
+                    <div class="practice-card mt-4">
+                        <h5 class="mb-3"><i class="bi bi-bar-chart text-primary me-2"></i>Tus estadísticas</h5>
+                        
+                        <div class="mb-3">
+                            <div class="d-flex justify-content-between mb-1">
+                                <span>Dictados completados</span>
+                                <span class="fw-bold" id="totalDictations">0</span>
+                            </div>
+                            <div class="d-flex justify-content-between mb-1">
+                                <span>Precisión promedio</span>
+                                <span class="fw-bold" id="avgAccuracy">0%</span>
+                            </div>
+                            <div class="d-flex justify-content-between mb-1">
+                                <span>Mejor puntuación</span>
+                                <span class="fw-bold" id="bestScore">0</span>
+                            </div>
+                            <div class="d-flex justify-content-between">
+                                <span>Errores promedio</span>
+                                <span class="fw-bold" id="avgErrors">0.0</span>
+                            </div>
+                        </div>
+                        
+                        <canvas id="dictationChart" height="200"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Estadísticas Section -->
+    <section id="estadisticas" class="py-5 bg-light">
+        <div class="container">
+            <div class="row mb-5">
+                <div class="col-12 text-center">
+                    <h2 class="fw-bold mb-3">Estadísticas de Progreso</h2>
+                    <p class="lead text-muted">Sigue tu evolución y mejora continua</p>
+                </div>
+            </div>
+            
+            <div class="row mb-4">
+                <div class="col-md-3 mb-4">
+                    <div class="stats-card text-center">
+                        <div class="fs-1 text-primary mb-2">
+                            <i class="bi bi-check-circle-fill"></i>
+                        </div>
+                        <div class="fs-3 fw-bold" id="totalExercisesStat">0</div>
+                        <div class="text-muted">Ejercicios completados</div>
+                    </div>
+                </div>
+                
+                <div class="col-md-3 mb-4">
+                    <div class="stats-card text-center">
+                        <div class="fs-1 text-success mb-2">
+                            <i class="bi bi-graph-up-arrow"></i>
+                        </div>
+                        <div class="fs-3 fw-bold" id="accuracyStat">0%</div>
+                        <div class="text-muted">Precisión general</div>
+                    </div>
+                </div>
+                
+                <div class="col-md-3 mb-4">
+                    <div class="stats-card text-center">
+                        <div class="fs-1 text-warning mb-2">
+                            <i class="bi bi-clock-history"></i>
+                        </div>
+                        <div class="fs-3 fw-bold" id="timeStat">0h</div>
+                        <div class="text-muted">Tiempo de práctica</div>
+                    </div>
+                </div>
+                
+                <div class="col-md-3 mb-4">
+                    <div class="stats-card text-center">
+                        <div class="fs-1 text-info mb-2">
+                            <i class="bi bi-translate"></i>
+                        </div>
+                        <div class="fs-3 fw-bold" id="streakStat">0</div>
+                        <div class="text-muted">Racha actual</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class="col-lg-8 mb-4">
+                    <div class="practice-card">
+                        <h4 class="mb-4">Progreso por categoría</h4>
+                        <canvas id="categoryChart"></canvas>
+                    </div>
+                </div>
+                
+                <div class="col-lg-4 mb-4">
+                    <div class="practice-card">
+                        <h4 class="mb-4">Distribución por idioma</h4>
+                        <canvas id="languageChart"></canvas>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class="col-12">
+                    <div class="practice-card">
+                        <h4 class="mb-4">Historial de actividad</h4>
+                        <div class="table-responsive">
+                            <table class="table table-hover" id="activityTable">
+                                <thead>
+                                    <tr>
+                                        <th>Fecha</th>
+                                        <th>Categoría</th>
+                                        <th>Idioma</th>
+                                        <th>Ejercicios</th>
+                                        <th>Precisión</th>
+                                        <th>Duración</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="activityTableBody">
+                                    <!-- Las actividades se cargarán dinámicamente -->
+                                    <tr>
+                                        <td colspan="6" class="text-center text-muted">No hay actividad registrada todavía</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-white py-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4 mb-4">
+                    <h4 class="fw-bold mb-3">Futuro Lingua</h4>
+                    <p>Una plataforma educativa diseñada para dominar las expresiones de futuro en español e inglés a través de práctica interactiva y personalizada.</p>
+                    <div class="d-flex gap-3">
+                        <a href="#" class="text-white fs-5"><i class="bi bi-facebook"></i></a>
+                        <a href="#" class="text-white fs-5"><i class="bi bi-twitter"></i></a>
+                        <a href="#" class="text-white fs-5"><i class="bi bi-instagram"></i></a>
+                        <a href="#" class="text-white fs-5"><i class="bi bi-youtube"></i></a>
+                    </div>
+                </div>
+                
+                <div class="col-lg-4 mb-4">
+                    <h5 class="fw-bold mb-3">Enlaces rápidos</h5>
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><a href="#inicio" class="text-white-50 text-decoration-none">Inicio</a></li>
+                        <li class="mb-2"><a href="#categorias" class="text-white-50 text-decoration-none">Categorías</a></li>
+                        <li class="mb-2"><a href="#practica" class="text-white-50 text-decoration-none">Práctica</a></li>
+                        <li class="mb-2"><a href="#dictado" class="text-white-50 text-decoration-none">Dictado</a></li>
+                        <li><a href="#estadisticas" class="text-white-50 text-decoration-none">Estadísticas</a></li>
+                    </ul>
+                </div>
+                
+                <div class="col-lg-4 mb-4">
+                    <h5 class="fw-bold mb-3">Contacto</h5>
+                    <p><i class="bi bi-envelope me-2"></i> info@futurolingua.com</p>
+                    <p><i class="bi bi-telephone me-2"></i> +1 (234) 567-890</p>
+                    <p><i class="bi bi-geo-alt me-2"></i> 123 Calle Educación, Ciudad Aprende</p>
+                    
+                    <div class="mt-4">
+                        <button class="btn btn-outline-light" data-bs-toggle="modal" data-bs-target="#contactModal">
+                            <i class="bi bi-chat-left-text me-2"></i>Envíanos un mensaje
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <hr class="my-4 bg-light">
+            
+            <div class="row">
+                <div class="col-md-6">
+                    <p class="mb-0">© 2023 Futuro Lingua. Todos los derechos reservados.</p>
+                </div>
+                <div class="col-md-6 text-md-end">
+                    <a href="#" class="text-white-50 text-decoration-none me-3">Política de privacidad</a>
+                    <a href="#" class="text-white-50 text-decoration-none">Términos de uso</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Modal de contacto -->
+    <div class="modal fade" id="contactModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Contáctanos</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="contactForm">
+                        <div class="mb-3">
+                            <label for="contactName" class="form-label">Nombre</label>
+                            <input type="text" class="form-control" id="contactName" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="contactEmail" class="form-label">Email</label>
+                            <input type="email" class="form-control" id="contactEmail" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="contactMessage" class="form-label">Mensaje</label>
+                            <textarea class="form-control" id="contactMessage" rows="4" required></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100">Enviar mensaje</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        // Datos de la aplicación
+        const appData = {
+            categories: [
+                {id: 1, name: "Futuro morfológico simple", count: 10, color: "#ff6b6b", icon: "bi-1-circle"},
+                {id: 2, name: "Perífrasis 'ir a + infinitivo'", count: 10, color: "#4a6fa5", icon: "bi-2-circle"},
+                {id: 3, name: "Presente con valor de futuro", count: 10, color: "#06d6a0", icon: "bi-3-circle"},
+                {id: 4, name: "Futuro compuesto", count: 10, color: "#ffd166", icon: "bi-4-circle"},
+                {id: 5, name: "Perífrasis 'tener que/deber + infinitivo'", count: 10, color: "#ef476f", icon: "bi-5-circle"},
+                {id: 6, name: "Perífrasis de intención", count: 10, color: "#118ab2", icon: "bi-6-circle"},
+                {id: 7, name: "Presente de subjuntivo en subordinadas", count: 10, color: "#073b4c", icon: "bi-7-circle"},
+                {id: 8, name: "Imperativo", count: 10, color: "#7209b7", icon: "bi-8-circle"},
+                {id: 9, name: "Construcciones condicionales", count: 10, color: "#f3722c", icon: "bi-9-circle"},
+                {id: 10, name: "Expresiones impersonales", count: 10, color: "#43aa8b", icon: "bi-10-circle"}
+            ],
+            
+            examples: [
+                // 10 ejemplos por categoría (reducido para esta demostración)
+                {id: 1, es: "Mañana estudiaré para el examen.", en: "Tomorrow I will study for the exam.", cat: 1},
+                {id: 2, es: "¿Algún día viajaremos a Marte?", en: "Will we ever travel to Mars?", cat: 1},
+                {id: 3, es: "Voy a cocinar paella el domingo.", en: "I am going to cook paella on Sunday.", cat: 2},
+                {id: 4, es: "El tren sale a las 18:00 horas.", en: "The train leaves at 6:00 p.m.", cat: 3},
+                {id: 5, es: "Para el lunes ya habré terminado el proyecto.", en: "By Monday I will have finished the project.", cat: 4},
+                {id: 6, es: "Tengo que hablar contigo seriamente.", en: "I have to talk to you seriously.", cat: 5},
+                {id: 7, es: "Pienso empezar un curso de fotografía.", en: "I plan to start a photography course.", cat: 6},
+                {id: 8, es: "Te prestaré dinero cuando lo necesites.", en: "I will lend you money when you need it.", cat: 7},
+                {id: 9, es: "Ven aquí ahora mismo.", en: "Come here right now.", cat: 8},
+                {id: 10, es: "Si ahorro dinero, me compraré un coche.", en: "If I save money, I will buy a car.", cat: 9},
+                {id: 11, es: "Habrá que esperar a ver los resultados.", en: "We/You/One will have to wait to see the results.", cat: 10},
+                {id: 12, es: "Te llamaré esta noche sin falta.", en: "I will call you tonight without fail.", cat: 1},
+                {id: 13, es: "Mira el cielo, va a llover.", en: "Look at the sky, it is going to rain.", cat: 2},
+                {id: 14, es: "La conferencia es mañana a las diez.", en: "The conference is tomorrow at ten.", cat: 3},
+                {id: 15, es: "¿Habrán llegado ya a casa?", en: "Will they have arrived home yet?", cat: 4},
+                {id: 16, es: "Debes ser más paciente con los niños.", en: "You must be more patient with children.", cat: 5},
+                {id: 17, es: "Quiero aprender a tocar el piano.", en: "I want to learn to play the piano.", cat: 6},
+                {id: 18, es: "Iremos a la playa en cuanto termine de llover.", en: "We will go to the beach as soon as it stops raining.", cat: 7},
+                {id: 19, es: "Haz los deberes antes de cenar.", en: "Do your homework before dinner.", cat: 8},
+                {id: 20, es: "Si llueve, nos quedaremos en casa.", en: "If it rains, we will stay home.", cat: 9},
+                {id: 21, es: "Será imposible convencerlo.", en: "It will be impossible to convince him.", cat: 10}
+            ],
+            
+            theory: {
+                1: {
+                    name: "Futuro morfológico simple",
+                    description: "Se forma añadiendo las terminaciones -é, -ás, -á, -emos, -éis, -án al infinitivo del verbo.",
+                    examples: [
+                        {es: "Mañana estudiaré para el examen.", en: "Tomorrow I will study for the exam."},
+                        {es: "¿Algún día viajaremos a Marte?", en: "Will we ever travel to Mars?"}
+                    ],
+                    usage: "Para expresar acciones futuras puras, probabilidad o suposición en el presente."
+                },
+                2: {
+                    name: "Perífrasis 'ir a + infinitivo'",
+                    description: "Forma perifrástica formada por el verbo 'ir' conjugado + 'a' + infinitivo.",
+                    examples: [
+                        {es: "Voy a cocinar paella el domingo.", en: "I am going to cook paella on Sunday."},
+                        {es: "Mira el cielo, va a llover.", en: "Look at the sky, it is going to rain."}
+                    ],
+                    usage: "Para expresar intención, planes o futuro inmediato basado en evidencia."
+                },
+                3: {
+                    name: "Presente con valor de futuro",
+                    description: "Se usa el presente de indicativo para referirse a eventos futuros programados.",
+                    examples: [
+                        {es: "El tren sale a las 18:00 horas.", en: "The train leaves at 6:00 p.m."},
+                        {es: "La conferencia es mañana a las diez.", en: "The conference is tomorrow at ten."}
+                    ],
+                    usage: "Para horarios, programas fijos y planes inmutables."
+                }
+            },
+            
+            userStats: {
+                totalExercises: 0,
+                correctAnswers: 0,
+                totalDictations: 0,
+                dictationScores: [],
+                practiceTime: 0, // en minutos
+                streak: 0,
+                lastPractice: null,
+                categoryStats: {},
+                languageStats: {es: 0, en: 0},
+                activityLog: []
+            },
+            
+            currentPractice: {
+                exercises: [],
+                currentIndex: 0,
+                userAnswers: [],
+                startTime: null,
+                mode: 'text',
+                direction: 'esToEn'
+            },
+            
+            currentDictation: {
+                text: "",
+                language: "es",
+                userInput: "",
+                score: 0,
+                errors: 0
+            },
+            
+            voiceSupport: {
+                tts: 'speechSynthesis' in window,
+                stt: 'webkitSpeechRecognition' in window || 'SpeechRecognition' in window
+            }
+        };
+
+        // Estado de la aplicación
+        const state = {
+            darkMode: false,
+            currentSection: 'inicio',
+            speechRecognition: null,
+            voices: [],
+            charts: {}
+        };
+
+        // Inicialización de la aplicación
+        document.addEventListener('DOMContentLoaded', function() {
+            initApp();
+            loadCategories();
+            loadTheory();
+            setupEventListeners();
+            loadUserStats();
+            updateStatsDisplay();
+            initVoice();
+            initCharts();
+        });
+
+        function initApp() {
+            // Configurar tema oscuro/claro
+            const themeToggle = document.getElementById('themeToggle');
+            themeToggle.addEventListener('click', toggleTheme);
+            
+            // Configurar navegación suave
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const targetId = this.getAttribute('href');
+                    if (targetId === '#') return;
+                    
+                    const targetElement = document.querySelector(targetId);
+                    if (targetElement) {
+                        window.scrollTo({
+                            top: targetElement.offsetTop - 70,
+                            behavior: 'smooth'
+                        });
+                        
+                        // Actualizar sección activa
+                        document.querySelectorAll('.nav-link').forEach(link => link.classList.remove('active'));
+                        this.classList.add('active');
+                        state.currentSection = targetId.substring(1);
+                    }
+                });
+            });
+            
+            // Actualizar navegación al hacer scroll
+            window.addEventListener('scroll', updateActiveNavLink);
+            
+            // Configurar selector de ejercicios
+            const exerciseCount = document.getElementById('exerciseCount');
+            const currentCount = document.getElementById('currentCount');
+            exerciseCount.addEventListener('input', function() {
+                currentCount.textContent = this.value;
+            });
+        }
+
+        function loadCategories() {
+            const container = document.getElementById('categories-container');
+            const select = document.getElementById('categorySelect');
+            
+            appData.categories.forEach(category => {
+                // Tarjeta de categoría
+                const col = document.createElement('div');
+                col.className = 'col-md-6 col-lg-4';
+                
+                col.innerHTML = `
+                    <div class="category-card card h-100">
+                        <div class="card-body">
+                            <div class="d-flex align-items-start mb-3">
+                                <div class="p-3 rounded-circle me-3" style="background-color: ${category.color}20; color: ${category.color};">
+                                    <i class="bi ${category.icon} fs-4"></i>
+                                </div>
+                                <div>
+                                    <h5 class="card-title mb-1">${category.name}</h5>
+                                    <span class="badge bg-light text-dark">${category.count} ejemplos</span>
+                                </div>
+                            </div>
+                            <p class="card-text text-muted">Ejercicios para practicar ${category.name.toLowerCase()} en español e inglés.</p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <a href="#practica" class="btn btn-sm btn-outline-primary" data-category="${category.id}">Practicar</a>
+                                <a href="#" class="text-decoration-none small" data-bs-toggle="collapse" data-bs-target="#theory${category.id}">Ver teoría <i class="bi bi-chevron-down"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                
+                container.appendChild(col);
+                
+                // Opción para selector
+                const option = document.createElement('option');
+                option.value = category.id;
+                option.textContent = category.name;
+                select.appendChild(option);
+            });
+            
+            // Event listeners para botones de práctica en tarjetas
+            document.querySelectorAll('[data-category]').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const categoryId = parseInt(this.getAttribute('data-category'));
+                    document.getElementById('categorySelect').value = categoryId;
+                    document.querySelector('#practica .nav-link').click();
+                });
+            });
+        }
+
+        function loadTheory() {
+            const accordion = document.getElementById('theoryAccordion');
+            
+            // Solo cargamos teoría para las primeras 3 categorías como ejemplo
+            Object.keys(appData.theory).forEach((catId, index) => {
+                const theory = appData.theory[catId];
+                
+                const item = document.createElement('div');
+                item.className = 'accordion-item';
+                
+                item.innerHTML = `
+                    <h2 class="accordion-header">
+                        <button class="accordion-button ${index === 0 ? '' : 'collapsed'}" type="button" data-bs-toggle="collapse" data-bs-target="#theoryCollapse${catId}">
+                            <i class="bi ${appData.categories[catId-1].icon} me-2" style="color: ${appData.categories[catId-1].color}"></i>
+                            ${theory.name}
+                        </button>
+                    </h2>
+                    <div id="theoryCollapse${catId}" class="accordion-collapse collapse ${index === 0 ? 'show' : ''}" data-bs-parent="#theoryAccordion">
+                        <div class="accordion-body">
+                            <p><strong>Descripción:</strong> ${theory.description}</p>
+                            <p><strong>Uso principal:</strong> ${theory.usage}</p>
+                            
+                            <h6 class="mt-3">Ejemplos bilingües:</h6>
+                            <div class="row">
+                                ${theory.examples.map(example => `
+                                    <div class="col-md-6 mb-2">
+                                        <div class="example-text">
+                                            <span class="badge es-badge me-2">ES</span>${example.es}
+                                        </div>
+                                        <div class="example-text mt-1">
+                                            <span class="badge en-badge me-2">EN</span>${example.en}
+                                        </div>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                    </div>
+                `;
+                
+                accordion.appendChild(item);
+            });
+        }
+
+        function setupEventListeners() {
+            // Botón de comenzar práctica
+            document.getElementById('startPracticeBtn').addEventListener('click', startPractice);
+            
+            // Botones de modo de práctica
+            document.querySelectorAll('[data-mode]').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    document.querySelectorAll('[data-mode]').forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    appData.currentPractice.mode = this.getAttribute('data-mode');
+                });
+            });
+            
+            // Botones de navegación de práctica
+            document.getElementById('prevExerciseBtn').addEventListener('click', showPreviousExercise);
+            document.getElementById('nextExerciseBtn').addEventListener('click', showNextExercise);
+            
+            // Botones de voz
+            document.getElementById('listenBtn').addEventListener('click', playCurrentPhrase);
+            document.getElementById('dictateBtn').addEventListener('click', startDictation);
+            
+            // Botones de dictado
+            document.getElementById('newDictationBtn').addEventListener('click', newDictation);
+            document.getElementById('playDictationBtn').addEventListener('click', playDictation);
+            document.getElementById('checkDictationBtn').addEventListener('click', checkDictation);
+            document.getElementById('clearDictationBtn').addEventListener('click', clearDictation);
+            document.getElementById('startChallengeBtn').addEventListener('click', startChallenge);
+            
+            // Formulario de contacto
+            document.getElementById('contactForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                alert('¡Gracias por tu mensaje! Te contactaremos pronto.');
+                bootstrap.Modal.getInstance(document.getElementById('contactModal')).hide();
+                this.reset();
+            });
+            
+            // Configurar reconocimiento de voz si está disponible
+            if (state.voiceSupport.stt) {
+                const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+                state.speechRecognition = new SpeechRecognition();
+                state.speechRecognition.continuous = false;
+                state.speechRecognition.interimResults = false;
+                state.speechRecognition.lang = 'es-ES';
+                
+                state.speechRecognition.onresult = function(event) {
+                    const transcript = event.results[0][0].transcript;
+                    
+                    if (state.currentSection === 'practica' && appData.currentPractice.exercises.length > 0) {
+                        // Para modo práctica
+                        const currentExercise = appData.currentPractice.exercises[appData.currentPractice.currentIndex];
+                        const answerInput = document.getElementById('answerInput');
+                        if (answerInput) {
+                            answerInput.value = transcript;
+                            checkAnswer();
+                        }
+                    } else if (state.currentSection === 'dictado') {
+                        // Para modo dictado
+                        document.getElementById('dictationInput').value = transcript;
+                    }
+                };
+                
+                state.speechRecognition.onerror = function(event) {
+                    console.error('Error en reconocimiento de voz:', event.error);
+                    alert('Error en el reconocimiento de voz. Asegúrate de que el micrófono esté conectado y tengas permisos.');
+                };
+            }
+        }
+
+        function startPractice() {
+            const categoryId = parseInt(document.getElementById('categorySelect').value);
+            const exerciseCount = parseInt(document.getElementById('exerciseCount').value);
+            const direction = document.querySelector('input[name="direction"]:checked').id;
+            
+            // Filtrar ejercicios por categoría
+            let exercises;
+            if (categoryId === 0) {
+                exercises = [...appData.examples];
+            } else {
+                exercises = appData.examples.filter(ex => ex.cat === categoryId);
+            }
+            
+            // Mezclar y seleccionar el número solicitado
+            exercises = shuffleArray(exercises).slice(0, exerciseCount);
+            
+            // Configurar práctica actual
+            appData.currentPractice = {
+                exercises: exercises,
+                currentIndex: 0,
+                userAnswers: new Array(exercises.length).fill(null),
+                startTime: new Date(),
+                mode: appData.currentPractice.mode,
+                direction: direction
+            };
+            
+            // Actualizar interfaz
+            document.getElementById('practiceArea').classList.add('d-none');
+            document.getElementById('practiceResults').classList.remove('d-none');
+            
+            // Mostrar primer ejercicio
+            showCurrentExercise();
+        }
+
+        function showCurrentExercise() {
+            if (appData.currentPractice.exercises.length === 0) return;
+            
+            const exercise = appData.currentPractice.exercises[appData.currentPractice.currentIndex];
+            const direction = appData.currentPractice.direction;
+            
+            const sourceText = direction === 'esToEn' || direction === 'mixedDirection' ? exercise.es : exercise.en;
+            const targetLanguage = direction === 'esToEn' || direction === 'mixedDirection' ? 'inglés' : 'español';
+            
+            const category = appData.categories.find(c => c.id === exercise.cat);
+            
+            let content = `
+                <div class="mb-4">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <div>
+                            <span class="badge" style="background-color: ${category.color}">${category.name}</span>
+                            <span class="badge ${direction === 'esToEn' || direction === 'mixedDirection' ? 'es-badge' : 'en-badge'} ms-2">
+                                ${direction === 'esToEn' || direction === 'mixedDirection' ? 'ES' : 'EN'} → ${direction === 'esToEn' || direction === 'mixedDirection' ? 'EN' : 'ES'}
+                            </span>
+                        </div>
+                        <div class="text-muted">Ejercicio ${appData.currentPractice.currentIndex + 1} de ${appData.currentPractice.exercises.length}</div>
+                    </div>
+                    
+                    <div class="example-text mb-4">
+                        <strong>Traduce al ${targetLanguage}:</strong><br>
+                        "${sourceText}"
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="answerInput" class="form-label">Tu respuesta:</label>
+                        <textarea class="form-control" id="answerInput" rows="3" placeholder="Escribe tu traducción aquí..."></textarea>
+                    </div>
+                    
+                    <div class="d-flex gap-3">
+                        <button class="btn btn-primary" id="checkAnswerBtn">Verificar respuesta</button>
+                        <button class="btn btn-outline-secondary" id="skipBtn">Saltar</button>
+                    </div>
+                </div>
+            `;
+            
+            document.getElementById('resultsContent').innerHTML = content;
+            
+            // Configurar botones
+            document.getElementById('checkAnswerBtn').addEventListener('click', checkAnswer);
+            document.getElementById('skipBtn').addEventListener('click', skipExercise);
+            
+            // Actualizar barra de progreso
+            updateProgressBar();
+            
+            // Configurar botones de navegación
+            document.getElementById('prevExerciseBtn').disabled = appData.currentPractice.currentIndex === 0;
+            document.getElementById('nextExerciseBtn').textContent = 
+                appData.currentPractice.currentIndex === appData.currentPractice.exercises.length - 1 ? 
+                'Finalizar' : 'Siguiente';
+            
+            // Reproducir automáticamente si el modo es escucha o dictado
+            if (appData.currentPractice.mode === 'listen' || appData.currentPractice.mode === 'dictate') {
+                setTimeout(() => playCurrentPhrase(), 500);
+            }
+        }
+
+        function checkAnswer() {
+            const exercise = appData.currentPractice.exercises[appData.currentPractice.currentIndex];
+            const direction = appData.currentPractice.direction;
+            const userAnswer = document.getElementById('answerInput').value.trim();
+            
+            const correctAnswer = direction === 'esToEn' || direction === 'mixedDirection' ? exercise.en : exercise.es;
+            
+            // Guardar respuesta del usuario
+            appData.currentPractice.userAnswers[appData.currentPractice.currentIndex] = userAnswer;
+            
+            // Calcular similitud (simplificado)
+            const similarity = calculateSimilarity(userAnswer.toLowerCase(), correctAnswer.toLowerCase());
+            const isCorrect = similarity >= 0.8;
+            
+            // Actualizar estadísticas del usuario
+            appData.userStats.totalExercises++;
+            if (isCorrect) {
+                appData.userStats.correctAnswers++;
+                appData.userStats.streak++;
+            } else {
+                appData.userStats.streak = 0;
+            }
+            
+            // Actualizar estadísticas de categoría
+            if (!appData.userStats.categoryStats[exercise.cat]) {
+                appData.userStats.categoryStats[exercise.cat] = {total: 0, correct: 0};
+            }
+            appData.userStats.categoryStats[exercise.cat].total++;
+            if (isCorrect) appData.userStats.categoryStats[exercise.cat].correct++;
+            
+            // Actualizar estadísticas de idioma
+            if (direction === 'esToEn' || direction === 'mixedDirection') {
+                appData.userStats.languageStats.en++;
+            } else {
+                appData.userStats.languageStats.es++;
+            }
+            
+            // Mostrar resultado
+            let resultHTML = `
+                <div class="alert ${isCorrect ? 'alert-success' : 'alert-warning'}">
+                    <h5><i class="bi ${isCorrect ? 'bi-check-circle-fill' : 'bi-exclamation-circle-fill'} me-2"></i>
+                    ${isCorrect ? '¡Correcto!' : 'Respuesta incorrecta'}</h5>
+                    
+                    <div class="mt-3">
+                        <p><strong>Tu respuesta:</strong> "${userAnswer || '(No respondiste)'}"</p>
+                        <p><strong>Respuesta correcta:</strong> "${correctAnswer}"</p>
+                        ${!isCorrect ? `<p><strong>Similitud:</strong> ${Math.round(similarity * 100)}%</p>` : ''}
+                    </div>
+                </div>
+                
+                <div class="row mt-3">
+                    <div class="col-md-6">
+                        <div class="example-text">
+                            <span class="badge es-badge me-2">ES</span>${exercise.es}
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="example-text">
+                            <span class="badge en-badge me-2">EN</span>${exercise.en}
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            document.getElementById('resultsContent').innerHTML = resultHTML;
+            
+            // Actualizar botones
+            document.getElementById('prevExerciseBtn').disabled = appData.currentPractice.currentIndex === 0;
+            
+            if (appData.currentPractice.currentIndex === appData.currentPractice.exercises.length - 1) {
+                document.getElementById('nextExerciseBtn').innerHTML = '<i class="bi bi-graph-up me-1"></i>Ver resultados';
+            }
+            
+            // Guardar estadísticas y actualizar display
+            saveUserStats();
+            updateStatsDisplay();
+        }
+
+        function skipExercise() {
+            // Marcar como no respondida
+            appData.currentPractice.userAnswers[appData.currentPractice.currentIndex] = null;
+            
+            // Pasar al siguiente
+            if (appData.currentPractice.currentIndex < appData.currentPractice.exercises.length - 1) {
+                appData.currentPractice.currentIndex++;
+                showCurrentExercise();
+            } else {
+                finishPractice();
+            }
+        }
+
+        function showPreviousExercise() {
+            if (appData.currentPractice.currentIndex > 0) {
+                appData.currentPractice.currentIndex--;
+                showCurrentExercise();
+            }
+        }
+
+        function showNextExercise() {
+            if (appData.currentPractice.currentIndex < appData.currentPractice.exercises.length - 1) {
+                appData.currentPractice.currentIndex++;
+                showCurrentExercise();
+            } else {
+                finishPractice();
+            }
+        }
+
+        function finishPractice() {
+            // Calcular tiempo de práctica
+            const endTime = new Date();
+            const timeDiff = endTime - appData.currentPractice.startTime;
+            const minutes = Math.floor(timeDiff / 60000);
+            
+            appData.userStats.practiceTime += minutes;
+            
+            // Registrar actividad
+            const activity = {
+                date: new Date().toLocaleDateString(),
+                category: appData.currentPractice.exercises[0]?.cat || 0,
+                language: appData.currentPractice.direction.includes('esToEn') ? 'ES→EN' : 'EN→ES',
+                exercises: appData.currentPractice.exercises.length,
+                accuracy: appData.userStats.correctAnswers / appData.userStats.totalExercises * 100,
+                duration: minutes
+            };
+            
+            appData.userStats.activityLog.unshift(activity);
+            if (appData.userStats.activityLog.length > 10) {
+                appData.userStats.activityLog.pop();
+            }
+            
+            // Mostrar resultados finales
+            const correctCount = appData.currentPractice.userAnswers.filter((answer, index) => {
+                if (!answer) return false;
+                const exercise = appData.currentPractice.exercises[index];
+                const correctAnswer = appData.currentPractice.direction === 'esToEn' || 
+                                      appData.currentPractice.direction === 'mixedDirection' ? 
+                                      exercise.en : exercise.es;
+                return calculateSimilarity(answer.toLowerCase(), correctAnswer.toLowerCase()) >= 0.8;
+            }).length;
+            
+            const accuracy = (correctCount / appData.currentPractice.exercises.length * 100).toFixed(1);
+            
+            let resultsHTML = `
+                <div class="text-center py-4">
+                    <i class="bi bi-trophy-fill text-warning" style="font-size: 4rem;"></i>
+                    <h3 class="mt-3">¡Práctica completada!</h3>
+                    
+                    <div class="row mt-4">
+                        <div class="col-md-4 mb-3">
+                            <div class="p-3 bg-light rounded">
+                                <div class="fs-2 fw-bold">${appData.currentPractice.exercises.length}</div>
+                                <div class="text-muted">Ejercicios</div>
+                            </div>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <div class="p-3 bg-light rounded">
+                                <div class="fs-2 fw-bold">${correctCount}</div>
+                                <div class="text-muted">Correctos</div>
+                            </div>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <div class="p-3 bg-light rounded">
+                                <div class="fs-2 fw-bold">${accuracy}%</div>
+                                <div class="text-muted">Precisión</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-4">
+                        <p>Tiempo de práctica: <strong>${minutes} minutos</strong></p>
+                    </div>
+                    
+                    <div class="mt-4">
+                        <button class="btn btn-primary me-2" id="practiceAgainBtn">Practicar de nuevo</button>
+                        <button class="btn btn-outline-primary" id="newPracticeBtn">Nueva práctica</button>
+                    </div>
+                </div>
+            `;
+            
+            document.getElementById('resultsContent').innerHTML = resultsHTML;
+            
+            // Configurar botones de resultados
+            document.getElementById('practiceAgainBtn').addEventListener('click', function() {
+                appData.currentPractice.currentIndex = 0;
+                appData.currentPractice.userAnswers = new Array(appData.currentPractice.exercises.length).fill(null);
+                appData.currentPractice.startTime = new Date();
+                showCurrentExercise();
+            });
+            
+            document.getElementById('newPracticeBtn').addEventListener('click', function() {
+                document.getElementById('practiceArea').classList.remove('d-none');
+                document.getElementById('practiceResults').classList.add('d-none');
+            });
+            
+            // Actualizar estadísticas
+            saveUserStats();
+            updateStatsDisplay();
+            updateCharts();
+        }
+
+        function updateProgressBar() {
+            const progress = ((appData.currentPractice.currentIndex + 1) / appData.currentPractice.exercises.length) * 100;
+            document.getElementById('progressBar').style.width = `${progress}%`;
+            document.getElementById('progressText').textContent = 
+                `${appData.currentPractice.currentIndex + 1}/${appData.currentPractice.exercises.length}`;
+        }
+
+        function initVoice() {
+            // Cargar voces disponibles
+            if (state.voiceSupport.tts) {
+                speechSynthesis.onvoiceschanged = function() {
+                    state.voices = speechSynthesis.getVoices();
+                };
+                
+                // Forzar carga de voces
+                setTimeout(() => {
+                    state.voices = speechSynthesis.getVoices();
+                }, 100);
+            }
+            
+            // Actualizar interfaz según soporte de voz
+            if (!state.voiceSupport.tts && !state.voiceSupport.stt) {
+                document.getElementById('listenBtn').disabled = true;
+                document.getElementById('dictateBtn').disabled = true;
+                document.getElementById('playDictationBtn').disabled = true;
+                
+                const voiceAlert = document.querySelector('.alert-info');
+                if (voiceAlert) {
+                    voiceAlert.innerHTML = `
+                        <i class="bi bi-exclamation-triangle me-2"></i>
+                        <strong>Nota:</strong> Tu navegador no soporta las funciones de voz. 
+                        Usa Chrome o Edge para una experiencia completa.
+                    `;
+                    voiceAlert.classList.remove('alert-info');
+                    voiceAlert.classList.add('alert-warning');
+                }
+            }
+        }
+
+        function playCurrentPhrase() {
+            if (!state.voiceSupport.tts || appData.currentPractice.exercises.length === 0) return;
+            
+            const exercise = appData.currentPractice.exercises[appData.currentPractice.currentIndex];
+            const direction = appData.currentPractice.direction;
+            
+            let textToSpeak;
+            let language;
+            
+            if (direction === 'esToEn' || direction === 'mixedDirection') {
+                textToSpeak = exercise.es;
+                language = 'es-ES';
+            } else {
+                textToSpeak = exercise.en;
+                language = 'en-US';
+            }
+            
+            speakText(textToSpeak, language);
+        }
+
+        function playDictation() {
+            const text = document.getElementById('dictationText').textContent;
+            const language = document.getElementById('dictationLanguage').value;
+            const speed = document.getElementById('dictationSpeed').value;
+            
+            if (!text || text.includes('Selecciona')) {
+                alert('Primero genera un nuevo dictado');
+                return;
+            }
+            
+            let rate = 1.0;
+            if (speed === 'slow') rate = 0.7;
+            if (speed === 'fast') rate = 1.3;
+            
+            speakText(text, language === 'es' ? 'es-ES' : 'en-US', rate);
+        }
+
+        function speakText(text, lang, rate = 1.0) {
+            if (!state.voiceSupport.tts) {
+                alert('Tu navegador no soporta síntesis de voz');
+                return;
+            }
+            
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = lang;
+            utterance.rate = rate;
+            utterance.volume = 1.0;
+            
+            // Intentar encontrar una voz adecuada
+            if (state.voices.length > 0) {
+                const preferredVoice = state.voices.find(voice => 
+                    voice.lang.startsWith(lang.substring(0, 2)));
+                if (preferredVoice) {
+                    utterance.voice = preferredVoice;
+                }
+            }
+            
+            speechSynthesis.speak(utterance);
+        }
+
+        function startDictation() {
+            if (!state.voiceSupport.stt || !state.speechRecognition) {
+                alert('Tu navegador no soporta reconocimiento de voz');
+                return;
+            }
+            
+            const language = appData.currentPractice.direction === 'esToEn' || 
+                           appData.currentPractice.direction === 'mixedDirection' ? 
+                           'es-ES' : 'en-US';
+            
+            state.speechRecognition.lang = language;
+            state.speechRecognition.start();
+            
+            // Cambiar estado del botón
+            const dictateBtn = document.getElementById('dictateBtn');
+            const originalHTML = dictateBtn.innerHTML;
+            dictateBtn.innerHTML = '<i class="bi bi-mic-fill me-2"></i>Escuchando...';
+            dictateBtn.disabled = true;
+            
+            // Restaurar después de 5 segundos
+            setTimeout(() => {
+                dictateBtn.innerHTML = originalHTML;
+                dictateBtn.disabled = false;
+            }, 5000);
+        }
+
+        function newDictation() {
+            // Seleccionar un ejercicio aleatorio
+            const exercises = [...appData.examples];
+            const randomExercise = exercises[Math.floor(Math.random() * exercises.length)];
+            const language = document.getElementById('dictationLanguage').value;
+            
+            appData.currentDictation.text = language === 'es' ? randomExercise.es : randomExercise.en;
+            appData.currentDictation.language = language;
+            
+            // Mostrar en la interfaz
+            document.getElementById('dictationText').textContent = appData.currentDictation.text;
+            document.getElementById('dictationInput').value = '';
+            document.getElementById('dictationResults').classList.add('d-none');
+            
+            // Reproducir automáticamente si está configurado
+            const autoPlay = localStorage.getItem('autoPlayDictation') === 'true';
+            if (autoPlay) {
+                setTimeout(() => playDictation(), 500);
+            }
+        }
+
+        function checkDictation() {
+            const userInput = document.getElementById('dictationInput').value.trim();
+            const originalText = appData.currentDictation.text;
+            
+            if (!userInput) {
+                alert('Escribe algo antes de verificar');
+                return;
+            }
+            
+            // Calcular similitud
+            const similarity = calculateSimilarity(userInput.toLowerCase(), originalText.toLowerCase());
+            const score = Math.round(similarity * 100);
+            
+            // Contar errores aproximados
+            const errors = Math.round((1 - similarity) * originalText.length / 3);
+            
+            // Actualizar dictado actual
+            appData.currentDictation.userInput = userInput;
+            appData.currentDictation.score = score;
+            appData.currentDictation.errors = errors;
+            
+            // Actualizar estadísticas del usuario
+            appData.userStats.totalDictations++;
+            appData.userStats.dictationScores.push(score);
+            if (appData.userStats.dictationScores.length > 20) {
+                appData.userStats.dictationScores.shift();
+            }
+            
+            // Mostrar resultados
+            document.getElementById('originalText').textContent = originalText;
+            document.getElementById('userText').textContent = userInput;
+            document.getElementById('dictationScore').textContent = score;
+            document.getElementById('dictationErrors').textContent = errors;
+            
+            // Análisis de errores
+            let analysisHTML = `
+                <h5 class="mt-4">Análisis de escritura</h5>
+                <div class="mb-3">
+                    <div class="d-flex justify-content-between mb-1">
+                        <span>Precisión</span>
+                        <span class="fw-bold">${score}%</span>
+                    </div>
+                    <div class="progress" style="height: 10px;">
+                        <div class="progress-bar ${score >= 90 ? 'bg-success' : score >= 70 ? 'bg-warning' : 'bg-danger'}" 
+                             style="width: ${score}%"></div>
+                    </div>
+                </div>
+            `;
+            
+            if (score < 100) {
+                analysisHTML += `
+                    <div class="alert ${score >= 80 ? 'alert-warning' : 'alert-danger'}">
+                        <i class="bi ${score >= 80 ? 'bi-lightbulb' : 'bi-exclamation-triangle'} me-2"></i>
+                        <strong>Sugerencias:</strong>
+                        <ul class="mb-0 mt-2">
+                            ${score >= 80 ? 
+                              '<li>¡Casi perfecto! Revisa los pequeños detalles.</li>' : 
+                              '<li>Presta atención a la ortografía y puntuación.</li>'}
+                            <li>Escucha el dictado nuevamente y compara.</li>
+                            <li>Practica escribiendo frases similares.</li>
+                        </ul>
+                    </div>
+                `;
+            } else {
+                analysisHTML += `
+                    <div class="alert alert-success">
+                        <i class="bi bi-trophy-fill me-2"></i>
+                        <strong>¡Perfecto!</strong> Escritura exacta. ¡Excelente trabajo!
+                    </div>
+                `;
+            }
+            
+            document.getElementById('dictationAnalysis').innerHTML = analysisHTML;
+            document.getElementById('dictationResults').classList.remove('d-none');
+            
+            // Guardar estadísticas y actualizar
+            saveUserStats();
+            updateStatsDisplay();
+            updateDictationChart();
+            
+            // Desplazarse a resultados
+            document.getElementById('dictationResults').scrollIntoView({behavior: 'smooth'});
+        }
+
+        function clearDictation() {
+            document.getElementById('dictationInput').value = '';
+        }
+
+        function startChallenge() {
+            alert('¡Desafío iniciado! Tendrás 3 minutos para completar 5 dictados. ¡Buena suerte!');
+            
+            // Simular inicio de desafío
+            newDictation();
+        }
+
+        function loadUserStats() {
+            const savedStats = localStorage.getItem('futuroLinguaStats');
+            if (savedStats) {
+                appData.userStats = {...appData.userStats, ...JSON.parse(savedStats)};
+            }
+        }
+
+        function saveUserStats() {
+            localStorage.setItem('futuroLinguaStats', JSON.stringify(appData.userStats));
+        }
+
+        function updateStatsDisplay() {
+            // Actualizar panel lateral
+            document.getElementById('completedExercises').textContent = appData.userStats.totalExercises;
+            document.getElementById('correctAnswers').textContent = appData.userStats.correctAnswers;
+            
+            const accuracy = appData.userStats.totalExercises > 0 ? 
+                Math.round((appData.userStats.correctAnswers / appData.userStats.totalExercises) * 100) : 0;
+            document.getElementById('accuracyRate').textContent = `${accuracy}%`;
+            
+            // Actualizar sección de estadísticas
+            document.getElementById('totalExercisesStat').textContent = appData.userStats.totalExercises;
+            document.getElementById('accuracyStat').textContent = `${accuracy}%`;
+            document.getElementById('timeStat').textContent = `${Math.floor(appData.userStats.practiceTime / 60)}h ${appData.userStats.practiceTime % 60}m`;
+            document.getElementById('streakStat').textContent = appData.userStats.streak;
+            
+            // Actualizar estadísticas de dictado
+            document.getElementById('totalDictations').textContent = appData.userStats.totalDictations;
+            
+            const avgScore = appData.userStats.dictationScores.length > 0 ? 
+                Math.round(appData.userStats.dictationScores.reduce((a, b) => a + b, 0) / appData.userStats.dictationScores.length) : 0;
+            document.getElementById('avgAccuracy').textContent = `${avgScore}%`;
+            
+            const bestScore = appData.userStats.dictationScores.length > 0 ? 
+                Math.max(...appData.userStats.dictationScores) : 0;
+            document.getElementById('bestScore').textContent = bestScore;
+            
+            // Actualizar tabla de actividad
+            const activityTableBody = document.getElementById('activityTableBody');
+            if (appData.userStats.activityLog.length > 0) {
+                activityTableBody.innerHTML = appData.userStats.activityLog.map(activity => `
+                    <tr>
+                        <td>${activity.date}</td>
+                        <td>${appData.categories[activity.category-1]?.name || 'Varias'}</td>
+                        <td>${activity.language}</td>
+                        <td>${activity.exercises}</td>
+                        <td>${activity.accuracy.toFixed(1)}%</td>
+                        <td>${activity.duration}m</td>
+                    </tr>
+                `).join('');
+            }
+        }
+
+        function initCharts() {
+            // Gráfico de categorías
+            const categoryCtx = document.getElementById('categoryChart').getContext('2d');
+            state.charts.categoryChart = new Chart(categoryCtx, {
+                type: 'bar',
+                data: {
+                    labels: appData.categories.map(c => c.name.substring(0, 15) + '...'),
+                    datasets: [{
+                        label: 'Precisión (%)',
+                        data: new Array(10).fill(0),
+                        backgroundColor: appData.categories.map(c => c.color + '80'),
+                        borderColor: appData.categories.map(c => c.color),
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 100
+                        }
+                    }
+                }
+            });
+            
+            // Gráfico de idiomas
+            const languageCtx = document.getElementById('languageChart').getContext('2d');
+            state.charts.languageChart = new Chart(languageCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Español', 'Inglés'],
+                    datasets: [{
+                        data: [0, 0],
+                        backgroundColor: ['#ff6b6b', '#4a6fa5'],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'bottom'
+                        }
+                    }
+                }
+            });
+            
+            // Gráfico de dictado
+            const dictationCtx = document.getElementById('dictationChart').getContext('2d');
+            state.charts.dictationChart = new Chart(dictationCtx, {
+                type: 'line',
+                data: {
+                    labels: [],
+                    datasets: [{
+                        label: 'Puntuación de dictado',
+                        data: [],
+                        borderColor: '#4a6fa5',
+                        backgroundColor: 'rgba(74, 111, 165, 0.1)',
+                        fill: true,
+                        tension: 0.3
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 100
+                        }
+                    }
+                }
+            });
+            
+            updateCharts();
+        }
+
+        function updateCharts() {
+            // Actualizar gráfico de categorías
+            const categoryData = appData.categories.map(category => {
+                const stats = appData.userStats.categoryStats[category.id];
+                if (stats && stats.total > 0) {
+                    return (stats.correct / stats.total) * 100;
+                }
+                return 0;
+            });
+            
+            state.charts.categoryChart.data.datasets[0].data = categoryData;
+            state.charts.categoryChart.update();
+            
+            // Actualizar gráfico de idiomas
+            state.charts.languageChart.data.datasets[0].data = [
+                appData.userStats.languageStats.es,
+                appData.userStats.languageStats.en
+            ];
+            state.charts.languageChart.update();
+        }
+
+        function updateDictationChart() {
+            const scores = appData.userStats.dictationScores;
+            const labels = scores.map((_, i) => `Dictado ${i + 1}`);
+            
+            state.charts.dictationChart.data.labels = labels;
+            state.charts.dictationChart.data.datasets[0].data = scores;
+            state.charts.dictationChart.update();
+        }
+
+        function toggleTheme() {
+            state.darkMode = !state.darkMode;
+            document.body.classList.toggle('dark-mode', state.darkMode);
+            document.body.setAttribute('data-bs-theme', state.darkMode ? 'dark' : 'light');
+            
+            const themeIcon = document.querySelector('#themeToggle i');
+            if (state.darkMode) {
+                themeIcon.classList.remove('bi-moon-fill');
+                themeIcon.classList.add('bi-sun-fill');
+            } else {
+                themeIcon.classList.remove('bi-sun-fill');
+                themeIcon.classList.add('bi-moon-fill');
+            }
+        }
+
+        function updateActiveNavLink() {
+            const sections = document.querySelectorAll('section[id]');
+            const scrollPos = window.scrollY + 100;
+            
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                const sectionHeight = section.offsetHeight;
+                const sectionId = section.getAttribute('id');
+                
+                if (scrollPos >= sectionTop && scrollPos < sectionTop + sectionHeight) {
+                    document.querySelectorAll('.nav-link').forEach(link => link.classList.remove('active'));
+                    document.querySelector(`a[href="#${sectionId}"]`).classList.add('active');
+                    state.currentSection = sectionId;
+                }
+            });
+        }
+
+        // Funciones auxiliares
+        function shuffleArray(array) {
+            const shuffled = [...array];
+            for (let i = shuffled.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+            }
+            return shuffled;
+        }
+
+        function calculateSimilarity(str1, str2) {
+            // Algoritmo de similitud simple (Levenshtein simplificado)
+            if (str1 === str2) return 1.0;
+            if (str1.length === 0 || str2.length === 0) return 0.0;
+            
+            const maxLength = Math.max(str1.length, str2.length);
+            const distance = levenshteinDistance(str1, str2);
+            return 1 - distance / maxLength;
+        }
+
+        function levenshteinDistance(str1, str2) {
+            const matrix = [];
+            
+            for (let i = 0; i <= str2.length; i++) {
+                matrix[i] = [i];
+            }
+            
+            for (let j = 0; j <= str1.length; j++) {
+                matrix[0][j] = j;
+            }
+            
+            for (let i = 1; i <= str2.length; i++) {
+                for (let j = 1; j <= str1.length; j++) {
+                    if (str2.charAt(i - 1) === str1.charAt(j - 1)) {
+                        matrix[i][j] = matrix[i - 1][j - 1];
+                    } else {
+                        matrix[i][j] = Math.min(
+                            matrix[i - 1][j - 1] + 1,
+                            matrix[i][j - 1] + 1,
+                            matrix[i - 1][j] + 1
+                        );
+                    }
+                }
+            }
+            
+            return matrix[str2.length][str1.length];
+        }
+
+        // Inicializar reconocimiento de voz si está disponible
+        if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+            console.log('Reconocimiento de voz disponible');
+        } else {
+            console.log('Reconocimiento de voz no disponible');
+        }
+    </script>
+</body>
+</html>

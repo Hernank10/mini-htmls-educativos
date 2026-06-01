@@ -1,0 +1,798 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plataforma Educativa de Práctica de Idiomas</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #3498db;
+            --secondary-color: #2ecc71;
+            --accent-color: #e74c3c;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8f9fa;
+        }
+        
+        .navbar-brand {
+            font-weight: bold;
+        }
+        
+        .hero-section {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 80px 0;
+            border-radius: 0 0 30px 30px;
+            margin-bottom: 40px;
+        }
+        
+        .card {
+            border: none;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+            margin-bottom: 20px;
+            height: 100%;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .card-header {
+            background-color: var(--primary-color);
+            color: white;
+            border-radius: 15px 15px 0 0 !important;
+            font-weight: bold;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary-color);
+            border: none;
+        }
+        
+        .btn-success {
+            background-color: var(--secondary-color);
+            border: none;
+        }
+        
+        .progress {
+            height: 10px;
+            margin-bottom: 10px;
+        }
+        
+        .exercise-container {
+            background-color: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+        
+        .language-selector {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .language-btn {
+            margin: 0 10px;
+            padding: 10px 20px;
+            border-radius: 50px;
+        }
+        
+        .active-language {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        .timer {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--accent-color);
+        }
+        
+        .score-display {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: var(--secondary-color);
+        }
+        
+        .leaderboard {
+            background-color: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .leaderboard-item {
+            padding: 10px 15px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .leaderboard-item:last-child {
+            border-bottom: none;
+        }
+        
+        .badge-position {
+            background-color: var(--primary-color);
+            color: white;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 10px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand" href="#">
+                <i class="fas fa-language me-2"></i>Práctica de Idiomas
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#inicio">Inicio</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#ejercicios">Ejercicios</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#progreso">Progreso</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#clasificacion">Clasificación</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero-section" id="inicio">
+        <div class="container text-center">
+            <h1 class="display-4 fw-bold">Mejora tu dominio del español e inglés</h1>
+            <p class="lead">Practica gramática, vocabulario y estructura de frases con nuestra plataforma interactiva</p>
+            <a href="#ejercicios" class="btn btn-light btn-lg mt-3">Comenzar a practicar</a>
+        </div>
+    </section>
+
+    <!-- Language Selector -->
+    <div class="container language-selector">
+        <div class="btn-group" role="group">
+            <button type="button" class="btn btn-outline-primary language-btn active-language" data-language="spanish">
+                <i class="fas fa-flag me-2"></i>Español
+            </button>
+            <button type="button" class="btn btn-outline-primary language-btn" data-language="english">
+                <i class="fas fa-flag-usa me-2"></i>English
+            </button>
+        </div>
+    </div>
+
+    <!-- Exercises Section -->
+    <section class="container" id="ejercicios">
+        <h2 class="text-center mb-5">Ejercicios de Práctica</h2>
+        
+        <div class="row">
+            <!-- Spanish Exercises -->
+            <div class="col-md-6 spanish-exercises">
+                <div class="card">
+                    <div class="card-header text-center">
+                        <i class="fas fa-keyboard me-2"></i>Mecanografía
+                    </div>
+                    <div class="card-body">
+                        <p class="card-text">Practica tu velocidad y precisión al escribir con estos ejercicios de mecanografía.</p>
+                        <div class="d-grid gap-2">
+                            <button class="btn btn-primary btn-exercise" data-type="typing" data-language="spanish">
+                                Comenzar ejercicio
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header text-center">
+                        <i class="fas fa-spell-check me-2"></i>Ortografía
+                    </div>
+                    <div class="card-body">
+                        <p class="card-text">Mejora tu ortografía con reglas específicas y listas de palabras para practicar.</p>
+                        <div class="d-grid gap-2">
+                            <button class="btn btn-primary btn-exercise" data-type="spelling" data-language="spanish">
+                                Comenzar ejercicio
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header text-center">
+                        <i class="fas fa-concierge-bell me-2"></i>Conjugación de Verbos
+                    </div>
+                    <div class="card-body">
+                        <p class="card-text">Domina la conjugación de verbos en diferentes tiempos y modos.</p>
+                        <div class="d-grid gap-2">
+                            <button class="btn btn-primary btn-exercise" data-type="verbs" data-language="spanish">
+                                Comenzar ejercicio
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- English Exercises -->
+            <div class="col-md-6 english-exercises d-none">
+                <div class="card">
+                    <div class="card-header text-center">
+                        <i class="fas fa-keyboard me-2"></i>Typing
+                    </div>
+                    <div class="card-body">
+                        <p class="card-text">Practice your typing speed and accuracy with these typing exercises.</p>
+                        <div class="d-grid gap-2">
+                            <button class="btn btn-primary btn-exercise" data-type="typing" data-language="english">
+                                Start Exercise
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header text-center">
+                        <i class="fas fa-spell-check me-2"></i>Spelling
+                    </div>
+                    <div class="card-body">
+                        <p class="card-text">Improve your spelling with specific rules and word lists to practice.</p>
+                        <div class="d-grid gap-2">
+                            <button class="btn btn-primary btn-exercise" data-type="spelling" data-language="english">
+                                Start Exercise
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header text-center">
+                        <i class="fas fa-concierge-bell me-2"></i>Verb Conjugation
+                    </div>
+                    <div class="card-body">
+                        <p class="card-text">Master verb conjugation in different tenses and moods.</p>
+                        <div class="d-grid gap-2">
+                            <button class="btn btn-primary btn-exercise" data-type="verbs" data-language="english">
+                                Start Exercise
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Exercise Container -->
+        <div class="exercise-container mt-5 d-none" id="exerciseContainer">
+            <div class="row">
+                <div class="col-md-8">
+                    <h3 id="exerciseTitle">Ejercicio de Mecanografía</h3>
+                    <p id="exerciseDescription">Escribe las siguientes palabras o frases lo más rápido y preciso posible.</p>
+                    
+                    <div class="mb-3">
+                        <label for="userInput" class="form-label">Tu respuesta:</label>
+                        <textarea class="form-control" id="userInput" rows="3" placeholder="Escribe aquí..."></textarea>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <button class="btn btn-success" id="checkAnswer">
+                            <i class="fas fa-check me-2"></i>Verificar
+                        </button>
+                        <button class="btn btn-secondary" id="nextExercise">
+                            <i class="fas fa-forward me-2"></i>Siguiente
+                        </button>
+                        <button class="btn btn-outline-danger" id="cancelExercise">
+                            <i class="fas fa-times me-2"></i>Cancelar
+                        </button>
+                    </div>
+                    
+                    <div class="alert alert-info d-none" id="resultAlert">
+                        <!-- Results will be shown here -->
+                    </div>
+                </div>
+                
+                <div class="col-md-4">
+                    <div class="card">
+                        <div class="card-header text-center">
+                            <i class="fas fa-chart-line me-2"></i>Progreso
+                        </div>
+                        <div class="card-body">
+                            <div class="timer text-center mb-3" id="timer">00:00</div>
+                            <div class="score-display text-center mb-3" id="scoreDisplay">Puntuación: 0</div>
+                            <div class="progress">
+                                <div class="progress-bar" id="progressBar" role="progressbar" style="width: 0%"></div>
+                            </div>
+                            <p class="text-center mt-2" id="progressText">Ejercicio 0 de 10</p>
+                            
+                            <button class="btn btn-outline-primary w-100 mt-3" id="listenButton">
+                                <i class="fas fa-volume-up me-2"></i>Escuchar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Progress Section -->
+    <section class="container mt-5" id="progreso">
+        <h2 class="text-center mb-4">Tu Progreso</h2>
+        
+        <div class="row">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header text-center">
+                        <i class="fas fa-trophy me-2"></i>Estadísticas de Español
+                    </div>
+                    <div class="card-body">
+                        <canvas id="spanishProgressChart" height="200"></canvas>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header text-center">
+                        <i class="fas fa-trophy me-2"></i>Estadísticas de English
+                    </div>
+                    <div class="card-body">
+                        <canvas id="englishProgressChart" height="200"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Leaderboard Section -->
+    <section class="container mt-5" id="clasificacion">
+        <h2 class="text-center mb-4">Tabla de Clasificación</h2>
+        
+        <div class="row">
+            <div class="col-md-8 mx-auto">
+                <div class="leaderboard">
+                    <div class="leaderboard-item d-flex justify-content-between">
+                        <div>
+                            <span class="badge-position">1</span>
+                            <strong>María González</strong>
+                        </div>
+                        <span class="score-display">985 puntos</span>
+                    </div>
+                    <div class="leaderboard-item d-flex justify-content-between">
+                        <div>
+                            <span class="badge-position">2</span>
+                            <strong>Carlos López</strong>
+                        </div>
+                        <span class="score-display">932 puntos</span>
+                    </div>
+                    <div class="leaderboard-item d-flex justify-content-between">
+                        <div>
+                            <span class="badge-position">3</span>
+                            <strong>Ana Martínez</strong>
+                        </div>
+                        <span class="score-display">875 puntos</span>
+                    </div>
+                    <div class="leaderboard-item d-flex justify-content-between">
+                        <div>
+                            <span class="badge-position">4</span>
+                            <strong>Juan Pérez</strong>
+                        </div>
+                        <span class="score-display">821 puntos</span>
+                    </div>
+                    <div class="leaderboard-item d-flex justify-content-between">
+                        <div>
+                            <span class="badge-position">5</span>
+                            <strong>Laura Rodríguez</strong>
+                        </div>
+                        <span class="score-display">798 puntos</span>
+                    </div>
+                </div>
+                
+                <div class="text-center mt-4">
+                    <button class="btn btn-primary" id="saveScore">
+                        <i class="fas fa-save me-2"></i>Guardar Mi Puntaje
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-white mt-5 py-4">
+        <div class="container text-center">
+            <p>Plataforma Educativa de Práctica de Idiomas &copy; 2023</p>
+            <p>Desarrollada para mejorar el aprendizaje de español e inglés</p>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // Datos de ejercicios
+        const exercises = {
+            spanish: {
+                typing: {
+                    title: "Ejercicio de Mecanografía",
+                    description: "Escribe las siguientes palabras o frases lo más rápido y preciso posible.",
+                    items: [
+                        "El rápido zorro marrón salta sobre el perro perezoso",
+                        "Los niños juegan en el parque todos los días",
+                        "La casa es grande y tiene un jardín hermoso",
+                        "Estudiamos para el examen de la universidad",
+                        "Mi familia viaja a la playa en verano"
+                    ]
+                },
+                spelling: {
+                    title: "Ejercicio de Ortografía",
+                    description: "Escribe correctamente las siguientes palabras según las reglas ortográficas.",
+                    items: [
+                        "baca",
+                        "haber",
+                        "echo",
+                        "vello",
+                        "hierba"
+                    ]
+                },
+                verbs: {
+                    title: "Ejercicio de Conjugación de Verbos",
+                    description: "Conjuga los verbos en el tiempo y persona indicados.",
+                    items: [
+                        "Yo (hablar) -> presente",
+                        "Tú (comer) -> pretérito perfecto simple",
+                        "Él (vivir) -> futuro",
+                        "Nosotros (estudiar) -> presente de subjuntivo",
+                        "Vosotros (correr) -> imperativo"
+                    ]
+                }
+            },
+            english: {
+                typing: {
+                    title: "Typing Exercise",
+                    description: "Type the following words or phrases as quickly and accurately as possible.",
+                    items: [
+                        "The quick brown fox jumps over the lazy dog",
+                        "Children play in the park every day",
+                        "The house is big and has a beautiful garden",
+                        "We study for the university exam",
+                        "My family travels to the beach in summer"
+                    ]
+                },
+                spelling: {
+                    title: "Spelling Exercise",
+                    description: "Write the following words correctly according to spelling rules.",
+                    items: [
+                        "accommodation",
+                        "necessary",
+                        "separate",
+                        "definitely",
+                        "embarrass"
+                    ]
+                },
+                verbs: {
+                    title: "Verb Conjugation Exercise",
+                    description: "Conjugate the verbs in the indicated tense and person.",
+                    items: [
+                        "I (to speak) -> present",
+                        "You (to eat) -> simple past",
+                        "He (to live) -> future",
+                        "We (to study) -> present subjunctive",
+                        "You (to run) -> imperative"
+                    ]
+                }
+            }
+        };
+
+        // Variables de estado
+        let currentLanguage = 'spanish';
+        let currentExerciseType = '';
+        let currentExerciseIndex = 0;
+        let score = 0;
+        let startTime;
+        let timerInterval;
+        let userProgress = {
+            spanish: { typing: 0, spelling: 0, verbs: 0 },
+            english: { typing: 0, spelling: 0, verbs: 0 }
+        };
+
+        // Elementos DOM
+        const languageButtons = document.querySelectorAll('.language-btn');
+        const spanishExercises = document.querySelector('.spanish-exercises');
+        const englishExercises = document.querySelector('.english-exercises');
+        const exerciseButtons = document.querySelectorAll('.btn-exercise');
+        const exerciseContainer = document.getElementById('exerciseContainer');
+        const exerciseTitle = document.getElementById('exerciseTitle');
+        const exerciseDescription = document.getElementById('exerciseDescription');
+        const userInput = document.getElementById('userInput');
+        const checkAnswerButton = document.getElementById('checkAnswer');
+        const nextExerciseButton = document.getElementById('nextExercise');
+        const cancelExerciseButton = document.getElementById('cancelExercise');
+        const resultAlert = document.getElementById('resultAlert');
+        const timerElement = document.getElementById('timer');
+        const scoreDisplay = document.getElementById('scoreDisplay');
+        const progressBar = document.getElementById('progressBar');
+        const progressText = document.getElementById('progressText');
+        const listenButton = document.getElementById('listenButton');
+        const saveScoreButton = document.getElementById('saveScore');
+
+        // Cambiar idioma
+        languageButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const language = this.getAttribute('data-language');
+                
+                // Actualizar botones de idioma
+                languageButtons.forEach(btn => btn.classList.remove('active-language'));
+                this.classList.add('active-language');
+                
+                // Mostrar/ocultar ejercicios según el idioma
+                if (language === 'spanish') {
+                    spanishExercises.classList.remove('d-none');
+                    englishExercises.classList.add('d-none');
+                    currentLanguage = 'spanish';
+                } else {
+                    spanishExercises.classList.add('d-none');
+                    englishExercises.classList.remove('d-none');
+                    currentLanguage = 'english';
+                }
+                
+                // Actualizar gráficos de progreso
+                updateProgressCharts();
+            });
+        });
+
+        // Iniciar ejercicio
+        exerciseButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const exerciseType = this.getAttribute('data-type');
+                const language = this.getAttribute('data-language');
+                
+                currentExerciseType = exerciseType;
+                currentExerciseIndex = 0;
+                score = 0;
+                
+                // Mostrar contenedor de ejercicio
+                exerciseContainer.classList.remove('d-none');
+                
+                // Configurar ejercicio
+                setupExercise(language, exerciseType);
+                
+                // Iniciar temporizador
+                startTimer();
+            });
+        });
+
+        // Configurar ejercicio
+        function setupExercise(language, type) {
+            const exercise = exercises[language][type];
+            
+            exerciseTitle.textContent = exercise.title;
+            exerciseDescription.textContent = exercise.description;
+            
+            // Mostrar primer elemento del ejercicio
+            showExerciseItem(language, type, 0);
+            
+            // Actualizar progreso
+            updateProgress();
+        }
+
+        // Mostrar elemento del ejercicio
+        function showExerciseItem(language, type, index) {
+            const exercise = exercises[language][type];
+            
+            if (index < exercise.items.length) {
+                userInput.value = '';
+                userInput.focus();
+                
+                // Mostrar el elemento actual (en una implementación real, esto sería más elaborado)
+                exerciseDescription.textContent = `${exercise.description} Escribe: "${exercise.items[index]}"`;
+                
+                currentExerciseIndex = index;
+                updateProgress();
+            } else {
+                // Ejercicio completado
+                finishExercise();
+            }
+        }
+
+        // Verificar respuesta
+        checkAnswerButton.addEventListener('click', function() {
+            const language = currentLanguage;
+            const type = currentExerciseType;
+            const exercise = exercises[language][type];
+            const userAnswer = userInput.value.trim();
+            const correctAnswer = exercise.items[currentExerciseIndex];
+            
+            // En una implementación real, aquí habría una lógica más sofisticada para verificar la respuesta
+            const isCorrect = userAnswer.toLowerCase() === correctAnswer.toLowerCase();
+            
+            if (isCorrect) {
+                score += 10;
+                showResult('¡Correcto! +10 puntos', 'success');
+            } else {
+                showResult(`Incorrecto. La respuesta era: "${correctAnswer}"`, 'danger');
+            }
+            
+            scoreDisplay.textContent = `Puntuación: ${score}`;
+            
+            // Actualizar progreso del usuario
+            userProgress[language][type] = Math.max(userProgress[language][type], score);
+            updateProgressCharts();
+        });
+
+        // Siguiente ejercicio
+        nextExerciseButton.addEventListener('click', function() {
+            showExerciseItem(currentLanguage, currentExerciseType, currentExerciseIndex + 1);
+            resultAlert.classList.add('d-none');
+        });
+
+        // Cancelar ejercicio
+        cancelExerciseButton.addEventListener('click', function() {
+            exerciseContainer.classList.add('d-none');
+            clearInterval(timerInterval);
+            resultAlert.classList.add('d-none');
+        });
+
+        // Escuchar texto (text-to-speech)
+        listenButton.addEventListener('click', function() {
+            const language = currentLanguage;
+            const type = currentExerciseType;
+            const exercise = exercises[language][type];
+            const text = exercise.items[currentExerciseIndex];
+            
+            // En una implementación real, aquí se usaría la API de síntesis de voz del navegador
+            alert(`En una implementación completa, esto leería: "${text}"`);
+        });
+
+        // Guardar puntuación
+        saveScoreButton.addEventListener('click', function() {
+            const userName = prompt("Ingresa tu nombre para guardar tu puntuación:");
+            if (userName) {
+                alert(`¡Puntuación de ${userName} guardada exitosamente!`);
+                // En una implementación real, aquí se guardaría en una base de datos
+            }
+        });
+
+        // Mostrar resultado
+        function showResult(message, type) {
+            resultAlert.textContent = message;
+            resultAlert.className = `alert alert-${type}`;
+            resultAlert.classList.remove('d-none');
+        }
+
+        // Iniciar temporizador
+        function startTimer() {
+            startTime = new Date();
+            timerInterval = setInterval(updateTimer, 1000);
+        }
+
+        // Actualizar temporizador
+        function updateTimer() {
+            const currentTime = new Date();
+            const elapsedTime = Math.floor((currentTime - startTime) / 1000);
+            const minutes = Math.floor(elapsedTime / 60);
+            const seconds = elapsedTime % 60;
+            
+            timerElement.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        }
+
+        // Actualizar barra de progreso
+        function updateProgress() {
+            const language = currentLanguage;
+            const type = currentExerciseType;
+            const exercise = exercises[language][type];
+            const progress = (currentExerciseIndex / exercise.items.length) * 100;
+            
+            progressBar.style.width = `${progress}%`;
+            progressText.textContent = `Ejercicio ${currentExerciseIndex + 1} de ${exercise.items.length}`;
+        }
+
+        // Finalizar ejercicio
+        function finishExercise() {
+            clearInterval(timerInterval);
+            
+            const totalTime = Math.floor((new Date() - startTime) / 1000);
+            const minutes = Math.floor(totalTime / 60);
+            const seconds = totalTime % 60;
+            
+            showResult(`¡Ejercicio completado! Puntuación final: ${score} puntos. Tiempo: ${minutes}:${seconds.toString().padStart(2, '0')}`, 'success');
+            
+            // Deshabilitar botones
+            checkAnswerButton.disabled = true;
+            nextExerciseButton.disabled = true;
+        }
+
+        // Actualizar gráficos de progreso
+        function updateProgressCharts() {
+            // Gráfico para español
+            const spanishCtx = document.getElementById('spanishProgressChart').getContext('2d');
+            new Chart(spanishCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['Mecanografía', 'Ortografía', 'Verbos'],
+                    datasets: [{
+                        label: 'Puntuación',
+                        data: [
+                            userProgress.spanish.typing,
+                            userProgress.spanish.spelling,
+                            userProgress.spanish.verbs
+                        ],
+                        backgroundColor: [
+                            'rgba(52, 152, 219, 0.7)',
+                            'rgba(46, 204, 113, 0.7)',
+                            'rgba(155, 89, 182, 0.7)'
+                        ],
+                        borderColor: [
+                            'rgb(52, 152, 219)',
+                            'rgb(46, 204, 113)',
+                            'rgb(155, 89, 182)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 100
+                        }
+                    }
+                }
+            });
+            
+            // Gráfico para inglés
+            const englishCtx = document.getElementById('englishProgressChart').getContext('2d');
+            new Chart(englishCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['Typing', 'Spelling', 'Verbs'],
+                    datasets: [{
+                        label: 'Score',
+                        data: [
+                            userProgress.english.typing,
+                            userProgress.english.spelling,
+                            userProgress.english.verbs
+                        ],
+                        backgroundColor: [
+                            'rgba(52, 152, 219, 0.7)',
+                            'rgba(46, 204, 113, 0.7)',
+                            'rgba(155, 89, 182, 0.7)'
+                        ],
+                        borderColor: [
+                            'rgb(52, 152, 219)',
+                            'rgb(46, 204, 113)',
+                            'rgb(155, 89, 182)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 100
+                        }
+                    }
+                }
+            });
+        }
+
+        // Inicializar gráficos al cargar la página
+        document.addEventListener('DOMContentLoaded', function() {
+            updateProgressCharts();
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,393 @@
+{% extends "base.html" %}
+
+{% block title %}Práctica - Aprendizaje de Latín{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="card shadow mb-4">
+            <div class="card-header bg-primary text-white">
+                <h4 class="mb-0">
+                    <i class="fas fa-brain"></i> Modo Práctica
+                </h4>
+            </div>
+            <div class="card-body">
+                <!-- Configuración Inicial -->
+                <div id="configuracion">
+                    <form id="configForm">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">
+                                    <i class="fas fa-layer-group"></i> Modo de Práctica
+                                </label>
+                                <select class="form-select" id="modoPractica" name="modo">
+                                    <option value="libre">Práctica Libre</option>
+                                    <option value="categoria">Por Categoría</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">
+                                    <i class="fas fa-list-ol"></i> Número de Preguntas
+                                </label>
+                                <input type="number" class="form-control" id="cantidadPreguntas" 
+                                       min="1" max="100" value="10">
+                            </div>
+                        </div>
+                        
+                        <div class="row" id="categoriaContainer" style="display: none;">
+                            <div class="col-12 mb-3">
+                                <label class="form-label">
+                                    <i class="fas fa-tag"></i> Selecciona Categoría
+                                </label>
+                                <select class="form-select" id="categoriaSelect" name="categoria">
+                                    <option value="todas">Todas las Categorías</option>
+                                    {% for categoria in categorias %}
+                                    <option value="{{ categoria }}">{{ categoria }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-12 mb-4">
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" 
+                                           id="mostrarIngles" checked>
+                                    <label class="form-check-label" for="mostrarIngles">
+                                        <i class="fas fa-language"></i> Mostrar equivalente en inglés
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="text-center">
+                            <button type="submit" class="btn btn-primary btn-lg">
+                                <i class="fas fa-play-circle"></i> Comenzar Práctica
+                            </button>
+                        </div>
+                    </form>
+                </div>
+                
+                <!-- Área de Preguntas -->
+                <div id="areaPreguntas" style="display: none;">
+                    <div class="text-center mb-4">
+                        <div class="progress" style="height: 25px;">
+                            <div class="progress-bar progress-bar-striped progress-bar-animated" 
+                                 id="progresoBar" role="progressbar" style="width: 0%">
+                                Pregunta <span id="preguntaActual">1</span> de <span id="totalPreguntas">10</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="card shadow-sm mb-4">
+                        <div class="card-body">
+                            <h5 class="card-title">
+                                <i class="fas fa-question-circle"></i> Pregunta
+                            </h5>
+                            <div class="mb-3">
+                                <label class="form-label">Significado:</label>
+                                <div class="alert alert-info" id="significadoTexto">
+                                    Cargando...
+                                </div>
+                            </div>
+                            <div class="mb-3" id="inglesContainer" style="display: none;">
+                                <label class="form-label">
+                                    <i class="fas fa-globe"></i> Equivalente en inglés:
+                                </label>
+                                <div class="alert alert-secondary" id="inglesTexto">
+                                    Cargando...
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">
+                                    <i class="fas fa-edit"></i> Tu respuesta en latín:
+                                </label>
+                                <input type="text" class="form-control form-control-lg" 
+                                       id="respuestaInput" placeholder="Escribe la expresión latina...">
+                            </div>
+                            <div class="text-center">
+                                <button class="btn btn-success btn-lg" id="verificarBtn">
+                                    <i class="fas fa-check-circle"></i> Verificar Respuesta
+                                </button>
+                                <button class="btn btn-secondary btn-lg" id="saltarBtn">
+                                    <i class="fas fa-forward"></i> Saltar
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Resultados de Verificación -->
+                <div id="resultadoVerificacion" style="display: none;">
+                    <div class="card shadow-sm mb-4">
+                        <div class="card-body text-center">
+                            <h4 id="resultadoTitulo" class="mb-3">
+                                <i class="fas fa-check-circle text-success"></i> ¡Correcto!
+                            </h4>
+                            <div class="alert" id="resultadoMensaje">
+                                Tu respuesta es correcta.
+                            </div>
+                            <div class="mb-3">
+                                <strong>Respuesta correcta:</strong>
+                                <div class="alert alert-success" id="respuestaCorrecta">
+                                    Cargando...
+                                </div>
+                            </div>
+                            <button class="btn btn-primary btn-lg" id="siguienteBtn">
+                                <i class="fas fa-arrow-right"></i> Siguiente Pregunta
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Resultados Finales -->
+                <div id="resultadosFinales" style="display: none;">
+                    <div class="card shadow-sm">
+                        <div class="card-body text-center">
+                            <h3 class="mb-4">
+                                <i class="fas fa-trophy text-warning"></i> Resultados de la Práctica
+                            </h3>
+                            <div class="row justify-content-center">
+                                <div class="col-md-6">
+                                    <div class="card mb-4">
+                                        <div class="card-body">
+                                            <h1 id="porcentajeFinal" class="display-1">0%</h1>
+                                            <p class="lead">de aciertos</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <h5>Aciertos</h5>
+                                            <h2 id="aciertosFinal" class="text-success">0</h2>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <h5>Total Preguntas</h5>
+                                            <h2 id="totalFinal" class="text-primary">0</h2>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mt-4">
+                                <a href="{{ url_for('practica') }}" class="btn btn-primary btn-lg">
+                                    <i class="fas fa-redo"></i> Nueva Práctica
+                                </a>
+                                <a href="{{ url_for('estadisticas') }}" class="btn btn-info btn-lg">
+                                    <i class="fas fa-chart-bar"></i> Ver Estadísticas
+                                </a>
+                                <a href="{{ url_for('inicio') }}" class="btn btn-secondary btn-lg">
+                                    <i class="fas fa-home"></i> Inicio
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+$(document).ready(function() {
+    let preguntaActual = {};
+    let configuracion = {};
+    
+    // Mostrar/ocultar selección de categoría
+    $('#modoPractica').change(function() {
+        if ($(this).val() === 'categoria') {
+            $('#categoriaContainer').show();
+        } else {
+            $('#categoriaContainer').hide();
+        }
+    });
+    
+    // Configurar práctica
+    $('#configForm').submit(function(e) {
+        e.preventDefault();
+        
+        configuracion = {
+            modo: $('#modoPractica').val(),
+            categoria: $('#categoriaSelect').val(),
+            cantidad: $('#cantidadPreguntas').val(),
+            mostrar_ingles: $('#mostrarIngles').is(':checked')
+        };
+        
+        // Enviar configuración al servidor
+        $.ajax({
+            url: '/practica',
+            method: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify(configuracion),
+            success: function(response) {
+                if (response.success) {
+                    $('#configuracion').hide();
+                    $('#areaPreguntas').show();
+                    $('#totalPreguntas').text(response.total);
+                    cargarSiguientePregunta();
+                }
+            },
+            error: function() {
+                alert('Error al iniciar la práctica');
+            }
+        });
+    });
+    
+    // Cargar siguiente pregunta
+    function cargarSiguientePregunta() {
+        $.get('/practica/pregunta', function(response) {
+            if (response.fin) {
+                mostrarResultadosFinales();
+                return;
+            }
+            
+            if (response.error) {
+                alert(response.error);
+                return;
+            }
+            
+            preguntaActual = response;
+            $('#significadoTexto').text(response.significado);
+            $('#preguntaActual').text(response.numero);
+            
+            // Mostrar u ocultar inglés
+            if (response.mostrar_ingles && response.ingles) {
+                $('#inglesContainer').show();
+                $('#inglesTexto').text(response.ingles);
+            } else {
+                $('#inglesContainer').hide();
+            }
+            
+            // Actualizar barra de progreso
+            let porcentaje = (response.numero / response.total) * 100;
+            $('#progresoBar').css('width', porcentaje + '%');
+            $('#progresoBar').text(`Pregunta ${response.numero} de ${response.total}`);
+            
+            // Limpiar campo de respuesta
+            $('#respuestaInput').val('');
+            $('#respuestaInput').focus();
+            
+            // Mostrar área de pregunta
+            $('#areaPreguntas').show();
+            $('#resultadoVerificacion').hide();
+        });
+    }
+    
+    // Verificar respuesta
+    $('#verificarBtn').click(function() {
+        verificarRespuesta();
+    });
+    
+    $('#respuestaInput').keypress(function(e) {
+        if (e.which == 13) { // Enter key
+            verificarRespuesta();
+        }
+    });
+    
+    function verificarRespuesta() {
+        let respuesta = $('#respuestaInput').val().trim();
+        
+        if (!respuesta) {
+            alert('Por favor, escribe una respuesta');
+            return;
+        }
+        
+        $.ajax({
+            url: '/practica/verificar',
+            method: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify({
+                respuesta: respuesta,
+                id_expresion: preguntaActual.id
+            }),
+            success: function(response) {
+                mostrarResultadoVerificacion(response);
+            },
+            error: function() {
+                alert('Error al verificar respuesta');
+            }
+        });
+    }
+    
+    // Mostrar resultado de verificación
+    function mostrarResultadoVerificacion(resultado) {
+        $('#areaPreguntas').hide();
+        $('#resultadoVerificacion').show();
+        
+        if (resultado.correcto) {
+            $('#resultadoTitulo').html('<i class="fas fa-check-circle text-success"></i> ¡Correcto!');
+            $('#resultadoMensaje').removeClass('alert-danger').addClass('alert-success');
+            $('#resultadoMensaje').text('Tu respuesta es correcta.');
+        } else {
+            $('#resultadoTitulo').html('<i class="fas fa-times-circle text-danger"></i> Incorrecto');
+            $('#resultadoMensaje').removeClass('alert-success').addClass('alert-danger');
+            $('#resultadoMensaje').text('Tu respuesta no es correcta.');
+        }
+        
+        $('#respuestaCorrecta').text(resultado.respuesta_correcta);
+    }
+    
+    // Siguiente pregunta
+    $('#siguienteBtn').click(function() {
+        $('#resultadoVerificacion').hide();
+        cargarSiguientePregunta();
+    });
+    
+    // Saltar pregunta
+    $('#saltarBtn').click(function() {
+        mostrarResultadoVerificacion({
+            correcto: false,
+            respuesta_correcta: "Salteada"
+        });
+    });
+    
+    // Mostrar resultados finales
+    function mostrarResultadosFinales() {
+        $('#areaPreguntas').hide();
+        $('#resultadosFinales').show();
+        
+        // Obtener resultados del servidor
+        $.get('/practica/resultados', function(data) {
+            // Esta es una redirección, manejamos en la página de resultados
+            window.location.href = '/practica/resultados';
+        });
+    }
+});
+</script>
+
+<style>
+.progress {
+    border-radius: 10px;
+    overflow: hidden;
+}
+.progress-bar {
+    transition: width 0.5s ease;
+}
+.card {
+    border: none;
+    border-radius: 15px;
+}
+.form-control-lg {
+    font-size: 1.2rem;
+    padding: 15px;
+    border-radius: 10px;
+}
+.btn-lg {
+    padding: 10px 30px;
+    border-radius: 10px;
+    margin: 5px;
+}
+.alert {
+    border-radius: 10px;
+    border: none;
+}
+</style>
+{% endblock %}

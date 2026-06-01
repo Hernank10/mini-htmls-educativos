@@ -1,0 +1,131 @@
+<!-- Agregar esta sección al perfil existente -->
+
+<!-- Sección de Gamificación -->
+<div class="row mt-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">
+                    <i class="fas fa-trophy"></i> Progreso y Logros
+                </h5>
+            </div>
+            <div class="card-body">
+                <!-- Nivel y Progreso -->
+                <div class="row mb-4">
+                    <div class="col-md-4 text-center">
+                        <div class="level-display">
+                            {% if current_user.level_progress %}
+                            <div class="level-badge" style="color: {{ current_user.level_progress.current_level.color }};">
+                                <i class="{{ current_user.level_progress.current_level.icon }} fa-4x"></i>
+                            </div>
+                            <h4 class="mt-2">{{ current_user.level_progress.current_level.level_name }}</h4>
+                            <p class="text-muted">Nivel {{ current_user.level_progress.current_level.level_number }}</p>
+                            {% else %}
+                            <p class="text-muted">Cargando nivel...</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="col-md-8">
+                        <h6>Progreso al siguiente nivel</h6>
+                        {% if current_user.level_progress %}
+                        <div class="progress mb-2" style="height: 20px;">
+                            <div class="progress-bar" 
+                                 style="width: {{ current_user.level_progress.level_progress_percentage }}%; 
+                                        background: {{ current_user.level_progress.current_level.color }};">
+                                {{ current_user.level_progress.level_progress_percentage|round|int }}%
+                            </div>
+                        </div>
+                        <div class="d-flex justify-content-between">
+                            <small class="text-muted">
+                                {{ current_user.level_progress.total_points }} puntos
+                            </small>
+                            <small class="text-muted">
+                                {{ current_user.level_progress.points_to_next_level }} para el siguiente nivel
+                            </small>
+                        </div>
+                        {% endif %}
+                        
+                        <!-- Badges Equipados -->
+                        <h6 class="mt-4">Medallas Equipadas</h6>
+                        <div class="equipped-badges">
+                            {% set equipped_badges = current_user.visual_badges_earned.filter_by(is_equipped=True).limit(3).all() %}
+                            {% if equipped_badges %}
+                            <div class="d-flex justify-content-start gap-3">
+                                {% for user_badge in equipped_badges %}
+                                <div class="equipped-badge" 
+                                     style="color: {{ user_badge.badge.color }}; 
+                                            text-shadow: {{ user_badge.badge.get_glow_effect() }};">
+                                    {% if user_badge.badge.badge_image %}
+                                    <img src="{{ user_badge.badge.badge_image }}" 
+                                         alt="{{ user_badge.badge.name }}"
+                                         class="img-fluid" 
+                                         style="max-width: 50px; border-radius: 50%;">
+                                    {% else %}
+                                    <i class="{{ user_badge.badge.icon }} fa-2x"></i>
+                                    {% endif %}
+                                    <small class="d-block mt-1">{{ user_badge.badge.name }}</small>
+                                </div>
+                                {% endfor %}
+                            </div>
+                            {% else %}
+                            <p class="text-muted">No hay medallas equipadas. 
+                                <a href="{{ url_for('gamification.badges') }}">Equipa algunas</a>
+                            </p>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Logros Recientes -->
+                <h6>Logros Recientes</h6>
+                <div class="row">
+                    {% set recent_achievements = current_user.achievements.order_by(UserAchievement.unlocked_at.desc()).limit(2).all() %}
+                    {% if recent_achievements %}
+                    {% for achievement in recent_achievements %}
+                    <div class="col-md-6 mb-3">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="d-flex align-items-center">
+                                    <div class="achievement-icon me-3" 
+                                         style="color: {{ achievement.achievement_type.color }};">
+                                        <i class="{{ achievement.achievement_type.icon }} fa-2x"></i>
+                                    </div>
+                                    <div>
+                                        <h6 class="card-title mb-1">{{ achievement.achievement_type.name }}</h6>
+                                        <p class="card-text small text-muted mb-1">
+                                            {{ achievement.achievement_type.description }}
+                                        </p>
+                                        <small class="text-muted">
+                                            {{ achievement.unlocked_at.strftime('%d/%m/%Y') }}
+                                        </small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                    {% else %}
+                    <div class="col-12">
+                        <p class="text-muted text-center">Aún no has desbloqueado logros.</p>
+                    </div>
+                    {% endif %}
+                </div>
+
+                <!-- Enlaces a Gamificación -->
+                <div class="text-center mt-3">
+                    <div class="btn-group">
+                        <a href="{{ url_for('gamification.ranking') }}" class="btn btn-outline-primary">
+                            <i class="fas fa-ranking-star"></i> Ver Ranking
+                        </a>
+                        <a href="{{ url_for('gamification.logros') }}" class="btn btn-outline-success">
+                            <i class="fas fa-medal"></i> Ver Logros
+                        </a>
+                        <a href="{{ url_for('gamification.badges') }}" class="btn btn-outline-warning">
+                            <i class="fas fa-award"></i> Ver Medallas
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

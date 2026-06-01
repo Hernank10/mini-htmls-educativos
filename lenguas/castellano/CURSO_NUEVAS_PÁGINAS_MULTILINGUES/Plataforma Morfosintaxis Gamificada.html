@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title></title>
+
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+
+  <style>
+    body {
+      background: #f7f7f7;
+    }
+    .card {
+      border-radius: 1rem;
+    }
+    .example-box {
+      padding: 1rem;
+      border-left: 4px solid #0d6efd;
+      background: #e9f2ff;
+      margin-bottom: 1rem;
+    }
+    .flashcard {
+      perspective: 1000px;
+      cursor: pointer;
+      margin-top: 20px;
+    }
+    .flashcard-inner {
+      position: relative;
+      width: 100%;
+      height: 150px;
+      transition: transform 0.6s;
+      transform-style: preserve-3d;
+    }
+    .flashcard.flip .flashcard-inner {
+      transform: rotateY(180deg);
+    }
+    .flashcard-front, .flashcard-back {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      backface-visibility: hidden;
+      border-radius: 10px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 1.2rem;
+      font-weight: 500;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      background-color: white;
+    }
+    .flashcard-back {
+      transform: rotateY(180deg);
+      background-color: #dbeafe;
+    }
+    .progress {
+      height: 25px;
+    }
+  </style>
+</head>
+<body class="p-4">
+  <div class="container">
+    <h1 class="text-center mb-4">🎓 Plataforma Gamificada de Morfosintaxis</h1>
+
+    <!-- Puntuación y progreso -->
+    <div class="row mb-4">
+      <div class="col-md-6">
+        <div class="card shadow p-3">
+          <h5>Puntuación: <span id="score">0</span> ⭐</h5>
+          <p class="text-muted mb-0">¡Practica para ganar puntos!</p>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="card shadow p-3">
+          <h5>Progreso</h5>
+          <div class="progress">
+            <div id="progress-bar" class="progress-bar bg-success" style="width: 0%">0%</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Configuración -->
+    <div class="row g-4">
+      <div class="col-md-4">
+        <div class="card shadow p-3">
+          <h4>Idiomas</h4>
+          <select id="language" class="form-select">
+            <option value="es">Español</option>
+            <option value="en">Inglés</option>
+            <option value="fr">Francés</option>
+            <option value="pt">Portugués</option>
+            <option value="jp">Japonés</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <div class="card shadow p-3">
+          <h4>Categorías</h4>
+          <select id="category" class="form-select">
+            <option value="impersonal">Oraciones impersonales</option>
+            <option value="reflexiva">Construcciones reflexivas</option>
+            <option value="pasiva">Voz pasiva</option>
+            <option value="subjuntivo">Modo subjuntivo</option>
+            <option value="cliticos">Pronombres clíticos</option>
+            <option value="inversion">Inversión del sujeto</option>
+            <option value="relativas">Oraciones de relativo</option>
+            <option value="auxiliares">Perífrasis verbales</option>
+            <option value="marcadores">Marcadores discursivos</option>
+            <option value="topicalizacion">Topicalización</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <div class="card shadow p-3">
+          <h4>Acciones</h4>
+          <button id="generateBtn" class="btn btn-primary w-100 mb-2">🎲 Generar Ejemplo</button>
+          <button id="speakBtn" class="btn btn-success w-100">🔊 Escuchar</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Flashcard -->
+    <div class="flashcard" id="flashcard">
+      <div class="flashcard-inner">
+        <div class="flashcard-front" id="output">Selecciona opciones y pulsa "Generar".</div>
+        <div class="flashcard-back" id="translation">Traducción oculta.</div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+  <script>
+    const examples = {
+      es: { impersonal: 'Llueve mucho en esta región.', reflexiva: 'María se peina todas las mañanas.', pasiva: 'El puente fue construido en 1920.', subjuntivo: 'Espero que vengas mañana.', cliticos: 'Te lo dije ayer.', inversion: 'Quizás venga Juan.', relativas: 'La casa que compré es antigua.', auxiliares: 'Voy a estudiar ahora.', marcadores: 'Sin embargo, llegamos temprano.', topicalizacion: 'A Juan, lo vi ayer.' },
+      en: { impersonal: 'It rains a lot in this region.', reflexiva: 'She brushes herself in the morning.', pasiva: 'The bridge was built in 1920.', subjuntivo: 'I hope you come tomorrow.', cliticos: 'I told you so.', inversion: 'Perhaps John will come.', relativas: 'The house that I bought is old.', auxiliares: 'I am going to study now.', marcadores: 'However, we arrived early.', topicalizacion: 'John, I saw him yesterday.' },
+      fr: { impersonal: 'Il pleut beaucoup dans cette région.', reflexiva: 'Elle se coiffe le matin.', pasiva: 'Le pont a été construit en 1920.', subjuntivo: 'J’espère que tu viendras demain.', cliticos: 'Je te l’ai dit hier.', inversion: 'Peut-être Jean viendra-t-il.', relativas: 'La maison que j’ai achetée est ancienne.', auxiliares: 'Je vais étudier maintenant.', marcadores: 'Cependant, nous sommes arrivés tôt.', topicalizacion: 'Jean, je l’ai vu hier.' },
+      pt: { impersonal: 'Chove muito nesta região.', reflexiva: 'Ela se penteia de manhã.', pasiva: 'A ponte foi construída em 1920.', subjuntivo: 'Espero que você venha amanhã.', cliticos: 'Eu te disse ontem.', inversion: 'Talvez João venha.', relativas: 'A casa que comprei é antiga.', auxiliares: 'Vou estudar agora.', marcadores: 'No entanto, chegamos cedo.', topicalizacion: 'O João, eu o vi ontem.' },
+      jp: { impersonal: 'この地域では雨がよく降る。', reflexiva: '彼女は朝、自分で髪をとかす。', pasiva: '橋は1920年に建てられた。', subjuntivo: '明日来てほしい。', cliticos: '昨日あなたに言った。', inversion: 'たぶんジョンが来るだろう。', relativas: '私が買った家は古い。', auxiliares: '今、勉強するつもりだ。', marcadores: 'しかし、私たちは早く着いた。', topicalizacion: 'ジョンは、昨日見た。' }
+    };
+
+    let score = 0;
+    let progress = 0;
+
+    const output = document.getElementById('output');
+    const translation = document.getElementById('translation');
+    const flashcard = document.getElementById('flashcard');
+    const progressBar = document.getElementById('progress-bar');
+
+    document.getElementById('generateBtn').addEventListener('click', () => {
+      const lang = document.getElementById('language').value;
+      const cat = document.getElementById('category').value;
+      const example = examples[lang][cat];
+      output.textContent = example;
+      translation.textContent = 'Haz clic para revelar la traducción.';
+      flashcard.classList.remove('flip');
+      score += 10;
+      progress = Math.min(progress + 10, 100);
+      document.getElementById('score').textContent = score;
+      progressBar.style.width = progress + '%';
+      progressBar.textContent = progress + '%';
+    });
+
+    // Leer con voz
+    document.getElementById('speakBtn').addEventListener('click', () => {
+      const utter = new SpeechSynthesisUtterance(output.textContent);
+      utter.lang = document.getElementById('language').value === 'jp' ? 'ja-JP' : document.getElementById('language').value;
+      speechSynthesis.speak(utter);
+    });
+
+    // Voltear tarjeta
+    flashcard.addEventListener('click', () => {
+      flashcard.classList.toggle('flip');
+      if (flashcard.classList.contains('flip')) {
+        translation.textContent = '[Traducción o explicación aquí]';
+      }
+    });
+  </script>
+</body>
+</html>

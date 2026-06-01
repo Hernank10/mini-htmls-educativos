@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Practicador Literario de Aforismos</title>
+<style>
+    body {
+        background-color: #f8f3e7;
+        font-family: Georgia, serif;
+        margin: 0;
+        display: flex;
+        height: 100vh;
+    }
+    #sidebar {
+        width: 260px;
+        background: #e9dfcf;
+        padding: 20px;
+        overflow-y: auto;
+        border-right: 2px solid #cbbfaa;
+    }
+    #sidebar h2 {
+        margin-top: 0;
+    }
+    .categoria {
+        margin: 8px 0;
+        cursor: pointer;
+    }
+    .categoria:hover {
+        text-decoration: underline;
+    }
+    #content {
+        flex-grow: 1;
+        padding: 30px;
+    }
+    #exampleBox, #inputBox, #messageBox {
+        background: #e9dfcf;
+        padding: 15px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+    }
+    textarea {
+        width: 100%;
+        height: 100px;
+        resize: vertical;
+        font-family: Georgia, serif;
+        font-size: 16px;
+        padding: 10px;
+        border: 1px solid #b09f85;
+        background: #fffaf3;
+    }
+    button {
+        padding: 10px 20px;
+        background: #a78965;
+        color: white;
+        border: none;
+        cursor: pointer;
+        border-radius: 6px;
+        font-size: 16px;
+    }
+    button:hover {
+        background: #8b6f4e;
+    }
+</style>
+</head>
+<body>
+
+<div id="sidebar">
+    <h2>Categorías</h2>
+    <div id="categories"></div>
+</div>
+
+<div id="content">
+    <h1>Practicador Literario de Aforismos</h1>
+
+    <div id="exampleBox">
+        <h3>Ejemplo</h3>
+        <p id="exampleText">Selecciona una categoría para ver un ejemplo.</p>
+    </div>
+
+    <div id="inputBox">
+        <h3>Tu aforismo</h3>
+        <textarea id="userInput" placeholder="Escribe aquí tu aforismo..."></textarea>
+        <br><br>
+        <button onclick="evaluar()">Evaluar</button>
+    </div>
+
+    <div id="messageBox">
+        <h3>Evaluación</h3>
+        <p id="message">Selecciona una categoría y escribe tu aforismo.</p>
+    </div>
+</div>
+
+<script>
+const ejemplos = {
+    "Sentencias morales": [
+        "La virtud no hace ruido, pero se escucha lejos.",
+        "Quien se vence a sí mismo nunca pierde.",
+        "La codicia siempre tiene hambre."],
+    "Observaciones psicológicas": [
+        "La mente teme más a sus sombras que a la noche.",
+        "Recordamos lo que nos hiere con más nitidez que lo que nos alegra.",
+        "El deseo piensa más rápido que la razón."],
+    "Imágenes poéticas": [
+        "El alba abre los párpados del mundo.",
+        "La lluvia escribe cartas en la ventana.",
+        "El viento colecciona secretos."],
+    "Aforismos humorísticos": [
+        "La paciencia es una virtud... que nunca encuentro a tiempo.",
+        "Mi memoria tiene un excelente servicio de extravíos.",
+        "Si el mundo es un escenario, todavía espero mis luces."],
+    "Máximas filosóficas": [
+        "Ser es aprender a desaparecer con gracia.",
+        "Toda certeza es una pausa en la duda.",
+        "El tiempo siempre piensa antes que nosotros."]
+};
+
+let categoriaActual = null;
+
+// Cargar categorías
+const catDiv = document.getElementById("categories");
+Object.keys(ejemplos).forEach(cat => {
+    const div = document.createElement("div");
+    div.className = "categoria";
+    div.textContent = "• " + cat;
+    div.onclick = () => seleccionarCategoria(cat);
+    catDiv.appendChild(div);
+});
+
+function seleccionarCategoria(cat) {
+    categoriaActual = cat;
+    const lista = ejemplos[cat];
+    const ejemplo = lista[Math.floor(Math.random() * lista.length)];
+
+    document.getElementById("exampleText").textContent = ejemplo;
+    document.getElementById("message").textContent = `Escribe un aforismo al estilo de '${cat}'.`;
+}
+
+function evaluar() {
+    const texto = document.getElementById("userInput").value.trim();
+    if (!categoriaActual) {
+        document.getElementById("message").textContent = "Primero selecciona una categoría.";
+        return;
+    }
+    if (texto.length < 5) {
+        document.getElementById("message").textContent = "Demasiado breve: intenta desarrollar una idea más clara.";
+        return;
+    }
+
+    let hints = [];
+    if ([",", ";", ":"].some(p => texto.includes(p))) hints.push("Buen uso de pausas reflexivas.");
+    if (["luz", "sombra", "viento", "tiempo"].some(w => texto.toLowerCase().includes(w))) hints.push("Aprecio por imágenes literarias.");
+    if (texto.split(" ").length >= 12) hints.push("Extensión adecuada para un aforismo elaborado.");
+
+    document.getElementById("message").textContent = hints.length ? hints.join(" | ") : "Puede ser más evocador o preciso.";
+}
+</script>
+
+</body>
+</html>

@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>Matemáticas Colombia · 100 conceptos esenciales</title>
+  <style>
+    /* ----- VARIABLES CSS: paleta matemática (azul, gris, naranja) ----- */
+    :root {
+      --fondo: #f9fafc;
+      --texto: #1e293b;
+      --azul-mate: #2563eb;
+      --naranja-calculo: #ea580c;
+      --gris-teorema: #64748b;
+      --acierto: #10b981;
+      --fallo: #ef4444;
+      --sombra: rgba(0, 0, 0, 0.05);
+      --card-bg: #ffffff;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: var(--fondo);
+      color: var(--texto);
+      font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
+      line-height: 1.5;
+      padding: 1rem;
+    }
+
+    .app-container {
+      max-width: 1300px;
+      margin: 0 auto;
+      background: var(--card-bg);
+      border-radius: 2rem;
+      box-shadow: 0 12px 28px var(--sombra);
+      overflow: hidden;
+      border: 1px solid #e2e8f0;
+    }
+
+    header {
+      background: #f1f5f9;
+      padding: 1.2rem 2rem;
+      border-bottom: 3px solid var(--azul-mate);
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 1rem;
+    }
+    h1 {
+      font-size: 1.7rem;
+      font-weight: 600;
+      color: #1e3a8a;
+      letter-spacing: -0.2px;
+    }
+    h1 small {
+      font-size: 0.7rem;
+      font-weight: normal;
+      color: #475569;
+    }
+
+    nav {
+      display: flex;
+      gap: 0.5rem;
+      background: #eef2ff;
+      padding: 0.6rem 2rem;
+      border-bottom: 1px solid #e2e8f0;
+      flex-wrap: wrap;
+    }
+    .nav-btn {
+      background: transparent;
+      border: none;
+      font-size: 0.95rem;
+      padding: 0.5rem 1.2rem;
+      border-radius: 40px;
+      cursor: pointer;
+      font-weight: 500;
+      transition: all 0.2s;
+      color: #2563eb;
+    }
+    .nav-btn.active {
+      background-color: var(--azul-mate);
+      color: white;
+    }
+    .nav-btn:hover:not(.active) {
+      background-color: #e0e7ff;
+    }
+
+    .view {
+      display: none;
+      padding: 2rem;
+      animation: fade 0.2s ease;
+    }
+    .active-view { display: block; }
+    @keyframes fade { from { opacity: 0; transform: translateY(5px);} to { opacity: 1; transform: translateY(0);} }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+    .stat-card {
+      background: var(--fondo);
+      border-radius: 1.5rem;
+      padding: 1rem;
+      text-align: center;
+      border-left: 6px solid var(--naranja-calculo);
+      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    }
+    .stat-number {
+      font-size: 2.2rem;
+      font-weight: 700;
+      color: var(--azul-mate);
+    }
+    .progress-bar-bg {
+      background: #e2e8f0;
+      border-radius: 40px;
+      height: 12px;
+      overflow: hidden;
+      margin: 0.8rem 0;
+    }
+    .progress-fill {
+      background: var(--azul-mate);
+      width: 0%;
+      height: 100%;
+      transition: width 0.2s;
+    }
+
+    .conceptos-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+      gap: 1rem;
+      max-height: 65vh;
+      overflow-y: auto;
+      padding-right: 0.3rem;
+    }
+    .concepto-item {
+      background: white;
+      border-radius: 1.2rem;
+      padding: 0.8rem 1rem;
+      border-left: 5px solid var(--gris-teorema);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+    .concepto-titulo {
+      font-weight: 700;
+      color: #1e3a8a;
+    }
+    .concepto-desc {
+      font-size: 0.85rem;
+      color: #334155;
+      margin-top: 6px;
+      border-top: 1px solid #eef2ff;
+      padding-top: 6px;
+    }
+    .badge-progreso {
+      font-size: 0.7rem;
+      background: #eef2ff;
+      border-radius: 20px;
+      padding: 2px 10px;
+      display: inline-block;
+      margin-top: 8px;
+    }
+
+    /* práctica */
+    .flashcard {
+      background: #ffffff;
+      border-radius: 2rem;
+      padding: 1.8rem;
+      text-align: center;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+      border: 1px solid #e2e8f0;
+      max-width: 750px;
+      margin: 0 auto;
+    }
+    .pregunta {
+      font-size: 1.4rem;
+      font-weight: 500;
+      margin-bottom: 1.8rem;
+      background: #f0f4fe;
+      padding: 1.2rem;
+      border-radius: 1.5rem;
+    }
+    .respuesta-oculta {
+      background: #f1f5f9;
+      border-radius: 1.2rem;
+      padding: 1rem;
+      margin: 1rem 0;
+      display: none;
+    }
+    .palabras-baraja {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 0.6rem;
+      margin: 1.5rem 0;
+    }
+    .palabra-btn {
+      background: var(--azul-mate);
+      color: white;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 2rem;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: 0.1s;
+    }
+    .orden-actual {
+      background: #f8fafc;
+      border-radius: 1rem;
+      padding: 1rem;
+      min-height: 80px;
+      margin: 1rem 0;
+      text-align: left;
+      border: 1px dashed #cbd5e1;
+    }
+    .btn {
+      background: #e2e8f0;
+      border: none;
+      padding: 0.6rem 1.5rem;
+      border-radius: 3rem;
+      font-weight: 600;
+      margin: 0.3rem;
+      cursor: pointer;
+      font-family: inherit;
+    }
+    .btn-primary { background: var(--azul-mate); color: white; }
+    .btn-acierto { background: var(--acierto); color: white; }
+    .btn-fallo { background: var(--fallo); color: white; }
+    .modo-selector { display: flex; justify-content: center; gap: 0.8rem; margin-bottom: 1.5rem; flex-wrap: wrap; }
+    footer {
+      text-align: center;
+      padding: 1rem;
+      font-size: 0.75rem;
+      border-top: 1px solid #e2e8f0;
+      background: #f8fafc;
+    }
+    @media (max-width: 680px) {
+      .view { padding: 1rem; }
+      .pregunta { font-size: 1rem; }
+    }
+  </style>
+</head>
+<body>
+<div class="app-container">
+  <header>
+    <h1>📐 Matemáticas Colombia <small>100 conceptos esenciales</small></h1>
+    <div style="font-size:0.8rem;">🧮 Aritmética · Álgebra · Geometría · Cálculo · Estadística · Trigonometría</div>
+  </header>
+  <nav>
+    <button class="nav-btn active" data-view="dashboard">📊 Panel</button>
+    <button class="nav-btn" data-view="listado">📚 Compendio</button>
+    <button class="nav-btn" data-view="practica">🃏 Práctica</button>
+  </nav>
+
+  <section id="dashboard" class="view active-view">
+    <div class="stats-grid" id="statsContainer"></div>
+    <div class="card" style="background:white; border-radius:1.6rem; padding:1.2rem;">
+      <h3>📈 Progreso en fundamentos matemáticos</h3>
+      <div class="progress-bar-bg"><div class="progress-fill" id="globalProgressFill"></div></div>
+      <p id="globalProgressText"></p>
+      <button id="resetProgresoBtn" class="btn" style="background:#cbd5e1;">🔄 Reiniciar progreso</button>
+    </div>
+  </section>
+
+  <section id="listado" class="view">
+    <input type="text" id="filtroListado" placeholder="🔍 Buscar concepto o definición..." style="width:100%; padding:10px; margin-bottom:15px; border-radius:40px; border:1px solid #cbd5e1;">
+    <div id="conceptosListadoContainer" class="conceptos-grid"></div>
+  </section>
+
+  <section id="practica" class="view">
+    <div class="modo-selector">
+      <button id="modoConceptoDef" class="btn btn-primary">📖 Concepto → Definición</button>
+      <button id="modoDefConcepto" class="btn">🔄 Definición → Concepto</button>
+      <button id="modoOrdenar" class="btn">🧩 Ordenar definición</button>
+    </div>
+    <div id="practicaContainer"></div>
+  </section>
+  <footer>Progreso guardado localmente · Ejercicio interactivo de ordenar definición · Alineado con estándares colombianos (MEN)</footer>
+</div>
+
+<script>
+  // --------------------------------------------------------------
+  // 100 CONCEPTOS MATEMÁTICOS (enfoque Colombia)
+  // (número, concepto, definición)
+  // --------------------------------------------------------------
+  const conceptosData = [
+    [1, "Número natural", "Los que se usan para contar: 1, 2, 3, ... (algunos incluyen el 0)."],
+    [2, "Número entero", "Incluye naturales, sus negativos y el cero: ..., -2, -1, 0, 1, 2, ..."],
+    [3, "Número racional", "Todo número que puede expresarse como fracción a/b, con b ≠ 0 y a, b enteros."],
+    [4, "Número irracional", "Número real que no puede expresarse como fracción exacta (π, √2, e)."],
+    [5, "Número real", "Unión de números racionales e irracionales; completan la recta numérica."],
+    [6, "Número complejo", "Expresión de la forma a + bi, donde i = √−1, con a y b reales."],
+    [7, "Valor absoluto", "Distancia de un número real al cero, sin signo: |x|."],
+    [8, "Múltiplo", "Producto de un número por otro entero. Ej: 12 es múltiplo de 3."],
+    [9, "Divisor", "Número que divide exactamente a otro. Ej: 3 es divisor de 12."],
+    [10, "Número primo", "Número natural mayor que 1 que solo es divisible entre 1 y sí mismo (2,3,5,7...)."],
+    [11, "Máximo común divisor (MCD)", "Mayor número que divide exactamente a dos o más números."],
+    [12, "Mínimo común múltiplo (MCM)", "Menor múltiplo común positivo de dos o más números."],
+    [13, "Potencia", "Producto de una base por sí misma un número de veces: aⁿ."],
+    [14, "Raíz cuadrada", "Número que multiplicado por sí mismo da el radicando: √a."],
+    [15, "Notación científica", "Expresión de números como producto de un número entre 1 y 10 y una potencia de 10."],
+    [16, "Proporción", "Igualdad entre dos razones: a/b = c/d."],
+    [17, "Regla de tres", "Procedimiento para hallar un cuarto proporcional a tres valores conocidos."],
+    [18, "Porcentaje", "Proporción que representa una parte de 100 unidades."],
+    [19, "Variable", "Símbolo que representa un valor desconocido o que puede cambiar."],
+    [20, "Expresión algebraica", "Combinación de números, variables y operaciones (+, -, ×, ÷, potencias)."],
+    [21, "Término algebraico", "Producto de un coeficiente y una parte literal (ej: 3x²y)."],
+    [22, "Polinomio", "Suma finita de términos algebraicos (ej: 2x³ + 5x - 1)."],
+    [23, "Grado de un polinomio", "Mayor exponente de la variable en el polinomio."],
+    [24, "Ecuación", "Igualdad que contiene una o más incógnitas, solo se cumple para ciertos valores."],
+    [25, "Identidad", "Igualdad que se cumple para todos los valores de sus variables (ej: (a+b)² = a²+2ab+b²)."],
+    [26, "Ecuación lineal", "Ecuación de primer grado: ax + b = 0."],
+    [27, "Ecuación cuadrática", "Ecuación de segundo grado: ax² + bx + c = 0, a ≠ 0."],
+    [28, "Fórmula cuadrática", "Solución general: x = [-b ± √(b²-4ac)] / (2a)."],
+    [29, "Discriminante", "Δ = b² - 4ac; indica naturaleza de raíces (reales, iguales, complejas)."],
+    [30, "Sistema de ecuaciones", "Conjunto de dos o más ecuaciones con varias incógnitas."],
+    [31, "Función", "Relación entre conjuntos donde cada elemento del dominio corresponde a uno en el codominio."],
+    [32, "Dominio", "Conjunto de valores que puede tomar la variable independiente."],
+    [33, "Rango", "Conjunto de valores que toma la variable dependiente."],
+    [34, "Función lineal", "f(x) = mx + b, gráfica una línea recta, con pendiente m."],
+    [35, "Función cuadrática", "f(x) = ax² + bx + c, gráfica una parábola."],
+    [36, "Pendiente", "Razón de cambio vertical sobre horizontal entre dos puntos de una recta."],
+    [37, "Intersección", "Punto común entre dos o más gráficas o conjuntos."],
+    [38, "Logaritmo", "Exponente al que hay que elevar una base para obtener un número: logₐ b = c → aᶜ = b."],
+    [39, "Función exponencial", "f(x) = aˣ, con a>0, a≠1; crecimiento acelerado."],
+    [40, "Función logarítmica", "f(x) = logₐ x, inversa de la exponencial."],
+    [41, "Trigonometría", "Rama que estudia relaciones entre lados y ángulos de triángulos."],
+    [42, "Seno", "En un triángulo rectángulo, cateto opuesto / hipotenusa."],
+    [43, "Coseno", "Cateto adyacente / hipotenusa."],
+    [44, "Tangente", "Cateto opuesto / cateto adyacente = sen/cos."],
+    [45, "Radian", "Medida angular basada en el radio; π rad = 180°."],
+    [46, "Teorema de Pitágoras", "En triángulo rectángulo: hipotenusa² = cateto₁² + cateto₂²."],
+    [47, "Geometría plana", "Estudio de figuras en dos dimensiones: puntos, rectas, polígonos, círculos."],
+    [48, "Punto", "Elemento geométrico sin dimensión, representa posición."],
+    [49, "Recta", "Sucesión infinita de puntos en una misma dirección."],
+    [50, "Plano", "Superficie bidimensional que se extiende infinitamente."],
+    [51, "Ángulo", "Figura formada por dos rayos con origen común."],
+    [52, "Triángulo", "Polígono de tres lados y tres ángulos, suma de ángulos internos = 180°."],
+    [53, "Cuadrilátero", "Polígono de cuatro lados (cuadrado, rectángulo, rombo, trapecio)."],
+    [54, "Circunferencia", "Conjunto de puntos equidistantes de un centro."],
+    [55, "Círculo", "Región del plano limitada por una circunferencia."],
+    [56, "Perímetro", "Suma de las longitudes de los lados de una figura plana."],
+    [57, "Área", "Medida de la superficie encerrada por una figura plana."],
+    [58, "Volumen", "Medida del espacio ocupado por un cuerpo tridimensional."],
+    [59, "Teorema de Tales", "Rectas paralelas determinan segmentos proporcionales sobre transversales."],
+    [60, "Semejanza", "Figuras con misma forma pero diferente tamaño; ángulos iguales, lados proporcionales."],
+    [61, "Congruencia", "Figuras idénticas en forma y tamaño."],
+    [62, "Sistema de coordenadas cartesianas", "Plano con ejes x e y para ubicar puntos (x, y)."],
+    [63, "Vector", "Magnitud con dirección y sentido, representado por componentes."],
+    [64, "Producto escalar", "Producto de dos vectores que da un escalar: u·v = |u||v|cosθ."],
+    [65, "Matriz", "Arreglo rectangular de números en filas y columnas."],
+    [66, "Determinante", "Número asociado a una matriz cuadrada, útil para resolver sistemas."],
+    [67, "Sistema de ecuaciones lineales", "Conjunto de ecuaciones lineales; se resuelve por eliminación, matriz inversa o reglas de Cramer."],
+    [68, "Límite", "Valor al que se aproxima una función cuando su variable tiende a un punto."],
+    [69, "Derivada", "Tasa de cambio instantánea; pendiente de la recta tangente a una curva."],
+    [70, "Reglas de derivación", "Fórmulas para derivar sumas, productos, cocientes y composiciones."],
+    [71, "Integral definida", "Área bajo la curva entre dos límites; inversa de la derivada."],
+    [72, "Teorema fundamental del cálculo", "Relaciona la derivada y la integral: son operaciones inversas."],
+    [73, "Sucesión", "Lista ordenada de números generados por una regla."],
+    [74, "Progresión aritmética", "Sucesión donde la diferencia entre términos consecutivos es constante."],
+    [75, "Progresión geométrica", "Sucesión donde cada término se obtiene multiplicando por una razón constante."],
+    [76, "Serie", "Suma de los términos de una sucesión."],
+    [77, "Estadística", "Ciencia de recopilar, organizar, analizar e interpretar datos."],
+    [78, "Población", "Conjunto total de individuos o elementos de estudio."],
+    [79, "Muestra", "Subconjunto representativo de la población."],
+    [80, "Media aritmética", "Promedio: suma de datos dividida entre número total."],
+    [81, "Mediana", "Valor central cuando los datos están ordenados."],
+    [82, "Moda", "Valor que más se repite en un conjunto de datos."],
+    [83, "Desviación estándar", "Medida de dispersión respecto a la media."],
+    [84, "Varianza", "Cuadrado de la desviación estándar."],
+    [85, "Probabilidad", "Medida numérica de la posibilidad de que ocurra un evento, entre 0 y 1."],
+    [86, "Evento independiente", "Eventos cuyo resultado no se afecta mutuamente."],
+    [87, "Teorema de Bayes", "Permite calcular probabilidades condicionales inversas."],
+    [88, "Combinatoria", "Rama que estudia formas de contar agrupaciones (permutaciones, combinaciones)."],
+    [89, "Permutación", "Ordenación de todos o parte de un conjunto, importa el orden."],
+    [90, "Combinación", "Selección sin importar el orden."],
+    [91, "Números complejos (repaso)", "Forma polar: r(cosθ + i senθ)."],
+    [92, "Ecuación diferencial", "Ecuación que relaciona una función con sus derivadas."],
+    [93, "Números de Fibonacci", "Sucesión: 1,1,2,3,5,8,... donde cada término suma los dos anteriores."],
+    [94, "Conjunto", "Colección de elementos definidos por una propiedad común."],
+    [95, "Operaciones con conjuntos", "Unión, intersección, diferencia, complemento."],
+    [96, "Diagrama de Venn", "Representación gráfica de conjuntos y sus relaciones."],
+    [97, "Lógica matemática", "Estudio de proposiciones, conectivos lógicos (y, o, no, implica)."],
+    [98, "Demostración matemática", "Razonamiento deductivo que prueba la veracidad de un enunciado."],
+    [99, "Inducción matemática", "Método de demostración para afirmaciones sobre números naturales."],
+    [100, "Matemáticas discretas", "Estudio de estructuras finitas o contables (grafos, combinatoria, algoritmos)."]
+  ];
+
+  // --------------------- LOCALSTORAGE Y PROGRESO -------------------------
+  let progreso = {};
+  const STORAGE_KEY = "matematicasColombiaProgreso";
+
+  function cargarProgreso() {
+    const guardado = localStorage.getItem(STORAGE_KEY);
+    if (guardado) progreso = JSON.parse(guardado);
+    else {
+      progreso = {};
+      for (let i = 1; i <= 100; i++) progreso[i] = { aciertos: 0, fallos: 0 };
+    }
+  }
+  function guardarProgreso() { localStorage.setItem(STORAGE_KEY, JSON.stringify(progreso)); }
+  function registrarResultado(id, acierto) {
+    if (!progreso[id]) progreso[id] = { aciertos: 0, fallos: 0 };
+    if (acierto) progreso[id].aciertos += 1;
+    else progreso[id].fallos += 1;
+    guardarProgreso();
+    renderDashboard();
+    renderListado(document.getElementById("filtroListado")?.value || "");
+    if (window.currentCardId === id && document.getElementById("infoProgresoCard")) {
+      document.getElementById("infoProgresoCard").innerHTML = `📊 Concepto ${id} · ✅ ${progreso[id].aciertos} aciertos · ❌ ${progreso[id].fallos} fallos`;
+    }
+  }
+
+  function renderDashboard() {
+    let totalAciertos = 0, totalFallos = 0, conceptosConAcierto = 0;
+    for (let i = 1; i <= 100; i++) {
+      const p = progreso[i] || { aciertos: 0, fallos: 0 };
+      totalAciertos += p.aciertos;
+      totalFallos += p.fallos;
+      if (p.aciertos > 0) conceptosConAcierto++;
+    }
+    const porcentaje = (conceptosConAcierto / 100) * 100;
+    document.getElementById("globalProgressFill").style.width = `${porcentaje}%`;
+    document.getElementById("globalProgressText").innerHTML = `${conceptosConAcierto} de 100 conceptos con al menos 1 acierto (${Math.round(porcentaje)}%).`;
+    document.getElementById("statsContainer").innerHTML = `
+      <div class="stat-card"><div class="stat-number">${totalAciertos}</div>✅ Aciertos totales</div>
+      <div class="stat-card"><div class="stat-number">${totalFallos}</div>❌ Fallos</div>
+      <div class="stat-card"><div class="stat-number">${conceptosConAcierto}</div>📘 Conceptos dominados</div>
+      <div class="stat-card"><div class="stat-number">${Math.round((totalAciertos/(totalAciertos+totalFallos+0.001))*100)}%</div>📊 Tasa éxito</div>
+    `;
+  }
+
+  function renderListado(filtro = "") {
+    const container = document.getElementById("conceptosListadoContainer");
+    container.innerHTML = "";
+    const filtroLower = filtro.toLowerCase();
+    for (let c of conceptosData) {
+      const [id, nombre, definicion] = c;
+      const prog = progreso[id] || { aciertos: 0, fallos: 0 };
+      if (filtro && !nombre.toLowerCase().includes(filtroLower) && !definicion.toLowerCase().includes(filtroLower)) continue;
+      const div = document.createElement("div");
+      div.className = "concepto-item";
+      div.innerHTML = `<div class="concepto-titulo">${id}. ${nombre}</div>
+                       <div class="concepto-desc">🧮 ${definicion.substring(0, 150)}${definicion.length > 150 ? '…' : ''}</div>
+                       <span class="badge-progreso">✅ ${prog.aciertos} aciertos · ❌ ${prog.fallos} fallos</span>`;
+      container.appendChild(div);
+    }
+  }
+
+  // --------------------- PRÁCTICA: TRES MODOS -------------------------
+  let currentMode = "concepto_def";
+  let cardsArray = [];
+  let currentCardIndex = 0;
+  let currentCardId = null;
+  // variables modo ordenar
+  let currentOrdenarPalabras = [];
+  let shuffledPalabras = [];
+  let selectedOrder = [];
+  let ordenarRespuestaCorrecta = "";
+
+  const practicaDiv = document.getElementById("practicaContainer");
+
+  function construirCards() {
+    cardsArray = conceptosData.map(item => {
+      const [id, concepto, definicion] = item;
+      if (currentMode === "concepto_def") {
+        return { id, pregunta: `📐 Concepto: ${concepto}`, respuestaCorrecta: definicion };
+      } else if (currentMode === "def_concepto") {
+        let defCorta = definicion.length > 130 ? definicion.substring(0, 127) + "…" : definicion;
+        return { id, pregunta: `✍️ Definición: "${defCorta}"`, respuestaCorrecta: concepto };
+      } else {
+        return { id, concepto, definicion };
+      }
+    });
+  }
+
+  // Flashcard normal
+  function renderFlashcardNormal() {
+    if (!cardsArray.length) return;
+    const card = cardsArray[currentCardIndex];
+    currentCardId = card.id;
+    practicaDiv.innerHTML = `
+      <div class="flashcard">
+        <div class="pregunta">${card.pregunta}</div>
+        <button id="mostrarRespuestaBtn" class="btn">📖 Mostrar respuesta</button>
+        <div id="respuestaDiv" class="respuesta-oculta"><strong>Respuesta:</strong><br>${card.respuestaCorrecta}</div>
+        <div style="margin-top:1rem;">
+          <button id="aciertoBtn" class="btn btn-acierto" disabled>✅ Acierto</button>
+          <button id="falloBtn" class="btn btn-fallo" disabled>❌ Fallo</button>
+        </div>
+        <button id="siguienteCardBtn" class="btn" style="margin-top:1rem;">⏩ Siguiente</button>
+        <p id="infoProgresoCard" style="margin-top:0.8rem;">📊 ${currentMode === "concepto_def" ? "Concepto" : "Definición"} ${card.id} · ✅ ${progreso[card.id]?.aciertos||0} aciertos · ❌ ${progreso[card.id]?.fallos||0} fallos</p>
+      </div>
+    `;
+    document.getElementById("mostrarRespuestaBtn").onclick = () => {
+      const respDiv = document.getElementById("respuestaDiv");
+      if (respDiv.style.display !== "block") {
+        respDiv.style.display = "block";
+        document.getElementById("aciertoBtn").disabled = false;
+        document.getElementById("falloBtn").disabled = false;
+      }
+    };
+    document.getElementById("aciertoBtn").onclick = () => { registrarResultado(currentCardId, true); siguienteNormal(); };
+    document.getElementById("falloBtn").onclick = () => { registrarResultado(currentCardId, false); siguienteNormal(); };
+    document.getElementById("siguienteCardBtn").onclick = () => siguienteNormal();
+  }
+
+  function siguienteNormal() {
+    currentCardIndex = (currentCardIndex + 1) % cardsArray.length;
+    renderFlashcardNormal();
+  }
+
+  // Modo ordenar
+  function inicializarOrdenar() {
+    const card = cardsArray[currentCardIndex];
+    currentCardId = card.id;
+    const definicionOriginal = card.definicion;
+    ordenarRespuestaCorrecta = definicionOriginal;
+    let palabras = definicionOriginal.split(/\s+/).filter(p => p.length > 0);
+    currentOrdenarPalabras = [...palabras];
+    shuffledPalabras = [...palabras];
+    for (let i = shuffledPalabras.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [shuffledPalabras[i], shuffledPalabras[j]] = [shuffledPalabras[j], shuffledPalabras[i]];
+    }
+    selectedOrder = [];
+    renderOrdenarUI();
+  }
+
+  function renderOrdenarUI() {
+    const card = cardsArray[currentCardIndex];
+    const prog = progreso[currentCardId] || { aciertos:0, fallos:0 };
+    let palabrasHTML = shuffledPalabras.map(p => `<button class="palabra-btn" data-palabra="${p.replace(/"/g, '&quot;')}">${p}</button>`).join('');
+    let ordenHTML = selectedOrder.map(p => `<span style="background:#f1f5f9; padding:0.2rem 0.6rem; margin:0.2rem; border-radius:1rem;">${p}</span>`).join(' ');
+    if (ordenHTML === "") ordenHTML = "<em>Haz clic en las palabras en el orden correcto...</em>";
+    practicaDiv.innerHTML = `
+      <div class="flashcard">
+        <h3>🧩 Ordena la definición de:</h3>
+        <div class="pregunta" style="background:#eff6ff;">📌 ${card.concepto}</div>
+        <div class="orden-actual"><strong>Tu orden:</strong><br> ${ordenHTML}</div>
+        <div class="palabras-baraja" id="palabrasBaraja">${palabrasHTML}</div>
+        <div>
+          <button id="resetOrdenBtn" class="btn" style="background:#cbd5e1;">🔁 Reiniciar orden</button>
+          <button id="comprobarOrdenBtn" class="btn btn-primary">✓ Comprobar</button>
+        </div>
+        <button id="siguienteOrdenBtn" class="btn" style="margin-top:1rem;">⏩ Siguiente concepto</button>
+        <p id="infoProgresoCard">✅ ${prog.aciertos} aciertos · ❌ ${prog.fallos} fallos</p>
+        <div id="feedbackOrden" style="margin-top:0.8rem; font-weight:bold;"></div>
+      </div>
+    `;
+    document.querySelectorAll(".palabra-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const palabra = btn.getAttribute("data-palabra");
+        const idx = shuffledPalabras.indexOf(palabra);
+        if (idx !== -1) {
+          shuffledPalabras.splice(idx, 1);
+          selectedOrder.push(palabra);
+          renderOrdenarUI();
+        }
+      });
+    });
+    document.getElementById("resetOrdenBtn").onclick = () => {
+      shuffledPalabras = [...currentOrdenarPalabras];
+      for (let i = shuffledPalabras.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [shuffledPalabras[i], shuffledPalabras[j]] = [shuffledPalabras[j], shuffledPalabras[i]];
+      }
+      selectedOrder = [];
+      renderOrdenarUI();
+    };
+    document.getElementById("comprobarOrdenBtn").onclick = () => {
+      const ordenUsuario = selectedOrder.join(" ");
+      if (ordenUsuario === ordenarRespuestaCorrecta) {
+        document.getElementById("feedbackOrden").innerHTML = "<span style='color:#10b981'>✅ ¡Correcto! Definición ordenada correctamente.</span>";
+        registrarResultado(currentCardId, true);
+        setTimeout(() => siguienteOrdenar(), 1200);
+      } else {
+        document.getElementById("feedbackOrden").innerHTML = `<span style='color:#ef4444'>❌ Incorrecto. La definición correcta es: "${ordenarRespuestaCorrecta}"</span>`;
+        registrarResultado(currentCardId, false);
+        setTimeout(() => siguienteOrdenar(), 2000);
+      }
+      document.getElementById("comprobarOrdenBtn").disabled = true;
+      document.querySelectorAll(".palabra-btn").forEach(b => b.style.pointerEvents = "none");
+      setTimeout(() => {
+        if (document.getElementById("comprobarOrdenBtn")) document.getElementById("comprobarOrdenBtn").disabled = false;
+        document.querySelectorAll(".palabra-btn").forEach(b => b.style.pointerEvents = "auto");
+      }, 2000);
+    };
+    document.getElementById("siguienteOrdenBtn").onclick = () => siguienteOrdenar();
+  }
+
+  function siguienteOrdenar() {
+    currentCardIndex = (currentCardIndex + 1) % cardsArray.length;
+    inicializarOrdenar();
+  }
+
+  function setMode(mode) {
+    currentMode = mode;
+    construirCards();
+    currentCardIndex = 0;
+    if (mode === "ordenar") inicializarOrdenar();
+    else renderFlashcardNormal();
+  }
+
+  // Navegación y eventos
+  function initUI() {
+    document.querySelectorAll(".nav-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const viewId = btn.getAttribute("data-view");
+        document.querySelectorAll(".view").forEach(v => v.classList.remove("active-view"));
+        document.getElementById(viewId).classList.add("active-view");
+        document.querySelectorAll(".nav-btn").forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+        if (viewId === "listado") renderListado(document.getElementById("filtroListado").value);
+        if (viewId === "dashboard") renderDashboard();
+        if (viewId === "practica") setMode(currentMode);
+      });
+    });
+    document.getElementById("modoConceptoDef").addEventListener("click", () => {
+      currentMode = "concepto_def";
+      setMode("concepto_def");
+      document.getElementById("modoConceptoDef").classList.add("btn-primary");
+      document.getElementById("modoDefConcepto").classList.remove("btn-primary");
+      document.getElementById("modoOrdenar").classList.remove("btn-primary");
+    });
+    document.getElementById("modoDefConcepto").addEventListener("click", () => {
+      currentMode = "def_concepto";
+      setMode("def_concepto");
+      document.getElementById("modoDefConcepto").classList.add("btn-primary");
+      document.getElementById("modoConceptoDef").classList.remove("btn-primary");
+      document.getElementById("modoOrdenar").classList.remove("btn-primary");
+    });
+    document.getElementById("modoOrdenar").addEventListener("click", () => {
+      currentMode = "ordenar";
+      setMode("ordenar");
+      document.getElementById("modoOrdenar").classList.add("btn-primary");
+      document.getElementById("modoConceptoDef").classList.remove("btn-primary");
+      document.getElementById("modoDefConcepto").classList.remove("btn-primary");
+    });
+    document.getElementById("resetProgresoBtn").addEventListener("click", () => {
+      if (confirm("¿Reiniciar todo el progreso? Se perderán aciertos y fallos.")) {
+        for (let i = 1; i <= 100; i++) progreso[i] = { aciertos: 0, fallos: 0 };
+        guardarProgreso();
+        renderDashboard();
+        renderListado(document.getElementById("filtroListado")?.value || "");
+        if (currentMode === "ordenar") inicializarOrdenar();
+        else if (currentMode !== "ordenar") renderFlashcardNormal();
+      }
+    });
+    document.getElementById("filtroListado").addEventListener("input", (e) => renderListado(e.target.value));
+  }
+
+  window.addEventListener("DOMContentLoaded", () => {
+    cargarProgreso();
+    construirCards();
+    setMode("concepto_def");
+    renderDashboard();
+    renderListado();
+    initUI();
+  });
+</script>
+</body>
+</html>

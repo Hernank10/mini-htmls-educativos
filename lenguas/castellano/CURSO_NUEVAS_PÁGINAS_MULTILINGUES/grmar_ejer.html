@@ -1,0 +1,128 @@
+<!DOCTYPE html><html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Plataforma Educativa - Escritura</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light"><div class="container py-4">
+<h1 class="text-center mb-4">🎓 Plataforma LMS - Escritura Castellana</h1><!-- LOGIN --><div id="login" class="card p-4 mb-4">
+<h4>Ingreso</h4>
+<select id="role" class="form-select mb-2">
+<option value="student">Estudiante</option>
+<option value="teacher">Profesor</option>
+</select>
+<input id="username" class="form-control mb-2" placeholder="Nombre">
+<button class="btn btn-primary" onclick="login()">Entrar</button>
+</div><!-- DASHBOARD --><div id="dashboard" style="display:none;">
+<h3 id="welcome"></h3><div id="studentPanel" style="display:none;">
+<h4>📚 Lecciones</h4>
+<div id="lessons" class="row"></div>
+</div><div id="teacherPanel" style="display:none;">
+<h4>🧑‍🏫 Crear Lección</h4>
+<input id="lessonTitle" class="form-control mb-2" placeholder="Título">
+<textarea id="lessonContent" class="form-control mb-2" placeholder="Contenido"></textarea>
+<button class="btn btn-success" onclick="addLesson()">Guardar</button><h4 class="mt-4">📋 Lecciones creadas</h4>
+<ul id="lessonList" class="list-group"></ul>
+</div></div>
+</div><script>
+let currentUser = null;
+
+const defaultLessons = [
+// 50 MORFOSINTÁCTICAS
+"Sujeto y predicado","Concordancia verbal","Concordancia nominal","Oraciones simples","Oraciones compuestas",
+"Coordinación","Subordinación","Yuxtaposición","Elipsis","Sustitución pronominal",
+"Orden lógico","Inversión sintáctica","Paralelismo","Enumeración","Repetición controlada",
+"Conectores de adición","Conectores de causa","Conectores de consecuencia","Conectores de contraste","Conectores temporales",
+"Tiempos verbales","Modo subjuntivo","Modo indicativo","Infinitivo","Gerundio","Participio",
+"Evitar ambigüedad","Evitar redundancia","Frases breves","Puntuación",
+"Anáfora","Catáfora","Sinónimos","Repetición léxica",
+"Subordinadas sustantivas","Subordinadas adjetivas","Subordinadas adverbiales","Incisos","Aposiciones",
+"Ortografía","Tildes","Signos de puntuación","Mayúsculas",
+"Ritmo","Variación","Pausas","Encadenamiento",
+"Polisíndeton","Asíndeton","Hipérbaton",
+
+// 50 SEMÁNTICAS
+"Vocabulario específico","Evitar vaguedad","Tecnicismos","Palabras concretas",
+"Sinonimia","Antonimia","Hiperonimia","Hiponimia",
+"Metáfora","Símil","Personificación","Hipérbole","Metonimia","Ironía",
+"Gradación","Énfasis","Reiteración",
+"Unidad temática","Progresión temática","Relación lógica",
+"Idea principal","Ideas secundarias","Ejemplos","Comparación",
+"Evidencias","Analogías","Refutación",
+"Registro formal","Registro informal","Adecuación",
+"Imágenes mentales","Simbolismo","Narración evocadora",
+"Lenguaje directo","Lenguaje figurado","Claridad",
+"Apelación emocional","Apelación lógica","Apelación ética",
+"Interpretación","Análisis","Síntesis",
+"Coherencia global","Cohesión temática","Consistencia",
+"Polisemia","Intertextualidad","Ambigüedad intencional","Estilo propio"
+];
+
+let lessons = JSON.parse(localStorage.getItem("lessons")) || defaultLessons.map(t => {
+return {
+ title: t,
+ content: "Explicación de la técnica: " + t + ". Ejemplo práctico de escritura en contexto académico."
+};
+});
+
+function login(){
+const name = document.getElementById("username").value;
+const role = document.getElementById("role").value;
+if(!name) return alert("Escribe tu nombre");
+
+currentUser = {name, role};
+document.getElementById("login").style.display = "none";
+document.getElementById("dashboard").style.display = "block";
+document.getElementById("welcome").innerText = `Bienvenido ${name}`;
+
+if(role === "student"){
+document.getElementById("studentPanel").style.display = "block";
+renderLessons();
+}else{
+document.getElementById("teacherPanel").style.display = "block";
+renderTeacherLessons();
+}
+}
+
+function addLesson(){
+const title = document.getElementById("lessonTitle").value;
+const content = document.getElementById("lessonContent").value;
+if(!title || !content) return alert("Completa los campos");
+
+lessons.push({title, content});
+localStorage.setItem("lessons", JSON.stringify(lessons));
+
+renderTeacherLessons();
+}
+
+function renderLessons(){
+const container = document.getElementById("lessons");
+container.innerHTML = "";
+lessons.forEach((l,i)=>{
+container.innerHTML += `
+<div class="col-md-4 mb-3">
+<div class="card">
+<div class="card-body">
+<h5>${l.title}</h5>
+<p>${l.content.substring(0,80)}...</p>
+<button class="btn btn-primary" onclick="study(${i})">Estudiar</button>
+</div>
+</div>
+</div>`;
+});
+}
+
+function renderTeacherLessons(){
+const list = document.getElementById("lessonList");
+list.innerHTML = "";
+lessons.forEach((l)=>{
+list.innerHTML += `<li class="list-group-item">${l.title}</li>`;
+});
+}
+
+function study(i){
+alert(lessons[i].content);
+}
+</script><script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script></body>
+</html>

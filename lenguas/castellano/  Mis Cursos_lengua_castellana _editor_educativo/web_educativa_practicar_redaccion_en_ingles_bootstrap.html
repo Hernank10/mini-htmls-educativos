@@ -1,0 +1,406 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Práctica de Redacción en Inglés — Aula Bootstrap</title>
+  <!-- Bootstrap 5 CDN -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body { padding-top: 4.5rem; }
+    .example-card { white-space: pre-wrap; }
+    .rule-badge { font-size: .85rem; }
+    .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, "Roboto Mono", monospace; }
+  </style>
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top">
+  <div class="container">
+    <a class="navbar-brand" href="#">Aula Redacción Inglés</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navMenu">
+      <ul class="navbar-nav ms-auto">
+        <li class="nav-item"><a class="nav-link" href="#modules">Módulos</a></li>
+        <li class="nav-item"><a class="nav-link" href="#practice">Práctica</a></li>
+        <li class="nav-item"><a class="nav-link" href="#notebook">Cuaderno</a></li>
+        <li class="nav-item"><a class="nav-link" href="#about">Acerca</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<main class="container">
+  <div class="row">
+    <div class="col-lg-4">
+      <div class="card mb-3">
+        <div class="card-body">
+          <h5 class="card-title">Menú de módulos</h5>
+          <p class="card-text">Selecciona una regla para ver explicación, ejemplos y ejercicios interactivos.</p>
+          <div id="moduleList" class="list-group"></div>
+        </div>
+      </div>
+
+      <div class="card mb-3">
+        <div class="card-body">
+          <h6>Controles</h6>
+          <button id="btnNewExercise" class="btn btn-outline-primary btn-sm mb-2">Ejercicio aleatorio</button>
+          <button id="btnExport" class="btn btn-outline-success btn-sm mb-2">Exportar cuaderno (JSON)</button>
+          <button id="btnClearNotes" class="btn btn-outline-danger btn-sm mb-2">Borrar cuaderno</button>
+          <div class="form-check mt-2">
+            <input class="form-check-input" type="checkbox" id="autoShowSolution" checked>
+            <label class="form-check-label" for="autoShowSolution">Mostrar solución automáticamente</label>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-body">
+          <h6>Progreso (sesión)</h6>
+          <p class="mb-1">Ejercicios resueltos: <span id="statSolved">0</span></p>
+          <p class="mb-1">Aciertos: <span id="statCorrect">0</span></p>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="col-lg-8">
+      <section id="modules" class="mb-4">
+        <div class="card">
+          <div class="card-body">
+            <h4 class="card-title">Explicación de la regla</h4>
+            <p id="ruleTitle" class="h5"></p>
+            <p id="ruleDesc"></p>
+            <div class="mb-3">
+              <h6>Ejemplo con error</h6>
+              <div class="alert alert-danger example-card" id="exampleError"></div>
+            </div>
+            <div class="mb-3">
+              <h6>Corrección modelo</h6>
+              <div class="alert alert-success example-card" id="exampleCorrect"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="practice" class="mb-4">
+        <div class="card">
+          <div class="card-body">
+            <h4 class="card-title">Práctica</h4>
+            <p class="text-muted">Crea tu propio ejemplo aplicando la regla seleccionada. Puedes escribir libremente o elegir opciones cuando estén disponibles.</p>
+
+            <div id="mcqArea" class="mb-3 d-none">
+              <label class="form-label">Elige la respuesta correcta</label>
+              <div id="mcqOptions" class="list-group"></div>
+            </div>
+
+            <div class="mb-3">
+              <label for="userExample" class="form-label">Tu ejemplo (sujeto/ verbo distinto):</label>
+              <textarea id="userExample" class="form-control" rows="3" placeholder="Escribe tu ejemplo en inglés..."></textarea>
+            </div>
+
+            <div class="d-flex gap-2">
+              <button id="btnCheck" class="btn btn-primary">Comprobar</button>
+              <button id="btnSaveNote" class="btn btn-outline-secondary">Guardar en cuaderno</button>
+              <button id="btnShowModel" class="btn btn-outline-info">Mostrar modelo</button>
+            </div>
+
+            <div id="feedback" class="mt-3"></div>
+
+          </div>
+        </div>
+      </section>
+
+      <section id="notebook" class="mb-4">
+        <div class="card">
+          <div class="card-body">
+            <h4 class="card-title">Cuaderno de práctica</h4>
+            <p class="text-muted">Aquí se guardan tus ejemplos. Se almacenan localmente en tu navegador.</p>
+            <ul id="notesList" class="list-group"></ul>
+          </div>
+        </div>
+      </section>
+
+      <section id="about" class="mb-4">
+        <div class="card">
+          <div class="card-body">
+            <h4 class="card-title">Acerca del recurso</h4>
+            <p>Esta página reúne los siete módulos creados para practicar la redacción en inglés: evitar comma splice, elegir conjunciones, evitar traducción literal, acortar oraciones largas, revisar puntuación, no omitir sujeto o verbo y usar conectores formales. Cada módulo incluye explicación, ejemplos y ejercicios interactivos.</p>
+            <p class="mb-0"><small class="text-muted">Desarrollado como material pedagógico. Datos y ejemplos adaptados para práctica autodidacta.</small></p>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </div>
+</main>
+
+<footer class="bg-light py-3 mt-4">
+  <div class="container text-center small">© Proyecto educativo — Practicar Redacción en Inglés</div>
+</footer>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+// ====== Datos de los módulos y ejercicios (basados en lo desarrollado) ======
+const modules = [
+  {
+    id: 1,
+    title: 'Evitar el comma splice',
+    desc: 'No unir dos oraciones independientes sólo con una coma. Usa conjunción, punto y coma o separa en dos oraciones.',
+    error: 'I studied hard, I passed the test.',
+    correct: 'I studied hard, and I passed the test. / I studied hard; I passed the test. / I studied hard. I passed the test.',
+    type: 'free' ,
+    hints: ['Usa and, so o punto y coma.']
+  },
+  {
+    id: 2,
+    title: 'Seleccionar la conjunción adecuada',
+    desc: 'Escoge la conjunción que refleje la relación lógica (contraste, causa, consecuencia, adición, alternativa).',
+    error: 'I was tired, I didn\'t go to the party.',
+    correct: 'I was tired, so I didn\'t go to the party. (or: ...; I didn\'t go to the party.)',
+    type: 'mcq',
+    options: ['and','but','so'],
+    answer: 'so',
+    hints: ['Observa la relación: consecuencia.']
+  },
+  {
+    id: 3,
+    title: 'Evitar la traducción literal',
+    desc: 'No traduzcas palabra por palabra. Aprende expresiones y estructuras naturales en inglés.',
+    error: 'Estoy embarazado. -> I am embarrassed.',
+    correct: 'I am pregnant. ("embarrassed" es un falso cognado)',
+    type: 'mcq',
+    options: ['I am embarrassed.','I am pregnant.'],
+    answer: 'I am pregnant.',
+    hints: ['Falso cognado: embarrassed ≠ embarazado']
+  },
+  {
+    id: 4,
+    title: 'Evitar oraciones excesivamente largas',
+    desc: 'Divide oraciones largas en frases más cortas y claras; elimina redundancias.',
+    error: 'I went to the store and I bought milk and I met my friend and we talked for an hour and I was late.',
+    correct: 'I went to the store and bought milk. Then I met my friend, and we talked for an hour, so I was late.',
+    type: 'free',
+    hints: ['Divide en oraciones y usa conectores variados.']
+  },
+  {
+    id: 5,
+    title: 'Revisar la puntuación',
+    desc: 'Usa coma + conjunción, punto y coma o punto según corresponda. Aprende la colocación de comillas, Oxford comma y el uso de however.',
+    error: 'I like coffee, I don\'t like tea.',
+    correct: 'I like coffee; I don\'t like tea. OR I like coffee, and I don\'t like tea.',
+    type: 'free',
+    hints: ['¿Es comma splice? Considera ; o and.']
+  },
+  {
+    id: 6,
+    title: 'No omitir sujeto o verbo',
+    desc: 'En inglés el sujeto y el verbo son necesarios; evita fragmentos.',
+    error: 'Went to the park.',
+    correct: 'I went to the park.',
+    type: 'free',
+    hints: ['Asegúrate de incluir sujeto (I, He, She, They) y verbo.']
+  },
+  {
+    id: 7,
+    title: 'Usar conectores formales',
+    desc: 'Utiliza moreover, however, therefore, for example, etc., con la puntuación adecuada.',
+    error: 'The experiment was successful, however it needs to be repeated.',
+    correct: 'The experiment was successful; however, it needs to be repeated.',
+    type: 'free',
+    hints: ['When using however between clauses use ; however, ...']
+  }
+];
+
+// Estado
+let currentModule = modules[0];
+let stats = { solved: 0, correct: 0 };
+let notes = JSON.parse(localStorage.getItem('writing_notes_v1')||'[]');
+
+// DOM refs
+const moduleList = document.getElementById('moduleList');
+const ruleTitle = document.getElementById('ruleTitle');
+const ruleDesc = document.getElementById('ruleDesc');
+const exampleError = document.getElementById('exampleError');
+const exampleCorrect = document.getElementById('exampleCorrect');
+const mcqArea = document.getElementById('mcqArea');
+const mcqOptions = document.getElementById('mcqOptions');
+const userExample = document.getElementById('userExample');
+const btnCheck = document.getElementById('btnCheck');
+const btnSaveNote = document.getElementById('btnSaveNote');
+const btnShowModel = document.getElementById('btnShowModel');
+const feedback = document.getElementById('feedback');
+const notesList = document.getElementById('notesList');
+const statSolved = document.getElementById('statSolved');
+const statCorrect = document.getElementById('statCorrect');
+const btnNewExercise = document.getElementById('btnNewExercise');
+const autoShowSolution = document.getElementById('autoShowSolution');
+const btnExport = document.getElementById('btnExport');
+const btnClearNotes = document.getElementById('btnClearNotes');
+
+// Inicializar lista de módulos
+function renderModuleList(){
+  moduleList.innerHTML = '';
+  modules.forEach(m=>{
+    const a = document.createElement('button');
+    a.className = 'list-group-item list-group-item-action';
+    a.textContent = m.title;
+    a.onclick = ()=> selectModule(m.id);
+    moduleList.appendChild(a);
+  });
+}
+
+function selectModule(id){
+  currentModule = modules.find(m=>m.id===id);
+  ruleTitle.textContent = currentModule.title;
+  ruleDesc.textContent = currentModule.desc;
+  exampleError.textContent = currentModule.error;
+  exampleCorrect.textContent = autoShowSolution.checked ? currentModule.correct : 'Solución oculta. Pulsa "Mostrar modelo".';
+
+  // MCQ setup
+  if(currentModule.type === 'mcq'){
+    mcqArea.classList.remove('d-none');
+    mcqOptions.innerHTML = '';
+    currentModule.options.forEach((opt,i)=>{
+      const b = document.createElement('button');
+      b.className = 'list-group-item list-group-item-action';
+      b.textContent = opt;
+      b.onclick = ()=>{
+        userExample.value = opt; // fill
+        checkAnswer(true);
+      };
+      mcqOptions.appendChild(b);
+    });
+  } else {
+    mcqArea.classList.add('d-none');
+    mcqOptions.innerHTML = '';
+  }
+
+  // limpiar feedback y textarea
+  feedback.innerHTML = '';
+  userExample.value = '';
+}
+
+function randomExercise(){
+  const idx = Math.floor(Math.random()*modules.length);
+  selectModule(modules[idx].id);
+}
+
+function checkAnswer(fromMCQ=false){
+  const ans = userExample.value.trim();
+  if(!ans){
+    feedback.innerHTML = '<div class="alert alert-warning">Escribe una corrección para poder comprobar.</div>';
+    return;
+  }
+
+  stats.solved++;
+  statSolved.textContent = stats.solved;
+
+  let correct = false;
+  // MCQ or exact match
+  if(currentModule.type === 'mcq'){
+    if(ans.toLowerCase() === (currentModule.answer||'').toLowerCase()) correct = true;
+  } else {
+    // heurística simple: verificar que la respuesta sea distinta al error y contenga sujeto+verbo en free types
+    if(ans.toLowerCase() !== currentModule.error.toLowerCase()){
+      if(currentModule.id === 6){ // no omitir sujeto/verbo -> simple check
+        correct = /\b(I|He|She|They|We|You|It|He\w*|She\w*)\b/i.test(ans) && /\b\w+\b\s+\b\w+\b/.test(ans);
+      } else if(currentModule.id === 4){ // acortar oraciones -> check fewer words
+        correct = ans.split(/\s+/).length < currentModule.error.split(/\s+/).length;
+      } else {
+        // accept if not identical and includes some verbs (heuristic)
+        correct = /\b(is|are|was|were|have|has|had|went|studied|bought|decided|liked|did|do|does|liked)\b/i.test(ans) || ans.split(' ').length<40;
+      }
+    }
+  }
+
+  if(correct){
+    stats.correct++;
+    statCorrect.textContent = stats.correct;
+    feedback.innerHTML = '<div class="alert alert-success">✅ ¡Bien! Tu corrección parece adecuada.</div>';
+  } else {
+    feedback.innerHTML = '<div class="alert alert-danger">⚠️ Esa corrección no parece resolver completamente el problema. Revisa la regla y prueba otra vez.</div>';
+  }
+
+  if(autoShowSolution.checked) feedback.innerHTML += `<div class="mt-2"><strong>Solución modelo:</strong><div class="alert alert-secondary mt-1">${currentModule.correct}</div></div>`;
+}
+
+function saveNote(){
+  const text = userExample.value.trim();
+  if(!text){
+    feedback.innerHTML = '<div class="alert alert-warning">Escribe algo para guardar en el cuaderno.</div>';
+    return;
+  }
+  const note = {
+    id: Date.now(),
+    module: currentModule.title,
+    input: text,
+    model: currentModule.correct
+  };
+  notes.unshift(note);
+  localStorage.setItem('writing_notes_v1', JSON.stringify(notes));
+  renderNotes();
+  feedback.innerHTML = '<div class="alert alert-success">Guardado en tu cuaderno.</div>';
+}
+
+function renderNotes(){
+  notesList.innerHTML = '';
+  if(!notes.length){
+    notesList.innerHTML = '<li class="list-group-item">(Cuaderno vacío)</li>';
+    return;
+  }
+  notes.forEach(n=>{
+    const li = document.createElement('li');
+    li.className = 'list-group-item';
+    li.innerHTML = `<div class="d-flex w-100 justify-content-between"><h6 class="mb-1">${n.module}</h6><small>${new Date(n.id).toLocaleString()}</small></div><p class="mb-1 mono">${n.input}</p><small class="text-muted">Modelo: ${n.model}</small><div class="mt-2"><button class="btn btn-sm btn-outline-danger" onclick="deleteNote(${n.id})">Borrar</button></div>`;
+    notesList.appendChild(li);
+  });
+}
+
+function deleteNote(id){
+  notes = notes.filter(n=>n.id!==id);
+  localStorage.setItem('writing_notes_v1', JSON.stringify(notes));
+  renderNotes();
+}
+
+function exportNotes(){
+  const dataStr = JSON.stringify(notes, null, 2);
+  const blob = new Blob([dataStr], {type: 'application/json'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'cuaderno_practica_redaccion.json';
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+function clearNotes(){
+  if(confirm('¿Borrar todo el cuaderno?')){
+    notes = [];
+    localStorage.removeItem('writing_notes_v1');
+    renderNotes();
+  }
+}
+
+// Eventos
+btnCheck.addEventListener('click', ()=> checkAnswer());
+btnSaveNote.addEventListener('click', ()=> saveNote());
+btnShowModel.addEventListener('click', ()=> { exampleCorrect.textContent = currentModule.correct; });
+btnNewExercise.addEventListener('click', randomExercise);
+btnExport.addEventListener('click', exportNotes);
+btnClearNotes.addEventListener('click', clearNotes);
+
+// Init
+renderModuleList();
+selectModule(1);
+renderNotes();
+
+</script>
+
+</body>
+</html>

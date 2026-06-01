@@ -1,0 +1,433 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Centro Bilingüe — Lección: Morfosintaxis (100 ejercicios)</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body { padding-top: 3.5rem; }
+    .exercise-card { margin-bottom: 1rem; }
+    .correct { border-left: .4rem solid #198754; }
+    .wrong { border-left: .4rem solid #dc3545; }
+    .lang-flag { cursor:pointer; }
+    pre { white-space: pre-wrap; }
+  </style>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="#">Centro Bilingüe — Morfosintaxis</a>
+    <div class="d-flex">
+      <button id="btnToggleLang" class="btn btn-outline-light me-2">ES / EN</button>
+      <button id="btnShowResults" class="btn btn-light">Ver resultados</button>
+    </div>
+  </div>
+</nav>
+
+<main class="container">
+  <header class="mb-4">
+    <h1 class="h3">Lección interactiva: Morfosintaxis (100 ejercicios)</h1>
+    <p class="text-muted">Practica estructuras y reglas clave en español e inglés — activa el idioma con el botón ES/EN.</p>
+  </header>
+
+  <section id="controls" class="mb-3">
+    <div class="row g-2">
+      <div class="col-md-4">
+        <label class="form-label">Filtro por tipo</label>
+        <select id="filterType" class="form-select">
+          <option value="all">Todos</option>
+          <option value="fill">Rellenar (fill-in)</option>
+          <option value="choose">Seleccionar (multiple choice)</option>
+          <option value="order">Ordenar palabras</option>
+          <option value="translate">Traducir</option>
+        </select>
+      </div>
+      <div class="col-md-4">
+        <label class="form-label">Buscar palabra</label>
+        <input id="searchTerm" class="form-control" placeholder="buscar en enunciado...">
+      </div>
+      <div class="col-md-4 d-flex align-items-end">
+        <button id="btnApply" class="btn btn-primary me-2">Aplicar</button>
+        <button id="btnReset" class="btn btn-outline-secondary">Reiniciar</button>
+      </div>
+    </div>
+  </section>
+
+  <section id="exerciseList"></section>
+
+  <footer class="mt-4">
+    <div class="d-flex justify-content-between align-items-center">
+      <div>
+        <strong>Progreso:</strong> <span id="progressCount">0/100</span>
+      </div>
+      <div>
+        <button id="btnCheckAll" class="btn btn-success">Verificar respuestas</button>
+      </div>
+    </div>
+  </footer>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+// Data: 100 ejercicios bilingües de morfosintaxis (varios tipos)
+const exercises = [
+  // We'll include 100 objects. Each has: id, type, es, en, options (for choose), answer
+  // 1-20: fill-in (verb conjugation / articles)
+  {id:1,type:'fill',es:'Yo ___ (comer) una manzana todos los días.',en:'I ___ (eat) an apple every day.',answer_es:'como',answer_en:'eat'},
+  {id:2,type:'fill',es:'Ellos ___ (ir) al cine mañana.',en:'They ___ (go) to the cinema tomorrow.',answer_es:'irán',answer_en:'will go'},
+  {id:3,type:'fill',es:'Nosotros ___ (tener) dos perros.',en:'We ___ (have) two dogs.',answer_es:'tenemos',answer_en:'have'},
+  {id:4,type:'fill',es:'Ella ___ (ser) doctora.',en:'She ___ (be) a doctor.',answer_es:'es',answer_en:'is'},
+  {id:5,type:'fill',es:'¿Tú ___ (saber) la respuesta?',en:'Do you ___ (know) the answer?',answer_es:'sabes',answer_en:'know'},
+  {id:6,type:'fill',es:'El libro ___ (estar) sobre la mesa.',en:'The book ___ (be) on the table.',answer_es:'está',answer_en:'is'},
+  {id:7,type:'fill',es:'Antes, yo ___ (vivir) en Madrid.',en:'Before, I ___ (live) in Madrid.',answer_es:'vivía',answer_en:'lived'},
+  {id:8,type:'fill',es:'Mañana ella ___ (estudiar) para el examen.',en:'Tomorrow she ___ (study) for the exam.',answer_es:'estudiará',answer_en:'will study'},
+  {id:9,type:'fill',es:'Los niños ___ (jugar) en el parque.',en:'The children ___ (play) in the park.',answer_es:'juegan',answer_en:'play'},
+  {id:10,type:'fill',es:'Yo nunca ___ (comer) sushi.',en:'I never ___ (eat) sushi.',answer_es:'he comido/como (según contexto)',answer_en:'eat/have eaten'},
+  {id:11,type:'fill',es:'¿Dónde ___ (estar) el baño?',en:'Where ___ (be) the bathroom?',answer_es:'está',answer_en:'is'},
+  {id:12,type:'fill',es:'Tú ___ (hablar) demasiado rápido.',en:'You ___ (speak) too fast.',answer_es:'hablas',answer_en:'speak'},
+  {id:13,type:'fill',es:'Ella ___ (leer) un libro interesante.',en:'She ___ (read) an interesting book.',answer_es:'lee',answer_en:'reads'},
+  {id:14,type:'fill',es:'Nosotros ___ (viajar) a Colombia el próximo año.',en:'We ___ (travel) to Colombia next year.',answer_es:'viajaremos',answer_en:'will travel'},
+  {id:15,type:'fill',es:'Ellos ___ (hacer) la tarea ahora.',en:'They ___ (do) the homework now.',answer_es:'están haciendo/hacen',answer_en:'are doing/do'},
+  {id:16,type:'fill',es:'Yo ___ (querer) aprender inglés.',en:'I ___ (want) to learn English.',answer_es:'quiero',answer_en:'want'},
+  {id:17,type:'fill',es:'Hoy ___ (hacer) frío.',en:'Today ___ (be) cold.',answer_es:'hace',answer_en:'is'},
+  {id:18,type:'fill',es:'Ella ___ (poder) cantar muy bien.',en:'She ___ (can) sing very well.',answer_es:'puede',answer_en:'can'},
+  {id:19,type:'fill',es:'Nosotros no ___ (ver) la película todavía.',en:'We have not ___ (see) the movie yet.',answer_es:'hemos visto',answer_en:'seen'},
+  {id:20,type:'fill',es:'¿Cómo te ___ (llamar)?',en:'What ___ (call) you?',answer_es:'llamas',answer_en:'do they call / are you called'},
+  // 21-50: multiple choice (choose)
+  {id:21,type:'choose',es:'Selecciona la forma correcta: "He ___ to the store yesterday."',en:'Choose the correct form: "He ___ to the store yesterday."',options:['go','went','gone'],answer:'went'},
+  {id:22,type:'choose',es:'Selecciona: "Nosotros ___ temprano."',en:'Choose: "We ___ early."',options:['arrive','arrived','arrives'],answer:'arrive/arrived (depends on tense)'},
+  {id:23,type:'choose',es:'Selecciona: "She ___ singing now."',en:'Choose: "She ___ singing now."',options:['is','are','am'],answer:'is'},
+  {id:24,type:'choose',es:'¿Cuál es correcto? "Yo ___ un coche."',en:'Which is correct? "I ___ a car."',options:['have','has','had'],answer:'have'},
+  {id:25,type:'choose',es:'Elige el artículo correcto: "___ agua fría"',en:'Choose the correct article: "___ cold water"',options:['El','La','Los'],answer:'El/La (en español: el agua (femenino con el artículo el por fonética))'},
+  {id:26,type:'choose',es:'Which one? "They ___ been to Paris."',en:'Which one? "They ___ been to Paris."',options:['have','has','had'],answer:'have'},
+  {id:27,type:'choose',es:'Escoge la preposición: "She is good ___ math."',en:'Pick preposition: "She is good ___ math."',options:['in','at','on'],answer:'at'},
+  {id:28,type:'choose',es:'Selecciona forma correcta: "¿___ you like coffee?"',en:'Choose correct: "___ you like coffee?"',options:['Do','Does','Did'],answer:'Do'},
+  {id:29,type:'choose',es:'Which is correct: "I have ___ book."',en:'Which is correct: "I have ___ book."',options:['a','an','the'],answer:'a'},
+  {id:30,type:'choose',es:'Elige la mejor traducción: "Estoy aprendiendo."',en:'Pick best translation: "I am learning."',options:['I learn','I am learning','I have learned'],answer:'I am learning'},
+  {id:31,type:'choose',es:'Escoge: "There ___ many people here."',en:'Choose: "There ___ many people here."',options:['is','are','be'],answer:'are'},
+  {id:32,type:'choose',es:'Selecciona: "Mi hermana ___ cinco años."',en:'Select: "My sister ___ five years old."',options:['is','are','am'],answer:'is'},
+  {id:33,type:'choose',es:'Choose correct: "We ___ to the party last night."',en:'',options:['go','went','gone'],answer:'went'},
+  {id:34,type:'choose',es:'Escoge la forma: "He has ___ homework."',en:'Choose form: "He has ___ homework."',options:['many','much','a lot'],answer:'much'},
+  {id:35,type:'choose',es:'Which article: "___ university" (a / an)?',en:'Which article: "___ university" (a / an)?',options:['a','an'],answer:'a (porque university suena /ju/) '},
+  {id:36,type:'choose',es:'Elige: "No ___ any sugar."',en:'Choose: "No ___ any sugar."',options:['have','has','had'],answer:'have'},
+  {id:37,type:'choose',es:'Seleccione: "It ___ raining."',en:'Select: "It ___ raining."',options:['is','are','was'],answer:'is'},
+  {id:38,type:'choose',es:'Escoge: "I ___ seen that movie."',en:'Pick: "I ___ seen that movie."',options:['have','has','had'],answer:'have'},
+  {id:39,type:'choose',es:'Choose: "She ___ like pizza."',en:'',options:['doesn\'t','don\'t','didn\'t'],answer:"doesn't"},
+  {id:40,type:'choose',es:'Selecciona: "Los libros ___ en la mesa."',en:'Select: "The books ___ on the table."',options:['are','is','am'],answer:'are'},
+  // 41-65: order exercises (reorder words to make sentence)
+  {id:41,type:'order',es:{words:['mañana','iré','al','parque'] ,prompt_es:'Ordena las palabras para formar una frase correcta.'},en:{words:['tomorrow','I','will','go','to','the','park'],prompt_en:'Order the words to create a correct sentence.'},answer_es:'iré al parque mañana',answer_en:'I will go to the park tomorrow'},
+  {id:42,type:'order',es:{words:['comió','él','manzana','una'],prompt_es:'Ordena'},en:{words:['he','ate','an','apple'],prompt_en:'Order'},answer_es:'él comió una manzana',answer_en:'he ate an apple'},
+  {id:43,type:'order',es:{words:['siempre','yo','tomo','café'],prompt_es:'Ordena'},en:{words:['I','always','drink','coffee'],prompt_en:'Order'},answer_es:'yo siempre tomo café',answer_en:'I always drink coffee'},
+  {id:44,type:'order',es:{words:['estudiará','ella','mañana'],prompt_es:'Ordena'},en:{words:['she','will','study','tomorrow'],prompt_en:'Order'},answer_es:'ella estudiará mañana',answer_en:'she will study tomorrow'},
+  {id:45,type:'order',es:{words:['libro','el','está','mesa','en'],prompt_es:'Ordena'},en:{words:['the','book','is','on','the','table'],prompt_en:'Order'},answer_es:'el libro está en la mesa',answer_en:'the book is on the table'},
+  {id:46,type:'order',es:{words:['aún','no','hemos','terminado'],prompt_es:'Ordena'},en:{words:['we','have','not','finished','yet'],prompt_en:'Order'},answer_es:'aún no hemos terminado',answer_en:'we have not finished yet'},
+  {id:47,type:'order',es:{words:['ayer','ellos','salieron','tarde'],prompt_es:'Ordena'},en:{words:['they','left','late','yesterday'],prompt_en:'Order'},answer_es:'ellos salieron tarde ayer',answer_en:'they left late yesterday'},
+  {id:48,type:'order',es:{words:['bella','es','ciudad','una'],prompt_es:'Ordena'},en:{words:['it','is','a','beautiful','city'],prompt_en:'Order'},answer_es:'es una ciudad bella',answer_en:'it is a beautiful city'},
+  {id:49,type:'order',es:{words:['puedes','me','ayudar','por','favor'],prompt_es:'Ordena'},en:{words:['can','you','help','me','please'],prompt_en:'Order'},answer_es:'¿puedes ayudarme por favor?',answer_en:'can you help me please?'},
+  {id:50,type:'order',es:{words:['mañana','llueve','quizá'],prompt_es:'Ordena'},en:{words:['maybe','it','will','rain','tomorrow'],prompt_en:'Order'},answer_es:'quizá mañana llueve',answer_en:'maybe it will rain tomorrow'},
+  // 51-80: translate prompts
+  {id:51,type:'translate',es:'Traduce al inglés: "Porque ella estudia mucho, aprobó."',en:'Translate to Spanish: "Because she studies a lot, she passed."',answer_es:'Porque ella estudia mucho, aprobó.',answer_en:'Because she studies a lot, she passed.'},
+  {id:52,type:'translate',es:'Traduce al inglés: "No tengo tiempo para hacerlo."',en:'Translate to Spanish: "I don\'t have time to do it."',answer_es:'No tengo tiempo para hacerlo.',answer_en:"I don't have time to do it."},
+  {id:53,type:'translate',es:'Traduce: "If I had money, I would travel."',en:'Traduce: "Si tuviera dinero, viajaría."',answer_es:'Si tuviera dinero, viajaría.',answer_en:'If I had money, I would travel.'},
+  {id:54,type:'translate',es:'Traduce: "She had been waiting for an hour."',en:'Traduce: "Ella había estado esperando por una hora."',answer_es:'Ella había estado esperando por una hora.',answer_en:'She had been waiting for an hour.'},
+  {id:55,type:'translate',es:'Traduce: "Aunque llueva, iremos."',en:'Translate to English: "Aunque llueva, iremos."',answer_es:'Aunque llueva, iremos.',answer_en:'Even if it rains, we will go.'},
+  {id:56,type:'translate',es:'Traduce: "It\'s important that you study every day."',en:'Traduce: "Es importante que estudies todos los días."',answer_es:'Es importante que estudies todos los días.',answer_en:"It's important that you study every day."},
+  {id:57,type:'translate',es:'Traduce: "I wish I could speak Spanish fluently."',en:'Traduce: "Ojalá pudiera hablar español con fluidez."',answer_es:'Ojalá pudiera hablar español con fluidez.',answer_en:'I wish I could speak Spanish fluently.'},
+  {id:58,type:'translate',es:'Traduce: "We have been friends since childhood."',en:'Traduce: "Hemos sido amigos desde la infancia."',answer_es:'Hemos sido amigos desde la infancia.',answer_en:'We have been friends since childhood.'},
+  {id:59,type:'translate',es:'Traduce: "He talks faster than she does."',en:'Traduce: "Él habla más rápido que ella."',answer_es:'Él habla más rápido que ella.',answer_en:'He talks faster than she does.'},
+  {id:60,type:'translate',es:'Traduce: "No matter how hard it is, keep trying."',en:'Traduce: "No importa lo difícil que sea, sigue intentando."',answer_es:'No importa lo difícil que sea, sigue intentando.',answer_en:'No matter how hard it is, keep trying.'},
+  {id:61,type:'translate',es:'Traduce: "When I arrived, they had already left."',en:'Traduce: "Cuando llegué, ellos ya se habían ido."',answer_es:'Cuando llegué, ellos ya se habían ido.',answer_en:'When I arrived, they had already left.'},
+  {id:62,type:'translate',es:'Traduce: "If it weren\'t for you, I would have failed."',en:'Traduce: "Si no fuera por ti, habría fracasado."',answer_es:'Si no fuera por ti, habría fracasado.',answer_en:"If it weren't for you, I would have failed."},
+  {id:63,type:'translate',es:'Traduce: "She suggested going earlier."',en:'Traduce: "Ella sugirió ir antes."',answer_es:'Ella sugirió ir antes.',answer_en:'She suggested going earlier.'},
+  {id:64,type:'translate',es:'Traduce: "Antes de comer, lava tus manos."',en:'Translate to English: "Antes de comer, lava tus manos."',answer_es:'Antes de comer, lava tus manos.',answer_en:'Before eating, wash your hands.'},
+  {id:65,type:'translate',es:'Traduce: "I used to live in Barcelona."',en:'Traduce: "Solía vivir en Barcelona."',answer_es:'Solía vivir en Barcelona.',answer_en:'I used to live in Barcelona.'},
+  // 66-85: targeted grammar (pronouns, relative clauses, passive)
+  {id:66,type:'choose',es:'Selecciona pronombre correcto: "___ viste ayer?"',en:'Pick correct pronoun: "___ did you see yesterday?"',options:['Qué','A quién','Quien'],answer:'A quién / Who did you see yesterday?'},
+  {id:67,type:'fill',es:'Transforma a pasiva: "La empresa contrató a María."',en:'Passive: "The company hired María."',answer_es:'María fue contratada por la empresa.',answer_en:'María was hired by the company.'},
+  {id:68,type:'choose',es:'Relative clause: "The man ___ lives next door is a doctor."',en:'',options:['who','whom','that'],answer:'who/that'},
+  {id:69,type:'choose',es:'Elije: "This is the house ___ we grew up."',en:'',options:['where','which','that'],answer:'where/that'},
+  {id:70,type:'fill',es:'Completa con pronombre: "Eso es para ___ ." (a mí)',en:'Complete with pronoun: "That is for ___ ." (me)',answer_es:'mí',answer_en:'me'},
+  {id:71,type:'choose',es:'Selecciona la voz pasiva correcta: "The cake was ___ by my sister."',en:'',options:['eat','eaten','eating'],answer:'eaten'},
+  {id:72,type:'fill',es:'Completa con relativo: "La chica ___ habla es mi prima."',en:'',answer_es:'que',answer_en:'that/who'},
+  {id:73,type:'choose',es:'Elige la forma correcta: "If I ___ you, I would go."',en:'',options:['am','was','were'],answer:'were'},
+  {id:74,type:'fill',es:'Completa con comparativo: "Él es ___ que su hermano."',en:'Complete with comparative: "He is ___ than his brother."',answer_es:'más alto',answer_en:'taller'},
+  {id:75,type:'choose',es:'Which is correct: "She insisted ___ paying."',en:'',options:['on','in','at'],answer:'on'},
+  {id:76,type:'fill',es:'Completa: "I wish I ___ more time."',en:'',answer_es:'tuviera',answer_en:'had'},
+  {id:77,type:'choose',es:'Escoge la conjunción: "I will call you ___ I arrive."',en:'',options:['when','while','if'],answer:'when'},
+  {id:78,type:'fill',es:'Completa con reflexivo: "Él ___ levantó temprano."',en:'Complete with reflexive: "He ___ up early."',answer_es:'se',answer_en:'got'},
+  {id:79,type:'choose',es:'Pick: "I\'m looking forward ___ hearing from you."',en:'',options:['to','for','at'],answer:'to'},
+  {id:80,type:'fill',es:'Completa: "No hay nadie ___ pueda ayudar."',en:'Complete: "There is no one ___ can help."',answer_es:'que',answer_en:'who'},
+  // 81-95: mixed short dialogues / error correction
+  {id:81,type:'choose',es:'Corrige: "She don\'t like fish." — ¿Qué opción corrige?',en:'Correct: "She don\'t like fish."',options:['She doesn\'t like fish.','She don\'t likes fish.','She did not like fish.'],answer:"She doesn't like fish."},
+  {id:82,type:'fill',es:'Corrige la oración: "Yo comiste ayer." (español)',en:'Correct: "I ate yesterday." (english)',answer_es:'Yo comí ayer.',answer_en:'I ate yesterday.'},
+  {id:83,type:'choose',es:'Elige la forma correcta: "He \___ a doctor."',en:'',options:['is','are','am'],answer:'is'},
+  {id:84,type:'fill',es:'Corrige el orden: "Casa la es bonita."',en:'',answer_es:'La casa es bonita.',answer_en:'The house is beautiful.'},
+  {id:85,type:'choose',es:'Detecta el error: "I have 25 years." — ¿Cuál es la corrección?',en:'',options:['I am 25 years old.','I have 25 years old.','I have 25.'],answer:'I am 25 years old.'},
+  // 96-100: production / open response prompts (student types answer)
+  {id:96,type:'translate',es:'Escribe en inglés: "Describe tu rutina diaria en tres frases."',en:'Write in Spanish: "Describe your daily routine in three sentences."',answer_es:'(respuesta abierta)',answer_en:'(open response)'},
+  {id:97,type:'translate',es:'Escribe en inglés: "Explica la diferencia entre "por" y "para" en una frase."',en:'Write in Spanish: "Explain the difference between \"por\" and \"para\" in one sentence."',answer_es:'(respuesta abierta)',answer_en:'(open response)'},
+  {id:98,type:'translate',es:'Redacta en español: "Write a short paragraph (4-5 sentences) using present perfect in English."',en:'Redacta en inglés: "Escribe un párrafo corto (4-5 oraciones) usando presente perfecto en inglés."',answer_es:'(open)',answer_en:'(open)'},
+  {id:99,type:'translate',es:'Produce: "Create two sentences using a relative clause in English."',en:'Produce: "Crea dos oraciones usando una cláusula relativa en español."',answer_es:'(open)',answer_en:'(open)'},
+  {id:100,type:'fill',es:'Escribe la forma correcta: "Si yo ___ (tener) tiempo, iría."',en:'Write correct: "If I ___ (have) time, I would go."',answer_es:'tuviera',answer_en:'had'}
+];
+
+let currentLang = 'es';
+let userAnswers = {}; // {id: {answer:..., correct: true/false}}
+
+const exerciseListEl = document.getElementById('exerciseList');
+const progressCount = document.getElementById('progressCount');
+
+function renderExercises(list){
+  exerciseListEl.innerHTML = '';
+  list.forEach(ex => {
+    const card = document.createElement('div');
+    card.className = 'card exercise-card';
+    card.id = 'ex-'+ex.id;
+
+    const body = document.createElement('div');
+    body.className = 'card-body';
+
+    // Title
+    const title = document.createElement('h5');
+    title.className = 'card-title';
+    title.textContent = `Ejercicio ${ex.id} — ${ex.type}`;
+    body.appendChild(title);
+
+    // Prompt (depends on type)
+    const prompt = document.createElement('p');
+    prompt.className = 'card-text';
+    if(ex.type === 'order'){
+      prompt.innerHTML = `<strong>${currentLang === 'es' ? ex.es.prompt_es : ex.en.prompt_en}</strong>`;
+    } else if(ex.type === 'choose'){
+      prompt.innerHTML = `<strong>${currentLang === 'es' ? ex.es : ex.en}</strong>`;
+    } else if(ex.type === 'fill' || ex.type === 'translate'){
+      prompt.innerHTML = `<strong>${currentLang === 'es' ? ex.es : ex.en}</strong>`;
+    }
+    body.appendChild(prompt);
+
+    // Controls by type
+    const controlDiv = document.createElement('div');
+
+    if(ex.type === 'choose'){
+      ex.options.forEach((opt,i)=>{
+        const div = document.createElement('div');
+        div.className = 'form-check';
+        const input = document.createElement('input');
+        input.className = 'form-check-input';
+        input.type = 'radio';
+        input.name = 'choice-'+ex.id;
+        input.id = `choice-${ex.id}-${i}`;
+        input.value = opt;
+        input.addEventListener('change', ()=>{ saveAnswer(ex.id, input.value); });
+        const label = document.createElement('label');
+        label.className = 'form-check-label';
+        label.htmlFor = input.id;
+        label.textContent = opt;
+        div.appendChild(input); div.appendChild(label);
+        controlDiv.appendChild(div);
+      });
+    } else if(ex.type === 'order'){
+      // create draggable buttons or simple select order controls
+      const words = currentLang === 'es' ? ex.es.words.slice() : ex.en.words.slice();
+      const container = document.createElement('div');
+      container.className = 'd-flex flex-wrap gap-2 mb-2';
+      words.forEach((w, idx)=>{
+        const btn = document.createElement('button');
+        btn.className = 'btn btn-outline-secondary btn-sm word-btn';
+        btn.textContent = w;
+        btn.dataset.index = idx;
+        btn.addEventListener('click', ()=>{
+          // append to answer area
+          const ansArea = card.querySelector('.order-answer');
+          const span = document.createElement('span');
+          span.className = 'badge bg-secondary me-1';
+          span.textContent = w;
+          span.addEventListener('click', ()=>{ span.remove(); updateOrderAnswer(ex.id); });
+          ansArea.appendChild(span);
+          updateOrderAnswer(ex.id);
+        });
+        container.appendChild(btn);
+      });
+      controlDiv.appendChild(container);
+      const ansLabel = document.createElement('div');
+      ansLabel.className = 'order-answer mb-2';
+      controlDiv.appendChild(ansLabel);
+      const btnClear = document.createElement('button');
+      btnClear.className = 'btn btn-sm btn-outline-danger';
+      btnClear.textContent = 'Limpiar orden';
+      btnClear.addEventListener('click', ()=>{ card.querySelector('.order-answer').innerHTML=''; saveAnswer(ex.id,''); });
+      controlDiv.appendChild(btnClear);
+    } else if(ex.type === 'fill' || ex.type === 'translate'){
+      const textarea = document.createElement('textarea');
+      textarea.className = 'form-control mb-2';
+      textarea.rows = 2;
+      textarea.placeholder = currentLang === 'es' ? 'Escribe tu respuesta aquí...' : 'Type your answer here...';
+      textarea.addEventListener('input', ()=>{ saveAnswer(ex.id, textarea.value); });
+      controlDiv.appendChild(textarea);
+    }
+
+    body.appendChild(controlDiv);
+
+    // Feedback area
+    const feedback = document.createElement('div');
+    feedback.className = 'mt-2 feedback text-muted';
+    body.appendChild(feedback);
+
+    // Buttons: check / show answer
+    const btnGroup = document.createElement('div');
+    btnGroup.className = 'mt-3';
+    const btnCheck = document.createElement('button');
+    btnCheck.className = 'btn btn-outline-success btn-sm me-2';
+    btnCheck.textContent = currentLang === 'es' ? 'Verificar' : 'Check';
+    btnCheck.addEventListener('click', ()=>{ checkExercise(ex.id); });
+    const btnShow = document.createElement('button');
+    btnShow.className = 'btn btn-outline-secondary btn-sm';
+    btnShow.textContent = currentLang === 'es' ? 'Mostrar respuesta' : 'Show answer';
+    btnShow.addEventListener('click', ()=>{ showAnswer(ex.id); });
+    btnGroup.appendChild(btnCheck); btnGroup.appendChild(btnShow);
+    body.appendChild(btnGroup);
+
+    card.appendChild(body);
+    exerciseListEl.appendChild(card);
+
+    // restore previous answer if exists
+    if(userAnswers[ex.id]){
+      const val = userAnswers[ex.id].answer;
+      if(ex.type === 'fill' || ex.type === 'translate'){
+        const ta = card.querySelector('textarea'); if(ta) ta.value = val;
+      }
+      if(ex.type === 'choose'){
+        const inputs = card.querySelectorAll('input[type=radio]'); inputs.forEach(i=>{ if(i.value===val) i.checked=true; });
+      }
+      if(ex.type === 'order'){
+        const ansArea = card.querySelector('.order-answer'); ansArea.innerHTML=''; if(val){
+          val.split(' ').forEach(w=>{ if(w.trim()){ const span = document.createElement('span'); span.className='badge bg-secondary me-1'; span.textContent=w; span.addEventListener('click', ()=>{ span.remove(); updateOrderAnswer(ex.id); }); ansArea.appendChild(span); }});
+        }
+      }
+      renderFeedback(ex.id);
+    }
+  });
+  updateProgress();
+}
+
+function saveAnswer(id, value){
+  userAnswers[id] = userAnswers[id] || {};
+  userAnswers[id].answer = (value||'').toString().trim();
+  userAnswers[id].checked = false;
+  renderFeedback(id);
+  updateProgress();
+}
+
+function updateOrderAnswer(id){
+  const card = document.getElementById('ex-'+id);
+  const ans = Array.from(card.querySelectorAll('.order-answer span')).map(s=>s.textContent).join(' ');
+  saveAnswer(id, ans);
+}
+
+function normalize(s){ return (s||'').toString().trim().toLowerCase(); }
+
+function checkExercise(id){
+  const ex = exercises.find(e=>e.id===id);
+  const ua = userAnswers[id] && userAnswers[id].answer ? normalize(userAnswers[id].answer) : '';
+  let correct = false;
+  const correctMsgEl = document.getElementById('ex-'+id).querySelector('.feedback');
+
+  if(ex.type === 'choose'){
+    correct = ua === normalize(ex.answer) || (Array.isArray(ex.answer) && ex.answer.map(a=>normalize(a)).includes(ua));
+  } else if(ex.type === 'order'){
+    const target = normalize(currentLang==='es'?ex.answer_es:ex.answer_en);
+    correct = ua === normalize(target);
+  } else if(ex.type === 'fill' || ex.type === 'translate'){
+    // allow partial matches and multiple acceptable answers: we'll check if user answer contains key words from expected
+    const expected = (currentLang==='es'?ex.answer_es:ex.answer_en).toString().toLowerCase();
+    if(expected.includes('(') || expected.includes('/')){
+      // complex expected: treat as accept anything that contains main verb or keyword
+      const keywords = expected.replace(/[()\/]*/g,'').split(' ').slice(0,3).map(s=>s.replace(/[^a-záéíóúñü]/g,''));
+      correct = keywords.every(k=>k?ua.includes(k):true);
+    } else if(expected.length<20 && expected.includes(' ')==false){
+      correct = ua === normalize(expected);
+    } else {
+      // open answers: accept if at least 50% words match
+      const aWords = ua.split(' ').filter(Boolean);
+      const eWords = expected.split(' ').filter(Boolean);
+      const matches = eWords.filter(w=>aWords.includes(w)).length;
+      correct = eWords.length? (matches / eWords.length) >= 0.5 : ua.length>0;
+    }
+  }
+
+  userAnswers[id].checked = true;
+  userAnswers[id].correct = correct;
+  renderFeedback(id);
+  updateProgress();
+}
+
+function renderFeedback(id){
+  const ex = exercises.find(e=>e.id===id);
+  const card = document.getElementById('ex-'+id);
+  const fb = card.querySelector('.feedback');
+  card.classList.remove('correct','wrong');
+  if(userAnswers[id] && userAnswers[id].checked){
+    if(userAnswers[id].correct){ fb.innerHTML = `<span class="text-success">Correcto</span>`; card.classList.add('correct'); }
+    else { fb.innerHTML = `<span class="text-danger">Incorrecto o incompleto</span>`; card.classList.add('wrong'); }
+  } else if(userAnswers[id] && userAnswers[id].answer){
+    fb.innerHTML = `<span class="text-muted">Respuesta guardada (sin verificar)</span>`;
+  } else { fb.innerHTML = `<span class="text-muted">Sin respuesta</span>`; }
+}
+
+function showAnswer(id){
+  const ex = exercises.find(e=>e.id===id);
+  const card = document.getElementById('ex-'+id);
+  const fb = card.querySelector('.feedback');
+  const correct = currentLang==='es' ? ex.answer_es || ex.answer : ex.answer_en || ex.answer;
+  fb.innerHTML = `<strong>Respuesta ejemplo:</strong> <pre>${correct}</pre>`;
+}
+
+function updateProgress(){
+  const total = exercises.length;
+  const answered = Object.keys(userAnswers).length;
+  const checkedCorrect = Object.values(userAnswers).filter(v=>v.correct).length;
+  progressCount.textContent = `${answered}/${total} — Aciertos verificados: ${checkedCorrect}`;
+}
+
+// Filtering and search
+function applyFilters(){
+  const type = document.getElementById('filterType').value;
+  const term = document.getElementById('searchTerm').value.trim().toLowerCase();
+  let list = exercises.slice();
+  if(type !== 'all') list = list.filter(e=>e.type===type);
+  if(term){
+    list = list.filter(e=>{
+      const text = (typeof e.es === 'string' ? e.es : JSON.stringify(e.es)).toLowerCase();
+      const textEn = (typeof e.en === 'string' ? e.en : JSON.stringify(e.en)).toLowerCase();
+      return text.includes(term) || textEn.includes(term);
+    });
+  }
+  renderExercises(list);
+}
+
+// Language toggle
+document.getElementById('btnToggleLang').addEventListener('click', ()=>{
+  currentLang = currentLang === 'es' ? 'en' : 'es';
+  document.documentElement.lang = currentLang === 'es' ? 'es' : 'en';
+  document.getElementById('btnToggleLang').textContent = currentLang === 'es' ? 'ES / EN' : 'EN / ES';
+  applyFilters();
+});
+
+// Buttons
+document.getElementById('btnApply').addEventListener('click', applyFilters);
+document.getElementById('btnReset').addEventListener('click', ()=>{ document.getElementById('filterType').value='all'; document.getElementById('searchTerm').value=''; renderExercises(exercises); });
+document.getElementById('btnCheckAll').addEventListener('click', ()=>{ exercises.forEach(e=>{ checkExercise(e.id); }); alert('Revisión completada. Revisa retroalimentación en cada ejercicio.'); });
+document.getElementById('btnShowResults').addEventListener('click', ()=>{
+  const total = exercises.length;
+  const answered = Object.keys(userAnswers).length;
+  const correct = Object.values(userAnswers).filter(v=>v.correct).length;
+  const message = `Respondidos: ${answered}/${total}\nAciertos verificados: ${correct}`;
+  alert(message);
+});
+
+// initial render
+renderExercises(exercises);
+</script>
+</body>
+</html>

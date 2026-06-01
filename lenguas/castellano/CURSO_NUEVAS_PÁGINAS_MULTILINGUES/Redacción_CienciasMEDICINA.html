@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>Redacción en Ciencias de la Salud · 100 técnicas · Medicina · Fisioterapia · Enfermería</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #1B6B8A;
+      --primary-dark: #134F6B;
+      --secondary: #F39C12;
+      --bg-dark: #1a1a1a;
+      --bg-light: #F5F0E8;
+      --card-dark: #252525;
+      --card-light: #FFFFFF;
+    }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg-dark);
+      color: #E5E5E5;
+      transition: all 0.3s;
+    }
+    body.light-mode {
+      background: var(--bg-light);
+      color: #1E1E1E;
+    }
+    .sidebar {
+      background: #1E1E1E;
+      border-radius: 1.5rem;
+      padding: 1rem;
+      height: fit-content;
+      position: sticky;
+      top: 20px;
+    }
+    body.light-mode .sidebar { background: #FFF; }
+    .nav-item-custom {
+      padding: 0.8rem 1rem;
+      border-radius: 1rem;
+      cursor: pointer;
+      margin-bottom: 0.5rem;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: #AAA;
+    }
+    .nav-item-custom i { width: 24px; }
+    .nav-item-custom.active { background: var(--primary); color: white; }
+    .cat-filter {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+    }
+    .filter-btn {
+      background: transparent;
+      border: 1px solid #3A3A3A;
+      border-radius: 30px;
+      padding: 0.2rem 0.8rem;
+      font-size: 0.7rem;
+      cursor: pointer;
+    }
+    .filter-btn.active { background: var(--primary); border-color: var(--primary); color: white; }
+    body.light-mode .filter-btn { border-color: #D0D0D0; }
+    .tecnica-card {
+      background: var(--card-dark);
+      border-radius: 1rem;
+      padding: 1rem;
+      margin-bottom: 0.8rem;
+      border: 1px solid #3A3A3A;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+    body.light-mode .tecnica-card { background: var(--card-light); border-color: #E0E0E0; }
+    .tecnica-card.completed { border-left: 4px solid var(--primary); background: rgba(27,107,138,0.15); }
+    .flashcard-container { perspective: 1000px; min-height: 520px; cursor: pointer; }
+    .flashcard { width: 100%; height: 560px; position: relative; transform-style: preserve-3d; transition: transform 0.6s; border-radius: 1.5rem; }
+    .flashcard.flipped { transform: rotateY(180deg); }
+    .flashcard-front, .flashcard-back {
+      position: absolute; width: 100%; height: 100%; backface-visibility: hidden;
+      border-radius: 1.5rem; padding: 1.5rem; display: flex; flex-direction: column;
+      background: var(--card-dark); border: 1px solid #3A3A3A; overflow-y: auto;
+    }
+    body.light-mode .flashcard-front, body.light-mode .flashcard-back { background: var(--card-light); }
+    .flashcard-back { transform: rotateY(180deg); background: var(--primary); color: white; }
+    .option-btn { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); padding: 0.5rem 1rem; border-radius: 2rem; margin: 0.3rem; cursor: pointer; }
+    .option-btn:hover { background: rgba(255,255,255,0.2); }
+    .option-btn.correct { background: #27ae60; }
+    .option-btn.incorrect { background: #e74c3c; }
+    .progress-custom { height: 4px; background: #3A3A3A; border-radius: 2px; }
+    .progress-fill-custom { height: 100%; background: var(--primary); width: 0%; transition: width 0.3s; }
+    footer { background: #141414; padding: 1rem 0; margin-top: 2rem; text-align: center; }
+    .badge-cat { background: var(--secondary); color: #2C2A29; padding: 0.2rem 0.6rem; border-radius: 20px; font-size: 0.7rem; }
+    .search-box { width: 100%; padding: 0.5rem; border-radius: 2rem; border: 1px solid #3A3A3A; background: var(--card-dark); color: #E5E5E5; }
+    body.light-mode .search-box { background: var(--card-light); color: #1E1E1E; border-color: #D0D0D0; }
+  </style>
+</head>
+<body>
+
+<div class="container-fluid px-4 py-3">
+  <div class="row g-4">
+    
+    <!-- SIDEBAR -->
+    <div class="col-lg-3 col-md-4">
+      <div class="sidebar">
+        <div class="text-center py-3">
+          <i class="bi bi-heart-pulse" style="font-size: 2rem; color: var(--primary);"></i>
+          <h5 class="mt-2">HealthWrite</h5>
+          <small class="text-muted">100 técnicas · Ciencias de la Salud</small>
+        </div>
+        <hr>
+        <div class="nav-item-custom active" data-view="lista">
+          <i class="bi bi-list-ul"></i> <span>📋 Técnicas</span>
+        </div>
+        <div class="nav-item-custom" data-view="flashcards">
+          <i class="bi bi-stack"></i> <span>🃏 Flashcards</span>
+        </div>
+        <hr>
+        <div class="mt-3">
+          <div class="d-flex justify-content-between small"><span>Técnicas completadas</span><span id="completedCount">0</span><span>/100</span></div>
+          <div class="progress-custom mt-1"><div class="progress-fill-custom" id="progressFill"></div></div>
+        </div>
+        <hr>
+        <button id="themeToggleBtn" class="btn btn-sm w-100 mt-2"><i class="bi bi-moon-stars-fill"></i> Modo oscuro</button>
+      </div>
+    </div>
+    
+    <!-- CONTENIDO PRINCIPAL -->
+    <div class="col-lg-9 col-md-8">
+      
+      <!-- VISTA LISTA DE TÉCNICAS -->
+      <div id="listaView">
+        <h3><i class="bi bi-heart-pulse me-2"></i>100 técnicas de redacción para Ciencias de la Salud</h3>
+        <p class="text-muted small">Medicina · Fisioterapia · Enfermería · Informes clínicos · Artículos científicos</p>
+        <div class="d-flex gap-2 my-3 flex-wrap">
+          <input type="text" id="searchInput" class="search-box" placeholder="🔍 Buscar técnica..." style="width: 200px;">
+          <select id="catFilter" class="form-select form-select-sm" style="width: 160px;">
+            <option value="all">Todas las categorías</option>
+            <option value="Informes clínicos">📋 Informes clínicos</option>
+            <option value="Historia clínica">📖 Historia clínica</option>
+            <option value="Artículo científico">🔬 Artículo científico</option>
+            <option value="Comunicación con pacientes">💬 Comunicación con pacientes</option>
+            <option value="Ética y legal">⚖️ Ética y legal</option>
+          </select>
+        </div>
+        <div id="tecnicasList" style="max-height: 70vh; overflow-y: auto;"></div>
+        <div class="d-flex justify-content-center mt-4"><ul class="pagination" id="pagination"></ul></div>
+      </div>
+      
+      <!-- VISTA FLASHCARDS -->
+      <div id="flashcardsView" style="display: none;">
+        <div class="d-flex justify-content-between mb-3">
+          <h3><i class="bi bi-stack me-2"></i>Flashcards · Aprende redacción clínica</h3>
+        </div>
+        <div class="flashcard-container"><div class="flashcard" id="flashcard">
+          <div class="flashcard-front">
+            <div class="d-flex justify-content-between"><span class="badge-cat" id="frontCat">Categoría</span><span id="frontNum">#1</span></div>
+            <h5 id="frontTitle" class="mt-2">Técnica</h5>
+            <p id="frontConcept" class="mt-3" style="flex:1;">Concepto</p>
+            <small>🖱️ Haz clic para ver el ejemplo clínico</small>
+          </div>
+          <div class="flashcard-back">
+            <div class="d-flex justify-content-between"><span class="badge-cat">📖 Ejemplo en salud</span><span id="backNum">#1</span></div>
+            <h5 id="backTitle" class="mt-2">Ejemplo práctico</h5>
+            <p id="backExample" class="mt-2" style="flex:1;"></p>
+            <div id="exerciseArea" class="mt-3"></div>
+          </div>
+        </div></div>
+        <div class="d-flex justify-content-between mt-4">
+          <button id="prevCardBtn" class="btn btn-outline-light">◀ Anterior</button>
+          <div><span id="cardCounter">1 / 100</span><button id="markCompleteBtn" class="btn btn-sm btn-success ms-2">✅ Aprendida</button></div>
+          <button id="nextCardBtn" class="btn btn-outline-light">Siguiente ▶</button>
+        </div>
+        <div class="text-center mt-3"><button id="randomCardBtn" class="btn btn-sm btn-secondary me-2">🎲 Aleatorio</button><button id="flipCardBtn" class="btn btn-sm btn-secondary">🔄 Voltear</button></div>
+      </div>
+    </div>
+  </div>
+</div>
+<footer><div class="container"><small>🏥 HealthWrite · 100 técnicas de redacción en ciencias de la salud · Medicina · Fisioterapia · Enfermería</small></div></footer>
+
+<script>
+  // ============================================================
+  // 100 TÉCNICAS DE REDACCIÓN PARA CIENCIAS DE LA SALUD
+  // ============================================================
+  
+  const tecnicas = [];
+  
+  // Definir técnicas por categoría
+  const tecnicasPorCategoria = {
+    "Informes clínicos": [
+      [1, "Usa el formato SOAP", "Organiza la información en Subjetivo, Objetivo, Evaluación, Plan.", "Ejemplo: S: Paciente refiere dolor lumbar. O: Exploración con limitación a flexión. A: Lumbalgia mecánica. P: Paracetamol 500mg c/8h."],
+      [2, "Redacta hallazgos objetivos sin interpretar", "Describe lo que observas, no lo que deduces.", "Ejemplo: 'Edema ++ en tobillo izquierdo' no 'Parece tener inflamación'."],
+      [3, "Usa escalas validadas", "Incluye puntuaciones estandarizadas para evaluar síntomas.", "Ejemplo: 'EVA 8/10 (dolor intenso)', 'Escala de Barthel 75/100'."],
+      [4, "Documenta la evolución temporal", "Registra cambios del paciente en el tiempo.", "Ejemplo: 'El día 1 presentó fiebre 38.5°C; día 3 afebril, mejora de la tos'."],
+      [5, "Sé preciso con la localización anatómica", "Usa términos anatómicos correctos.", "Ejemplo: 'Dolor en región lumbar L4-L5' no 'dolor en la espalda baja'."],
+      [6, "Incluye signos vitales completos", "Registra TA, FC, FR, SatO2, temperatura.", "Ejemplo: 'TA 120/80 mmHg, FC 72 lpm, FR 16 rpm, SatO2 98%, T° 36.5°C'."],
+      [7, "Usa verbos en pasado para hallazgos", "Describe lo encontrado en tiempo pasado.", "Ejemplo: 'Se auscultaron ruidos cardiacos rítmicos'."],
+      [8, "Diferencia signos de síntomas", "Signos son objetivos; síntomas son referidos por el paciente.", "Ejemplo: 'Signo: temperatura 38°C; Síntoma: refiere escalofríos'."],
+      [9, "Documenta medicamentos con dosis y vía", "Registra nombre, dosis, frecuencia y vía de administración.", "Ejemplo: 'Paracetamol 500mg VO c/8h'."],
+      [10, "Incluye alergias en cada nota", "Registra alergias conocidas al inicio de cada informe.", "Ejemplo: 'Alergias: penicilina (rash cutáneo)'."],
+      [11, "Usa abreviaturas estandarizadas", "Emplea abreviaturas aceptadas institucionalmente.", "Ejemplo: 'IM (intramuscular), VO (vía oral), SC (subcutáneo)'."],
+      [12, "Evita juicios de valor", "Describe hechos, no opiniones.", "Ejemplo: 'Paciente no cooperó con la exploración' no 'Paciente fue difícil'."],
+      [13, "Registra la hora de los eventos", "La cronología es crucial en evolución clínica.", "Ejemplo: '08:00: administración de analgesia; 09:30: dolor EVA 3'."],
+      [14, "Documenta la respuesta al tratamiento", "Evalúa efectividad de intervenciones.", "Ejemplo: 'Posterior a nebulización, saturación aumentó de 88% a 94%'."],
+      [15, "Incluye plan de egreso claro", "Define seguimiento, medicamentos y signos de alarma.", "Ejemplo: 'Egreso: control en 7 días con médico familiar'."],
+      [16, "Usa lenguaje técnico preciso", "Emplea terminología médica estándar.", "Ejemplo: 'Cefalea holocraneana' no 'dolor de cabeza general'."],
+      [17, "Evita ambigüedades", "Sé específico en cada afirmación.", "Ejemplo: 'Dolor de 3 días de evolución' no 'dolor reciente'."],
+      [18, "Documenta la fuente de información", "Indica si el dato es del paciente, familiar o registros.", "Ejemplo: 'Familiar refiere que paciente ha perdido 5kg en 2 meses'."],
+      [19, "Registra la actividad física del paciente", "Incluye nivel de movilidad y ejercicio.", "Ejemplo: 'Deambula sin ayuda, realiza 30 min de caminata diaria'."],
+      [20, "Documenta el estado nutricional", "Registra hábitos alimenticios y peso.", "Ejemplo: 'Peso 70kg, talla 1.65m, IMC 25.7 (sobrepeso)'."]
+    ],
+    "Historia clínica": [
+      [21, "Organiza por aparatos y sistemas", "Estructura la información por sistemas corporales.", "Ejemplo: 'Cardiovascular: ruidos rítmicos, sin soplos; Respiratorio: campos pulmonares limpios'."],
+      [22, "Incluye antecedentes patológicos", "Registra enfermedades previas del paciente.", "Ejemplo: 'Antecedentes: HTA de 5 años, DM2 diagnosticada en 2020'."],
+      [23, "Documenta antecedentes familiares", "Enfermedades hereditarias en familiares.", "Ejemplo: 'Madre con HTA, padre con DM2, hermana con cáncer de mama'."],
+      [24, "Registra antecedentes sociales", "Hábitos, ocupación, vivienda, redes de apoyo.", "Ejemplo: 'Tabaquismo 10 años, 1 cajetilla/día; vive solo'."],
+      [25, "Incluye revisión por sistemas", "Interroga sistemáticamente cada sistema corporal.", "Ejemplo: 'Neurológico: sin déficit motor ni sensitivo; Digestivo: deposiciones diarias'."],
+      [26, "Redacta el motivo de consulta literal", "Usa palabras del paciente.", "Ejemplo: 'Motivo: 'me duele el pecho cada vez que camino''."],
+      [27, "Documenta la enfermedad actual", "Describe inicio, evolución, tratamientos previos.", "Ejemplo: 'Inició hace 3 días con tos seca, luego productiva. Tomó jarabe sin mejoría'."],
+      [28, "Registra alergias detalladamente", "Especifica tipo de reacción.", "Ejemplo: 'Alergia a látex (urticaria), a penicilina (anafilaxia)'."],
+      [29, "Documenta medicación actual", "Registra fármacos, dosis y adherencia.", "Ejemplo: 'Losartán 50mg/día (refiere cumplimiento), Metformina 850mg c/12h (omite ocasionalmente)'."],
+      [30, "Registra exploración física completa", "Realiza examen céfalo-caudal.", "Ejemplo: 'Cabeza: normocéfalo; cuello: sin adenopatías; tórax: expansión simétrica'."],
+      [31, "Documenta escala de Glasgow", "Registra nivel de conciencia en pacientes neurológicos.", "Ejemplo: 'Glasgow 15/15 (apertura ocular 4, respuesta verbal 5, motora 6)'."],
+      [32, "Incluye pruebas diagnósticas realizadas", "Registra estudios y resultados.", "Ejemplo: 'Laboratorio: Hb 12.5, leucocitos 8,500. Radiografía de tórax: sin alteraciones'."],
+      [33, "Documenta procedimientos realizados", "Registra técnica, hallazgos y complicaciones.", "Ejemplo: 'Fisioterapia respiratoria: técnica de drenaje postural; toleró bien'."],
+      [34, "Registra diagnósticos presuntivos", "Enumera posibles diagnósticos diferenciales.", "Ejemplo: 'Diagnóstico presuntivo: neumonía adquirida en comunidad. Diferencial: bronquitis aguda'."],
+      [35, "Documenta diagnósticos definitivos", "Diagnóstico confirmado por estudios.", "Ejemplo: 'Diagnóstico definitivo: infarto agudo de miocardio'."],
+      [36, "Incluye pronóstico", "Estima evolución esperada del paciente.", "Ejemplo: 'Pronóstico favorable con tratamiento antibiótico'."],
+      [37, "Documenta interconsultas", "Registra solicitudes a otros especialistas.", "Ejemplo: 'Interconsulta a cardiología por dolor torácico atípico'."],
+      [38, "Registra consentimientos informados", "Documenta procedimientos autorizados.", "Ejemplo: 'Consentimiento firmado para cirugía de rodilla derecha'."],
+      [39, "Documenta plan de manejo", "Define tratamiento, estudios y seguimiento.", "Ejemplo: 'Plan: reposo relativo, analgesia, control en 48h'."],
+      [40, "Incluye notas de evolución diarias", "Registra cambios diarios en el paciente hospitalizado.", "Ejemplo: 'Día 2: mejora de dolor, tolera vía oral, afebril'."]
+    ],
+    "Artículo científico": [
+      [41, "Estructura IMRyD", "Introducción, Métodos, Resultados y Discusión.", "Ejemplo: 'Introducción: contexto; Métodos: diseño; Resultados: hallazgos; Discusión: interpretación'."],
+      [42, "Redacta título informativo", "Incluye población, intervención, comparación y desenlace.", "Ejemplo: 'Efecto del ejercicio aeróbico sobre la presión arterial en hipertensos: ensayo clínico'."],
+      [43, "Usa resumen estructurado", "Introducción, objetivos, métodos, resultados, conclusiones.", "Ejemplo: 'Objetivo: evaluar... Métodos: estudio retrospectivo...'."],
+      [44, "Define palabras clave MeSH", "Incluye términos MeSH para indexación.", "Ejemplo: 'Palabras clave: Hipertensión, Ejercicio, Calidad de vida'."],
+      [45, "Redacta introducción con pirámide invertida", "De lo general a lo específico, finaliza con objetivo.", "Ejemplo: 'La HTA afecta al 30% de adultos. El ejercicio aeróbico podría reducirla. Objetivo: evaluar...'."],
+      [46, "Describe diseño de estudio", "Especifica tipo de estudio, cohorte, casos y controles.", "Ejemplo: 'Diseño: estudio transversal analítico'."],
+      [47, "Define criterios de inclusión/exclusión", "Especifica población elegible.", "Ejemplo: 'Inclusión: mayores de 18 años; Exclusión: embarazadas'."],
+      [48, "Calcula tamaño de muestra", "Describe cálculo estadístico.", "Ejemplo: 'Tamaño de muestra: 120 pacientes (α=0.05, poder 80%)'."],
+      [49, "Describe instrumentos de medición", "Especifica equipos y escalas utilizadas.", "Ejemplo: 'Presión arterial medida con esfigmomanómetro calibrado'."],
+      [50, "Redacta resultados en pasado", "Describe hallazgos sin interpretación.", "Ejemplo: 'La presión arterial sistólica disminuyó 12 mmHg (IC95%: 8-16)'."],
+      [51, "Usa tablas y figuras autoexplicativas", "Facilita comprensión visual.", "Ejemplo: 'Tabla 1: características basales de los participantes'."],
+      [52, "Incluye valores de significancia estadística", "Reporta p-valores e intervalos de confianza.", "Ejemplo: 'p=0.03, IC95% 1.2-3.4'."],
+      [53, "Discute limitaciones del estudio", "Reconoce sesgos y limitaciones metodológicas.", "Ejemplo: 'Limitación: tamaño de muestra pequeño, sesgo de selección'."],
+      [54, "Compara hallazgos con literatura", "Cita estudios previos y explica similitudes/diferencias.", "Ejemplo: 'A diferencia de Pérez (2020), encontramos asociación significativa'."],
+      [55, "Redacta conclusiones basadas en evidencia", "Conclusiones deben derivarse de los resultados.", "Ejemplo: 'Conclusión: el ejercicio aeróbico reduce significativamente la PA en hipertensos'."],
+      [56, "Incluye recomendaciones clínicas", "Sugiere aplicaciones prácticas.", "Ejemplo: 'Se recomienda prescribir ejercicio aeróbico 150 min/semana'."],
+      [57, "Cita correctamente en Vancouver", "Usa estilo Vancouver para referencias.", "Ejemplo: '1. Gómez J, et al. Hipertensión arterial. Rev Med 2024;45(2):123-30'."],
+      [58, "Declara conflictos de interés", "Transparencia financiera.", "Ejemplo: 'Los autores declaran no tener conflictos de interés'."],
+      [59, "Incluye aprobación ética", "Menciona comité de ética.", "Ejemplo: 'Estudio aprobado por Comité de Ética del Hospital Universitario'."],
+      [60, "Redacta agradecimientos", "Reconoce contribuciones no autoriales.", "Ejemplo: 'Agradecemos al personal de enfermería por su colaboración'."]
+    ],
+    "Comunicación con pacientes": [
+      [61, "Usa lenguaje claro y sencillo", "Evita tecnicismos innecesarios.", "Ejemplo: 'Tiene presión alta' no 'hipertensión arterial sistémica'."],
+      [62, "Explica diagnósticos con analogías", "Usa comparaciones comprensibles.", "Ejemplo: 'Las arterias son como tuberías; la placa es como sarro que las obstruye'."],
+      [63, "Verifica comprensión (teach-back)", "Pide al paciente que repita instrucciones.", "Ejemplo: 'Para asegurarme, ¿puede decirme cómo va a tomar su medicamento?'."],
+      [64, "Usa materiales visuales", "Diagramas, ilustraciones para explicar procedimientos.", "Ejemplo: 'Mire este dibujo del intestino para entender la cirugía'."],
+      [65, "Redacta instrucciones paso a paso", "Instrucciones claras y secuenciales.", "Ejemplo: '1. Lávese las manos; 2. Abra el frasco; 3. Tome una tableta'."],
+      [66, "Escribe en letra legible", "Letra clara o impresa para recetas e indicaciones.", "Ejemplo: Usar letra de imprenta mayúscula en recetas médicas."],
+      [67, "Personaliza el mensaje", "Adapta información a la situación específica del paciente.", "Ejemplo: 'Usted, que trabaja sentado, debe levantarse cada hora'."],
+      [68, "Usa frases cortas y directas", "Oraciones simples para facilitar comprensión.", "Ejemplo: 'Tome esta pastilla cada 8 horas. No la mastique'."],
+      [69, "Prioriza información esencial", "Enfócate en lo más importante primero.", "Ejemplo: 'Lo más importante es que tome sus antibióticos hasta terminar'."],
+      [70, "Incluye señales de alarma", "Indica cuándo buscar atención médica.", "Ejemplo: 'Vuelva si presenta fiebre mayor de 39°C o dificultad para respirar'."],
+      [71, "Usa lenguaje culturalmente sensible", "Respeta creencias y prácticas culturales.", "Ejemplo: 'El tratamiento respeta su ayuno religioso, puede tomarlo al anochecer'."],
+      [72, "Evita lenguaje paternalista", "Respeta autonomía del paciente.", "Ejemplo: 'Le recomiendo esta opción' no 'Usted debe hacer esto'."],
+      [73, "Documenta la conversación en notas", "Registra lo discutido y acordado.", "Ejemplo: 'Se explicó procedimiento, acepta y firma consentimiento'."],
+      [74, "Incluye al familiar/cuidador", "Instruye también a quien cuida al paciente.", "Ejemplo: 'Familiar presente: se explica manejo de sonda vesical'."],
+      [75, "Usa preguntas abiertas para evaluar", "Para verificar comprensión.", "Ejemplo: '¿Qué dudas tiene sobre el procedimiento?' no '¿Entendió?'."],
+      [76, "Redacta resúmenes escritos", "Proporciona instrucciones por escrito.", "Ejemplo: Entregar hoja con indicaciones post-consulta."],
+      [77, "Incluye horarios de medicación concretos", "Especifica horas reales.", "Ejemplo: 'Tome a las 8am, 2pm y 8pm' no 'tres veces al día'."],
+      [78, "Explica efectos adversos comunes", "Prepara al paciente sobre posibles reacciones.", "Ejemplo: 'Este medicamento puede causar sueño; no maneje'."],
+      [79, "Usa lenguaje positivo", "Enfócate en lo que puede hacer.", "Ejemplo: 'Puede caminar 20 minutos diarios' no 'No debe estar sentado'."],
+      [80, "Verifica comprensión de fechas", "Confirma entendimiento de citas y plazos.", "Ejemplo: '¿Qué día es su próxima cita? ¿Cada cuánto toma el medicamento?'."]
+    ],
+    "Ética y legal": [
+      [81, "Obtén consentimiento informado por escrito", "Documenta autorización para procedimientos.", "Ejemplo: 'Formato de consentimiento firmado por paciente para cirugía'."],
+      [82, "Respeta confidencialidad", "Protege datos de identificación del paciente.", "Ejemplo: 'No incluir nombres completos en presentaciones académicas'."],
+      [83, "Documenta negativa del paciente", "Registra rechazo a tratamiento o procedimiento.", "Ejemplo: 'Paciente rehusó vacunación después de explicar beneficios y riesgos'."],
+      [84, "Registra capacidad de toma de decisiones", "Evalúa si paciente puede decidir.", "Ejemplo: 'Paciente orientado en tiempo, espacio y persona, capaz de decidir'."],
+      [85, "Notifica enfermedades de declaración obligatoria", "Registra y reporta según normativa.", "Ejemplo: 'Se notificó caso de tuberculosis al sistema de vigilancia'."],
+      [86, "Documenta eventos adversos", "Registra complicaciones no esperadas.", "Ejemplo: 'Reacción alérgica a contraste: rash urticario generalizado'."],
+      [87, "Evita lenguaje estigmatizante", "Lenguaje respetuoso.", "Ejemplo: 'Paciente con trastorno por uso de sustancias' no 'drogadicto'."],
+      [88, "Respeta voluntades anticipadas", "Documenta directrices del paciente.", "Ejemplo: 'Paciente no desea reanimación cardiopulmonar (documento firmado)'."],
+      [89, "Registra objeción de conciencia", "Documenta cuando profesional se niega por convicciones.", "Ejemplo: 'Médico se acoge a objeción de conciencia para procedimiento'."],
+      [90, "Documenta comunicación de malas noticias", "Registra cómo y cuándo se informó.", "Ejemplo: 'Se comunicó diagnóstico de neoplasia a paciente y familiar, en privado'."],
+      [91, "Incluye registro de telemedicina", "Documenta consultas virtuales.", "Ejemplo: 'Consulta por videollamada. Paciente en domicilio, conexión estable'."],
+      [92, "Registra traslados y referencias", "Documenta envío a otro nivel de atención.", "Ejemplo: 'Referido a tercer nivel por neurocirugía'."],
+      [93, "Documenta alta voluntaria", "Registra cuando paciente se retira contra indicación.", "Ejemplo: 'Paciente solicita alta voluntaria; se explican riesgos, firma formato'."],
+      [94, "Registra errores de medicación", "Documenta incidentes para análisis.", "Ejemplo: 'Se administró dosis duplicada de insulina; se monitorizó glicemia'."],
+      [95, "Documenta uso de medidas de restricción", "Registra justificación y duración.", "Ejemplo: 'Sujeción mecánica por agitación psicomotriz; se retiró a las 2h'."],
+      [96, "Protege datos en publicaciones", "Anonimiza información en artículos.", "Ejemplo: 'Paciente 45 años, sexo masculino' no 'Juan Pérez, 45 años'."],
+      [97, "Documenta segunda opinión", "Registra cuando se solicita otra evaluación.", "Ejemplo: 'Se solicita segunda opinión a cardiología por caso complejo'."],
+      [98, "Registra objeción familiar", "Documenta cuando familiares se oponen a tratamiento.", "Ejemplo: 'Familiares se oponen a transfusión por creencias religiosas'."],
+      [99, "Incluye código de ética institucional", "Referencia a normativa aplicable.", "Ejemplo: 'Actuación conforme a Código de Ética del Hospital'."],
+      [100, "Documenta queja del paciente", "Registra inconformidades y seguimiento.", "Ejemplo: 'Paciente refiere demora en atención; se informa a jefe de servicio'."]
+    ]
+  };
+  
+  // Construir array de técnicas
+  let idCounter = 1;
+  for(let categoria in tecnicasPorCategoria) {
+    for(let tec of tecnicasPorCategoria[categoria]) {
+      tecnicas.push({
+        id: tec[0],
+        categoria: categoria,
+        titulo: tec[1],
+        concepto: tec[2],
+        ejemplo: tec[3]
+      });
+    }
+  }
+  
+  // Ordenar por ID
+  tecnicas.sort((a,b) => a.id - b.id);
+  
+  // Estado
+  let progress = {};
+  let currentCatFilter = "all";
+  let currentSearch = "";
+  let currentPage = 1;
+  let itemsPerPage = 12;
+  let filteredTecnicas = [...tecnicas];
+  let currentCardIndex = 0;
+  let filteredFlashcards = [...tecnicas];
+  const STORAGE_KEY = "healthwrite_100_tecnicas";
+  
+  function loadProgress() {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if(saved) progress = JSON.parse(saved);
+    for(let i=0; i<tecnicas.length; i++) if(progress[tecnicas[i].id]===undefined) progress[tecnicas[i].id] = false;
+    updateStats();
+  }
+  function saveProgress() { localStorage.setItem(STORAGE_KEY, JSON.stringify(progress)); updateStats(); }
+  function updateStats() {
+    let c = Object.values(progress).filter(v=>v===true).length;
+    document.getElementById("completedCount").innerText = c;
+    document.getElementById("progressFill").style.width = `${(c/100)*100}%`;
+  }
+  function markComplete(id, isComplete) {
+    if(isComplete && !progress[id]) { progress[id] = true; saveProgress(); renderLista(); }
+  }
+  
+  function renderLista() {
+    let filtered = tecnicas.filter(t => {
+      if(currentCatFilter !== "all" && t.categoria !== currentCatFilter) return false;
+      if(currentSearch && !t.titulo.toLowerCase().includes(currentSearch) && !t.concepto.toLowerCase().includes(currentSearch)) return false;
+      return true;
+    });
+    filteredTecnicas = filtered;
+    const totalPages = Math.ceil(filtered.length / itemsPerPage);
+    const start = (currentPage-1) * itemsPerPage;
+    const paginated = filtered.slice(start, start+itemsPerPage);
+    
+    const container = document.getElementById("tecnicasList");
+    container.innerHTML = paginated.map(t => `
+      <div class="tecnica-card ${progress[t.id] ? 'completed' : ''}" data-id="${t.id}">
+        <div class="d-flex justify-content-between">
+          <div><span class="badge-cat">${t.categoria}</span><span class="ms-2">#${t.id}</span></div>
+          <input class="form-check-input" type="checkbox" ${progress[t.id] ? 'checked' : ''} onchange="event.stopPropagation(); markComplete(${t.id}, this.checked)">
+        </div>
+        <h6 class="mt-2">${t.titulo}</h6>
+        <p class="small text-muted">${t.concepto.substring(0, 100)}...</p>
+      </div>
+    `).join('');
+    
+    document.querySelectorAll(".tecnica-card").forEach(card => {
+      card.addEventListener("click", (e) => {
+        if(!e.target.classList.contains("form-check-input")) {
+          let id = parseInt(card.dataset.id);
+          let idx = filteredTecnicas.findIndex(t => t.id === id);
+          if(idx !== -1) { currentCardIndex = idx; switchToFlashcards(); updateFlashcard(); }
+        }
+      });
+    });
+    
+    let pagHtml = ''; for(let i=1;i<=totalPages;i++) pagHtml += `<li class="page-item ${i===currentPage?'active':''}"><a class="page-link" href="#" data-page="${i}">${i}</a></li>`;
+    document.getElementById("pagination").innerHTML = pagHtml;
+    document.querySelectorAll("#pagination .page-link").forEach(l=>l.addEventListener("click", e=>{ e.preventDefault(); currentPage=parseInt(l.dataset.page); renderLista(); }));
+  }
+  
+  function filterFlashcards() {
+    if(currentCatFilter === "all") filteredFlashcards = [...tecnicas];
+    else filteredFlashcards = tecnicas.filter(t => t.categoria === currentCatFilter);
+    currentCardIndex = Math.min(currentCardIndex, filteredFlashcards.length-1);
+    if(currentCardIndex < 0) currentCardIndex = 0;
+    updateFlashcard();
+  }
+  
+  function updateFlashcard() {
+    let t = filteredFlashcards[currentCardIndex];
+    if(!t) return;
+    document.getElementById("frontCat").innerHTML = t.categoria;
+    document.getElementById("frontNum").innerHTML = `#${t.id}`;
+    document.getElementById("frontTitle").innerHTML = t.titulo;
+    document.getElementById("frontConcept").innerHTML = t.concepto;
+    document.getElementById("backNum").innerHTML = `#${t.id}`;
+    document.getElementById("backTitle").innerHTML = t.titulo;
+    document.getElementById("backExample").innerHTML = t.ejemplo;
+    document.getElementById("cardCounter").innerHTML = `${currentCardIndex+1}/${filteredFlashcards.length}`;
+    document.getElementById("flashcard").classList.remove("flipped");
+    
+    // Ejercicio simple
+    let ejercicioHtml = `<div class="small fw-bold mb-2">📝 Ejercicio: ¿Cuál es el objetivo de esta técnica?</div>
+      <div class="d-flex flex-wrap gap-2">
+        <button class="option-btn ejercicio-opt" data-value="${t.concepto.split('.')[0]}">${t.concepto.split('.')[0]}</button>
+        <button class="option-btn ejercicio-opt" data-value="Escribir sin estructura">Escribir sin estructura</button>
+        <button class="option-btn ejercicio-opt" data-value="Usar jerga complicada">Usar jerga complicada</button>
+      </div>
+      <div id="ejercicioFeedback" class="mt-2 small"></div>`;
+    document.getElementById("exerciseArea").innerHTML = ejercicioHtml;
+    
+    document.querySelectorAll(".ejercicio-opt").forEach(btn => {
+      btn.onclick = () => {
+        let isCorrect = btn.getAttribute("data-value") === t.concepto.split('.')[0];
+        let fb = document.getElementById("ejercicioFeedback");
+        if(isCorrect) { fb.innerHTML = "<span class='text-success'>✅ Correcto!</span>"; markComplete(t.id, true); renderLista(); }
+        else { fb.innerHTML = "<span class='text-danger'>❌ Incorrecto. Vuelve a leer la técnica.</span>"; }
+        document.querySelectorAll(".ejercicio-opt").forEach(b=>b.disabled=true);
+      };
+    });
+  }
+  
+  function nextCard(){ if(currentCardIndex<filteredFlashcards.length-1){currentCardIndex++; updateFlashcard();} }
+  function prevCard(){ if(currentCardIndex>0){currentCardIndex--; updateFlashcard();} }
+  function randomCard(){ currentCardIndex=Math.floor(Math.random()*filteredFlashcards.length); updateFlashcard(); }
+  function flipCard(){ document.getElementById("flashcard").classList.toggle("flipped"); }
+  function markCurrentComplete(){
+    let t = filteredFlashcards[currentCardIndex];
+    if(t && !progress[t.id]) { progress[t.id]=true; saveProgress(); renderLista(); updateFlashcard(); }
+  }
+  
+  function switchToLista() {
+    document.getElementById("listaView").style.display = "block";
+    document.getElementById("flashcardsView").style.display = "none";
+    document.querySelectorAll(".nav-item-custom").forEach(i=>i.classList.remove("active"));
+    document.querySelector(".nav-item-custom[data-view='lista']").classList.add("active");
+    renderLista();
+  }
+  function switchToFlashcards() {
+    document.getElementById("listaView").style.display = "none";
+    document.getElementById("flashcardsView").style.display = "block";
+    document.querySelectorAll(".nav-item-custom").forEach(i=>i.classList.remove("active"));
+    document.querySelector(".nav-item-custom[data-view='flashcards']").classList.add("active");
+    filterFlashcards();
+  }
+  
+  document.getElementById("prevCardBtn")?.addEventListener("click", prevCard);
+  document.getElementById("nextCardBtn")?.addEventListener("click", nextCard);
+  document.getElementById("randomCardBtn")?.addEventListener("click", randomCard);
+  document.getElementById("flipCardBtn")?.addEventListener("click", flipCard);
+  document.getElementById("markCompleteBtn")?.addEventListener("click", markCurrentComplete);
+  document.getElementById("themeToggleBtn")?.addEventListener("click", () => document.body.classList.toggle("light-mode"));
+  document.querySelector(".nav-item-custom[data-view='lista']")?.addEventListener("click", switchToLista);
+  document.querySelector(".nav-item-custom[data-view='flashcards']")?.addEventListener("click", switchToFlashcards);
+  
+  document.getElementById("searchInput")?.addEventListener("input", e => { currentSearch = e.target.value.toLowerCase(); currentPage = 1; renderLista(); });
+  document.getElementById("catFilter")?.addEventListener("change", e => { currentCatFilter = e.target.value; currentPage = 1; renderLista(); filterFlashcards(); });
+  
+  loadProgress();
+  renderLista();
+  switchToLista();
+</script>
+</body>
+</html>

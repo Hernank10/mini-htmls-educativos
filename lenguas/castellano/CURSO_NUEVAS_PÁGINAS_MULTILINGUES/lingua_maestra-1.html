@@ -1,0 +1,1204 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>LinguaMaestra — Plataforma Gramatical</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,300;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;600&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet"/>
+<style>
+:root {
+  --bg:#0d0f14; --surface:#161923; --surface2:#1e2330;
+  --border:#2a3045; --text:#e8e6f0; --muted:#6b7394;
+  --accent:#7C3AED; --accent2:#FF6B35; --gold:#F59E0B;
+  --green:#059669; --blue:#0EA5E9; --pink:#EC4899;
+}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--text);font-family:'Nunito',sans-serif;min-height:100vh}
+
+/* ── SIDEBAR ── */
+#sidebar{
+  width:250px;min-height:100vh;background:var(--surface);
+  border-right:1px solid var(--border);position:fixed;top:0;left:0;bottom:0;
+  display:flex;flex-direction:column;overflow-y:auto;z-index:100;
+  transition:transform .3s;
+}
+#sidebar .brand h5{font-family:'Crimson Pro',serif;font-size:1.35rem;color:#fff;font-weight:700;margin:0}
+#sidebar .brand small{color:var(--muted);font-size:.72rem}
+.nav-section{font-size:.68rem;font-weight:800;color:var(--muted);text-transform:uppercase;
+  letter-spacing:1px;padding:14px 16px 4px}
+.nav-lnk{
+  display:flex;align-items:center;gap:10px;padding:9px 14px;border-radius:10px;
+  cursor:pointer;color:var(--muted);font-weight:600;font-size:.88rem;
+  transition:all .18s;border:1px solid transparent;text-decoration:none;
+}
+.nav-lnk:hover{background:var(--surface2);color:var(--text)}
+.nav-lnk.active{background:rgba(124,58,237,.2);border-color:rgba(124,58,237,.4);color:#c4b5fd}
+.sidebar-bottom{margin-top:auto;border-top:1px solid var(--border);padding:14px}
+.user-chip{display:flex;align-items:center;gap:10px;background:var(--surface2);
+  border-radius:10px;padding:10px 12px}
+
+/* ── MAIN ── */
+#main-content{margin-left:250px;padding:28px 32px;min-height:100vh}
+
+/* ── CARDS ── */
+.lm-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:20px}
+.lm-card-hover{transition:all .2s;cursor:pointer}
+.lm-card-hover:hover{border-color:var(--accent);transform:translateY(-2px);
+  box-shadow:0 10px 32px rgba(0,0,0,.4)}
+.stat-val{font-family:'Crimson Pro',serif;font-size:2.2rem;font-weight:700;color:#fff}
+.stat-lbl{font-size:.75rem;color:var(--muted);font-weight:600;margin-top:2px}
+
+/* ── BADGES ── */
+.bdg{display:inline-flex;align-items:center;gap:4px;padding:3px 9px;
+  border-radius:20px;font-size:.72rem;font-weight:700}
+.bdg-admin{background:rgba(245,158,11,.2);color:#fbbf24}
+.bdg-teacher{background:rgba(14,165,233,.2);color:#38bdf8}
+.bdg-student{background:rgba(5,150,105,.2);color:#34d399}
+.bdg-basic{background:rgba(5,150,105,.15);color:#6ee7b7}
+.bdg-inter{background:rgba(245,158,11,.15);color:#fcd34d}
+.bdg-adv{background:rgba(239,68,68,.15);color:#fca5a5}
+
+/* ── CATEGORY CARD ── */
+.cat-card{
+  background:var(--surface);border:1px solid var(--border);border-radius:16px;
+  padding:20px;cursor:pointer;transition:all .22s;position:relative;overflow:hidden;
+}
+.cat-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--ccolor,var(--accent))}
+.cat-card:hover{border-color:var(--ccolor,var(--accent));transform:translateY(-2px);
+  box-shadow:0 12px 36px rgba(0,0,0,.4)}
+.cat-tag{padding:2px 8px;border-radius:8px;font-size:.68rem;font-weight:600;
+  background:var(--surface2);color:var(--muted);border:1px solid var(--border);
+  display:inline-block;margin:2px}
+
+/* ── THEORY ── */
+.theory-box{background:var(--surface2);border:1px solid var(--border);
+  border-radius:14px;padding:20px;line-height:1.8;font-size:.91rem}
+.theory-box b{color:var(--accent2)}
+
+/* ── EXAMPLES ── */
+.ex-es{background:rgba(124,58,237,.12);border:1px solid rgba(124,58,237,.3);
+  border-radius:12px;padding:14px 16px}
+.ex-en{background:rgba(14,165,233,.1);border:1px solid rgba(14,165,233,.25);
+  border-radius:12px;padding:14px 16px}
+.ex-label{font-size:.68rem;font-weight:700;color:var(--muted);text-transform:uppercase;
+  letter-spacing:.5px;margin-bottom:5px}
+.ex-text{font-style:italic;color:#fff;font-size:.9rem}
+
+/* ── QUIZ ── */
+.quiz-opt{
+  width:100%;padding:12px 16px;border:2px solid var(--border);border-radius:12px;
+  background:var(--surface2);color:var(--text);font-family:'Nunito',sans-serif;
+  font-size:.9rem;font-weight:600;text-align:left;cursor:pointer;transition:all .18s;
+}
+.quiz-opt:hover:not(:disabled){border-color:var(--accent);color:#c4b5fd}
+.quiz-opt.correct{border-color:var(--green)!important;background:rgba(5,150,105,.15)!important;color:#6ee7b7!important}
+.quiz-opt.wrong{border-color:#ef4444!important;background:rgba(239,68,68,.12)!important;color:#fca5a5!important}
+.quiz-dot{height:6px;border-radius:3px;background:var(--surface2);flex:1;transition:background .3s}
+.quiz-dot.done-ok{background:var(--green)}
+.quiz-dot.done-ko{background:#ef4444}
+.quiz-dot.cur{background:var(--accent)}
+
+/* ── TABLES ── */
+.lm-table{width:100%;border-collapse:collapse;font-size:.82rem}
+.lm-table th{padding:10px 12px;text-align:left;font-size:.7rem;font-weight:700;
+  text-transform:uppercase;letter-spacing:.5px;color:var(--muted);
+  border-bottom:1px solid var(--border)}
+.lm-table td{padding:10px 12px;border-bottom:1px solid rgba(42,48,69,.5)}
+.lm-table tr:hover td{background:var(--surface2)}
+.mono{font-family:'JetBrains Mono',monospace}
+
+/* ── PROGRESS ── */
+.lm-prog{height:7px;border-radius:4px;background:var(--surface2);overflow:hidden}
+.lm-prog-fill{height:100%;border-radius:4px;transition:width .5s}
+
+/* ── FORMS ── */
+.lm-inp,.lm-ta,.lm-sel{
+  width:100%;padding:11px 15px;background:var(--surface2);
+  border:1px solid var(--border);border-radius:12px;color:var(--text);
+  font-family:'Nunito',sans-serif;font-size:.92rem;outline:none;transition:border-color .2s;
+}
+.lm-ta{min-height:80px;resize:vertical}
+.lm-inp:focus,.lm-ta:focus,.lm-sel:focus{border-color:var(--accent)}
+.lm-sel option{background:#1e2330}
+.lm-label{display:block;font-size:.75rem;font-weight:700;color:var(--muted);
+  margin-bottom:5px;text-transform:uppercase;letter-spacing:.4px}
+
+/* ── BUTTONS ── */
+.btn-lm{padding:9px 18px;border-radius:10px;border:none;cursor:pointer;
+  font-family:'Nunito',sans-serif;font-weight:700;font-size:.83rem;transition:all .18s}
+.btn-lm-accent{background:var(--accent);color:#fff}
+.btn-lm-accent:hover{background:#6d28d9;box-shadow:0 6px 20px rgba(124,58,237,.4)}
+.btn-lm-ghost{background:var(--surface2);color:var(--muted);border:1px solid var(--border)}
+.btn-lm-ghost:hover{border-color:var(--accent);color:var(--text)}
+.btn-lm-danger{background:rgba(239,68,68,.18);color:#fca5a5;border:1px solid rgba(239,68,68,.3)}
+.btn-lm-primary{width:100%;padding:13px;background:var(--accent);border:none;border-radius:12px;
+  color:#fff;font-family:'Nunito',sans-serif;font-size:1rem;font-weight:800;cursor:pointer;
+  transition:all .2s}
+.btn-lm-primary:hover{background:#6d28d9;transform:translateY(-1px);
+  box-shadow:0 8px 24px rgba(124,58,237,.4)}
+.back-btn{display:inline-flex;align-items:center;gap:7px;color:var(--muted);cursor:pointer;
+  font-size:.83rem;font-weight:600;margin-bottom:18px;transition:color .2s;background:none;border:none}
+.back-btn:hover{color:var(--text)}
+.success-box{background:rgba(5,150,105,.15);border:1px solid rgba(5,150,105,.3);
+  border-radius:14px;padding:28px;text-align:center;margin-top:18px}
+
+/* ── LOGIN ── */
+.login-wrap{
+  min-height:100vh;display:flex;align-items:center;justify-content:center;
+  background:radial-gradient(ellipse at 20% 50%,#1a0a2e 0%,#0d0f14 60%),
+              radial-gradient(ellipse at 80% 20%,#0a1a2e 0%,transparent 50%);
+  padding:20px;
+}
+.login-card{
+  background:var(--surface);border:1px solid var(--border);border-radius:22px;
+  padding:44px 38px;width:100%;max-width:430px;
+  box-shadow:0 40px 80px rgba(0,0,0,.6),0 0 80px rgba(124,58,237,.08);
+}
+.quick-role{
+  padding:10px 8px;border:1px solid var(--border);background:var(--surface2);
+  border-radius:12px;cursor:pointer;text-align:center;transition:all .2s;
+  color:var(--text);font-family:'Nunito',sans-serif;font-size:.78rem;font-weight:600;
+  width:100%;
+}
+.quick-role:hover{border-color:var(--accent);background:rgba(124,58,237,.15)}
+
+/* ── PAGE TITLE ── */
+.page-title{font-family:'Crimson Pro',serif;font-size:1.95rem;font-weight:700;color:#fff;margin-bottom:2px}
+.page-sub{color:var(--muted);font-size:.87rem;margin-bottom:24px}
+
+/* ── LESSON ROW ── */
+.lesson-row{
+  background:var(--surface);border:1px solid var(--border);border-radius:14px;
+  padding:16px 18px;cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:14px;
+}
+.lesson-row:hover{border-color:var(--accent);background:rgba(124,58,237,.05)}
+.lesson-num{width:38px;height:38px;border-radius:10px;background:var(--surface2);
+  display:flex;align-items:center;justify-content:center;
+  font-family:'JetBrains Mono',monospace;font-weight:600;color:var(--muted);
+  font-size:.82rem;flex-shrink:0}
+.lesson-num.done{background:rgba(5,150,105,.2);color:#34d399}
+
+/* ── COURSE CARD ── */
+.course-card{background:var(--surface);border:1px solid var(--border);
+  border-radius:14px;padding:18px 20px;margin-bottom:12px}
+
+/* ── MOBILE ── */
+@media(max-width:768px){
+  #sidebar{transform:translateX(-100%)}
+  #sidebar.open{transform:translateX(0)}
+  #main-content{margin-left:0;padding:20px 14px}
+  .hamburger{display:flex!important}
+  .hide-mobile{display:none!important}
+}
+.hamburger{display:none;position:fixed;top:14px;left:14px;z-index:200;
+  background:var(--surface);border:1px solid var(--border);border-radius:10px;
+  padding:8px 10px;cursor:pointer;font-size:1.1rem}
+
+/* ── OFFCANVAS OVERLAY ── */
+#overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:99}
+#overlay.show{display:block}
+</style>
+</head>
+<body>
+
+<!-- ========== LOGIN SCREEN ========== -->
+<div id="screen-login" class="login-wrap">
+  <div class="login-card">
+    <div class="text-center mb-4">
+      <div style="font-size:2.6rem">📖</div>
+      <h1 style="font-family:'Crimson Pro',serif;font-size:2rem;font-weight:700;color:#fff;letter-spacing:-1px;margin:4px 0">LinguaMaestra</h1>
+      <small style="color:var(--muted)">Plataforma de Gramática Española &amp; Comparativa</small>
+    </div>
+
+    <p class="text-center" style="font-size:.72rem;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px">Acceso Rápido</p>
+    <div class="row g-2 mb-4">
+      <div class="col-4"><button class="quick-role" onclick="quickLogin('admin')"><div style="font-size:1.4rem">👑</div>Admin</button></div>
+      <div class="col-4"><button class="quick-role" onclick="quickLogin('teacher')"><div style="font-size:1.4rem">👨‍🏫</div>Profesor</button></div>
+      <div class="col-4"><button class="quick-role" onclick="quickLogin('student')"><div style="font-size:1.4rem">🎓</div>Estudiante</button></div>
+    </div>
+
+    <hr style="border-color:var(--border);margin-bottom:20px"/>
+    <div class="mb-3">
+      <label class="lm-label">Email</label>
+      <input id="inp-email" class="lm-inp" type="email" placeholder="usuario@lingua.edu" onkeydown="if(event.key==='Enter')doLogin()"/>
+    </div>
+    <div class="mb-4">
+      <label class="lm-label">Contraseña</label>
+      <input id="inp-pass" class="lm-inp" type="password" placeholder="••••••••" onkeydown="if(event.key==='Enter')doLogin()"/>
+    </div>
+    <button class="btn-lm-primary" onclick="doLogin()">Iniciar Sesión</button>
+    <div id="login-err" class="text-center mt-2" style="color:#f87171;font-size:.84rem;display:none"></div>
+    <p class="text-center mt-3" style="color:var(--muted);font-size:.72rem">
+      Demo: admin@lingua.edu / admin123 &nbsp;·&nbsp; garcia@lingua.edu / prof123 &nbsp;·&nbsp; ana@lingua.edu / est123
+    </p>
+  </div>
+</div>
+
+<!-- ========== APP SHELL ========== -->
+<div id="screen-app" style="display:none">
+
+  <!-- Hamburger -->
+  <button class="hamburger" onclick="toggleSidebar()">☰</button>
+  <div id="overlay" onclick="closeSidebar()"></div>
+
+  <!-- SIDEBAR -->
+  <div id="sidebar">
+    <div class="brand p-3 pb-2">
+      <h5>📖 LinguaMaestra</h5>
+      <small>Plataforma Gramatical</small>
+    </div>
+    <div class="nav-section">Navegación</div>
+    <div id="sidebar-nav" class="px-2"></div>
+    <div id="sidebar-cats" class="px-2"></div>
+    <div class="sidebar-bottom">
+      <div class="user-chip">
+        <span id="sb-avatar" style="font-size:1.3rem"></span>
+        <div style="flex:1">
+          <div id="sb-name" style="font-weight:700;font-size:.88rem"></div>
+          <div id="sb-role" style="font-size:.72rem;color:var(--muted)"></div>
+        </div>
+        <button class="btn-lm btn-lm-ghost" style="padding:6px 10px;font-size:.8rem" onclick="logout()">↩</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MAIN -->
+  <div id="main-content">
+    <div id="page-root"></div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+// ============================================================
+// DATA
+// ============================================================
+const CATEGORIES = [
+  { id:"coordinacion",   name:"Coordinación",              icon:"⚡",  color:"#FF6B35",
+    subcats:["Copulativas","Disyuntivas","Adversativas","Explicativas","Distributivas","Causales coord.","Ilativas"],
+    desc:"Proposiciones con igual jerarquía sintáctica unidas por conjunciones coordinantes." },
+  { id:"sustantivas",    name:"Subordinadas Sustantivas",   icon:"📚", color:"#7C3AED",
+    subcats:["Sujeto","Objeto Directo","Obj. Indirecto","Atributo","Compl. Preposicional","Infinitivo","Gerundio","Exclamativa indirecta"],
+    desc:"Desempeñan la función de un sustantivo dentro de la oración principal." },
+  { id:"adjetivas",      name:"Subordinadas Adjetivas",     icon:"🔗", color:"#059669",
+    subcats:["Especificativa","Explicativa","Relativo 'quien'","Relativo 'cuyo'","Relativo 'donde'","Relativo 'cuando'","Contacto (sin nexo)","Participio"],
+    desc:"Funcionan como adjetivos, modificando a un sustantivo antecedente." },
+  { id:"adverbiales",    name:"Subordinadas Adverbiales",   icon:"🕐", color:"#0EA5E9",
+    subcats:["Temporales","Causales","Condicionales","Concesivas","Finales","Consecutivas","Comparativas","Modales"],
+    desc:"Funcionan como adverbios; expresan tiempo, causa, condición, concesión, etc." },
+  { id:"yuxtaposicion",  name:"Yuxtaposición",              icon:"✂️", color:"#F59E0B",
+    subcats:["Enumerativa","Explicativa asindética","Adversativa asindética","Causal asindética"],
+    desc:"Proposiciones unidas sin nexo, solo por signos de puntuación." },
+  { id:"estilisticas",   name:"Técnicas Estilísticas",      icon:"✨", color:"#EC4899",
+    subcats:["Hipotaxis inversa","Oraciones escindidas","Polisíndeton","Asíndeton","Zeugma","Período retórico","Discurso indirecto libre","Nominalización"],
+    desc:"Recursos avanzados para enriquecer la expresión escrita y oral." },
+  { id:"comparativa",    name:"Comparativa Multilingüe",    icon:"🌍", color:"#6366F1",
+    subcats:["Chino","Hindi","Coreano","Japonés","Árabe","Ruso","Francés","Alemán","Portugués"],
+    desc:"Análisis comparativo de oraciones compuestas en diferentes sistemas lingüísticos." }
+];
+
+const LESSONS = {
+  coordinacion:[
+    { id:"c1", title:"Conjunciones Copulativas", level:"Básico",
+      theory:`Las oraciones copulativas unen ideas sumando o acumulando. Los nexos principales son: <b>y, e, ni, que</b>.<br><br>
+<b>y / e</b>: suma ideas positivas → <i>Estudio y trabajo.</i><br>
+<b>ni</b>: suma ideas negativas → <i>Ni come ni duerme.</i><br>
+<b>que</b>: equivale a 'y' en contextos literarios → <i>Dale que dale.</i>`,
+      examples:[
+        { es:"María estudia y Pedro trabaja.", en:"María studies and Pedro works.", type:"Copulativa con 'y'" },
+        { es:"No come ni duerme bien.", en:"He neither eats nor sleeps well.", type:"Copulativa con 'ni'" },
+        { es:"Llegó e inmediatamente comenzó.", en:"He arrived and immediately began.", type:"Copulativa con 'e'" }
+      ],
+      exercises:[
+        { q:"¿Qué nexo une: 'Estudia ___ trabaja todo el día'?", opts:["y","pero","porque","si"], ans:0 },
+        { q:"Identifica el tipo: 'No ríe ni llora'", opts:["Copulativa negativa","Adversativa","Disyuntiva","Causal"], ans:0 },
+        { q:"¿Cuál es la forma correcta ante vocal inicial?", opts:["e (no y)","y siempre","ni siempre","o siempre"], ans:0 }
+      ]
+    },
+    { id:"c2", title:"Conjunciones Adversativas", level:"Intermedio",
+      theory:`Las adversativas oponen o contrastan dos proposiciones:<br><br>
+<b>pero</b>: oposición parcial → <i>Quiero ir, pero estoy cansado.</i><br>
+<b>sino (que)</b>: oposición total → <i>No es tonto, sino listo.</i><br>
+<b>sin embargo / no obstante</b>: adversativas del discurso → <i>Llovía; sin embargo, salí.</i>`,
+      examples:[
+        { es:"Es inteligente pero perezoso.", en:"He is intelligent but lazy.", type:"Adversativa restrictiva" },
+        { es:"No llegó tarde, sino muy tarde.", en:"He didn't arrive late, but very late.", type:"Adversativa exclusiva" },
+        { es:"Estudió mucho; no obstante, suspendió.", en:"He studied a lot; however, he failed.", type:"Adversativa discursiva" }
+      ],
+      exercises:[
+        { q:"Elige el nexo: 'No es médico ___ enfermero'", opts:["sino","pero","aunque","sin embargo"], ans:0 },
+        { q:"¿Qué adversativa expresa oposición parcial?", opts:["pero","sino","sin embargo","aunque"], ans:0 },
+        { q:"'Trabajó duro; ___, no recibió aumento.'", opts:["sin embargo","sino","pero","o"], ans:0 }
+      ]
+    }
+  ],
+  adverbiales:[
+    { id:"a1", title:"Subordinadas Temporales", level:"Básico",
+      theory:`Expresan el tiempo en que ocurre la acción. Nexos:<br><br>
+<b>cuando</b>: simultaneidad → <i>Cuando llegué, él dormía.</i><br>
+<b>mientras</b>: duración simultánea → <i>Mientras cocina, escucha música.</i><br>
+<b>antes de que</b>: anterioridad → <i>Antes de que llegues, prepararé todo.</i><br>
+<b>después de que</b>: posterioridad → <i>Después de que comió, descansó.</i><br>
+<b>en cuanto</b>: inmediatez → <i>En cuanto salga, te llamo.</i><br>
+<b>desde que</b>: punto de inicio → <i>Desde que llegaste, todo cambió.</i>`,
+      examples:[
+        { es:"Cuando llegué, él ya se había ido.", en:"When I arrived, he had already left.", type:"Temporal con 'cuando'" },
+        { es:"Mientras dormía, soñé con el mar.", en:"While I slept, I dreamed of the sea.", type:"Temporal con 'mientras'" },
+        { es:"En cuanto termine, te aviso.", en:"As soon as I finish, I'll let you know.", type:"Temporal de inmediatez" }
+      ],
+      exercises:[
+        { q:"¿Qué nexo indica inmediatez temporal?", opts:["en cuanto","cuando","mientras","desde que"], ans:0 },
+        { q:"'___ llegues, llámame.' ¿Nexo de anterioridad?", opts:["Antes de que","Cuando","Mientras","Desde que"], ans:0 },
+        { q:"Identifica la sub. temporal: 'Desde que te fuiste, todo cambió.'", opts:["Desde que te fuiste","todo cambió","te fuiste","todo"], ans:0 }
+      ]
+    },
+    { id:"a2", title:"Subordinadas Condicionales", level:"Intermedio",
+      theory:`Expresan la condición necesaria para que se cumpla la acción:<br><br>
+<b>si</b> + indicativo → condición real → <i>Si estudias, aprobarás.</i><br>
+<b>si</b> + imperf. subj. → irreal presente → <i>Si estudiaras, aprobarías.</i><br>
+<b>si</b> + pluscuamp. subj. → irreal pasado → <i>Si hubieras estudiado, habrías aprobado.</i><br>
+<b>a menos que</b>: condición negativa → <i>A menos que llueva, saldremos.</i><br>
+<b>con tal de que</b>: permisiva → <i>Con tal de que vengas, acepto.</i>`,
+      examples:[
+        { es:"Si estudias, aprobarás el examen.", en:"If you study, you will pass.", type:"Condicional real" },
+        { es:"Si tuvieras dinero, viajarías.", en:"If you had money, you would travel.", type:"Condicional irreal presente" },
+        { es:"A menos que llueva, saldremos.", en:"Unless it rains, we will go out.", type:"Condicional negativa" }
+      ],
+      exercises:[
+        { q:"'Si ___ tiempo, te ayudaré.' ¿Verbo correcto?", opts:["tengo","tenga","tuviera","tendría"], ans:0 },
+        { q:"'Si hubiera estudiado, ___.' ¿Modo?", opts:["habría aprobado","aprobaré","apruebo","aprobaba"], ans:0 },
+        { q:"¿Qué nexo equivale a 'if not' en español?", opts:["a menos que","con tal de que","siempre que","aunque"], ans:0 }
+      ]
+    },
+    { id:"a3", title:"Subordinadas Concesivas", level:"Avanzado",
+      theory:`Expresan un obstáculo que no impide la acción principal:<br><br>
+<b>aunque</b> + indicativo: hecho real → <i>Aunque llueve, salgo.</i><br>
+<b>aunque</b> + subjuntivo: hipotético → <i>Aunque llueva, saldré.</i><br>
+<b>a pesar de que</b>: enfática → <i>A pesar de que está enfermo, trabaja.</i><br>
+<b>por más que</b>: de grado → <i>Por más que insistas, no cederé.</i><br>
+<b>si bien</b>: formal → <i>Si bien es caro, vale la pena.</i>`,
+      examples:[
+        { es:"Aunque está cansado, sigue trabajando.", en:"Although he is tired, he keeps working.", type:"Concesiva real (indicativo)" },
+        { es:"Por más que lo intente, no puede.", en:"No matter how hard he tries, he can't.", type:"Concesiva de grado" },
+        { es:"Si bien es difícil, es posible.", en:"Even though it is difficult, it is possible.", type:"Concesiva formal" }
+      ],
+      exercises:[
+        { q:"'Aunque ___ (llover), saldré.' ¿Modo hipótesis?", opts:["llueva (subjuntivo)","llueve (indicativo)","llovió","lloverá"], ans:0 },
+        { q:"¿Qué diferencia 'aunque+ind.' de 'aunque+subj.'?", opts:["Realidad vs. hipótesis","Presente vs. pasado","Positivo vs. negativo","Nada"], ans:0 },
+        { q:"Nexo para 'no matter how much':", opts:["por más que","aunque","si bien","a pesar de"], ans:0 }
+      ]
+    }
+  ],
+  comparativa:[
+    { id:"cm1", title:"Comparativa: Chino y Japonés", level:"Avanzado",
+      theory:`<b>CHINO MANDARÍN (中文)</b><br>
+Sin conjugación verbal. Tiempo con partículas (了/过/着) y adverbios.<br>
+Conjunciones correlativas: 虽然…但 (aunque), 因为…所以 (porque…por eso), 如果…就 (si…entonces).<br><br>
+<b>JAPONÉS (日本語)</b><br>
+Tres sistemas: Hiragana + Katakana + Kanji. Orden SOV.<br>
+Subordinada SIEMPRE precede al verbo principal.<br>
+から/ので = porque · けれども = aunque · ように = para que`,
+      examples:[
+        { es:"Aunque estaba cansado, estudió.", en:"Although tired, he studied.", type:"Chino: 虽然他很累，但他学习了。" },
+        { es:"Porque estudió, aprobó.", en:"Because he studied, he passed.", type:"Japonés: 勉強したので、合格した。" },
+        { es:"Si llueve, me quedo.", en:"If it rains, I'll stay.", type:"Chino: 如果下雨，我就留下。" }
+      ],
+      exercises:[
+        { q:"En chino, ¿qué par expresa 'si…entonces'?", opts:["如果…就","虽然…但","因为…所以","当…时"], ans:0 },
+        { q:"En japonés, ¿qué posición ocupa la subordinada?", opts:["Antes del verbo principal","Después","Al final","Al inicio"], ans:0 },
+        { q:"En chino, ¿cómo se marca el tiempo verbal?", opts:["Con partículas y adverbios","Con conjugación","Con casos","Con prefijos"], ans:0 }
+      ]
+    },
+    { id:"cm2", title:"Comparativa: Árabe y Ruso", level:"Avanzado",
+      theory:`<b>ÁRABE (العربية)</b><br>
+Escritura de derecha a izquierda. Abjad (sistema consonántico). Orden VSO.<br>
+لأن (porque) · إذا (si) · على الرغم من أن (aunque) · أن (que completiva)<br><br>
+<b>RUSO (Русский)</b><br>
+Alfabeto cirílico. 6 casos gramaticales → orden libre.<br>
+потому что (porque) · если (si) · хотя (aunque) · чтобы (para que + subj. pasado)`,
+      examples:[
+        { es:"Porque estudió, aprobó.", en:"Because he studied, he passed.", type:"Árabe: لأنه درس، نجح." },
+        { es:"Si estudias, aprobarás.", en:"If you study, you'll pass.", type:"Ruso: Если будешь учиться, сдашь." },
+        { es:"Para que entiendas, explico.", en:"So that you understand, I explain.", type:"Ruso: Чтобы ты понял, объясню." }
+      ],
+      exercises:[
+        { q:"¿En qué dirección se escribe el árabe?", opts:["Derecha a izquierda","Izquierda a derecha","Vertical","Circular"], ans:0 },
+        { q:"¿Cuántos casos tiene el ruso?", opts:["6","4","3","8"], ans:0 },
+        { q:"En árabe, el orden básico es:", opts:["VSO","SVO","SOV","OVS"], ans:0 }
+      ]
+    }
+  ]
+};
+
+const COMP_TABLE = [
+  { tipo:"Causal",    es:"porque",  en:"because",  zh:"因为",  ja:"から/ので", ko:"때문에",  ar:"لأن",       ru:"потому что", fr:"parce que", de:"weil",     pt:"porque", hi:"क्योंकि" },
+  { tipo:"Concesiva", es:"aunque",  en:"although", zh:"虽然",  ja:"けれども",  ko:"지만",    ar:"على الرغم", ru:"хотя",       fr:"bien que",  de:"obwohl",   pt:"embora", hi:"हालाँकि" },
+  { tipo:"Condicional",es:"si",     en:"if",       zh:"如果",  ja:"たら/ば",   ko:"면/으면", ar:"إذا",        ru:"если",       fr:"si",        de:"wenn",     pt:"se",     hi:"अगर" },
+  { tipo:"Final",     es:"para que",en:"so that",  zh:"为了",  ja:"ように",    ko:"도록",    ar:"لكي",        ru:"чтобы",      fr:"pour que",  de:"damit",    pt:"para que",hi:"ताकि" },
+  { tipo:"Temporal",  es:"cuando",  en:"when",     zh:"当…时", ja:"とき",      ko:"때",      ar:"عندما",      ru:"когда",      fr:"quand",     de:"wenn/als", pt:"quando", hi:"जब" },
+  { tipo:"Completiva",es:"que",     en:"that",     zh:"Ø/说",  ja:"と/こと",   ko:"것",      ar:"أن",         ru:"что",        fr:"que",       de:"dass",     pt:"que",    hi:"कि" }
+];
+
+const LANG_INFO = [
+  { lang:"🇨🇳 Chino Mandarín", chars:"中文",     note:"Sin conjugación. Tiempo con partículas (了/过/着). Pares correlativas: 虽然…但, 因为…所以", dir:"Izq → Der", order:"SVO", script:"Logográfico" },
+  { lang:"🇯🇵 Japonés",        chars:"日本語",   note:"Tres sistemas: Hiragana + Katakana + Kanji. Subordinada ANTES del verbo principal.", dir:"Izq→Der/Vertical", order:"SOV", script:"Mixto (3 sistemas)" },
+  { lang:"🇰🇷 Coreano",        chars:"한국어",   note:"Altamente aglutinante. Sufijos verbales como nexos. Bloques silábicos (Hangul).", dir:"Izq → Der", order:"SOV", script:"Hangul (fonémico)" },
+  { lang:"🇸🇦 Árabe",          chars:"العربية", note:"Abjad consonántico. Raíz trilítera. Sin vocales breves en escritura estándar.", dir:"Der → Izq", order:"VSO", script:"Abjad" },
+  { lang:"🇷🇺 Ruso",           chars:"Русский", note:"6 casos gramaticales permiten orden libre. Aspecto verbal perfectivo/imperfectivo.", dir:"Izq → Der", order:"Libre", script:"Cirílico" },
+  { lang:"🇮🇳 Hindi",          chars:"हिन्दी",  note:"Abugida Devanāgarī. Verbo siempre al final. Subordinación con कि (ki).", dir:"Izq → Der", order:"SOV", script:"Devanāgarī" }
+];
+
+// ============================================================
+// STATE & DB
+// ============================================================
+let DB = {
+  users:[
+    { id:1, name:"Admin Sistema",  email:"admin@lingua.edu",  role:"admin",   pass:"admin123", avatar:"👑",  score:0 },
+    { id:2, name:"Prof. García",   email:"garcia@lingua.edu", role:"teacher", pass:"prof123",  avatar:"👨‍🏫", score:0 },
+    { id:3, name:"Ana Estudiante", email:"ana@lingua.edu",    role:"student", pass:"est123",   avatar:"👩‍🎓", score:0 },
+    { id:4, name:"Luis Martínez",  email:"luis@lingua.edu",   role:"student", pass:"est456",   avatar:"👨‍🎓", score:150 }
+  ],
+  courses:[
+    { id:1, title:"Oraciones Compuestas: Nivel Básico",    teacherId:2, students:[3,4], published:true,  cats:["coordinacion","adverbiales"] },
+    { id:2, title:"Gramática Comparativa Internacional",    teacherId:2, students:[3],  published:true,  cats:["comparativa"] }
+  ],
+  progress:{ 3:{c1:{done:true,score:3}}, 4:{c1:{done:true,score:3},c2:{done:true,score:2}} }
+};
+
+let currentUser = null;
+let currentPage = 'dashboard';
+let currentParam = null;
+
+// ============================================================
+// AUTH
+// ============================================================
+function doLogin(){
+  const email = document.getElementById('inp-email').value.trim();
+  const pass  = document.getElementById('inp-pass').value;
+  const u = DB.users.find(x => x.email===email && x.pass===pass);
+  if(u){ loginAs(u); }
+  else { showErr('Email o contraseña incorrectos'); }
+}
+function quickLogin(role){ const u=DB.users.find(x=>x.role===role); if(u) loginAs(u); }
+function loginAs(u){
+  currentUser=u;
+  document.getElementById('screen-login').style.display='none';
+  document.getElementById('screen-app').style.display='block';
+  buildSidebar();
+  navigate('dashboard');
+}
+function logout(){
+  currentUser=null;
+  document.getElementById('screen-app').style.display='none';
+  document.getElementById('screen-login').style.display='flex';
+  document.getElementById('inp-email').value='';
+  document.getElementById('inp-pass').value='';
+}
+function showErr(msg){
+  const el=document.getElementById('login-err');
+  el.textContent=msg; el.style.display='block';
+  setTimeout(()=>el.style.display='none',3000);
+}
+
+// ============================================================
+// SIDEBAR
+// ============================================================
+function buildSidebar(){
+  document.getElementById('sb-avatar').textContent=currentUser.avatar;
+  document.getElementById('sb-name').textContent=currentUser.name.split(' ')[0];
+  const roleLabel = currentUser.role==='admin'?'👑 Admin':currentUser.role==='teacher'?'👨‍🏫 Profesor':'🎓 Estudiante';
+  document.getElementById('sb-role').textContent=roleLabel;
+
+  const NAV = {
+    admin:   [{id:'dashboard',label:'Panel Admin',icon:'🏠'},{id:'categories',label:'Categorías',icon:'📂'},{id:'users',label:'Usuarios',icon:'👥'}],
+    teacher: [{id:'dashboard',label:'Mi Panel',icon:'🏠'},{id:'create-course',label:'Crear Curso',icon:'➕'},{id:'categories',label:'Categorías',icon:'📂'}],
+    student: [{id:'dashboard',label:'Mi Aprendizaje',icon:'🏠'},{id:'categories',label:'Explorar',icon:'🔍'},{id:'comparative',label:'Comparativa',icon:'🌍'}]
+  };
+
+  const nav = document.getElementById('sidebar-nav');
+  nav.innerHTML = NAV[currentUser.role].map(item=>
+    `<div class="nav-lnk" id="nav-${item.id}" onclick="navigate('${item.id}')">
+       <span>${item.icon}</span> ${item.label}
+     </div>`
+  ).join('');
+
+  const catsEl = document.getElementById('sidebar-cats');
+  if(currentUser.role==='student'){
+    catsEl.innerHTML = `<div class="nav-section">Categorías</div>` +
+      CATEGORIES.slice(0,4).map(c=>
+        `<div class="nav-lnk" id="nav-cat-${c.id}" onclick="navigate('category','${c.id}')">
+           <span>${c.icon}</span> <span style="font-size:.83rem">${c.name.split(' ')[0]}</span>
+         </div>`
+      ).join('');
+  } else { catsEl.innerHTML=''; }
+}
+
+function updateSidebarActive(){
+  document.querySelectorAll('.nav-lnk').forEach(el=>el.classList.remove('active'));
+  const target = currentPage==='category' ? `nav-cat-${currentParam}` : `nav-${currentPage}`;
+  const el = document.getElementById(target);
+  if(el) el.classList.add('active');
+}
+
+// ============================================================
+// ROUTER
+// ============================================================
+function navigate(page, param=null){
+  currentPage=page; currentParam=param;
+  updateSidebarActive();
+  const root=document.getElementById('page-root');
+  root.innerHTML='';
+  closeSidebar();
+  if(page==='dashboard'){
+    if(currentUser.role==='admin') root.innerHTML=renderAdminDash();
+    else if(currentUser.role==='teacher') root.innerHTML=renderTeacherDash();
+    else root.innerHTML=renderStudentDash();
+    attachDashEvents();
+  } else if(page==='categories') root.innerHTML=renderAllCategories();
+  else if(page==='category')     root.innerHTML=renderCategoryPage(param);
+  else if(page==='lesson')       root.innerHTML=renderLessonPage(param);
+  else if(page==='create-course'){ root.innerHTML=renderCreateCourse(); attachCourseEvents(); }
+  else if(page==='comparative')  root.innerHTML=renderComparativePage();
+  else if(page==='users')        root.innerHTML=renderUsersAdmin();
+  window.scrollTo(0,0);
+}
+
+// ============================================================
+// MOBILE SIDEBAR
+// ============================================================
+function toggleSidebar(){
+  document.getElementById('sidebar').classList.toggle('open');
+  document.getElementById('overlay').classList.toggle('show');
+}
+function closeSidebar(){
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('overlay').classList.remove('show');
+}
+
+// ============================================================
+// HELPERS
+// ============================================================
+function pct(done, total){ return total ? Math.round(done/total*100) : 0; }
+function getLevelBadge(level){
+  if(level==='Básico')    return '<span class="bdg bdg-basic">Básico</span>';
+  if(level==='Intermedio')return '<span class="bdg bdg-inter">Intermedio</span>';
+  return '<span class="bdg bdg-adv">Avanzado</span>';
+}
+function allLessons(){ return Object.values(LESSONS).flat(); }
+function getUserProgress(uid){ return DB.progress[uid]||{}; }
+function statCard(icon,num,lbl){
+  return `<div class="col-6 col-md-3">
+    <div class="lm-card text-center p-3">
+      <div style="font-size:1.5rem;margin-bottom:6px">${icon}</div>
+      <div class="stat-val">${num}</div>
+      <div class="stat-lbl">${lbl}</div>
+    </div>
+  </div>`;
+}
+function catTagsHtml(subcats, max=4){
+  let html = subcats.slice(0,max).map(s=>`<span class="cat-tag">${s}</span>`).join('');
+  if(subcats.length>max) html+=`<span class="cat-tag">+${subcats.length-max}</span>`;
+  return html;
+}
+function progBar(val, color='var(--accent)'){
+  return `<div class="lm-prog"><div class="lm-prog-fill" style="width:${val}%;background:${color}"></div></div>`;
+}
+
+// ============================================================
+// ADMIN DASHBOARD
+// ============================================================
+function renderAdminDash(){
+  const students = DB.users.filter(u=>u.role==='student');
+  const totalProg = Object.values(DB.progress).reduce((a,u)=>a+Object.keys(u).length,0);
+  const totalPts = DB.users.reduce((a,u)=>a+(u.score||0),0);
+  return `
+  <p class="page-title">Panel de Administración</p>
+  <p class="page-sub">Gestión global del sistema LinguaMaestra</p>
+  <div class="row g-3 mb-4">
+    ${statCard('👥',DB.users.length,'Total Usuarios')}
+    ${statCard('🎓',students.length,'Estudiantes')}
+    ${statCard('📚',DB.courses.length,'Cursos')}
+    ${statCard('📂',CATEGORIES.length,'Categorías')}
+    ${statCard('✅',totalProg,'Lecciones completadas')}
+    ${statCard('⭐',totalPts,'Puntos totales')}
+    ${statCard('🌍',11,'Idiomas comparados')}
+    ${statCard('📝',allLessons().length,'Lecciones base')}
+  </div>
+  <div class="row g-3">
+    <div class="col-12 col-lg-7">
+      <div class="lm-card">
+        <h6 class="fw-bold text-white mb-3">👥 Usuarios del Sistema</h6>
+        <div class="table-responsive">
+          <table class="lm-table">
+            <thead><tr><th>Usuario</th><th>Email</th><th>Rol</th><th>Puntos</th></tr></thead>
+            <tbody>
+              ${DB.users.map(u=>`<tr>
+                <td>${u.avatar} ${u.name}</td>
+                <td style="color:var(--muted)">${u.email}</td>
+                <td><span class="bdg bdg-${u.role}">${u.role}</span></td>
+                <td class="mono">${u.score||'—'}</td>
+              </tr>`).join('')}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <div class="col-12 col-lg-5">
+      <div class="lm-card">
+        <h6 class="fw-bold text-white mb-3">📂 Categorías del Sistema</h6>
+        ${CATEGORIES.map(c=>`
+          <div class="d-flex align-items-center gap-2 py-2" style="border-bottom:1px solid var(--border)">
+            <span style="font-size:1.1rem">${c.icon}</span>
+            <div style="flex:1">
+              <div class="fw-bold" style="font-size:.88rem;color:#fff">${c.name}</div>
+              <div style="font-size:.72rem;color:var(--muted)">${c.subcats.length} subcategorías</div>
+            </div>
+            ${progBar(Math.floor(Math.random()*50+30), c.color)}
+          </div>`).join('')}
+      </div>
+    </div>
+  </div>`;
+}
+
+// ============================================================
+// TEACHER DASHBOARD
+// ============================================================
+function renderTeacherDash(){
+  const myCourses = DB.courses.filter(c=>c.teacherId===currentUser.id);
+  const myStudents = [...new Set(myCourses.flatMap(c=>c.students))];
+  return `
+  <p class="page-title">Panel del Profesor</p>
+  <p class="page-sub">Bienvenido/a, ${currentUser.name.split(' ')[1]||currentUser.name}</p>
+  <div class="row g-3 mb-4">
+    ${statCard('📚',myCourses.length,'Mis cursos')}
+    ${statCard('🎓',myStudents.length,'Estudiantes')}
+    ${statCard('📂',CATEGORIES.length,'Categorías')}
+    ${statCard('📖',allLessons().length,'Lecciones base')}
+  </div>
+  <div class="row g-3 mb-4">
+    <div class="col-12 col-lg-6">
+      <div class="lm-card">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <h6 class="fw-bold text-white mb-0">Mis Cursos</h6>
+          <button class="btn-lm btn-lm-accent" onclick="navigate('create-course')">+ Nuevo Curso</button>
+        </div>
+        ${myCourses.length===0
+          ? `<p style="color:var(--muted);font-size:.88rem">No tienes cursos creados aún.</p>`
+          : myCourses.map(c=>`
+            <div class="course-card">
+              <div class="d-flex justify-content-between align-items-start">
+                <div>
+                  <div class="fw-bold text-white mb-1">${c.title}</div>
+                  <small style="color:var(--muted)">${c.students.length} estudiantes · ${c.cats.length} categorías</small>
+                </div>
+                <span class="bdg ${c.published?'bdg-student':'bdg-admin'}">${c.published?'Publicado':'Borrador'}</span>
+              </div>
+            </div>`).join('')}
+      </div>
+    </div>
+    <div class="col-12 col-lg-6">
+      <div class="lm-card">
+        <h6 class="fw-bold text-white mb-3">✏️ Crear Ejercicio Rápido</h6>
+        ${renderExerciseForm()}
+      </div>
+    </div>
+  </div>
+  <div class="lm-card">
+    <h6 class="fw-bold text-white mb-3">📂 Explorar Categorías</h6>
+    <div class="row g-3">
+      ${CATEGORIES.map(c=>`
+        <div class="col-12 col-md-6 col-xl-4">
+          <div class="cat-card" style="--ccolor:${c.color}" onclick="navigate('category','${c.id}')">
+            <div style="font-size:1.8rem;margin-bottom:10px">${c.icon}</div>
+            <div class="fw-bold text-white mb-1">${c.name}</div>
+            <small style="color:var(--muted)">${c.subcats.length} subcategorías</small>
+            <div class="mt-2">${catTagsHtml(c.subcats,3)}</div>
+          </div>
+        </div>`).join('')}
+    </div>
+  </div>`;
+}
+
+function renderExerciseForm(){
+  return `
+  <div>
+    <div class="mb-2"><label class="lm-label">Pregunta</label>
+      <textarea class="lm-ta" id="eq-q" style="min-height:58px" placeholder="Escribe la pregunta..."></textarea></div>
+    ${['A','B','C','D'].map((l,i)=>`
+      <div class="d-flex align-items-center gap-2 mb-2">
+        <input type="radio" name="eq-ans" value="${i}" style="accent-color:var(--accent)" ${i===0?'checked':''}>
+        <input class="lm-inp" id="eq-opt${i}" placeholder="Opción ${l}" style="margin-bottom:0"/>
+      </div>`).join('')}
+    <small style="color:var(--muted);display:block;margin-bottom:10px">Selecciona el radio de la opción correcta</small>
+    <button class="btn-lm btn-lm-accent" id="save-eq-btn" onclick="saveExercise()">💾 Guardar ejercicio</button>
+  </div>`;
+}
+
+function saveExercise(){
+  const q=document.getElementById('eq-q').value.trim();
+  const opts=[0,1,2,3].map(i=>document.getElementById(`eq-opt${i}`).value.trim());
+  if(!q||opts.some(o=>!o)){ alert('Completa todos los campos'); return; }
+  const btn=document.getElementById('save-eq-btn');
+  btn.textContent='✅ Guardado'; btn.disabled=true;
+  setTimeout(()=>{btn.textContent='💾 Guardar ejercicio';btn.disabled=false;
+    document.getElementById('eq-q').value='';
+    [0,1,2,3].forEach(i=>document.getElementById(`eq-opt${i}`).value='');
+  },2000);
+}
+
+// ============================================================
+// STUDENT DASHBOARD
+// ============================================================
+function renderStudentDash(){
+  const prog = getUserProgress(currentUser.id);
+  const total = allLessons().length;
+  const done = Object.values(prog).filter(p=>p.done).length;
+  const pctVal = pct(done,total);
+  const enrolled = DB.courses.filter(c=>c.students.includes(currentUser.id));
+  return `
+  <p class="page-title">Mi Panel de Aprendizaje</p>
+  <p class="page-sub">¡Sigue practicando, ${currentUser.name.split(' ')[0]}!</p>
+  <div class="row g-3 mb-4">
+    ${statCard('📈',pctVal+'%','Progreso total')}
+    ${statCard('✅',done,'Lecciones completadas')}
+    ${statCard('⭐',currentUser.score||0,'Puntos acumulados')}
+    ${statCard('📚',enrolled.length,'Cursos inscritos')}
+  </div>
+  <div class="lm-card mb-4">
+    <div class="d-flex justify-content-between mb-2">
+      <span class="fw-bold" style="font-size:.88rem">Progreso general</span>
+      <span style="font-size:.83rem;color:var(--muted)">${done}/${total} lecciones</span>
+    </div>
+    <div class="lm-prog" style="height:10px">
+      <div class="lm-prog-fill" style="width:${pctVal}%;background:linear-gradient(90deg,var(--accent),var(--pink))"></div>
+    </div>
+  </div>
+  <h6 class="fw-bold text-white mb-3">📂 Explorar Categorías</h6>
+  <div class="row g-3 mb-4">
+    ${CATEGORIES.map(c=>{
+      const catLessons = LESSONS[c.id]||[];
+      const catDone = catLessons.filter(l=>prog[l.id]?.done).length;
+      const p = pct(catDone, catLessons.length);
+      return `<div class="col-12 col-md-6 col-xl-4">
+        <div class="cat-card" style="--ccolor:${c.color}" onclick="navigate('category','${c.id}')">
+          <div style="font-size:1.8rem;margin-bottom:10px">${c.icon}</div>
+          <div class="fw-bold text-white mb-1">${c.name}</div>
+          <p style="color:var(--muted);font-size:.78rem;margin-bottom:12px">${c.desc.substring(0,65)}…</p>
+          ${catLessons.length>0?`
+          <div class="d-flex justify-content-between mb-1" style="font-size:.72rem;color:var(--muted)">
+            <span>Progreso</span><span>${catDone}/${catLessons.length}</span>
+          </div>
+          ${progBar(p, c.color)}`:''}
+        </div>
+      </div>`;}).join('')}
+  </div>
+  <div class="lm-card">
+    <h6 class="fw-bold text-white mb-3">🌍 Tabla Comparativa Multilingüe</h6>
+    ${renderCompTable()}
+  </div>`;
+}
+
+// ============================================================
+// ALL CATEGORIES
+// ============================================================
+function renderAllCategories(){
+  return `
+  <p class="page-title">Todas las Categorías</p>
+  <p class="page-sub">100 técnicas en 7 grandes categorías gramaticales</p>
+  <div class="row g-3">
+    ${CATEGORIES.map(c=>`
+      <div class="col-12 col-md-6 col-xl-4">
+        <div class="cat-card" style="--ccolor:${c.color}" onclick="navigate('category','${c.id}')">
+          <div style="font-size:2rem;margin-bottom:10px">${c.icon}</div>
+          <div class="fw-bold text-white mb-1" style="font-size:1rem">${c.name}</div>
+          <p style="color:var(--muted);font-size:.82rem;line-height:1.5;margin-bottom:12px">${c.desc}</p>
+          <div>${catTagsHtml(c.subcats)}</div>
+        </div>
+      </div>`).join('')}
+  </div>`;
+}
+
+// ============================================================
+// CATEGORY PAGE
+// ============================================================
+function renderCategoryPage(catId){
+  const cat = CATEGORIES.find(c=>c.id===catId);
+  if(!cat) return '<p class="text-danger">Categoría no encontrada</p>';
+  const lessons = LESSONS[catId]||[];
+  const prog = getUserProgress(currentUser.id);
+
+  return `
+  <button class="back-btn" onclick="navigate('${currentUser.role==='student'?'dashboard':'dashboard'}')">← Volver al panel</button>
+  <div class="d-flex align-items-center gap-3 mb-2">
+    <span style="font-size:2.5rem">${cat.icon}</span>
+    <div>
+      <p class="page-title mb-0">${cat.name}</p>
+      <p class="page-sub mb-0">${cat.desc}</p>
+    </div>
+  </div>
+  <div class="mb-4 mt-2">${catTagsHtml(cat.subcats,20)}</div>
+
+  ${lessons.length===0
+    ? `<div class="lm-card text-center py-5">
+        <div style="font-size:2.5rem;margin-bottom:12px">🚧</div>
+        <p style="color:var(--muted)">Las lecciones de esta categoría están siendo preparadas.</p>
+        ${currentUser.role==='teacher'?`<button class="btn-lm btn-lm-accent mt-3" onclick="navigate('create-course')">+ Crear lección</button>`:''}
+      </div>`
+    : `<h6 class="fw-bold text-white mb-3">Lecciones disponibles</h6>
+      <div class="d-flex flex-column gap-2">
+        ${lessons.map((l,i)=>{
+          const done = prog[l.id]?.done;
+          return `<div class="lesson-row" onclick="navigate('lesson','${l.id}')">
+            <div class="lesson-num ${done?'done':''}">${done?'✓':'L'+(i+1)}</div>
+            <div style="flex:1">
+              <div class="fw-bold text-white">${l.title}</div>
+              <div class="d-flex align-items-center gap-2 mt-1 flex-wrap">
+                ${getLevelBadge(l.level)}
+                <small style="color:var(--muted)">${l.exercises.length} ejercicios</small>
+                ${done?`<small style="color:#34d399">✓ Completada · ${prog[l.id].score}/${l.exercises.length} pts</small>`:''}
+              </div>
+            </div>
+            <span style="color:var(--muted);font-size:1.2rem">›</span>
+          </div>`;}).join('')}
+      </div>`}
+
+  ${catId==='comparativa'?`
+  <div class="lm-card mt-4">
+    <h6 class="fw-bold text-white mb-3">Tabla de nexos por idioma</h6>
+    ${renderCompTable()}
+  </div>`:''}`;
+}
+
+// ============================================================
+// LESSON PAGE
+// ============================================================
+let quizState = { qi:0, answers:[], chosen:null, done:false };
+
+function renderLessonPage(lessonId){
+  const lesson = allLessons().find(l=>l.id===lessonId);
+  if(!lesson) return '<p class="text-danger">Lección no encontrada</p>';
+  quizState = { qi:0, answers:[], chosen:null, done:false };
+
+  const catId = Object.keys(LESSONS).find(k=>LESSONS[k].some(l=>l.id===lessonId));
+
+  return `
+  <button class="back-btn" onclick="navigate('category','${catId}')">← Volver a categoría</button>
+  <div class="d-flex justify-content-between align-items-start mb-3 flex-wrap gap-2">
+    <div>
+      <p class="page-title mb-1">${lesson.title}</p>
+      <div class="d-flex align-items-center gap-2">
+        ${getLevelBadge(lesson.level)}
+        <small style="color:var(--muted)">${lesson.exercises.length} ejercicios</small>
+      </div>
+    </div>
+  </div>
+
+  <!-- TABS -->
+  <ul class="nav mb-4" style="gap:8px">
+    <li><button class="btn-lm btn-lm-accent" id="tab-theory-btn" onclick="switchTab('theory','${lessonId}')">📖 Teoría</button></li>
+    <li><button class="btn-lm btn-lm-ghost" id="tab-examples-btn" onclick="switchTab('examples','${lessonId}')">💡 Ejemplos</button></li>
+    <li><button class="btn-lm btn-lm-ghost" id="tab-practice-btn" onclick="switchTab('practice','${lessonId}')">✏️ Práctica</button></li>
+  </ul>
+
+  <div id="tab-content">
+    ${renderTheoryTab(lesson)}
+  </div>`;
+}
+
+function switchTab(tab, lessonId){
+  const lesson = allLessons().find(l=>l.id===lessonId);
+  ['theory','examples','practice'].forEach(t=>{
+    const btn=document.getElementById(`tab-${t}-btn`);
+    if(btn){ btn.className = t===tab ? 'btn-lm btn-lm-accent' : 'btn-lm btn-lm-ghost'; }
+  });
+  const content=document.getElementById('tab-content');
+  if(tab==='theory') content.innerHTML=renderTheoryTab(lesson);
+  else if(tab==='examples') content.innerHTML=renderExamplesTab(lesson);
+  else content.innerHTML=renderPracticeTab(lesson);
+}
+
+function renderTheoryTab(lesson){
+  return `<div class="theory-box">${lesson.theory}</div>`;
+}
+
+function renderExamplesTab(lesson){
+  return lesson.examples.map((ex,i)=>`
+    <div class="mb-3">
+      <div class="mb-2" style="font-size:.72rem;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.5px">${ex.type}</div>
+      <div class="row g-2">
+        <div class="col-12 col-md-6"><div class="ex-es"><div class="ex-label">🇪🇸 Español</div><div class="ex-text">${ex.es}</div></div></div>
+        <div class="col-12 col-md-6"><div class="ex-en"><div class="ex-label">🇬🇧 English</div><div class="ex-text">${ex.en}</div></div></div>
+      </div>
+    </div>`).join('');
+}
+
+function renderPracticeTab(lesson){
+  if(quizState.done) return renderQuizResult(lesson);
+  return renderQuizQuestion(lesson);
+}
+
+function renderQuizProgress(lesson){
+  return `<div class="d-flex gap-1 mb-3">
+    ${lesson.exercises.map((_,i)=>`
+      <div class="quiz-dot ${i<quizState.qi?(quizState.answers[i]?'done-ok':'done-ko'):i===quizState.qi?'cur':''}"></div>`).join('')}
+  </div>`;
+}
+
+function renderQuizQuestion(lesson){
+  const q = lesson.exercises[quizState.qi];
+  return `
+  ${renderQuizProgress(lesson)}
+  <p style="font-size:.75rem;color:var(--muted);font-family:'JetBrains Mono',monospace;margin-bottom:10px">
+    Pregunta ${quizState.qi+1} de ${lesson.exercises.length}
+  </p>
+  <div class="fw-bold text-white mb-3" style="font-size:1.02rem;line-height:1.5">${q.q}</div>
+  <div class="d-flex flex-column gap-2 mb-3">
+    ${q.opts.map((opt,i)=>`
+      <button class="quiz-opt" id="qopt-${i}" onclick="chooseAnswer(${i},'${lesson.id}')">
+        <span class="mono me-2" style="color:var(--muted)">${String.fromCharCode(65+i)}.</span>${opt}
+      </button>`).join('')}
+  </div>`;
+}
+
+function renderQuizResult(lesson){
+  const score = quizState.answers.filter(Boolean).length;
+  const total = lesson.exercises.length;
+  const p = Math.round(score/total*100);
+  return `
+  <div class="success-box">
+    <div style="font-size:2.5rem;margin-bottom:8px">${p>=66?'🎉':'📖'}</div>
+    <h5 style="color:#6ee7b7;font-weight:800">${p>=66?'¡Excelente trabajo!':'Sigue practicando'}</h5>
+    <p style="color:#a7f3d0;margin-top:8px">Respuestas correctas: ${score} / ${total} — ${p}%</p>
+    <button class="btn-lm btn-lm-accent mt-3" onclick="retryQuiz('${lesson.id}')">🔄 Intentar de nuevo</button>
+  </div>`;
+}
+
+function chooseAnswer(idx, lessonId){
+  if(quizState.chosen!==null) return;
+  const lesson = allLessons().find(l=>l.id===lessonId);
+  const q = lesson.exercises[quizState.qi];
+  quizState.chosen = idx;
+  const ok = idx===q.ans;
+
+  // Style buttons
+  q.opts.forEach((_,i)=>{
+    const btn=document.getElementById(`qopt-${i}`);
+    if(!btn) return;
+    btn.disabled=true;
+    if(i===q.ans) btn.classList.add('correct');
+    else if(i===idx) btn.classList.add('wrong');
+  });
+
+  setTimeout(()=>{
+    quizState.answers.push(ok);
+    if(quizState.qi+1 < lesson.exercises.length){
+      quizState.qi++;
+      quizState.chosen=null;
+      document.getElementById('tab-content').innerHTML=renderPracticeTab(lesson);
+    } else {
+      quizState.done=true;
+      const score=quizState.answers.filter(Boolean).length;
+      completeLesson(lessonId, score, lesson.exercises.length);
+      document.getElementById('tab-content').innerHTML=renderPracticeTab(lesson);
+    }
+  }, 900);
+}
+
+function retryQuiz(lessonId){
+  quizState = { qi:0, answers:[], chosen:null, done:false };
+  const lesson = allLessons().find(l=>l.id===lessonId);
+  document.getElementById('tab-content').innerHTML=renderPracticeTab(lesson);
+}
+
+function completeLesson(lessonId, score, total){
+  if(currentUser.role!=='student') return;
+  const uid=currentUser.id;
+  if(!DB.progress[uid]) DB.progress[uid]={};
+  DB.progress[uid][lessonId]={done:true,score};
+  const pts = score*10;
+  const u = DB.users.find(x=>x.id===uid);
+  if(u) u.score=(u.score||0)+pts;
+  currentUser.score=(currentUser.score||0)+pts;
+  document.getElementById('sb-name').textContent=currentUser.name.split(' ')[0];
+}
+
+// ============================================================
+// CREATE COURSE
+// ============================================================
+function renderCreateCourse(){
+  return `
+  <button class="back-btn" onclick="navigate('dashboard')">← Volver al panel</button>
+  <p class="page-title">Crear Nuevo Curso</p>
+  <p class="page-sub">Diseña tu curso seleccionando categorías y añadiendo contenido</p>
+  <div class="lm-card mb-3">
+    <div class="mb-3"><label class="lm-label">Título del curso</label>
+      <input class="lm-inp" id="cc-title" placeholder="Ej: Oraciones Compuestas Avanzadas"/></div>
+    <div class="mb-0"><label class="lm-label">Descripción</label>
+      <textarea class="lm-ta" id="cc-desc" placeholder="Describe el objetivo del curso..."></textarea></div>
+  </div>
+  <div class="lm-card">
+    <h6 class="fw-bold text-white mb-3">Seleccionar Categorías</h6>
+    <div class="row g-3 mb-3" id="cat-select-grid">
+      ${CATEGORIES.map(c=>`
+        <div class="col-12 col-md-6 col-xl-4">
+          <div class="cat-card" style="--ccolor:${c.color}" id="catsel-${c.id}" onclick="toggleCatSel('${c.id}','${c.color}')">
+            <div class="d-flex justify-content-between align-items-start">
+              <span style="font-size:1.5rem">${c.icon}</span>
+              <span id="catsel-check-${c.id}" style="color:${c.color};font-weight:800;display:none">✓</span>
+            </div>
+            <div class="fw-bold text-white mt-2 mb-1">${c.name}</div>
+            <small style="color:var(--muted)">${c.subcats.length} subcategorías</small>
+          </div>
+        </div>`).join('')}
+    </div>
+    <div class="d-flex gap-2">
+      <button class="btn-lm btn-lm-accent" id="save-course-btn" onclick="saveCourse()">💾 Crear Curso</button>
+      <button class="btn-lm btn-lm-ghost" onclick="navigate('dashboard')">Cancelar</button>
+    </div>
+    <small id="cc-err" style="color:var(--muted);display:block;margin-top:10px">Completa el título y selecciona al menos una categoría.</small>
+  </div>`;
+}
+
+let selectedCats = [];
+
+function toggleCatSel(id, color){
+  const el=document.getElementById(`catsel-${id}`);
+  const check=document.getElementById(`catsel-check-${id}`);
+  if(selectedCats.includes(id)){
+    selectedCats=selectedCats.filter(c=>c!==id);
+    el.style.border='1px solid var(--border)';
+    el.style.background='var(--surface)';
+    check.style.display='none';
+  } else {
+    selectedCats.push(id);
+    el.style.border=`2px solid ${color}`;
+    el.style.background=`${color}18`;
+    check.style.display='inline';
+  }
+}
+
+function saveCourse(){
+  const title=document.getElementById('cc-title').value.trim();
+  if(!title||selectedCats.length===0){
+    document.getElementById('cc-err').style.color='#f87171';
+    return;
+  }
+  DB.courses.push({ id:Date.now(), title, teacherId:currentUser.id, students:[], published:false, cats:selectedCats });
+  selectedCats=[];
+  const btn=document.getElementById('save-course-btn');
+  btn.textContent='✅ ¡Curso creado!'; btn.disabled=true;
+  setTimeout(()=>navigate('dashboard'),1500);
+}
+
+function attachCourseEvents(){ selectedCats=[]; }
+function attachDashEvents(){}
+
+// ============================================================
+// COMPARATIVE PAGE
+// ============================================================
+function renderComparativePage(){
+  return `
+  <p class="page-title">🌍 Comparativa Multilingüe</p>
+  <p class="page-sub">Nexos de subordinación en 11 idiomas y sistemas de escritura</p>
+  <div class="lm-card mb-4" style="overflow-x:auto">${renderCompTable()}</div>
+  <div class="row g-3">
+    ${LANG_INFO.map(l=>`
+      <div class="col-12 col-md-6">
+        <div class="lm-card">
+          <div class="d-flex justify-content-between align-items-start mb-2">
+            <h6 class="fw-bold text-white mb-0">${l.lang}</h6>
+            <span style="font-size:1.3rem;font-family:serif;color:var(--accent2)">${l.chars}</span>
+          </div>
+          <p style="color:var(--muted);font-size:.83rem;line-height:1.6;margin-bottom:10px">${l.note}</p>
+          <div class="d-flex gap-1 flex-wrap">
+            <span class="cat-tag">🔄 ${l.dir}</span>
+            <span class="cat-tag">📐 ${l.order}</span>
+            <span class="cat-tag">✍️ ${l.script}</span>
+          </div>
+        </div>
+      </div>`).join('')}
+  </div>`;
+}
+
+function renderCompTable(){
+  const langs=[['es','🇪🇸'],['en','🇬🇧'],['zh','🇨🇳'],['ja','🇯🇵'],['ko','🇰🇷'],['ar','🇸🇦'],['ru','🇷🇺'],['fr','🇫🇷'],['de','🇩🇪'],['pt','🇧🇷'],['hi','🇮🇳']];
+  return `<div style="overflow-x:auto">
+  <table class="lm-table">
+    <thead><tr>
+      <th>Tipo</th>${langs.map(([,f])=>`<th>${f}</th>`).join('')}
+    </tr></thead>
+    <tbody>
+      ${COMP_TABLE.map(row=>`<tr>
+        <td class="fw-bold">${row.tipo}</td>
+        ${langs.map(([k])=>`<td class="mono" style="color:var(--muted)">${row[k]}</td>`).join('')}
+      </tr>`).join('')}
+    </tbody>
+  </table></div>`;
+}
+
+// ============================================================
+// USERS ADMIN PAGE
+// ============================================================
+function renderUsersAdmin(){
+  return `
+  <p class="page-title">👥 Gestión de Usuarios</p>
+  <p class="page-sub">Administra todos los usuarios del sistema</p>
+  <div class="lm-card mb-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <h6 class="fw-bold text-white mb-0">Usuarios registrados</h6>
+      <span class="bdg bdg-admin">${DB.users.length} total</span>
+    </div>
+    <div class="table-responsive">
+      <table class="lm-table">
+        <thead><tr><th>Avatar</th><th>Nombre</th><th>Email</th><th>Rol</th><th>Puntos</th><th>Estado</th></tr></thead>
+        <tbody>
+          ${DB.users.map(u=>`<tr>
+            <td style="font-size:1.3rem">${u.avatar}</td>
+            <td class="fw-bold">${u.name}</td>
+            <td style="color:var(--muted)">${u.email}</td>
+            <td><span class="bdg bdg-${u.role}">${u.role}</span></td>
+            <td class="mono">${u.score||0}</td>
+            <td><span class="bdg bdg-student">Activo</span></td>
+          </tr>`).join('')}
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="row g-3">
+    <div class="col-12 col-md-6">
+      <div class="lm-card">
+        <h6 class="fw-bold text-white mb-3">📊 Distribución por roles</h6>
+        ${['admin','teacher','student'].map(r=>{
+          const count=DB.users.filter(u=>u.role===r).length;
+          const p=pct(count,DB.users.length);
+          return `<div class="mb-3">
+            <div class="d-flex justify-content-between mb-1">
+              <span style="font-size:.85rem;font-weight:600">${r.charAt(0).toUpperCase()+r.slice(1)}</span>
+              <span style="font-size:.8rem;color:var(--muted)">${count} (${p}%)</span>
+            </div>
+            ${progBar(p,'var(--accent)')}
+          </div>`;}).join('')}
+      </div>
+    </div>
+    <div class="col-12 col-md-6">
+      <div class="lm-card">
+        <h6 class="fw-bold text-white mb-3">📈 Progreso por estudiante</h6>
+        ${DB.users.filter(u=>u.role==='student').map(u=>{
+          const prog=getUserProgress(u.id);
+          const done=Object.values(prog).filter(p=>p.done).length;
+          const p=pct(done,allLessons().length);
+          return `<div class="mb-3">
+            <div class="d-flex justify-content-between mb-1">
+              <span style="font-size:.85rem">${u.avatar} ${u.name.split(' ')[0]}</span>
+              <span style="font-size:.8rem;color:var(--muted)">${done}/${allLessons().length} lecciones</span>
+            </div>
+            ${progBar(p,'var(--green)')}
+          </div>`;}).join('')}
+      </div>
+    </div>
+  </div>`;
+}
+</script>
+</body>
+</html>

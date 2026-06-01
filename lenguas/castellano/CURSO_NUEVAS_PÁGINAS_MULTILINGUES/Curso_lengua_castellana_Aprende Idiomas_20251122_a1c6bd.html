@@ -1,0 +1,1438 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LinguaLearn - Plataforma Educativa de Idiomas</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #3498db;
+            --secondary-color: #2c3e50;
+            --accent-color: #e74c3c;
+            --light-color: #ecf0f1;
+            --success-color: #2ecc71;
+            --warning-color: #f39c12;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8f9fa;
+        }
+        
+        .navbar-brand {
+            font-weight: bold;
+            font-size: 1.5rem;
+        }
+        
+        .hero-section {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 5rem 0;
+            margin-bottom: 3rem;
+        }
+        
+        .language-card {
+            transition: transform 0.3s, box-shadow 0.3s;
+            border: none;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 1.5rem;
+        }
+        
+        .language-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+        
+        .language-card .card-header {
+            background-color: var(--secondary-color);
+            color: white;
+            font-weight: bold;
+            text-align: center;
+        }
+        
+        .exercise-container {
+            background-color: white;
+            border-radius: 10px;
+            padding: 2rem;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            margin-bottom: 2rem;
+        }
+        
+        .exercise-title {
+            color: var(--secondary-color);
+            border-bottom: 2px solid var(--primary-color);
+            padding-bottom: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+        
+        .btn-primary:hover {
+            background-color: #2980b9;
+            border-color: #2980b9;
+        }
+        
+        .result-correct {
+            color: var(--success-color);
+            font-weight: bold;
+        }
+        
+        .result-incorrect {
+            color: var(--accent-color);
+            font-weight: bold;
+        }
+        
+        .language-flag {
+            font-size: 2rem;
+            margin-right: 10px;
+        }
+        
+        .progress-section {
+            background-color: var(--light-color);
+            padding: 2rem;
+            border-radius: 10px;
+            margin-top: 2rem;
+        }
+        
+        footer {
+            background-color: var(--secondary-color);
+            color: white;
+            padding: 2rem 0;
+            margin-top: 3rem;
+        }
+        
+        .user-section {
+            background-color: white;
+            border-radius: 10px;
+            padding: 2rem;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            margin-bottom: 2rem;
+        }
+        
+        .medal-container {
+            text-align: center;
+            padding: 2rem;
+            background: linear-gradient(135deg, #ffd700, #ffec8b);
+            border-radius: 10px;
+            margin: 2rem 0;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .medal {
+            font-size: 5rem;
+            color: gold;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            margin-bottom: 1rem;
+        }
+        
+        .achievement-badge {
+            display: inline-block;
+            background-color: var(--primary-color);
+            color: white;
+            border-radius: 50px;
+            padding: 5px 15px;
+            margin: 5px;
+            font-size: 0.9rem;
+        }
+        
+        .stats-card {
+            text-align: center;
+            padding: 1.5rem;
+            border-radius: 10px;
+            background-color: white;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            margin-bottom: 1.5rem;
+        }
+        
+        .stats-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+        
+        .login-container {
+            max-width: 400px;
+            margin: 5rem auto;
+            padding: 2rem;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .profile-pic {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid var(--primary-color);
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand" href="#">
+                <i class="fas fa-language me-2"></i>LinguaLearn
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#home">Inicio</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#languages">Idiomas</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#exercises">Ejercicios</a>
+                    </li>
+                </ul>
+                <ul class="navbar-nav ms-auto" id="auth-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#loginModal">Iniciar Sesión</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#registerModal">Registrarse</a>
+                    </li>
+                </ul>
+                <ul class="navbar-nav ms-auto" id="user-nav" style="display: none;">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown">
+                            <span id="user-greeting"></span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="#" onclick="showUserProfile()">Mi Perfil</a></li>
+                            <li><a class="dropdown-item" href="#" onclick="showProgress()">Mi Progreso</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="#" onclick="logout()">Cerrar Sesión</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Login Modal -->
+    <div class="modal fade" id="loginModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Iniciar Sesión</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="loginForm">
+                        <div class="mb-3">
+                            <label for="loginEmail" class="form-label">Correo Electrónico</label>
+                            <input type="email" class="form-control" id="loginEmail" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="loginPassword" class="form-label">Contraseña</label>
+                            <input type="password" class="form-control" id="loginPassword" required>
+                        </div>
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary">Iniciar Sesión</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Register Modal -->
+    <div class="modal fade" id="registerModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Crear Cuenta</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="registerForm">
+                        <div class="mb-3">
+                            <label for="registerName" class="form-label">Nombre Completo</label>
+                            <input type="text" class="form-control" id="registerName" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="registerEmail" class="form-label">Correo Electrónico</label>
+                            <input type="email" class="form-control" id="registerEmail" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="registerPassword" class="form-label">Contraseña</label>
+                            <input type="password" class="form-control" id="registerPassword" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="registerConfirmPassword" class="form-label">Confirmar Contraseña</label>
+                            <input type="password" class="form-control" id="registerConfirmPassword" required>
+                        </div>
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary">Registrarse</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Hero Section -->
+    <section class="hero-section" id="home">
+        <div class="container text-center">
+            <h1 class="display-4 fw-bold">Aprende Idiomas de Forma Interactiva</h1>
+            <p class="lead">Practica español, inglés, francés, japonés y muchos más idiomas con ejercicios divertidos y efectivos.</p>
+            <a href="#languages" class="btn btn-light btn-lg mt-3">Comenzar a Aprender</a>
+        </div>
+    </section>
+
+    <!-- User Profile Section -->
+    <section class="container" id="user-profile" style="display: none;">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2>Mi Perfil</h2>
+            <button class="btn btn-outline-secondary" onclick="backToLanguages()">
+                <i class="fas fa-arrow-left me-2"></i>Volver a Idiomas
+            </button>
+        </div>
+        
+        <div class="user-section">
+            <div class="row">
+                <div class="col-md-4 text-center">
+                    <img src="https://ui-avatars.com/api/?name=Usuario&background=3498db&color=fff&size=100" 
+                         class="profile-pic mb-3" id="profile-picture">
+                    <h3 id="profile-name">Usuario</h3>
+                    <p id="profile-email">usuario@ejemplo.com</p>
+                    <p>Miembro desde: <span id="member-since"></span></p>
+                </div>
+                <div class="col-md-8">
+                    <h4>Mis Estadísticas</h4>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="stats-card">
+                                <div class="stats-number" id="total-exercises-completed">0</div>
+                                <div>Ejercicios Completados</div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="stats-card">
+                                <div class="stats-number" id="languages-started">0</div>
+                                <div>Idiomas Iniciados</div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="stats-card">
+                                <div class="stats-number" id="days-active">0</div>
+                                <div>Días Activo</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <h4 class="mt-4">Mis Logros</h4>
+                    <div id="achievements-container">
+                        <!-- Los logros se cargarán aquí -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Progress Section -->
+    <section class="container" id="user-progress" style="display: none;">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2>Mi Progreso</h2>
+            <button class="btn btn-outline-secondary" onclick="backToLanguages()">
+                <i class="fas fa-arrow-left me-2"></i>Volver a Idiomas
+            </button>
+        </div>
+        
+        <div class="user-section">
+            <h4>Progreso por Idioma</h4>
+            <div id="language-progress-container">
+                <!-- El progreso por idioma se cargará aquí -->
+            </div>
+            
+            <h4 class="mt-4">Medallas Obtenidas</h4>
+            <div id="medals-container">
+                <!-- Las medallas se cargarán aquí -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Languages Section -->
+    <section class="container" id="languages">
+        <h2 class="text-center mb-5">Selecciona un Idioma para Practicar</h2>
+        
+        <div class="row">
+            <!-- Español -->
+            <div class="col-md-4 col-sm-6">
+                <div class="card language-card">
+                    <div class="card-header">
+                        <span class="language-flag">🇪🇸</span> Español
+                    </div>
+                    <div class="card-body">
+                        <p class="card-text">Practica lectura, escritura y vocabulario en español con ejercicios interactivos.</p>
+                        <button class="btn btn-primary w-100" onclick="selectLanguage('es')">Seleccionar</button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Inglés -->
+            <div class="col-md-4 col-sm-6">
+                <div class="card language-card">
+                    <div class="card-header">
+                        <span class="language-flag">🇺🇸</span> Inglés
+                    </div>
+                    <div class="card-body">
+                        <p class="card-text">Mejora tu inglés con ejercicios de vocabulario, gramática y comprensión.</p>
+                        <button class="btn btn-primary w-100" onclick="selectLanguage('en')">Seleccionar</button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Francés -->
+            <div class="col-md-4 col-sm-6">
+                <div class="card language-card">
+                    <div class="card-header">
+                        <span class="language-flag">🇫🇷</span> Francés
+                    </div>
+                    <div class="card-body">
+                        <p class="card-text">Aprende el idioma del amor con ejercicios adaptados a todos los niveles.</p>
+                        <button class="btn btn-primary w-100" onclick="selectLanguage('fr')">Seleccionar</button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Japonés -->
+            <div class="col-md-4 col-sm-6">
+                <div class="card language-card">
+                    <div class="card-header">
+                        <span class="language-flag">🇯🇵</span> Japonés
+                    </div>
+                    <div class="card-body">
+                        <p class="card-text">Descubre el japonés con ejercicios de escritura y vocabulario básico.</p>
+                        <button class="btn btn-primary w-100" onclick="selectLanguage('ja')">Seleccionar</button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Alemán -->
+            <div class="col-md-4 col-sm-6">
+                <div class="card language-card">
+                    <div class="card-header">
+                        <span class="language-flag">🇩🇪</span> Alemán
+                    </div>
+                    <div class="card-body">
+                        <p class="card-text">Domina el alemán con ejercicios de gramática y construcción de oraciones.</p>
+                        <button class="btn btn-primary w-100" onclick="selectLanguage('de')">Seleccionar</button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Italiano -->
+            <div class="col-md-4 col-sm-6">
+                <div class="card language-card">
+                    <div class="card-header">
+                        <span class="language-flag">🇮🇹</span> Italiano
+                    </div>
+                    <div class="card-body">
+                        <p class="card-text">Aprende italiano con ejercicios divertidos y contenido cultural.</p>
+                        <button class="btn btn-primary w-100" onclick="selectLanguage('it')">Seleccionar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Exercises Section -->
+    <section class="container mt-5" id="exercises" style="display: none;">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2 id="current-language">Ejercicios de <span id="language-name"></span></h2>
+            <button class="btn btn-outline-secondary" onclick="backToLanguages()">
+                <i class="fas fa-arrow-left me-2"></i>Volver a Idiomas
+            </button>
+        </div>
+        
+        <!-- Exercise Tabs -->
+        <ul class="nav nav-tabs" id="exerciseTabs">
+            <li class="nav-item">
+                <a class="nav-link active" data-bs-toggle="tab" href="#association">
+                    <i class="fas fa-images me-2"></i>Asociación
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" data-bs-toggle="tab" href="#dictation">
+                    <i class="fas fa-pen me-2"></i>Dictado
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" data-bs-toggle="tab" href="#ordering">
+                    <i class="fas fa-sort me-2"></i>Ordenar
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" data-bs-toggle="tab" href="#fillblanks">
+                    <i class="fas fa-edit me-2"></i>Completar
+                </a>
+            </li>
+        </ul>
+        
+        <!-- Tab Content -->
+        <div class="tab-content mt-4">
+            <!-- Association Exercise -->
+            <div class="tab-pane fade show active" id="association">
+                <div class="exercise-container">
+                    <h3 class="exercise-title">Asociación de Imágenes con Palabras</h3>
+                    <p>Relaciona cada imagen con la palabra correcta en el idioma seleccionado.</p>
+                    
+                    <div id="association-content">
+                        <!-- Content will be loaded by JavaScript -->
+                    </div>
+                    
+                    <div class="mt-3">
+                        <button class="btn btn-primary" onclick="checkAssociation()">Comprobar Respuestas</button>
+                        <button class="btn btn-outline-secondary" onclick="newAssociationExercise()">Nuevo Ejercicio</button>
+                    </div>
+                    
+                    <div id="association-result" class="mt-3"></div>
+                </div>
+            </div>
+            
+            <!-- Dictation Exercise -->
+            <div class="tab-pane fade" id="dictation">
+                <div class="exercise-container">
+                    <h3 class="exercise-title">Dictado Interactivo</h3>
+                    <p>Escribe la oración que se presenta a continuación.</p>
+                    
+                    <div id="dictation-content">
+                        <!-- Content will be loaded by JavaScript -->
+                    </div>
+                    
+                    <div class="mt-3">
+                        <button class="btn btn-primary" onclick="checkDictation()">Comprobar</button>
+                        <button class="btn btn-outline-secondary" onclick="newDictationExercise()">Nueva Oración</button>
+                    </div>
+                    
+                    <div id="dictation-result" class="mt-3"></div>
+                </div>
+            </div>
+            
+            <!-- Ordering Exercise -->
+            <div class="tab-pane fade" id="ordering">
+                <div class="exercise-container">
+                    <h3 class="exercise-title">Ordenar Palabras</h3>
+                    <p>Ordena las palabras para formar una oración coherente.</p>
+                    
+                    <div id="ordering-content">
+                        <!-- Content will be loaded by JavaScript -->
+                    </div>
+                    
+                    <div class="mt-3">
+                        <button class="btn btn-primary" onclick="checkOrdering()">Comprobar</button>
+                        <button class="btn btn-outline-secondary" onclick="newOrderingExercise()">Nueva Oración</button>
+                    </div>
+                    
+                    <div id="ordering-result" class="mt-3"></div>
+                </div>
+            </div>
+            
+            <!-- Fill Blanks Exercise -->
+            <div class="tab-pane fade" id="fillblanks">
+                <div class="exercise-container">
+                    <h3 class="exercise-title">Completar Espacios en Blanco</h3>
+                    <p>Completa la oración con la palabra correcta.</p>
+                    
+                    <div id="fillblanks-content">
+                        <!-- Content will be loaded by JavaScript -->
+                    </div>
+                    
+                    <div class="mt-3">
+                        <button class="btn btn-primary" onclick="checkFillBlanks()">Comprobar</button>
+                        <button class="btn btn-outline-secondary" onclick="newFillBlanksExercise()">Nueva Oración</button>
+                    </div>
+                    
+                    <div id="fillblanks-result" class="mt-3"></div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Progress Section -->
+        <div class="progress-section">
+            <h4>Tu Progreso en <span id="progress-language-name"></span></h4>
+            <div class="progress mb-3">
+                <div class="progress-bar" id="progress-bar" role="progressbar" style="width: 0%">0%</div>
+            </div>
+            <p>Ejercicios completados: <span id="completed-exercises">0</span> de <span id="total-exercises">20</span></p>
+            
+            <div id="gold-medal-container" style="display: none;">
+                <div class="medal-container">
+                    <div class="medal">
+                        <i class="fas fa-medal"></i>
+                    </div>
+                    <h3>¡Felicidades!</h3>
+                    <p>Has completado todos los ejercicios de <span id="medal-language-name"></span> y has ganado la Medalla de Oro.</p>
+                    <button class="btn btn-warning" onclick="shareAchievement()">
+                        <i class="fas fa-share-alt me-2"></i>Compartir Logro
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section class="container mt-5" id="about">
+        <div class="row">
+            <div class="col-md-8 mx-auto text-center">
+                <h2>Acerca de LinguaLearn</h2>
+                <p class="lead">LinguaLearn es una plataforma educativa diseñada para hacer el aprendizaje de idiomas accesible, interactivo y divertido para todos.</p>
+                <p>Nuestra misión es proporcionar herramientas efectivas para practicar y mejorar habilidades en múltiples idiomas a través de ejercicios interactivos y contenido adaptado a diferentes niveles de competencia.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container text-center">
+            <p>&copy; 2023 LinguaLearn. Todos los derechos reservados.</p>
+            <p>Desarrollado con <i class="fas fa-heart text-danger"></i> para amantes de los idiomas</p>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- JavaScript for the application -->
+    <script>
+        // Current selected language
+        let currentLanguage = '';
+        let currentExerciseData = {};
+        let currentUser = null;
+        
+        // Language data - simplified for demonstration
+        const languageData = {
+            'es': {
+                name: 'Español',
+                association: {
+                    items: [
+                        { word: "manzana", image: "🍎" },
+                        { word: "perro", image: "🐕" },
+                        { word: "sol", image: "☀️" },
+                        { word: "casa", image: "🏠" },
+                        { word: "árbol", image: "🌳" }
+                    ]
+                },
+                dictation: {
+                    sentences: [
+                        "El sol brilla en el cielo.",
+                        "El perro juega en el parque.",
+                        "La manzana es roja y dulce.",
+                        "La casa tiene un jardín grande.",
+                        "El árbol da sombra en verano."
+                    ]
+                },
+                ordering: {
+                    sentences: [
+                        ["juega", "el", "parque", "en", "perro", "el"],
+                        ["brilla", "cielo", "el", "en", "sol", "el"],
+                        ["roja", "es", "y", "dulce", "manzana", "la"]
+                    ]
+                },
+                fillblanks: {
+                    sentences: [
+                        { sentence: "El ___ brilla en el cielo.", answer: "sol" },
+                        { sentence: "El perro juega en el ___.", answer: "parque" },
+                        { sentence: "La manzana es ___ y dulce.", answer: "roja" }
+                    ]
+                }
+            },
+            'en': {
+                name: 'Inglés',
+                association: {
+                    items: [
+                        { word: "apple", image: "🍎" },
+                        { word: "dog", image: "🐕" },
+                        { word: "sun", image: "☀️" },
+                        { word: "house", image: "🏠" },
+                        { word: "tree", image: "🌳" }
+                    ]
+                },
+                dictation: {
+                    sentences: [
+                        "The sun shines in the sky.",
+                        "The dog plays in the park.",
+                        "The apple is red and sweet.",
+                        "The house has a big garden.",
+                        "The tree provides shade in summer."
+                    ]
+                },
+                ordering: {
+                    sentences: [
+                        ["plays", "the", "park", "in", "dog", "the"],
+                        ["shines", "sky", "the", "in", "sun", "the"],
+                        ["red", "is", "and", "sweet", "apple", "the"]
+                    ]
+                },
+                fillblanks: {
+                    sentences: [
+                        { sentence: "The ___ shines in the sky.", answer: "sun" },
+                        { sentence: "The dog plays in the ___.", answer: "park" },
+                        { sentence: "The apple is ___ and sweet.", answer: "red" }
+                    ]
+                }
+            },
+            'fr': {
+                name: 'Francés',
+                association: {
+                    items: [
+                        { word: "pomme", image: "🍎" },
+                        { word: "chien", image: "🐕" },
+                        { word: "soleil", image: "☀️" },
+                        { word: "maison", image: "🏠" },
+                        { word: "arbre", image: "🌳" }
+                    ]
+                },
+                dictation: {
+                    sentences: [
+                        "Le soleil brille dans le ciel.",
+                        "Le chien joue dans le parc.",
+                        "La pomme est rouge et sucrée.",
+                        "La maison a un grand jardin.",
+                        "L'arbre donne de l'ombre en été."
+                    ]
+                },
+                ordering: {
+                    sentences: [
+                        ["joue", "dans", "le", "parc", "le", "chien"],
+                        ["brille", "dans", "le", "ciel", "le", "soleil"],
+                        ["rouge", "et", "sucrée", "la", "pomme", "est"]
+                    ]
+                },
+                fillblanks: {
+                    sentences: [
+                        { sentence: "Le ___ brille dans le ciel.", answer: "soleil" },
+                        { sentence: "Le chien joue dans le ___.", answer: "parc" },
+                        { sentence: "La pomme est ___ et sucrée.", answer: "rouge" }
+                    ]
+                }
+            },
+            'ja': {
+                name: 'Japonés',
+                association: {
+                    items: [
+                        { word: "りんご", image: "🍎" },
+                        { word: "いぬ", image: "🐕" },
+                        { word: "たいよう", image: "☀️" },
+                        { word: "いえ", image: "🏠" },
+                        { word: "き", image: "🌳" }
+                    ]
+                },
+                dictation: {
+                    sentences: [
+                        "太陽が空に輝いています。",
+                        "犬が公園で遊んでいます。",
+                        "りんごは赤くて甘いです。"
+                    ]
+                },
+                ordering: {
+                    sentences: [
+                        ["遊んでいます", "公園", "で", "犬", "が"],
+                        ["輝いています", "空", "に", "太陽", "が"],
+                        ["赤くて", "甘いです", "りんご", "は"]
+                    ]
+                },
+                fillblanks: {
+                    sentences: [
+                        { sentence: "太陽が___に輝いています。", answer: "空" },
+                        { sentence: "犬が___で遊んでいます。", answer: "公園" },
+                        { sentence: "りんごは___くて甘いです。", answer: "赤" }
+                    ]
+                }
+            },
+            'de': {
+                name: 'Alemán',
+                association: {
+                    items: [
+                        { word: "Apfel", image: "🍎" },
+                        { word: "Hund", image: "🐕" },
+                        { word: "Sonne", image: "☀️" },
+                        { word: "Haus", image: "🏠" },
+                        { word: "Baum", image: "🌳" }
+                    ]
+                },
+                dictation: {
+                    sentences: [
+                        "Die Sonne scheint am Himmel.",
+                        "Der Hund spielt im Park.",
+                        "Der Apfel ist rot und süß."
+                    ]
+                },
+                ordering: {
+                    sentences: [
+                        ["spielt", "im", "Park", "der", "Hund"],
+                        ["scheint", "am", "Himmel", "die", "Sonne"],
+                        ["rot", "und", "süß", "der", "Apfel", "ist"]
+                    ]
+                },
+                fillblanks: {
+                    sentences: [
+                        { sentence: "Die ___ scheint am Himmel.", answer: "Sonne" },
+                        { sentence: "Der Hund spielt im ___.", answer: "Park" },
+                        { sentence: "Der Apfel ist ___ und süß.", answer: "rot" }
+                    ]
+                }
+            },
+            'it': {
+                name: 'Italiano',
+                association: {
+                    items: [
+                        { word: "mela", image: "🍎" },
+                        { word: "cane", image: "🐕" },
+                        { word: "sole", image: "☀️" },
+                        { word: "casa", image: "🏠" },
+                        { word: "albero", image: "🌳" }
+                    ]
+                },
+                dictation: {
+                    sentences: [
+                        "Il sole splende nel cielo.",
+                        "Il cane gioca nel parco.",
+                        "La mela è rossa e dolce."
+                    ]
+                },
+                ordering: {
+                    sentences: [
+                        ["gioca", "nel", "parco", "il", "cane"],
+                        ["splende", "nel", "cielo", "il", "sole"],
+                        ["rossa", "e", "dolce", "la", "mela", "è"]
+                    ]
+                },
+                fillblanks: {
+                    sentences: [
+                        { sentence: "Il ___ splende nel cielo.", answer: "sole" },
+                        { sentence: "Il cane gioca nel ___.", answer: "parco" },
+                        { sentence: "La mela è ___ e dolce.", answer: "rossa" }
+                    ]
+                }
+            }
+        };
+        
+        // User management functions
+        function registerUser() {
+            const name = document.getElementById('registerName').value;
+            const email = document.getElementById('registerEmail').value;
+            const password = document.getElementById('registerPassword').value;
+            const confirmPassword = document.getElementById('registerConfirmPassword').value;
+            
+            if (password !== confirmPassword) {
+                alert('Las contraseñas no coinciden');
+                return;
+            }
+            
+            // Check if user already exists
+            const users = JSON.parse(localStorage.getItem('lingualearn_users') || '[]');
+            if (users.find(u => u.email === email)) {
+                alert('Ya existe un usuario con este correo electrónico');
+                return;
+            }
+            
+            // Create new user
+            const newUser = {
+                id: Date.now().toString(),
+                name: name,
+                email: email,
+                password: password, // In a real app, this should be hashed
+                registrationDate: new Date().toISOString(),
+                progress: {},
+                achievements: []
+            };
+            
+            users.push(newUser);
+            localStorage.setItem('lingualearn_users', JSON.stringify(users));
+            
+            // Auto login
+            loginUser(email, password);
+            
+            // Close modal
+            const registerModal = bootstrap.Modal.getInstance(document.getElementById('registerModal'));
+            registerModal.hide();
+            
+            // Reset form
+            document.getElementById('registerForm').reset();
+        }
+        
+        function loginUser(email, password) {
+            const users = JSON.parse(localStorage.getItem('lingualearn_users') || '[]');
+            const user = users.find(u => u.email === email && u.password === password);
+            
+            if (user) {
+                currentUser = user;
+                localStorage.setItem('lingualearn_current_user', JSON.stringify(user));
+                updateUIForUser();
+                return true;
+            } else {
+                alert('Credenciales incorrectas');
+                return false;
+            }
+        }
+        
+        function logout() {
+            currentUser = null;
+            localStorage.removeItem('lingualearn_current_user');
+            updateUIForUser();
+            
+            // Show languages section
+            document.getElementById('languages').style.display = 'block';
+            document.getElementById('exercises').style.display = 'none';
+            document.getElementById('user-profile').style.display = 'none';
+            document.getElementById('user-progress').style.display = 'none';
+        }
+        
+        function updateUIForUser() {
+            const authNav = document.getElementById('auth-nav');
+            const userNav = document.getElementById('user-nav');
+            
+            if (currentUser) {
+                authNav.style.display = 'none';
+                userNav.style.display = 'flex';
+                document.getElementById('user-greeting').textContent = `Hola, ${currentUser.name}`;
+            } else {
+                authNav.style.display = 'flex';
+                userNav.style.display = 'none';
+            }
+        }
+        
+        function showUserProfile() {
+            document.getElementById('languages').style.display = 'none';
+            document.getElementById('exercises').style.display = 'none';
+            document.getElementById('user-progress').style.display = 'none';
+            document.getElementById('user-profile').style.display = 'block';
+            
+            // Update profile information
+            document.getElementById('profile-name').textContent = currentUser.name;
+            document.getElementById('profile-email').textContent = currentUser.email;
+            document.getElementById('member-since').textContent = new Date(currentUser.registrationDate).toLocaleDateString();
+            
+            // Update profile picture
+            document.getElementById('profile-picture').src = `https://ui-avatars.com/api/?name=${encodeURIComponent(currentUser.name)}&background=3498db&color=fff&size=100`;
+            
+            // Calculate statistics
+            const totalExercises = calculateTotalExercisesCompleted();
+            const languagesStarted = calculateLanguagesStarted();
+            const daysActive = calculateDaysActive();
+            
+            document.getElementById('total-exercises-completed').textContent = totalExercises;
+            document.getElementById('languages-started').textContent = languagesStarted;
+            document.getElementById('days-active').textContent = daysActive;
+            
+            // Display achievements
+            displayAchievements();
+        }
+        
+        function showProgress() {
+            document.getElementById('languages').style.display = 'none';
+            document.getElementById('exercises').style.display = 'none';
+            document.getElementById('user-profile').style.display = 'none';
+            document.getElementById('user-progress').style.display = 'block';
+            
+            // Display language progress
+            displayLanguageProgress();
+            
+            // Display medals
+            displayMedals();
+        }
+        
+        function calculateTotalExercisesCompleted() {
+            if (!currentUser.progress) return 0;
+            
+            let total = 0;
+            for (const lang in currentUser.progress) {
+                for (const exerciseType in currentUser.progress[lang]) {
+                    total += currentUser.progress[lang][exerciseType].completed || 0;
+                }
+            }
+            return total;
+        }
+        
+        function calculateLanguagesStarted() {
+            if (!currentUser.progress) return 0;
+            return Object.keys(currentUser.progress).length;
+        }
+        
+        function calculateDaysActive() {
+            const registrationDate = new Date(currentUser.registrationDate);
+            const today = new Date();
+            const diffTime = Math.abs(today - registrationDate);
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+            return diffDays;
+        }
+        
+        function displayAchievements() {
+            const container = document.getElementById('achievements-container');
+            container.innerHTML = '';
+            
+            if (!currentUser.achievements || currentUser.achievements.length === 0) {
+                container.innerHTML = '<p>Aún no has obtenido logros. ¡Sigue practicando!</p>';
+                return;
+            }
+            
+            currentUser.achievements.forEach(achievement => {
+                const badge = document.createElement('span');
+                badge.className = 'achievement-badge';
+                badge.textContent = achievement;
+                container.appendChild(badge);
+            });
+        }
+        
+        function displayLanguageProgress() {
+            const container = document.getElementById('language-progress-container');
+            container.innerHTML = '';
+            
+            if (!currentUser.progress || Object.keys(currentUser.progress).length === 0) {
+                container.innerHTML = '<p>Aún no has comenzado a practicar ningún idioma.</p>';
+                return;
+            }
+            
+            for (const lang in currentUser.progress) {
+                const langData = currentUser.progress[lang];
+                const langName = languageData[lang] ? languageData[lang].name : lang;
+                
+                let totalExercises = 0;
+                let completedExercises = 0;
+                
+                for (const exerciseType in langData) {
+                    totalExercises += langData[exerciseType].total || 0;
+                    completedExercises += langData[exerciseType].completed || 0;
+                }
+                
+                const progressPercentage = totalExercises > 0 ? (completedExercises / totalExercises) * 100 : 0;
+                
+                const progressHTML = `
+                    <div class="mb-4">
+                        <div class="d-flex justify-content-between">
+                            <h5>${langName}</h5>
+                            <span>${completedExercises}/${totalExercises} ejercicios</span>
+                        </div>
+                        <div class="progress">
+                            <div class="progress-bar" role="progressbar" style="width: ${progressPercentage}%">${Math.round(progressPercentage)}%</div>
+                        </div>
+                    </div>
+                `;
+                
+                container.innerHTML += progressHTML;
+            }
+        }
+        
+        function displayMedals() {
+            const container = document.getElementById('medals-container');
+            container.innerHTML = '';
+            
+            const medals = [];
+            
+            // Check for gold medals in each language
+            if (currentUser.progress) {
+                for (const lang in currentUser.progress) {
+                    const langData = currentUser.progress[lang];
+                    let totalExercises = 0;
+                    let completedExercises = 0;
+                    
+                    for (const exerciseType in langData) {
+                        totalExercises += langData[exerciseType].total || 0;
+                        completedExercises += langData[exerciseType].completed || 0;
+                    }
+                    
+                    if (completedExercises >= totalExercises && totalExercises > 0) {
+                        medals.push({
+                            language: languageData[lang] ? languageData[lang].name : lang,
+                            type: 'gold'
+                        });
+                    }
+                }
+            }
+            
+            if (medals.length === 0) {
+                container.innerHTML = '<p>Aún no has obtenido medallas. ¡Completa todos los ejercicios de un idioma para ganar tu primera medalla de oro!</p>';
+                return;
+            }
+            
+            medals.forEach(medal => {
+                const medalHTML = `
+                    <div class="col-md-4 mb-3">
+                        <div class="text-center p-3 border rounded">
+                            <i class="fas fa-medal text-warning" style="font-size: 3rem;"></i>
+                            <h5>Medalla de Oro</h5>
+                            <p>${medal.language}</p>
+                        </div>
+                    </div>
+                `;
+                container.innerHTML += medalHTML;
+            });
+        }
+        
+        // Function to select a language
+        function selectLanguage(lang) {
+            if (!currentUser) {
+                alert('Por favor, inicia sesión para practicar idiomas');
+                return;
+            }
+            
+            currentLanguage = lang;
+            document.getElementById('language-name').textContent = languageData[lang].name;
+            document.getElementById('progress-language-name').textContent = languageData[lang].name;
+            document.getElementById('exercises').style.display = 'block';
+            document.getElementById('languages').style.display = 'none';
+            document.getElementById('user-profile').style.display = 'none';
+            document.getElementById('user-progress').style.display = 'none';
+            
+            // Initialize exercises for the selected language
+            initializeExercises();
+            
+            // Scroll to exercises section
+            document.getElementById('exercises').scrollIntoView({ behavior: 'smooth' });
+        }
+        
+        // Function to go back to language selection
+        function backToLanguages() {
+            document.getElementById('exercises').style.display = 'none';
+            document.getElementById('user-profile').style.display = 'none';
+            document.getElementById('user-progress').style.display = 'none';
+            document.getElementById('languages').style.display = 'block';
+            document.getElementById('home').scrollIntoView({ behavior: 'smooth' });
+        }
+        
+        // Initialize exercises for the current language
+        function initializeExercises() {
+            currentExerciseData = languageData[currentLanguage];
+            
+            // Initialize user progress for this language if it doesn't exist
+            if (!currentUser.progress) {
+                currentUser.progress = {};
+            }
+            
+            if (!currentUser.progress[currentLanguage]) {
+                currentUser.progress[currentLanguage] = {
+                    association: { completed: 0, total: 5 },
+                    dictation: { completed: 0, total: 5 },
+                    ordering: { completed: 0, total: 3 },
+                    fillblanks: { completed: 0, total: 3 }
+                };
+            }
+            
+            // Update progress display
+            updateProgressDisplay();
+            
+            // Initialize all exercises
+            newAssociationExercise();
+            newDictationExercise();
+            newOrderingExercise();
+            newFillBlanksExercise();
+        }
+        
+        // Update progress display for current language
+        function updateProgressDisplay() {
+            const langProgress = currentUser.progress[currentLanguage];
+            let totalExercises = 0;
+            let completedExercises = 0;
+            
+            for (const exerciseType in langProgress) {
+                totalExercises += langProgress[exerciseType].total || 0;
+                completedExercises += langProgress[exerciseType].completed || 0;
+            }
+            
+            const progressPercentage = (completedExercises / totalExercises) * 100;
+            
+            document.getElementById('progress-bar').style.width = `${progressPercentage}%`;
+            document.getElementById('progress-bar').textContent = `${Math.round(progressPercentage)}%`;
+            document.getElementById('completed-exercises').textContent = completedExercises;
+            document.getElementById('total-exercises').textContent = totalExercises;
+            
+            // Check if user has completed all exercises
+            if (completedExercises >= totalExercises) {
+                document.getElementById('gold-medal-container').style.display = 'block';
+                document.getElementById('medal-language-name').textContent = languageData[currentLanguage].name;
+                
+                // Add achievement if not already added
+                if (!currentUser.achievements) {
+                    currentUser.achievements = [];
+                }
+                
+                const achievementName = `Medalla de Oro en ${languageData[currentLanguage].name}`;
+                if (!currentUser.achievements.includes(achievementName)) {
+                    currentUser.achievements.push(achievementName);
+                    saveUserData();
+                }
+            } else {
+                document.getElementById('gold-medal-container').style.display = 'none';
+            }
+        }
+        
+        // Save user data to localStorage
+        function saveUserData() {
+            const users = JSON.parse(localStorage.getItem('lingualearn_users') || '[]');
+            const userIndex = users.findIndex(u => u.id === currentUser.id);
+            
+            if (userIndex !== -1) {
+                users[userIndex] = currentUser;
+                localStorage.setItem('lingualearn_users', JSON.stringify(users));
+                localStorage.setItem('lingualearn_current_user', JSON.stringify(currentUser));
+            }
+        }
+        
+        // Association Exercise Functions
+        function newAssociationExercise() {
+            const contentDiv = document.getElementById('association-content');
+            let html = '';
+            
+            // Shuffle the items
+            const shuffledItems = [...currentExerciseData.association.items].sort(() => Math.random() - 0.5);
+            
+            shuffledItems.forEach(item => {
+                html += `
+                    <div class="mb-3">
+                        <p class="mb-1">${item.image} ¿Qué palabra corresponde a esta imagen?</p>
+                        <input type="text" class="form-control association-answer" data-correct="${item.word}" placeholder="Escribe la palabra">
+                    </div>
+                `;
+            });
+            
+            contentDiv.innerHTML = html;
+            document.getElementById('association-result').innerHTML = '';
+        }
+        
+        function checkAssociation() {
+            const inputs = document.querySelectorAll('.association-answer');
+            let correctCount = 0;
+            let resultHTML = '';
+            
+            inputs.forEach(input => {
+                const userAnswer = input.value.trim().toLowerCase();
+                const correctAnswer = input.getAttribute('data-correct').toLowerCase();
+                
+                if (userAnswer === correctAnswer) {
+                    input.classList.add('is-valid');
+                    input.classList.remove('is-invalid');
+                    correctCount++;
+                } else {
+                    input.classList.add('is-invalid');
+                    input.classList.remove('is-valid');
+                    resultHTML += `<p class="result-incorrect">Para ${input.previousElementSibling.textContent}, la respuesta correcta es: ${correctAnswer}</p>`;
+                }
+            });
+            
+            if (correctCount === inputs.length) {
+                resultHTML = `<p class="result-correct">¡Perfecto! Todas las respuestas son correctas. 🎉</p>`;
+                
+                // Update user progress
+                if (currentUser && currentUser.progress[currentLanguage].association.completed < currentUser.progress[currentLanguage].association.total) {
+                    currentUser.progress[currentLanguage].association.completed++;
+                    saveUserData();
+                    updateProgressDisplay();
+                }
+            } else {
+                resultHTML += `<p class="mt-2">Tienes ${correctCount} de ${inputs.length} correctas.</p>`;
+            }
+            
+            document.getElementById('association-result').innerHTML = resultHTML;
+        }
+        
+        // Dictation Exercise Functions
+        function newDictationExercise() {
+            const sentences = currentExerciseData.dictation.sentences;
+            const randomSentence = sentences[Math.floor(Math.random() * sentences.length)];
+            
+            const contentDiv = document.getElementById('dictation-content');
+            contentDiv.innerHTML = `
+                <p class="mb-3">Escribe la siguiente oración: "<strong>${randomSentence}</strong>"</p>
+                <textarea class="form-control" id="dictation-answer" rows="3" placeholder="Escribe la oración aquí"></textarea>
+            `;
+            
+            document.getElementById('dictation-result').innerHTML = '';
+        }
+        
+        function checkDictation() {
+            const userAnswer = document.getElementById('dictation-answer').value.trim();
+            const correctSentence = document.querySelector('#dictation-content strong').textContent;
+            
+            let resultHTML = '';
+            
+            if (userAnswer === correctSentence) {
+                resultHTML = `<p class="result-correct">¡Perfecto! No hay errores. 🎉</p>`;
+                
+                // Update user progress
+                if (currentUser && currentUser.progress[currentLanguage].dictation.completed < currentUser.progress[currentLanguage].dictation.total) {
+                    currentUser.progress[currentLanguage].dictation.completed++;
+                    saveUserData();
+                    updateProgressDisplay();
+                }
+            } else {
+                resultHTML = `
+                    <p class="result-incorrect">Hubo algunos errores.</p>
+                    <p>La oración correcta es: <strong>${correctSentence}</strong></p>
+                `;
+            }
+            
+            document.getElementById('dictation-result').innerHTML = resultHTML;
+        }
+        
+        // Ordering Exercise Functions
+        function newOrderingExercise() {
+            const sentences = currentExerciseData.ordering.sentences;
+            const randomSentence = sentences[Math.floor(Math.random() * sentences.length)];
+            const shuffledWords = [...randomSentence].sort(() => Math.random() - 0.5);
+            
+            const contentDiv = document.getElementById('ordering-content');
+            contentDiv.innerHTML = `
+                <p class="mb-3">Ordena las siguientes palabras para formar una oración coherente:</p>
+                <div class="d-flex flex-wrap gap-2 mb-3" id="word-container">
+                    ${shuffledWords.map(word => `<span class="badge bg-secondary order-word" draggable="true">${word}</span>`).join('')}
+                </div>
+                <p>Tu oración:</p>
+                <div class="border p-3 min-height-100 mb-3" id="sentence-container"></div>
+                <input type="hidden" id="correct-order" value="${randomSentence.join(' ')}">
+            `;
+            
+            // Add drag and drop functionality
+            setupDragAndDrop();
+            
+            document.getElementById('ordering-result').innerHTML = '';
+        }
+        
+        function setupDragAndDrop() {
+            const words = document.querySelectorAll('.order-word');
+            const sentenceContainer = document.getElementById('sentence-container');
+            
+            words.forEach(word => {
+                word.addEventListener('dragstart', (e) => {
+                    e.dataTransfer.setData('text/plain', e.target.textContent);
+                });
+            });
+            
+            sentenceContainer.addEventListener('dragover', (e) => {
+                e.preventDefault();
+            });
+            
+            sentenceContainer.addEventListener('drop', (e) => {
+                e.preventDefault();
+                const word = e.dataTransfer.getData('text/plain');
+                const span = document.createElement('span');
+                span.className = 'badge bg-primary me-1';
+                span.textContent = word;
+                span.draggable = true;
+                
+                span.addEventListener('dragstart', (event) => {
+                    event.dataTransfer.setData('text/plain', event.target.textContent);
+                    setTimeout(() => event.target.remove(), 0);
+                });
+                
+                sentenceContainer.appendChild(span);
+            });
+        }
+        
+        function checkOrdering() {
+            const sentenceContainer = document.getElementById('sentence-container');
+            const userSentence = Array.from(sentenceContainer.children)
+                .map(span => span.textContent)
+                .join(' ')
+                .toLowerCase();
+                
+            const correctSentence = document.getElementById('correct-order').value.toLowerCase();
+            
+            let resultHTML = '';
+            
+            if (userSentence === correctSentence) {
+                resultHTML = `<p class="result-correct">¡Correcto! La oración está bien ordenada. 🎉</p>`;
+                
+                // Update user progress
+                if (currentUser && currentUser.progress[currentLanguage].ordering.completed < currentUser.progress[currentLanguage].ordering.total) {
+                    currentUser.progress[currentLanguage].ordering.completed++;
+                    saveUserData();
+                    updateProgressDisplay();
+                }
+            } else {
+                resultHTML = `
+                    <p class="result-incorrect">Incorrecto. La oración correcta es: <strong>${correctSentence}</strong></p>
+                `;
+            }
+            
+            document.getElementById('ordering-result').innerHTML = resultHTML;
+        }
+        
+        // Fill Blanks Exercise Functions
+        function newFillBlanksExercise() {
+            const sentences = currentExerciseData.fillblanks.sentences;
+            const randomSentence = sentences[Math.floor(Math.random() * sentences.length)];
+            
+            const contentDiv = document.getElementById('fillblanks-content');
+            contentDiv.innerHTML = `
+                <p class="mb-3">Completa la oración:</p>
+                <p>${randomSentence.sentence}</p>
+                <input type="text" class="form-control" id="fillblanks-answer" placeholder="Escribe la palabra faltante">
+                <input type="hidden" id="correct-fill" value="${randomSentence.answer}">
+            `;
+            
+            document.getElementById('fillblanks-result').innerHTML = '';
+        }
+        
+        function checkFillBlanks() {
+            const userAnswer = document.getElementById('fillblanks-answer').value.trim().toLowerCase();
+            const correctAnswer = document.getElementById('correct-fill').value.toLowerCase();
+            
+            let resultHTML = '';
+            
+            if (userAnswer === correctAnswer) {
+                resultHTML = `<p class="result-correct">¡Correcto! 🎉</p>`;
+                
+                // Update user progress
+                if (currentUser && currentUser.progress[currentLanguage].fillblanks.completed < currentUser.progress[currentLanguage].fillblanks.total) {
+                    currentUser.progress[currentLanguage].fillblanks.completed++;
+                    saveUserData();
+                    updateProgressDisplay();
+                }
+            } else {
+                resultHTML = `<p class="result-incorrect">Incorrecto. La respuesta correcta es: <strong>${correctAnswer}</strong></p>`;
+            }
+            
+            document.getElementById('fillblanks-result').innerHTML = resultHTML;
+        }
+        
+        function shareAchievement() {
+            alert(`¡Comparte tu logro! Has obtenido la Medalla de Oro en ${languageData[currentLanguage].name}`);
+            // In a real application, this would integrate with social media sharing APIs
+        }
+        
+        // Initialize the page
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check if user is already logged in
+            const savedUser = localStorage.getItem('lingualearn_current_user');
+            if (savedUser) {
+                currentUser = JSON.parse(savedUser);
+                updateUIForUser();
+            }
+            
+            // Set up form event listeners
+            document.getElementById('loginForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                const email = document.getElementById('loginEmail').value;
+                const password = document.getElementById('loginPassword').value;
+                
+                if (loginUser(email, password)) {
+                    const loginModal = bootstrap.Modal.getInstance(document.getElementById('loginModal'));
+                    loginModal.hide();
+                    document.getElementById('loginForm').reset();
+                }
+            });
+            
+            document.getElementById('registerForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                registerUser();
+            });
+        });
+    </script>
+</body>
+</html>

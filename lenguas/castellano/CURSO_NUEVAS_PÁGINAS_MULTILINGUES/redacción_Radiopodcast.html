@@ -1,0 +1,801 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>Radios Comunitarias Colombia · C1 Bilingual · Avanzado</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --fondo: #fef7e0;
+      --texto: #2c3e2f;
+      --verde-radio: #2a7a4b;
+      --naranja-comunidad: #e67e22;
+      --rojo-acento: #c0392b;
+      --acierto: #27ae60;
+      --fallo: #e74c3c;
+      --sombra: rgba(0, 0, 0, 0.08);
+      --card-bg: #ffffff;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: var(--fondo);
+      color: var(--texto);
+      font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
+      line-height: 1.5;
+      padding: 1rem;
+    }
+
+    .app-container {
+      max-width: 1300px;
+      margin: 0 auto;
+      background: var(--card-bg);
+      border-radius: 2rem;
+      box-shadow: 0 12px 28px var(--sombra);
+      overflow: hidden;
+      border: 1px solid #f0e0c0;
+    }
+
+    header {
+      background: #fdf4df;
+      padding: 1rem 2rem;
+      border-bottom: 3px solid var(--verde-radio);
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+    }
+    h1 {
+      font-size: 1.7rem;
+      font-weight: 600;
+      color: #2a7a4b;
+      letter-spacing: -0.2px;
+    }
+    h1 small {
+      font-size: 0.7rem;
+      font-weight: normal;
+      color: #b98f5c;
+    }
+
+    .lang-selector {
+      display: flex;
+      gap: 0.5rem;
+      background: white;
+      padding: 0.3rem;
+      border-radius: 40px;
+      border: 1px solid #f0e0c0;
+    }
+    .lang-btn {
+      background: transparent;
+      border: none;
+      padding: 0.4rem 1rem;
+      border-radius: 30px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.2s;
+      font-size: 0.85rem;
+    }
+    .lang-btn.active {
+      background: var(--verde-radio);
+      color: white;
+    }
+
+    nav {
+      display: flex;
+      gap: 0.5rem;
+      background: #eaddc5;
+      padding: 0.6rem 2rem;
+      border-bottom: 1px solid #e6d5ba;
+      flex-wrap: wrap;
+    }
+    .nav-btn {
+      background: transparent;
+      border: none;
+      font-size: 0.95rem;
+      padding: 0.5rem 1.2rem;
+      border-radius: 40px;
+      cursor: pointer;
+      font-weight: 500;
+      transition: all 0.2s;
+      color: #2a7a4b;
+    }
+    .nav-btn.active {
+      background-color: var(--verde-radio);
+      color: white;
+    }
+    .nav-btn:hover:not(.active) {
+      background-color: #cfdec9;
+    }
+
+    .view {
+      display: none;
+      padding: 2rem;
+      animation: fade 0.2s ease;
+    }
+    .active-view { display: block; }
+    @keyframes fade { from { opacity: 0; transform: translateY(5px);} to { opacity: 1; transform: translateY(0);} }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+    .stat-card {
+      background: var(--fondo);
+      border-radius: 1.5rem;
+      padding: 1rem;
+      text-align: center;
+      border-left: 6px solid var(--naranja-comunidad);
+      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    }
+    .stat-number {
+      font-size: 2.2rem;
+      font-weight: 700;
+      color: var(--verde-radio);
+    }
+
+    .progress-bar-bg {
+      background: #e2e8f0;
+      border-radius: 40px;
+      height: 12px;
+      overflow: hidden;
+      margin: 0.8rem 0;
+    }
+    .progress-fill {
+      background: var(--verde-radio);
+      width: 0%;
+      height: 100%;
+      transition: width 0.2s;
+    }
+
+    .conceptos-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+      gap: 1rem;
+      max-height: 65vh;
+      overflow-y: auto;
+      padding-right: 0.3rem;
+    }
+    .concepto-item {
+      background: white;
+      border-radius: 1.2rem;
+      padding: 0.8rem 1rem;
+      border-left: 5px solid var(--rojo-acento);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+    .concepto-titulo {
+      font-weight: 700;
+      color: #2a7a4b;
+    }
+    .concepto-desc {
+      font-size: 0.85rem;
+      color: #6b5a44;
+      margin-top: 6px;
+      border-top: 1px solid #f5ebd8;
+      padding-top: 6px;
+    }
+    .badge-progreso {
+      font-size: 0.7rem;
+      background: #fef5e6;
+      border-radius: 20px;
+      padding: 2px 10px;
+      display: inline-block;
+      margin-top: 8px;
+    }
+
+    .flashcard {
+      background: #ffffff;
+      border-radius: 2rem;
+      padding: 1.8rem;
+      text-align: center;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+      border: 1px solid #f0e0c0;
+      max-width: 750px;
+      margin: 0 auto;
+    }
+    .pregunta {
+      font-size: 1.3rem;
+      font-weight: 500;
+      margin-bottom: 1.8rem;
+      background: #fdf4df;
+      padding: 1.2rem;
+      border-radius: 1.5rem;
+    }
+    .respuesta-oculta {
+      background: #fef9ec;
+      border-radius: 1.2rem;
+      padding: 1rem;
+      margin: 1rem 0;
+      display: none;
+    }
+    .orden-palabras {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 0.6rem;
+      margin: 1.5rem 0;
+    }
+    .palabra-btn {
+      background: var(--verde-radio);
+      color: white;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 2rem;
+      font-size: 0.9rem;
+      cursor: pointer;
+    }
+    .orden-actual {
+      background: #fefef9;
+      border-radius: 1rem;
+      padding: 1rem;
+      min-height: 80px;
+      margin: 1rem 0;
+      text-align: left;
+      border: 1px dashed #e6d5ba;
+      font-size: 1rem;
+    }
+    .btn {
+      background: #e2e8f0;
+      border: none;
+      padding: 0.6rem 1.5rem;
+      border-radius: 3rem;
+      font-weight: 600;
+      margin: 0.3rem;
+      cursor: pointer;
+      font-family: inherit;
+    }
+    .btn-primary { background: var(--verde-radio); color: white; }
+    .btn-acierto { background: var(--acierto); color: white; }
+    .btn-fallo { background: var(--fallo); color: white; }
+    .modo-selector {
+      display: flex;
+      justify-content: center;
+      gap: 0.8rem;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+    }
+    .modo-btn {
+      background: #e2e8f0;
+      border: none;
+      padding: 0.5rem 1.2rem;
+      border-radius: 40px;
+      cursor: pointer;
+      font-weight: 500;
+      transition: all 0.2s;
+    }
+    .modo-btn.active {
+      background: var(--verde-radio);
+      color: white;
+    }
+    footer {
+      text-align: center;
+      padding: 1rem;
+      font-size: 0.75rem;
+      border-top: 1px solid #f0e0c0;
+      background: #fefcf7;
+    }
+    .translation-direction {
+      margin: 0.5rem 0;
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: var(--naranja-comunidad);
+    }
+    input {
+      padding: 0.8rem;
+      border-radius: 2rem;
+      border: 1px solid #cbd5e1;
+      font-size: 1rem;
+      width: 80%;
+      margin: 1rem auto;
+      display: block;
+      text-align: center;
+      font-family: inherit;
+    }
+    @media (max-width: 680px) {
+      .view { padding: 1rem; }
+      .pregunta { font-size: 1rem; }
+      .lang-selector { order: 2; width: 100%; justify-content: center; }
+      header { flex-direction: column; align-items: stretch; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+<div class="app-container">
+  <header>
+    <div>
+      <h1>📻 Radios Comunitarias Colombia <small>C1 Bilingual · Avanzado</small></h1>
+    </div>
+    <div class="lang-selector">
+      <button id="langEsBtn" class="lang-btn active">🇪🇸 Español</button>
+      <button id="langEnBtn" class="lang-btn">🇬🇧 English</button>
+      <button id="langBothBtn" class="lang-btn">🌐 Bilingüe</button>
+    </div>
+  </header>
+  <nav>
+    <button class="nav-btn active" data-view="dashboard">📊 Panel</button>
+    <button class="nav-btn" data-view="listado">📚 Compendio</button>
+    <button class="nav-btn" data-view="practica">🃏 Práctica</button>
+  </nav>
+
+  <section id="dashboard" class="view active-view">
+    <div class="stats-grid" id="statsContainer"></div>
+    <div class="card" style="background:white; border-radius:1.6rem; padding:1.2rem;">
+      <h3 id="progressTitle">📈 Progreso en radios comunitarias C1</h3>
+      <div class="progress-bar-bg"><div class="progress-fill" id="globalProgressFill"></div></div>
+      <p id="globalProgressText"></p>
+      <button id="resetProgresoBtn" class="btn" style="background:#eaddc5;">🔄 Reiniciar progreso</button>
+    </div>
+  </section>
+
+  <section id="listado" class="view">
+    <input type="text" id="filtroListado" placeholder="🔍 Buscar término / definición / Search..." style="width:100%; padding:10px; margin-bottom:15px; border-radius:40px; border:1px solid #e6d5ba;">
+    <div id="conceptosListadoContainer" class="conceptos-grid"></div>
+  </section>
+
+  <section id="practica" class="view">
+    <div class="modo-selector" id="modoSelector">
+      <button id="modoTraduccionDirecta" class="modo-btn active">📖 Término → Traducción</button>
+      <button id="modoTraduccionInversa" class="modo-btn">🔄 Traducción → Término</button>
+      <button id="modoOrdenar" class="modo-btn">🧩 Ordenar frase</button>
+      <button id="modoEspEng" class="modo-btn">🌐 ESP ↔ ENG</button>
+    </div>
+    <div id="practicaContainer"></div>
+  </section>
+  <footer>Progreso guardado localmente · Terminología especializada radios comunitarias Colombia · Nivel C1</footer>
+</div>
+
+<script>
+  // --------------------------------------------------------------
+  // 100 TÉRMINOS C1 - RADIOS COMUNITARIAS COLOMBIANAS (Español - Inglés)
+  // Legislación, producción, participación, software, sostenibilidad
+  // --------------------------------------------------------------
+  const vocabularioData = [
+    [1, "Radio comunitaria", "Community radio", "Emisora sin ánimo de lucro, gestionada por comunidades para promover participación y desarrollo local", "Non-profit station managed by communities to promote participation and local development"],
+    [2, "Concesión radial comunitaria", "Community broadcasting license", "Permiso otorgado por MinTIC a organizaciones sociales para operar una emisora", "Permit granted by MinTIC to social organizations to operate a station"],
+    [3, "Ley 1341 de 2009", "Law 1341 of 2009", "Ley marco de Tecnologías de la Información y Comunicaciones en Colombia", "Framework law for Information and Communication Technologies in Colombia"],
+    [4, "MinTIC", "MinTIC (Ministry of ICT)", "Ministerio de Tecnologías de la Información y Comunicaciones de Colombia", "Ministry of Information and Communication Technologies of Colombia"],
+    [5, "RTVC", "RTVC (Public Media System)", "Sistema de Medios Públicos de Colombia (Radio Televisión de Colombia)", "Public Media System of Colombia"],
+    [6, "Señal Radio Colombia", "Señal Radio Colombia", "Emisora cultural pública del orden nacional", "National public cultural radio station"],
+    [7, "Radiónica", "Radiónica", "Emisora pública juvenil con énfasis en música alternativa", "Youth public station focusing on alternative music"],
+    [8, "Plan TIC", "ICT Plan", "Estrategia gubernamental para el despliegue de infraestructura tecnológica", "Government strategy for technological infrastructure deployment"],
+    [9, "Espectro radioeléctrico", "Radio spectrum", "Recurso natural de uso público para transmisiones inalámbricas", "Natural public resource for wireless transmissions"],
+    [10, "Banda FM", "FM band", "Frecuencia modulada (88-108 MHz) usada por radios comunitarias", "Frequency modulation band used by community radios"],
+    [11, "Banda AM", "AM band", "Amplitud modulada (530-1710 kHz), mayor alcance", "Amplitude modulation, longer range"],
+    [12, "Convergencia digital", "Digital convergence", "Integración de tecnologías de audio, video y datos en una misma plataforma", "Integration of audio, video and data technologies on a single platform"],
+    [13, "Radiodifusión sonora digital", "Digital audio broadcasting (DAB)", "Transmisión de audio en formato digital sobre ondas terrestres", "Audio transmission in digital format over terrestrial waves"],
+    [14, "ANATO", "ANATO (National Radio Association)", "Asociación Nacional de Radio de Colombia (incluye comunitarias)", "National Radio Association of Colombia (includes community stations)"],
+    [15, "FLIP", "FLIP (Press Freedom Foundation)", "Fundación para la Libertad de Prensa, defiende a periodistas y medios comunitarios", "Foundation for Press Freedom, defends journalists and community media"],
+    [16, "Recomendación 29 OIT", "ILO Recommendation 29", "Sobre medios comunitarios y libertad sindical", "On community media and trade union freedom"],
+    [17, "Paridad de género", "Gender parity", "Equilibrio en la participación de hombres y mujeres en la gestión y programación", "Balance in participation of men and women in management and programming"],
+    [18, "Programación incluyente", "Inclusive programming", "Contenido que visibiliza minorías y grupos vulnerables", "Content that makes minorities and vulnerable groups visible"],
+    [19, "Lenguas nativas", "Native languages", "Transmisiones en wayuunaiki, nasa yuwe, etc., preservando identidad cultural", "Broadcasts in Wayuunaiki, Nasa Yuwe etc., preserving cultural identity"],
+    [20, "Radio escolar", "School radio", "Emisora con fines pedagógicos operada por estudiantes y docentes", "Educational station operated by students and teachers"],
+    [21, "Radio libre", "Free radio", "Movimiento de emisoras no comerciales sin concesión estatal (históricamente)", "Movement of non-commercial stations without state license (historically)"],
+    [22, "Autogestión comunitaria", "Community self-management", "Modelo de administración colectiva sin dependencia estatal ni comercial", "Collective management model without state or commercial dependency"],
+    [23, "Veeduría ciudadana", "Citizen oversight", "Mecanismo de control social sobre la gestión de la emisora", "Social control mechanism over station management"],
+    [24, "Asamblea de oyentes", "Listeners' assembly", "Espacio de decisión colectiva de los miembros de la comunidad radiofónica", "Collective decision-making space for radio community members"],
+    [25, "Parlante comunitario", "Community loudspeaker", "Difusión por altoparlantes en zonas sin cobertura de radio", "Broadcast via loudspeakers in areas with no radio coverage"],
+    [26, "Emisora virtual", "Web radio / Online radio", "Emisora que transmite exclusivamente por internet", "Station that broadcasts exclusively over the internet"],
+    [27, "Podcast comunitario", "Community podcast", "Contenido sonoro bajo demanda producido por la comunidad", "On-demand audio content produced by the community"],
+    [28, "Streaming", "Streaming", "Transmisión continua de audio a través de internet en tiempo real", "Continuous audio transmission over the internet in real time"],
+    [29, "Software libre para radio", "Free software for radio", "Aplicaciones como Airtime, Rivendell, LibreTime, sin costo de licencia", "Applications like Airtime, Rivendell, LibreTime, no license cost"],
+    [30, "Automatización radial", "Radio automation", "Sistema que programa y emite contenidos sin operador humano constante", "System that schedules and broadcasts content without constant human operator"],
+    [31, "Plataforma colaborativa", "Collaborative platform", "Espacio digital para que los oyentes suban audios y propongan temas", "Digital space for listeners to upload audio and suggest topics"],
+    [32, "Transmedia comunitaria", "Community transmedia", "Narrativa que expande el contenido radial a redes sociales, web y eventos", "Narrative that expands radio content to social media, web and events"],
+    [33, "Guion radiofónico comunitario", "Community radio script", "Documento que estructura la participación de múltiples voces y lenguajes", "Document structuring multiple voices and languages"],
+    [34, "Cobertura territorial", "Territorial coverage", "Alcance geográfico de la señal de la emisora", "Geographic reach of the station's signal"],
+    [35, "Zona rural dispersa", "Dispersed rural area", "Región con baja densidad poblacional y acceso limitado a TIC", "Area with low population density and limited ICT access"],
+    [36, "Operador técnico comunitario", "Community technical operator", "Voluntario encargado del manejo de consola y equipos de transmisión", "Volunteer in charge of console and transmission equipment"],
+    [37, "Locutor popular", "Community announcer", "Vocero sin formación profesional pero con arraigo en la comunidad", "Spokesperson without professional training but rooted in the community"],
+    [38, "Fonomontaje", "Audio editing", "Proceso de edición y mezcla de sonidos para producir cuñas y programas", "Process of editing and mixing sounds to produce spots and programs"],
+    [39, "Cuña publicitaria comunitaria", "Community service announcement", "Mensaje de interés social breve (15-30 segundos)", "Brief public service message (15-30 seconds)"],
+    [40, "Jingle comunitario", "Community jingle", "Canción corta que identifica a la emisora o programa", "Short song identifying the station or program"],
+    [41, "Cortina musical", "Music bed", "Fondo musical breve usado para separar secciones", "Brief musical background used to separate sections"],
+    [42, "Ráfaga", "Stinger / Sweeper", "Efecto sonoro corto que marca transiciones o promociona contenidos", "Short sound effect marking transitions or promoting content"],
+    [43, "Reportaje participativo", "Participatory report", "Investigación radial con aportes de la audiencia", "Radio investigation with audience contributions"],
+    [44, "Mesa redonda comunitaria", "Community roundtable", "Debate con líderes locales y oyentes presentes en estudio", "Debate with local leaders and listeners present in the studio"],
+    [45, "Asamblea al aire", "On-air assembly", "Programa donde se toman decisiones colectivas en vivo", "Program where collective decisions are taken live"],
+    [46, "Consulta ciudadana por radio", "Citizen consultation via radio", "Mecanismo para recoger opinión pública sobre temas locales", "Mechanism to gather public opinion on local issues"],
+    [47, "Telefonía al aire", "Call-in show", "Segmento donde oyentes llaman para opinar o solicitar música", "Segment where listeners call to give opinions or request music"],
+    [48, "Mensajes de texto a la radio", "Text-to-air", "Sistema que convierte SMS o WhatsApp en texto leído al aire", "System that converts SMS or WhatsApp into text read on air"],
+    [49, "Encuesta radial", "Radio poll", "Sondeo mediante llamadas, SMS o redes sociales", "Poll via calls, SMS or social media"],
+    [50, "Radionovela comunitaria", "Community radio drama", "Serie de ficción colectivamente escrita y actuada por la comunidad", "Fiction series collectively written and performed by the community"],
+    [51, "Radiotearro", "Radio theatre", "Adaptación de obras teatrales al lenguaje radiofónico", "Adaptation of theater plays to radio language"],
+    [52, "Documental sonoro comunitario", "Community sound documentary", "Producción extensa basada en testimonios locales", "Extended production based on local testimonies"],
+    [53, "Crónica radial local", "Local radio chronicle", "Relato secuencial de un hecho comunitario con estilo literario", "Sequential account of a community event with literary style"],
+    [54, "Boletín comunitario", "Community bulletin", "Resumen de actividades, fechas y servicios de la zona", "Summary of activities, dates and services in the area"],
+    [55, "Revista radial", "Radio magazine", "Programa misceláneo que combina información, música y entrevistas", "Miscellaneous program combining information, music and interviews"],
+    [56, "Franja de participación", "Participation slot", "Espacio fijo donde los oyentes proponen y realizan contenido", "Fixed space where listeners propose and create content"],
+    [57, "Programa de servicio social", "Social service program", "Ayuda a resolver problemas prácticos de la comunidad (desaparecidos, empleo)", "Helps solve community practical problems (missing persons, employment)"],
+    [58, "Alerta comunitaria", "Community alert", "Aviso urgente para prevenir desastres o emergencias", "Urgent notice to prevent disasters or emergencies"],
+    [59, "Franja musical indígena", "Indigenous music slot", "Espacio dedicado a músicas tradicionales en lenguas nativas", "Space dedicated to traditional music in native languages"],
+    [60, "Microprograma", "Microprogram", "Bloque muy breve (1-2 minutos) con mensaje específico", "Very short block (1-2 minutes) with specific message"],
+    [61, "Programa farándula local", "Local entertainment show", "Cobertura de eventos sociales y culturales de la comunidad", "Coverage of community social and cultural events"],
+    [62, "Mesa de control", "Control room", "Cabina con consola, micrófonos, computador y transmisor", "Booth with console, microphones, computer and transmitter"],
+    [63, "Enlace satelital", "Satellite link", "Transmisión vía satélite para ampliar cobertura", "Satellite transmission to extend coverage"],
+    [64, "Red de emisoras comunitarias", "Community radio network", "Federación de estaciones que comparten contenidos y recursos", "Federation of stations sharing content and resources"],
+    [65, "Seguro de responsabilidad civil", "Public liability insurance", "Cobertura para eventuales daños durante transmisiones", "Coverage for potential damages during broadcasts"],
+    [66, "Certificado de operación", "Operating certificate", "Documento expedido por MinTIC que habilita la emisión", "Document issued by MinTIC authorizing broadcast"],
+    [67, "Potencia de transmisión", "Transmission power", "Energía radiada por la antena (Watts), limitada por ley", "Energy radiated by the antenna (Watts), legally limited"],
+    [68, "Antena omnidireccional", "Omnidirectional antenna", "Antena que irradia señal en todas direcciones horizontales", "Antenna that radiates signal in all horizontal directions"],
+    [69, "Torre de transmisión", "Transmission tower", "Estructura que soporta la antena a gran altura", "Structure supporting the antenna at great height"],
+    [70, "Planta de emergencia", "Emergency generator", "Fuente de energía alternativa ante cortes eléctricos", "Alternative power source during power outages"],
+    [71, "Protección contra rayos", "Lightning protection", "Sistema de pararrayos para proteger equipos", "Lightning rod system to protect equipment"],
+    [72, "Licencia de derechos de autor", "Copyright license", "Permiso SAYCO-ACINPRO para reproducir música comercial", "SAYCO-ACINPRO permit to play commercial music"],
+    [73, "Dominio público", "Public domain", "Obras libres de derechos por antigüedad (70 años post mortem)", "Works free of rights due to age (70 years after death)"],
+    [74, "Creative Commons", "Creative Commons", "Licencias que permiten compartir música con atribución", "Licenses allowing music sharing with attribution"],
+    [75, "Infracción de derechos", "Copyright infringement", "Emisión de música sin autorización de los titulares", "Broadcast of music without authorization from rights holders"],
+    [76, "Sistema de reporte de emisiones", "Broadcast reporting system", "Software para enviar playlists a entidades de gestión", "Software to send playlists to management entities"],
+    [77, "Autofinanciación", "Self-funding", "Modelo económico basado en aportes comunitarios y publicidad local no lucrativa", "Economic model based on community contributions and non-profit local advertising"],
+    [78, "Publicidad comercial limitada", "Limited commercial advertising", "Espacios pagados restringidos por ley (máximo 30% de programación)", "Paid spaces restricted by law (maximum 30% of programming)"],
+    [79, "Pauta comunitaria", "Community advertising", "Anuncios de pequeñas empresas locales a tarifas solidarias", "Ads from local small businesses at solidarity rates"],
+    [80, "Patrocinio cultural", "Cultural sponsorship", "Apoyo económico de entidades públicas para contenidos educativos", "Economic support from public entities for educational content"],
+    [81, "Membresía de oyentes", "Listener membership", "Aporte voluntario periódico de la audiencia", "Periodic voluntary contribution from the audience"],
+    [82, "Tienda de la emisora", "Station shop", "Venta de camisetas, tazas y CDs para recaudar fondos", "Sale of t-shirts, mugs and CDs to raise funds"],
+    [83, "Bingo radial", "Radio bingo", "Juego de azar legalizado para recaudación, común en radios comunitarias", "Legalized gambling for fundraising, common in community radio"],
+    [84, "Donación de equipos", "Equipment donation", "Recepción de consolas, micrófonos o computadores por empresas", "Receipt of consoles, microphones or computers from companies"],
+    [85, "Voluntariado técnico", "Technical volunteering", "Profesionales que dan soporte gratis a la emisora", "Professionals providing free support to the station"],
+    [86, "Escuela de formación radial", "Radio training school", "Talleres para capacitar a jóvenes en producción", "Workshops to train youth in production"],
+    [87, "Medición de audiencia comunitaria", "Community audience measurement", "Métodos alternativos al rating comercial (encuestas, focus groups)", "Alternative methods to commercial rating (surveys, focus groups)"],
+    [88, "Cuaderno de bitácora", "Logbook", "Registro diario de novedades, fallas técnicas y programación", "Daily record of news, technical failures and programming"],
+    [89, "Acta de asamblea de oyentes", "Listeners assembly minutes", "Documento oficial de decisiones colectivas", "Official document of collective decisions"],
+    [90, "Plan de desarrollo comunitario", "Community development plan", "Estrategia que articula la programación a necesidades locales", "Strategy linking programming to local needs"],
+    [91, "Fortalecimiento de tejido social", "Social fabric strengthening", "Objetivo de las radios comunitarias para cohesionar comunidades", "Goal of community radios to cohere communities"],
+    [92, "Memoria local sonora", "Local sound memory", "Archivo histórico de entrevistas y eventos de la comunidad", "Historical archive of community interviews and events"],
+    [93, "Periodismo de paz", "Peace journalism", "Enfoque que evita estigmatizar y promueve resolución de conflictos", "Approach avoiding stigmatization and promoting conflict resolution"],
+    [94, "Comunicación popular", "Popular communication", "Corriente latinoamericana que privilegia la voz de sectores oprimidos", "Latin American current privileging the voice of oppressed sectors"],
+    [95, "Educación popular", "Popular education", "Metodología iniciada por Paulo Freire, aplicada a la radio", "Methodology initiated by Paulo Freire, applied to radio"],
+    [96, "Radios pacifistas", "Peace radio stations", "Emisoras que trabajan por la reconciliación en zonas de conflicto", "Stations working for reconciliation in conflict zones"],
+    [97, "Comunicación para el cambio social", "Communication for social change", "Enfoque que usa la radio para transformar realidades", "Approach using radio to transform realities"],
+    [98, "Indicador de sostenibilidad", "Sustainability indicator", "Métrica que evalúa viabilidad a largo plazo (financiera, audiencia, incidencia)", "Metric evaluating long-term viability (financial, audience, impact)"],
+    [99, "Plan de renovación de concesión", "License renewal plan", "Documento requerido cada 10 años ante MinTIC", "Document required every 10 years before MinTIC"],
+    [100, "Observatorio de radios comunitarias", "Community radio observatory", "Entidad que monitorea políticas públicas y brechas digitales", "Entity monitoring public policies and digital gaps"]
+  ];
+
+  // --------------------- LOCALSTORAGE Y PROGRESO -------------------------
+  let progreso = {};
+  let currentLang = "es";
+  let currentPracticeMode = "traduccion_directa";
+  let currentCardId = null;
+  let currentOrdenarPalabras = [];
+  let shuffledPalabras = [];
+  let selectedOrder = [];
+  let ordenarRespuestaCorrecta = "";
+
+  const STORAGE_KEY = "radiosComunitariasC1Progreso";
+
+  function cargarProgreso() {
+    const guardado = localStorage.getItem(STORAGE_KEY);
+    if (guardado) progreso = JSON.parse(guardado);
+    else {
+      progreso = {};
+      for (let i = 1; i <= 100; i++) progreso[i] = { aciertos: 0, fallos: 0 };
+    }
+  }
+  function guardarProgreso() { localStorage.setItem(STORAGE_KEY, JSON.stringify(progreso)); }
+  function registrarResultado(id, acierto) {
+    if (!progreso[id]) progreso[id] = { aciertos: 0, fallos: 0 };
+    if (acierto) progreso[id].aciertos += 1;
+    else progreso[id].fallos += 1;
+    guardarProgreso();
+    renderDashboard();
+    renderListado(document.getElementById("filtroListado")?.value || "");
+  }
+
+  function obtenerTexto(item, tipo) {
+    if (currentLang === 'es') return tipo === 'palabra' ? item[1] : item[3];
+    if (currentLang === 'en') return tipo === 'palabra' ? item[2] : item[4];
+    return tipo === 'palabra' ? `${item[1]} / ${item[2]}` : `${item[3]} / ${item[4]}`;
+  }
+
+  function renderDashboard() {
+    let totalAciertos = 0, totalFallos = 0, conceptosConAcierto = 0;
+    for (let i = 1; i <= 100; i++) {
+      const p = progreso[i] || { aciertos: 0, fallos: 0 };
+      totalAciertos += p.aciertos;
+      totalFallos += p.fallos;
+      if (p.aciertos > 0) conceptosConAcierto++;
+    }
+    const porcentaje = (conceptosConAcierto / 100) * 100;
+    document.getElementById("globalProgressFill").style.width = `${porcentaje}%`;
+    document.getElementById("globalProgressText").innerHTML = `${conceptosConAcierto} de 100 términos con al menos 1 acierto (${Math.round(porcentaje)}%).`;
+    document.getElementById("statsContainer").innerHTML = `
+      <div class="stat-card"><div class="stat-number">${totalAciertos}</div>✅ Aciertos totales</div>
+      <div class="stat-card"><div class="stat-number">${totalFallos}</div>❌ Fallos</div>
+      <div class="stat-card"><div class="stat-number">${conceptosConAcierto}</div>📘 Términos dominados</div>
+      <div class="stat-card"><div class="stat-number">${Math.round((totalAciertos/(totalAciertos+totalFallos+0.001))*100)}%</div>📊 Tasa éxito</div>
+    `;
+  }
+
+  function renderListado(filtro = "") {
+    const container = document.getElementById("conceptosListadoContainer");
+    container.innerHTML = "";
+    const filtroLower = filtro.toLowerCase();
+    for (let c of vocabularioData) {
+      const id = c[0];
+      const palabra = obtenerTexto(c, 'palabra');
+      const definicion = obtenerTexto(c, 'definicion');
+      const prog = progreso[id] || { aciertos: 0, fallos: 0 };
+      if (filtro && !palabra.toLowerCase().includes(filtroLower) && !definicion.toLowerCase().includes(filtroLower)) continue;
+      const div = document.createElement("div");
+      div.className = "concepto-item";
+      div.innerHTML = `<div class="concepto-titulo">${id}. ${palabra}</div>
+                       <div class="concepto-desc">📻 ${definicion}</div>
+                       <span class="badge-progreso">✅ ${prog.aciertos} aciertos · ❌ ${prog.fallos} fallos</span>`;
+      container.appendChild(div);
+    }
+  }
+
+  const practicaDiv = document.getElementById("practicaContainer");
+
+  function modoTraduccionDirecta() {
+    const randomIndex = Math.floor(Math.random() * vocabularioData.length);
+    const item = vocabularioData[randomIndex];
+    currentCardId = item[0];
+    const pregunta = obtenerTexto(item, 'palabra');
+    const respuestaCorrecta = obtenerTexto(item, 'palabra') === item[1] ? item[2] : item[1];
+    
+    practicaDiv.innerHTML = `
+      <div class="flashcard">
+        <div class="pregunta">📖 <strong>${pregunta}</strong></div>
+        <input type="text" id="respuestaInput" placeholder="Escribe la traducción / Type the translation...">
+        <button id="comprobarBtn" class="btn btn-primary">✓ Comprobar</button>
+        <div id="feedbackMsg" style="margin:1rem 0; font-weight:bold;"></div>
+        <button id="siguienteBtn" class="btn">⏩ Siguiente</button>
+        <p id="infoProgresoCard" style="margin-top:0.8rem;">📊 Término ${currentCardId} · ✅ ${progreso[currentCardId]?.aciertos||0} aciertos · ❌ ${progreso[currentCardId]?.fallos||0} fallos</p>
+      </div>
+    `;
+    
+    document.getElementById("comprobarBtn").onclick = () => {
+      const userAnswer = document.getElementById("respuestaInput").value.trim().toLowerCase();
+      const correct = respuestaCorrecta.toLowerCase();
+      const isCorrect = userAnswer === correct;
+      const feedback = document.getElementById("feedbackMsg");
+      if (isCorrect) {
+        feedback.innerHTML = `<span style='color:#27ae60'>✅ ¡Correcto! "${respuestaCorrecta}"</span>`;
+        registrarResultado(currentCardId, true);
+      } else {
+        feedback.innerHTML = `<span style='color:#e67e22'>❌ Incorrecto. La respuesta correcta es: "${respuestaCorrecta}"</span>`;
+        registrarResultado(currentCardId, false);
+      }
+      document.getElementById("comprobarBtn").disabled = true;
+      setTimeout(() => { document.getElementById("comprobarBtn").disabled = false; }, 1500);
+    };
+    document.getElementById("siguienteBtn").onclick = () => modoTraduccionDirecta();
+  }
+
+  function modoTraduccionInversa() {
+    const randomIndex = Math.floor(Math.random() * vocabularioData.length);
+    const item = vocabularioData[randomIndex];
+    currentCardId = item[0];
+    const traduccion = obtenerTexto(item, 'palabra') === item[1] ? item[2] : item[1];
+    const respuestaCorrecta = obtenerTexto(item, 'palabra');
+    
+    practicaDiv.innerHTML = `
+      <div class="flashcard">
+        <div class="pregunta">🔄 <strong>${traduccion}</strong></div>
+        <input type="text" id="respuestaInput" placeholder="Escribe el término original / Type the original term...">
+        <button id="comprobarBtn" class="btn btn-primary">✓ Comprobar</button>
+        <div id="feedbackMsg" style="margin:1rem 0; font-weight:bold;"></div>
+        <button id="siguienteBtn" class="btn">⏩ Siguiente</button>
+        <p id="infoProgresoCard" style="margin-top:0.8rem;">📊 Término ${currentCardId} · ✅ ${progreso[currentCardId]?.aciertos||0} aciertos · ❌ ${progreso[currentCardId]?.fallos||0} fallos</p>
+      </div>
+    `;
+    
+    document.getElementById("comprobarBtn").onclick = () => {
+      const userAnswer = document.getElementById("respuestaInput").value.trim().toLowerCase();
+      const correct = respuestaCorrecta.toLowerCase();
+      const isCorrect = userAnswer === correct;
+      const feedback = document.getElementById("feedbackMsg");
+      if (isCorrect) {
+        feedback.innerHTML = `<span style='color:#27ae60'>✅ ¡Correcto! "${respuestaCorrecta}"</span>`;
+        registrarResultado(currentCardId, true);
+      } else {
+        feedback.innerHTML = `<span style='color:#e67e22'>❌ Incorrecto. La respuesta correcta es: "${respuestaCorrecta}"</span>`;
+        registrarResultado(currentCardId, false);
+      }
+      document.getElementById("comprobarBtn").disabled = true;
+      setTimeout(() => { document.getElementById("comprobarBtn").disabled = false; }, 1500);
+    };
+    document.getElementById("siguienteBtn").onclick = () => modoTraduccionInversa();
+  }
+
+  function modoOrdenarPalabras() {
+    const randomIndex = Math.floor(Math.random() * vocabularioData.length);
+    const item = vocabularioData[randomIndex];
+    currentCardId = item[0];
+    const fraseOriginal = obtenerTexto(item, 'palabra');
+    ordenarRespuestaCorrecta = fraseOriginal;
+    let palabras = fraseOriginal.split(/\s+/).filter(p => p.length > 0);
+    currentOrdenarPalabras = [...palabras];
+    shuffledPalabras = [...palabras];
+    for (let i = shuffledPalabras.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [shuffledPalabras[i], shuffledPalabras[j]] = [shuffledPalabras[j], shuffledPalabras[i]];
+    }
+    selectedOrder = [];
+    
+    const renderUI = () => {
+      let palabrasHTML = shuffledPalabras.map(p => `<button class="palabra-btn" data-palabra="${p.replace(/"/g, '&quot;')}">${p}</button>`).join('');
+      let ordenHTML = selectedOrder.map(p => `<span style="background:#fdf4df; padding:0.2rem 0.6rem; margin:0.2rem; border-radius:1rem;">${p}</span>`).join(' ');
+      if (ordenHTML === "") ordenHTML = "<em>Haz clic en las palabras en el orden correcto...</em>";
+      practicaDiv.innerHTML = `
+        <div class="flashcard">
+          <h3>🧩 Ordena el término:</h3>
+          <div class="pregunta" style="background:#fdf4df;">📌 ${obtenerTexto(item, 'definicion')}</div>
+          <div class="orden-actual"><strong>Tu orden:</strong><br> ${ordenHTML}</div>
+          <div class="orden-palabras" id="palabrasContainer">${palabrasHTML}</div>
+          <div>
+            <button id="resetBtn" class="btn" style="background:#eaddc5;">🔁 Reiniciar</button>
+            <button id="comprobarBtn" class="btn btn-primary">✓ Comprobar</button>
+          </div>
+          <button id="siguienteBtn" class="btn" style="margin-top:1rem;">⏩ Siguiente</button>
+          <p id="infoProgresoCard">📊 Término ${currentCardId} · ✅ ${progreso[currentCardId]?.aciertos||0} aciertos · ❌ ${progreso[currentCardId]?.fallos||0} fallos</p>
+          <div id="feedbackMsg" style="margin-top:0.8rem; font-weight:bold;"></div>
+        </div>
+      `;
+      document.querySelectorAll(".palabra-btn").forEach(btn => {
+        btn.addEventListener("click", () => {
+          const palabra = btn.getAttribute("data-palabra");
+          const idx = shuffledPalabras.indexOf(palabra);
+          if (idx !== -1) {
+            shuffledPalabras.splice(idx, 1);
+            selectedOrder.push(palabra);
+            renderUI();
+          }
+        });
+      });
+      document.getElementById("resetBtn").onclick = () => {
+        shuffledPalabras = [...currentOrdenarPalabras];
+        for (let i = shuffledPalabras.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [shuffledPalabras[i], shuffledPalabras[j]] = [shuffledPalabras[j], shuffledPalabras[i]];
+        }
+        selectedOrder = [];
+        renderUI();
+      };
+      document.getElementById("comprobarBtn").onclick = () => {
+        const ordenUsuario = selectedOrder.join(" ");
+        if (ordenUsuario === ordenarRespuestaCorrecta) {
+          document.getElementById("feedbackMsg").innerHTML = "<span style='color:#27ae60'>✅ ¡Correcto! Término ordenado correctamente.</span>";
+          registrarResultado(currentCardId, true);
+          setTimeout(() => modoOrdenarPalabras(), 1500);
+        } else {
+          document.getElementById("feedbackMsg").innerHTML = `<span style='color:#e67e22'>❌ Incorrecto. El término correcto es: "${ordenarRespuestaCorrecta}"</span>`;
+          registrarResultado(currentCardId, false);
+          setTimeout(() => modoOrdenarPalabras(), 2000);
+        }
+        document.getElementById("comprobarBtn").disabled = true;
+        setTimeout(() => { if(document.getElementById("comprobarBtn")) document.getElementById("comprobarBtn").disabled = false; }, 2000);
+      };
+      document.getElementById("siguienteBtn").onclick = () => modoOrdenarPalabras();
+    };
+    renderUI();
+  }
+
+  function modoEspEng() {
+    const randomIndex = Math.floor(Math.random() * vocabularioData.length);
+    const item = vocabularioData[randomIndex];
+    currentCardId = item[0];
+    const direction = Math.random() < 0.5 ? "esp2eng" : "eng2esp";
+    const [pregunta, respuestaCorrecta] = direction === "esp2eng" ? [item[1], item[2]] : [item[2], item[1]];
+    const directionText = direction === "esp2eng" ? "🇪🇸 → 🇬🇧 Español a Inglés" : "🇬🇧 → 🇪🇸 English to Spanish";
+    
+    practicaDiv.innerHTML = `
+      <div class="flashcard">
+        <div class="translation-direction">${directionText}</div>
+        <div class="pregunta">📝 <strong>${pregunta}</strong></div>
+        <input type="text" id="respuestaInput" placeholder="Escribe la traducción / Type the translation...">
+        <button id="comprobarBtn" class="btn btn-primary">✓ Comprobar</button>
+        <div id="feedbackMsg" style="margin:1rem 0; font-weight:bold;"></div>
+        <button id="siguienteBtn" class="btn">⏩ Siguiente</button>
+        <p id="infoProgresoCard" style="margin-top:0.8rem;">📊 Término ${currentCardId} · ✅ ${progreso[currentCardId]?.aciertos||0} aciertos · ❌ ${progreso[currentCardId]?.fallos||0} fallos</p>
+      </div>
+    `;
+    
+    document.getElementById("comprobarBtn").onclick = () => {
+      const userAnswer = document.getElementById("respuestaInput").value.trim().toLowerCase();
+      const correct = respuestaCorrecta.toLowerCase();
+      const isCorrect = userAnswer === correct;
+      const feedback = document.getElementById("feedbackMsg");
+      if (isCorrect) {
+        feedback.innerHTML = `<span style='color:#27ae60'>✅ ¡Correcto! "${respuestaCorrecta}"</span>`;
+        registrarResultado(currentCardId, true);
+      } else {
+        feedback.innerHTML = `<span style='color:#e67e22'>❌ Incorrecto. La respuesta correcta es: "${respuestaCorrecta}"</span>`;
+        registrarResultado(currentCardId, false);
+      }
+      document.getElementById("comprobarBtn").disabled = true;
+      setTimeout(() => { document.getElementById("comprobarBtn").disabled = false; }, 1500);
+    };
+    document.getElementById("siguienteBtn").onclick = () => modoEspEng();
+  }
+
+  function setPracticeMode(mode) {
+    currentPracticeMode = mode;
+    document.querySelectorAll(".modo-btn").forEach(btn => btn.classList.remove("active"));
+    if (mode === "traduccion_directa") document.getElementById("modoTraduccionDirecta").classList.add("active");
+    if (mode === "traduccion_inversa") document.getElementById("modoTraduccionInversa").classList.add("active");
+    if (mode === "ordenar") document.getElementById("modoOrdenar").classList.add("active");
+    if (mode === "esp_eng") document.getElementById("modoEspEng").classList.add("active");
+    
+    if (mode === "traduccion_directa") modoTraduccionDirecta();
+    else if (mode === "traduccion_inversa") modoTraduccionInversa();
+    else if (mode === "ordenar") modoOrdenarPalabras();
+    else if (mode === "esp_eng") modoEspEng();
+  }
+
+  function setLanguage(lang) {
+    currentLang = lang;
+    document.getElementById("langEsBtn").classList.toggle("active", lang === 'es');
+    document.getElementById("langEnBtn").classList.toggle("active", lang === 'en');
+    document.getElementById("langBothBtn").classList.toggle("active", lang === 'both');
+    document.getElementById("progressTitle").innerText = lang === 'es' ? "📈 Progreso en radios comunitarias C1" : 
+                                                         (lang === 'en' ? "📈 Community Radio C1 Progress" : "📈 Progreso / Progress");
+    const placeholder = document.querySelector("#listado input");
+    if (placeholder) {
+      placeholder.placeholder = lang === 'es' ? "🔍 Buscar término / definición..." :
+                                (lang === 'en' ? "🔍 Search term / definition..." : "🔍 Buscar / Search...");
+    }
+    renderListado(document.getElementById("filtroListado")?.value || "");
+    setPracticeMode(currentPracticeMode);
+  }
+
+  function initUI() {
+    document.querySelectorAll(".nav-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const viewId = btn.getAttribute("data-view");
+        document.querySelectorAll(".view").forEach(v => v.classList.remove("active-view"));
+        document.getElementById(viewId).classList.add("active-view");
+        document.querySelectorAll(".nav-btn").forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+        if (viewId === "listado") renderListado(document.getElementById("filtroListado").value);
+        if (viewId === "dashboard") renderDashboard();
+        if (viewId === "practica") setPracticeMode(currentPracticeMode);
+      });
+    });
+    
+    document.getElementById("modoTraduccionDirecta").addEventListener("click", () => setPracticeMode("traduccion_directa"));
+    document.getElementById("modoTraduccionInversa").addEventListener("click", () => setPracticeMode("traduccion_inversa"));
+    document.getElementById("modoOrdenar").addEventListener("click", () => setPracticeMode("ordenar"));
+    document.getElementById("modoEspEng").addEventListener("click", () => setPracticeMode("esp_eng"));
+    
+    document.getElementById("resetProgresoBtn").addEventListener("click", () => {
+      if (confirm("¿Reiniciar todo el progreso? Se perderán aciertos y fallos. / Reset all progress?")) {
+        for (let i = 1; i <= 100; i++) progreso[i] = { aciertos: 0, fallos: 0 };
+        guardarProgreso();
+        renderDashboard();
+        renderListado(document.getElementById("filtroListado")?.value || "");
+        setPracticeMode(currentPracticeMode);
+      }
+    });
+    document.getElementById("filtroListado").addEventListener("input", (e) => renderListado(e.target.value));
+    
+    document.getElementById("langEsBtn").addEventListener("click", () => setLanguage('es'));
+    document.getElementById("langEnBtn").addEventListener("click", () => setLanguage('en'));
+    document.getElementById("langBothBtn").addEventListener("click", () => setLanguage('both'));
+  }
+
+  window.addEventListener("DOMContentLoaded", () => {
+    cargarProgreso();
+    renderDashboard();
+    renderListado();
+    initUI();
+    setPracticeMode("traduccion_directa");
+  });
+</script>
+</body>
+</html>

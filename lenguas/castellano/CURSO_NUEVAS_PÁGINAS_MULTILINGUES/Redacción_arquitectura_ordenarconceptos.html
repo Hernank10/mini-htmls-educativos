@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>Arquitectura Colombia · 100 conceptos clave</title>
+  <style>
+    /* ----- VARIABLES CSS: paleta arquitectónica (concreto, ladrillo, cielo) ----- */
+    :root {
+      --fondo: #f4f1ea;          /* papel de croquis */
+      --texto: #2c2820;
+      --concreto: #a3a8ad;
+      --ladrillo: #bc6f4b;
+      --cielo: #578a9e;
+      --verde-ok: #3a7a5c;
+      --rojo-error: #b95a3c;
+      --sombra: rgba(60, 50, 35, 0.08);
+      --card-bg: #ffffff;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: var(--fondo);
+      color: var(--texto);
+      font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
+      line-height: 1.5;
+      padding: 1rem;
+    }
+
+    .app-container {
+      max-width: 1300px;
+      margin: 0 auto;
+      background: var(--card-bg);
+      border-radius: 2rem;
+      box-shadow: 0 12px 28px var(--sombra);
+      overflow: hidden;
+      border: 1px solid #ddd0bd;
+    }
+
+    header {
+      background: #fdfaf5;
+      padding: 1.2rem 2rem;
+      border-bottom: 3px solid var(--ladrillo);
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 1rem;
+    }
+    h1 {
+      font-size: 1.7rem;
+      font-weight: 600;
+      color: #4e3b2c;
+      letter-spacing: -0.2px;
+    }
+    h1 small {
+      font-size: 0.7rem;
+      font-weight: normal;
+      color: #8f765b;
+    }
+
+    nav {
+      display: flex;
+      gap: 0.5rem;
+      background: #ece3d8;
+      padding: 0.6rem 2rem;
+      border-bottom: 1px solid #ddd0bd;
+      flex-wrap: wrap;
+    }
+    .nav-btn {
+      background: transparent;
+      border: none;
+      font-size: 0.95rem;
+      padding: 0.5rem 1.2rem;
+      border-radius: 40px;
+      cursor: pointer;
+      font-weight: 500;
+      transition: all 0.2s;
+      color: #5a4737;
+    }
+    .nav-btn.active {
+      background-color: var(--ladrillo);
+      color: white;
+    }
+    .nav-btn:hover:not(.active) {
+      background-color: #dacfbf;
+    }
+
+    .view {
+      display: none;
+      padding: 2rem;
+      animation: fade 0.2s ease;
+    }
+    .active-view { display: block; }
+    @keyframes fade { from { opacity: 0; transform: translateY(5px);} to { opacity: 1; transform: translateY(0);} }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+    .stat-card {
+      background: var(--fondo);
+      border-radius: 1.5rem;
+      padding: 1rem;
+      text-align: center;
+      border-left: 6px solid var(--concreto);
+      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    }
+    .stat-number {
+      font-size: 2.2rem;
+      font-weight: 700;
+      color: var(--ladrillo);
+    }
+    .progress-bar-bg {
+      background: #e2dbd0;
+      border-radius: 40px;
+      height: 12px;
+      overflow: hidden;
+      margin: 0.8rem 0;
+    }
+    .progress-fill {
+      background: var(--ladrillo);
+      width: 0%;
+      height: 100%;
+      transition: width 0.2s;
+    }
+
+    .conceptos-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+      gap: 1rem;
+      max-height: 65vh;
+      overflow-y: auto;
+      padding-right: 0.3rem;
+    }
+    .concepto-item {
+      background: white;
+      border-radius: 1.2rem;
+      padding: 0.8rem 1rem;
+      border-left: 5px solid var(--cielo);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+    .concepto-titulo {
+      font-weight: 700;
+      color: #4f3d2c;
+    }
+    .concepto-desc {
+      font-size: 0.85rem;
+      color: #6e5e4c;
+      margin-top: 6px;
+      border-top: 1px solid #eee2d4;
+      padding-top: 6px;
+    }
+    .badge-progreso {
+      font-size: 0.7rem;
+      background: #e9e2d8;
+      border-radius: 20px;
+      padding: 2px 10px;
+      display: inline-block;
+      margin-top: 8px;
+    }
+
+    /* práctica */
+    .flashcard {
+      background: #fffdf9;
+      border-radius: 2rem;
+      padding: 1.8rem;
+      text-align: center;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+      border: 1px solid #e0d3c2;
+      max-width: 750px;
+      margin: 0 auto;
+    }
+    .pregunta {
+      font-size: 1.4rem;
+      font-weight: 500;
+      margin-bottom: 1.8rem;
+      background: #f4efe7;
+      padding: 1.2rem;
+      border-radius: 1.5rem;
+    }
+    .respuesta-oculta {
+      background: #e8e2d9;
+      border-radius: 1.2rem;
+      padding: 1rem;
+      margin: 1rem 0;
+      display: none;
+    }
+    .palabras-baraja {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 0.6rem;
+      margin: 1.5rem 0;
+    }
+    .palabra-btn {
+      background: var(--cielo);
+      color: white;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 2rem;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: 0.1s;
+    }
+    .palabra-btn:active { transform: scale(0.97); }
+    .orden-actual {
+      background: #f8f3ec;
+      border-radius: 1rem;
+      padding: 1rem;
+      min-height: 80px;
+      margin: 1rem 0;
+      text-align: left;
+      font-size: 1rem;
+      border: 1px dashed #cec0ae;
+    }
+    .btn {
+      background: #e2dbd0;
+      border: none;
+      padding: 0.6rem 1.5rem;
+      border-radius: 3rem;
+      font-weight: 600;
+      margin: 0.3rem;
+      cursor: pointer;
+      font-family: inherit;
+    }
+    .btn-primary { background: var(--ladrillo); color: white; }
+    .btn-acierto { background: var(--verde-ok); color: white; }
+    .btn-fallo { background: var(--rojo-error); color: white; }
+    .modo-selector { display: flex; justify-content: center; gap: 0.8rem; margin-bottom: 1.5rem; flex-wrap: wrap; }
+    footer {
+      text-align: center;
+      padding: 1rem;
+      font-size: 0.75rem;
+      border-top: 1px solid #e0d3c2;
+      background: #faf7f2;
+    }
+    @media (max-width: 680px) {
+      .view { padding: 1rem; }
+      .pregunta { font-size: 1rem; }
+    }
+  </style>
+</head>
+<body>
+<div class="app-container">
+  <header>
+    <h1>🏛️ Arquitectura Colombia <small>100 conceptos esenciales</small></h1>
+    <div style="font-size:0.8rem;">📐 Teoría · Construcción · Urbanismo · Patrimonio · Normativa colombiana</div>
+  </header>
+  <nav>
+    <button class="nav-btn active" data-view="dashboard">📊 Panel</button>
+    <button class="nav-btn" data-view="listado">📚 Compendio</button>
+    <button class="nav-btn" data-view="practica">🃏 Práctica</button>
+  </nav>
+
+  <section id="dashboard" class="view active-view">
+    <div class="stats-grid" id="statsContainer"></div>
+    <div class="card" style="background:white; border-radius:1.6rem; padding:1.2rem;">
+      <h3>📈 Progreso en fundamentos arquitectónicos</h3>
+      <div class="progress-bar-bg"><div class="progress-fill" id="globalProgressFill"></div></div>
+      <p id="globalProgressText"></p>
+      <button id="resetProgresoBtn" class="btn" style="background:#d9c7ae;">🔄 Reiniciar progreso</button>
+    </div>
+  </section>
+
+  <section id="listado" class="view">
+    <input type="text" id="filtroListado" placeholder="🔍 Buscar concepto o definición..." style="width:100%; padding:10px; margin-bottom:15px; border-radius:40px; border:1px solid #ddd0bd;">
+    <div id="conceptosListadoContainer" class="conceptos-grid"></div>
+  </section>
+
+  <section id="practica" class="view">
+    <div class="modo-selector">
+      <button id="modoConceptoDef" class="btn btn-primary">📖 Concepto → Definición</button>
+      <button id="modoDefConcepto" class="btn">🔄 Definición → Concepto</button>
+      <button id="modoOrdenar" class="btn">🧩 Ordenar definición</button>
+    </div>
+    <div id="practicaContainer"></div>
+  </section>
+  <footer>Progreso guardado localmente · Ejercicio interactivo de ordenar definición incluido · Contexto colombiano</footer>
+</div>
+
+<script>
+  // --------------------------------------------------------------
+  // 100 CONCEPTOS DE ARQUITECTURA (enfoque Colombia)
+  // (número, concepto, definición)
+  // --------------------------------------------------------------
+  const conceptosData = [
+    [1, "Arquitectura", "Arte y técnica de proyectar y construir espacios habitables, considerando función, estética y contexto."],
+    [2, "Urbanismo", "Disciplina que ordena el territorio urbano, planifica usos del suelo y diseña la ciudad."],
+    [3, "Espacio arquitectónico", "Volumen generado por planos límite (suelo, paredes, techo) que permite la experiencia humana."],
+    [4, "Escala", "Relación entre las dimensiones del objeto arquitectónico y el cuerpo humano o su entorno."],
+    [5, "Proporción", "Relación armónica entre las partes de un edificio y el todo (sección áurea, módulo)."],
+    [6, "Composición", "Organización de los elementos arquitectónicos (volumen, ritmo, simetría, jerarquía)."],
+    [7, "Estructura", "Sistema resistente que soporta cargas y transmite fuerzas a la cimentación."],
+    [8, "Materialidad", "Elección y expresión de los materiales constructivos (hormigón, acero, madera, vidrio)."],
+    [9, "Hormigón armado", "Material compuesto de cemento, agregados y acero de refuerzo, muy usado en Colombia."],
+    [10, "Mampostería estructural", "Sistema de muros de ladrillo o bloque que soportan cargas verticales y laterales."],
+    [11, "Acero estructural", "Material de alta resistencia para vigas, columnas y cerchas en edificios industriales o de gran altura."],
+    [12, "Cimentación", "Elemento que transmite las cargas del edificio al terreno (zapatas, pilotes, losa)."],
+    [13, "Viga", "Elemento horizontal que recibe cargas de losas y las lleva a columnas o muros."],
+    [14, "Columna", "Elemento vertical de soporte, puede ser de concreto, acero o madera."],
+    [15, "Losa", "Superficie horizontal que constituye pisos y techos, puede ser maciza o aligerada."],
+    [16, "Cubierta", "Cierre superior del edificio (plana, inclinada, verde) que protege de la intemperie."],
+    [17, "Fachada", "Paramento exterior de un edificio, con valor funcional (aislamiento) y expresivo."],
+    [18, "Cerramiento", "Elemento que delimita el espacio interior del exterior (muro, ventana, puerta)."],
+    [19, "Ventilación natural", "Renovación del aire interior sin sistemas mecánicos, aprovechando presión de viento y efecto chimenea."],
+    [20, "Iluminación natural", "Aporte de luz solar a través de vanos, lucernarios o patios, reduciendo consumo energético."],
+    [21, "Acondicionamiento térmico", "Estrategias pasivas o activas para mantener confort temperatura interior."],
+    [22, "Bioclimática", "Arquitectura que aprovecha las condiciones climáticas locales para reducir impacto ambiental."],
+    [23, "Sostenibilidad", "Diseño que minimiza el consumo de recursos y la huella ecológica, usando energías renovables y materiales locales."],
+    [24, "Certificación LEED", "Sistema internacional de evaluación de edificios sostenibles, aplicado en proyectos colombianos."],
+    [25, "Edificio verde", "Construcción con alta eficiencia energética, gestión de agua y materiales reciclados."],
+    [26, "Estrategia pasiva", "Enfriamiento o calefacción natural sin consumo energético (masa térmica, orientación)."],
+    [27, "Plan de Ordenamiento Territorial (POT)", "Instrumento de planeación municipal en Colombia que define usos del suelo y normas urbanísticas."],
+    [28, "Norma NSR-10", "Reglamento colombiano de construcción sismo resistente, obligatoria desde 2010."],
+    [29, "Sismo resistencia", "Capacidad de una estructura para disipar energía durante un terremoto, evitando colapso."],
+    [30, "Zonificación sísmica colombiana", "División del territorio en zonas de amenaza sísmica alta, media y baja, según NSR-10."],
+    [31, "Patrimonio arquitectónico", "Conjunto de bienes inmuebles con valor cultural, histórico o estético, protegidos por ley."],
+    [32, "Ministerio de Cultura - Patrimonio", "Entidad que declara Bienes de Interés Cultural (BIC) en Colombia."],
+    [33, "Intervención patrimonial", "Acciones de restauración, conservación o rehabilitación de edificios históricos."],
+    [34, "Carta de Venecia", "Documento internacional (1964) que establece criterios para la restauración de monumentos."],
+    [35, "Centro histórico", "Área fundacional de una ciudad con valor patrimonial (ej. La Candelaria en Bogotá)."],
+    [36, "Restauración arquitectónica", "Proceso de recuperar un edificio histórico respetando su materialidad y valores originales."],
+    [37, "Rehabilitación", "Adecuación de un edificio existente a nuevos usos sin perder sus cualidades."],
+    [38, "Vivienda de interés social (VIS)", "Vivienda con precio máximo regulado en Colombia para población de bajos ingresos."],
+    [39, "Vivienda de interés prioritario (VIP)", "Vivienda de menor costo que la VIS, dirigida a hogares vulnerables."],
+    [40, "Déficit habitacional", "Diferencia entre número de hogares y viviendas adecuadas en Colombia."],
+    [41, "Barrios informal", "Asentamientos sin planeación urbana, carentes de servicios públicos y titulación."],
+    [42, "Mejoramiento integral de barrios", "Estrategia de urbanismo social para dotar de infraestructura y equipamientos."],
+    [43, "Espacio público", "Lugar de encuentro ciudadano de acceso libre: plazas, parques, calles peatonales."],
+    [44, "Andén", "Franja elevada de la vía para circulación peatonal."],
+    [45, "Ciclorruta", "Vía segregada para bicicletas, fomentada en ciudades colombianas como Bogotá y Medellín."],
+    [46, "Transmilenio", "Sistema de transporte masivo tipo BRT en Bogotá, referente de diseño de estaciones."],
+    [47, "Metrocable", "Sistema de teleférico urbano usado en Medellín para conectar barrios periféricos."],
+    [48, "Universidad Nacional de Colombia - Sede Medellín", "Referente arquitectónico moderno (edificio de aulas MDE)."],
+    [49, "Rogelio Salmona", "Arquitecto colombiano célebre por manejo del ladrillo, agua y patios (Torres del Parque)."],
+    [50, "Torres del Parque", "Conjunto residencial en Bogotá, obra maestra de Salmona, integrado al paisaje de la Santamaría."],
+    [51, "Centro Cultural Gabriel García Márquez", "Edificio de Salmona en Bogotá, con referencias a la arquitectura árabe."],
+    [52, "Ladrillo a la vista", "Material típico de la arquitectura colombiana, utilizado por Salmona y otros."],
+    [53, "Simón Vélez", "Arquitecto colombiano experto en estructura de guadua (Pabellón de Colombia en Expo Hannover 2000)."],
+    [54, "Guadua", "Bambú nativo de Colombia, usado como material estructural sostenible."],
+    [55, "Arquitectura colonial", "Edificios de los siglos XVI-XVIII con influencia española: patio central, muros gruesos."],
+    [56, "Casa de bahareque", "Técnica tradicional de muros de madera y barro, aún usada en zonas rurales colombianas."],
+    [57, "Patio", "Espacio abierto interior que proporciona luz y ventilación, elemento clave en la arquitectura tropical."],
+    [58, "Zaguán", "Espacio de transición entre la calle y el patio interior en viviendas coloniales."],
+    [59, "Alero", "Parte saliente de la cubierta que protege el muro de la lluvia."],
+    [60, "Cornisa", "Elemento horizontal volado que remata una fachada."],
+    [61, "Planta libre", "Espacio interior sin divisiones fijas, posibilitado por estructura reticular (Le Corbusier)."],
+    [62, "Fachada cortina", "Muro de vidrio estructural no portante, común en edificios comerciales."],
+    [63, "Modulor", "Sistema de proporciones basado en la figura humana, desarrollado por Le Corbusier."],
+    [64, "Mies van der Rohe", "Arquitecto alemán del movimiento moderno, autor del Pabellón de Barcelona."],
+    [65, "Frank Lloyd Wright", "Arquitecto orgánico, Casa de la Cascada."],
+    [66, "Le Corbusier", "Pionero del urbanismo moderno y los cinco puntos de la arquitectura nueva."],
+    [67, "Planta libre", "Sin muros de carga, permite flexibilidad."],
+    [68, "Terraza jardín", "Cubierta plana utilizable como área verde, uno de los cinco puntos de Le Corbusier."],
+    [69, "Ventana corrida", "Vano horizontal continuo que ilumina y ventila uniformemente."],
+    [70, "Rendering", "Imagen digital generada por computadora para visualizar un proyecto arquitectónico."],
+    [71, "BIM (Building Information Modeling)", "Metodología colaborativa de diseño y gestión de proyectos en 3D con datos."],
+    [72, "Maqueta arquitectónica", "Representación física a escala de un proyecto, usada en diseño y presentación."],
+    [73, "Anteproyecto", "Fase inicial de diseño donde se definen conceptos, volumetría y programa."],
+    [74, "Proyecto ejecutivo", "Conjunto de planos y especificaciones detalladas para la construcción."],
+    [75, "Licencia de construcción", "Permiso otorgado por la curaduría urbana para edificar en Colombia."],
+    [76, "Curador urbano", "Particular encargado de revisar y expedir licencias de construcción en algunas ciudades."],
+    [77, "Plan parcial", "Instrumento de planeamiento para desarrollar una unidad de actuación urbanística."],
+    [78, "Índice de ocupación", "Porcentaje del lote que puede ser cubierto por la edificación."],
+    [79, "Índice de construcción", "Relación entre el área construida total y el área del lote (medida de densificación)."],
+    [80, "Cesión urbanística", "Terreno que el propietario debe ceder al municipio para espacio público."],
+    [81, "Accesibilidad universal", "Diseño que permite el uso a todas las personas, incluyendo discapacitados (rampas, anchos mínimos)."],
+    [82, "Diseño universal", "Principio de crear entornos utilizables por el mayor número de personas sin adaptación."],
+    [83, "Confort lumínico", "Niveles de iluminación adecuados para cada actividad sin deslumbramiento."],
+    [84, "Confort acústico", "Control de ruidos molestos mediante aislamiento y absorción."],
+    [85, "Carta Solar", "Diagrama que indica la posición del sol en diferentes momentos, usada para diseñar protecciones."],
+    [86, "Asoleo", "Estudio de incidencia solar sobre una edificación, para dimensionar vanos y voladizos."],
+    [87, "Viento dominante", "Dirección principal del viento en un sitio, importante para ventilación natural."],
+    [88, "Paisajismo", "Diseño de espacios exteriores con vegetación, topografía y mobiliario."],
+    [89, "Jardín vertical", "Fachada viva con plantas, que mejora aislamiento térmico y calidad del aire."],
+    [90, "Cubierta verde", "Techo cubierto de vegetación y sustrato, reduce escorrentía e islas de calor."],
+    [91, "Norma de sismo resistencia (NSR-10)", "Reglamento técnico de obligatorio cumplimiento en Colombia."],
+    [92, "Espectro de diseño", "Curva que representa la aceleración sísmica esperada en un sitio según NSR-10."],
+    [93, "Muros de corte", "Muros de concreto armado que resisten fuerzas laterales de sismos o viento."],
+    [94, "Junta de dilatación", "Separación entre partes de un edificio para absorber movimientos térmicos o sísmicos."],
+    [95, "Cimentación profunda", "Pilotes o caissons que transmiten cargas a estratos resistentes a gran profundidad."],
+    [96, "Prefabricado", "Elementos construidos en planta industrial y ensamblados en obra (losas, vigas)."],
+    [97, "Acabados arquitectónicos", "Revestimientos finales: pañete, estuco, pintura, revestimiento cerámico."],
+    [98, "Mobiliario urbano", "Elementos del espacio público: bancas, luminarias, paraderos, señalética."],
+    [99, "Ciudad compacta", "Modelo de ciudad de alta densidad, mixta de usos, que reduce desplazamientos."],
+    [100, "Arquitectura contemporánea colombiana", "Obras de Giancarlo Mazzanti (Parque Biblioteca España), Plan B, El Equipo Mazzanti."]
+  ];
+
+  // --------------------- LOCALSTORAGE Y PROGRESO -------------------------
+  let progreso = {};
+  const STORAGE_KEY = "arquitecturaColombiaProgreso";
+
+  function cargarProgreso() {
+    const guardado = localStorage.getItem(STORAGE_KEY);
+    if (guardado) progreso = JSON.parse(guardado);
+    else {
+      progreso = {};
+      for (let i = 1; i <= 100; i++) progreso[i] = { aciertos: 0, fallos: 0 };
+    }
+  }
+  function guardarProgreso() { localStorage.setItem(STORAGE_KEY, JSON.stringify(progreso)); }
+  function registrarResultado(id, acierto) {
+    if (!progreso[id]) progreso[id] = { aciertos: 0, fallos: 0 };
+    if (acierto) progreso[id].aciertos += 1;
+    else progreso[id].fallos += 1;
+    guardarProgreso();
+    renderDashboard();
+    renderListado(document.getElementById("filtroListado")?.value || "");
+    if (window.currentCardId === id && document.getElementById("infoProgresoCard")) {
+      document.getElementById("infoProgresoCard").innerHTML = `📊 Concepto ${id} · ✅ ${progreso[id].aciertos} aciertos · ❌ ${progreso[id].fallos} fallos`;
+    }
+  }
+
+  function renderDashboard() {
+    let totalAciertos = 0, totalFallos = 0, conceptosConAcierto = 0;
+    for (let i = 1; i <= 100; i++) {
+      const p = progreso[i] || { aciertos: 0, fallos: 0 };
+      totalAciertos += p.aciertos;
+      totalFallos += p.fallos;
+      if (p.aciertos > 0) conceptosConAcierto++;
+    }
+    const porcentaje = (conceptosConAcierto / 100) * 100;
+    document.getElementById("globalProgressFill").style.width = `${porcentaje}%`;
+    document.getElementById("globalProgressText").innerHTML = `${conceptosConAcierto} de 100 conceptos con al menos 1 acierto (${Math.round(porcentaje)}%).`;
+    document.getElementById("statsContainer").innerHTML = `
+      <div class="stat-card"><div class="stat-number">${totalAciertos}</div>✅ Aciertos totales</div>
+      <div class="stat-card"><div class="stat-number">${totalFallos}</div>❌ Fallos</div>
+      <div class="stat-card"><div class="stat-number">${conceptosConAcierto}</div>📘 Conceptos dominados</div>
+      <div class="stat-card"><div class="stat-number">${Math.round((totalAciertos/(totalAciertos+totalFallos+0.001))*100)}%</div>📊 Tasa éxito</div>
+    `;
+  }
+
+  function renderListado(filtro = "") {
+    const container = document.getElementById("conceptosListadoContainer");
+    container.innerHTML = "";
+    const filtroLower = filtro.toLowerCase();
+    for (let c of conceptosData) {
+      const [id, nombre, definicion] = c;
+      const prog = progreso[id] || { aciertos: 0, fallos: 0 };
+      if (filtro && !nombre.toLowerCase().includes(filtroLower) && !definicion.toLowerCase().includes(filtroLower)) continue;
+      const div = document.createElement("div");
+      div.className = "concepto-item";
+      div.innerHTML = `<div class="concepto-titulo">${id}. ${nombre}</div>
+                       <div class="concepto-desc">🏛️ ${definicion.substring(0, 150)}${definicion.length > 150 ? '…' : ''}</div>
+                       <span class="badge-progreso">✅ ${prog.aciertos} aciertos · ❌ ${prog.fallos} fallos</span>`;
+      container.appendChild(div);
+    }
+  }
+
+  // --------------------- PRÁCTICA: TRES MODOS -------------------------
+  let currentMode = "concepto_def";
+  let cardsArray = [];
+  let currentCardIndex = 0;
+  let currentCardId = null;
+  // Variables para modo ordenar
+  let currentOrdenarPalabras = [];
+  let shuffledPalabras = [];
+  let selectedOrder = [];
+  let ordenarRespuestaCorrecta = "";
+
+  const practicaDiv = document.getElementById("practicaContainer");
+
+  function construirCards() {
+    cardsArray = conceptosData.map(item => {
+      const [id, concepto, definicion] = item;
+      if (currentMode === "concepto_def") {
+        return { id, pregunta: `📐 Concepto: ${concepto}`, respuestaCorrecta: definicion };
+      } else if (currentMode === "def_concepto") {
+        let defCorta = definicion.length > 130 ? definicion.substring(0, 127) + "…" : definicion;
+        return { id, pregunta: `✍️ Definición: "${defCorta}"`, respuestaCorrecta: concepto };
+      } else {
+        return { id, concepto, definicion };
+      }
+    });
+  }
+
+  // Flashcard normal
+  function renderFlashcardNormal() {
+    if (!cardsArray.length) return;
+    const card = cardsArray[currentCardIndex];
+    currentCardId = card.id;
+    practicaDiv.innerHTML = `
+      <div class="flashcard">
+        <div class="pregunta">${card.pregunta}</div>
+        <button id="mostrarRespuestaBtn" class="btn">📖 Mostrar respuesta</button>
+        <div id="respuestaDiv" class="respuesta-oculta"><strong>Respuesta:</strong><br>${card.respuestaCorrecta}</div>
+        <div style="margin-top:1rem;">
+          <button id="aciertoBtn" class="btn btn-acierto" disabled>✅ Acierto</button>
+          <button id="falloBtn" class="btn btn-fallo" disabled>❌ Fallo</button>
+        </div>
+        <button id="siguienteCardBtn" class="btn" style="margin-top:1rem;">⏩ Siguiente</button>
+        <p id="infoProgresoCard" style="margin-top:0.8rem;">📊 ${currentMode === "concepto_def" ? "Concepto" : "Definición"} ${card.id} · ✅ ${progreso[card.id]?.aciertos||0} aciertos · ❌ ${progreso[card.id]?.fallos||0} fallos</p>
+      </div>
+    `;
+    document.getElementById("mostrarRespuestaBtn").onclick = () => {
+      const respDiv = document.getElementById("respuestaDiv");
+      if (respDiv.style.display !== "block") {
+        respDiv.style.display = "block";
+        document.getElementById("aciertoBtn").disabled = false;
+        document.getElementById("falloBtn").disabled = false;
+      }
+    };
+    document.getElementById("aciertoBtn").onclick = () => { registrarResultado(currentCardId, true); siguienteNormal(); };
+    document.getElementById("falloBtn").onclick = () => { registrarResultado(currentCardId, false); siguienteNormal(); };
+    document.getElementById("siguienteCardBtn").onclick = () => siguienteNormal();
+  }
+
+  function siguienteNormal() {
+    currentCardIndex = (currentCardIndex + 1) % cardsArray.length;
+    renderFlashcardNormal();
+  }
+
+  // Modo ordenar
+  function inicializarOrdenar() {
+    const card = cardsArray[currentCardIndex];
+    currentCardId = card.id;
+    const definicionOriginal = card.definicion;
+    ordenarRespuestaCorrecta = definicionOriginal;
+    let palabras = definicionOriginal.split(/\s+/).filter(p => p.length > 0);
+    currentOrdenarPalabras = [...palabras];
+    shuffledPalabras = [...palabras];
+    for (let i = shuffledPalabras.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [shuffledPalabras[i], shuffledPalabras[j]] = [shuffledPalabras[j], shuffledPalabras[i]];
+    }
+    selectedOrder = [];
+    renderOrdenarUI();
+  }
+
+  function renderOrdenarUI() {
+    const card = cardsArray[currentCardIndex];
+    const prog = progreso[currentCardId] || { aciertos:0, fallos:0 };
+    let palabrasHTML = shuffledPalabras.map(p => `<button class="palabra-btn" data-palabra="${p.replace(/"/g, '&quot;')}">${p}</button>`).join('');
+    let ordenHTML = selectedOrder.map(p => `<span style="background:#e9e2d8; padding:0.2rem 0.6rem; margin:0.2rem; border-radius:1rem;">${p}</span>`).join(' ');
+    if (ordenHTML === "") ordenHTML = "<em>Haz clic en las palabras en el orden correcto...</em>";
+    practicaDiv.innerHTML = `
+      <div class="flashcard">
+        <h3>🧩 Ordena la definición de:</h3>
+        <div class="pregunta" style="background:#fff0e0;">📌 ${card.concepto}</div>
+        <div class="orden-actual"><strong>Tu orden:</strong><br> ${ordenHTML}</div>
+        <div class="palabras-baraja" id="palabrasBaraja">${palabrasHTML}</div>
+        <div>
+          <button id="resetOrdenBtn" class="btn btn-reset-palabras">🔁 Reiniciar orden</button>
+          <button id="comprobarOrdenBtn" class="btn btn-primary">✓ Comprobar</button>
+        </div>
+        <button id="siguienteOrdenBtn" class="btn" style="margin-top:1rem;">⏩ Siguiente concepto</button>
+        <p id="infoProgresoCard">✅ ${prog.aciertos} aciertos · ❌ ${prog.fallos} fallos</p>
+        <div id="feedbackOrden" style="margin-top:0.8rem; font-weight:bold;"></div>
+      </div>
+    `;
+    document.querySelectorAll(".palabra-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const palabra = btn.getAttribute("data-palabra");
+        const idx = shuffledPalabras.indexOf(palabra);
+        if (idx !== -1) {
+          shuffledPalabras.splice(idx, 1);
+          selectedOrder.push(palabra);
+          renderOrdenarUI();
+        }
+      });
+    });
+    document.getElementById("resetOrdenBtn").onclick = () => {
+      shuffledPalabras = [...currentOrdenarPalabras];
+      for (let i = shuffledPalabras.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [shuffledPalabras[i], shuffledPalabras[j]] = [shuffledPalabras[j], shuffledPalabras[i]];
+      }
+      selectedOrder = [];
+      renderOrdenarUI();
+    };
+    document.getElementById("comprobarOrdenBtn").onclick = () => {
+      const ordenUsuario = selectedOrder.join(" ");
+      if (ordenUsuario === ordenarRespuestaCorrecta) {
+        document.getElementById("feedbackOrden").innerHTML = "<span style='color:green'>✅ ¡Correcto! Definición ordenada.</span>";
+        registrarResultado(currentCardId, true);
+        setTimeout(() => siguienteOrdenar(), 1200);
+      } else {
+        document.getElementById("feedbackOrden").innerHTML = `<span style='color:#b95a3c'>❌ Incorrecto. La definición correcta es: "${ordenarRespuestaCorrecta}"</span>`;
+        registrarResultado(currentCardId, false);
+        setTimeout(() => siguienteOrdenar(), 2000);
+      }
+      document.getElementById("comprobarOrdenBtn").disabled = true;
+      document.querySelectorAll(".palabra-btn").forEach(b => b.style.pointerEvents = "none");
+      setTimeout(() => {
+        if (document.getElementById("comprobarOrdenBtn")) document.getElementById("comprobarOrdenBtn").disabled = false;
+        document.querySelectorAll(".palabra-btn").forEach(b => b.style.pointerEvents = "auto");
+      }, 2000);
+    };
+    document.getElementById("siguienteOrdenBtn").onclick = () => siguienteOrdenar();
+  }
+
+  function siguienteOrdenar() {
+    currentCardIndex = (currentCardIndex + 1) % cardsArray.length;
+    inicializarOrdenar();
+  }
+
+  function setMode(mode) {
+    currentMode = mode;
+    construirCards();
+    currentCardIndex = 0;
+    if (mode === "ordenar") inicializarOrdenar();
+    else renderFlashcardNormal();
+  }
+
+  // Navegación y eventos
+  function initUI() {
+    document.querySelectorAll(".nav-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const viewId = btn.getAttribute("data-view");
+        document.querySelectorAll(".view").forEach(v => v.classList.remove("active-view"));
+        document.getElementById(viewId).classList.add("active-view");
+        document.querySelectorAll(".nav-btn").forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+        if (viewId === "listado") renderListado(document.getElementById("filtroListado").value);
+        if (viewId === "dashboard") renderDashboard();
+        if (viewId === "practica") setMode(currentMode);
+      });
+    });
+    document.getElementById("modoConceptoDef").addEventListener("click", () => {
+      currentMode = "concepto_def";
+      setMode("concepto_def");
+      document.getElementById("modoConceptoDef").classList.add("btn-primary");
+      document.getElementById("modoDefConcepto").classList.remove("btn-primary");
+      document.getElementById("modoOrdenar").classList.remove("btn-primary");
+    });
+    document.getElementById("modoDefConcepto").addEventListener("click", () => {
+      currentMode = "def_concepto";
+      setMode("def_concepto");
+      document.getElementById("modoDefConcepto").classList.add("btn-primary");
+      document.getElementById("modoConceptoDef").classList.remove("btn-primary");
+      document.getElementById("modoOrdenar").classList.remove("btn-primary");
+    });
+    document.getElementById("modoOrdenar").addEventListener("click", () => {
+      currentMode = "ordenar";
+      setMode("ordenar");
+      document.getElementById("modoOrdenar").classList.add("btn-primary");
+      document.getElementById("modoConceptoDef").classList.remove("btn-primary");
+      document.getElementById("modoDefConcepto").classList.remove("btn-primary");
+    });
+    document.getElementById("resetProgresoBtn").addEventListener("click", () => {
+      if (confirm("¿Reiniciar todo el progreso? Se perderán aciertos y fallos.")) {
+        for (let i = 1; i <= 100; i++) progreso[i] = { aciertos: 0, fallos: 0 };
+        guardarProgreso();
+        renderDashboard();
+        renderListado(document.getElementById("filtroListado")?.value || "");
+        if (currentMode === "ordenar") inicializarOrdenar();
+        else if (currentMode !== "ordenar") renderFlashcardNormal();
+      }
+    });
+    document.getElementById("filtroListado").addEventListener("input", (e) => renderListado(e.target.value));
+  }
+
+  window.addEventListener("DOMContentLoaded", () => {
+    cargarProgreso();
+    construirCards();
+    setMode("concepto_def");
+    renderDashboard();
+    renderListado();
+    initUI();
+  });
+</script>
+</body>
+</html>

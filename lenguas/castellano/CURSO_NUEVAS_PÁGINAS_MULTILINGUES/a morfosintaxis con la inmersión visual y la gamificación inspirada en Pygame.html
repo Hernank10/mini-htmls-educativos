@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Morfosintaxis Bilingüe | Academia Gamificada</title>
+    <!-- Carga de Tailwind CSS para utilidades -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Fuente Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --color-primary: #8a2be2; /* BlueViolet */
+            --color-secondary: #00bcd4; /* Cyan */
+            --color-success: #4CAF50;
+            --color-error: #F44336;
+        }
+
+        /* 1. Fondo Animado y Diseño Base */
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+            background-size: 400% 400%;
+            animation: gradient-animation 15s ease infinite;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 1rem;
+        }
+
+        @keyframes gradient-animation {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .glass-card {
+            background-color: rgba(255, 255, 255, 0.15); /* Fondo semitransparente */
+            backdrop-filter: blur(12px); /* Efecto Glassmorphism */
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 1.5rem;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+        }
+        
+        /* 2. Botones Arcoíris (Rainbow Buttons) */
+        .rainbow-btn {
+            position: relative;
+            overflow: hidden;
+            border: none;
+            color: white;
+            padding: 0.75rem 2rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            z-index: 10;
+        }
+
+        .rainbow-btn::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(
+                60deg,
+                #ff0000, #ff7f00, #ffff00, #00ff00, #0000ff, #4b0082, #9400d3, #ff0000
+            );
+            background-size: 300% 300%;
+            animation: rainbowGlow 4s linear infinite;
+            opacity: 0.8;
+            transition: opacity 0.3s;
+            z-index: -1;
+        }
+
+        .rainbow-btn:hover::before {
+            opacity: 1;
+        }
+        
+        .rainbow-btn:active {
+            transform: scale(0.98);
+            box-shadow: none;
+        }
+        
+        .rainbow-btn span {
+            position: relative;
+            z-index: 2;
+        }
+        
+        @keyframes rainbowGlow {
+            0% { background-position: 0% 50%; }
+            100% { background-position: 100% 50%; }
+        }
+
+        /* Estilo para los elementos de respuesta de opción múltiple */
+        .answer-option {
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .answer-option:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        /* 3. Estilos del Sistema de Partículas */
+        .particle-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            overflow: hidden;
+            z-index: 100;
+        }
+        .particle {
+            position: absolute;
+            font-size: 2rem;
+            opacity: 0;
+            transition: transform 1s ease-out, opacity 1s ease-out;
+        }
+        
+        .medal-icon {
+            font-size: 1.5rem;
+            margin-right: 0.5rem;
+            vertical-align: middle;
+        }
+
+    </style>
+</head>
+<body class="text-white">
+
+    <!-- Contenedor Principal de la Aplicación -->
+    <div id="app" class="w-full max-w-4xl p-6 my-8 glass-card">
+        
+        <!-- Cabecera y Puntuación -->
+        <header class="flex justify-between items-center mb-6">
+            <h1 class="text-3xl font-bold tracking-tight text-white/90">
+                Grammar Quest <span class="text-xl font-light">| Morfosintaxis</span>
+            </h1>
+            <div id="scoreDisplay" class="text-2xl font-extrabold flex items-center p-2 rounded-lg bg-yellow-400/20 text-yellow-300 shadow-xl">
+                <span class="mr-2">Puntuación:</span>
+                <span id="starScore" class="text-4xl">0</span>
+                <span class="ml-1">⭐</span>
+            </div>
+        </header>
+
+        <!-- Barra de Progreso General -->
+        <div class="mb-6">
+            <h2 class="text-lg font-semibold mb-2">Progreso General del Curso (100 Lecciones)</h2>
+            <div class="w-full bg-gray-700 rounded-full h-3">
+                <div id="progressBar" class="bg-indigo-500 h-3 rounded-full transition-all duration-500" style="width: 0%"></div>
+            </div>
+            <p id="progressText" class="text-sm mt-1 text-white/70">0/100 Lecciones Completadas</p>
+        </div>
+
+        <!-- Área de Contenido de la Lección y Ejercicio -->
+        <div id="lessonContainer" class="bg-white/10 p-6 rounded-xl shadow-inner min-h-[400px]">
+            <h3 id="lessonTitle" class="text-2xl font-bold mb-4 text-pink-300">Cargando Lección...</h3>
+            
+            <!-- Contenido Bilingüe -->
+            <div class="mb-6 border-b border-white/20 pb-4">
+                <p id="contentES" class="text-lg mb-2 italic">Español: Este es el contenido de la lección.</p>
+                <p id="contentEN" class="text-lg italic">English: This is the lesson content.</p>
+            </div>
+            
+            <!-- Área de Ejercicio -->
+            <div id="exerciseArea">
+                <h4 class="text-xl font-semibold mb-4 text-teal-300">Ejercicio: <span id="exerciseType"></span></h4>
+                <p id="exerciseInstruction" class="mb-4 text-white/80">Instrucción...</p>
+                
+                <div id="questionContainer" class="bg-gray-800/50 p-4 rounded-lg mb-6">
+                    <!-- Pregunta aquí -->
+                </div>
+                
+                <div id="optionsContainer" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <!-- Opciones de respuesta o entrada de texto -->
+                </div>
+
+                <button id="submitBtn" onclick="checkAnswer()" class="rainbow-btn mt-6 w-full opacity-0" disabled>
+                    <span>Verificar Respuesta</span>
+                </button>
+            </div>
+            
+            <!-- Retroalimentación -->
+            <div id="feedback" class="mt-4 p-4 rounded-lg text-center hidden font-semibold transition-all duration-300"></div>
+
+            <!-- Botones de Navegación -->
+            <div class="flex justify-between mt-6 pt-4 border-t border-white/20">
+                <button onclick="changeLesson(-1)" id="prevBtn" class="rainbow-btn py-2 px-6">
+                    <span>⬅️ Anterior</span>
+                </button>
+                <button onclick="changeLesson(1)" id="nextBtn" class="rainbow-btn py-2 px-6">
+                    <span>Siguiente ➡️</span>
+                </button>
+            </div>
+        </div>
+        
+        <!-- Menú de Lecciones (Simulación del Listado de la API) -->
+        <div class="mt-8">
+            <h2 class="text-2xl font-bold mb-4 text-purple-300">Mapa del Curso (100 Lecciones)</h2>
+            <div id="lessonMap" class="grid grid-cols-3 sm:grid-cols-5 md:grid-cols-10 gap-2 max-h-64 overflow-y-auto p-2 glass-card">
+                <!-- Los botones de lección se insertarán aquí por JS -->
+            </div>
+        </div>
+    </div>
+    
+    <!-- Contenedor del Sistema de Partículas -->
+    <div id="particleContainer" class="particle-container"></div>
+    
+    <!-- Script de la Aplicación -->
+    <script>
+        // =======================================================
+        // SIMULACIÓN DE LA BASE DE DATOS (Contenido Bilingüe y Lógica)
+        // =======================================================
+
+        const LESSON_COUNT = 100;
+        const EXERCISE_TYPES = ['multiple_choice', 'fill_in_the_blank', 'sentence_ordering', 'error_correction', 'translation_check'];
+        
+        // Genera 100 lecciones con contenido de morfosintaxis avanzada (simulado)
+        const generateLessons = () => {
+            const data = [];
+            for (let i = 1; i <= LESSON_COUNT; i++) {
+                const lessonId = i;
+                const unit = Math.ceil(i / 10);
+                const title_es = `Lección ${i}: ${['Sujetos Tácitos', 'Uso del Subjuntivo', 'Condicionales Compuestas', 'Gerundios Perfectos', 'Dequeísmo y Queísmo'][unit % 5] || 'La Morfología del Verbo'}`;
+                const title_en = `Lesson ${i}: ${['Implicit Subjects', 'The Use of the Subjunctive', 'Compound Conditionals', 'Perfect Gerunds', 'Dequeísmo and Queísmo'][unit % 5] || 'The Morphology of the Verb'}`;
+                const type = EXERCISE_TYPES[i % 5];
+                
+                let exercise;
+                switch (type) {
+                    case 'multiple_choice':
+                        exercise = {
+                            question_es: "Identifique la oración que usa el **subjuntivo** correctamente:",
+                            question_en: "Identify the sentence that uses the **subjunctive** correctly:",
+                            options: [
+                                { text: "Es probable que *llueve* hoy.", is_correct: false },
+                                { text: "No creo que *sea* verdad.", is_correct: true },
+                                { text: "Pienso que *es* tarde.", is_correct: false },
+                                { text: "Aunque *está* aquí, no habla.", is_correct: false },
+                            ],
+                            correct_answer: "No creo que *sea* verdad.",
+                        };
+                        break;
+                    case 'fill_in_the_blank':
+                        exercise = {
+                            question_es: "Completa la frase con la forma verbal correcta (Condicional Compuesto): 'Si hubieras estudiado, tú ______ el examen.'",
+                            question_en: "Complete the phrase with the correct verb form (Compound Conditional): 'If you had studied, you ______ the exam.'",
+                            blank_placeholder: "habrías aprobado",
+                            correct_answer: "habrías aprobado",
+                        };
+                        break;
+                    case 'sentence_ordering':
+                        exercise = {
+                            question_es: "Ordene las palabras para formar una oración compleja coherente (español):",
+                            question_en: "Order the words to form a coherent complex sentence (English):",
+                            words_es: ["el", "problema", "resolver", "que", "debería", "pienso"],
+                            words_en: ["the", "problem", "solve", "that", "should", "I think"],
+                            correct_order_es: "Pienso que debería resolver el problema",
+                            correct_order_en: "I think that I should solve the problem",
+                        };
+                        break;
+                    case 'error_correction':
+                        exercise = {
+                            question_es: "Corrija el **dequeísmo**: 'Me alegra de que vengas.'",
+                            question_en: "Correct the **wrong preposition usage**: 'He insisted of going home.'",
+                            sentence_es: "Me alegra de que vengas.",
+                            correct_answer_es: "Me alegra que vengas.",
+                            correct_answer_en: "He insisted on going home.",
+                        };
+                        break;
+                    case 'translation_check':
+                        exercise = {
+                            question_es: "Traduce: 'Having finished the work, we went home.'",
+                            question_en: "Translate: 'Habiendo terminado el trabajo, nos fuimos a casa.'",
+                            correct_answer_es: "Habiendo terminado el trabajo, nos fuimos a casa.",
+                            correct_answer_en: "Having finished the work, we went home.",
+                        };
+                        break;
+                }
+                
+                data.push({
+                    id: lessonId,
+                    unit: unit,
+                    title_es: title_es,
+                    title_en: title_en,
+                    content_es: `En esta lección, exploramos la morfosintaxis avanzada enfocada en ${title_es.split(': ')[1].toLowerCase()}. Es crucial para la precisión de nivel C1.`,
+                    content_en: `In this lesson, we explore advanced morphosyntax focused on ${title_en.split(': ')[1].toLowerCase()}. This is crucial for C1 level precision.`,
+                    exercise_type: type,
+                    exercise_data: exercise,
+                });
+            }
+            return data;
+        };
+
+        const LESSONS_DATA = generateLessons();
+
+        // SIMULACIÓN DE PROGRESO DE USUARIO
+        let currentLessonIndex = 0;
+        let userProgress = new Array(LESSON_COUNT).fill({ score: 0, attempts: 0, medal: 'None' });
+        let starScore = 0; // Puntuación total visible
+
+        // =======================================================
+        // CLASE: SISTEMA DE PARTÍCULAS
+        // =======================================================
+
+        class ParticleSystem {
+            constructor(containerId) {
+                this.container = document.getElementById(containerId);
+                this.emojis = ['🚀', '✨', '🧠', '✅', '💯'];
+            }
+
+            // Lanza una ráfaga de partículas desde el centro de la pantalla
+            triggerBurst(count = 10) {
+                const centerX = window.innerWidth / 2;
+                const centerY = window.innerHeight / 2;
+
+                for (let i = 0; i < count; i++) {
+                    const particle = document.createElement('div');
+                    particle.className = 'particle';
+                    particle.textContent = this.emojis[Math.floor(Math.random() * this.emojis.length)];
+                    this.container.appendChild(particle);
+
+                    // Posición inicial (Centro)
+                    particle.style.left = `${centerX}px`;
+                    particle.style.top = `${centerY}px`;
+                    particle.style.opacity = '1';
+                    
+                    // Destino aleatorio
+                    const angle = Math.random() * 2 * Math.PI;
+                    const distance = 100 + Math.random() * 150;
+                    const endX = centerX + Math.cos(angle) * distance;
+                    const endY = centerY + Math.sin(angle) * distance;
+                    
+                    // Aplicar transformación después de un pequeño retraso para asegurar la transición
+                    setTimeout(() => {
+                        particle.style.transform = `translate(${endX - centerX}px, ${endY - centerY}px) scale(0.5) rotate(${Math.random() * 720}deg)`;
+                        particle.style.opacity = '0';
+                    }, 50);
+
+                    // Eliminar la partícula después de la animación
+                    setTimeout(() => {
+                        this.container.removeChild(particle);
+                    }, 1000);
+                }
+            }
+        }
+
+        const particleSystem = new ParticleSystem('particleContainer');
+
+        // =======================================================
+        // LÓGICA DE LA APLICACIÓN
+        // =======================================================
+
+        const els = {
+            lessonTitle: document.getElementById('lessonTitle'),
+            contentES: document.getElementById('contentES'),
+            contentEN: document.getElementById('contentEN'),
+            exerciseType: document.getElementById('exerciseType'),
+            exerciseInstruction: document.getElementById('exerciseInstruction'),
+            questionContainer: document.getElementById('questionContainer'),
+            optionsContainer: document.getElementById('optionsContainer'),
+            submitBtn: document.getElementById('submitBtn'),
+            feedback: document.getElementById('feedback'),
+            starScore: document.getElementById('starScore'),
+            progressBar: document.getElementById('progressBar'),
+            progressText: document.getElementById('progressText'),
+            lessonMap: document.getElementById('lessonMap'),
+        };
+        
+        // Determina la medalla basada en la puntuación
+        const getMedal = (score) => {
+            if (score >= 90) return { name: 'Oro', color: 'text-yellow-400', icon: '🥇' };
+            if (score >= 70) return { name: 'Plata', color: 'text-gray-400', icon: '🥈' };
+            if (score >= 50) return { name: 'Bronce', color: 'text-yellow-600', icon: '🥉' };
+            return { name: 'None', color: 'text-white/50', icon: '⚪' };
+        };
+
+        // Renderiza el mapa de lecciones y actualiza el progreso
+        const renderLessonMap = () => {
+            els.lessonMap.innerHTML = '';
+            let completedCount = 0;
+            
+            LESSONS_DATA.forEach((lesson, index) => {
+                const progress = userProgress[index];
+                const medal = getMedal(progress.score);
+                
+                if (progress.score > 0) completedCount++;
+
+                const button = document.createElement('button');
+                button.textContent = lesson.id;
+                button.className = `p-1 text-sm rounded-full w-8 h-8 font-semibold transition-colors flex items-center justify-center ${
+                    index === currentLessonIndex 
+                        ? 'bg-purple-600 ring-4 ring-purple-300' 
+                        : 'bg-white/10 hover:bg-white/20'
+                }`;
+                
+                const medalSpan = `<span class="medal-icon absolute bottom-[-5px] right-[-5px] text-lg">${medal.icon}</span>`;
+                button.style.position = 'relative';
+                
+                button.innerHTML = lesson.id + (progress.score > 0 ? medalSpan : '');
+                button.onclick = () => changeLesson(0, index);
+                
+                els.lessonMap.appendChild(button);
+            });
+            
+            // Actualizar la barra de progreso
+            const progressPercent = (completedCount / LESSON_COUNT) * 100;
+            els.progressBar.style.width = `${progressPercent}%`;
+            els.progressText.textContent = `${completedCount}/${LESSON_COUNT} Lecciones Completadas`;
+        };
+        
+        // Carga y renderiza el contenido y ejercicio de la lección actual
+        const loadLesson = () => {
+            const lesson = LESSONS_DATA[currentLessonIndex];
+            const progress = userProgress[currentLessonIndex];
+            const medal = getMedal(progress.score);
+
+            // Actualizar Cabecera
+            els.lessonTitle.textContent = `${lesson.title_es} ${medal.icon}`;
+            els.contentES.innerHTML = `**Español:** ${lesson.content_es}`;
+            els.contentEN.innerHTML = `**English:** ${lesson.content_en}`;
+
+            // Resetear Feedback
+            els.feedback.className = 'mt-4 p-4 rounded-lg text-center hidden font-semibold transition-all duration-300';
+            els.feedback.textContent = '';
+            els.submitBtn.classList.add('opacity-0');
+            els.submitBtn.disabled = true;
+
+            // Renderizar Ejercicio
+            renderExercise(lesson, progress);
+            renderLessonMap(); // Asegura que el mapa se actualice y marque la lección actual
+        };
+
+        const renderExercise = (lesson, progress) => {
+            const data = lesson.exercise_data;
+            els.exerciseType.textContent = lesson.exercise_type.replace('_', ' ').toUpperCase();
+            els.exerciseInstruction.textContent = data.question_es;
+            els.optionsContainer.innerHTML = '';
+            
+            // Inicializar el botón de envío
+            els.submitBtn.onclick = checkAnswer;
+            els.submitBtn.textContent = 'Verificar Respuesta';
+            els.submitBtn.classList.remove('opacity-0');
+            els.submitBtn.disabled = false;
+
+            // Contenido de la pregunta
+            if (lesson.exercise_type === 'fill_in_the_blank' || lesson.exercise_type === 'error_correction' || lesson.exercise_type === 'translation_check') {
+                 els.questionContainer.innerHTML = `
+                    <p class="text-xl font-medium text-white/90">${data.question_es}</p>
+                    <input type="text" id="answerInput" placeholder="${data.blank_placeholder || 'Escriba su respuesta aquí...'}" 
+                           class="w-full mt-3 p-3 rounded-lg bg-gray-900/50 border border-purple-500/50 text-white focus:ring-2 focus:ring-purple-400">
+                `;
+            } else if (lesson.exercise_type === 'multiple_choice') {
+                els.questionContainer.innerHTML = `<p class="text-xl font-medium text-white/90">${data.question_es}</p>`;
+                data.options.forEach((option, index) => {
+                    const optionEl = document.createElement('div');
+                    optionEl.className = 'answer-option bg-white/10 p-4 rounded-lg shadow-md hover:bg-white/20 text-lg';
+                    optionEl.textContent = option.text;
+                    optionEl.setAttribute('data-index', index);
+                    optionEl.onclick = () => selectOption(optionEl);
+                    els.optionsContainer.appendChild(optionEl);
+                });
+                els.submitBtn.disabled = true; // Desactivar hasta que se seleccione una opción
+            } else if (lesson.exercise_type === 'sentence_ordering') {
+                // Simplificado: solo se muestra la lista de palabras
+                els.questionContainer.innerHTML = `
+                    <p class="text-xl font-medium text-white/90">${data.question_es}</p>
+                    <div id="wordBank" class="flex flex-wrap gap-2 mt-3 bg-gray-900/50 p-3 rounded-lg">
+                        ${data.words_es.map(word => `<span class="draggable-word bg-indigo-500/70 hover:bg-indigo-500 cursor-move p-2 rounded-lg" draggable="true">${word}</span>`).join('')}
+                    </div>
+                    <div id="sentenceDropzone" class="mt-4 p-4 border-2 border-dashed border-purple-500 rounded-lg min-h-[50px] text-lg text-white/80">
+                        Arrastra las palabras aquí para formar la oración...
+                    </div>
+                `;
+                setupDragAndDrop();
+            }
+        };
+
+        // Manejo de Opción Múltiple
+        let selectedOption = null;
+        const selectOption = (el) => {
+            document.querySelectorAll('.answer-option').forEach(opt => opt.classList.remove('bg-purple-500', 'ring-2', 'ring-purple-300'));
+            el.classList.add('bg-purple-500', 'ring-2', 'ring-purple-300');
+            selectedOption = el.textContent.trim();
+            els.submitBtn.disabled = false;
+        };
+
+        // Manejo de Drag and Drop (Simplificado para el ejemplo)
+        const setupDragAndDrop = () => {
+            const dropzone = document.getElementById('sentenceDropzone');
+            const wordBank = document.getElementById('wordBank');
+            let dragTarget = null;
+
+            document.querySelectorAll('.draggable-word').forEach(word => {
+                word.addEventListener('dragstart', (e) => {
+                    dragTarget = word;
+                    e.dataTransfer.setData('text/plain', word.textContent);
+                    setTimeout(() => word.classList.add('opacity-50'), 0);
+                });
+                word.addEventListener('dragend', () => word.classList.remove('opacity-50'));
+            });
+
+            dropzone.addEventListener('dragover', (e) => e.preventDefault());
+            dropzone.addEventListener('drop', (e) => {
+                e.preventDefault();
+                if (dragTarget) {
+                    // Mover la palabra del banco a la zona de caída
+                    dropzone.appendChild(dragTarget);
+                    // Actualizar el contenido de la zona para eliminar el placeholder
+                    if (dropzone.textContent.includes('Arrastra')) dropzone.textContent = '';
+                    dropzone.appendChild(document.createTextNode(' '));
+                    dropzone.appendChild(dragTarget);
+                    
+                    dragTarget = null;
+                }
+            });
+
+            // Permite regresar las palabras al banco (simple click)
+            dropzone.addEventListener('click', (e) => {
+                if (e.target.classList.contains('draggable-word')) {
+                    wordBank.appendChild(e.target);
+                    if (dropzone.children.length === 0) dropzone.textContent = 'Arrastra las palabras aquí para formar la oración...';
+                }
+            });
+            
+            els.submitBtn.disabled = false;
+        };
+        
+        // Verifica la respuesta del usuario (Simulación de POST a la API)
+        const checkAnswer = () => {
+            const lesson = LESSONS_DATA[currentLessonIndex];
+            const type = lesson.exercise_type;
+            let userAnswer = '';
+            let isCorrect = false;
+
+            // 1. Obtener la respuesta del usuario
+            if (type === 'multiple_choice') {
+                userAnswer = selectedOption;
+                isCorrect = lesson.exercise_data.options.find(opt => opt.text === userAnswer)?.is_correct;
+            } else if (type === 'fill_in_the_blank' || type === 'error_correction' || type === 'translation_check') {
+                const input = document.getElementById('answerInput');
+                userAnswer = input ? input.value.trim().toLowerCase() : '';
+                const correctAnswer = (lesson.exercise_data.correct_answer_es || lesson.exercise_data.correct_answer || lesson.exercise_data.correct_answer_en).toLowerCase();
+                isCorrect = userAnswer === correctAnswer;
+            } else if (type === 'sentence_ordering') {
+                const dropzone = document.getElementById('sentenceDropzone');
+                const words = Array.from(dropzone.querySelectorAll('.draggable-word')).map(w => w.textContent.trim());
+                userAnswer = words.join(' ');
+                isCorrect = userAnswer.toLowerCase() === lesson.exercise_data.correct_order_es.toLowerCase();
+            }
+
+            // 2. Lógica de Puntuación y Retroalimentación
+            els.feedback.classList.remove('hidden');
+            let points = 0;
+            
+            if (isCorrect) {
+                els.feedback.textContent = '¡Correcto! ¡Refuerzo positivo de morfosintaxis! ✨';
+                els.feedback.className = 'mt-4 p-4 rounded-lg text-center font-semibold bg-green-500/70 text-white shadow-xl';
+                points = 100;
+                particleSystem.triggerBurst(15); // Dispara la ráfaga de partículas
+            } else {
+                els.feedback.textContent = `Incorrecto. La respuesta correcta era: "${lesson.exercise_data.correct_answer || lesson.exercise_data.correct_answer_es || lesson.exercise_data.correct_answer_en}"`;
+                els.feedback.className = 'mt-4 p-4 rounded-lg text-center font-semibold bg-red-500/70 text-white shadow-xl';
+                points = 0;
+            }
+            
+            // 3. Actualizar el estado (Simulación de la API)
+            const currentProgress = userProgress[currentLessonIndex];
+            const newScore = points > currentProgress.score ? points : currentProgress.score;
+
+            userProgress[currentLessonIndex] = {
+                score: newScore,
+                attempts: currentProgress.attempts + 1,
+                medal: getMedal(newScore).name
+            };
+
+            // 4. Actualizar Puntuación Total Visible
+            if (isCorrect) {
+                starScore += 50; // Puntos fijos por acierto
+                els.starScore.textContent = starScore;
+            }
+            
+            // 5. Deshabilitar botón y permitir navegación a la siguiente lección
+            els.submitBtn.disabled = true;
+            els.submitBtn.textContent = isCorrect ? 'Completado' : 'Revisado';
+
+            // Actualizar la vista del mapa de lecciones
+            renderLessonMap();
+        };
+
+        // Navegación entre lecciones
+        const changeLesson = (direction, targetIndex = -1) => {
+            if (targetIndex !== -1) {
+                currentLessonIndex = targetIndex;
+            } else {
+                currentLessonIndex += direction;
+                if (currentLessonIndex < 0) currentLessonIndex = 0;
+                if (currentLessonIndex >= LESSON_COUNT) currentLessonIndex = LESSON_COUNT - 1;
+            }
+            loadLesson();
+        };
+
+        // Inicialización
+        document.addEventListener('DOMContentLoaded', () => {
+            // Generar 1-2 lecciones completadas al azar para simular progreso inicial
+            userProgress[5] = { score: 100, attempts: 1, medal: 'Oro' };
+            userProgress[15] = { score: 75, attempts: 2, medal: 'Plata' };
+            starScore = 150;
+            els.starScore.textContent = starScore;
+
+            loadLesson();
+        });
+
+    </script>
+</body>
+</html>
