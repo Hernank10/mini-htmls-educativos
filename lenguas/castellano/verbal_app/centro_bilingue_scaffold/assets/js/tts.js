@@ -1,0 +1,1 @@
+async function speak(text, lang='es-CO'){ if ('speechSynthesis' in window){ window.speechSynthesis.cancel(); const u = new SpeechSynthesisUtterance(text); u.lang = lang; u.rate = 0.95; window.speechSynthesis.speak(u); return; } alert(text); }

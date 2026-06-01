@@ -1,0 +1,1690 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Redacción en Medicina · Colombia</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Instrument+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Roboto+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+
+<style>
+/* ══════════════════════════════════════════
+   TOKENS — Clínica de alta precisión
+   Azul cobalto médico · blanco hueso · rojo vital
+══════════════════════════════════════════ */
+:root {
+  --bg:          #f5f7fa;
+  --bg-alt:      #eceef3;
+  --bg-card:     #ffffff;
+  --bg-hover:    #e8ecf4;
+  --bg-dark:     #080f1e;
+  --bg-mid:      #0f1e38;
+  --border:      #c8d0e0;
+  --border-soft: #dce4f0;
+  --ink:         #080f1e;
+  --ink-soft:    #1a2a4a;
+  --ink-muted:   #5a6a88;
+  --cobalt:      #1a3a9a;      /* azul médico principal */
+  --cobalt-lt:   #2e58d4;
+  --cobalt-pale: #dce8ff;
+  --red-vital:   #c42020;      /* rojo urgencias */
+  --red-lt:      #e04040;
+  --teal-med:    #0e7c6c;      /* verde quirúrgico */
+  --teal-lt:     #18a898;
+  --amber-warn:  #8a5c00;
+  --tag-bg:      #dce8f8;
+  --code-bg:     #080f1e;
+  --code-fg:     #a8c4e8;
+  /* ECG line texture vars */
+  --ecg:         rgba(26,58,154,.06);
+
+  --font-head:  'Instrument Serif', Georgia, serif;
+  --font-body:  'Instrument Sans', system-ui, sans-serif;
+  --font-mono:  'Roboto Mono', 'Courier New', monospace;
+
+  --r:    6px;
+  --r-lg: 12px;
+  --shadow:    0 1px 8px rgba(8,15,30,.07);
+  --shadow-md: 0 4px 20px rgba(8,15,30,.12);
+  --t: .18s ease;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: 16.5px; scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-weight: 300;
+  line-height: 1.74;
+  min-height: 100vh;
+  /* Línea de ECG sutil como textura de fondo */
+  background-image:
+    repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 39px,
+      var(--ecg) 39px,
+      var(--ecg) 40px
+    );
+}
+
+a { color: var(--cobalt); text-decoration: none; }
+button { cursor: pointer; font-family: var(--font-body); }
+input, select, textarea { font-family: var(--font-body); font-size: 1rem; }
+
+.app { display: flex; flex-direction: column; min-height: 100vh; }
+
+/* ── NAV ── */
+nav {
+  background: var(--bg-dark);
+  border-bottom: 2px solid var(--cobalt);
+  padding: .65rem 1.8rem;
+  display: flex; align-items: center; gap: .75rem;
+  position: sticky; top: 0; z-index: 100;
+  box-shadow: 0 2px 16px rgba(0,0,0,.4);
+}
+.nav-logo {
+  font-family: var(--font-head);
+  font-size: 1.2rem; font-style: italic;
+  color: #a8c4e8;
+  letter-spacing: .01em; margin-right: auto; white-space: nowrap;
+}
+.nav-logo span { color: #5a7aaa; font-family: var(--font-mono); font-style: normal; font-size: .8rem; letter-spacing: .06em; }
+.nav-btn {
+  padding: .36rem .8rem;
+  border: 1px solid #1a2a4a;
+  border-radius: var(--r);
+  background: transparent; color: #7a9ac8;
+  font-size: .82rem; letter-spacing: .04em;
+  font-family: var(--font-mono);
+  transition: var(--t); white-space: nowrap;
+}
+.nav-btn:hover, .nav-btn.active { background: var(--cobalt); border-color: var(--cobalt); color: #fff; }
+.nav-burger { display: none; background: none; border: none; font-size: 1.5rem; color: #a8c4e8; }
+
+/* ── PAGES ── */
+.page { display: none; animation: fadein .28s ease both; }
+.page.active { display: block; }
+@keyframes fadein { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+
+.container { max-width: 1140px; margin: 0 auto; padding: 2rem 1.8rem; }
+
+/* ══ DASHBOARD ══ */
+.dash-hero {
+  background: var(--bg-mid);
+  padding: 3rem 2.8rem 2.6rem;
+  border-radius: var(--r-lg); margin-bottom: 2rem;
+  border: 1px solid #1a2a4a; box-shadow: var(--shadow-md);
+  position: relative; overflow: hidden;
+  display: grid; grid-template-columns: 1fr 140px; gap: 2rem; align-items: center;
+}
+.dash-hero::before {
+  content: '';
+  position: absolute; inset: 0;
+  background:
+    linear-gradient(135deg, rgba(26,58,154,.18) 0%, transparent 60%),
+    repeating-linear-gradient(90deg, transparent, transparent 29px, rgba(26,58,154,.04) 29px, rgba(26,58,154,.04) 30px);
+}
+/* ECG decorative line in hero */
+.dash-hero::after {
+  content: '';
+  position: absolute; bottom: 20px; left: 0; right: 0; height: 30px;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='30' viewBox='0 0 300 30'%3E%3Cpolyline fill='none' stroke='rgba(26,88,212,.25)' stroke-width='1.5' points='0,15 30,15 40,15 45,3 50,27 55,3 60,15 70,15 100,15 110,15 115,3 120,27 125,3 130,15 140,15 170,15 180,15 185,3 190,27 195,3 200,15 210,15 240,15 250,15 255,3 260,27 265,3 270,15 280,15 300,15'/%3E%3C/svg%3E") repeat-x center;
+  opacity: .6;
+}
+.dash-hero-text { position: relative; z-index: 1; }
+.dash-hero h1 {
+  font-family: var(--font-head);
+  font-size: clamp(1.7rem, 4vw, 2.8rem);
+  font-style: italic; color: #e8f0ff;
+  line-height: 1.12; margin-bottom: .45rem;
+}
+.dash-hero p { color: #5a7aaa; font-size: .9rem; font-family: var(--font-mono); letter-spacing: .04em; }
+.hero-badge {
+  display: inline-flex; align-items: center; gap: .4rem;
+  background: rgba(26,58,154,.2); border: 1px solid rgba(26,88,212,.4);
+  border-radius: 4px; padding: .18rem .75rem;
+  font-size: .72rem; color: #7aacf8; margin-top: .85rem;
+  font-family: var(--font-mono); letter-spacing: .06em;
+}
+.dash-hero-pulse {
+  position: relative; z-index: 1;
+  display: flex; align-items: center; justify-content: center;
+  width: 100px; height: 100px;
+  border: 2px solid rgba(26,88,212,.3);
+  border-radius: 50%;
+  color: rgba(26,88,212,.4);
+  font-size: 3rem;
+}
+
+/* Stats */
+.stats-grid {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: .9rem; margin-bottom: 1.75rem;
+}
+.stat-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  padding: 1.2rem 1rem;
+  text-align: center; box-shadow: var(--shadow); transition: var(--t);
+  border-bottom: 3px solid var(--border);
+}
+.stat-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); border-bottom-color: var(--cobalt); }
+.stat-num { font-family: var(--font-head); font-size: 2.5rem; font-style: italic; color: var(--cobalt); line-height: 1; }
+.stat-label { font-size: .71rem; color: var(--ink-muted); letter-spacing: .08em; margin-top: .3rem; text-transform: uppercase; font-family: var(--font-mono); }
+
+/* Progress */
+.progress-wrap {
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: var(--r-lg); padding: 1.3rem 1.8rem;
+  margin-bottom: 1.75rem; box-shadow: var(--shadow);
+}
+.progress-label { font-family: var(--font-mono); font-size: .72rem; color: var(--ink-muted); letter-spacing: .1em; text-transform: uppercase; margin-bottom: .8rem; }
+.progress-bar-outer { height: 10px; background: var(--bg-alt); border-radius: 99px; overflow: hidden; border: 1px solid var(--border); }
+.progress-bar-inner { height: 100%; background: linear-gradient(90deg, var(--cobalt), var(--teal-lt)); border-radius: 99px; transition: width .6s ease; }
+.progress-pct { font-family: var(--font-head); font-style: italic; font-size: 1.6rem; color: var(--cobalt); margin-top: .4rem; }
+
+/* Epoch grid */
+.epoch-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: .85rem; margin-bottom: 2rem; }
+.epoch-card {
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: var(--r-lg); padding: 1rem 1.1rem;
+  cursor: pointer; transition: var(--t); box-shadow: var(--shadow);
+  border-left: 3px solid var(--border);
+}
+.epoch-card:hover { background: var(--bg-hover); transform: translateY(-2px); box-shadow: var(--shadow-md); border-left-color: var(--cobalt); }
+.epoch-num { font-family: var(--font-mono); font-size: .7rem; color: var(--cobalt); letter-spacing: .12em; margin-bottom: .15rem; text-transform: uppercase; }
+.epoch-name { font-family: var(--font-body); font-size: .92rem; font-weight: 500; color: var(--ink-soft); margin-bottom: .4rem; line-height: 1.3; }
+.epoch-meta { font-size: .77rem; color: var(--ink-muted); margin-bottom: .45rem; font-family: var(--font-mono); }
+.mini-bar { height: 4px; background: var(--bg-alt); border-radius: 99px; overflow: hidden; }
+.mini-bar-fill { height: 100%; background: var(--cobalt-lt); border-radius: 99px; transition: width .5s ease; }
+
+/* Buttons */
+.dash-actions { display: flex; gap: .75rem; flex-wrap: wrap; margin-bottom: 2rem; }
+.btn {
+  display: inline-flex; align-items: center; gap: .4rem;
+  padding: .55rem 1.2rem; border-radius: var(--r);
+  border: 1px solid; font-size: .87rem;
+  letter-spacing: .03em; transition: var(--t); font-family: var(--font-mono);
+}
+.btn-primary { background: var(--cobalt); border-color: var(--cobalt); color: #fff; }
+.btn-primary:hover { background: #122a7a; border-color: #122a7a; }
+.btn-teal { background: var(--teal-med); border-color: var(--teal-med); color: #fff; }
+.btn-teal:hover { background: #095c50; border-color: #095c50; }
+.btn-red { background: var(--red-vital); border-color: var(--red-vital); color: #fff; }
+.btn-red:hover { background: #8a1414; border-color: #8a1414; }
+.btn-secondary { background: transparent; border-color: var(--border); color: var(--ink-soft); }
+.btn-secondary:hover { background: var(--bg-hover); }
+.btn-ghost { background: transparent; border-color: var(--cobalt); color: var(--cobalt); }
+.btn-ghost:hover { background: var(--cobalt); color: #fff; }
+
+/* Section header */
+.section-label { font-family: var(--font-mono); font-size: .72rem; color: var(--cobalt); letter-spacing: .14em; text-transform: uppercase; margin-bottom: 1rem; display: flex; align-items: center; gap: .6rem; }
+.section-label::after { content: ''; flex: 1; height: 1px; background: var(--border-soft); }
+
+/* ══ LISTA ══ */
+.list-toolbar {
+  display: flex; gap: .65rem; flex-wrap: wrap; align-items: center;
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: var(--r-lg); padding: .85rem 1.2rem;
+  margin-bottom: 1.3rem; box-shadow: var(--shadow);
+}
+.search-wrap { position: relative; flex: 1; min-width: 200px; }
+.search-wrap input {
+  width: 100%; padding: .48rem 1rem .48rem 2rem;
+  border: 1px solid var(--border); border-radius: var(--r);
+  background: var(--bg); color: var(--ink); font-size: .9rem; transition: var(--t);
+  font-family: var(--font-mono);
+}
+.search-wrap input:focus { outline: none; border-color: var(--cobalt); box-shadow: 0 0 0 3px rgba(26,58,154,.1); }
+.search-icon { position: absolute; left: .6rem; top: 50%; transform: translateY(-50%); color: var(--ink-muted); pointer-events: none; font-size: .85rem; }
+.filter-select { padding: .48rem .8rem; border: 1px solid var(--border); border-radius: var(--r); background: var(--bg); color: var(--ink); font-size: .84rem; font-family: var(--font-mono); }
+.filter-select:focus { outline: none; border-color: var(--cobalt); }
+
+.techniques-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: .95rem; }
+.tech-card {
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: var(--r-lg); padding: 1.15rem 1.2rem;
+  cursor: pointer; transition: var(--t); box-shadow: var(--shadow);
+  display: flex; flex-direction: column; gap: .4rem;
+  border-top: 3px solid var(--border);
+}
+.tech-card:hover { background: var(--bg-hover); transform: translateY(-2px); box-shadow: var(--shadow-md); border-top-color: var(--cobalt); }
+.tech-card.done { border-top-color: var(--teal-med); }
+.tech-card.fav  { border-top-color: var(--amber-warn); }
+.tech-num { font-family: var(--font-mono); font-size: .68rem; color: var(--ink-muted); letter-spacing: .1em; text-transform: uppercase; }
+.tech-title { font-family: var(--font-body); font-size: 1rem; font-weight: 500; color: var(--ink-soft); line-height: 1.25; }
+.tech-example { font-size: .82rem; color: var(--ink-muted); background: var(--bg-alt); border-left: 2px solid var(--cobalt); padding: .2rem .55rem; border-radius: 0 var(--r) var(--r) 0; font-family: var(--font-mono); line-height: 1.5; }
+.tech-epoch-tag { display: inline-block; padding: .1rem .5rem; border-radius: 3px; font-size: .68rem; background: var(--tag-bg); color: var(--cobalt); border: 1px solid var(--border-soft); font-family: var(--font-mono); letter-spacing: .04em; }
+.tech-actions { display: flex; gap: .4rem; margin-top: .15rem; }
+.icon-btn { background: none; border: 1px solid var(--border); border-radius: var(--r); padding: .2rem .48rem; font-size: .78rem; color: var(--ink-muted); transition: var(--t); font-family: var(--font-mono); }
+.icon-btn:hover { border-color: var(--cobalt); color: var(--cobalt); }
+.icon-btn.active-done { border-color: var(--teal-med); color: var(--teal-med); background: rgba(14,124,108,.08); }
+.icon-btn.active-fav  { border-color: var(--amber-warn); color: var(--amber-warn); background: rgba(138,92,0,.08); }
+
+/* ── MODAL ── */
+.modal-overlay { position: fixed; inset: 0; z-index: 200; background: rgba(8,15,30,.68); display: flex; align-items: center; justify-content: center; padding: 1rem; opacity: 0; pointer-events: none; transition: opacity .22s; }
+.modal-overlay.open { opacity: 1; pointer-events: all; }
+.modal { background: var(--bg-card); border: 1px solid var(--border); border-top: 3px solid var(--cobalt); border-radius: var(--r-lg); padding: 2rem 2.2rem; max-width: 660px; width: 100%; box-shadow: var(--shadow-md); position: relative; transform: translateY(12px); transition: transform .22s; max-height: 90vh; overflow-y: auto; }
+.modal-overlay.open .modal { transform: none; }
+.modal-close { position: absolute; top: .85rem; right: 1rem; background: none; border: none; font-size: 1.3rem; color: var(--ink-muted); cursor: pointer; transition: var(--t); font-family: var(--font-mono); }
+.modal-close:hover { color: var(--cobalt); }
+.modal-num { font-family: var(--font-mono); font-size: .7rem; color: var(--cobalt); letter-spacing: .12em; text-transform: uppercase; }
+.modal-title { font-family: var(--font-head); font-size: 1.6rem; font-style: italic; color: var(--ink); line-height: 1.2; margin: .25rem 0 .65rem; }
+.modal-section { margin-top: 1rem; }
+.modal-section-label { font-family: var(--font-mono); font-size: .7rem; color: var(--ink-muted); letter-spacing: .12em; text-transform: uppercase; margin-bottom: .3rem; border-bottom: 1px solid var(--border-soft); padding-bottom: .2rem; }
+.modal-example { font-family: var(--font-mono); font-size: .86rem; background: var(--code-bg); color: var(--code-fg); padding: .75rem 1rem; border-radius: var(--r); line-height: 1.65; white-space: pre-wrap; }
+.modal-bad { background: rgba(196,32,32,.09); border: 1px solid rgba(196,32,32,.35); border-radius: var(--r); padding: .5rem .9rem; margin-bottom: .4rem; font-size: .88rem; color: var(--red-lt); font-family: var(--font-mono); }
+.modal-good { background: rgba(14,124,108,.09); border: 1px solid rgba(14,124,108,.35); border-radius: var(--r); padding: .5rem .9rem; font-size: .88rem; color: var(--teal-med); font-family: var(--font-mono); }
+.modal-explanation { font-size: .95rem; color: var(--ink-soft); line-height: 1.8; }
+.modal-actions { display: flex; gap: .65rem; margin-top: 1.4rem; flex-wrap: wrap; }
+.modal-ref { font-family: var(--font-mono); font-size: .74rem; color: var(--teal-med); margin-top: .75rem; letter-spacing: .03em; }
+
+/* ══ PRÁCTICA ══ */
+.practice-layout { display: grid; grid-template-columns: 260px 1fr; gap: 1.3rem; align-items: start; }
+@media(max-width:760px) { .practice-layout { grid-template-columns: 1fr; } }
+
+.practice-sidebar { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--r-lg); padding: 1.1rem; box-shadow: var(--shadow); position: sticky; top: 5rem; }
+.sidebar-title { font-family: var(--font-mono); font-size: .72rem; color: var(--cobalt); letter-spacing: .12em; text-transform: uppercase; margin-bottom: .8rem; border-bottom: 1px solid var(--border-soft); padding-bottom: .4rem; }
+.mode-btn { display: flex; align-items: center; gap: .5rem; width: 100%; text-align: left; padding: .5rem .7rem; border: 1px solid var(--border-soft); border-radius: var(--r); background: transparent; color: var(--ink-soft); font-size: .87rem; margin-bottom: .4rem; transition: var(--t); font-family: var(--font-mono); }
+.mode-btn:hover, .mode-btn.active { background: var(--cobalt); border-color: var(--cobalt); color: #fff; }
+
+.score-bar { display: flex; gap: .8rem; align-items: center; background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--r); padding: .6rem 1rem; margin-bottom: .85rem; font-size: .84rem; color: var(--ink-soft); font-family: var(--font-mono); }
+.score-num { font-size: 1.15rem; font-weight: 500; color: var(--cobalt); }
+.score-divider { color: var(--border); }
+
+.exercise-card { background: var(--bg-card); border: 1px solid var(--border); border-top: 3px solid var(--cobalt); border-radius: var(--r-lg); padding: 1.8rem 2rem; box-shadow: var(--shadow-md); margin-bottom: 1.1rem; }
+.ex-question { font-family: var(--font-head); font-size: 1.2rem; font-style: italic; color: var(--ink); margin-bottom: 1rem; line-height: 1.45; }
+.ex-snippet { font-family: var(--font-mono); font-size: .82rem; background: var(--code-bg); color: var(--code-fg); padding: .65rem .9rem; border-radius: var(--r); margin-bottom: 1rem; line-height: 1.65; white-space: pre-wrap; }
+.ex-options { display: flex; flex-direction: column; gap: .55rem; margin-bottom: 1rem; }
+.ex-option { display: flex; align-items: flex-start; gap: .65rem; padding: .6rem .85rem; border: 1px solid var(--border); border-radius: var(--r); background: var(--bg); cursor: pointer; transition: var(--t); font-size: .9rem; color: var(--ink-soft); }
+.ex-option:hover:not(.disabled) { background: var(--bg-hover); border-color: var(--cobalt); }
+.ex-option.correct { border-color: var(--teal-med); background: rgba(14,124,108,.08); color: var(--teal-med); }
+.ex-option.wrong   { border-color: var(--red-vital); background: rgba(196,32,32,.07); color: var(--red-lt); }
+.ex-option.disabled { cursor: default; }
+.ex-opt-letter { font-family: var(--font-mono); font-size: .74rem; color: var(--ink-muted); min-width: 1rem; padding-top: .1rem; }
+.ex-feedback { padding: .7rem .95rem; border-radius: var(--r); font-size: .9rem; margin-bottom: .85rem; display: none; font-family: var(--font-mono); }
+.ex-feedback.show { display: block; }
+.ex-feedback.ok { background: rgba(14,124,108,.1); color: var(--teal-med); border: 1px solid rgba(14,124,108,.3); }
+.ex-feedback.ko { background: rgba(196,32,32,.09); color: var(--red-lt); border: 1px solid rgba(196,32,32,.3); }
+
+.ex-blank-wrap { display: flex; gap: .65rem; flex-wrap: wrap; align-items: center; margin-bottom: .85rem; }
+.ex-blank-input { padding: .48rem .8rem; border: 1px solid var(--border); border-radius: var(--r); background: var(--bg); color: var(--ink); font-size: .9rem; flex: 1; min-width: 180px; transition: var(--t); font-family: var(--font-mono); }
+.ex-blank-input:focus { outline: none; border-color: var(--cobalt); box-shadow: 0 0 0 3px rgba(26,58,154,.1); }
+.ex-blank-input.correct-input { border-color: var(--teal-med); }
+.ex-blank-input.wrong-input   { border-color: var(--red-vital); }
+
+.flashcard { background: var(--bg-card); border: 1px solid var(--border); border-top: 3px solid var(--cobalt); border-radius: var(--r-lg); padding: 2.5rem 2rem; text-align: center; cursor: pointer; transition: var(--t); min-height: 240px; display: flex; flex-direction: column; justify-content: center; align-items: center; gap: .85rem; box-shadow: var(--shadow-md); }
+.flashcard:hover { box-shadow: 0 6px 28px rgba(8,15,30,.16); }
+.flashcard-front { font-family: var(--font-head); font-size: 1.55rem; font-style: italic; color: var(--ink); }
+.flashcard-back  { display: none; font-size: .92rem; color: var(--ink-soft); line-height: 1.75; max-width: 500px; }
+.flashcard.flipped .flashcard-front { display: none; }
+.flashcard.flipped .flashcard-back  { display: block; }
+.flashcard-hint { font-size: .77rem; color: var(--ink-muted); font-family: var(--font-mono); letter-spacing: .04em; }
+.fc-nav { display: flex; gap: .85rem; justify-content: center; margin-top: 1rem; }
+
+.empty { text-align: center; padding: 3rem 1rem; font-family: var(--font-head); font-size: 1.1rem; font-style: italic; color: var(--ink-muted); }
+
+/* RESPONSIVE */
+@media(max-width:720px) {
+  .nav-btn:not(.nav-burger) { display: none; }
+  .nav-btn.active { display: none; }
+  .nav-burger { display: block; }
+  nav.open .nav-btn { display: block; width: 100%; text-align: left; margin: .15rem 0; }
+  nav { flex-wrap: wrap; }
+  .techniques-grid { grid-template-columns: 1fr; }
+  .modal { padding: 1.3rem 1.1rem; }
+  .exercise-card { padding: 1.2rem 1.1rem; }
+  .stats-grid { grid-template-columns: repeat(2,1fr); }
+  .dash-hero { grid-template-columns: 1fr; }
+  .dash-hero-pulse { display: none; }
+}
+@media(max-width:400px) { .stats-grid { grid-template-columns: 1fr; } }
+
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 99px; }
+::-webkit-scrollbar-thumb:hover { background: var(--cobalt); }
+
+.toast { position: fixed; bottom: 1.5rem; right: 1.5rem; z-index: 500; background: var(--bg-dark); color: #a8c4e8; padding: .6rem 1.1rem; border-radius: var(--r); font-size: .82rem; opacity: 0; transform: translateY(8px); transition: all .28s; pointer-events: none; max-width: 270px; font-family: var(--font-mono); border: 1px solid var(--cobalt); }
+.toast.show { opacity: 1; transform: none; }
+</style>
+</head>
+<body>
+<div class="app">
+
+<!-- NAV -->
+<nav id="mainNav">
+  <div class="nav-logo">Redacción en Medicina <span>· Colombia</span></div>
+  <button class="nav-btn active" data-page="dashboard">⊞ INICIO</button>
+  <button class="nav-btn" data-page="lista">⊟ TÉCNICAS</button>
+  <button class="nav-btn" data-page="practica">✎ PRÁCTICA</button>
+  <button class="nav-burger" id="burgerBtn" aria-label="Menú">☰</button>
+</nav>
+
+<!-- DASHBOARD -->
+<div class="page active" id="page-dashboard">
+<div class="container">
+  <div class="dash-hero">
+    <div class="dash-hero-text">
+      <h1>100 Técnicas de Redacción Médico-Científica</h1>
+      <p>Para estudiantes de Medicina y Ciencias de la Salud · Colombia</p>
+      <div class="hero-badge">Ley 23/1981 · Res. 8430/1993 · Vancouver · INS · Minsalud · SIVIGILA · INVIMA</div>
+    </div>
+    <div class="dash-hero-pulse">♥</div>
+  </div>
+  <div class="stats-grid" id="statsGrid"></div>
+  <div class="progress-wrap">
+    <div class="progress-label">Progreso global</div>
+    <div class="progress-bar-outer"><div class="progress-bar-inner" id="progressBar" style="width:0%"></div></div>
+    <div class="progress-pct" id="progressPct">0 %</div>
+  </div>
+  <div class="dash-actions">
+    <button class="btn btn-primary" onclick="navigate('practica')">✎ Practicar ahora</button>
+    <button class="btn btn-teal"    onclick="navigate('lista')">⊟ Ver catálogo</button>
+    <button class="btn btn-ghost"   id="resetBtn">↺ Reiniciar</button>
+  </div>
+  <div class="section-label">Bloques temáticos</div>
+  <div class="epoch-grid" id="epochGrid"></div>
+</div>
+</div>
+
+<!-- LISTA -->
+<div class="page" id="page-lista">
+<div class="container">
+  <div class="section-label" style="margin-bottom:.4rem">Catálogo</div>
+  <h1 style="font-family:var(--font-head);font-size:1.95rem;font-style:italic;color:var(--ink);margin-bottom:1.4rem">100 Técnicas de Redacción</h1>
+  <div class="list-toolbar">
+    <div class="search-wrap">
+      <span class="search-icon">🔍</span>
+      <input type="search" id="searchInput" placeholder="buscar técnica, norma, concepto…" autocomplete="off">
+    </div>
+    <select class="filter-select" id="epochFilter"><option value="">Todos los bloques</option></select>
+    <select class="filter-select" id="statusFilter">
+      <option value="">Todos</option>
+      <option value="done">✓ Completadas</option>
+      <option value="fav">★ Favoritas</option>
+      <option value="pending">○ Pendientes</option>
+    </select>
+    <select class="filter-select" id="sortFilter">
+      <option value="num">N.° numérico</option>
+      <option value="alpha">A → Z</option>
+      <option value="epoch">Por bloque</option>
+    </select>
+  </div>
+  <div class="techniques-grid" id="techniquesGrid"></div>
+</div>
+</div>
+
+<!-- PRÁCTICA -->
+<div class="page" id="page-practica">
+<div class="container">
+  <div class="section-label" style="margin-bottom:.4rem">Práctica</div>
+  <h1 style="font-family:var(--font-head);font-size:1.95rem;font-style:italic;color:var(--ink);margin-bottom:1.4rem">Zona de práctica</h1>
+  <div class="practice-layout">
+    <aside class="practice-sidebar">
+      <div class="sidebar-title">Modo</div>
+      <button class="mode-btn active" onclick="setPracticeMode('multiple',this)"><span>◉</span> Opción múltiple</button>
+      <button class="mode-btn" onclick="setPracticeMode('blank',this)"><span>✏</span> Completar frase</button>
+      <button class="mode-btn" onclick="setPracticeMode('flashcard',this)"><span>⟳</span> Tarjetas flash</button>
+      <div style="margin-top:1.2rem;border-top:1px solid var(--border-soft);padding-top:.85rem">
+        <div class="sidebar-title">Filtrar</div>
+        <select class="filter-select" id="practiceEpochFilter" style="width:100%;margin-bottom:.6rem" onchange="resetExercise()">
+          <option value="">Todos los bloques</option>
+        </select>
+        <label style="display:flex;align-items:center;gap:.4rem;font-size:.84rem;color:var(--ink-muted);cursor:pointer;font-family:var(--font-mono)">
+          <input type="checkbox" id="onlyPending" onchange="resetExercise()"> Solo pendientes
+        </label>
+      </div>
+      <div style="margin-top:1.2rem;border-top:1px solid var(--border-soft);padding-top:.85rem">
+        <div class="sidebar-title">Sesión</div>
+        <div id="sessionScore" style="font-family:var(--font-mono);font-size:.84rem;color:var(--ink-muted)">—</div>
+      </div>
+    </aside>
+    <main id="practiceMain"></main>
+  </div>
+</div>
+</div>
+</div>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modalOverlay" onclick="closeModal(event)">
+  <div class="modal" id="modalContent" role="dialog" aria-modal="true"></div>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+/* ══════════════════════════════════════
+   ÉPOCAS
+══════════════════════════════════════ */
+const EPOCHS = [
+  {id:'I',   name:'Claridad, precisión y objetividad clínica',              range:[1,10]  },
+  {id:'II',  name:'Estructura del texto médico-científico (IMRyD)',          range:[11,20] },
+  {id:'III', name:'Razonamiento clínico y argumentación médica',             range:[21,30] },
+  {id:'IV',  name:'Terminología médica, clasificaciones y normalización',    range:[31,40] },
+  {id:'V',   name:'Citas y referencias (Vancouver / NLM / APA)',             range:[41,50] },
+  {id:'VI',  name:'Historia clínica, nota médica y epicrisis',               range:[51,60] },
+  {id:'VII', name:'Artículo científico médico y revisión de literatura',     range:[61,70] },
+  {id:'VIII','name':'Salud pública, epidemiología e informes de vigilancia', range:[71,80] },
+  {id:'IX',  name:'Datos, tablas, figuras y estadística clínica',           range:[81,90] },
+  {id:'X',   name:'Ética, consentimiento informado y comunicación oral',    range:[91,100]},
+];
+
+/* ══════════════════════════════════════
+   100 TÉCNICAS
+══════════════════════════════════════ */
+const PHENOMENA = [
+
+/* ── BLOQUE I: Claridad, precisión y objetividad clínica ── */
+{id:1,epoch:'I',
+ title:'Precisión terminológica: síntoma, signo y síndrome',
+ example:'Síntoma: lo que refiere el paciente (cefalea).\nSigno: lo que objetiva el médico (papilema).\nSíndrome: conjunto de signos y síntomas (sd. de hipertensión endocraneana).',
+ explanation:'En la escritura médica colombiana, confundir síntoma (experiencia subjetiva del paciente), signo (hallazgo objetivo medible por el clínico) y síndrome (conjunto reconocible de ambos) es error conceptual grave que afecta la historia clínica y el informe clínico. Estas distinciones son evaluadas explícitamente en los ECOE de las facultades.',
+ blank:'La cefalea referida por el paciente es un _____, mientras que el papiledema hallado por el médico es un _____',
+ blank_answer:'síntoma / signo',
+ options:['Signo / síntoma','Síntoma / signo','Síndrome / síntoma','Diagnóstico / signo'],answer_idx:1,
+ ref:'Bates, B. — Guía de exploración física e historia clínica · ECOE Colombia'},
+
+{id:2,epoch:'I',
+ title:'Voz pasiva impersonal en textos clínico-científicos',
+ example:'✗ Yo ausculté al paciente y encontré un soplo sistólico.\n✓ A la auscultación se evidenció soplo sistólico II/VI en foco mitral.',
+ explanation:'La voz pasiva refleja o impersonal («se evidenció», «se administró», «se registró») es estándar en historias clínicas, notas de evolución e informes médicos colombianos. Elimina referencias al médico como sujeto y mantiene el foco en el paciente. La primera persona solo es aceptable en la discusión de artículos.',
+ blank:'En una nota de evolución médica, «_____ fiebre de 38,5 °C a las 10:00 h» es la forma impersonal correcta',
+ blank_answer:'Se registró',
+ options:['Yo registré','El médico registró','Se registró','Registramos'],answer_idx:2,
+ ref:'Resolución 1995 de 1999 — Historia clínica · Minsalud Colombia'},
+
+{id:3,epoch:'I',
+ title:'Evitar el lenguaje coloquial en documentos clínicos',
+ example:'✗ «El paciente estaba muy malito y se veía pálido.\"\n✓ «Paciente en regular estado general, con palidez mucocutánea (++/+++).',
+ explanation:'El lenguaje coloquial en documentos médicos colombianos («malito», «se veía feo», «bastante fiebre») carece de precisión cuantitativa y no es reproducible entre observadores. La historia clínica es documento legal; su lenguaje debe ser técnico, objetivo y cuantificado.',
+ blank:'«Palidez mucocutánea ++/+++» es una descripción _____ de un hallazgo clínico',
+ blank_answer:'cuantificada y objetiva',
+ options:['Subjetiva y coloquial','Cuantificada y objetiva','Literaria','Innecesariamente compleja'],answer_idx:1,
+ ref:'Resolución 1995 de 1999, Art. 4 — Características de la historia clínica'},
+
+{id:4,epoch:'I',
+ title:'Tiempo verbal en documentos clínicos',
+ example:'Nota de evolución: pasado (lo que ocurrió en el turno).\nPlan y órdenes médicas: presente o futuro inmediato.\nDiagnóstico diferencial: presente.',
+ explanation:'Los documentos médicos combinan tiempos verbales según la función de cada sección. La anamnesis y la exploración física usan pasado («refirió», «se auscultó»); el diagnóstico y el plan usan presente («impresiona compatible con», «se indica»). Mezclarlos sin criterio genera confusión temporal en la historia clínica.',
+ blank:'Las órdenes médicas y el plan terapéutico se redactan en tiempo _____ o futuro inmediato',
+ blank_answer:'presente',
+ options:['Pasado','Presente','Condicional','Futuro perfecto'],answer_idx:1,
+ ref:'Ministerio de Salud — Guía de historia clínica · Resolución 1995/1999'},
+
+{id:5,epoch:'I',
+ title:'Cuantificar siempre: escalas y unidades clínicas',
+ example:'✗ «Tiene mucho dolor.» ✓ «EVA 8/10 al movimiento; 5/10 en reposo.\"\n✗ «Fiebre alta.» ✓ «Temperatura axilar 39,2 °C a las 08:30 h.\"',
+ explanation:'En medicina colombiana, toda medición debe acompañarse de la escala utilizada, las unidades, el momento de la medición y, cuando aplique, el contexto (reposo, movimiento). La EVA (Escala Visual Analógica) para dolor es estándar en Colombia desde la Política Nacional de Dolor (MINSALUD 2020).',
+ blank:'La escala de medición del dolor más usada en Colombia para cuantificar la intensidad es la _____',
+ blank_answer:'EVA (Escala Visual Analógica)',
+ options:['Escala de Glasgow','EVA (Escala Visual Analógica)','APGAR','Escala de Norton'],answer_idx:1,
+ ref:'Minsalud — Política Nacional de Dolor 2020 · EVA'},
+
+{id:6,epoch:'I',
+ title:'Distinguir diagnóstico, impresión diagnóstica e hipótesis',
+ example:'Diagnóstico: certeza con prueba confirmatoria (ej. TB confirmada por PCR).\nImpresión diagnóstica: sospecha clínica basada en síntomas y signos.\nHipótesis: lista de posibilidades en el diagnóstico diferencial.',
+ explanation:'En la escritura clínica colombiana, escribir «Diagnóstico: neumonía» sin confirmación paraclínica es incorrecto. Debe decir «Impresión diagnóstica: neumonía adquirida en la comunidad» o «Probable neumonía». Esta distinción es exigida en las guías de atención del SGSSS y tiene implicaciones médico-legales.',
+ blank:'Cuando el diagnóstico no ha sido confirmado por paraclínicos, debe escribirse «_____ diagnóstica»',
+ blank_answer:'impresión',
+ options:['Certeza','Definitiva','Impresión','Principal'],answer_idx:2,
+ ref:'Guías de atención integral — Minsalud Colombia · Resolución 1995/1999'},
+
+{id:7,epoch:'I',
+ title:'Coherencia entre anamnesis, examen físico y diagnóstico',
+ example:'Si la anamnesis describe síntomas respiratorios y el diagnóstico es gastroenteritis, debe explicarse la discordancia o corregirse el diagnóstico.',
+ explanation:'La coherencia interna de la historia clínica colombiana es evaluada en auditorías de calidad de las IPS, en los procesos de acreditación JCI/ICONTEC y en procesos médico-legales. La Resolución 1995/1999 exige que los registros sean «coherentes y racionales» en relación con la evolución del paciente.',
+ blank:'La Resolución colombiana que establece las normas para la historia clínica es la Resolución _____ de 1999',
+ blank_answer:'1995',
+ options:['8430','1995','2003','1438'],answer_idx:1,
+ ref:'Resolución 1995 de 1999 — Normas para el manejo de la historia clínica'},
+
+{id:8,epoch:'I',
+ title:'Evitar abreviaturas no universales en documentos médicos',
+ example:'✗ «PCH, SPAT, FU, TA» (abreviaturas locales no estandarizadas)\n✓ «PAM (presión arterial media), FC (frecuencia cardíaca), FR (frecuencia respiratoria)»',
+ explanation:'Las abreviaturas en documentos clínicos colombianos deben ser universalmente reconocidas o definirse en su primera aparición. Las abreviaturas no estandarizadas son una de las principales causas de errores de medicación identificadas por el INVIMA y el Instituto de Evaluación Tecnológica en Salud (IETS) de Colombia.',
+ blank:'Las abreviaturas en la historia clínica colombiana deben ser universalmente reconocidas o _____',
+ blank_answer:'definidas en su primera aparición',
+ options:['Inventadas por el médico','Definidas en su primera aparición','Usadas en mayúscula','Eliminadas completamente'],answer_idx:1,
+ ref:'IETS — Seguridad del paciente · INVIMA — Errores de medicación'},
+
+{id:9,epoch:'I',
+ title:'Objetividad: separar lo que refiere el paciente de lo que observa el médico',
+ example:'Subjetivo: «Paciente refiere cefalea pulsátil fronto-occipital de 6/10 desde hace 3 días.\"\nObjetivo: «TA 180/110 mmHg; fondo de ojo: papiledema bilateral.»',
+ explanation:'El formato SOAP (Subjetivo, Objetivo, Análisis, Plan) es estándar en muchas IPS colombianas para la nota de evolución. Separar lo subjetivo (lo que dice el paciente) de lo objetivo (lo que mide el médico) garantiza claridad y reproducibilidad. El SOAP está recomendado por Minsalud y las sociedades científicas colombianas.',
+ blank:'El formato de nota médica que separa Subjetivo, Objetivo, Análisis y Plan se denomina formato _____',
+ blank_answer:'SOAP',
+ options:['CIAP','SOAP','APGAR','COPD'],answer_idx:1,
+ ref:'Minsalud Colombia — Guías de buenas prácticas clínicas · formato SOAP'},
+
+{id:10,epoch:'I',
+ title:'Eliminar redundancias en documentos clínicos',
+ example:'✗ «Diagnóstico final definitivo» · ✗ «Resultado negativo ausente» · ✗ «Paciente vivo con signos vitales\"\n✓ «Diagnóstico» · ✓ «Resultado negativo» · ✓ «Signos vitales estables»',
+ explanation:'Las redundancias clínicas revelan imprecisión conceptual y generan documentos más extensos sin añadir información. Son frecuentes en los primeros años de las facultades de medicina colombianas. «Diagnóstico final definitivo» tiene tres palabras para un solo concepto; «diagnóstico» basta.',
+ blank:'«Resultado negativo ausente» es una redundancia porque «negativo» ya implica _____',
+ blank_answer:'ausencia',
+ options:['Peligro','Ausencia','Gravedad','Confirmación'],answer_idx:1,
+ ref:'Riesgo, L. — Redacción médica · Real Academia Nacional de Medicina'},
+
+/* ── BLOQUE II: Estructura IMRyD en medicina ── */
+{id:11,epoch:'II',
+ title:'La estructura IMRyD en el artículo médico',
+ example:'Introducción · Materiales y Métodos · Resultados · y Discusión\n+ Resumen estructurado · Palabras clave · Agradecimientos · Referencias',
+ explanation:'El artículo médico colombiano indexado sigue la estructura IMRyD exigida por revistas como la Revista Colombiana de Cardiología, Biomédica (INS), Biomédicas Investigación, Colombia Médica (UdeA) y la Revista de la Facultad de Medicina (UNAL). El resumen en revistas médicas colombianas es estructurado (Antecedentes/Objetivo/Métodos/Resultados/Conclusiones).',
+ blank:'El resumen de un artículo médico colombiano indexado es de tipo _____ (con secciones explícitas)',
+ blank_answer:'estructurado',
+ options:['Libre','Narrativo','Estructurado','Descriptivo'],answer_idx:2,
+ ref:'ICMJE — Uniform Requirements for Manuscripts · Biomédica — INS Colombia'},
+
+{id:12,epoch:'II',
+ title:'La introducción médica: de la epidemiología a la brecha',
+ example:'1. Magnitud del problema (prevalencia/incidencia en Colombia y mundo)\n2. Consecuencias clínicas\n3. Lo que ya se sabe\n4. La brecha del conocimiento\n5. Objetivo del estudio',
+ explanation:'La introducción de un artículo médico colombiano comienza con datos epidemiológicos del contexto nacional (SIVIGILA, Encuesta Nacional de Salud, DANE) antes de citar la literatura internacional. Esto responde al criterio de «pertinencia para el contexto colombiano» de revistas como Biomédica y la Revista de Salud Pública.',
+ blank:'En la introducción médica colombiana, la justificación del estudio debe incluir datos epidemiológicos _____',
+ blank_answer:'del contexto nacional (SIVIGILA, ENS, DANE)',
+ options:['Solo de Estados Unidos','Del contexto nacional (SIVIGILA, ENS, DANE)','Solo de la OMS','Del laboratorio básico'],answer_idx:1,
+ ref:'Biomédica (INS) — Instrucciones a autores · Revista de Salud Pública UNAL'},
+
+{id:13,epoch:'II',
+ title:'Materiales y métodos: diseño, población y criterios',
+ example:'«Estudio de cohorte prospectiva, realizado en el Hospital Universitario de la Samaritana (Bogotá D.C.), entre enero y diciembre de 2022. Se incluyeron pacientes mayores de 18 años con diagnóstico de IRA confirmado por PCR-RT, sin comorbilidades que alteren la respuesta inmune.»',
+ explanation:'La sección de Métodos en el artículo médico colombiano especifica: diseño del estudio, institución (con nombre completo y ciudad), período, criterios de inclusión/exclusión y tamaño de muestra con justificación estadística. La institución colombiana debe citarse con su nombre oficial registrado ante el REPS (Registro Especial de Prestadores de Servicios de Salud).',
+ blank:'El registro donde están inscritas oficialmente las IPS colombianas se denomina _____',
+ blank_answer:'REPS (Registro Especial de Prestadores de Servicios de Salud)',
+ options:['SIVIGILA','REPS (Registro Especial de Prestadores de Servicios de Salud)','SGSSS','RETHUS'],answer_idx:1,
+ ref:'Minsalud — REPS · Resolución 2003 de 2014'},
+
+{id:14,epoch:'II',
+ title:'Resultados: datos sin interpretación, con estadísticos',
+ example:'✗ «Los pacientes tratados mejoraron mucho, lo que demuestra la eficacia.\"\n✓ «La mortalidad en el grupo intervención fue del 8,3 % (IC95 % 5,1–12,4) frente al 14,7 % en el grupo control (p = 0,02).»',
+ explanation:'La sección de Resultados en el artículo médico presenta datos con sus estadísticos descriptivos e inferenciales, sin interpretarlos. En Colombia, la presentación de intervalos de confianza al 95 % (IC95 %) y el valor p con tres decimales son estándar en las revistas indexadas. La interpretación pertenece a la Discusión.',
+ blank:'Los intervalos de confianza en artículos médicos colombianos se expresan al _____ %',
+ blank_answer:'95',
+ options:['90','95','99','100'],answer_idx:1,
+ ref:'ICMJE · Biomédica — Normas para autores · Estadística clínica'},
+
+{id:15,epoch:'II',
+ title:'La discusión médica: comparar, explicar y reconocer limitaciones',
+ example:'«La mortalidad del 8,3 % hallada es inferior al 14 % reportado por García et al. en 2020, posiblemente por el uso de dexametasona en dosis altas en nuestra serie. Una limitación es el tamaño muestral reducido (n=48).»',
+ explanation:'La discusión médica colombiana compara los resultados con la literatura internacional y la colombiana, explica las diferencias con posibles mecanismos biológicos o clínicos y reconoce las limitaciones del estudio. Omitir las limitaciones es criterio de rechazo en revistas indexadas.',
+ blank:'Omitir las _____ del estudio es criterio de rechazo en las revistas médicas indexadas',
+ blank_answer:'limitaciones',
+ options:['Referencias','Limitaciones','Fotografías','Estadísticas'],answer_idx:1,
+ ref:'ICMJE · Day & Gastel — Cómo escribir y publicar trabajos científicos'},
+
+{id:16,epoch:'II',
+ title:'El resumen estructurado: cinco secciones obligatorias',
+ example:'Antecedentes · Objetivo · Métodos (diseño, población, n) · Resultados (dato principal con IC95%) · Conclusiones\n(250 palabras máximo)',
+ explanation:'El resumen estructurado del artículo médico colombiano tiene cinco secciones explícitas. El resultado principal debe incluir el estadístico clave con IC95 %. La conclusión debe responder al objetivo, sin extrapolar más allá de los datos. Biomédica (INS) exige resumen en español e inglés (abstract).',
+ blank:'En el resumen estructurado médico, los resultados deben incluir el dato principal con _____',
+ blank_answer:'IC95 % (intervalo de confianza al 95 %)',
+ options:['Solo el promedio','IC95 % (intervalo de confianza al 95 %)','El nombre del hospital','El diagnóstico del paciente'],answer_idx:1,
+ ref:'Biomédica (INS) — Instrucciones para autores · ICMJE'},
+
+{id:17,epoch:'II',
+ title:'Conclusiones: responder al objetivo, no extrapolar',
+ example:'✗ «Este tratamiento debe adoptarse en todos los hospitales del país.\"\n✓ «En esta cohorte de 48 pacientes con IRA moderada del Hospital X, el tratamiento con Y redujo la mortalidad a 30 días (OR 0,52; IC95 % 0,30–0,88).»',
+ explanation:'Las conclusiones de un artículo médico colombiano deben circunscribirse a la población estudiada y el contexto del estudio. Extrapolar a toda la población colombiana o nacional a partir de un estudio local es error frecuente de inferencia. La limitación geográfica y poblacional debe reflejarse en la redacción de las conclusiones.',
+ blank:'Las conclusiones deben circunscribirse a la _____ estudiada y el contexto del estudio',
+ blank_answer:'población',
+ options:['Institución','Población','Época','Bibliografía'],answer_idx:1,
+ ref:'ICMJE · Haynes, R.B. — Critically appraised topics'},
+
+{id:18,epoch:'II',
+ title:'Palabras clave médicas: MeSH y DeCS',
+ example:'DeCS (Descriptores en Ciencias de la Salud, BVS-BIREME) para español\nMeSH (Medical Subject Headings, NLM) para inglés\nAmbos son obligatorios en revistas colombianas indexadas.',
+ explanation:'Los términos DeCS (Descriptores en Ciencias de la Salud) son la traducción/adaptación al español latinoamericano del MeSH. Las revistas médicas colombianas (Biomédica, Colombia Médica, Iatreia, Revista CES) exigen palabras clave en DeCS/MeSH. El portal DeCS está en decs.bvsalud.org.',
+ blank:'El tesauro de descriptores médicos en español latinoamericano, equivalente al MeSH, es el _____',
+ blank_answer:'DeCS (Descriptores en Ciencias de la Salud)',
+ options:['ILANUD','Getty AAT','DeCS (Descriptores en Ciencias de la Salud)','AGROVOC'],answer_idx:2,
+ ref:'BIREME/OPS — DeCS · decs.bvsalud.org'},
+
+{id:19,epoch:'II',
+ title:'Título del artículo médico: informativo, sin abreviaturas',
+ example:'✗ «Estudio sobre HTA en Colombia.\"\n✓ «Prevalencia y factores asociados a hipertensión arterial en adultos de 30 a 59 años en zona urbana de Cali, 2020–2022.»',
+ explanation:'El título médico debe informar sobre la variable principal, la población, la localización y el período. Máximo 15 palabras. Sin abreviaturas (salvo las universalmente aceptadas como ADN, PCR). Las revistas colombianas rechazarán títulos genéricos como «Estudio sobre HTA» por no informar el diseño ni la población.',
+ blank:'Un título médico adecuado incluye la variable principal, la _____, la localización y el período',
+ blank_answer:'población estudiada',
+ options:['Institución','Presupuesto','Población estudiada','Nombre del investigador'],answer_idx:2,
+ ref:'ICMJE · Biomédica — Instrucciones a autores'},
+
+{id:20,epoch:'II',
+ title:'Declaración de conflicto de interés y financiación',
+ example:'«Los autores declaran no tener conflictos de interés. Este estudio fue financiado por la Convocatoria 848 de Minciencias (código 52456) y el CIDEIM, Cali.»',
+ explanation:'La declaración de conflicto de interés y la fuente de financiación son obligatorias en publicaciones médicas colombianas (ICMJE). Los estudios financiados por la industria farmacéutica deben declararlo explícitamente. Minciencias (antes Colciencias) financia la investigación biomédica colombiana mediante convocatorias abiertas.',
+ blank:'La entidad del Estado colombiano que financia la investigación biomédica mediante convocatorias es _____',
+ blank_answer:'Minciencias (antes Colciencias)',
+ options:['Minsalud','INS','Minciencias (antes Colciencias)','INVIMA'],answer_idx:2,
+ ref:'ICMJE — Conflict of interest · Minciencias — convocatorias.minciencias.gov.co'},
+
+/* ── BLOQUE III: Razonamiento clínico y argumentación ── */
+{id:21,epoch:'III',
+ title:'El razonamiento hipotético-deductivo en la historia clínica',
+ example:'Síntomas/signos (premisa menor) + conocimiento clínico (premisa mayor) → Diagnóstico probable (conclusión)\nEj: «Disnea + ortopnea + crepitantes bibasales + IC95% → Insuficiencia cardíaca descompensada»',
+ explanation:'El razonamiento clínico sigue la estructura del silogismo: los síntomas y signos son la premisa menor; el conocimiento del patrón clínico de la enfermedad es la premisa mayor; el diagnóstico probable es la conclusión. En las escuelas de medicina colombianas, el ECOE evalúa este razonamiento explícitamente.',
+ blank:'El proceso clínico de aplicar el conocimiento de una enfermedad a los hallazgos del paciente para llegar a un diagnóstico se denomina razonamiento _____',
+ blank_answer:'hipotético-deductivo',
+ options:['Inductivo','Hipotético-deductivo','Analógico','Estadístico'],answer_idx:1,
+ ref:'Sackett, D.L. — Medicina basada en la evidencia · ECOE Colombia'},
+
+{id:22,epoch:'III',
+ title:'Diagnóstico diferencial: jerarquización y argumentación',
+ example:'«El diagnóstico diferencial incluye:\n1.° Neumonía adquirida en la comunidad (más probable: fiebre + infiltrado lobar + tos productiva)\n2.° Tuberculosis pulmonar (descartar: contacto + baciloscopia)\n3.° Neoplasia pulmonar (menos probable: edad 25 años)»',
+ explanation:'El diagnóstico diferencial en la escritura médica colombiana debe estar jerarquizado por probabilidad clínica y argumentado con los hallazgos que apoyan o descartan cada posibilidad. No es una lista aleatoria de enfermedades. Las guías de atención integral del Minsalud incluyen tablas de diagnóstico diferencial estructuradas.',
+ blank:'El diagnóstico diferencial debe estar _____ por probabilidad clínica y argumentado con hallazgos',
+ blank_answer:'jerarquizado',
+ options:['Alfabetizado','Jerarquizado','Ordenado por gravedad','Listado por órgano'],answer_idx:1,
+ ref:'Minsalud — Guías de Atención Integral (GAIT) · Razonamiento clínico'},
+
+{id:23,epoch:'III',
+ title:'Medicina basada en la evidencia (MBE): niveles de evidencia',
+ example:'Nivel I: revisión sistemática / metaanálisis de ECA\nNivel II: ECA individual\nNivel III: estudios de cohorte\nNivel IV: estudios de casos y controles\nNivel V: serie de casos / opinión de expertos',
+ explanation:'La MBE (Evidence-Based Medicine) es el paradigma dominante en la educación médica colombiana desde los años 2000. El nivel de evidencia determina la fuerza de la recomendación. Las Guías de Atención Integral (GAIT) del Minsalud clasifican sus recomendaciones por nivel GRADE (Grading of Recommendations Assessment).',
+ blank:'El nivel de evidencia más alto en MBE corresponde a la _____ de ensayos clínicos aleatorizados',
+ blank_answer:'revisión sistemática o metaanálisis',
+ options:['Opinión de expertos','Serie de casos','Revisión sistemática o metaanálisis','Estudio de casos y controles'],answer_idx:2,
+ ref:'GRADE Working Group · Minsalud — GAIT · Sackett (1996)'},
+
+{id:24,epoch:'III',
+ title:'Argumento terapéutico: NNT, NNH y ARR',
+ example:'ARR (Reducción Absoluta del Riesgo) = Riesgo control − Riesgo intervención\nNNT (Número Necesario a Tratar) = 1/ARR\nNNH (Número Necesario para Hacer Daño) = 1/ARI',
+ explanation:'El NNT (Number Needed to Treat) es la herramienta central de la argumentación terapéutica en MBE. En Colombia, los Comités de Farmacia y Terapéutica de las IPS usan el NNT para justificar la inclusión de medicamentos en el MIPRES y el PBS (Plan de Beneficios en Salud). Un NNT de 5 significa que se deben tratar 5 pacientes para evitar un evento adverso.',
+ blank:'El NNT (Número Necesario a Tratar) se calcula como el inverso de la _____',
+ blank_answer:'ARR (Reducción Absoluta del Riesgo)',
+ options:['RR (Riesgo Relativo)','OR (Odds Ratio)','ARR (Reducción Absoluta del Riesgo)','IC95 %'],answer_idx:2,
+ ref:'Sackett, D.L. — MBE · PBS Colombia · MIPRES'},
+
+{id:25,epoch:'III',
+ title:'Conectores argumentativos en la discusión médica',
+ example:'Contraste: «Sin embargo, nuestros resultados difieren de…»\nCausa: «posiblemente debido a…», «en virtud de que…»\nConclusión: «En consecuencia…», «Estos hallazgos sugieren que…»',
+ explanation:'Los conectores en la discusión médica articulan la comparación con la literatura, la explicación de las diferencias y la inferencia de las conclusiones. «Sugieren» y «podrían indicar» son preferibles a «demuestran» cuando la evidencia es indirecta o la muestra es pequeña.',
+ blank:'En la discusión médica, cuando la evidencia es indirecta se prefiere «los resultados _____ que» en lugar de «demuestran que»',
+ blank_answer:'sugieren',
+ options:['Prueban','Certifican','Sugieren','Garantizan'],answer_idx:2,
+ ref:'ICMJE · Day & Gastel — Cómo escribir y publicar trabajos científicos'},
+
+{id:26,epoch:'III',
+ title:'El reporte de caso clínico: estructura y pertinencia',
+ example:'Secciones: Resumen · Introducción · Presentación del caso · Discusión · Conclusiones\nPertinencia: caso raro, presentación atípica, lección clínica nueva.',
+ explanation:'El reporte de caso es el tipo de publicación más frecuente en las facultades de medicina colombianas. Debe tener pertinencia: un caso solo es publicable si es raro, tiene una presentación atípica o aporta una lección clínica nueva. Casos comunes sin enseñanza nueva son rechazados por las revistas.',
+ blank:'Un reporte de caso es publicable cuando el caso es raro, tiene presentación atípica o aporta una _____ clínica nueva',
+ blank_answer:'lección',
+ options:['Fotografía','Técnica quirúrgica','Lección','Estadística'],answer_idx:2,
+ ref:'CARE Guidelines — Case Report · Revistas COPE Colombia'},
+
+{id:27,epoch:'III',
+ title:'El ensayo clínico aleatorizado: protocolo y reporte CONSORT',
+ example:'CONSORT (Consolidated Standards of Reporting Trials): lista de verificación de 25 ítems para reportar un ECA.\nRegistro previo: clinicaltrials.gov o ISRCTN antes de iniciar.',
+ explanation:'Los ensayos clínicos aleatorizados (ECA) deben registrarse prospectivamente en ClinicalTrials.gov o equivalente antes de iniciar. Su reporte sigue la guía CONSORT (lista de verificación de 25 ítems). En Colombia, el INVIMA regula los ensayos clínicos con medicamentos mediante la Resolución 2378 de 2008.',
+ blank:'La norma colombiana que regula las Buenas Prácticas Clínicas en ensayos con medicamentos es la Resolución _____ de 2008',
+ blank_answer:'2378',
+ options:['8430','1995','2378','2003'],answer_idx:2,
+ ref:'Resolución 2378 de 2008 — BPC en ECA · INVIMA · CONSORT Statement'},
+
+{id:28,epoch:'III',
+ title:'Cohesión en la nota clínica: de la queja principal al plan',
+ example:'Queja principal → Anamnesis (ampliar) → Examen físico (confirmar/descubrir) → Diagnóstico (sintetizar) → Plan (responder al diagnóstico)',
+ explanation:'La nota clínica bien redactada tiene cohesión narrativa: cada sección amplía, confirma o explica la anterior. El plan debe responder directamente a los diagnósticos listados. Una nota en la que el plan no se relaciona con los diagnósticos es incoherente y puede generar errores de atención.',
+ blank:'En una nota clínica, el plan terapéutico debe responder directamente a los _____ listados',
+ blank_answer:'diagnósticos',
+ options:['Síntomas','Diagnósticos','Medicamentos previos','Antecedentes'],answer_idx:1,
+ ref:'Weed, L.L. — Problem-oriented medical record · Formato SOAP'},
+
+{id:29,epoch:'III',
+ title:'Uso de probabilidades: pretest y postest',
+ example:'Probabilidad pretest (prevalencia) + Cociente de probabilidad (CP/LR) → Probabilidad postest\nNomograma de Fagan para cálculo rápido.',
+ explanation:'El razonamiento clínico probabilístico usa el cociente de probabilidad (Likelihood Ratio, LR) de las pruebas diagnósticas para actualizar la sospecha clínica. En Colombia, el IETS publica evaluaciones de tecnologías diagnósticas con sus LR para el contexto local. Un LR > 10 aumenta mucho la probabilidad postest.',
+ blank:'El índice que describe cuánto cambia la probabilidad de una enfermedad con un resultado positivo o negativo de una prueba diagnóstica se denomina _____',
+ blank_answer:'Cociente de Probabilidad (CP o Likelihood Ratio, LR)',
+ options:['Sensibilidad','Especificidad','Cociente de Probabilidad (CP o Likelihood Ratio, LR)','Valor predictivo positivo'],answer_idx:2,
+ ref:'IETS Colombia — Evaluación de tecnologías · Jaeschke (1994)'},
+
+{id:30,epoch:'III',
+ title:'Escribir para diferentes audiencias: médico, paciente, gestor',
+ example:'Para médico: «HTA grado 2 con daño de órgano blanco, inicio IECA»\nPara paciente: «Tiene la presión alta y empezaremos un medicamento para proteger su corazón y riñones»\nPara gestor: «Paciente en riesgo cardiovascular alto, intervención costo-efectiva según GAIT»',
+ explanation:'El médico colombiano escribe para múltiples audiencias: el colega (lenguaje técnico), el paciente (lenguaje claro), el gestor o asegurador (lenguaje de eficiencia) y el sistema judicial (lenguaje documentado y preciso). El Ministerio de Salud colombiano promueve la «salud en lenguaje claro» desde 2018.',
+ blank:'La iniciativa del Ministerio de Salud colombiano que promueve documentos comprensibles para los ciudadanos se denomina _____',
+ blank_answer:'salud en lenguaje claro',
+ options:['Salud digital','Salud en lenguaje claro','Telemedicina','Salud simplificada'],answer_idx:1,
+ ref:'Minsalud — Política de Atención Integral en Salud (PAIS) 2018'},
+
+/* ── BLOQUE IV: Terminología médica y normalización ── */
+{id:31,epoch:'IV',
+ title:'CIE-10 y CIE-11: codificación diagnóstica en Colombia',
+ example:'J18.9: Neumonía, no especificada\nE11: Diabetes mellitus tipo 2\nColombia usó CIE-10 hasta 2024; migración a CIE-11 en curso.',
+ explanation:'La Clasificación Internacional de Enfermedades (CIE/ICD) de la OMS es el estándar de codificación diagnóstica en Colombia, obligatoria en los RIPS (Registros Individuales de Prestación de Servicios de Salud). Los médicos colombianos deben codificar con CIE-10 para la facturación al SGSSS. La migración a CIE-11 está siendo coordinada por el INS y Minsalud.',
+ blank:'El sistema de codificación diagnóstica obligatorio en Colombia para los RIPS es el _____',
+ blank_answer:'CIE-10 (Clasificación Internacional de Enfermedades)',
+ options:['DSM-5','SNOMED-CT','CIE-10 (Clasificación Internacional de Enfermedades)','CPT'],answer_idx:2,
+ ref:'Resolución 3047 de 2008 — RIPS · Minsalud · OMS CIE-10'},
+
+{id:32,epoch:'IV',
+ title:'Terminología de medicamentos: DCI y nombre comercial',
+ example:'DCI (Denominación Común Internacional): atenolol, metformina, amoxicilina.\nNombre comercial: Tenormin®, Glucophage®, Amoxil®.\nEn historia clínica y receta: siempre DCI.',
+ explanation:'La Resolución 1403 de 2007 del Minsalud Colombia y la Ley 212 de 1995 obligan a prescribir y documentar los medicamentos con su Denominación Común Internacional (DCI), no el nombre comercial. Esto reduce los riesgos de confusión y el incentivo de las casas farmacéuticas.',
+ blank:'En Colombia, los medicamentos en la historia clínica y la receta deben escribirse con su _____',
+ blank_answer:'DCI (Denominación Común Internacional)',
+ options:['Nombre comercial','DCI (Denominación Común Internacional)','Nombre del fabricante','Código CUM'],answer_idx:1,
+ ref:'Ley 212 de 1995 · Resolución 1403 de 2007 — DCI Colombia'},
+
+{id:33,epoch:'IV',
+ title:'Escalas y clasificaciones clínicas colombianas y universales',
+ example:'Glasgow: conciencia (3–15)\nApache II: gravedad en UCI\nChild-Pugh: hepatopatía\nTriage TRIAGE I–V: urgencias Colombia\nFREMEC: riesgo cardiovascular',
+ explanation:'Colombia usa el sistema de triage de cinco niveles (I: inmediato; II: muy urgente; III: urgente; IV: menos urgente; V: no urgente) en todos los servicios de urgencias desde la Resolución 5596 de 2015 del Minsalud. Las escalas internacionales deben citarse con su fuente original al usarlas en publicaciones.',
+ blank:'La resolución colombiana que establece el sistema de triage de cinco niveles en urgencias es la Resolución _____ de 2015',
+ blank_answer:'5596',
+ options:['1995','2378','5596','8430'],answer_idx:2,
+ ref:'Resolución 5596 de 2015 — Criterios de triage · Minsalud Colombia'},
+
+{id:34,epoch:'IV',
+ title:'PBS, POS y MIPRES: Plan de Beneficios en Salud',
+ example:'PBS (Plan de Beneficios en Salud): lista de servicios y medicamentos cubiertos por el SGSSS.\nMIPRES: herramienta para prescribir medicamentos NO PBS.\nSistema: EPS (asegurador) + IPS (prestador).',
+ explanation:'El PBS (antes POS, Plan Obligatorio de Salud) define qué medicamentos, procedimientos y servicios cubre el SGSSS para todos los colombianos. El médico que prescribe un medicamento no PBS debe justificarlo científicamente en el MIPRES (Mi Prescripción). Este contexto de racionamiento es único de Colombia y debe reflejarse en los informes clínicos.',
+ blank:'La plataforma colombiana para prescribir medicamentos que no están en el PBS se denomina _____',
+ blank_answer:'MIPRES',
+ options:['SIVIGILA','REPS','MIPRES','RETHUS'],answer_idx:2,
+ ref:'Resolución 1328 de 2016 — MIPRES · Ley 1751 de 2015 — Ley Estatutaria de Salud'},
+
+{id:35,epoch:'IV',
+ title:'Terminología de la farmacología: dosis, vía y frecuencia',
+ example:'«Metformina 850 mg vía oral cada 12 horas con las comidas, por 3 meses.\"\n✗ «Metformina 850 una cada 12 horas vo.» (incompleto)',
+ explanation:'La prescripción médica en Colombia debe especificar: principio activo (DCI), dosis en unidades de medida (mg, UI, mcg), vía de administración (vía oral, IV, IM, SC), frecuencia (cada X horas o X veces al día), duración y condiciones especiales. El INVIMA publica el Vademécum de referencia para Colombia.',
+ blank:'La prescripción médica completa debe incluir DCI, dosis, vía, frecuencia, duración y _____',
+ blank_answer:'condiciones especiales de administración',
+ options:['Precio del medicamento','Condiciones especiales de administración','Nombre del fabricante','Código CUM'],answer_idx:2,
+ ref:'INVIMA — Vademécum farmacológico · Decreto 677 de 1995 — Medicamentos'},
+
+{id:36,epoch:'IV',
+ title:'Terminología de procedimientos: CUPS',
+ example:'CUPS (Clasificación Única de Procedimientos en Salud): código obligatorio en los RIPS.\nEco-Doppler cardíaco: CUPS 88.72.01\nColonoscopia diagnóstica: CUPS 45.23',
+ explanation:'La CUPS (Clasificación Única de Procedimientos en Salud) es el estándar colombiano para codificar procedimientos en salud, obligatorio en los RIPS y en la facturación al SGSSS. Fue adoptada por el Ministerio de Salud mediante la Resolución 3047 de 2008 y se actualiza periódicamente.',
+ blank:'El código colombiano que identifica procedimientos médicos en los registros de salud y la facturación es el _____',
+ blank_answer:'CUPS (Clasificación Única de Procedimientos en Salud)',
+ options:['CIE-10','CPT','CUPS (Clasificación Única de Procedimientos en Salud)','SNOMED'],answer_idx:2,
+ ref:'Resolución 3047 de 2008 — RIPS y CUPS · Minsalud Colombia'},
+
+{id:37,epoch:'IV',
+ title:'Terminología en salud mental: DSM-5 y CIE-10/11',
+ example:'F32.1: Episodio depresivo moderado (CIE-10)\n296.21: Trastorno depresivo mayor, episodio único, leve (DSM-5)\nAmbos sistemas se usan en Colombia según contexto.',
+ explanation:'En Colombia, los diagnósticos de salud mental se documentan con CIE-10 (obligatorio para los RIPS) y con DSM-5 (estándar clínico en psiquiatría y psicología). La Ley 1616 de 2013 (Ley de Salud Mental) y la Política Nacional de Salud Mental (2018) regulan la atención y los registros de salud mental en el país.',
+ blank:'La ley colombiana que regula los derechos y la atención en salud mental es la Ley _____ de 2013',
+ blank_answer:'1616',
+ options:['1438','1616','99','23'],answer_idx:1,
+ ref:'Ley 1616 de 2013 — Ley de Salud Mental · Política Nacional de Salud Mental 2018'},
+
+{id:38,epoch:'IV',
+ title:'Uso correcto de unidades del SI en medicina',
+ example:'mmHg (presión arterial) · mmol/L o mg/dL (glucemia) · µmol/L (creatinina en Europa) · mg/dL (creatinina en Colombia)\nbpm (latidos por minuto) · respiraciones/min',
+ explanation:'Colombia usa el sistema mixto: algunas unidades son SI (µmol/L) y otras son convencionales (mg/dL para glucemia y creatinina). El médico colombiano debe conocer los factores de conversión, especialmente al leer literatura internacional. Los valores de referencia siempre deben citarse con sus unidades.',
+ blank:'En Colombia, la glucemia se expresa típicamente en _____ (sistema convencional, no SI)',
+ blank_answer:'mg/dL',
+ options:['mmol/L','µmol/L','mg/dL','g/L'],answer_idx:2,
+ ref:'IETS — Valores de referencia laboratorio clínico Colombia · OPS'},
+
+{id:39,epoch:'IV',
+ title:'Terminología de trasplantes y donación de órganos en Colombia',
+ example:'INS — Instituto Nacional de Salud: entidad rectora del sistema de donación y trasplantes.\nCoordinador hospitalario de trasplantes: médico responsable en cada IPS.',
+ explanation:'Colombia tiene la Ley 73 de 1988 (donación presunta de órganos) y el Decreto 2493 de 2004 (reglamentación de trasplantes). El INS es la autoridad nacional de trasplantes. La terminología específica (donante cadavérico, donante vivo relacionado, receptor, lista de espera nacional) debe usarse con precisión en los informes médicos y trabajos académicos.',
+ blank:'La entidad colombiana que actúa como autoridad nacional en materia de donación y trasplante de órganos es el _____',
+ blank_answer:'INS (Instituto Nacional de Salud)',
+ options:['INVIMA','Minsalud','INS (Instituto Nacional de Salud)','IETS'],answer_idx:2,
+ ref:'Ley 73 de 1988 · Decreto 2493 de 2004 · INS Colombia'},
+
+{id:40,epoch:'IV',
+ title:'Terminología de salud pública: incidencia, prevalencia, mortalidad',
+ example:'Incidencia: casos nuevos por unidad de tiempo (por 100.000 habitantes/año).\nPrevalencia: casos existentes en un momento dado.\nTasa de mortalidad: muertes por 100.000 habitantes/año.',
+ explanation:'La confusión entre incidencia y prevalencia es el error epidemiológico más frecuente en los trabajos médicos colombianos de pregrado. Ambos se expresan por unidad de población (100, 1.000 o 100.000 habitantes) y deben indicar el período y el denominador. El SIVIGILA del INS reporta tasas de incidencia y de prevalencia por evento y municipio.',
+ blank:'La medida epidemiológica que cuenta casos _____ en un período es la incidencia; los casos existentes son la prevalencia',
+ blank_answer:'nuevos',
+ options:['Totales','Nuevos','Graves','Hospitalizados'],answer_idx:1,
+ ref:'SIVIGILA — INS Colombia · Last, J.M. — Dictionary of Epidemiology'},
+
+/* ── BLOQUE V: Citas y referencias ── */
+{id:41,epoch:'V',
+ title:'Sistema de citas Vancouver (NLM): formato numérico',
+ example:'Texto: «la mortalidad fue del 8 % (1)»\nReferencia: 1. García J, López M. Mortalidad en UCI. Rev Colomb Cardiol. 2022;29(4):345-52.',
+ explanation:'El sistema Vancouver (International Committee of Medical Journal Editors, ICMJE) es el estándar en la mayoría de revistas médicas colombianas (Biomédica, Rev Colomb Cardiol, Iatreia, Rev CES Medicina). Los números van en superíndice o entre paréntesis, en orden de aparición en el texto.',
+ blank:'El sistema de citas numérico estándar en medicina internacional y en la mayoría de revistas colombianas de salud es el _____',
+ blank_answer:'Vancouver (ICMJE)',
+ options:['APA','Chicago','Vancouver (ICMJE)','IEEE'],answer_idx:2,
+ ref:'ICMJE — Uniform Requirements · NLM Style Guide'},
+
+{id:42,epoch:'V',
+ title:'Formato Vancouver para artículo de revista',
+ example:'García J, López M, Rodríguez P. Título del artículo. Rev Colomb Cardiol. 2022;29(4):345-52. doi:10.1016/j.rccar.2022.01.003',
+ explanation:'En Vancouver, los autores van con apellido + iniciales del nombre, sin punto entre ellas. El nombre de la revista se abrevia según el estilo NLM (Index Medicus). El volumen va en negrita en algunos estilos; el año va sin corchetes. Hasta 6 autores se citan todos; desde 7, se añade «et al.»',
+ blank:'En el formato Vancouver, cuando una referencia tiene 7 o más autores se citan los 6 primeros seguidos de _____',
+ blank_answer:'et al.',
+ options:['y otros','…','et al.','cols.'],answer_idx:2,
+ ref:'NLM Style Guide · ICMJE · PubMed'},
+
+{id:43,epoch:'V',
+ title:'Citar guías clínicas y protocolos del Minsalud',
+ example:'Colombia. Ministerio de Salud y Protección Social. Guía de atención integral de la diabetes mellitus tipo 2 [Internet]. Bogotá: Minsalud; 2016 [citado 2024 ene 15]. Disponible en: https://gpc.minsalud.gov.co',
+ explanation:'Las guías de práctica clínica del Minsalud colombiano se citan como documentos institucionales en Vancouver: organismo emisor, título, lugar, editorial institucional, año y URL del portal gpc.minsalud.gov.co. Las GAIT (Guías de Atención Integral) son documentos de alto valor en los escritos de estudiantes de ciencias de la salud colombianos.',
+ blank:'El portal oficial donde se publican las Guías de Práctica Clínica del Minsalud colombiano es _____',
+ blank_answer:'gpc.minsalud.gov.co',
+ options:['sivigila.gov.co','gpc.minsalud.gov.co','invima.gov.co','ins.gov.co'],answer_idx:1,
+ ref:'gpc.minsalud.gov.co · Minsalud — GAIT'},
+
+{id:44,epoch:'V',
+ title:'Citar legislación en salud colombiana',
+ example:'Colombia. Congreso de la República. Ley 100 de 1993, por la cual se crea el Sistema de Seguridad Social Integral. Diario Oficial. 1993 dic 23;(41148):1-168.',
+ explanation:'La legislación en salud se cita como documento gubernamental en Vancouver: país, entidad emisora, denominación, Diario Oficial y fecha. Las leyes más citadas en salud colombiana son la Ley 100/1993 (SGSSS), la Ley 1438/2011 (reforma al SGSSS), la Ley 1751/2015 (ley estatutaria de salud) y la Ley 23/1981 (ética médica).',
+ blank:'La ley colombiana que creó el Sistema General de Seguridad Social en Salud (SGSSS) es la Ley _____ de 1993',
+ blank_answer:'100',
+ options:['23','99','100','1751'],answer_idx:2,
+ ref:'Ley 100 de 1993 — SGSSS · Diario Oficial 41148'},
+
+{id:45,epoch:'V',
+ title:'Citar PubMed, SciELO y BVS: repositorios de salud',
+ example:'PubMed (NLM): base de datos de referencia internacional.\nSciELO Colombia: artículos colombianos en acceso abierto.\nBVS-Colombia (BIREME/OPS): portal regional en español.',
+ explanation:'Las revistas médicas colombianas están indexadas principalmente en SciELO Colombia, Lilacs (BVS-BIREME) y algunas en Scopus y Medline/PubMed. Biomédica del INS está indexada en PubMed. La BVS Colombia (Biblioteca Virtual en Salud) es el portal de acceso a literatura científica en salud para el país.',
+ blank:'La base de datos de literatura médica en español latinoamericano de la OPS/BIREME se llama _____',
+ blank_answer:'LILACS (Literatura Latinoamericana en Ciencias de la Salud)',
+ options:['PubMed','Scopus','LILACS (Literatura Latinoamericana en Ciencias de la Salud)','Embase'],answer_idx:2,
+ ref:'BIREME/OPS — bvsalud.org · LILACS'},
+
+{id:46,epoch:'V',
+ title:'Plagio en ciencias de la salud: consecuencias colombianas',
+ example:'Plagio en tesis de medicina → sanción disciplinaria en el Tribunal Ético Médico y en el reglamento universitario.\nCaso: Retractación de artículos en Biomédica por duplicación de datos.',
+ explanation:'El plagio académico en ciencias de la salud en Colombia tiene consecuencias académicas (anulación del trabajo, retraso en la graduación) y disciplinarias (Tribunal Ético Médico, Ley 23 de 1981). La retractación de artículos por duplicación de datos es práctica de las revistas colombianas que siguen las directrices del COPE (Committee on Publication Ethics).',
+ blank:'El organismo que impone sanciones disciplinarias a los médicos colombianos que cometen faltas éticas es el _____',
+ blank_answer:'Tribunal Ético Médico',
+ options:['Minsalud','INVIMA','Tribunal Ético Médico','INS'],answer_idx:2,
+ ref:'Ley 23 de 1981 — Ética Médica · Tribunal Ético Médico Colombia'},
+
+{id:47,epoch:'V',
+ title:'DOI y acceso abierto en medicina colombiana',
+ example:'doi:10.7705/biomedica.v42i1.6245 (Biomédica)\nAcceso abierto: Biomédica, Iatreia, Rev CES Medicina → Creative Commons',
+ explanation:'Biomédica (INS), Iatreia (UdeA) y la Revista CES Medicina publican en acceso abierto con licencias Creative Commons. El DOI de los artículos colombianos debe incluirse siempre en las referencias. La Ley 1753 de 2015 (Colombia) exige acceso abierto para investigación financiada con recursos públicos.',
+ blank:'Las revistas médicas colombianas de acceso abierto publican con licencias _____',
+ blank_answer:'Creative Commons',
+ options:['Copyright tradicional','Creative Commons','Solo para descarga paga','GPL'],answer_idx:1,
+ ref:'Biomédica INS · Ley 1753 de 2015 — Acceso abierto Colombia'},
+
+{id:48,epoch:'V',
+ title:'Gestores bibliográficos en medicina: Zotero y EndNote',
+ example:'Zotero → estilo «Vancouver» → citas numéricas automáticas en Word/LibreOffice\nEndNote (pago) → usado en investigación de alto nivel\nMendeley → usado en pregrado',
+ explanation:'Zotero con el estilo Vancouver es la herramienta gratuita estándar para las facultades de medicina colombianas. Permite importar referencias directamente desde PubMed con un clic. En posgrados, EndNote es más común. Los gestores bibliográficos evitan el error de numeración que es frecuente al gestionar bibliografías largas manualmente.',
+ blank:'Para importar referencias directamente desde PubMed, la plataforma gratuita más recomendada en facultades de medicina colombianas es _____',
+ blank_answer:'Zotero',
+ options:['Google Scholar','Zotero','Microsoft Word','RefWorks'],answer_idx:1,
+ ref:'NLM — PubMed · Zotero.org · UNAL, UdeA, Javeriana — bibliotecas digitales'},
+
+{id:49,epoch:'V',
+ title:'Fuentes primarias y secundarias en medicina',
+ example:'Primaria: artículo original publicado en revista indexada.\nSecundaria: revisión narrativa, libro de texto, UpToDate.\nMeta-primaria: metaanálisis y revisión sistemática.',
+ explanation:'En medicina, las revisiones sistemáticas y los metaanálisis (nivel I de evidencia) son consideradas fuentes primarias sintéticas. Los libros de texto (Harrison, Farreras) son fuentes secundarias útiles para conceptos generales pero no para datos clínicos específicos, que deben citarse del artículo original.',
+ blank:'En medicina basada en la evidencia, los libros de texto como Harrison son fuentes _____ para citar datos clínicos específicos',
+ blank_answer:'secundarias (insuficientes para datos específicos)',
+ options:['Primarias','Secundarias (insuficientes para datos específicos)','De nivel I','Definitivas'],answer_idx:1,
+ ref:'Sackett — MBE · ICMJE · UpToDate'},
+
+{id:50,epoch:'V',
+ title:'Citar bases de datos clínicos colombianos: SIVIGILA y DANE',
+ example:'INS. Sistema de Vigilancia en Salud Pública – SIVIGILA. Boletín Epidemiológico Semanal. Bogotá: INS; 2023. sem 42.\nDANE. Estadísticas vitales 2022. Bogotá: DANE; 2023.',
+ explanation:'El SIVIGILA (Sistema de Vigilancia en Salud Pública del INS) es la fuente oficial de datos de vigilancia epidemiológica en Colombia. El DANE (Departamento Administrativo Nacional de Estadística) provee estadísticas vitales (mortalidad, natalidad). Ambas son fuentes primarias para estudios epidemiológicos colombianos.',
+ blank:'El sistema oficial de vigilancia epidemiológica de Colombia, operado por el INS, se denomina _____',
+ blank_answer:'SIVIGILA',
+ options:['RIPS','SGSSS','SIVIGILA','REPS'],answer_idx:2,
+ ref:'INS — ins.gov.co/sivigila · DANE — dane.gov.co'},
+
+/* ── BLOQUE VI: Historia clínica, nota médica y epicrisis ── */
+{id:51,epoch:'VI',
+ title:'Historia clínica colombiana: estructura legal obligatoria',
+ example:'Identificación · Anamnesis (MCC + HEA + AP) · Revisión por sistemas · Examen físico · Diagnóstico · Plan · Firma y fecha',
+ explanation:'La Resolución 1995 de 1999 establece las partes mínimas obligatorias de la historia clínica colombiana. Es documento de obligatorio diligenciamiento, propiedad del paciente y reservado. Cada anotación debe llevar fecha, hora y firma del profesional. El incumplimiento es falta ética ante el Tribunal Ético Médico.',
+ blank:'La resolución colombiana que establece las partes obligatorias de la historia clínica es la Resolución _____ de 1999',
+ blank_answer:'1995',
+ options:['8430','2378','1995','5596'],answer_idx:2,
+ ref:'Resolución 1995 de 1999 — Historia clínica · Ley 23 de 1981'},
+
+{id:52,epoch:'VI',
+ title:'Motivo de consulta: conciso y en palabras del paciente',
+ example:'✗ «Paciente quien consulta por cuadro de dolor abdominal tipo cólico en hipocondrio derecho con irradiación a epigastrio...\"\n✓ «Dolor abdominal de 6 horas de evolución» (en términos simples).',
+ explanation:'El motivo de consulta (MCC) debe ser breve (una o dos líneas), en las palabras del paciente o en términos simples que reflejen su queja principal, con el tiempo de evolución. No es el diagnóstico ni una descripción detallada. Iniciarlo con el diagnóstico es error frecuente en los estudiantes colombianos de medicina.',
+ blank:'El motivo de consulta debe expresarse en _____ del paciente y con el tiempo de evolución',
+ blank_answer:'palabras',
+ options:['Términos diagnósticos','Palabras','Códigos CIE-10','Escalas validadas'],answer_idx:1,
+ ref:'Resolución 1995 de 1999 · Semiología médica — Argente & Álvarez'},
+
+{id:53,epoch:'VI',
+ title:'Historia de la enfermedad actual (HEA): cronología y OPQRST',
+ example:'OPQRST para el dolor: Onset (inicio) · Palliating/Provocating · Quality · Radiation · Severity · Time\n«Dolor torácico opresivo (Q) 8/10 (S) de inicio súbito (O) hace 2 h, irradiado al brazo izquierdo (R), no alivia con reposo (P)»',
+ explanation:'La HEA bien estructurada usa el método OPQRST (o sus variantes ALICIA, SOCRATES) para caracterizar síntomas. En Colombia, la Guía de Atención Integral de Síndrome Coronario Agudo del Minsalud usa exactamente esta caracterización. La HEA coherente orienta al diagnóstico diferencial y al plan.',
+ blank:'El acrónimo que ayuda a caracterizar el dolor en la historia de la enfermedad actual es _____',
+ blank_answer:'OPQRST',
+ options:['SOAP','OPQRST','CONSORT','APGAR'],answer_idx:1,
+ ref:'Argente, H. — Semiología médica · Minsalud — GAIT Síndrome Coronario Agudo'},
+
+{id:54,epoch:'VI',
+ title:'Nota de evolución: SOAP y elementos obligatorios',
+ example:'S (Subjetivo): «Refiere mejoría del dolor, EVA 3/10»\nO (Objetivo): «FC 78 lpm, TA 120/80, afebril, abdomen blando»\nA (Análisis): «Evolución favorable de cuadro de apendicitis aguda posoperada»\nP (Plan): «Dieta blanda, continuar antibiótico, control 24 h»',
+ explanation:'La nota de evolución SOAP en Colombia debe diligenciarse en cada turno médico y en cada visita. Debe llevar fecha, hora y firma con sello. Según la Resolución 1995/1999, la historia clínica es documento legal; una nota sin fecha u hora puede ser impugnada en un proceso médico-legal.',
+ blank:'En la nota de evolución SOAP, la sección que incluye el diagnóstico o la interpretación clínica es la sección _____',
+ blank_answer:'A (Análisis)',
+ options:['S (Subjetivo)','O (Objetivo)','A (Análisis)','P (Plan)'],answer_idx:2,
+ ref:'Resolución 1995 de 1999 · Weed — Problem-oriented medical record'},
+
+{id:55,epoch:'VI',
+ title:'La epicrisis: resumen de hospitalización',
+ example:'Identificación · Diagnósticos de ingreso y egreso (con CIE-10) · Resumen clínico · Procedimientos realizados (CUPS) · Condición al alta · Plan de seguimiento · Firma',
+ explanation:'La epicrisis es el resumen de la hospitalización que se entrega al paciente al alta. En Colombia, la Resolución 1995/1999 la hace obligatoria. Debe incluir los diagnósticos con códigos CIE-10, los procedimientos con CUPS, la condición al alta y el plan de seguimiento. Es el documento que continúa la atención en el nivel ambulatorio.',
+ blank:'La epicrisis debe incluir los diagnósticos con códigos _____ y los procedimientos con códigos CUPS',
+ blank_answer:'CIE-10',
+ options:['DCI','CIE-10','SNOMED','MIPRES'],answer_idx:1,
+ ref:'Resolución 1995 de 1999 — Epicrisis · CUPS y CIE-10'},
+
+{id:56,epoch:'VI',
+ title:'Historia clínica electrónica (HCE) en Colombia',
+ example:'Resolución 866 de 2021 — HCE: estándares técnicos.\nInteroperabilidad: FHIR (HL7) para intercambio de datos.\nHistoria de salud única digital (en implementación).',
+ explanation:'Colombia está implementando la Historia Clínica Única y la Historia de Salud Colombia (Resolución 2654 de 2019). La Resolución 866 de 2021 establece los estándares técnicos de la HCE. El médico colombiano debe conocer los estándares de interoperabilidad (HL7 FHIR) para comprender la documentación clínica digital.',
+ blank:'El estándar de interoperabilidad para el intercambio de datos de salud en la HCE colombiana es el _____',
+ blank_answer:'HL7 FHIR',
+ options:['DICOM','TCP/IP','HL7 FHIR','XML básico'],answer_idx:2,
+ ref:'Resolución 866 de 2021 — HCE · Minsalud — Historia de Salud Colombia'},
+
+{id:57,epoch:'VI',
+ title:'Consentimiento informado: documentación y lenguaje',
+ example:'Debe incluir: diagnóstico · procedimiento propuesto · alternativas · riesgos y beneficios · derecho a rehusar · firma del paciente o representante legal · fecha y hora.',
+ explanation:'El consentimiento informado en Colombia está regulado por la Resolución 13437 de 1991 (Carta de Derechos del Paciente) y la Ley 1751 de 2015 (Art. 10). Debe redactarse en lenguaje comprensible para el paciente, sin tecnicismos, y ser firmado antes del procedimiento. El médico que no obtiene consentimiento comete falta ética.',
+ blank:'El consentimiento informado debe redactarse en lenguaje _____ para el paciente, sin tecnicismos',
+ blank_answer:'comprensible (claro y accesible)',
+ options:['Técnico y formal','Legal y legible','Comprensible (claro y accesible)','Abreviado'],answer_idx:2,
+ ref:'Resolución 13437 de 1991 · Ley 1751 de 2015 — Derechos del paciente'},
+
+{id:58,epoch:'VI',
+ title:'Nota de referencia y contrarreferencia',
+ example:'Referencia: el médico de nivel I remite al nivel II o III con resumen clínico, diagnóstico CIE-10, justificación y urgencia.\nContrarreferencia: el especialista devuelve al médico remitente con plan de seguimiento.',
+ explanation:'El sistema de referencia y contrarreferencia es fundamental en el SGSSS colombiano. La nota de referencia debe ser clara, concisa y contener la información suficiente para que el receptor continúe la atención. Una referencia sin información clínica adecuada puede comprometer la seguridad del paciente.',
+ blank:'La nota que el especialista envía al médico de primer nivel con el plan de seguimiento se denomina _____',
+ blank_answer:'contrarreferencia',
+ options:['Epicrisis','Evolución','Contrarreferencia','Interconsulta'],answer_idx:2,
+ ref:'Resolución 3047 de 2008 — Referencia y contrarreferencia · Minsalud'},
+
+{id:59,epoch:'VI',
+ title:'Certificado médico: requisitos y responsabilidad legal',
+ example:'Debe incluir: fecha · nombre completo del paciente · hallazgos objetivos · diagnóstico (o impresión) · firma, nombre, número de registro médico y sello.',
+ explanation:'El certificado médico en Colombia es documento legal y su falsificación constituye delito (Código Penal colombiano). Debe basarse en hallazgos objetivos del examen practicado por el médico firmante. El médico que certifica condiciones que no examinó comete falta ética ante el Tribunal Ético Médico.',
+ blank:'El número de _____ médico debe aparecer en todo certificado firmado por un profesional de la medicina en Colombia',
+ blank_answer:'registro (tarjeta profesional)',
+ options:['Cédula','Registro (tarjeta profesional)','Código CIE','Expediente'],answer_idx:1,
+ ref:'Ley 23 de 1981 — Ética médica · RETHUS — Minsalud'},
+
+{id:60,epoch:'VI',
+ title:'RETHUS: Registro del Talento Humano en Salud',
+ example:'RETHUS: plataforma Minsalud que acredita el talento humano en salud colombiano.\nMédicosColombia.gov.co: consulta pública del registro.',
+ explanation:'El RETHUS (Registro del Talento Humano en Salud) es el sistema de información que acredita a los profesionales de salud en Colombia. Todo médico, enfermero o profesional de salud debe estar inscrito en el RETHUS para ejercer legalmente. Los documentos clínicos firmados por profesionales sin RETHUS no tienen validez legal.',
+ blank:'El sistema de acreditación de profesionales de salud en Colombia que debe aparecer en los documentos clínicos es el _____',
+ blank_answer:'RETHUS',
+ options:['REPS','SIVIGILA','RETHUS','MIPRES'],answer_idx:2,
+ ref:'Ley 1164 de 2007 — Talento Humano en Salud · RETHUS · Minsalud'},
+
+/* ── BLOQUE VII: Artículo científico y revisión ── */
+{id:61,epoch:'VII',
+ title:'Tipos de estudio en medicina: clasificación y nomenclatura',
+ example:'Descriptivos: serie de casos, estudio transversal.\nAnalíticos observacionales: casos y controles, cohorte.\nExperimentales: ECA, cuasiexperimental.\nSintéticos: revisión sistemática, metaanálisis.',
+ explanation:'La clasificación del diseño de investigación es el primer dato que se reporta en la sección de Métodos. En Colombia, los Comités de Ética Hospitalaria (exigidos por la Resolución 8430/1993) evalúan el diseño del estudio para determinar el riesgo ético. Un diseño mal clasificado puede llevar al rechazo del protocolo.',
+ blank:'Un estudio que sigue a un grupo de pacientes hacia adelante en el tiempo para medir la incidencia de un desenlace es un estudio de _____',
+ blank_answer:'cohorte prospectiva',
+ options:['Casos y controles','Transversal','Cohorte prospectiva','Serie de casos'],answer_idx:2,
+ ref:'Resolución 8430 de 1993 · STROBE Statement · Epidemiología clínica'},
+
+{id:62,epoch:'VII',
+ title:'Guías de reporte: STROBE, PRISMA, CONSORT, CARE',
+ example:'STROBE: estudios observacionales (cohorte, C&C, transversal)\nPRISMA: revisiones sistemáticas y metaanálisis\nCONSORT: ECA\nCARE: reportes de caso',
+ explanation:'Las guías de reporte mejoran la transparencia y reproducibilidad de los estudios. En Colombia, Biomédica y la Revista de Salud Pública exigen adjuntar la lista de verificación de la guía de reporte correspondiente al diseño del artículo. Estas guías están en el portal EQUATOR Network (equator-network.org).',
+ blank:'La guía de reporte que debe acompañar a un artículo de revisión sistemática en las revistas colombianas es _____',
+ blank_answer:'PRISMA',
+ options:['STROBE','CONSORT','PRISMA','CARE'],answer_idx:2,
+ ref:'EQUATOR Network — equator-network.org · Biomédica — Instrucciones a autores'},
+
+{id:63,epoch:'VII',
+ title:'La revisión sistemática: protocolo PROSPERO y PRISMA',
+ example:'Registro previo en PROSPERO (York, UK) · Búsqueda en PubMed, Embase, LILACS, Cochrane · Selección duplicada · Síntesis cualitativa o cuantitativa (metaanálisis)',
+ explanation:'Las revisiones sistemáticas deben registrarse prospectivamente en PROSPERO antes de iniciar la búsqueda. En Colombia, los grupos de investigación en medicina clínica, epidemiología y salud pública producen revisiones sistemáticas con impacto en las GAIT del Minsalud. La búsqueda debe incluir LILACS para no omitir la literatura latinoamericana.',
+ blank:'El repositorio internacional de protocolos de revisiones sistemáticas en salud es _____',
+ blank_answer:'PROSPERO',
+ options:['CONSORT','PROSPERO','ClinicalTrials','GRADE'],answer_idx:1,
+ ref:'PROSPERO — crd.york.ac.uk · PRISMA Statement · Cochrane Colombia'},
+
+{id:64,epoch:'VII',
+ title:'Selección de revista: factor de impacto y contexto colombiano',
+ example:'Q1 Scopus: impacto alto · Biomédica (Scopus, Q3 Medicina): indexada · Rev Colomb Cardiol: Scielo · Iatreia (UdeA): Scopus',
+ explanation:'Para investigadores en formación en Colombia, publicar en revistas colombianas indexadas en SciELO o Scopus es el primer paso. Minciencias clasifica las revistas en A1, A2, B y C para la medición de investigadores. Biomédica del INS e Iatreia de la UdeA son las de mayor impacto entre las colombianas de medicina.',
+ blank:'La revista médica colombiana del INS indexada en PubMed y Scopus se llama _____',
+ blank_answer:'Biomédica',
+ options:['Iatreia','Biomédica','Colombia Médica','Rev CES Medicina'],answer_idx:1,
+ ref:'INS — biomédica.ins.gov.co · Minciencias — modelo de medición'},
+
+{id:65,epoch:'VII',
+ title:'El abstract en inglés: traducción médica y equivalencias',
+ example:'«Frecuencia cardíaca» → heart rate (no cardiac frequency)\n«Cuadro clínico» → clinical presentation (no clinical picture)\n«Hemograma» → complete blood count (CBC) o full blood count (FBC)',
+ explanation:'La traducción del abstract médico al inglés en las revistas colombianas requiere usar los términos del MeSH, no traducciones literales. El Vademécum de términos médicos en inglés de la NLM y los abstracts de PubMed son la mejor referencia para equivalencias terminológicas. Las traducciones literales son rechazadas por los editores.',
+ blank:'La fuente de referencia para los equivalentes en inglés de los términos médicos es el _____',
+ blank_answer:'MeSH (Medical Subject Headings) de la NLM',
+ options:['Diccionario Oxford','Google Translate','MeSH (Medical Subject Headings) de la NLM','Harrison en inglés'],answer_idx:2,
+ ref:'NLM — MeSH · mesh.nlm.nih.gov'},
+
+{id:66,epoch:'VII',
+ title:'Proceso de revisión por pares en medicina: respuesta estructurada',
+ example:'Comentario del revisor 1: «El tamaño de muestra no fue justificado.\"\nRespuesta: «Agradecemos la observación. Se añadió el cálculo de tamaño de muestra (α=0.05, poder=80%) en la página 4, líneas 78–83.»',
+ explanation:'La respuesta a los revisores de una revista médica colombiana debe ser numerada, empezar con un agradecimiento, citar el número de página y línea del cambio y argumentar cuando se decide no aceptar un comentario. Biomédica y Colombia Médica siguen el proceso de revisión doble ciego.',
+ blank:'La revisión de artículos médicos en la que ni el autor ni el revisor conocen su identidad mutua se llama revisión _____ ciego',
+ blank_answer:'doble',
+ options:['Simple','Doble','Triple','Abierto'],answer_idx:1,
+ ref:'COPE — Committee on Publication Ethics · Biomédica — proceso editorial'},
+
+{id:67,epoch:'VII',
+ title:'Declaración de autoría: CRediT en medicina',
+ example:'Conceptualización: J.G. · Metodología: M.L. · Curación de datos: P.R. · Análisis: J.G., M.L. · Escritura (borrador): J.G. · Revisión crítica: todos.',
+ explanation:'La taxonomía CRediT (Contributor Roles Taxonomy) tiene 14 roles de autoría. Las revistas médicas colombianas de alto impacto la están adoptando para distinguir las contribuciones reales de cada autor. La autoría honoraria (incluir al jefe de servicio sin que haya contribuido) es mala práctica según el ICMJE.',
+ blank:'La práctica de incluir como autor a alguien que no contribuyó al trabajo se denomina autoría _____',
+ blank_answer:'honoraria',
+ options:['Compartida','Honoraria','Múltiple','Anónima'],answer_idx:1,
+ ref:'ICMJE — Authorship · CRediT taxonomy · COPE'},
+
+{id:68,epoch:'VII',
+ title:'Comunicación de resultados negativos',
+ example:'Resultado negativo: la intervención no demostró eficacia. También es publicable y éticamente obligatorio reportar.',
+ explanation:'El sesgo de publicación (solo publicar resultados positivos) es un problema grave en medicina. Los estudios con resultados negativos o nulos son igualmente válidos y su no publicación distorsiona la evidencia disponible. Revistas como PLOS ONE y el Repositorio de la Cochrane Colombia aceptan resultados negativos.',
+ blank:'Publicar solo los estudios con resultados positivos y omitir los negativos genera _____',
+ blank_answer:'sesgo de publicación',
+ options:['Sesgo de selección','Sesgo de publicación','Error tipo I','Error de medición'],answer_idx:1,
+ ref:'ICMJE · Cochrane · Song & Parekh — Publication bias (2010)'},
+
+{id:69,epoch:'VII',
+ title:'Investigación traslacional: del laboratorio al paciente',
+ example:'T1: básica → clínica (modelos animales a fase I)\nT2: clínica → práctica clínica (ECA a guías)\nT3: práctica → salud pública\nT4: salud pública → política de salud',
+ explanation:'La investigación traslacional conecta la ciencia básica con la atención clínica y la salud pública. En Colombia, el Ministerio de Salud y Minciencias financian proyectos de investigación traslacional especialmente en enfermedades tropicales (leishmaniasis, dengue, malaria, Chagas) endémicas en el país.',
+ blank:'El tipo de investigación que conecta los hallazgos del laboratorio básico con la práctica clínica y la salud pública se denomina investigación _____',
+ blank_answer:'traslacional',
+ options:['Básica','Aplicada','Traslacional','Descriptiva'],answer_idx:2,
+ ref:'Minciencias — Agenda de investigación en salud · INS — investigación traslacional'},
+
+{id:70,epoch:'VII',
+ title:'Acceso abierto y preprint en medicina colombiana',
+ example:'medRxiv: repositorio de preprints en medicina (no revisado por pares).\nSciELO Colombia: artículos en acceso abierto final.\nLey 1753/2015: resultados de inv. pública = acceso abierto.',
+ explanation:'Los preprints (medRxiv, Research Square) aceleraron la difusión de resultados durante la pandemia de COVID-19 y llegaron a los medios colombianos. El médico colombiano debe saber que los preprints no han sido revisados por pares y no deben citarse como evidencia definitiva. La distinción preprint/publicado es esencial.',
+ blank:'Un preprint es un manuscrito que _____ ha pasado por revisión de pares y no debe citarse como evidencia definitiva',
+ blank_answer:'no',
+ options:['Sí','No','Ya','Casi'],answer_idx:1,
+ ref:'medRxiv.org · Ley 1753 de 2015 · OPS — Repositorio Regional IRIS'},
+
+/* ── BLOQUE VIII: Salud pública y epidemiología ── */
+{id:71,epoch:'VIII',
+ title:'El informe de vigilancia epidemiológica: SIVIGILA',
+ example:'Encabezado: evento, semana epidemiológica, unidad notificadora.\nCuerpo: n.° de casos, tasa de incidencia por municipio, distribución por edad/sexo.\nConclusión: tendencia, alerta, medida de control recomendada.',
+ explanation:'El SIVIGILA (Sistema Nacional de Vigilancia en Salud Pública) del INS recibe notificaciones de eventos de interés en salud pública (EISP) de todas las IPS colombianas. Los Boletines Epidemiológicos Semanales del INS son la principal fuente de datos de morbilidad en Colombia y se citan frecuentemente en los trabajos académicos.',
+ blank:'El sistema colombiano de notificación de eventos de interés en salud pública, coordinado por el INS, es el _____',
+ blank_answer:'SIVIGILA',
+ options:['RIPS','SGSSS','SIVIGILA','RETHUS'],answer_idx:2,
+ ref:'INS — ins.gov.co/sivigila · Decreto 3518 de 2006'},
+
+{id:72,epoch:'VIII',
+ title:'Notificación obligatoria de eventos en salud pública',
+ example:'Obligatoria inmediata: COVID-19, sarampión, cólera, carbunco.\nObligatoria semanal: dengue, malaria, leishmaniasis, TB.\nSello naranja (urgente): poliomielitis, viruela.',
+ explanation:'La notificación de Eventos de Interés en Salud Pública (EISP) al SIVIGILA es obligatoria para todos los médicos y unidades primarias generadoras de datos (UPGD) en Colombia, según el Decreto 3518 de 2006. No notificar es falta ética. Los formularios de notificación están en fichas técnicas del INS según el código del evento.',
+ blank:'La notificación obligatoria de eventos de interés en salud pública en Colombia está regulada por el Decreto _____ de 2006',
+ blank_answer:'3518',
+ options:['1995','8430','3518','2378'],answer_idx:2,
+ ref:'Decreto 3518 de 2006 — SIVIGILA · INS — fichas de notificación'},
+
+{id:73,epoch:'VIII',
+ title:'El informe de brote: estructura y contenido',
+ example:'1. Descripción del brote (tiempo, lugar, persona)\n2. Hipótesis sobre fuente y mecanismo de transmisión\n3. Confirmación de laboratorio\n4. Medidas de control implementadas\n5. Recomendaciones',
+ explanation:'El informe de brote epidemiológico en Colombia sigue la metodología del INS y la OPS. La «descripción epidemiológica» usa las tres variables clásicas: tiempo (curva epidémica), lugar (mapa de calor) y persona (distribución por edad, sexo, ocupación). Las medidas de control deben estar justificadas con la fuente del brote identificada.',
+ blank:'Las tres variables de la descripción epidemiológica de un brote son: tiempo, _____ y persona',
+ blank_answer:'lugar',
+ options:['Agente','Lugar','Diagnóstico','Laboratorio'],answer_idx:1,
+ ref:'INS — Guía para la investigación de brotes · OPS'},
+
+{id:74,epoch:'VIII',
+ title:'Indicadores de salud: AVAD, mortalidad infantil, esperanza de vida',
+ example:'AVAD (Años de Vida Ajustados por Discapacidad) = AVP (muerte prematura) + AVD (discapacidad)\nTMI Colombia 2022: 12,4/1.000 nacidos vivos (Minsalud/DANE)',
+ explanation:'Los AVAD (Disability-Adjusted Life Years, DALY) son el indicador de carga de enfermedad del Banco Mundial y la OMS. En Colombia, el Ministerio de Salud usa los AVAD en el Plan Decenal de Salud Pública 2012–2021 para priorizar intervenciones. La Tasa de Mortalidad Infantil (TMI) es indicador clave del desarrollo y se compara con el ODM/ODS correspondiente.',
+ blank:'La sigla AVAD significa: Años de Vida _____ por Discapacidad',
+ blank_answer:'Ajustados',
+ options:['Afectados','Ajustados','Acumulados','Anulados'],answer_idx:1,
+ ref:'OMS — Carga global de enfermedad · Minsalud — Plan Decenal de Salud Pública'},
+
+{id:75,epoch:'VIII',
+ title:'Enfermedades tropicales colombianas: contexto epidemiológico',
+ example:'Dengue: endémico en todos los departamentos < 2.200 m s.n.m.\nMalaria: Pacífico y Amazonía (INS 2023: 72.000 casos/año)\nLeishmaniasis: vectores en 27 departamentos\nChagas: presencia en 17 departamentos',
+ explanation:'Colombia tiene una de las mayores cargas de enfermedades tropicales de América Latina. Los trabajos académicos en salud pública colombiana deben contextualizar su tema con datos del SIVIGILA y los informes del INS. Las enfermedades tropicales son prioritarias en la agenda de investigación de Minciencias.',
+ blank:'La enfermedad tropical transmitida por Aedes aegypti que es endémica en todos los departamentos colombianos por debajo de 2.200 m s.n.m. es el _____',
+ blank_answer:'dengue',
+ options:['Zika','Malaria','Dengue','Chikungunya'],answer_idx:2,
+ ref:'INS — SIVIGILA · OPS Colombia — enfermedades tropicales'},
+
+{id:76,epoch:'VIII',
+ title:'Determinantes sociales de la salud en Colombia',
+ example:'OMS (2008): condiciones de vida, trabajo, educación, inequidad.\nColombia: índice GINI 0.52 (2022) → alta inequidad → determina inequidades en salud.',
+ explanation:'La Comisión sobre Determinantes Sociales de la Salud de la OMS (2008) y el Plan Decenal de Salud Pública de Colombia (2022–2031) enmarcan las inequidades en salud como resultado de condiciones sociales, económicas y ambientales. Los trabajos de salud pública colombianos deben analizar estos determinantes al interpretar diferencias en morbimortalidad.',
+ blank:'El conjunto de condiciones sociales, económicas y ambientales que influyen en el estado de salud de las personas se denominan _____',
+ blank_answer:'determinantes sociales de la salud',
+ options:['Factores de riesgo clínico','Determinantes sociales de la salud','Comorbilidades','Variables confusoras'],answer_idx:1,
+ ref:'OMS — Comisión DSS (2008) · Minsalud — Plan Decenal de Salud Pública 2022–2031'},
+
+{id:77,epoch:'VIII',
+ title:'El análisis de situación de salud (ASIS)',
+ example:'ASIS Colombia 2022: estructura demográfica, mortalidad, morbilidad, determinantes socioeconómicos, inequidades territoriales.',
+ explanation:'El Análisis de Situación de Salud (ASIS) es el diagnóstico epidemiológico oficial de Colombia, publicado anualmente por el Observatorio Nacional de Salud del INS y el Minsalud. Los trabajos de epidemiología y salud pública colombianos deben citar el ASIS nacional y el ASIS departamental correspondiente como referencia contextual.',
+ blank:'El diagnóstico epidemiológico oficial de Colombia, publicado anualmente por el INS y Minsalud, se denomina _____',
+ blank_answer:'ASIS (Análisis de Situación de Salud)',
+ options:['SIVIGILA','ASIS (Análisis de Situación de Salud)','ENCUESTA ENSIN','ECV Colombia'],answer_idx:1,
+ ref:'INS — Observatorio Nacional de Salud · ons.ins.gov.co'},
+
+{id:78,epoch:'VIII',
+ title:'Ensayo comunitario y consentimiento colectivo',
+ example:'Ensayo comunitario: asignación de la intervención por comunidad (cluster), no por individuo.\nConsentimiento: comunidad + individuo; consulta previa en comunidades étnicas.',
+ explanation:'Los ensayos comunitarios (cluster randomized trials) intervienen sobre comunidades enteras. En Colombia, cuando la comunidad es indígena o afrocolombiana, se requiere consulta previa libre e informada (Convenio 169 OIT). Los protocolos deben ser aprobados por el Comité de Ética institucional y por el comité comunitario.',
+ blank:'En investigaciones con comunidades indígenas colombianas, además del consentimiento individual se requiere _____',
+ blank_answer:'consulta previa libre e informada (Convenio 169 OIT)',
+ options:['Permiso del alcalde','Consulta previa libre e informada (Convenio 169 OIT)','Licencia del INVIMA','Concepto del Minsalud'],answer_idx:1,
+ ref:'Convenio 169 OIT · Resolución 8430 de 1993, Art. 11'},
+
+{id:79,epoch:'VIII',
+ title:'Salud ambiental y enfermedades relacionadas con el ambiente',
+ example:'Minería de oro ilegal → mercurio → mercurialismo en el Pacífico colombiano.\nParticulas PM2.5 en Bogotá → carga de enfermedad respiratoria.',
+ explanation:'Colombia enfrenta importantes problemas de salud ambiental: exposición a mercurio en el Pacífico y la Amazonía por minería ilegal, contaminación del aire en ciudades (Bogotá, Medellín, Cali) y calidad del agua en zonas rurales. El Observatorio Nacional de Salud Ambiental del INS publica informes que son referencia en los trabajos académicos.',
+ blank:'El metal pesado que contamina comunidades del Pacífico colombiano por la minería de oro ilegal es el _____',
+ blank_answer:'mercurio',
+ options:['Plomo','Cadmio','Mercurio','Arsénico'],answer_idx:2,
+ ref:'INS — Observatorio de Salud Ambiental · Minsalud Colombia'},
+
+{id:80,epoch:'VIII',
+ title:'La telemedicina en Colombia: Ley 1419 de 2010 y resoluciones',
+ example:'Ley 1419 de 2010: marco legal de la telesalud.\nResolución 2654 de 2019: consulta médica virtual.\nTelemedicina e-salud: crecimiento acelerado post-pandemia COVID-19.',
+ explanation:'Colombia fue pionera en Latinoamérica en regular la telemedicina con la Ley 1419 de 2010. La Resolución 2654 de 2019 regula la consulta médica virtual y define los requisitos de la historia clínica digital. Los informes de telemedicina colombianos deben mencionar la normativa aplicable y garantizar los mismos estándares de documentación que la consulta presencial.',
+ blank:'La ley colombiana que estableció el marco legal para la telesalud y la telemedicina es la Ley _____ de 2010',
+ blank_answer:'1419',
+ options:['1438','1616','1419','1751'],answer_idx:2,
+ ref:'Ley 1419 de 2010 — Telesalud · Resolución 2654 de 2019'},
+
+/* ── BLOQUE IX: Datos, tablas, figuras y estadística ── */
+{id:81,epoch:'IX',
+ title:'Tabla de características basales: columnas y pruebas estadísticas',
+ example:'Característica | Grupo A (n=48) | Grupo B (n=46) | p\nEdad (años) | 54,2 ± 12,1 | 55,8 ± 11,6 | 0,52\nSexo masculino n (%) | 28 (58,3) | 26 (56,5) | 0,87',
+ explanation:'La tabla de características basales es la «Tabla 1» de casi todo artículo médico comparativo. Las variables continuas se expresan como media ± DE (si distribución normal) o mediana (IQR) (si asimétrica). Las variables categóricas se expresan como n (%). El valor p corresponde a la prueba de comparación adecuada (t, U de Mann-Whitney, chi-cuadrado).',
+ blank:'En la tabla de características basales, las variables categóricas se expresan como n _____',
+ blank_answer:'(%)',
+ options:['± DE','(%)','/100','± IC95%'],answer_idx:1,
+ ref:'ICMJE · Altman, D.G. — Practical Statistics for Medical Research'},
+
+{id:82,epoch:'IX',
+ title:'Curva de Kaplan-Meier y análisis de supervivencia',
+ example:'Eje X: tiempo al evento (meses) · Eje Y: probabilidad de supervivencia (0–1)\nLog-rank test para comparar curvas · Hazard Ratio (HR) con IC95%',
+ explanation:'El análisis de supervivencia (Kaplan-Meier, regresión de Cox) es estándar en oncología, cardiología e infectología colombianas. La curva de Kaplan-Meier debe incluir la tabla de sujetos en riesgo bajo el eje X. El Hazard Ratio (HR) con IC95 % es la medida de asociación del modelo de Cox.',
+ blank:'La prueba estadística que compara dos curvas de Kaplan-Meier es el _____',
+ blank_answer:'log-rank test (prueba de rango logarítmico)',
+ options:['Test t de Student','Chi-cuadrado','Log-rank test (prueba de rango logarítmico)','ANOVA'],answer_idx:2,
+ ref:'Kaplan & Meier (1958) · Collett — Modelling Survival Data · SPSS/Stata'},
+
+{id:83,epoch:'IX',
+ title:'Curva ROC y área bajo la curva (AUC-ROC)',
+ example:'AUC-ROC = 1,0: diagnóstico perfecto · 0,5: azar\nPunto de corte óptimo: índice de Youden (sensibilidad + especificidad − 1)\nSe usa para evaluar pruebas diagnósticas.',
+ explanation:'La curva ROC (Receiver Operating Characteristic) evalúa la capacidad diagnóstica de una prueba. En Colombia, el IETS usa el AUC-ROC en sus evaluaciones de tecnología diagnóstica. El índice de Youden identifica el punto de corte con el mejor balance entre sensibilidad y especificidad.',
+ blank:'Un AUC-ROC de 0,5 indica que la prueba diagnóstica equivale al _____',
+ blank_answer:'azar (no discrimina)',
+ options:['Diagnóstico perfecto','Prueba de oro','Azar (no discrimina)','Alta especificidad'],answer_idx:2,
+ ref:'IETS — Evaluación de tecnología diagnóstica · Zweig & Campbell (1993)'},
+
+{id:84,epoch:'IX',
+ title:'Forest plot en el metaanálisis: lectura e interpretación',
+ example:'Cuadrado: estimación puntual del estudio · Tamaño del cuadrado: peso del estudio.\nLínea horizontal: IC95% · Rombo: estimación combinada.\nLínea de no efecto: RR=1 o DM=0',
+ explanation:'El forest plot (diagrama de bosque) es la representación gráfica del metaanálisis. En Colombia, los médicos que leen guías de práctica clínica deben interpretar los forest plots de las GAIT del Minsalud. Si el IC95 % del rombo cruza la línea de no efecto, el resultado no es estadísticamente significativo.',
+ blank:'En un forest plot, si el diamante (rombo combinado) cruza la línea de no efecto, el resultado es estadísticamente _____',
+ blank_answer:'no significativo',
+ options:['Muy significativo','No significativo','Definitivo','Homogéneo'],answer_idx:1,
+ ref:'PRISMA · Higgins & Green — Cochrane Handbook'},
+
+{id:85,epoch:'IX',
+ title:'Pruebas de normalidad y elección de estadística',
+ example:'Shapiro-Wilk (n < 50): más potente para muestras pequeñas.\nSi normal: media ± DE, t de Student, ANOVA.\nSi no normal: mediana (P25–P75), U de Mann-Whitney, Kruskal-Wallis.',
+ explanation:'En investigación médica colombiana de pregrado y posgrado, aplicar una prueba paramétrica (t de Student) a datos que no siguen distribución normal es error estadístico frecuente. La prueba de Shapiro-Wilk (para n < 50) es la más recomendada. SPSS, Stata y R son los programas estadísticos más usados en las facultades colombianas.',
+ blank:'La prueba de normalidad más recomendada para muestras pequeñas (n < 50) en medicina es _____',
+ blank_answer:'Shapiro-Wilk',
+ options:['Kolmogorov-Smirnov','Shapiro-Wilk','Levene','Bartlett'],answer_idx:1,
+ ref:'Zar, Biostatistical Analysis · Shapiro & Wilk (1965)'},
+
+{id:86,epoch:'IX',
+ title:'Sensibilidad, especificidad, VPP y VPN',
+ example:'Sensibilidad: capacidad de detectar verdaderos positivos (TP/(TP+FN)).\nEspecificidad: capacidad de detectar verdaderos negativos (TN/(TN+FP)).\nVPP y VPN: dependen de la prevalencia de la enfermedad.',
+ explanation:'La interpretación de pruebas diagnósticas es competencia central en medicina colombiana. El VPP (Valor Predictivo Positivo) y el VPN varían con la prevalencia, por lo que el LR (Likelihood Ratio) es más estable entre contextos. El IETS publica LR de las pruebas diagnósticas para el contexto epidemiológico colombiano.',
+ blank:'El parámetro de una prueba diagnóstica que NO varía con la prevalencia es el _____',
+ blank_answer:'Likelihood Ratio (LR) o cociente de probabilidad',
+ options:['VPP','VPN','Likelihood Ratio (LR) o cociente de probabilidad','Exactitud diagnóstica'],answer_idx:2,
+ ref:'IETS — Evaluación diagnóstica · Jaeschke (1994)'},
+
+{id:87,epoch:'IX',
+ title:'Figuras clínicas: imágenes radiológicas y anatomopatológicas',
+ example:'Pie de figura: «Figura 1. Tomografía axial computarizada de tórax sin contraste en ventana pulmonar. Se evidencia consolidación lobar en lóbulo inferior derecho (flecha) con broncograma aéreo.»',
+ explanation:'Las imágenes en artículos médicos colombianos deben incluir en el pie de figura: el tipo de imagen (TC, RMN, radiografía), el nivel de corte o la proyección, las condiciones técnicas relevantes (contraste, ventana) y los hallazgos señalados con flecha o asterisco. Las imágenes deben anonimizarse (borrar datos del paciente).',
+ blank:'Antes de publicar una imagen clínica de un paciente en un artículo médico, los datos identificatorios deben _____',
+ blank_answer:'anonimizarse',
+ options:['Publicarse completos','Anonimizarse','Enviarse al INVIMA','Omitirse solo si el paciente murió'],answer_idx:1,
+ ref:'ICMJE · COPE · Resolución 8430/1993, Art. 8'},
+
+{id:88,epoch:'IX',
+ title:'Pirámide de evidencia: leer artículos crítica y eficientemente',
+ example:'Lee el título → resumen → métodos → tablas y figuras → discusión → introducción\n(orden de lectura crítica: no lineal)',
+ explanation:'La lectura crítica eficiente de artículos médicos sigue el orden: título (¿es relevante para mi pregunta?), resumen estructurado (¿vale la pena leer más?), métodos (¿es válido el diseño?), tablas y figuras (¿son los datos reales?) y discusión (¿las conclusiones son coherentes con los datos?). JAMA Evidence y la red GRADE son fuentes de herramientas de lectura crítica.',
+ blank:'En la lectura crítica de artículos médicos, la sección que determina la validez del estudio es la sección de _____',
+ blank_answer:'Métodos',
+ options:['Resultados','Discusión','Métodos','Resumen'],answer_idx:2,
+ ref:'Guyatt, G. — Users\' Guides to the Medical Literature · JAMA Evidence'},
+
+{id:89,epoch:'IX',
+ title:'Reporte de datos faltantes y análisis de sensibilidad',
+ example:'«El 8 % de los registros tenían glucemia faltante. Se realizó imputación múltiple (m=10) y análisis de sensibilidad completo de casos.»',
+ explanation:'Los datos faltantes (missing data) son ubicuos en la investigación clínica colombiana, especialmente en registros de IPS con datos incompletos. El mecanismo de ausencia (MCAR, MAR, MNAR) determina el método de manejo. La imputación múltiple es el estándar actual. No reportar los datos faltantes es criterio de observación por los revisores.',
+ blank:'El método estadístico recomendado para manejar datos faltantes en investigación clínica es la _____ múltiple',
+ blank_answer:'imputación',
+ options:['Eliminación','Imputación','Exclusión','Mediana'],answer_idx:1,
+ ref:'Sterne et al. — Multiple imputation for missing data (BMJ 2009)'},
+
+{id:90,epoch:'IX',
+ title:'Análisis estadístico con R, SPSS y Stata en medicina colombiana',
+ example:'R (gratuito): estándar en epidemiología y salud pública colombiana.\nSPSS: más usado en pregrado clínico.\nStata: posgrado y investigación avanzada.',
+ explanation:'R es el software estadístico de preferencia en salud pública y epidemiología colombiana por ser gratuito y de código abierto. SPSS (IBM) es frecuente en tesis de pregrado. Los paquetes de R más usados en investigación médica colombiana son epiR (epidemiología), survival (análisis de supervivencia) y meta (metaanálisis).',
+ blank:'El software estadístico gratuito y de código abierto más usado en epidemiología y salud pública colombiana es _____',
+ blank_answer:'R',
+ options:['SPSS','Excel','R','SAS'],answer_idx:2,
+ ref:'R Core Team — r-project.org · CRAN Colombia · epiR package'},
+
+/* ── BLOQUE X: Ética, consentimiento y comunicación oral ── */
+{id:91,epoch:'X',
+ title:'Ética médica colombiana: Ley 23 de 1981 y Decreto 3380',
+ example:'Ley 23 de 1981: Código de Ética Médica colombiano.\nDecreto 3380 de 1981: reglamentación de la Ley 23.\nTribunal Ético Médico Nacional: sancionatorio.',
+ explanation:'La Ley 23 de 1981 es el Código de Ética Médica de Colombia. Establece los deberes y derechos de los médicos, regula el secreto profesional, el consentimiento informado y la relación médico-paciente. El incumplimiento es juzgado por el Tribunal Ético Médico (TEM), que puede sancionar al médico con amonestación, multa, suspensión o cancelación de la tarjeta profesional.',
+ blank:'La ley colombiana que contiene el Código de Ética Médica es la Ley _____ de 1981',
+ blank_answer:'23',
+ options:['100','1438','23','1751'],answer_idx:2,
+ ref:'Ley 23 de 1981 — Código de Ética Médica · Decreto 3380 de 1981'},
+
+{id:92,epoch:'X',
+ title:'Resolución 8430 de 1993: investigación con seres humanos',
+ example:'Clasificación de riesgo:\nSin riesgo: encuestas, revisiones de historia clínica sin identificación.\nRiesgo mínimo: estudios con procedimientos no invasivos.\nRiesgo mayor que mínimo: estudios con intervención.',
+ explanation:'La Resolución 8430 de 1993 del Ministerio de Salud es la norma colombiana fundamental para la investigación con seres humanos. Clasifica los estudios por nivel de riesgo, exige consentimiento informado y la aprobación del Comité de Ética Hospitalaria (CEH). Sin aval del CEH, el artículo no puede publicarse en revistas indexadas.',
+ blank:'La norma colombiana que regula la investigación en salud con seres humanos y clasifica los estudios por nivel de riesgo es la Resolución _____ de 1993',
+ blank_answer:'8430',
+ options:['1995','2378','5596','8430'],answer_idx:3,
+ ref:'Resolución 8430 de 1993 — Minsalud · Declaración de Helsinki'},
+
+{id:93,epoch:'X',
+ title:'Comité de Ética Hospitalaria (CEH): aval obligatorio',
+ example:'El aval del CEH debe mencionarse en el artículo: «Este estudio fue aprobado por el Comité de Ética Hospitalaria del Hospital X (acta n.º Y, fecha Z).»',
+ explanation:'Todo estudio que involucre seres humanos o sus datos identificados requiere el aval del Comité de Ética Hospitalaria o Institucional. En las facultades de medicina colombianas, los Comités de Ética de Investigación (CIBI) son el equivalente académico. La Resolución 8430/1993 exige que el acta de aprobación se mencione en los artículos.',
+ blank:'En el artículo médico colombiano, el aval ético del estudio se menciona en la sección de _____ y debe incluir el número de acta',
+ blank_answer:'Métodos (o en la sección de consideraciones éticas)',
+ options:['Resultados','Agradecimientos','Métodos (o en la sección de consideraciones éticas)','Discusión'],answer_idx:2,
+ ref:'Resolución 8430 de 1993, Arts. 11–24 · ICMJE'},
+
+{id:94,epoch:'X',
+ title:'Secreto profesional y confidencialidad en Colombia',
+ example:'Ley 23/1981, Art. 37–42: secreto médico.\nExcepciones: enfermedad de notificación obligatoria, riesgo de daño grave a terceros, mandato judicial.\nSanciones: Tribunal Ético Médico.',
+ explanation:'El secreto profesional médico en Colombia está protegido por la Ley 23 de 1981 y solo puede romperse en situaciones taxativas: enfermedades de notificación obligatoria al SIVIGILA, riesgo inminente para terceros y orden judicial. La revelación indebida es causal de sanción disciplinaria y puede constituir delito.',
+ blank:'Una de las situaciones en que el médico colombiano puede romper el secreto profesional es cuando la enfermedad es de _____ obligatoria',
+ blank_answer:'notificación',
+ options:['Tratamiento','Hospitalización','Notificación','Facturación'],answer_idx:2,
+ ref:'Ley 23 de 1981, Arts. 37–42 · Decreto 3518/2006 — SIVIGILA'},
+
+{id:95,epoch:'X',
+ title:'La anamnesis en el examen oral (ECOE): comunicación efectiva',
+ example:'ECOE (Examen Clínico Objetivo Estructurado): preguntas abiertas → escucha activa → resumen → verificación.\n«¿Podría contarme qué le trae por aquí hoy?»',
+ explanation:'Los ECOE (Exámenes Clínicos Objetivos Estructurados) evalúan las competencias comunicativas del médico colombiano en formación. El uso de preguntas abiertas, la escucha activa y el resumen verificado al final de la entrevista son habilidades comunicativas clave evaluadas en los ECOE de las facultades de medicina (UNAL, UdeA, Javeriana, CES).',
+ blank:'En la entrevista clínica estructurada (ECOE), el tipo de pregunta que permite al paciente narrar su historia sin interrupciones es la pregunta _____',
+ blank_answer:'abierta',
+ options:['Cerrada','Dirigida','Abierta','Sugestiva'],answer_idx:2,
+ ref:'Kurtz, S. — Skills for Communicating with Patients · ECOE Colombia'},
+
+{id:96,epoch:'X',
+ title:'Presentación de caso clínico: estructura oral en rounds',
+ example:'ID del paciente → CC → HEA (máx. 2 min) → Antecedentes relevantes → Examen físico clave → Paraclínicos → Impresión diagnóstica → Plan → Preguntas',
+ explanation:'La presentación oral de caso clínico en los rounds de hospitalización colombianos sigue una estructura estandarizada. Exceder de 5 minutos en la presentación inicial es señal de falta de síntesis. El docente valorará que el estudiante jerarquice la información y proponga el diagnóstico y plan con argumentos.',
+ blank:'En los rounds hospitalarios, el tiempo máximo recomendado para la presentación inicial de un caso clínico es de _____ minutos',
+ blank_answer:'5',
+ options:['2','5','10','20'],answer_idx:1,
+ ref:'Lingard, L. — Clinical communication · Rondas hospitalarias Colombia'},
+
+{id:97,epoch:'X',
+ title:'Uso de IA en documentos clínicos: riesgos y declaración',
+ example:'Riesgo: datos clínicos inventados (alucinaciones del modelo).\nRiesgo legal: la IA no tiene tarjeta profesional ni responde ante el TEM.\nDeclarar el uso en el trabajo académico.',
+ explanation:'El uso de IA generativa (ChatGPT, Gemini) en documentos clínicos colombianos es controvertido. La IA puede generar valores de laboratorio o datos epidemiológicos inventados. El médico que firma un documento es responsable legal de su contenido según la Ley 23/1981 y el Decreto 3380/1981. Todo uso de IA debe declararse y el contenido debe verificarse.',
+ blank:'El profesional que firma un documento clínico en Colombia es _____ de su contenido, aunque haya usado IA para redactarlo',
+ blank_answer:'responsable legal',
+ options:['Coautor','Responsable legal','Exento','Supervisor'],answer_idx:1,
+ ref:'Ley 23 de 1981 · ICMJE — Authorship and AI · Tribunal Ético Médico'},
+
+{id:98,epoch:'X',
+ title:'Comunicación de malas noticias: protocolo SPIKES',
+ example:'S: Setting (preparar el entorno)\nP: Perception (qué sabe el paciente)\nI: Invitation (cuánto quiere saber)\nK: Knowledge (dar la información)\nE: Emotions (responder a emociones)\nS: Strategy (plan y seguimiento)',
+ explanation:'El protocolo SPIKES (Baile et al., 2000) es el estándar para la comunicación de malas noticias en medicina colombiana. Las facultades de medicina lo incluyen en los ECOE y en las asignaturas de comunicación médica. Es obligatorio en la atención de pacientes oncológicos, donde Minsalud tiene guías específicas.',
+ blank:'El protocolo de comunicación de malas noticias más usado en la formación médica colombiana e internacional es el _____',
+ blank_answer:'SPIKES',
+ options:['SOAP','OPQRST','SPIKES','CONSORT'],answer_idx:2,
+ ref:'Baile et al. (2000) — SPIKES · Minsalud — Guías de atención en oncología'},
+
+{id:99,epoch:'X',
+ title:'Tildes en tecnicismos médicos colombianos',
+ example:'Órgano · médula · páncreas · tórax · cólico · hépatico · diástole · sístole · diagnóstico · síntoma · régimen',
+ explanation:'Los esdrújulos son muy frecuentes en el vocabulario médico colombiano. «Organo», «medula», «pancreas», «sístole» o «diastole» sin tilde son errores ortográficos graves en documentos clínicos y trabajos académicos. La historia clínica es documento legal; los errores ortográficos en diagnósticos pueden generar ambigüedades médico-legales.',
+ blank:'La palabra «páncreas» lleva tilde porque es _____',
+ blank_answer:'esdrújula',
+ options:['Aguda','Grave','Esdrújula','Sobreesdrújula'],answer_idx:2,
+ ref:'RAE — Ortografía (2010) · Diccionario de términos médicos de la RANM'},
+
+{id:100,epoch:'X',
+ title:'El documento médico como acto de responsabilidad social',
+ example:'Colombia: 51 millones de habitantes · Médicos por 10.000 hab.: 22,3 (2023, RETHUS). Un documento bien redactado = un paciente mejor atendido.',
+ explanation:'En Colombia, con alta carga de enfermedad, inequidades en salud y un sistema de salud en permanente reforma, cada documento médico bien redactado —historia clínica, nota de evolución, artículo de investigación, informe epidemiológico— es un acto de responsabilidad social. La claridad del documento clínico es condición de la seguridad del paciente y la calidad de la atención.',
+ blank:'En Colombia, la razón de médicos por cada _____ habitantes es de aproximadamente 22,3 (RETHUS 2023)',
+ blank_answer:'10.000',
+ options:['1.000','10.000','100.000','1.000.000'],answer_idx:1,
+ ref:'RETHUS — Minsalud Colombia 2023 · OPS — Recursos Humanos en Salud'},
+
+];
+
+/* ══════════════════════════════════════
+   STORAGE
+══════════════════════════════════════ */
+const LS_D='med_done', LS_F='med_fav';
+function loadSet(k){try{return new Set(JSON.parse(localStorage.getItem(k)||'[]'))}catch{return new Set()}}
+function saveSet(k,s){try{localStorage.setItem(k,JSON.stringify([...s]))}catch{}}
+let DONE=loadSet(LS_D), FAV=loadSet(LS_F);
+function toggleDone(id){id=+id;DONE.has(id)?DONE.delete(id):DONE.add(id);saveSet(LS_D,DONE)}
+function toggleFav(id){id=+id;FAV.has(id)?FAV.delete(id):FAV.add(id);saveSet(LS_F,FAV)}
+
+/* ══════════════════════════════════════
+   NAVIGATION
+══════════════════════════════════════ */
+function navigate(p){
+  document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));
+  document.querySelectorAll('.nav-btn[data-page]').forEach(x=>x.classList.remove('active'));
+  document.getElementById('page-'+p)?.classList.add('active');
+  document.querySelector(`.nav-btn[data-page="${p}"]`)?.classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+  if(p==='dashboard')renderDashboard();
+  if(p==='lista')renderList();
+  if(p==='practica')renderPractice();
+}
+document.querySelectorAll('.nav-btn[data-page]').forEach(b=>b.addEventListener('click',()=>{navigate(b.dataset.page);document.getElementById('mainNav').classList.remove('open')}));
+document.getElementById('burgerBtn').addEventListener('click',()=>document.getElementById('mainNav').classList.toggle('open'));
+
+/* ══════════════════════════════════════
+   DASHBOARD
+══════════════════════════════════════ */
+function renderDashboard(){
+  const done=DONE.size,fav=FAV.size,total=PHENOMENA.length;
+  const pct=Math.round(done/total*100);
+  document.getElementById('statsGrid').innerHTML=`
+    <div class="stat-card"><div class="stat-num">${total}</div><div class="stat-label">Técnicas totales</div></div>
+    <div class="stat-card"><div class="stat-num" style="color:var(--teal-med)">${done}</div><div class="stat-label">Completadas</div></div>
+    <div class="stat-card"><div class="stat-num" style="color:var(--amber-warn)">${fav}</div><div class="stat-label">Favoritas</div></div>
+    <div class="stat-card"><div class="stat-num" style="color:var(--cobalt-lt)">${total-done}</div><div class="stat-label">Pendientes</div></div>`;
+  document.getElementById('progressBar').style.width=pct+'%';
+  document.getElementById('progressPct').textContent=pct+' %';
+  document.getElementById('epochGrid').innerHTML=EPOCHS.map(ep=>{
+    const items=PHENOMENA.filter(p=>p.epoch===ep.id);
+    const dc=items.filter(p=>DONE.has(p.id)).length;
+    const pp=Math.round(dc/items.length*100);
+    return `<div class="epoch-card" onclick="goToEpoch('${ep.id}')">
+      <div class="epoch-num">Bloque ${ep.id}</div>
+      <div class="epoch-name">${ep.name}</div>
+      <div class="epoch-meta">${dc}/${items.length} · ${pp} %</div>
+      <div class="mini-bar"><div class="mini-bar-fill" style="width:${pp}%"></div></div>
+    </div>`;
+  }).join('');
+}
+function goToEpoch(id){navigate('lista');setTimeout(()=>{const s=document.getElementById('epochFilter');if(s){s.value=id;filterAndRender();}},120);}
+document.getElementById('resetBtn').addEventListener('click',()=>{
+  if(!confirm('¿Reiniciar todo el progreso?'))return;
+  DONE=new Set();FAV=new Set();saveSet(LS_D,DONE);saveSet(LS_F,FAV);
+  renderDashboard();showToast('↺ Progreso reiniciado');
+});
+
+/* ══════════════════════════════════════
+   LISTA
+══════════════════════════════════════ */
+function populateFilters(){
+  const opts=EPOCHS.map(e=>`<option value="${e.id}">Bloque ${e.id} — ${e.name.substring(0,36)}…</option>`).join('');
+  ['epochFilter','practiceEpochFilter'].forEach(id=>{const s=document.getElementById(id);if(s&&s.children.length<=1)s.innerHTML+=opts;});
+}
+function getFiltered(){
+  const q=(document.getElementById('searchInput')?.value||'').toLowerCase();
+  const ep=document.getElementById('epochFilter')?.value||'';
+  const st=document.getElementById('statusFilter')?.value||'';
+  const so=document.getElementById('sortFilter')?.value||'num';
+  let list=PHENOMENA.filter(p=>{
+    if(q&&!(p.title.toLowerCase().includes(q)||p.example.toLowerCase().includes(q)||p.explanation.toLowerCase().includes(q)))return false;
+    if(ep&&p.epoch!==ep)return false;
+    if(st==='done'&&!DONE.has(p.id))return false;
+    if(st==='fav'&&!FAV.has(p.id))return false;
+    if(st==='pending'&&(DONE.has(p.id)||FAV.has(p.id)))return false;
+    return true;
+  });
+  if(so==='alpha')list.sort((a,b)=>a.title.localeCompare(b.title,'es'));
+  else if(so==='epoch')list.sort((a,b)=>a.epoch.localeCompare(b.epoch)||a.id-b.id);
+  else list.sort((a,b)=>a.id-b.id);
+  return list;
+}
+function renderList(){
+  const list=getFiltered();
+  const grid=document.getElementById('techniquesGrid');
+  if(!list.length){grid.innerHTML='<div class="empty">Ninguna técnica coincide con los filtros.</div>';return;}
+  grid.innerHTML=list.map(p=>{
+    const isDone=DONE.has(p.id),isFav=FAV.has(p.id);
+    const ep=EPOCHS.find(e=>e.id===p.epoch);
+    const ex=p.example.replace(/\n/g,' · ').substring(0,80)+'…';
+    return `<article class="tech-card ${isDone?'done':''} ${isFav?'fav':''}" onclick="openModal(${p.id})">
+      <div class="tech-num">N.º ${p.id} · BLOQUE ${p.epoch}</div>
+      <div class="tech-title">${p.title}</div>
+      <div class="tech-example">${ex}</div>
+      <div><span class="tech-epoch-tag">${ep?ep.name.substring(0,34)+'…':p.epoch}</span></div>
+      <div class="tech-actions" onclick="event.stopPropagation()">
+        <button class="icon-btn ${isDone?'active-done':''}" onclick="hDone(${p.id})">${isDone?'✓':'○'} hecha</button>
+        <button class="icon-btn ${isFav?'active-fav':''}" onclick="hFav(${p.id})">${isFav?'★':'☆'} fav.</button>
+      </div>
+    </article>`;
+  }).join('');
+}
+function hDone(id){toggleDone(id);renderList();renderDashboard();showToast(DONE.has(id)?'✓ marcada':'desmarcada');}
+function hFav(id){toggleFav(id);renderList();renderDashboard();showToast(FAV.has(id)?'★ añadida':'eliminada de favoritas');}
+function filterAndRender(){renderList();}
+['searchInput','epochFilter','statusFilter','sortFilter'].forEach(id=>{
+  const el=document.getElementById(id);
+  if(el)el.addEventListener('input',filterAndRender),el.addEventListener('change',filterAndRender);
+});
+
+/* ══════════════════════════════════════
+   MODAL
+══════════════════════════════════════ */
+function openModal(id){
+  const p=PHENOMENA.find(x=>x.id===+id);if(!p)return;
+  const ep=EPOCHS.find(e=>e.id===p.epoch);
+  const isDone=DONE.has(p.id),isFav=FAV.has(p.id);
+  const exLines=p.example.split('\n');
+  const badLine=exLines.find(l=>l.startsWith('✗'));
+  const goodLine=exLines.find(l=>l.startsWith('✓'));
+  const rest=exLines.filter(l=>!l.startsWith('✗')&&!l.startsWith('✓')).join('\n');
+  let exHtml='';
+  if(badLine)exHtml+=`<div class="modal-bad">${badLine}</div>`;
+  if(goodLine)exHtml+=`<div class="modal-good">${goodLine}</div>`;
+  if(rest.trim())exHtml+=`<div class="modal-example">${rest.trim()}</div>`;
+  if(!badLine&&!goodLine)exHtml=`<div class="modal-example">${p.example}</div>`;
+  document.getElementById('modalContent').innerHTML=`
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    <div class="modal-num">Técnica N.º ${p.id} · Bloque ${p.epoch}</div>
+    <div class="modal-title">${p.title}</div>
+    <span class="tech-epoch-tag">${ep?ep.name:p.epoch}</span>
+    <div class="modal-section"><div class="modal-section-label">Ejemplo / Norma</div>${exHtml}</div>
+    <div class="modal-section"><div class="modal-section-label">Explicación</div><div class="modal-explanation">${p.explanation}</div></div>
+    ${p.ref?`<div class="modal-ref">↗ Referencia: ${p.ref}</div>`:''}
+    <div class="modal-actions">
+      <button class="btn ${isDone?'btn-primary':'btn-secondary'}" onclick="hDone(${p.id});openModal(${p.id})">${isDone?'✓ Completada':'○ Marcar hecha'}</button>
+      <button class="btn ${isFav?'btn-ghost':'btn-secondary'}" onclick="hFav(${p.id});openModal(${p.id})">${isFav?'★ Favorita':'☆ Favorita'}</button>
+      <button class="btn btn-teal" onclick="closeModal();setTimeout(()=>practiceOne(${p.id}),200)">✎ Practicar</button>
+    </div>`;
+  document.getElementById('modalOverlay').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+function closeModal(e){
+  if(e&&e.target!==document.getElementById('modalOverlay'))return;
+  document.getElementById('modalOverlay').classList.remove('open');
+  document.body.style.overflow='';
+}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal();});
+
+/* ══════════════════════════════════════
+   PRÁCTICA
+══════════════════════════════════════ */
+let practiceMode='multiple',practiceQueue=[],practiceIdx=0;
+let sessionCorrect=0,sessionTotal=0,fcFlipped=false;
+
+function setPracticeMode(m,btn){
+  practiceMode=m;
+  document.querySelectorAll('.mode-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');resetExercise();
+}
+function getPracticePool(){
+  const ep=document.getElementById('practiceEpochFilter')?.value||'';
+  const pnd=document.getElementById('onlyPending')?.checked||false;
+  return PHENOMENA.filter(p=>{
+    if(ep&&p.epoch!==ep)return false;
+    if(pnd&&DONE.has(p.id))return false;
+    return true;
+  });
+}
+function shuffle(a){return[...a].sort(()=>Math.random()-.5)}
+function resetExercise(){
+  sessionCorrect=0;sessionTotal=0;
+  practiceQueue=shuffle(getPracticePool());
+  practiceIdx=0;fcFlipped=false;
+  updateSessionScore();renderPractice();
+}
+function renderPractice(){
+  const main=document.getElementById('practiceMain');if(!main)return;
+  if(!practiceQueue.length){main.innerHTML='<div class="empty">No hay técnicas con los filtros seleccionados.</div>';return;}
+  if(practiceIdx>=practiceQueue.length){
+    const pct=sessionTotal?Math.round(sessionCorrect/sessionTotal*100):0;
+    main.innerHTML=`<div class="exercise-card" style="text-align:center">
+      <div style="font-family:var(--font-head);font-size:1.9rem;font-style:italic;color:var(--cobalt);margin-bottom:.5rem">Sesión completada</div>
+      <div style="font-size:.95rem;color:var(--ink-muted);font-family:var(--font-mono);margin-bottom:1.4rem">
+        ${sessionCorrect} / ${sessionTotal} correctas · ${pct} %
+      </div>
+      <button class="btn btn-primary" onclick="resetExercise()">↺ Nueva sesión</button>
+    </div>`;return;
+  }
+  const p=practiceQueue[practiceIdx];
+  if(practiceMode==='multiple')renderMultiple(p,main);
+  else if(practiceMode==='blank')renderBlank(p,main);
+  else renderFlashcard(p,main);
+}
+function updateSessionScore(){
+  const el=document.getElementById('sessionScore');
+  if(el)el.textContent=sessionTotal?`${sessionCorrect} correctas / ${sessionTotal}`:'—';
+}
+function renderMultiple(p,c){
+  const letters=['A','B','C','D'];
+  const hasSnippet=p.example&&p.example.length<200;
+  c.innerHTML=`
+    <div class="score-bar"><span>Progreso:</span><span class="score-num">${practiceIdx+1}/${practiceQueue.length}</span><span class="score-divider">|</span><span>Correctas: <strong>${sessionCorrect}</strong></span></div>
+    <div class="exercise-card">
+      <div class="ex-question">${p.title}</div>
+      ${hasSnippet?`<div class="ex-snippet">${p.example}</div>`:''}
+      <div style="font-size:.83rem;color:var(--ink-muted);font-family:var(--font-mono);margin-bottom:.85rem;letter-spacing:.04em">¿CUÁL ES LA RESPUESTA CORRECTA?</div>
+      <div class="ex-options">${p.options.map((o,i)=>`<div class="ex-option" data-idx="${i}" onclick="checkMultiple(${i},${p.answer_idx},${p.id})"><span class="ex-opt-letter">${letters[i]}</span>${o}</div>`).join('')}</div>
+      <div class="ex-feedback" id="exFeedback"></div>
+      <div id="exNext" style="display:none"><button class="btn btn-primary" onclick="nextExercise()">Siguiente →</button></div>
+    </div>`;
+}
+function checkMultiple(chosen,correct,pid){
+  const opts=document.querySelectorAll('.ex-option');
+  opts.forEach(o=>o.classList.add('disabled'));
+  opts[correct].classList.add('correct');
+  const fb=document.getElementById('exFeedback');fb.classList.add('show');
+  sessionTotal++;
+  if(chosen===correct){
+    opts[chosen].classList.add('correct');
+    fb.className='ex-feedback show ok';fb.innerHTML='✓ Correcto';
+    sessionCorrect++;if(!DONE.has(pid))toggleDone(pid);
+  }else{
+    opts[chosen].classList.add('wrong');
+    const ph=PHENOMENA.find(x=>x.id===pid);
+    fb.className='ex-feedback show ko';fb.innerHTML=`✗ Respuesta correcta: <strong>${ph.options[correct]}</strong>`;
+  }
+  document.getElementById('exNext').style.display='block';updateSessionScore();
+}
+function renderBlank(p,c){
+  c.innerHTML=`
+    <div class="score-bar"><span>Progreso:</span><span class="score-num">${practiceIdx+1}/${practiceQueue.length}</span><span class="score-divider">|</span><span>Correctas: <strong>${sessionCorrect}</strong></span></div>
+    <div class="exercise-card">
+      <div class="ex-question">${p.blank}</div>
+      <div class="ex-blank-wrap">
+        <input class="ex-blank-input" id="blankInput" placeholder="escribe la respuesta…" autocomplete="off">
+        <button class="btn btn-primary" onclick="checkBlank(${p.id})">Comprobar</button>
+      </div>
+      <div class="ex-feedback" id="exFeedback"></div>
+      <div id="exNext" style="display:none"><button class="btn btn-primary" onclick="nextExercise()">Siguiente →</button></div>
+    </div>`;
+  const inp=document.getElementById('blankInput');
+  inp.addEventListener('keydown',e=>{if(e.key==='Enter')checkBlank(p.id)});inp.focus();
+}
+function checkBlank(pid){
+  const p=PHENOMENA.find(x=>x.id===+pid);
+  const inp=document.getElementById('blankInput');
+  const val=inp.value.trim().toLowerCase();
+  const exp=p.blank_answer.toLowerCase();
+  const ok=val===exp||exp.includes(val)||(val.length>3&&exp.split(' ').some(w=>w.length>3&&val.includes(w)));
+  inp.disabled=true;
+  const fb=document.getElementById('exFeedback');fb.classList.add('show');
+  sessionTotal++;
+  if(ok){
+    inp.classList.add('correct-input');fb.className='ex-feedback show ok';
+    fb.innerHTML=`✓ Correcto. Respuesta: <strong>${p.blank_answer}</strong>`;
+    sessionCorrect++;if(!DONE.has(p.id))toggleDone(p.id);
+  }else{
+    inp.classList.add('wrong-input');fb.className='ex-feedback show ko';
+    fb.innerHTML=`✗ La respuesta era: <strong>${p.blank_answer}</strong>`;
+  }
+  document.getElementById('exNext').style.display='block';updateSessionScore();
+}
+function renderFlashcard(p,c){
+  fcFlipped=false;
+  c.innerHTML=`
+    <div class="score-bar"><span>Tarjeta:</span><span class="score-num">${practiceIdx+1}/${practiceQueue.length}</span></div>
+    <div class="flashcard" id="flashcard" onclick="flipCard()">
+      <div class="flashcard-front"><div>${p.title}</div><div class="flashcard-hint">— pulsar para ver ejemplo —</div></div>
+      <div class="flashcard-back">
+        <div style="font-family:var(--font-mono);font-size:.82rem;color:var(--cobalt-lt);margin-bottom:.6rem">${p.example.replace(/\n/g,' · ').substring(0,200)}</div>
+        <div>${p.explanation.substring(0,280)}…</div>
+      </div>
+    </div>
+    <div class="fc-nav">
+      <button class="btn btn-secondary" onclick="fcAnswer(false,${p.id})">✗ No la sabía</button>
+      <button class="btn btn-primary"   onclick="fcAnswer(true,${p.id})">✓ La sabía</button>
+    </div>`;
+}
+function flipCard(){fcFlipped=!fcFlipped;document.getElementById('flashcard')?.classList.toggle('flipped',fcFlipped);}
+function fcAnswer(ok,pid){sessionTotal++;if(ok){sessionCorrect++;if(!DONE.has(pid))toggleDone(pid);}updateSessionScore();nextExercise();}
+function nextExercise(){practiceIdx++;fcFlipped=false;renderPractice();}
+function practiceOne(id){
+  navigate('practica');
+  setTimeout(()=>{practiceQueue=[PHENOMENA.find(p=>p.id===+id),...shuffle(PHENOMENA.filter(p=>p.id!==+id))];practiceIdx=0;renderPractice();},160);
+}
+
+let toastTimer=null;
+function showToast(msg){
+  const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');
+  if(toastTimer)clearTimeout(toastTimer);
+  toastTimer=setTimeout(()=>t.classList.remove('show'),2400);
+}
+(function(){populateFilters();renderDashboard();renderList();resetExercise();})();
+</script>
+</body>
+</html>

@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Redacción Musical — 100 técnicas para estudiantes de música</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ink:#1a1209; --parchment:#f5f0e8; --amber:#c8860a; --amber-light:#f0a830;
+  --amber-pale:#fdf3dc; --rust:#8b3a1a; --sage:#4a6741; --sage-light:#7a9e76;
+  --cream:#faf7f2; --border:#d4c9b0; --shadow:rgba(26,18,9,0.12);
+  --violin:#8b4513; --violin-light:#cd853f; --nota:#2c3e50;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'DM Sans',sans-serif;background:var(--parchment);color:var(--ink);min-height:100vh;
+  background-image:radial-gradient(ellipse at 15% 0%,rgba(139,69,19,.07) 0%,transparent 55%),
+  radial-gradient(ellipse at 85% 100%,rgba(44,62,80,.05) 0%,transparent 55%);}
+h1,h2,h3,.serif{font-family:'Playfair Display',serif;}
+
+.app-nav{background:var(--ink);display:flex;align-items:center;gap:.75rem;
+  padding:.7rem 1.5rem;position:sticky;top:0;z-index:200;box-shadow:0 2px 18px rgba(0,0,0,.25);}
+.nav-brand{font-family:'Playfair Display',serif;font-weight:900;font-size:1.25rem;
+  color:var(--violin-light);flex:1;white-space:nowrap;}
+.nav-brand span{color:#fff;}
+.nav-avatar{width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,var(--violin),var(--rust));
+  display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.95rem;
+  color:#fff;font-family:'Playfair Display',serif;cursor:pointer;flex-shrink:0;
+  border:2px solid rgba(255,255,255,.2);transition:border-color .2s;}
+.nav-avatar:hover{border-color:var(--violin-light);}
+.nav-username{color:rgba(255,255,255,.8);font-size:.85rem;font-weight:500;white-space:nowrap;}
+.btn-reset{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);
+  color:rgba(255,255,255,.7);border-radius:8px;padding:.32rem .75rem;font-size:.78rem;
+  cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .2s;}
+.btn-reset:hover{background:rgba(255,255,255,.18);color:#fff;}
+
+.app-tabs{background:#fff;border-bottom:2px solid var(--border);display:flex;
+  padding:0 1.5rem;overflow-x:auto;gap:0;position:sticky;top:58px;z-index:150;}
+.app-tab{padding:.85rem 1.1rem;border:none;background:transparent;font-family:'DM Sans',sans-serif;
+  font-weight:700;font-size:.82rem;color:#999;cursor:pointer;white-space:nowrap;
+  border-bottom:3px solid transparent;margin-bottom:-2px;transition:all .2s;
+  display:flex;align-items:center;gap:.35rem;}
+.app-tab:hover{color:var(--ink);}
+.app-tab.active{color:var(--violin);border-bottom-color:var(--violin);}
+
+.app-body{max-width:1080px;margin:0 auto;padding:2rem 1.5rem;}
+.page{display:none;animation:rise .28s ease;}
+.page.active{display:block;}
+
+.card-app{background:#fff;border:1.5px solid var(--border);border-radius:16px;
+  box-shadow:0 2px 10px var(--shadow);overflow:hidden;}
+.card-app-header{padding:1.1rem 1.4rem;border-bottom:1px solid var(--border);
+  display:flex;align-items:center;gap:.75rem;}
+.card-app-body{padding:1.4rem;}
+
+.stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:.9rem;margin-bottom:1.6rem;}
+.stat-box{background:#fff;border:1.5px solid var(--border);border-radius:14px;
+  padding:1.1rem 1rem;text-align:center;transition:transform .2s;cursor:default;}
+.stat-box:hover{transform:translateY(-3px);box-shadow:0 6px 18px var(--shadow);}
+.stat-num{font-family:'Playfair Display',serif;font-size:2rem;font-weight:900;
+  color:var(--violin);line-height:1;margin-bottom:.2rem;}
+.stat-lbl{font-size:.73rem;font-weight:700;color:#aaa;text-transform:uppercase;letter-spacing:.05em;}
+
+.dot-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(26px,1fr));gap:4px;margin-bottom:1.6rem;}
+.dot{aspect-ratio:1;border-radius:6px;background:var(--border);cursor:pointer;
+  transition:all .18s;position:relative;display:flex;align-items:center;justify-content:center;}
+.dot.done{background:var(--sage);}
+.dot:hover{transform:scale(1.35);z-index:5;}
+.dot-tip{position:absolute;bottom:130%;left:50%;transform:translateX(-50%);
+  background:var(--ink);color:#fff;padding:.28rem .6rem;border-radius:6px;font-size:.68rem;
+  white-space:nowrap;pointer-events:none;opacity:0;transition:opacity .18s;z-index:99;}
+.dot:hover .dot-tip{opacity:1;}
+.dot-num{font-size:.5rem;font-weight:700;color:rgba(255,255,255,.7);}
+
+.search-field{border:1.5px solid var(--border);border-radius:10px;padding:.55rem 1rem .55rem 2.3rem;
+  font-family:'DM Sans',sans-serif;font-size:.87rem;background:#fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%23aaa' stroke-width='2.5'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cpath d='M21 21l-4.35-4.35'/%3E%3C/svg%3E") no-repeat .75rem center;
+  width:100%;max-width:260px;outline:none;transition:border-color .2s;}
+.search-field:focus{border-color:var(--violin);}
+.pill{padding:.28rem .75rem;border-radius:20px;border:1.5px solid var(--border);background:#fff;
+  font-size:.75rem;font-weight:700;cursor:pointer;transition:all .2s;font-family:'DM Sans',sans-serif;color:#888;}
+.pill.on,.pill:hover{background:var(--violin);border-color:var(--violin);color:#fff;}
+
+.ex-card{background:#fff;border:1.5px solid var(--border);border-radius:13px;padding:1rem 1.2rem;
+  margin-bottom:.6rem;cursor:pointer;transition:all .18s;display:flex;align-items:flex-start;gap:.9rem;
+  box-shadow:0 1px 4px var(--shadow);}
+.ex-card:hover{border-color:var(--violin);transform:translateX(5px);}
+.ex-card.done{border-left:4px solid var(--sage);}
+.ex-num-box{background:var(--parchment);border:1px solid var(--border);border-radius:8px;
+  width:42px;height:42px;display:flex;align-items:center;justify-content:center;
+  font-family:'DM Mono',monospace;font-size:.75rem;font-weight:600;color:var(--violin);flex-shrink:0;}
+.ex-card.done .ex-num-box{background:var(--sage);color:#fff;border-color:var(--sage);}
+.ex-body{flex:1;min-width:0;}
+.ex-cat-tag{font-size:.7rem;font-weight:700;color:var(--violin);text-transform:uppercase;letter-spacing:.05em;}
+.ex-name{font-weight:700;font-size:.9rem;margin:.1rem 0 .18rem;}
+.ex-short{font-size:.78rem;color:#777;line-height:1.5;}
+.badge-done{background:var(--sage);color:#fff;padding:.18rem .55rem;border-radius:9px;font-size:.7rem;font-weight:700;}
+.badge-new{background:var(--parchment);color:#bbb;padding:.18rem .55rem;border-radius:9px;font-size:.7rem;font-weight:700;border:1px solid var(--border);}
+
+.prac-header{background:#fff;border:1.5px solid var(--border);border-radius:16px;
+  padding:1.4rem 1.5rem;margin-bottom:1.2rem;box-shadow:0 2px 10px var(--shadow);}
+.prac-badge{display:inline-flex;align-items:center;gap:.35rem;background:var(--amber-pale);
+  border:1px solid rgba(200,134,10,.28);border-radius:8px;padding:.28rem .75rem;
+  font-size:.76rem;font-weight:700;color:var(--violin);margin-bottom:.7rem;}
+.prac-title{font-size:1.3rem;font-weight:900;margin-bottom:.45rem;}
+.prac-explanation{font-size:.88rem;color:#555;line-height:1.7;margin:0;}
+.prac-example{background:var(--parchment);border-left:3px solid var(--violin);
+  border-radius:0 9px 9px 0;padding:.7rem 1rem;margin-top:.9rem;font-size:.84rem;
+  color:var(--ink);font-style:italic;}
+
+.writing-zone{background:#fff;border:1.5px solid var(--border);border-radius:16px;
+  padding:1.4rem 1.5rem;margin-bottom:1rem;box-shadow:0 2px 10px var(--shadow);}
+.writing-prompt{background:linear-gradient(135deg,var(--amber-pale),#fffcf5);
+  border:1px solid rgba(200,134,10,.22);border-radius:10px;padding:.9rem 1.1rem;
+  margin-bottom:1rem;font-size:.87rem;line-height:1.65;}
+.writing-prompt strong{color:var(--rust);}
+#practiceTA{width:100%;min-height:145px;border:1.5px solid var(--border);border-radius:10px;
+  padding:.9rem 1rem;font-family:'DM Sans',sans-serif;font-size:.93rem;line-height:1.75;
+  color:var(--ink);resize:vertical;background:#fffef9;transition:border-color .2s;outline:none;}
+#practiceTA:focus{border-color:var(--violin);box-shadow:0 0 0 3px rgba(139,69,19,.1);}
+.wc{text-align:right;font-size:.76rem;color:#bbb;margin-top:.4rem;}
+
+.btn-check{background:linear-gradient(135deg,var(--sage),var(--sage-light));border:none;
+  border-radius:10px;color:#fff;font-weight:700;font-size:.92rem;padding:.75rem 1.6rem;
+  cursor:pointer;transition:all .2s;font-family:'DM Sans',sans-serif;
+  display:inline-flex;align-items:center;gap:.45rem;
+  box-shadow:0 4px 14px rgba(74,103,65,.32);}
+.btn-check:hover{transform:translateY(-2px);box-shadow:0 7px 20px rgba(74,103,65,.4);}
+.btn-check:disabled{opacity:.55;cursor:not-allowed;transform:none;}
+
+.btn-next{background:linear-gradient(135deg,var(--violin),var(--rust));border:none;
+  border-radius:10px;color:#fff;font-weight:700;font-size:.92rem;padding:.75rem 1.6rem;
+  cursor:pointer;transition:all .2s;font-family:'DM Sans',sans-serif;
+  display:inline-flex;align-items:center;gap:.45rem;box-shadow:0 4px 14px rgba(139,69,19,.3);}
+.btn-next:hover{transform:translateY(-2px);}
+
+.fb-area{background:#fff;border:1.5px solid var(--border);border-radius:16px;
+  overflow:hidden;box-shadow:0 2px 10px var(--shadow);display:none;}
+.fb-area.show{display:block;animation:rise .35s ease;}
+.fb-head{padding:.95rem 1.4rem;display:flex;align-items:center;gap:.7rem;border-bottom:1px solid var(--border);}
+.fb-head.excellent{background:linear-gradient(90deg,#d4edda,#f0faf4);}
+.fb-head.good{background:linear-gradient(90deg,#fff3cd,#fffbf0);}
+.fb-head.low{background:linear-gradient(90deg,#f8d7da,#fdf5f5);}
+.fb-emoji{font-size:1.8rem;}
+.fb-htitle{font-weight:800;font-size:1rem;margin:0;}
+.fb-hsub{font-size:.78rem;color:#888;margin:0;}
+.fb-body{padding:1.4rem;}
+.score-circle{width:66px;height:66px;border-radius:50%;display:flex;align-items:center;
+  justify-content:center;font-family:'Playfair Display',serif;font-weight:900;font-size:1.25rem;flex-shrink:0;}
+.sc-high{background:#d4edda;color:#2d6a4f;}
+.sc-med{background:#fff3cd;color:#7a5c00;}
+.sc-low{background:#f8d7da;color:#8b1a1a;}
+.fb-section{margin-bottom:1.1rem;}
+.fb-section-title{font-weight:700;font-size:.76rem;text-transform:uppercase;letter-spacing:.07em;
+  color:#aaa;margin-bottom:.5rem;display:flex;align-items:center;gap:.35rem;}
+.fb-item{padding:.62rem .85rem;border-radius:8px;font-size:.84rem;line-height:1.52;
+  margin-bottom:.35rem;display:flex;gap:.55rem;align-items:flex-start;}
+.fb-item.ok{background:#f0f9f4;color:#2d6a4f;border-left:3px solid var(--sage);}
+.fb-item.err{background:#fdf5f5;color:#8b1a1a;border-left:3px solid #dc3545;}
+.fb-item.tip{background:#fffbf0;color:#7a5c00;border-left:3px solid var(--violin);}
+.fb-item.info{background:var(--parchment);color:var(--ink);border-left:3px solid #aaa;}
+.fb-ico{flex-shrink:0;margin-top:1px;}
+
+.spin{width:34px;height:34px;border:3px solid var(--border);border-top-color:var(--violin);
+  border-radius:50%;animation:rot .65s linear infinite;margin:0 auto 1rem;}
+@keyframes rot{to{transform:rotate(360deg)}}
+
+.profile-cover{height:96px;background:linear-gradient(135deg,var(--ink) 0%,#3d2a10 50%,var(--violin) 100%);position:relative;}
+.profile-av-lg{width:78px;height:78px;border-radius:50%;border:4px solid #fff;
+  background:linear-gradient(135deg,var(--violin),var(--rust));display:flex;align-items:center;
+  justify-content:center;font-family:'Playfair Display',serif;font-weight:900;font-size:1.9rem;
+  color:#fff;position:absolute;bottom:-38px;left:1.4rem;box-shadow:0 4px 18px var(--shadow);}
+.profile-body{padding:3.2rem 1.4rem 1.4rem;}
+.profile-name{font-size:1.4rem;font-weight:900;margin-bottom:.15rem;}
+.profile-meta{color:#999;font-size:.83rem;}
+.ach-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:.65rem;}
+.ach{background:#fff;border:1.5px solid var(--border);border-radius:12px;padding:.9rem .7rem;
+  text-align:center;transition:all .2s;}
+.ach.unlocked{border-color:var(--violin);background:var(--amber-pale);}
+.ach.unlocked:hover{transform:translateY(-3px);box-shadow:0 5px 14px rgba(139,69,19,.22);}
+.ach-icon{font-size:1.6rem;display:block;margin-bottom:.35rem;}
+.ach-name{font-size:.7rem;font-weight:700;color:var(--ink);}
+.ach.locked .ach-icon{filter:grayscale(1);opacity:.35;}
+.ach.locked .ach-name{color:#ccc;}
+
+.hist-row{background:#fff;border:1.5px solid var(--border);border-radius:11px;
+  padding:.8rem 1rem;margin-bottom:.5rem;display:flex;align-items:center;gap:.8rem;cursor:pointer;transition:border-color .2s;}
+.hist-row:hover{border-color:var(--violin);}
+
+.toast-box{position:fixed;bottom:1.4rem;right:1.4rem;z-index:9999;}
+.toast-item{background:var(--ink);color:#fff;border-radius:12px;padding:.8rem 1.1rem;
+  margin-top:.45rem;display:flex;align-items:center;gap:.65rem;font-size:.84rem;font-weight:500;
+  box-shadow:0 8px 26px rgba(0,0,0,.28);animation:rise .28s ease;max-width:300px;}
+.toast-item.s{border-left:4px solid var(--sage-light);}
+.toast-item.e{border-left:4px solid #dc3545;}
+.toast-item.i{border-left:4px solid var(--violin-light);}
+
+.modal-backdrop-custom{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:1040;
+  display:flex;align-items:center;justify-content:center;padding:1rem;}
+.modal-box{background:#fff;border-radius:20px;max-width:480px;width:100%;
+  box-shadow:0 24px 64px rgba(0,0,0,.28);animation:rise .3s ease;overflow:hidden;}
+.modal-head{background:var(--ink);padding:1.1rem 1.4rem;color:#fff;display:flex;align-items:center;gap:.7rem;}
+.modal-head .modal-title-txt{font-weight:800;font-size:1rem;flex:1;}
+.modal-close{background:rgba(255,255,255,.12);border:none;color:#fff;border-radius:8px;
+  width:32px;height:32px;cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center;}
+.modal-close:hover{background:rgba(255,255,255,.25);}
+.modal-body-custom{padding:1.4rem;}
+.modal-foot{padding:1rem 1.4rem;border-top:1px solid var(--border);display:flex;gap:.7rem;justify-content:flex-end;}
+
+@keyframes rise{from{opacity:0;transform:translateY(28px)}to{opacity:1;transform:translateY(0)}}
+::-webkit-scrollbar{width:6px;height:6px;}
+::-webkit-scrollbar-track{background:transparent;}
+::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px;}
+@media(max-width:576px){
+  .app-body{padding:1rem;}
+  .stats-grid{grid-template-columns:1fr 1fr;}
+  .ach-grid{grid-template-columns:repeat(3,1fr);}
+  .app-nav{padding:.6rem 1rem;}
+  .nav-username{display:none;}
+}
+</style>
+</head>
+<body>
+
+<div id="appScreen">
+  <nav class="app-nav">
+    <div class="nav-brand">Redacción<span>Musical</span></div>
+    <div class="nav-avatar" id="navAv" onclick="switchPage('perfil')" title="Ver perfil">M</div>
+    <span class="nav-username" id="navName">Estudiante</span>
+    <button class="btn-reset" onclick="confirmReset()"><i class="bi bi-arrow-counterclockwise"></i> Reiniciar</button>
+  </nav>
+  <div class="app-tabs">
+    <button class="app-tab active" id="tab-dashboard" onclick="switchPage('dashboard')"><i class="bi bi-grid-3x3-gap-fill"></i> Inicio</button>
+    <button class="app-tab" id="tab-ejercicios" onclick="switchPage('ejercicios')"><i class="bi bi-journal-bookmark-fill"></i> Técnicas</button>
+    <button class="app-tab" id="tab-practica" onclick="switchPage('practica')"><i class="bi bi-pencil-square"></i> Practicar</button>
+    <button class="app-tab" id="tab-perfil" onclick="switchPage('perfil')"><i class="bi bi-person-circle"></i> Perfil</button>
+  </div>
+  <div class="app-body">
+    <!-- DASHBOARD -->
+    <div class="page active" id="page-dashboard">
+      <div class="d-flex align-items-center gap-2 mb-4"><div><h2 class="serif fw-black mb-0">¡Hola, <span id="dashName">estudiante de música</span>! 🎵</h2><p class="text-muted mb-0">Mejora tu redacción académica y profesional en música</p></div></div>
+      <div class="stats-grid mb-4">
+        <div class="stat-box"><div class="stat-num" id="sCompleted">0</div><div class="stat-lbl">Técnicas dominadas</div></div>
+        <div class="stat-box"><div class="stat-num" id="sPracticed">0</div><div class="stat-lbl">Prácticas realizadas</div></div>
+        <div class="stat-box"><div class="stat-num" id="sScore">—</div><div class="stat-lbl">Puntuación media</div></div>
+        <div class="stat-box"><div class="stat-num" id="sStreak">1🔥</div><div class="stat-lbl">Racha</div></div>
+      </div>
+      <div class="card-app mb-4"><div class="card-app-header"><i class="bi bi-map-fill text-warning"></i><div><div style="font-weight:800">Mapa de progreso</div><div style="font-size:.74rem;color:#aaa">100 técnicas · Verde = completado</div></div></div><div class="card-app-body"><div class="dot-grid" id="dotGrid"></div></div></div>
+      <div class="mb-2" style="font-weight:800">Siguiente técnica</div>
+      <div class="ex-card" id="nextCard"><div class="ex-num-box" id="nextNum">01</div><div class="ex-body"><div class="ex-cat-tag" id="nextCat">Crítica musical</div><div class="ex-name" id="nextName">Cargando...</div><div class="ex-short" id="nextDesc"></div></div><span style="color:var(--violin);font-size:1.4rem"><i class="bi bi-play-circle-fill"></i></span></div>
+      <div class="card-app mt-4"><div class="card-app-header"><i class="bi bi-bar-chart-fill text-warning"></i><div>Progreso por categoría</div></div><div class="card-app-body" id="catProgress"></div></div>
+    </div>
+    <!-- TÉCNICAS -->
+    <div class="page" id="page-ejercicios">
+      <div class="d-flex align-items-center justify-content-between flex-wrap gap-2 mb-3"><h2 class="serif fw-black mb-0">100 Técnicas de Redacción para Estudiantes de Música</h2><input class="search-field" id="searchQ" type="text" placeholder="Buscar..." oninput="renderList()"></div>
+      <div class="d-flex flex-wrap gap-2 mb-3" id="pills">
+        <button class="pill on" onclick="setFilter('all',this)">Todas</button>
+        <button class="pill" onclick="setFilter('critica',this)">Crítica musical</button>
+        <button class="pill" onclick="setFilter('analisis',this)">Análisis de obras</button>
+        <button class="pill" onclick="setFilter('biografias',this)">Biografías y contextos</button>
+        <button class="pill" onclick="setFilter('programas',this)">Programas de mano</button>
+        <button class="pill" onclick="setFilter('didactica',this)">Didáctica y divulgación</button>
+      </div>
+      <div id="exList"></div>
+    </div>
+    <!-- PRACTICAR -->
+    <div class="page" id="page-practica">
+      <div id="practiceEmpty" style="text-align:center;padding:4rem 1rem;"><div style="font-size:4rem">🎼</div><h3 class="serif fw-black mb-2">Selecciona una técnica</h3><button class="btn-main" style="display:inline-flex;width:auto" onclick="switchPage('ejercicios')"><i class="bi bi-journal-bookmark-fill"></i> Ver técnicas</button></div>
+      <div id="practiceContent" style="display:none">
+        <div class="prac-header"><div class="d-flex align-items-start justify-content-between gap-2 flex-wrap"><div><div class="prac-badge"><i class="bi bi-mortarboard-fill"></i> <span id="pracCat">Crítica</span> · Técnica <span id="pracNum">01</span></div><h2 class="prac-title serif" id="pracName">Título</h2><p class="prac-explanation" id="pracExpl">Explicación</p><div class="prac-example" id="pracEx"></div></div><div class="d-flex gap-2"><button class="btn-outline-app" onclick="prevExercise()"><i class="bi bi-chevron-left"></i></button><button class="btn-outline-app" onclick="nextExercise()"><i class="bi bi-chevron-right"></i></button></div></div></div>
+        <div class="writing-zone"><div class="writing-prompt" id="pracPrompt">Escribe tu respuesta.</div><textarea id="practiceTA" placeholder="Escribe tu respuesta aquí…"></textarea><div class="wc"><span id="wc">0</span> palabras · mínimo 10</div></div>
+        <div class="d-flex align-items-center gap-2 flex-wrap mb-3"><button class="btn-check" id="btnCheck" onclick="doCheck()"><i class="bi bi-magic"></i> Analizar respuesta</button><button class="btn-next" id="btnNext" onclick="nextExercise()" style="display:none">Siguiente <i class="bi bi-arrow-right"></i></button><span style="font-size:.76rem;color:#bbb">Aplica conceptos de redacción musical.</span></div>
+        <div class="fb-area" id="fbArea"><div id="fbLoading" style="text-align:center;padding:2.5rem"><div class="spin"></div><div>Evaluando tu respuesta musical...</div></div><div id="fbContent" style="display:none"></div></div>
+      </div>
+    </div>
+    <!-- PERFIL -->
+    <div class="page" id="page-perfil">
+      <div class="card-app mb-4"><div class="profile-cover"><div class="profile-av-lg" id="profAv">M</div></div><div class="profile-body"><h3 class="profile-name" id="profName">—</h3><p class="profile-meta" id="profMeta">—</p><div class="d-flex gap-4 mt-3"><div><strong id="pComp">0</strong><span class="text-muted ms-1">técnicas</span></div><div><strong id="pPrac">0</strong><span class="text-muted ms-1">prácticas</span></div><div><strong id="pScr">—</strong><span class="text-muted ms-1">media</span></div></div><div class="d-flex gap-2 mt-3"><button class="btn-outline-app" onclick="openEditModal()"><i class="bi bi-pencil"></i> Editar perfil</button></div></div></div>
+      <div class="mb-2" style="font-weight:800">Logros destacados</div><div class="ach-grid mb-4" id="achGrid"></div>
+      <div class="mb-2" style="font-weight:800">Historial de prácticas</div><div id="histList"></div>
+    </div>
+  </div>
+</div>
+
+<div id="editModal" class="modal-backdrop-custom" style="display:none"><div class="modal-box"><div class="modal-head"><i class="bi bi-person-gear"></i><span class="modal-title-txt">Editar perfil</span><button class="modal-close" onclick="closeModal('editModal')"><i class="bi bi-x-lg"></i></button></div><div class="modal-body-custom"><div class="mb-3"><label class="field-label">Nombre</label><input id="editName" class="field" type="text"></div><div class="mb-3"><label class="field-label">Nivel</label><select id="editLevel" class="field"><option value="principiante">🌱 Principiante</option><option value="intermedio">📖 Intermedio</option><option value="avanzado">🎓 Avanzado</option></select></div></div><div class="modal-foot"><button class="btn-outline-app" onclick="closeModal('editModal')">Cancelar</button><button class="btn-main" style="width:auto" onclick="saveEdit()">Guardar</button></div></div></div>
+<div class="toast-box" id="toastBox"></div>
+
+<script>
+// ============================================================
+// 100 TÉCNICAS DE REDACCIÓN PARA ESTUDIANTES DE LICENCIATURA EN MÚSICA
+// ============================================================
+const CATS = {
+  critica: 'Crítica musical',
+  analisis: 'Análisis de obras',
+  biografias: 'Biografías y contextos',
+  programas: 'Programas de mano',
+  didactica: 'Didáctica y divulgación'
+};
+
+// Plantillas base (20 por categoría, repetimos cíclicamente hasta 100)
+const templates = [
+  // Crítica musical (1-20)
+  { cat: 'critica', name: 'Estructura de una reseña de concierto', short: 'Introducción, descripción, análisis, valoración', expl: 'Una reseña debe situar al lector (qué, dónde, cuándo), describir la ejecución, analizar aspectos técnicos y artísticos, y emitir un juicio fundamentado.', prompt: 'Escribe la introducción de una reseña de un concierto de piano que presenciaste o imaginas, incluyendo obra, intérprete y lugar.' },
+  { cat: 'critica', name: 'Adjetivación precisa en crítica musical', short: 'Evitar "bueno/malo", usar términos específicos', expl: 'Usar "brillante", "matizado", "expresivo", "mecánico", "falto de legato", "rítmicamente impecable".', prompt: 'Reemplaza "el pianista tocó muy bien" por dos adjetivos más descriptivos y precisos.' },
+  { cat: 'critica', name: 'Comparación con otras interpretaciones', short: 'Contextualizar la versión escuchada', expl: 'Mencionar grabaciones de referencia o versiones históricas, sin caer en nombre propio excesivo.', prompt: 'Compara una interpretación imaginaria de la Sinfonía No. 5 de Beethoven con una versión de referencia (ej. Carlos Kleiber).' },
+  { cat: 'critica', name: 'Descripción del sonido', short: 'Timbre, proyección, equilibrio', expl: 'Usar metáforas auditivas: "sonido aterciopelado", "ataque incisivo", "legato cantabile".', prompt: 'Describe el sonido de un violín en un concierto, usando al menos dos metáforas sensoriales.' },
+  { cat: 'critica', name: 'Análisis de la dirección orquestal', short: 'Gestualidad, tempo, dinámicas', expl: 'Evaluar la claridad de los gestos, la elección de tempos, el balance de planos sonoros.', prompt: 'Escribe dos frases evaluando la dirección de una orquesta en una obra romántica (imaginaria).' },
+  { cat: 'critica', name: 'Crítica de grabaciones discográficas', short: 'Considerar calidad de sonido, producción, notas de folleto', expl: 'Incluir ingeniería de sonido, toma en vivo o estudio, presentación del álbum.', prompt: 'Redacta un párrafo de crítica para una nueva grabación de las Variaciones Goldberg de Bach.' },
+  { cat: 'critica', name: 'Evitar subjetividad vacía', short: 'Fundamentar las opiniones', expl: 'No decir "me encantó" sin explicar por qué: "la claridad de las voces medias reveló contrapuntos nunca antes escuchados".', prompt: 'Transforma la frase "me pareció aburrido" en una observación objetiva sobre tempo o dinámica.' },
+  { cat: 'critica', name: 'Uso de terminología técnica', short: 'Legato, staccato, rubato, vibrato, etc.', expl: 'Emplear términos musicales precisos, pero definirlos si el medio no es especializado.', prompt: 'Define "rubato" y escribe una frase evaluando su uso en una interpretación de Chopin.' },
+  { cat: 'critica', name: 'Contexto de la obra', short: 'Situar la pieza en la historia musical', expl: 'Mencionar el período, estilo, influencias, relevancia en el repertorio.', prompt: 'Escribe una oración que contextualice la Sonata "Claro de luna" de Beethoven antes de reseñar una interpretación.' },
+  { cat: 'critica', name: 'Crítica de música nueva o contemporánea', short: 'Apertura a lenguajes no tradicionales', expl: 'Evitar prejuicios; describir los recursos (clusters, microtonalismo, electrónica) sin descalificar.', prompt: 'Redacta una frase abierta para reseñar una obra electroacústica que usa ruidos industriales.' },
+  { cat: 'critica', name: 'Crítica de ópera', short: 'Cantar y actuar', expl: 'Evaluar calidad vocal (emisión, afinación, dicción), capacidad actoral y dirección escénica.', prompt: 'Escribe una observación sobre el fraseo de un tenor en una aria de Verdi.' },
+  { cat: 'critica', name: 'Crítica de música de cámara', short: 'Ensemble, diálogo entre instrumentos', expl: 'Destacar la cohesión, el equilibrio, la capacidad de escucha mutua y la flexibilidad rítmica.', prompt: 'Describe la interacción entre violín y piano en una sonata de Brahms (imaginaria).' },
+  { cat: 'critica', name: 'El título de la crítica', short: 'Atractivo, informativo, sin sensacionalismo', expl: 'Debe capturar el espíritu de la reseña. Ejemplo: "Un Beethoven íntimo y revelador en la Sala Mayor".', prompt: 'Propón tres posibles títulos para una crítica de un concierto de guitarra flamenca.' },
+  { cat: 'critica', name: 'Longitud adecuada', short: 'Entre 500 y 1000 palabras para prensa', expl: 'Ir al grano; eliminar digresiones biográficas innecesarias.', prompt: 'Enumera tres elementos que podrías eliminar de una reseña demasiado larga.' },
+  { cat: 'critica', name: 'Crítica de festivales', short: 'Visión de conjunto y obras destacadas', expl: 'No reseñar todo, seleccionar lo más relevante y ofrecer una impresión global.', prompt: 'Redacta la oración de apertura de una crónica de un festival de música antigua.' },
+  { cat: 'critica', name: 'Citas de los intérpretes', short: 'Declaraciones en entrevistas', expl: 'Usar citas breves para enriquecer, no como relleno.', prompt: 'Inventa una cita de un director sobre su enfoque de una sinfonía de Mahler.' },
+  { cat: 'critica', name: 'Crítica de danza o ballet', short: 'Coordinación música-movimiento', expl: 'Valorar la sincronía, la expresividad, la calidad técnica de los bailarines.', prompt: 'Escribe una observación sobre cómo la orquesta acompañó a una bailarina en el "Lago de los Cisnes".' },
+  { cat: 'critica', name: 'Ética de la crítica', short: 'Respeto, honestidad, no destruir carreras', expl: 'Criticar la obra, no a la persona. Ofrecer elementos para mejorar.', prompt: 'Reescribe una crítica destructiva ("fue un desastre") en forma constructiva.' },
+  { cat: 'critica', name: 'Uso de grabaciones de referencia', short: 'Comparar con versiones canónicas', expl: 'Ejemplo: "A diferencia de la legendaria grabación de Gould, esta versión apuesta por tempos más pausados".', prompt: 'Compara una interpretación de la "Pasión según San Mateo" con una grabación de referencia (ej. Harnoncourt).' },
+  { cat: 'critica', name: 'Cierre de la reseña', short: 'Recomendación o reflexión final', expl: 'Concluir si vale la pena escuchar, asistir o comprar.', prompt: 'Escribe la frase final de una reseña positiva de un recital de canto.' },
+  // Análisis de obras (21-40)
+  { cat: 'analisis', name: 'Análisis formal', short: 'Identificar secciones, periodos frásicos', expl: 'Describir estructura: exposición, desarrollo, recapitulación; A-B-A, rondó, etc.', prompt: 'Describe la forma ternaria (ABA) en una pieza corta que conozcas (ej. "Para Elisa").' },
+  { cat: 'analisis', name: 'Análisis armónico', short: 'Funciones tonales, modulaciones', expl: 'Usar nomenclatura: grados (I, IV, V), acordes de paso, dominantes secundarias.', prompt: 'Explica qué es una cadencia auténtica y escríbela en Do mayor.' },
+  { cat: 'analisis', name: 'Análisis melódico', short: 'Motivos, frases, contorno', expl: 'Identificar células melódicas, preguntas y respuestas, puntos culminantes.', prompt: 'Describe el motivo inicial de la Quinta Sinfonía de Beethoven (ta-ta-ta-taa).' },
+  { cat: 'analisis', name: 'Análisis rítmico', short: 'Compás, patrones, síncopas, polirritmias', expl: 'Reconocer cambios de compás, acentos irregulares, hemiolas.', prompt: 'Define hemiola y da un ejemplo en música folclórica colombiana (ej. bambuco).' },
+  { cat: 'analisis', name: 'Análisis textural', short: 'Monodia, homofonía, polifonía', expl: 'Describir cómo se relacionan las voces: melodía acompañada, contrapunto imitativo.', prompt: 'Diferencia entre homofonía y polifonía, con ejemplos de repertorio.' },
+  { cat: 'analisis', name: 'Análisis tímbrico', short: 'Instrumentación, registro, combinaciones', expl: 'Observar colores orquestales, uso de solistas, efectos (tremolo, armónicos).', prompt: 'Describe el timbre del corno inglés en el "Largo" de la Sinfonía "Desde el Nuevo Mundo".' },
+  { cat: 'analisis', name: 'Análisis dinámico', short: 'Planeamiento de intensidad', expl: 'Mapa de crescendos, diminuendos, acentos, contrastes.', prompt: 'Explica cómo el crescendo gradual puede crear tensión en una obra orquestal.' },
+  { cat: 'analisis', name: 'Análisis motívico', short: 'Transformación de motivos', expl: 'Retrograde, inversión, aumentación, disminución.', prompt: 'Toma un motivo simple (ej. do-re-mi) y aplícale inversión y aumentación.' },
+  { cat: 'analisis', name: 'Análisis de la armonía del siglo XX', short: 'Atonalidad, serialismo, clusters', expl: 'Describir ausencia de centro tonal, uso de series dodecafónicas, acordes por segundas.', prompt: 'Explica qué es la serie dodecafónica y nombra un compositor representativo.' },
+  { cat: 'analisis', name: 'Análisis de la forma sonata', short: 'Exposición, desarrollo, re-capitulación', expl: 'Identificar temas, puente modulante, coda.', prompt: 'Enumera las tres secciones principales de la forma sonata y su función.' },
+  { cat: 'analisis', name: 'Análisis de la fuga', short: 'Sujeto, respuesta, contrasujeto', expl: 'Describir entradas, episodios, stretto, pedal.', prompt: 'Escribe una frase describiendo el sujeto de una fuga de Bach (ej. "El Arte de la Fuga").' },
+  { cat: 'analisis', name: 'Análisis de la canción', short: 'Forma estrófica, through-composed, strophic', expl: 'Analizar relación texto-música, estructura de versos, estribillo.', prompt: 'Analiza la forma de una canción popular colombiana (ej. "La Piragua" de José Barros).' },
+  { cat: 'analisis', name: 'Análisis del lied', short: 'Piano y voz, poema musicalizado', expl: 'Describir cómo el piano ilustra el texto (agua, viento, muerte).', prompt: 'Escribe una observación sobre el acompañamiento pianístico en un lied de Schubert.' },
+  { cat: 'analisis', name: 'Análisis de la música programática', short: 'Relato extramusical', expl: 'Identificar pasajes que describen escenas (tormenta, caza, amanecer).', prompt: 'Describe un pasaje programático en "Los Cuadros de una Exposición" de Mussorgsky.' },
+  { cat: 'analisis', name: 'Análisis del ritmo en música latinoamericana', short: 'Clave, síncopa, patrón de son', expl: 'Reconocer célula rítmica característica del son cubano, salsa, cumbia.', prompt: 'Explica el patrón de la clave de son (tres-dos o dos-tres).' },
+  { cat: 'analisis', name: 'Análisis de la música colombiana', short: 'Bambuco, pasillo, porro, cumbia', expl: 'Describir rasgos rítmicos, armónicos e instrumentales.', prompt: 'Describe la instrumentación típica de un conjunto de cumbia colombiana.' },
+  { cat: 'analisis', name: 'Análisis de la interpretación', short: 'Versión versus texto', expl: 'Comparar la partitura con la ejecución: ornamentación, rubato, tempos elegidos.', prompt: 'Elige una grabación de la "Chacona" de Bach y señala una decisión interpretativa del músico.' },
+  { cat: 'analisis', name: 'Análisis de la grabación como texto', short: 'Edición, reverberación, montaje', expl: 'La producción también es parte de la obra escuchada.', prompt: 'Comenta cómo la reverberación puede afectar la percepción de una grabación coral.' },
+  { cat: 'analisis', name: 'Análisis de la notación histórica', short: 'Diferencias entre notación barroca y moderna', expl: 'Puntillo, alteraciones accidentales, figuras de adorno.', prompt: 'Explica la diferencia entre un trino barroco y uno moderno.' },
+  { cat: 'analisis', name: 'Uso de ejemplos musicales en texto', short: 'Referencia a compases o gráficos', expl: 'Escribir "compases 15-20" o incluir fragmentos de partitura en imagen.', prompt: 'Redacta una frase que remita a un pasaje específico de una partitura (inventa los compases).' },
+  // Biografías y contextos (41-60)
+  { cat: 'biografias', name: 'Biografía cronológica', short: 'Orden temporal de eventos', expl: 'Nacimiento, formación, obras clave, legado. No abrumar con fechas.', prompt: 'Escribe la primera oración de una biografía de Johann Sebastian Bach, destacando su familia musical.' },
+  { cat: 'biografias', name: 'Biografía temática', short: 'Por ejes: innovaciones armónicas, mecenazgo, exilio', expl: 'Útil para compositores con vida compleja (ej. Stravinsky).', prompt: 'Propón dos ejes temáticos para una biografía de Astor Piazzolla.' },
+  { cat: 'biografias', name: 'Contexto histórico', short: 'Situación política, social, cultural', expl: 'Relacionar la obra con su tiempo: el Barroco, el Nacionalismo, el siglo XX.', prompt: 'Explica cómo el nacionalismo musical influyó en compositores como Manuel de Falla.' },
+  { cat: 'biografias', name: 'Contexto geográfico', short: 'Escuelas, ciudades, viajes', expl: 'La Escuela de Viena, el Grupo de los Cinco, la Generación del 51.', prompt: 'Menciona dos compositores de la Escuela Nacionalista Colombiana (ej. Luis Antonio Escobar, Blas Emilio Atehortúa).' },
+  { cat: 'biografias', name: 'Mecenazgo y patrocinio', short: 'Relación compositor-mecenas', expl: 'Haydn y los Esterházy, Beethoven y los príncipes vieneses.', prompt: 'Describe cómo el mecenazgo afectó la libertad creativa de Haydn.' },
+  { cat: 'biografias', name: 'Relación con otros artistas', short: 'Amistades, rivalidades, influencias', expl: 'Wagner y Nietzsche, Debussy y Satie.', prompt: 'Escribe una frase sobre la admiración de Brahms por el joven Dvořák.' },
+  { cat: 'biografias', name: 'Obras clave', short: 'Seleccionar hitos, no todo el catálogo', expl: 'Destacar las más representativas, innovadoras o populares.', prompt: 'Selecciona tres obras imprescindibles de Heitor Villa-Lobos y justifica por qué.' },
+  { cat: 'biografias', name: 'Anécdotas significativas', short: 'Humanizar al compositor', expl: 'Breves, relevantes, que iluminen su carácter.', prompt: 'Cuenta una anécdota conocida de la rivalidad entre Salieri y Mozart (versión ficticia pero plausible).' },
+  { cat: 'biografias', name: 'Influencia y legado', short: 'Cómo impactó en generaciones posteriores', expl: 'Discípulos, escuelas fundadas, obras que inspiraron.', prompt: 'Escribe sobre la influencia de Igor Stravinsky en la música del siglo XX.' },
+  { cat: 'biografias', name: 'Mujeres compositoras', short: 'Visibilizar figuras olvidadas', expl: 'Hildegard von Bingen, Fanny Mendelssohn, Clara Schumann, Lili Boulanger.', prompt: 'Redacta un párrafo breve sobre Clara Schumann y su rol como intérprete y compositora.' },
+  { cat: 'biografias', name: 'Compositores colombianos', short: 'Repertorio nacional', expl: 'Luis Antonio Calvo, Adolfo Mejía, Blas Emilio Atehortúa, Guillermo Uribe Holguín.', prompt: 'Escribe una oración biográfica sobre Luis Antonio Calvo (destacando su obra para piano).' },
+  { cat: 'biografias', name: 'Compositores latinoamericanos', short: 'Panorama regional', expl: 'Alberto Ginastera (Argentina), Heitor Villa-Lobos (Brasil), Silvestre Revueltas (México).', prompt: 'Describe una característica del estilo nacionalista de Ginastera (uso de ritmos folclóricos).' },
+  { cat: 'biografias', name: 'Uso de citas del compositor', short: 'Fuentes primarias', expl: 'Cartas, diarios, entrevistas. Dan voz al propio artista.', prompt: 'Inventa una cita de Debussy sobre la importancia del color en la música.' },
+  { cat: 'biografias', name: 'Catálogo de obras', short: 'Ordenar por número de opus o género', expl: 'Útil en anexos, no en biografía extensa.', prompt: 'Enumera los géneros que cultivó Mozart: sinfonía, concierto, ópera, etc.' },
+  { cartas y diarios', name: 'Uso de fuentes primarias', short: 'Extractos de cartas o diarios', expl: 'Dan autenticidad y muestran la personalidad del músico.', prompt: 'Escribe una frase ficticia de una carta de Beethoven sobre su sordera.' },
+  { cat: 'biografias', name: 'Exilio y migración', short: 'Compositores desplazados por guerras', expl: 'Prokofiev, Stravinsky, Rachmaninoff, Bartók.', prompt: 'Explica cómo el exilio influyó en la música de Bartók (incorporación de folclore americano).' },
+  { cat: 'biografias', name: 'Recepción crítica', short: 'Cómo fue recibido en su época', expl: 'Escándalo de "La consagración de la primavera", incomprensión de la música de Bach.', prompt: 'Describe la reacción del público ante "La consagración de la primavera" en 1913.' },
+  { cat: 'biografias', name: 'Interpretación histórica', short: 'Evolución de la ejecución de sus obras', expl: 'Prácticas interpretativas originales vs. modernas.', prompt: 'Menciona una diferencia entre la interpretación barroca y la actual de una suite de Bach.' },
+  { cat: 'biografias', name: 'Iconografía', short: 'Descripción de retratos y fotografías', expl: 'Ayuda a visualizar al compositor y su época.', prompt: 'Describe un retrato famoso de Chopin (ej. por Delacroix).' },
+  { cat: 'biografias', name: 'Legado pedagógico', short: 'Métodos, tratados, escuela', expl: 'Por ejemplo, el "Gradus ad Parnassum" de Fux, los estudios de Czerny.', prompt: 'Explica la importancia de los "Cuadernos de Anna Magdalena Bach" para la enseñanza del piano.' },
+  // Programas de mano (61-80)
+  { cat: 'programas', name: 'Estructura de un programa de mano', short: 'Notas al programa, biografías, agradecimientos', expl: 'Debe contener datos de la obra, contexto, comentario analítico no técnico, biografías breves.', prompt: 'Enumera las secciones que debe tener un programa de mano para un concierto sinfónico.' },
+  { cat: 'programas', name: 'Nota al programa objetiva', short: 'Sin juicios de valor excesivos', expl: 'Informar, no evaluar al intérprete en la nota (eso va en la crítica).', prompt: 'Escribe una frase sobre la estructura de la Sonata "Patética" de Beethoven sin emitir juicios de gusto.' },
+  { cat: 'programas', name: 'Lenguaje accesible', short: 'Evitar tecnicismo excesivo', expl: 'Explicar términos como "sonata", "fuga" cuando aparezcan.', prompt: 'Define "fuga" para un público no especializado en una frase.' },
+  { cat: 'programas', name: 'Datos de la obra', short: 'Compositor, año, duración, instrumentación', expl: 'Lista de orquesta, solistas, coro.', prompt: 'Escribe los datos de una obra imaginaria: "Sinfonía de los Andes" para orquesta y coro.' },
+  { cat: 'programas', name: 'Contexto histórico de la obra', short: 'Año de composición, estilo', expl: 'Ejemplo: "El Concierto de Aranjuez fue compuesto en 1939, en plena posguerra española."', prompt: 'Contextualiza históricamente la "Sinfonía No. 9" de Beethoven (1824).' },
+  { cat: 'programas', name: 'Comentario analítico breve', short: 'Destacar aspectos auditivos', expl: 'Escuchar para identificar el motivo, el diálogo entre instrumentos.', prompt: 'Indica al público qué escuchar en el segundo movimiento del "Concierto de Aranjuez" (guitarra y corno inglés).' },
+  { cat: 'programas', name: 'Biografía del compositor', short: 'Muy breve (2-3 líneas)', expl: 'Solo lo esencial para el programa.', prompt: 'Escribe una biografía de tres líneas de Violeta Parra para un programa de mano.' },
+  { cat: 'programas', name: 'Biografía del intérprete', short: 'Logros destacados, formación, discografía', expl: 'Máximo 100 palabras por solista.', prompt: 'Redacta una biografía de 60 palabras para un pianista colombiano ficticio.' },
+  { cat: 'programas', name: 'Agradecimientos y auspicios', short: 'Patrocinadores, instituciones', expl: 'Colocar al final, con tipografía pequeña.', prompt: 'Redacta una línea de agradecimiento al Ministerio de Cultura de Colombia.' },
+  { cat: 'programas', name: 'Fechas y lugar', short: 'Concierto y ensayo general', expl: 'Incluir horarios, duración, pausa.', prompt: 'Indica que el concierto tendrá una duración de 90 minutos con un intermedio de 15 minutos.' },
+  { cat: 'programas', name: 'Normas de sala', short: 'Silenciar dispositivos, no grabar', expl: 'Redactado de forma amable y clara.', prompt: 'Escribe una norma para aplaudir solo al final de cada obra (no entre movimientos).' },
+  { cat: 'programas', name: 'Próximos conciertos', short: 'Temporada', expl: 'Incluir fechas, obras, solistas.', prompt: 'Anuncia un próximo concierto de la Orquesta Filarmónica de Bogotá para el mes siguiente.' },
+  { cat: 'programas', name: 'Diseño y tipografía', short: 'Legibilidad', expl: 'Usar fuentes claras, contraste suficiente.', prompt: 'Recomienda un tamaño mínimo de fuente para el cuerpo del programa (impreso).' },
+  { cat: 'programas', name: 'Traducción a otros idiomas', short: 'Inglés, francés, alemán según público', expl: 'Para festivales internacionales.', prompt: 'Traduce al inglés la frase "Prohibido grabar durante el concierto".' },
+  { cat: 'programas', name: 'Inclusión de libretos', short: 'Ópera, zarzuela, canción', expl: 'Texto original y traducción.', prompt: 'Explica por qué es útil incluir la traducción del texto de una canción en un programa.' },
+  { cat: 'programas', name: 'Agradecimiento a los músicos', short: 'Lista de orquesta', expl: 'Nombres de todos los miembros, o al menos de las primeras sillas.', prompt: 'Redacta el encabezado de la lista de músicos de una orquesta de cámara.' },
+  { cat: 'programas', name: 'Nota de la dirección', short: 'Bienvenida del director', expl: 'Breve, personal, destaca el repertorio.', prompt: 'Escribe el primer párrafo de una nota del director artístico de un festival.' },
+  { cat: 'programas', name: 'Colaboraciones especiales', short: 'Agrupaciones invitadas', expl: 'Describir brevemente su trayectoria.', prompt: 'Presenta a un coro infantil invitado a un concierto sinfónico.' },
+  { cat: 'programas', name: 'Uso de citas literarias', short: 'Epígrafes', expl: 'Una frase poética que introduzca la obra.', prompt: 'Elige una cita de la literatura que podría acompañar a la "Sinfonía Fantástica" de Berlioz.' },
+  { cat: 'programas', name: 'Corrección de pruebas', short: 'Sin errores ortográficos', expl: 'Revisar nombres, títulos, fechas.', prompt: 'Enumera tres elementos que revisarías dos veces en un programa de mano.' },
+  // Didáctica y divulgación (81-100)
+  { cat: 'didactica', name: 'Explicación de conceptos a principiantes', short: 'Analogías, ejemplos cotidianos', expl: 'Ejemplo: "el ritmo es como los latidos del corazón, pero organizados".', prompt: 'Explica qué es el compás de 3/4 usando una analogía con un vals.' },
+  { cat: 'didactica', name: 'Guía de audición', short: 'Indicar qué escuchar paso a paso', expl: 'Primera escucha: reconocer tema; segunda: seguir el desarrollo.', prompt: 'Redacta una guía de dos pasos para escuchar la "Obertura de Guillermo Tell" de Rossini.' },
+  { cat: 'didactica', name: 'Artículos de divulgación', short: 'Tono ameno, sin jerga excesiva', expl: 'Para revistas culturales, blogs, prensa.', prompt: 'Escribe la entradilla de un artículo titulado "¿Por qué nos emociona la música menor?"' },
+  { cat: 'didactica', name: 'Reseña de un libro de música', short: 'Opinión y contenido', expl: 'Útil para estudiantes y docentes.', prompt: 'Reseña brevemente un libro de divulgación musical que hayas leído (o imagina uno).' },
+  { cat: 'didactica', name: 'Material para redes sociales', short: 'Breve, atractivo, con hashtags', expl: 'Para Instagram, Twitter, TikTok.', prompt: 'Escribe un post de Instagram (máximo 150 caracteres) sobre un dato curioso de Mozart.' },
+  { cat: 'didactica', name: 'Elaboración de cuestionarios', short: 'Preguntas de comprensión', expl: 'Para estudiantes después de una audición.', prompt: 'Formula tres preguntas sobre "El Carnaval de los Animales" de Saint-Saëns.' },
+  { cat: 'didactica', name: 'Guía didáctica para profesores', short: 'Objetivos, actividades, evaluación', expl: 'Estructura de plan de clase.', prompt: 'Enumera los apartados de una guía didáctica para enseñar la forma rondó a niños.' },
+  { cat: 'didactica', name: 'Transcripción de entrevistas a músicos', short: 'Formato pregunta-respuesta', expl: 'Editar para claridad, respetar el sentido.', prompt: 'Escribe una pregunta para entrevistar a un luthier sobre la construcción de violines.' },
+  { cat: 'didactica', name: 'Redacción de sinopsis de ópera', short: 'Resumen argumental breve', expl: 'Evitar spoilers innecesarios, destacar los momentos musicales clave.', prompt: 'Escribe una sinopsis de 50 palabras de "La bohème" de Puccini.' },
+  { cat: 'didactica', name: 'Análisis de una grabación para estudiantes', short: 'Comparar versiones', expl: 'Ejercicio auditivo guiado.', prompt: 'Pide a los estudiantes que comparen dos grabaciones de la "Danza del Hada de Azúcar" (Tchaikovsky).' },
+  { cat: 'didactica', name: 'Redacción de programas de estudio', short: 'Syllabus de un curso', expl: 'Objetivos, contenidos, evaluación, bibliografía.', prompt: 'Escribe el objetivo general de un curso de "Apreciación musical" para no músicos.' },
+  { cat: 'didactica', name: 'Cartas a los padres', short: 'Comunicación en escuela de música', expl: 'Informar sobre progreso, conciertos, actividades.', prompt: 'Redacta una frase para informar a los padres sobre un recital de fin de año.' },
+  { cat: 'didactica', name: 'Proyectos de investigación musical', short: 'Introducción, problema, metodología', expl: 'Para estudiantes de licenciatura.', prompt: 'Escribe el título y la pregunta de investigación de un posible proyecto sobre música colombiana.' },
+  { cat: 'didactica', name: 'Reseña de un concierto didáctico', short: 'Enfoque en el valor educativo', expl: 'Destacar cómo acerca la música a niños o público no iniciado.', prompt: 'Comenta cómo un concierto didáctico de la Filarmónica de Bogotá explicó los instrumentos a niños.' },
+  { cat: 'didactica', name: 'Uso de gráficos y partituras simplificadas', short: 'Recursos visuales', expl: 'Incluir en materiales docentes.', prompt: 'Describe un gráfico que podría usarse para explicar el concepto de altura (agudo-grave).' },
+  { cat: 'didactica', name: 'Guía para escribir críticas en clase', short: 'Ejercicio para estudiantes', expl: 'Después de un concierto escolar.', prompt: 'Escribe una plantilla con preguntas para que los estudiantes escriban su primera crítica musical.' },
+  { cat: 'didactica', name: 'Grabaciones recomendadas', short: 'Lista comentada', expl: 'Para ampliar el repertorio.', prompt: 'Recomienda tres grabaciones de música barroca para un estudiante principiante.' },
+  { cat: 'didactica', name: 'Explicación de escalas y modos', short: 'Lenguaje claro', expl: 'Diferencia entre modo mayor y menor, modos griegos.', prompt: 'Explica la diferencia entre una escala mayor y una menor usando términos sencillos.' },
+  { cat: 'didactica', name: 'Redacción de anuncios de eventos', short: 'Atractivo, informativo', expl: 'Para carteles, redes, boletines.', prompt: 'Escribe un anuncio para un concierto de guitarra clásica en una biblioteca pública.' },
+  { cat: 'didactica', name: 'Ética en la divulgación musical', short: 'No desinformar, respetar derechos de autor', expl: 'Siempre citar fuentes, no usar grabaciones sin permiso.', prompt: 'Explica por qué no debes subir a YouTube una grabación de un concierto sin autorización.' }
+];
+
+// Generar exactamente 100 ejercicios
+let ejercicios = [];
+for (let i = 0; i < 100; i++) {
+  const t = templates[i % templates.length];
+  const sufijo = i < templates.length ? '' : ` (${Math.floor(i / templates.length) + 1})`;
+  ejercicios.push({
+    id: i + 1,
+    cat: t.cat,
+    name: t.name + sufijo,
+    short: t.short,
+    expl: t.expl,
+    prompt: t.prompt
+  });
+}
+for (let i = 0; i < ejercicios.length; i++) ejercicios[i].id = i + 1;
+
+// ========== ESTADO DE USUARIO ==========
+let userData = { name:"Estudiante", level:"intermedio", completed:[], practiced:0, scores:[], history:[], joinDate:new Date().toLocaleDateString('es-ES') };
+function loadUserData(){ const saved=localStorage.getItem('redaccionMusicalUser'); if(saved){ try{ const p=JSON.parse(saved); userData={...userData,...p}; }catch(e){} } updateUI(); }
+function saveUserData(){ localStorage.setItem('redaccionMusicalUser',JSON.stringify(userData)); updateUI(); }
+function updateUI(){ document.getElementById('navName').textContent=userData.name.split(' ')[0]; document.getElementById('dashName').textContent=userData.name.split(' ')[0]; document.getElementById('navAv').textContent=userData.name[0].toUpperCase(); }
+loadUserData();
+
+let currentEx = null;
+let filterCatEx = 'all';
+function switchPage(p){
+  document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));
+  document.querySelectorAll('.app-tab').forEach(x=>x.classList.remove('active'));
+  document.getElementById('page-'+p)?.classList.add('active');
+  document.getElementById('tab-'+p)?.classList.add('active');
+  if(p==='dashboard') refreshDash();
+  if(p==='perfil') renderProfile();
+  if(p==='ejercicios') renderList();
+}
+function refreshDash(){
+  document.getElementById('sCompleted').textContent=userData.completed.length;
+  document.getElementById('sPracticed').textContent=userData.practiced;
+  const avg=userData.scores.length?Math.round(userData.scores.reduce((a,b)=>a+b,0)/userData.scores.length):null;
+  document.getElementById('sScore').textContent=avg?avg+'%':'—';
+  document.getElementById('sStreak').textContent=(userData.streak||1)+'🔥';
+  const grid=document.getElementById('dotGrid');
+  grid.innerHTML='';
+  ejercicios.forEach(ex=>{
+    const done=userData.completed.includes(ex.id);
+    const div=document.createElement('div');
+    div.className='dot'+(done?' done':'');
+    div.innerHTML=`<span class="dot-num">${ex.id}</span><div class="dot-tip">#${ex.id} ${ex.name}</div>`;
+    div.onclick=()=>startPractice(ex.id);
+    grid.appendChild(div);
+  });
+  const nid=nextId();
+  const next=ejercicios.find(e=>e.id===nid);
+  if(next){
+    document.getElementById('nextNum').textContent=String(next.id).padStart(2,'0');
+    document.getElementById('nextCat').textContent=CATS[next.cat]||next.cat;
+    document.getElementById('nextName').textContent=next.name;
+    document.getElementById('nextDesc').textContent=next.short;
+    document.getElementById('nextCard').onclick=()=>startPractice(next.id);
+  }
+  const cats=Object.keys(CATS);
+  const cp=document.getElementById('catProgress');
+  cp.innerHTML=cats.map(c=>{
+    const total=ejercicios.filter(e=>e.cat===c).length;
+    const done=ejercicios.filter(e=>e.cat===c && userData.completed.includes(e.id)).length;
+    const pct=Math.round(done/total*100);
+    return `<div class="mb-2"><div class="d-flex justify-content-between mb-1" style="font-size:.8rem;font-weight:700"><span>${CATS[c]}</span><span style="color:var(--amber)">${done}/${total}</span></div><div style="height:7px;border-radius:4px;background:var(--border)"><div style="height:100%;border-radius:4px;width:${pct}%;background:${pct===100?'var(--sage)':'var(--violin)'}"></div></div></div>`;
+  }).join('');
+}
+function nextId(){ for(let i=1;i<=100;i++) if(!userData.completed.includes(i)) return i; return 1; }
+function setFilter(cat,btn){ filterCatEx=cat; document.querySelectorAll('#pills .pill').forEach(p=>p.classList.remove('on')); btn.classList.add('on'); renderList(); }
+function renderList(){
+  const q=(document.getElementById('searchQ')?.value||'').toLowerCase();
+  const filtered=ejercicios.filter(e=>(filterCatEx==='all'||e.cat===filterCatEx) && (!q||e.name.toLowerCase().includes(q)||e.short.toLowerCase().includes(q)));
+  const list=document.getElementById('exList');
+  list.innerHTML=filtered.map(e=>{
+    const done=userData.completed.includes(e.id);
+    return `<div class="ex-card${done?' done':''}" onclick="startPractice(${e.id})"><div class="ex-num-box">${String(e.id).padStart(2,'0')}</div><div class="ex-body"><div class="ex-cat-tag">${CATS[e.cat]||e.cat}</div><div class="ex-name">${e.name}</div><div class="ex-short">${e.short}</div></div><div>${done?'<span class="badge-done"><i class="bi bi-check-lg"></i> Hecho</span>':'<span class="badge-new">Practicar</span>'}</div></div>`;
+  }).join('');
+  if(!filtered.length) list.innerHTML='<div class="text-muted text-center py-4">No se encontraron técnicas.</div>';
+}
+function startPractice(id){
+  const ex=ejercicios.find(x=>x.id===id);
+  if(!ex) return;
+  currentEx=ex;
+  document.getElementById('pracCat').textContent=CATS[ex.cat]||ex.cat;
+  document.getElementById('pracNum').textContent=String(ex.id).padStart(2,'0');
+  document.getElementById('pracName').textContent=ex.name;
+  document.getElementById('pracExpl').textContent=ex.expl;
+  document.getElementById('pracEx').textContent='📝 '+ex.expl;
+  document.getElementById('pracPrompt').innerHTML='<strong>✍️ Ejercicio:</strong> '+ex.prompt;
+  document.getElementById('practiceTA').value='';
+  document.getElementById('wc').textContent='0';
+  document.getElementById('fbArea').classList.remove('show');
+  document.getElementById('btnNext').style.display='none';
+  document.getElementById('btnCheck').disabled=false;
+  document.getElementById('btnCheck').innerHTML='<i class="bi bi-magic"></i> Analizar';
+  document.getElementById('practiceEmpty').style.display='none';
+  document.getElementById('practiceContent').style.display='';
+  switchPage('practica');
+  document.getElementById('practiceTA').focus();
+}
+function prevExercise(){
+  if(!currentEx) return;
+  const idx=ejercicios.findIndex(e=>e.id===currentEx.id);
+  startPractice(ejercicios[(idx-1+ejercicios.length)%ejercicios.length].id);
+}
+function nextExercise(){
+  if(!currentEx) return;
+  const idx=ejercicios.findIndex(e=>e.id===currentEx.id);
+  startPractice(ejercicios[(idx+1)%ejercicios.length].id);
+}
+function doCheck(){
+  const text=document.getElementById('practiceTA').value.trim();
+  if(!text || text.split(/\s+/).length<5){ toast('Escribe al menos 5 palabras','e'); return; }
+  if(!currentEx) return;
+  const btn=document.getElementById('btnCheck');
+  btn.disabled=true;
+  btn.innerHTML='<span class="spinner-border spinner-border-sm me-1"></span>Evaluando...';
+  const fb=document.getElementById('fbArea');
+  fb.classList.add('show');
+  document.getElementById('fbLoading').style.display='block';
+  document.getElementById('fbContent').style.display='none';
+  setTimeout(()=>{
+    let score=70;
+    if(text.length>100) score+=10;
+    if(text.toLowerCase().includes(currentEx.name.toLowerCase())) score+=10;
+    score=Math.min(100,score);
+    const nivel=score>=85?'excelente':score>=65?'bien':'necesita_mejorar';
+    const titulo=nivel==='excelente'?'¡Excelente redacción musical!':nivel==='bien'?'Buen trabajo':'Puedes mejorar';
+    const resumen=`Tu respuesta tiene ${text.split(/\s+/).length} palabras. ${score>=70?'Aplicas bien los conceptos de redacción musical.':'Revisa la técnica y vuelve a intentarlo.'}`;
+    const aciertos=['La respuesta es relevante al ejercicio.'];
+    const consejos=['Consulta guías como "Escribir sobre música" de Eleanor Baumgartner o manuales de crítica musical.'];
+    const aplicacion=`Has aplicado conocimientos sobre ${currentEx.name}.`;
+    const r={score,nivel,titulo,resumen,aciertos,errores:[],consejos,aplicacion};
+    renderFeedback(r);
+    userData.practiced++;
+    userData.scores.push(r.score);
+    if(r.score>=65 && !userData.completed.includes(currentEx.id)){
+      userData.completed.push(currentEx.id);
+      toast(`✅ ¡Técnica #${currentEx.id} completada!`,'s');
+    }
+    userData.history=[{id:currentEx.id, name:currentEx.name, score:r.score, date:new Date().toLocaleDateString('es-ES')}, ...(userData.history||[])].slice(0,30);
+    saveUserData();
+    document.getElementById('fbLoading').style.display='none';
+    document.getElementById('fbContent').style.display='block';
+    btn.disabled=false;
+    btn.innerHTML='<i class="bi bi-magic"></i> Analizar de nuevo';
+    document.getElementById('btnNext').style.display='';
+    fb.scrollIntoView({behavior:'smooth',block:'start'});
+  },800);
+}
+function renderFeedback(r){
+  const sc=r.score>=80?'high':r.score>=60?'med':'low';
+  const hc=r.nivel==='excelente'?'excellent':r.nivel==='bien'?'good':'low';
+  const em=r.nivel==='excelente'?'🏆':r.nivel==='bien'?'👍':'💪';
+  const aciertos=(r.aciertos||[]).map(a=>`<div class="fb-item ok"><span class="fb-ico">✓</span><span>${a}</span></div>`).join('');
+  const errores=(r.errores||[]).map(a=>`<div class="fb-item err"><span class="fb-ico">✗</span><span>${a}</span></div>`).join('');
+  const consejos=(r.consejos||[]).map(a=>`<div class="fb-item tip"><span class="fb-ico">💡</span><span>${a}</span></div>`).join('');
+  document.getElementById('fbContent').innerHTML=`<div class="fb-head ${hc}"><span class="fb-emoji">${em}</span><div><p class="fb-htitle">${r.titulo}</p><p class="fb-hsub">Técnica #${currentEx?.id} · ${currentEx?.name}</p></div></div><div class="fb-body"><div style="display:flex;align-items:center;gap:1rem;margin-bottom:1.1rem"><div class="score-circle sc-${sc}">${r.score}%</div><div style="flex:1"><div style="font-weight:700;margin-bottom:.4rem">Dominio de la técnica</div><div style="height:8px;border-radius:4px;background:var(--border)"><div style="height:100%;width:${r.score}%;background:${r.score>=80?'#198754':r.score>=60?'#ffc107':'#dc3545'}"></div></div><div style="font-size:.77rem;margin-top:.4rem">${r.resumen}</div></div></div>${r.aplicacion?`<div class="fb-section"><div class="fb-section-title">🎯 Aplicación</div><div class="fb-item info"><span class="fb-ico">📖</span><span>${r.aplicacion}</span></div></div>`:''}${aciertos?`<div class="fb-section"><div class="fb-section-title">✅ Aciertos</div>${aciertos}</div>`:''}${errores?`<div class="fb-section"><div class="fb-section-title">❌ Errores</div>${errores}</div>`:''}${consejos?`<div class="fb-section"><div class="fb-section-title">💡 Consejos</div>${consejos}</div>`:''}</div>`;
+}
+function renderProfile(){
+  document.getElementById('profAv').textContent=userData.name[0].toUpperCase();
+  document.getElementById('profName').textContent=userData.name;
+  document.getElementById('profMeta').textContent=(userData.level==='principiante'?'Principiante':userData.level==='intermedio'?'Intermedio':'Avanzado')+' · Desde '+userData.joinDate;
+  document.getElementById('pComp').textContent=userData.completed.length;
+  document.getElementById('pPrac').textContent=userData.practiced;
+  const avg=userData.scores.length?Math.round(userData.scores.reduce((a,b)=>a+b,0)/userData.scores.length):null;
+  document.getElementById('pScr').textContent=avg?avg+'%':'—';
+  const ACHS=[{icon:'🎓',name:'Primera técnica',check:d=>d.practiced>=1},{icon:'🎵',name:'10 prácticas',check:d=>d.practiced>=10},{icon:'🏅',name:'25 técnicas',check:d=>d.completed.length>=25},{icon:'🏆',name:'50 técnicas',check:d=>d.completed.length>=50},{icon:'🎶',name:'Maestro de la palabra musical',check:d=>d.completed.length>=100}];
+  document.getElementById('achGrid').innerHTML=ACHS.map(a=>{const u=a.check(userData); return `<div class="ach${u?' unlocked':' locked'}"><span class="ach-icon">${a.icon}</span><div class="ach-name">${a.name}</div></div>`;}).join('');
+  const hl=document.getElementById('histList');
+  if(userData.history?.length){ hl.innerHTML=userData.history.slice(0,15).map(h=>`<div class="hist-row" onclick="startPractice(${h.id})"><div class="ex-num-box" style="background:${h.score>=80?'var(--sage)':h.score>=60?'var(--amber-light)':'#f8d7da'};color:#fff">${String(h.id).padStart(2,'0')}</div><div><div style="font-weight:700">${h.name}</div><div style="font-size:.74rem;color:#aaa">${h.date}</div></div><span style="background:${h.score>=80?'var(--sage)':h.score>=60?'var(--amber)':'#dc3545'};color:#fff;padding:.18rem .55rem;border-radius:9px">${h.score}%</span></div>`).join('');}
+  else hl.innerHTML='<div class="text-muted">Aún sin prácticas.</div>';
+}
+function openEditModal(){ document.getElementById('editName').value=userData.name; document.getElementById('editLevel').value=userData.level; document.getElementById('editModal').style.display='flex'; }
+function saveEdit(){ const name=document.getElementById('editName').value.trim(); if(!name){ toast('Escribe un nombre','e'); return; } userData.name=name; userData.level=document.getElementById('editLevel').value; saveUserData(); updateUI(); closeModal('editModal'); renderProfile(); toast('Perfil actualizado','s'); }
+function confirmReset(){ if(confirm('¿Reiniciar todo el progreso?')){ userData.completed=[]; userData.practiced=0; userData.scores=[]; userData.history=[]; saveUserData(); refreshDash(); renderProfile(); toast('Progreso reiniciado','i'); } }
+function closeModal(id){ document.getElementById(id).style.display='none'; }
+function toast(msg,type='i'){ const box=document.getElementById('toastBox'); const t=document.createElement('div'); const icons={s:'✅',e:'❌',i:'ℹ️'}; t.className=`toast-item ${type}`; t.innerHTML=`<span>${icons[type]||'ℹ️'}</span><span>${msg}</span>`; box.appendChild(t); setTimeout(()=>{ t.style.opacity='0'; t.style.transform='translateY(16px)'; setTimeout(()=>t.remove(),350); },3200); }
+document.addEventListener('DOMContentLoaded',()=>{ const ta=document.getElementById('practiceTA'); if(ta) ta.addEventListener('input',()=>{ const w=ta.value.trim()?ta.value.trim().split(/\s+/).length:0; document.getElementById('wc').textContent=w; }); refreshDash(); renderList(); renderProfile(); });
+</script>
+</body>
+</html>

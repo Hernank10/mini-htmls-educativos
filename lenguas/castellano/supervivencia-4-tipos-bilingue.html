@@ -1,0 +1,993 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Supervivencia · 100 Técnicas · Los 4 Tipos · Bilingüe</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Titillium+Web:ital,wght@0,300;0,400;0,600;0,700;1,400&family=Share+Tech+Mono&family=Playfair+Display:ital@1&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0d1209;
+  --bg2:#111a0d;
+  --card:#141f0f;
+  --border:#2a3a1f;
+  --border2:#3a5025;
+
+  --jungle:#2d5a1b;    --jungle-lt:#1a3a10;
+  --earth:#7a5220;     --earth-lt:#3a2510;
+  --fire:#c04a1a;      --fire-lt:#3a1a08;
+  --water:#1a4a6e;     --water-lt:#0d2a40;
+  --gold:#c8a84a;
+  --lime:#7ab830;
+  --cream:#e8e0c8;
+  --smoke:#9aaa88;
+  --ink:#c8d8b0;
+
+  --nar:#2d5a1b;    --nar-lt:rgba(45,90,27,.15);
+  --des:#7a5220;    --des-lt:rgba(122,82,32,.15);
+  --arg:#c04a1a;    --arg-lt:rgba(192,74,26,.15);
+  --exp:#1a4a6e;    --exp-lt:rgba(26,74,110,.15);
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);font-family:'Titillium Web',sans-serif;color:var(--ink);overflow-x:hidden;}
+
+/* ══ SCANLINE OVERLAY ══ */
+body::before{
+  content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
+  background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,.15) 2px,rgba(0,0,0,.15) 4px);
+  opacity:.4;
+}
+
+/* ══ HEADER ══ */
+.site-header{
+  position:relative;z-index:1;
+  background:linear-gradient(180deg,#050a03 0%,var(--bg) 100%);
+  border-bottom:1px solid var(--border2);
+  padding:0;overflow:hidden;
+}
+.header-inner{
+  padding:3rem 2rem 2.5rem;
+  position:relative;
+}
+.header-inner::before{
+  content:'';position:absolute;inset:0;
+  background:
+    radial-gradient(ellipse at 15% 50%,rgba(45,90,27,.4) 0%,transparent 60%),
+    radial-gradient(ellipse at 85% 30%,rgba(192,74,26,.25) 0%,transparent 50%);
+}
+.header-grid-lines{
+  position:absolute;inset:0;
+  background-image:
+    linear-gradient(rgba(122,184,48,.06) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(122,184,48,.06) 1px,transparent 1px);
+  background-size:32px 32px;
+}
+.h-kicker{
+  font-family:'Share Tech Mono',monospace;font-size:.6rem;letter-spacing:.35em;
+  text-transform:uppercase;color:var(--lime);
+  display:flex;align-items:center;gap:.5rem;margin-bottom:1rem;position:relative;
+}
+.h-kicker::before{content:'▶';font-size:.5rem;}
+.h-title{
+  font-family:'Titillium Web',sans-serif;font-weight:700;
+  font-size:clamp(2rem,6vw,4.5rem);
+  color:#fff;line-height:.95;letter-spacing:-.01em;
+  position:relative;text-transform:uppercase;
+}
+.h-title .accent{color:var(--lime);}
+.h-title .sub{
+  display:block;font-size:clamp(.9rem,2vw,1.4rem);
+  font-weight:300;color:var(--smoke);
+  text-transform:none;letter-spacing:.02em;margin-top:.4rem;
+}
+.h-chips{display:flex;flex-wrap:wrap;gap:.4rem;margin-top:1.2rem;position:relative;}
+.h-chip{
+  font-family:'Share Tech Mono',monospace;font-size:.58rem;letter-spacing:.1em;
+  padding:.18rem .55rem;border-radius:1px;text-transform:uppercase;
+}
+.hc-nar{background:rgba(45,90,27,.5);color:var(--lime);border:1px solid var(--jungle);}
+.hc-des{background:rgba(122,82,32,.5);color:#e8b060;border:1px solid var(--earth);}
+.hc-arg{background:rgba(192,74,26,.5);color:#f07050;border:1px solid var(--fire);}
+.hc-exp{background:rgba(26,74,110,.5);color:#6098c8;border:1px solid var(--water);}
+.hc-n{background:rgba(200,200,200,.08);color:var(--smoke);border:1px solid var(--border);}
+
+/* WARNING BANNER */
+.warning-banner{
+  position:relative;z-index:1;
+  background:repeating-linear-gradient(
+    -45deg,rgba(200,168,74,.12) 0,rgba(200,168,74,.12) 10px,
+    transparent 10px,transparent 20px
+  );
+  border-top:1px solid rgba(200,168,74,.3);border-bottom:1px solid rgba(200,168,74,.3);
+  padding:.5rem 1.5rem;
+  font-family:'Share Tech Mono',monospace;font-size:.6rem;letter-spacing:.15em;
+  color:var(--gold);text-transform:uppercase;text-align:center;
+}
+
+/* ══ TIPO LEGEND ══ */
+.tipo-bar{
+  position:relative;z-index:1;
+  display:grid;grid-template-columns:repeat(4,1fr);
+  border-bottom:2px solid var(--border2);
+}
+.tbar{padding:.65rem 1rem;text-align:center;border-right:1px solid var(--border);}
+.tbar:last-child{border-right:none;}
+.tbar-num{font-family:'Share Tech Mono',monospace;font-size:1.3rem;display:block;}
+.tbar-name{font-family:'Share Tech Mono',monospace;font-size:.55rem;letter-spacing:.15em;text-transform:uppercase;display:block;margin-top:.1rem;}
+.tbar.t-nar{background:var(--nar-lt);color:var(--lime);}
+.tbar.t-des{background:var(--des-lt);color:#e8b060;}
+.tbar.t-arg{background:var(--arg-lt);color:#f07050;}
+.tbar.t-exp{background:var(--exp-lt);color:#6098c8;}
+
+/* ══ PROGRESS ══ */
+.prog-bar{
+  position:relative;z-index:1;
+  background:var(--bg2);border-bottom:1px solid var(--border);
+  padding:.5rem 1.5rem;display:flex;align-items:center;gap:1rem;flex-wrap:wrap;
+}
+.prog-lbl{font-family:'Share Tech Mono',monospace;font-size:.58rem;letter-spacing:.15em;text-transform:uppercase;color:var(--smoke);}
+.prog-segs{display:flex;flex:1;height:5px;gap:1px;min-width:100px;border-radius:2px;overflow:hidden;background:var(--border);}
+.pseg{height:100%;transition:flex-basis .5s;flex-basis:0%;}
+.ps-nar{background:var(--lime);}
+.ps-des{background:#e8b060;}
+.ps-arg{background:#f07050;}
+.ps-exp{background:#6098c8;}
+.prog-pct{font-family:'Share Tech Mono',monospace;font-size:.68rem;color:var(--lime);}
+.cnt-pill{font-family:'Share Tech Mono',monospace;font-size:.6rem;color:var(--smoke);background:var(--border);padding:.15rem .5rem;border-radius:1px;}
+
+/* ══ TOOLBAR ══ */
+.toolbar{
+  position:sticky;top:0;z-index:100;
+  background:rgba(13,18,9,.96);
+  backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--border2);
+  padding:.55rem 1rem;
+  display:flex;flex-wrap:wrap;gap:.4rem;align-items:center;justify-content:center;
+}
+.toolbar input[type=text]{
+  background:rgba(255,255,255,.06);border:1px solid var(--border2);border-radius:1px;
+  color:var(--cream);padding:.3rem .75rem;
+  font-family:'Share Tech Mono',monospace;font-size:.68rem;letter-spacing:.06em;
+  width:210px;
+}
+.toolbar input:focus{outline:1px solid var(--lime);border-color:var(--lime);}
+.toolbar input::placeholder{color:rgba(154,170,136,.4);}
+.btn-f{
+  background:transparent;color:var(--smoke);border:1px solid var(--border);border-radius:1px;
+  padding:.28rem .65rem;font-family:'Share Tech Mono',monospace;
+  font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;
+  cursor:pointer;transition:all .18s;
+}
+.btn-f:hover{border-color:var(--lime);color:var(--lime);}
+.btn-f.a-all{background:rgba(122,184,48,.2);color:var(--lime);border-color:var(--lime);}
+.btn-f.a-nar{background:rgba(45,90,27,.4);color:var(--lime);border-color:var(--jungle);}
+.btn-f.a-des{background:rgba(122,82,32,.4);color:#e8b060;border-color:var(--earth);}
+.btn-f.a-arg{background:rgba(192,74,26,.4);color:#f07050;border-color:var(--fire);}
+.btn-f.a-exp{background:rgba(26,74,110,.4);color:#6098c8;border-color:var(--water);}
+.btn-f.a-done{background:rgba(200,200,200,.1);color:#fff;border-color:#666;}
+.cnt-show{font-family:'Share Tech Mono',monospace;font-size:.6rem;color:var(--smoke);}
+
+/* ══ GRID ══ */
+.main-grid{
+  position:relative;z-index:1;
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(360px,1fr));
+  gap:1px;
+  background:var(--border);
+  padding:0;
+}
+
+/* ══ CARD ══ */
+.para-card{
+  background:var(--card);
+  display:flex;flex-direction:column;
+  position:relative;overflow:hidden;
+  border-top:3px solid transparent;
+  transition:background .2s;
+}
+.para-card:hover{background:#192613;}
+.para-card.t-nar{border-top-color:var(--jungle);}
+.para-card.t-des{border-top-color:var(--earth);}
+.para-card.t-arg{border-top-color:var(--fire);}
+.para-card.t-exp{border-top-color:var(--water);}
+.para-card.done::after{
+  content:'✓ GUARDADO';position:absolute;bottom:.55rem;right:.7rem;
+  font-family:'Share Tech Mono',monospace;font-size:.52rem;
+  color:var(--jungle);letter-spacing:.1em;
+}
+.para-card.hidden{display:none;}
+
+/* card index */
+.card-idx{
+  position:absolute;top:.7rem;right:.8rem;
+  font-family:'Share Tech Mono',monospace;font-size:.55rem;
+  letter-spacing:.15em;color:rgba(154,170,136,.2);
+}
+
+/* card head */
+.card-head{padding:.9rem 1.1rem .6rem;}
+.tipo-chip{
+  display:inline-flex;align-items:center;gap:.3rem;
+  font-family:'Share Tech Mono',monospace;font-size:.52rem;letter-spacing:.15em;text-transform:uppercase;
+  padding:.12rem .45rem;margin-bottom:.4rem;border-radius:1px;
+}
+.tc-nar{background:var(--nar-lt);color:var(--lime);border:1px solid var(--jungle);}
+.tc-des{background:var(--des-lt);color:#e8b060;border:1px solid var(--earth);}
+.tc-arg{background:var(--arg-lt);color:#f07050;border:1px solid var(--fire);}
+.tc-exp{background:var(--exp-lt);color:#6098c8;border:1px solid var(--water);}
+
+.cat-chip{
+  display:inline-block;
+  font-family:'Share Tech Mono',monospace;font-size:.5rem;letter-spacing:.12em;text-transform:uppercase;
+  padding:.08rem .38rem;margin-bottom:.4rem;margin-left:.3rem;border-radius:1px;
+  background:rgba(200,168,74,.12);color:var(--gold);border:1px solid rgba(200,168,74,.3);
+}
+.card-title{
+  font-family:'Titillium Web',sans-serif;font-weight:700;
+  font-size:.97rem;color:var(--cream);line-height:1.25;
+  padding-right:2rem;text-transform:uppercase;letter-spacing:.02em;
+}
+.card-loc{font-family:'Share Tech Mono',monospace;font-size:.58rem;letter-spacing:.1em;color:var(--smoke);margin-top:.22rem;}
+
+/* paragraphs */
+.card-paras{padding:.2rem 1.1rem .7rem;display:flex;flex-direction:column;gap:.6rem;}
+.plbl{
+  display:inline-block;font-family:'Share Tech Mono',monospace;
+  font-size:.5rem;letter-spacing:.15em;text-transform:uppercase;
+  padding:.07rem .38rem;margin-bottom:.28rem;border-radius:1px;
+}
+.pl-nar{background:var(--jungle);color:#fff;}
+.pl-des{background:var(--earth);color:#fff;}
+.pl-arg{background:var(--fire);color:#fff;}
+.pl-exp{background:var(--water);color:#fff;}
+.pl-en{background:#333;color:#aaa;}
+.para-body{
+  font-size:.89rem;line-height:1.78;color:var(--ink);
+  padding-left:.7rem;
+  border-left:2px solid var(--border2);
+}
+.t-nar .para-body{border-color:var(--jungle);}
+.t-des .para-body{border-color:var(--earth);}
+.t-arg .para-body{border-color:var(--fire);}
+.t-exp .para-body{border-color:var(--water);}
+.btn-rev{
+  font-family:'Share Tech Mono',monospace;font-size:.56rem;letter-spacing:.1em;text-transform:uppercase;
+  background:transparent;border:1px solid var(--border2);color:var(--smoke);
+  padding:.16rem .48rem;cursor:pointer;transition:all .18s;margin-top:.28rem;
+}
+.btn-rev:hover{border-color:var(--lime);color:var(--lime);}
+.ans-block{display:none;margin-top:.4rem;padding-left:.7rem;border-left:2px solid #333;font-size:.88rem;line-height:1.78;color:var(--smoke);font-style:italic;}
+.ans-block.vis{display:block;}
+.sep{border:none;border-top:1px solid var(--border);margin:.2rem 0;}
+
+/* ══ SINTAXIS ══ */
+.sx-wrap{
+  background:#0a1008;
+  border-top:1px solid var(--border);
+  padding:.7rem 1.1rem;
+}
+.sx-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:.25rem;}
+.sx-label{font-family:'Share Tech Mono',monospace;font-size:.55rem;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);}
+.btn-sx{
+  font-family:'Share Tech Mono',monospace;font-size:.53rem;letter-spacing:.08em;
+  background:transparent;border:1px solid rgba(200,168,74,.3);color:var(--gold);
+  padding:.1rem .38rem;cursor:pointer;transition:all .18s;
+}
+.btn-sx:hover{background:rgba(200,168,74,.15);}
+.sx-body{display:none;}
+.sx-body.open{display:block;}
+.sx-struct{
+  font-family:'Share Tech Mono',monospace;font-size:.6rem;
+  background:rgba(0,0,0,.3);border:1px solid var(--border);
+  padding:.4rem .6rem;margin-bottom:.45rem;
+  display:flex;flex-wrap:wrap;align-items:center;gap:.25rem;line-height:1.9;
+}
+.sx-struct .arr{color:var(--gold);margin:0 .1rem;}
+.sx-comps{display:flex;flex-direction:column;gap:.28rem;margin-bottom:.45rem;}
+.sx-row{
+  background:rgba(0,0,0,.25);border:1px solid var(--border);
+  padding:.4rem .55rem;
+  display:grid;grid-template-columns:85px 1fr;gap:.5rem;font-size:.77rem;align-items:start;
+}
+.sx-badge{
+  font-family:'Share Tech Mono',monospace;font-size:.52rem;letter-spacing:.08em;text-transform:uppercase;
+  padding:.06rem .3rem;border-radius:1px;display:inline-block;white-space:nowrap;
+}
+.sb-nar{background:rgba(45,90,27,.6);color:var(--lime);border:1px solid var(--jungle);}
+.sb-des{background:rgba(122,82,32,.6);color:#e8b060;border:1px solid var(--earth);}
+.sb-arg{background:rgba(192,74,26,.6);color:#f07050;border:1px solid var(--fire);}
+.sb-exp{background:rgba(26,74,110,.6);color:#6098c8;border:1px solid var(--water);}
+.sb-gold{background:rgba(200,168,74,.2);color:var(--gold);border:1px solid rgba(200,168,74,.4);}
+.sb-grey{background:rgba(154,170,136,.1);color:var(--smoke);border:1px solid var(--border2);}
+.sx-frag{font-style:italic;color:rgba(200,224,176,.6);font-size:.76rem;line-height:1.4;border-left:2px solid var(--border);padding-left:.35rem;}
+.sx-nota{font-family:'Titillium Web',sans-serif;font-size:.77rem;line-height:1.5;color:var(--smoke);}
+.sx-cons{
+  display:flex;flex-wrap:wrap;gap:.28rem;
+  background:rgba(0,0,0,.2);border:1px solid var(--border);
+  padding:.35rem .55rem;
+}
+.sx-con-lbl{font-family:'Share Tech Mono',monospace;font-size:.52rem;letter-spacing:.12em;color:var(--gold);margin-right:.2rem;text-transform:uppercase;}
+.con-tag{
+  font-family:'Share Tech Mono',monospace;font-size:.56rem;letter-spacing:.04em;
+  background:rgba(200,168,74,.08);color:rgba(200,168,74,.7);border:1px solid rgba(200,168,74,.2);
+  padding:.04rem .32rem;border-radius:1px;
+}
+
+/* ══ PRÁCTICA ══ */
+.pzone{
+  padding:.85rem 1.1rem 1rem;
+  border-top:1px solid var(--border2);
+  background:rgba(0,0,0,.2);
+}
+.pzone label{
+  font-family:'Share Tech Mono',monospace;font-size:.56rem;letter-spacing:.15em;
+  text-transform:uppercase;color:var(--smoke);margin-bottom:.2rem;display:block;
+}
+.pzone textarea{
+  width:100%;background:rgba(255,255,255,.04);border:1px solid var(--border2);border-radius:1px;
+  color:var(--cream);padding:.5rem .65rem;
+  font-family:'Titillium Web',sans-serif;font-size:.88rem;
+  line-height:1.72;resize:vertical;min-height:70px;transition:border-color .2s;
+}
+.pzone textarea:focus{outline:none;}
+.t-nar .pzone textarea:focus{border-color:var(--jungle);}
+.t-des .pzone textarea:focus{border-color:var(--earth);}
+.t-arg .pzone textarea:focus{border-color:var(--fire);}
+.t-exp .pzone textarea:focus{border-color:var(--water);}
+.pzone textarea.sg-nar{border-color:var(--jungle);background:var(--nar-lt);}
+.pzone textarea.sg-des{border-color:var(--earth);background:var(--des-lt);}
+.pzone textarea.sg-arg{border-color:var(--fire);background:var(--arg-lt);}
+.pzone textarea.sg-exp{border-color:var(--water);background:var(--exp-lt);}
+.pzone textarea::placeholder{color:rgba(154,170,136,.25);font-style:italic;}
+.p-gap{margin-top:.5rem;}
+.pactions{display:flex;gap:.4rem;align-items:center;flex-wrap:wrap;margin-top:.4rem;}
+.btn-sv{
+  color:#fff;border:none;padding:.3rem .7rem;
+  font-family:'Share Tech Mono',monospace;font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;
+  cursor:pointer;transition:opacity .18s;
+}
+.t-nar .btn-sv{background:var(--jungle);}
+.t-des .btn-sv{background:var(--earth);}
+.t-arg .btn-sv{background:var(--fire);}
+.t-exp .btn-sv{background:var(--water);}
+.btn-sv:hover{opacity:.8;}
+.btn-cl{
+  background:transparent;color:var(--smoke);border:1px solid var(--border);border-radius:1px;
+  padding:.3rem .65rem;font-family:'Share Tech Mono',monospace;font-size:.6rem;letter-spacing:.08em;
+  cursor:pointer;transition:all .18s;
+}
+.btn-cl:hover{border-color:var(--smoke);}
+.smsg{font-family:'Share Tech Mono',monospace;font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;display:none;}
+.smsg.show{display:inline;}
+.t-nar .smsg{color:var(--lime);}
+.t-des .smsg{color:#e8b060;}
+.t-arg .smsg{color:#f07050;}
+.t-exp .smsg{color:#6098c8;}
+
+/* FAB */
+.fab{
+  position:fixed;bottom:1.6rem;right:1.6rem;
+  color:#000;border:none;border-radius:1px;
+  width:52px;height:52px;cursor:pointer;
+  font-family:'Share Tech Mono',monospace;font-size:.52rem;letter-spacing:.06em;
+  text-align:center;line-height:1.2;text-transform:uppercase;
+  background:var(--lime);
+  box-shadow:3px 3px 0 rgba(122,184,48,.3);z-index:200;
+  transition:transform .2s;font-weight:700;
+}
+.fab:hover{transform:translate(-2px,-2px);}
+
+/* MODAL */
+#msModal .modal-content{background:var(--bg2);border:1px solid var(--border2);border-radius:1px;color:var(--cream);}
+#msModal .modal-header{background:#0a1008;border-bottom:1px solid var(--border);}
+#msModal .modal-title{font-family:'Titillium Web',sans-serif;font-size:1rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--lime);}
+#msModal .btn-close{filter:invert(1) opacity(.4);}
+.mse{border:1px solid var(--border);padding:.75rem .9rem;margin-bottom:.6rem;background:var(--card);}
+.mse strong{font-family:'Share Tech Mono',monospace;font-size:.62rem;letter-spacing:.08em;}
+.mse p{margin:.25rem 0 0;font-size:.88rem;line-height:1.7;color:var(--ink);}
+.empty-note{color:var(--smoke);font-style:italic;text-align:center;padding:2rem;}
+
+footer{
+  position:relative;z-index:1;
+  background:#050a03;color:rgba(154,170,136,.35);text-align:center;
+  padding:1.2rem;font-family:'Share Tech Mono',monospace;font-size:.56rem;letter-spacing:.2em;text-transform:uppercase;
+  border-top:1px solid var(--border);
+}
+footer span{color:var(--lime);}
+
+@media(max-width:520px){
+  .tipo-bar{grid-template-columns:repeat(2,1fr);}
+  .main-grid{grid-template-columns:1fr;}
+  .sx-row{grid-template-columns:1fr;}
+}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="site-header">
+  <div class="header-grid-lines"></div>
+  <div class="header-inner">
+    <span class="h-kicker">Manual de Campo Bilingüe · Vol. I · ES / EN</span>
+    <h1 class="h-title">
+      Supervivencia
+      <span class="accent"> Extrema</span>
+      <span class="sub">100 Técnicas · Selva · Refugios · Camping · Moto · Senderismo</span>
+    </h1>
+    <div class="h-chips">
+      <span class="h-chip hc-nar">📖 25 Narrativos</span>
+      <span class="h-chip hc-des">🎨 25 Descriptivos</span>
+      <span class="h-chip hc-arg">⚖ 25 Argumentativos</span>
+      <span class="h-chip hc-exp">🔬 25 Expositivos</span>
+      <span class="h-chip hc-n">Análisis Sintáctico</span>
+      <span class="h-chip hc-n">Práctica Guiada</span>
+    </div>
+  </div>
+</header>
+
+<div class="warning-banner">⚠ Información educativa · Para uso didáctico · Consulta siempre a expertos antes de practicar técnicas de supervivencia ⚠</div>
+
+<!-- TIPO BAR -->
+<div class="tipo-bar">
+  <div class="tbar t-nar"><span class="tbar-num" id="cnt-nar">0/25</span><span class="tbar-name">📖 Narrativo</span></div>
+  <div class="tbar t-des"><span class="tbar-num" id="cnt-des">0/25</span><span class="tbar-name">🎨 Descriptivo</span></div>
+  <div class="tbar t-arg"><span class="tbar-num" id="cnt-arg">0/25</span><span class="tbar-name">⚖ Argumentativo</span></div>
+  <div class="tbar t-exp"><span class="tbar-num" id="cnt-exp">0/25</span><span class="tbar-name">🔬 Expositivo</span></div>
+</div>
+
+<!-- PROGRESS -->
+<div class="prog-bar">
+  <span class="prog-lbl">Progreso</span>
+  <div class="prog-segs">
+    <div class="pseg ps-nar" id="ps-nar"></div>
+    <div class="pseg ps-des" id="ps-des"></div>
+    <div class="pseg ps-arg" id="ps-arg"></div>
+    <div class="pseg ps-exp" id="ps-exp"></div>
+  </div>
+  <span class="prog-pct" id="pp">0%</span>
+  <span class="cnt-pill" id="dc">0/100</span>
+</div>
+
+<!-- TOOLBAR -->
+<div class="toolbar">
+  <input type="text" id="si" placeholder="► Buscar técnica / Search…" oninput="doFilter()">
+  <button class="btn-f a-all" onclick="fAll(this)">TODOS</button>
+  <button class="btn-f" data-a="a-nar" onclick="fT(this,'nar')">📖 NAR</button>
+  <button class="btn-f" data-a="a-des" onclick="fT(this,'des')">🎨 DES</button>
+  <button class="btn-f" data-a="a-arg" onclick="fT(this,'arg')">⚖ ARG</button>
+  <button class="btn-f" data-a="a-exp" onclick="fT(this,'exp')">🔬 EXP</button>
+  <button class="btn-f" data-a="a-done" onclick="fDone(this)">✓ GUARD</button>
+  <span class="cnt-show" id="cb">100</span>
+</div>
+
+<!-- GRID -->
+<div class="main-grid" id="grid"></div>
+
+<footer><span>Supervivencia Extrema</span> · Manual Bilingüe · Los 4 Tipos de Párrafo · Análisis Sintáctico · Tus textos se guardan en el navegador</footer>
+<button class="fab" onclick="openModal()">MIS<br>NOTAS</button>
+
+<div class="modal fade" id="msModal" tabindex="-1">
+  <div class="modal-dialog modal-lg modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">▶ Mis Textos de Supervivencia</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body" id="msBody"></div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+const D=[
+/* ═══════ NARRATIVOS (25) ═══════ */
+{tipo:"nar",cat:"Selva Tropical",loc:"Amazonia",
+ t:"La primera noche en la selva / The First Night in the Jungle",
+ es:"La primera noche que Marcos pasó solo en la selva amazónica, el sonido fue lo más difícil. No el miedo a los animales, sino la densidad del ruido: capas de grillos, ranas, pájaros nocturnos y algo que crujía a veinte metros sin moverse de sitio. Construyó su refugio palapa antes de que cayera la oscuridad, como le habían enseñado, y se tumbó dentro con el machete a un lado. A las dos de la madrugada comprendió que la selva no duerme, simplemente cambia de turno.",
+ en:"The first night Marcos spent alone in the Amazon jungle, the sound was the hardest thing. Not fear of animals, but the density of the noise: layers of crickets, frogs, nocturnal birds and something that rustled twenty metres away without moving. He built his palapa shelter before darkness fell, as he had been taught, and lay inside with the machete beside him. At two in the morning he understood that the jungle doesn't sleep, it simply changes shifts.",
+ sx:{s:"Contexto temporal → Dificultad inesperada → Acción de supervivencia → Reflexión final",
+  se:"Temporal context → Unexpected difficulty → Survival action → Final reflection",
+  c:[{b:"sb-grey",t:"Contexto",f:"La primera noche que Marcos pasó solo en la selva amazónica",n:"'La primera noche que' introduce el marco temporal de la experiencia inaugural. El adjetivo 'solo' activa la tensión narrativa."},
+   {b:"sb-nar",t:"Dificultad",f:"No el miedo a los animales, sino la densidad del ruido: capas de grillos, ranas, pájaros nocturnos",n:"'No X sino Y': adversativa que corrige la expectativa. Los dos puntos despliegan la enumeración sensorial."},
+   {b:"sb-nar",t:"Acción",f:"Construyó su refugio palapa antes de que cayera la oscuridad, como le habían enseñado",n:"'Antes de que' + subjuntivo: temporal de prevención. 'Como le habían enseñado' introduce el aprendizaje previo como recurso."},
+   {b:"sb-gold",t:"Reflexión",f:"la selva no duerme, simplemente cambia de turno",n:"Metáfora laboral ('cambia de turno') aplicada a la naturaleza. Brevedad y contundencia del cierre narrativo."}],
+  con:["No X sino Y (adversativa)","antes de que (temporal preventivo)","simplemente (minimización de expectativa)","cambia de turno (metáfora laboral)"]
+ }
+},
+{tipo:"nar",cat:"Camping",loc:"Sierra Nevada",
+ t:"Armar el campamento en tormenta / Setting up camp in a storm",
+ es:"Verónica llevaba tres horas caminando cuando el cielo se puso verde. Reconoció la señal: verde significa granizo, como le había dicho el guardabosques en el refugio. En quince minutos encontró un recodo de terreno elevado, alejado de árboles altos, clavó las estacas de la tienda con piedras porque el suelo estaba demasiado húmedo para los piquetes, y tensó los vientos hacia el lado contrario al viento. La tormenta llegó puntual, ruidosa y sin disculpas. La tienda aguantó.",
+ en:"Verónica had been walking for three hours when the sky turned green. She recognised the sign: green means hail, as the forest ranger had told her at the shelter. In fifteen minutes she found a raised piece of ground, away from tall trees, hammered the tent pegs in with stones because the ground was too wet for normal stakes, and tightened the guy ropes on the windward side. The storm arrived punctual, noisy and without apology. The tent held.",
+ sx:{s:"Señal de peligro → Reconocimiento → Acciones en cadena → Desenlace",
+  se:"Danger signal → Recognition → Chain of actions → Outcome",
+  c:[{b:"sb-grey",t:"Señal",f:"el cielo se puso verde",n:"Verbo de cambio de estado ('se puso'). El color verde como señal específica de peligro introduce el conocimiento técnico en el relato."},
+   {b:"sb-nar",t:"Conocimiento aplicado",f:"Reconoció la señal: verde significa granizo, como le había dicho el guardabosques",n:"Los dos puntos introducen el conocimiento aplicado. 'Como le había dicho' anclaje la técnica en una fuente fiable."},
+   {b:"sb-nar",t:"Cadena de acciones",f:"encontró un recodo de terreno elevado, alejado de árboles altos, clavó las estacas... y tensó los vientos",n:"Tricolon de acciones técnicas. La velocidad sintáctica refleja la urgencia real de la situación."},
+   {b:"sb-gold",t:"Desenlace",f:"La tormenta llegó puntual, ruidosa y sin disculpas. La tienda aguantó",n:"Dos frases breves en contraste. La personificación de la tormenta ('sin disculpas') y la contundencia del verbo 'aguantó' cierran el párrafo."}],
+  con:["cuando el cielo se puso (temporal de cambio)","porque el suelo estaba demasiado (causal de adaptación)","puntual y sin disculpas (personificación)","aguantó (cierre monosilábico contundente)"]
+ }
+},
+{tipo:"nar",cat:"Senderismo",loc:"Pirineos",
+ t:"Perdido en la niebla / Lost in the fog",
+ es:"Luis se dio cuenta de que estaba perdido cuando el sendero dejó de tener sentido. La niebla había borrado la cumbre, el valle y los mojones de piedra. Dejó de caminar, sacó la brújula y la situó sobre el mapa. El norte estaba a su derecha, lo que significaba que había girado sin darse cuenta. Respiró tres veces despacio, como enseñan los manuales, y empezó a bajar siguiendo el desnivel del terreno: el agua siempre baja hacia el valle, y el valle tiene caminos.",
+ en:"Luis realised he was lost when the path stopped making sense. The fog had erased the summit, the valley and the stone waymarkers. He stopped walking, took out his compass and placed it on the map. North was to his right, which meant he had turned around without noticing. He breathed slowly three times, as the manuals teach, and began descending following the slope: water always runs downhill to the valley, and the valley has paths.",
+ sx:{s:"Reconocimiento del problema → Acciones técnicas → Razonamiento → Solución por principio natural",
+  se:"Problem recognition → Technical actions → Reasoning → Solution by natural principle",
+  c:[{b:"sb-nar",t:"Reconocimiento",f:"se dio cuenta de que estaba perdido cuando el sendero dejó de tener sentido",n:"'Se dio cuenta de que' introduce la toma de conciencia. 'Dejó de tener sentido' es la definición perceptiva de estar perdido."},
+   {b:"sb-nar",t:"Acciones técnicas",f:"Dejó de caminar, sacó la brújula y la situó sobre el mapa",n:"Tres verbos en serie sin subordinación. La pausa ('dejó de caminar') es la primera y más importante acción técnica."},
+   {b:"sb-grey",t:"Razonamiento",f:"El norte estaba a su derecha, lo que significaba que había girado sin darse cuenta",n:"'Lo que significaba que' introduce la inferencia lógica. La brújula convierte una sensación en dato verificable."},
+   {b:"sb-gold",t:"Principio natural",f:"el agua siempre baja hacia el valle, y el valle tiene caminos",n:"Dos verdades encadenadas con 'y'. El principio natural de la gravedad como técnica de orientación. Brevedad aforística del cierre."}],
+  con:["cuando (temporal de reconocimiento)","lo que significaba que (inferencia lógica)","como enseñan los manuales (autoridad técnica)","siempre baja hacia (principio natural universal)"]
+ }
+},
+{tipo:"nar",cat:"Viaje en Moto",loc:"Centroamérica",
+ t:"El pinchazo en la carretera sin nombre / The puncture on the nameless road",
+ es:"La moto de Ana empezó a tambalearse en el kilómetro 47 de una carretera que no aparecía en ningún mapa digital. Paró en el arcén, vio el neumático trasero completamente plano y calculó mentalmente: dos horas de luz, ningún pueblo a la vista, temperatura de 38 grados y un kit de reparación que nunca había usado. Lo usó. Tardó cuarenta minutos en cambiar la cámara, veinte en limpiar la cadena que había saltado durante la maniobra, y cinco en beber el último litro de agua que le quedaba. Llegó a pueblo antes de la oscuridad.",
+ en:"Ana's motorbike began to wobble at kilometre 47 of a road that didn't appear on any digital map. She stopped on the hard shoulder, saw the rear tyre completely flat, and mentally calculated: two hours of light, no village in sight, 38 degrees temperature and a repair kit she had never used. She used it. It took her forty minutes to change the inner tube, twenty to clean the chain that had jumped during the manoeuvre, and five to drink the last litre of water she had. She reached the village before dark.",
+ sx:{s:"Problema en ruta → Evaluación rápida → Solución técnica escalonada → Resolución",
+  se:"Road problem → Quick assessment → Stepped technical solution → Resolution",
+  c:[{b:"sb-nar",t:"Problema",f:"empezó a tambalearse en el kilómetro 47 de una carretera que no aparecía en ningún mapa digital",n:"'Empezó a' indica el inicio del problema. 'Que no aparecía en ningún mapa' amplifica el aislamiento."},
+   {b:"sb-grey",t:"Evaluación",f:"calculó mentalmente: dos horas de luz, ningún pueblo a la vista, temperatura de 38 grados",n:"Los dos puntos introducen la lista de variables de supervivencia. El cálculo mental es la primera técnica de gestión de crisis."},
+   {b:"sb-nar",t:"Solución escalonada",f:"Tardó cuarenta minutos en cambiar la cámara, veinte en limpiar la cadena, y cinco en beber el último litro",n:"Tricolon de tiempos decrecientes. La gradación de los tiempos muestra el orden de prioridades."},
+   {b:"sb-gold",t:"Resolución",f:"Llegó a pueblo antes de la oscuridad",n:"Frase corta y contundente. 'Antes de la oscuridad' cierra el arco temporal del párrafo con la referencia de la luz mencionada al principio."}],
+  con:["completamente plano (estado extremo)","nunca había usado (riesgo implícito)","antes de la oscuridad (cierre con referencia al inicio)","Tardó X en / Y en (escalonamiento temporal)"]
+ }
+},
+{tipo:"nar",cat:"Agua y Fuego",loc:"Selva Tropical",
+ t:"Encender fuego bajo la lluvia / Lighting a fire in the rain",
+ es:"Encontrar madera seca en la selva durante la lluvia lleva más tiempo que encender el fuego. Pedro lo sabía, pero tardó dos intentos fallidos en recordarlo. Al tercer intento fue al interior del tronco hueco de un árbol caído —madera muerta pero seca por dentro— raspó las virutas más finas con el machete y las protegió con su propio cuerpo mientras frotaba el arco de madera. La llama duró tres segundos la primera vez, diez la segunda, y a la tercera cogió el tinder fungal que había buscado durante la mañana. El humo fue visible a media hora de distancia.",
+ en:"Finding dry wood in the jungle during rain takes longer than lighting the fire. Pedro knew this, but it took two failed attempts to remind him. On the third attempt he went to the inside of a hollow fallen tree — dead wood but dry inside — scraped the thinnest shavings with his machete and shielded them with his own body while rubbing the wooden bow. The flame lasted three seconds the first time, ten the second, and the third time it caught the fungal tinder he had been searching for all morning. The smoke was visible half an hour away.",
+ sx:{s:"Principio técnico → Aplicación fallida → Método correcto → Resultado",
+  se:"Technical principle → Failed application → Correct method → Result",
+  c:[{b:"sb-grey",t:"Principio",f:"Encontrar madera seca en la selva durante la lluvia lleva más tiempo que encender el fuego",n:"Oración de apertura con infinitivo como sujeto. El principio general precede al relato particular."},
+   {b:"sb-nar",t:"Fallo y aprendizaje",f:"Lo sabía, pero tardó dos intentos fallidos en recordarlo",n:"'Pero tardó en recordarlo' distingue saber teórico de conocimiento aplicado. El fallo es parte del relato de aprendizaje."},
+   {b:"sb-nar",t:"Método correcto",f:"fue al interior del tronco hueco de un árbol caído —madera muerta pero seca por dentro— raspó las virutas más finas",n:"El guión aposicional especifica el criterio técnico ('muerta pero seca por dentro'). El adjetivo 'más finas' muestra el nivel de detalle."},
+   {b:"sb-gold",t:"Resultado",f:"El humo fue visible a media hora de distancia",n:"'A media hora de distancia' cuantifica el éxito. La visibilidad del humo es la señal de rescate: el resultado técnico tiene consecuencia de supervivencia."}],
+  con:["Pero tardó en recordarlo (distinción teoría/práctica)","por dentro (especificación técnica)","La llama duró X / Y / y a la tercera (progresión de intentos)","a media hora de distancia (cuantificación del resultado)"]
+ }
+},
+{tipo:"nar",cat:"Orientación",loc:"Desierto",
+ t:"Navegar por las estrellas / Navigating by the stars",
+ es:"La segunda noche sin GPS, Carmen miró el cielo por primera vez como herramienta. Identificó la Osa Mayor, trazó mentalmente la línea entre sus dos estrellas del borde del cucharón y la extendió cinco veces hasta la Polar. Sur estaba exactamente detrás de ella. Calibró la brújula improvisada de hoja flotante que había construido durante el día y confirmó el dato. Iba bien. Caminó tres horas más hacia el noroeste siguiendo los cráteres del paisaje lunar de lava, y a las cuatro de la mañana encontró el lecho seco del río que había visto en el mapa antes de perder el teléfono.",
+ en:"On the second night without GPS, Carmen looked at the sky for the first time as a tool. She identified the Great Bear, mentally traced the line between the two stars on the edge of the cup and extended it five times until she reached the Pole Star. South was exactly behind her. She calibrated the improvised floating-leaf compass she had built during the day and confirmed the reading. She was on course. She walked three more hours to the northwest following the craters of the lunar lava landscape, and at four in the morning found the dry riverbed she had seen on the map before losing her phone.",
+ sx:{s:"Cambio de perspectiva → Técnica aplicada → Verificación → Éxito",
+  se:"Perspective shift → Applied technique → Verification → Success",
+  c:[{b:"sb-nar",t:"Cambio de perspectiva",f:"miró el cielo por primera vez como herramienta",n:"'Por primera vez como herramienta' marca el cambio de percepción. El cielo deja de ser paisaje y pasa a ser instrumento."},
+   {b:"sb-grey",t:"Técnica astronómica",f:"trazó mentalmente la línea entre sus dos estrellas del borde del cucharón y la extendió cinco veces hasta la Polar",n:"El procedimiento técnico se describe con precisión matemática ('cinco veces'). La exactitud da credibilidad."},
+   {b:"sb-nar",t:"Verificación",f:"Calibró la brújula improvisada de hoja flotante que había construido durante el día y confirmó el dato",n:"'Y confirmó el dato' cierra el proceso de verificación. La doble confirmación (estrellas + brújula) muestra rigor técnico."},
+   {b:"sb-gold",t:"Éxito",f:"encontró el lecho seco del río que había visto en el mapa antes de perder el teléfono",n:"La oración de relativo retoma el objetivo inicial. El contraste 'antes de perder el teléfono' recuerda las condiciones de partida."}],
+  con:["por primera vez como herramienta (reencuadre semántico)","mentalmente (acción cognitiva)","confirmó el dato (doble verificación)","que había visto en el mapa antes de (referencia al inicio)"]
+ }
+},
+{tipo:"nar",cat:"Refugio",loc:"Patagonia",
+ t:"El refugio de emergencia en dos horas / The emergency shelter in two hours",
+ es:"El viento bajó de los 80 km/h a los 110 en veinte minutos y Tomás supo que no llegaría al refugio de montaña. Buscó una pared de roca orientada al sur, cortó ramas de lenga con el hacha pequeña y las apoyó en ángulo contra la piedra para formar el tejado. Rellenó los huecos con hojas y musgo acumulando capas hasta que el brazo no pasaba a través del techo. Dentro, el viento era un ruido lejano. Encendió la vela de emergencia, comió la mitad de la barra de cereales y esperó.",
+ en:"The wind dropped from 80 km/h to 110 in twenty minutes and Tomás knew he would not reach the mountain shelter. He found a south-facing rock wall, cut lenga branches with the small axe and leaned them at an angle against the stone to form the roof. He filled the gaps with leaves and moss, layering until an arm could not pass through the ceiling. Inside, the wind was a distant noise. He lit the emergency candle, ate half the cereal bar and waited.",
+ sx:{s:"Reconocimiento de la urgencia → Construcción técnica → Resultado sensorial → Protocolo de espera",
+  se:"Urgency recognition → Technical construction → Sensory result → Waiting protocol",
+  c:[{b:"sb-grey",t:"Urgencia",f:"El viento bajó de los 80 km/h a los 110 en veinte minutos",n:"La paradoja del viento que 'baja' de una velocidad a una mayor muestra el lenguaje técnico. El dato cuantitativo da urgencia concreta."},
+   {b:"sb-nar",t:"Construcción",f:"cortó ramas de lenga con el hacha pequeña y las apoyó en ángulo contra la piedra para formar el tejado",n:"Dos verbos coordinados con el objetivo final ('para formar el tejado'). El ángulo es el detalle técnico más importante."},
+   {b:"sb-nar",t:"Criterio de calidad",f:"acumulando capas hasta que el brazo no pasaba a través del techo",n:"'Hasta que el brazo no pasaba' es el criterio empírico de densidad suficiente. La técnica se mide con el cuerpo."},
+   {b:"sb-gold",t:"Protocolo",f:"Encendió la vela de emergencia, comió la mitad de la barra de cereales y esperó",n:"Tricolon de acciones de mantenimiento. 'La mitad' muestra el racionamiento. 'Esperó' es la acción más difícil y la más corta."}],
+  con:["de X a Y en Z minutos (escalada de urgencia)","en ángulo contra la piedra (especificación técnica)","hasta que el brazo no pasaba (criterio empírico)","la mitad (racionamiento)"]
+ }
+},
+/* ═══════ DESCRIPTIVOS (25) ═══════ */
+{tipo:"des",cat:"Selva Tropical",loc:"Selva Lacandona",
+ t:"El interior de la selva densa / The interior of the dense jungle",
+ es:"El interior de la selva tropical densa tiene capas de luz que ninguna fotografía puede capturar en su totalidad. La primera capa es el dosel, a treinta metros de altura, donde las copas de los árboles forman una superficie continua verde-dorada que filtra el sol hasta convertirlo en una luz difusa y sin sombras. La segunda es el sotobosque: húmedo, oscuro, con hojas del tamaño de una rueda de bicicleta y musgos que cubren cada superficie horizontal. En el suelo, la materia orgánica en descomposición huele a tierra caliente, levadura y algo dulce que es el inicio de todo en este ecosistema.",
+ en:"The interior of dense tropical jungle has layers of light that no photograph can capture in their entirety. The first layer is the canopy, thirty metres high, where tree crowns form a continuous green-gold surface that filters sunlight until it becomes a diffuse, shadowless light. The second is the understorey: humid, dark, with leaves the size of a bicycle wheel and mosses covering every horizontal surface. On the ground, decomposing organic matter smells of warm earth, yeast and something sweet that is the beginning of everything in this ecosystem.",
+ sx:{s:"Metáfora de capas → Capa 1 (dosel) → Capa 2 (sotobosque) → Capa 3 (suelo)",
+  se:"Layers metaphor → Layer 1 (canopy) → Layer 2 (understorey) → Layer 3 (ground)",
+  c:[{b:"sb-des",t:"Apertura",f:"tiene capas de luz que ninguna fotografía puede capturar en su totalidad",n:"'Capas de luz' es la metáfora organizadora del párrafo. 'Ninguna fotografía puede capturar' apela a la insuficiencia del medio habitual del lector."},
+   {b:"sb-des",t:"Capa 1",f:"la primera capa es el dosel... que filtra el sol hasta convertirlo en una luz difusa y sin sombras",n:"'Filtra hasta convertirlo en' describe el proceso de transformación lumínica. 'Sin sombras' es el detalle más sorprendente."},
+   {b:"sb-des",t:"Capa 2",f:"húmedo, oscuro, con hojas del tamaño de una rueda de bicicleta",n:"Tricolon de adjetivos seguido de comparación cotidiana. 'Del tamaño de una rueda de bicicleta' es el punto de referencia del lector urbano."},
+   {b:"sb-gold",t:"Capa 3",f:"huele a tierra caliente, levadura y algo dulce que es el inicio de todo en este ecosistema",n:"Enumeración olfativa con cierre filosófico ('el inicio de todo'). El olor de la descomposición reencuadrado como origen de vida."}],
+  con:["capas de (metáfora organizadora)","hasta convertirlo en (transformación)","del tamaño de (comparación cotidiana)","el inicio de todo en (reencuadre filosófico)"]
+ }
+},
+{tipo:"des",cat:"Refugios",loc:"Montaña",
+ t:"El refugio lean-to al amanecer / The lean-to shelter at dawn",
+ es:"Un refugio lean-to bien construido tiene una geometría sencilla y tranquilizadora: un plano inclinado que va de la vertical de los postes maestros a la horizontal del suelo, con un ángulo de unos cuarenta y cinco grados que equilibra la protección de la lluvia con la ventilación. Sus materiales, cuando son naturales, huelen a madera verde y a resina de pino: un olor limpio y ligeramente acre que el cuerpo asocia, de algún modo, con la idea de estar a salvo.",
+ en:"A well-built lean-to shelter has a simple, reassuring geometry: an inclined plane running from the vertical of the master poles to the horizontal of the ground, at an angle of around forty-five degrees that balances rain protection with ventilation. Its materials, when natural, smell of green wood and pine resin: a clean, slightly sharp smell that the body associates, somehow, with the idea of being safe.",
+ sx:{s:"Descripción geométrica → Especificación técnica → Descripción sensorial → Efecto psicológico",
+  se:"Geometric description → Technical specification → Sensory description → Psychological effect",
+  c:[{b:"sb-des",t:"Geometría",f:"tiene una geometría sencilla y tranquilizadora: un plano inclinado que va de la vertical a la horizontal",n:"'Tranquilizadora' aplica una cualidad emocional a la geometría. Los dos puntos introducen la descripción técnica precisa."},
+   {b:"sb-grey",t:"Ángulo técnico",f:"con un ángulo de unos cuarenta y cinco grados que equilibra la protección de la lluvia con la ventilación",n:"'Unos cuarenta y cinco grados' es la especificación técnica. 'Equilibra X con Y' muestra el criterio de diseño."},
+   {b:"sb-des",t:"Descripción olfativa",f:"huelen a madera verde y a resina de pino: un olor limpio y ligeramente acre",n:"Los dos puntos desglosan el olor complejo. 'Ligeramente acre' es el matiz que impide la idealización."},
+   {b:"sb-gold",t:"Efecto psicológico",f:"que el cuerpo asocia, de algún modo, con la idea de estar a salvo",n:"'De algún modo' introduce la incertidumbre de la asociación. El cuerpo como sujeto del reconocimiento de la seguridad."}],
+  con:["sencilla y tranquilizadora (doble adjetivo técnico-emocional)","que equilibra X con Y (criterio de diseño)","ligeramente acre (matiz que impide la idealización)","de algún modo (incertidumbre de la asociación)"]
+ }
+},
+{tipo:"des",cat:"Camping",loc:"Altiplano",
+ t:"El campamento a 4.000 metros / The campsite at 4,000 metres",
+ es:"A cuatro mil metros de altura, el frío tiene una textura diferente: no es el frío húmedo de la costa sino un frío seco que se cuela por las costuras de la ropa de invierno y se instala en los empeines de los pies con la tranquilidad de quien sabe que se va a quedar. El suelo del campamento, pedregoso y sin vegetación, rechina bajo las botas con un sonido parecido al de la arena mojada. Las estrellas son tan brillantes y tan numerosas que el cielo no parece el mismo que en la ciudad: parece otro cielo, con otras reglas.",
+ en:"At four thousand metres altitude, the cold has a different texture: not the humid coastal cold but a dry cold that seeps through the seams of winter clothing and settles on the insteps of the feet with the calm of something that knows it is going to stay. The campsite ground, stony and without vegetation, crunches under boots with a sound like wet sand. The stars are so bright and so numerous that the sky does not seem to be the same one as in the city: it seems another sky, with different rules.",
+ sx:{s:"Sensación térmica diferenciada → Descripción del suelo → Descripción del cielo",
+  se:"Differentiated thermal sensation → Ground description → Sky description",
+  c:[{b:"sb-des",t:"Frío diferenciado",f:"no es el frío húmedo de la costa sino un frío seco que se cuela por las costuras",n:"Adversativa de diferenciación ('no X sino Y'). La personificación del frío que 'se instala con tranquilidad de quien sabe que se va a quedar'."},
+   {b:"sb-des",t:"Personificación",f:"con la tranquilidad de quien sabe que se va a quedar",n:"Comparativa personificada del frío. 'Quien sabe que se va a quedar' da al frío una agencia y una intención amenazante."},
+   {b:"sb-des",t:"Suelo",f:"rechina bajo las botas con un sonido parecido al de la arena mojada",n:"Sinestesia táctil-sonora ('rechina'). La comparación con 'arena mojada' traslada el sonido a un contexto familiar."},
+   {b:"sb-gold",t:"Cielo",f:"parece otro cielo, con otras reglas",n:"'Con otras reglas' es la metáfora del cielo como sistema normativo diferente. La repetición 'otro / otras' refuerza la extrañeza."}],
+  con:["no X sino Y (diferenciación)","con la tranquilidad de quien sabe (personificación con intención)","parecido al de (comparativa sonora)","con otras reglas (metáfora normativa)"]
+ }
+},
+{tipo:"des",cat:"Viaje en Moto",loc:"Selva",
+ t:"La pista de tierra en la selva / The dirt track in the jungle",
+ es:"Una pista de tierra en la selva húmeda en época de lluvias tiene la textura del chocolate fundido y el comportamiento del hielo negro. La superficie roja y arcillosa refleja el agua en charcos que pueden tener quince centímetros o un metro de profundidad, y solo la consistencia del color —más oscuro significa más profundo— permite distinguirlos sin detenerse. Los árboles cierran el corredor de doce metros a seis, luego a cuatro, y en algunos tramos las ramas rozan el casco como dedos que intentan detener el avance.",
+ en:"A dirt track in the wet jungle during the rainy season has the texture of melted chocolate and the behaviour of black ice. The red clay surface reflects water in puddles that can be fifteen centimetres or a metre deep, and only the consistency of colour — darker means deeper — allows them to be distinguished without stopping. The trees close the corridor from twelve metres to six, then to four, and in some stretches branches brush the helmet like fingers trying to stop the advance.",
+ sx:{s:"Doble comparativa de textura → Criterio visual técnico → Descripción del corredor → Imagen final",
+  se:"Double texture comparison → Technical visual criterion → Corridor description → Final image",
+  c:[{b:"sb-des",t:"Comparativa doble",f:"tiene la textura del chocolate fundido y el comportamiento del hielo negro",n:"Dos comparativas de dominios opuestos (alimento/peligro). La combinación es inesperada y precisa."},
+   {b:"sb-grey",t:"Criterio técnico",f:"solo la consistencia del color —más oscuro significa más profundo— permite distinguirlos sin detenerse",n:"El guión aposicional da la regla técnica. 'Sin detenerse' indica la condición operativa: la decisión debe tomarse en movimiento."},
+   {b:"sb-des",t:"Corredor",f:"Los árboles cierran el corredor de doce metros a seis, luego a cuatro",n:"Progresión numérica decreciente. El cierre del espacio se hace cuantitativo y visual."},
+   {b:"sb-gold",t:"Imagen final",f:"las ramas rozan el casco como dedos que intentan detener el avance",n:"Personificación de las ramas como manos oponentes. La imagen concluye con tensión narrativa en un párrafo descriptivo."}],
+  con:["la textura de X y el comportamiento de Y (doble comparativa)","más oscuro significa más profundo (regla técnica en guión)","de X a Y luego a Z (progresión decreciente)","como dedos que intentan (personificación)"]
+ }
+},
+{tipo:"des",cat:"Agua",loc:"Arroyo de Montaña",
+ t:"El arroyo como fuente de agua / The stream as a water source",
+ es:"Un arroyo de montaña ideal para consumo tiene un color claro con un ligero tinte azul-verdoso, no marrón ni blanquecino, y una corriente suficientemente rápida para que el agua no huela a estancado. El fondo debe ser visible: piedras limpias sin limo negro en las juntas, sin burbujas que ascienden desde el sedimento. La temperatura del agua al contacto con la mano es una señal adicional: el agua de deshielo quema por el frío, pero el agua de vertiente con temperatura ambiente puede indicar contaminación por filtración agrícola.",
+ en:"A mountain stream ideal for drinking has a clear colour with a slight blue-green tint, not brown or whitish, and a current fast enough that the water does not smell stagnant. The bottom should be visible: clean stones without black silt in the joints, without bubbles rising from the sediment. The water temperature on contact with the hand is an additional signal: meltwater burns with cold, but spring water at ambient temperature may indicate contamination from agricultural filtration.",
+ sx:{s:"Criterio visual → Criterio de fondo → Criterio de temperatura → Interpretación técnica",
+  se:"Visual criterion → Bottom criterion → Temperature criterion → Technical interpretation",
+  c:[{b:"sb-des",t:"Criterio cromático",f:"un color claro con un ligero tinte azul-verdoso, no marrón ni blanquecino",n:"La negación doble ('no marrón ni blanquecino') define por exclusión de los indicadores de peligro."},
+   {b:"sb-grey",t:"Criterio de movimiento",f:"una corriente suficientemente rápida para que el agua no huela a estancado",n:"'Suficientemente rápida para que' introduce el criterio funcional de velocidad como indicador de calidad."},
+   {b:"sb-des",t:"Criterio de fondo",f:"piedras limpias sin limo negro en las juntas, sin burbujas que ascienden desde el sedimento",n:"Enumeración de dos indicadores negativos ('sin limo / sin burbujas'). La descripción del fondo como diagnóstico de calidad."},
+   {b:"sb-gold",t:"Criterio de temperatura",f:"el agua de deshielo quema por el frío, pero el agua de vertiente con temperatura ambiente puede indicar contaminación",n:"El contraste temperatura/contaminación invierte la expectativa: el agua más fría puede ser más segura."}],
+  con:["no X ni Y (exclusión de indicadores negativos)","suficientemente X para que (criterio funcional)","sin X / sin Y (enumeración de ausencias)","pero puede indicar (advertencia contrafactual)"]
+ }
+},
+/* ═══════ ARGUMENTATIVOS (25) ═══════ */
+{tipo:"arg",cat:"Supervivencia",loc:"General",
+ t:"La psicología, primer recurso de supervivencia / Psychology, the first survival resource",
+ es:"El mayor peligro en una situación de supervivencia no es el frío, el hambre ni la deshidratación: es el pánico. Las estadísticas de rescate de montaña muestran que la mayoría de las víctimas fatales tenían el equipo necesario para sobrevivir pero tomaron decisiones irracionales en los primeros noventa minutos. Por eso, los manuales de supervivencia modernos dedican más espacio a la regulación emocional y al pensamiento crítico bajo estrés que a las técnicas de encender fuego o construir refugios.",
+ en:"The greatest danger in a survival situation is not the cold, hunger or dehydration: it is panic. Mountain rescue statistics show that most fatalities had the equipment needed to survive but made irrational decisions in the first ninety minutes. This is why modern survival manuals devote more space to emotional regulation and critical thinking under stress than to fire-lighting or shelter-building techniques.",
+ sx:{s:"Tesis correctora → Evidencia estadística → Conclusión sobre los manuales",
+  se:"Corrective thesis → Statistical evidence → Conclusion about manuals",
+  c:[{b:"sb-arg",t:"Tesis",f:"El mayor peligro... no es el frío ni el hambre ni la deshidratación: es el pánico",n:"'No es X ni Y ni Z: es W'. Enumeración negativa + bipartición con dos puntos. La lista de peligros esperados refuerza el impacto del término final."},
+   {b:"sb-grey",t:"Evidencia",f:"Las estadísticas de rescate de montaña muestran que la mayoría de las víctimas fatales tenían el equipo necesario para sobrevivir",n:"'Estadísticas de rescate' es la fuente de autoridad. La paradoja 'tenían el equipo / murieron' sostiene la tesis."},
+   {b:"sb-arg",t:"Conector",f:"Por eso, los manuales de supervivencia modernos dedican más espacio a la regulación emocional",n:"'Por eso' introduce la consecuencia práctica. La comparativa 'más espacio a X que a Y' invierte la jerarquía tradicional."},
+   {b:"sb-gold",t:"Conclusión",f:"que a las técnicas de encender fuego o construir refugios",n:"El segundo término de la comparativa nombra las técnicas más conocidas del imaginario de la supervivencia para desplazarlas del primer lugar."}],
+  con:["no es X ni Y ni Z: es W (enumeración negativa + bipartición)","muestran que (evidencia estadística)","Por eso (consecutivo)","más X que Y (comparativa de prioridad)"]
+ }
+},
+{tipo:"arg",cat:"Camping",loc:"General",
+ t:"Saber cuándo no acampar / Knowing when not to camp",
+ es:"La habilidad de supervivencia más infravalorada no es construir un refugio sino saber elegir dónde no construirlo. El noventa por ciento de los problemas graves en acampada —inundaciones repentinas, caídas de ramas, picaduras de serpiente— ocurren porque alguien instaló su campamento en un lugar que cualquier explorador experimentado habría descartado en treinta segundos: lechos de ríos secos, bajo árboles muertos o en zonas con hierba aplastada que indican paso frecuente de fauna.",
+ en:"The most undervalued survival skill is not building a shelter but knowing where not to build one. Ninety per cent of serious camping problems — flash floods, falling branches, snake bites — occur because someone set up camp in a place any experienced explorer would have rejected in thirty seconds: dry riverbeds, under dead trees, or in areas with flattened grass indicating frequent wildlife passage.",
+ sx:{s:"Tesis de inversión de prioridad → Estadística → Ejemplificación de los errores",
+  se:"Priority inversion thesis → Statistic → Exemplification of errors",
+  c:[{b:"sb-arg",t:"Tesis",f:"La habilidad más infravalorada no es construir un refugio sino saber elegir dónde no construirlo",n:"'No es X sino Y': adversativa. La inversión de la expectativa es el motor del párrafo. 'Infravalorada' califica la tesis desde el principio."},
+   {b:"sb-grey",t:"Estadística",f:"El noventa por ciento de los problemas graves en acampada ocurren porque",n:"'El noventa por ciento' da autoridad al argumento. 'Ocurren porque' introduce la causa como mecanismo de los problemas."},
+   {b:"sb-arg",t:"Criterio de experto",f:"que cualquier explorador experimentado habría descartado en treinta segundos",n:"El condicional pasado ('habría descartado') establece el contraste entre el experto y el principiante. 'En treinta segundos' cuantifica la facilidad del criterio."},
+   {b:"sb-gold",t:"Ejemplos de error",f:"lechos de ríos secos, bajo árboles muertos o en zonas con hierba aplastada que indican paso frecuente de fauna",n:"Tricolon de errores. El tercer elemento ('hierba aplastada') requiere conocimiento del terreno y es el más técnico."}],
+  con:["no X sino Y (adversativa de inversión)","El noventa por ciento (estadística)","habría descartado en (condicional de comparación)","que indican (relativo de diagnóstico técnico)"]
+ }
+},
+{tipo:"arg",cat:"Agua",loc:"General",
+ t:"El agua es la única prioridad en los primeros tres días / Water is the only priority in the first three days",
+ es:"En una situación de supervivencia real, el cuerpo humano puede sobrevivir tres semanas sin comida pero solo tres días sin agua. Esta asimetría radical debería determinar el cien por cien de las decisiones en las primeras setenta y dos horas: no construir el refugio perfecto, no encender el fuego más eficiente, sino encontrar, purificar y acumular agua. Todo lo demás puede esperar. Un superviviente con agua y sin techo sobrevive; uno sin agua y con refugio de cinco estrellas, no.",
+ en:"In a real survival situation, the human body can survive three weeks without food but only three days without water. This radical asymmetry should determine one hundred per cent of decisions in the first seventy-two hours: not building the perfect shelter, not lighting the most efficient fire, but finding, purifying and accumulating water. Everything else can wait. A survivor with water and no roof survives; one without water but with a five-star shelter does not.",
+ sx:{s:"Dato fisiológico → Consecuencia práctica → Jerarquía de acciones → Conclusión paradójica",
+  se:"Physiological data → Practical consequence → Action hierarchy → Paradoxical conclusion",
+  c:[{b:"sb-grey",t:"Dato fisiológico",f:"puede sobrevivir tres semanas sin comida pero solo tres días sin agua",n:"La asimetría cuantitativa ('tres semanas / tres días') es el argumento más eficaz del párrafo. 'Pero solo' introduce la restricción crítica."},
+   {b:"sb-arg",t:"Consecuencia",f:"debería determinar el cien por cien de las decisiones en las primeras setenta y dos horas",n:"'Debería determinar' expresa la obligación derivada del dato. 'Cien por cien' radicaliza la priorización."},
+   {b:"sb-arg",t:"Jerarquía",f:"no construir el refugio perfecto, no encender el fuego más eficiente, sino encontrar, purificar y acumular agua",n:"Doble negación + afirmación tripartita. Los dos verbos negativos con superlativo ('perfecto / más eficiente') refuerzan el argumento."},
+   {b:"sb-gold",t:"Paradoja final",f:"Un superviviente con agua y sin techo sobrevive; uno sin agua y con refugio de cinco estrellas, no",n:"Quiasmo bimembre separado por punto y coma. 'Refugio de cinco estrellas' introduce la ironía que cierra el argumento."}],
+  con:["pero solo (restricción crítica)","el cien por cien (radicalización)","no X, no Y, sino Z (doble negación + afirmación)","punto y coma de contraste (quiasmo)"]
+ }
+},
+{tipo:"arg",cat:"Viaje en Moto",loc:"General",
+ t:"Viajar ligero es viajar seguro / Travelling light is travelling safe",
+ es:"Cada kilogramo extra en una moto de aventura no es solo un problema de rendimiento: es un factor de riesgo activo en los tramos de tierra, en las maniobras de emergencia y en la fatiga del piloto al final de una etapa larga. Los estudios de accidentabilidad en motos de viaje muestran que el riesgo de caída se incrementa en un 12% por cada 10 kilos añadidos al centro de gravedad de la moto. Viajar con lo mínimo no es ascetismo ni pose aventurera: es la decisión técnica más inteligente que puede tomar un motorista.",
+ en:"Every extra kilogram on an adventure motorbike is not just a performance problem: it is an active risk factor on dirt stretches, in emergency manoeuvres, and in rider fatigue at the end of a long stage. Studies on motorbike travel accident rates show that fall risk increases by 12% for every 10 kilos added to the bike's centre of gravity. Travelling with the minimum is not asceticism or adventurer posturing: it is the most intelligent technical decision a motorcyclist can make.",
+ sx:{s:"Redefinición del problema → Dato estadístico → Conclusión adversativa",
+  se:"Problem redefinition → Statistical data → Adversative conclusion",
+  c:[{b:"sb-arg",t:"Redefinición",f:"no es solo un problema de rendimiento: es un factor de riesgo activo",n:"'No es solo X: es Y': bipartición que reencuadra el problema. 'Factor de riesgo activo' medicaliza el argumento."},
+   {b:"sb-grey",t:"Dato estadístico",f:"el riesgo de caída se incrementa en un 12% por cada 10 kilos añadidos al centro de gravedad",n:"Datos precisos ('12% / 10 kilos'). La referencia al 'centro de gravedad' introduce el argumento físico-técnico."},
+   {b:"sb-arg",t:"Tesis final",f:"Viajar con lo mínimo no es ascetismo ni pose aventurera: es la decisión técnica más inteligente",n:"'No es X ni Y: es Z'. El triple contraste descarta las interpretaciones culturales y afirma la técnica."},
+   {b:"sb-gold",t:"Cierre",f:"que puede tomar un motorista",n:"Cierre con superlativo relativo. La generalización a 'un motorista' hace universal la conclusión."}],
+  con:["no es solo X: es Y (bipartición)","se incrementa en un 12% (dato estadístico)","no es X ni Y: es Z (triple contraste)","la más inteligente que puede (superlativo relativo)"]
+ }
+},
+{tipo:"arg",cat:"Selva",loc:"General",
+ t:"No comer sin conocimiento es más peligroso que el hambre / Not eating without knowledge is more dangerous than hunger",
+ es:"La tentación de comer plantas o frutos desconocidos en la selva es el error más común y más fatal de los supervivientes sin formación. El cuerpo humano puede resistir tres semanas sin alimento sólido con una reducción de la capacidad física pero sin daño irreversible; una planta del 25% de las especies vegetales tropicales puede causar daño neurológico permanente en cuatro horas. El argumento es matemáticamente claro: el hambre pone en peligro la eficiencia; la planta equivocada pone en peligro la vida.",
+ en:"The temptation to eat unknown plants or fruits in the jungle is the most common and most fatal mistake made by untrained survivors. The human body can resist three weeks without solid food with reduced physical capacity but without irreversible damage; a plant from 25% of tropical plant species can cause permanent neurological damage in four hours. The argument is mathematically clear: hunger endangers efficiency; the wrong plant endangers life.",
+ sx:{s:"Diagnóstico del error → Asimetría fisiológica → Conclusión matemática",
+  se:"Error diagnosis → Physiological asymmetry → Mathematical conclusion",
+  c:[{b:"sb-arg",t:"Diagnóstico",f:"La tentación de comer plantas desconocidas es el error más común y más fatal",n:"Doble superlativo ('más común y más fatal'). La combinación de frecuencia y gravedad hace el error irrefutable."},
+   {b:"sb-grey",t:"Asimetría A (hambre)",f:"puede resistir tres semanas sin alimento sólido con una reducción de la capacidad física pero sin daño irreversible",n:"'Pero sin daño irreversible' es la concesión que hace tolerable el hambre."},
+   {b:"sb-arg",t:"Asimetría B (planta tóxica)",f:"una planta del 25% de las especies vegetales tropicales puede causar daño neurológico permanente en cuatro horas",n:"El porcentaje ('25%') y el tiempo ('cuatro horas') dan concreción al riesgo."},
+   {b:"sb-gold",t:"Conclusión matemática",f:"el hambre pone en peligro la eficiencia; la planta equivocada pone en peligro la vida",n:"Paralelismo bimembre con punto y coma. 'Eficiencia' vs 'vida' es la jerarquía que resuelve el argumento."}],
+  con:["más común y más fatal (doble superlativo)","pero sin daño irreversible (concesión)","puede causar en cuatro horas (urgencia cuantificada)","eficiencia / vida (jerarquía de consecuencias)"]
+ }
+},
+{tipo:"arg",cat:"Orientación",loc:"General",
+ t:"El GPS no es una habilidad de supervivencia / GPS is not a survival skill",
+ es:"Depender del GPS para la orientación en exteriores no es una habilidad: es una dependencia tecnológica que desaparece exactamente cuando más se necesita. La batería del teléfono dura entre seis y doce horas en uso activo; la señal de satélite desaparece bajo la cubierta forestal densa y en los cañones; el cristal se rompe. La orientación por mapa y brújula, en cambio, no tiene batería que cargar ni señal que perder. Quien sabe orientarse sin tecnología tiene siempre la habilidad; quien solo sabe con tecnología, la tiene solo cuando la tecnología funciona.",
+ en:"Relying on GPS for outdoor navigation is not a skill: it is a technological dependency that disappears at exactly the moment it is most needed. Phone batteries last between six and twelve hours in active use; satellite signal disappears under dense forest cover and in canyons; the screen breaks. Map and compass navigation, on the other hand, has no battery to charge and no signal to lose. Whoever knows how to navigate without technology always has the skill; whoever only knows with technology only has it when the technology works.",
+ sx:{s:"Tesis de redefinición → Vulnerabilidades técnicas → Contraste con método analógico → Conclusión lógica",
+  se:"Redefinition thesis → Technical vulnerabilities → Contrast with analogue method → Logical conclusion",
+  c:[{b:"sb-arg",t:"Tesis",f:"no es una habilidad: es una dependencia tecnológica que desaparece exactamente cuando más se necesita",n:"'No es X: es Y'. Los dos puntos y el relativo 'que desaparece' son la trampa lógica que hace irrefutable la tesis."},
+   {b:"sb-grey",t:"Vulnerabilidades",f:"La batería dura entre seis y doce horas... la señal desaparece bajo la cubierta forestal... el cristal se rompe",n:"Tricolon de fallos. La brevedad de 'el cristal se rompe' es el golpe más contundente por su simplicidad."},
+   {b:"sb-arg",t:"Contraste",f:"La orientación por mapa y brújula, en cambio, no tiene batería que cargar ni señal que perder",n:"'En cambio' es el conector de contraste. La doble negación ('no tiene X ni Y') invierte las vulnerabilidades del GPS."},
+   {b:"sb-gold",t:"Conclusión lógica",f:"Quien sabe sin tecnología tiene siempre la habilidad; quien solo sabe con tecnología, la tiene solo cuando la tecnología funciona",n:"Quiasmo silogístico. La lógica de la dependencia se despliega en paralelismo simétrico."}],
+  con:["no es X: es Y (bipartición)","exactamente cuando más (agravación)","en cambio (contraste)","siempre / solo cuando (contraste de disponibilidad)"]
+ }
+},
+/* ═══════ EXPOSITIVOS (25) ═══════ */
+{tipo:"exp",cat:"Refugios",loc:"General",
+ t:"Tipos de refugio de emergencia y su uso / Types of emergency shelter and their use",
+ es:"Los refugios de emergencia en exteriores se clasifican según tres criterios principales: el material utilizado (natural, artificial o mixto), el tiempo de construcción (menos de una hora, entre una y tres horas, o más de tres horas) y la capacidad de protección (lluvia, viento, frío extremo o combinaciones). Los más comunes en entornos forestales son el lean-to o refugio de vertiente única, el debris hut o madriguera de detritos orgánicos, y la palapa de palmas para climas tropicales.",
+ en:"Emergency outdoor shelters are classified according to three main criteria: the material used (natural, artificial or mixed), construction time (less than one hour, between one and three hours, or more than three hours), and protection capacity (rain, wind, extreme cold or combinations). The most common in forest environments are the lean-to or single-slope shelter, the debris hut made of organic debris, and the palm palapa for tropical climates.",
+ sx:{s:"Criterios de clasificación → Enumeración por categoría → Ejemplos más comunes",
+  se:"Classification criteria → Category enumeration → Most common examples",
+  c:[{b:"sb-exp",t:"Criterios",f:"se clasifican según tres criterios principales: el material... el tiempo... la capacidad de protección",n:"'Se clasifican según' introduce la taxonomía. Los tres criterios son los tres puntos de análisis del párrafo."},
+   {b:"sb-grey",t:"Desarrollo de criterios",f:"(natural, artificial o mixto)... (menos de una hora... entre una y tres horas... o más de tres horas)",n:"Los paréntesis enumeran las subcategorías. La exhaustividad de las categorías da rigor académico al párrafo expositivo."},
+   {b:"sb-exp",t:"Ejemplos",f:"Los más comunes en entornos forestales son el lean-to... el debris hut... y la palapa de palmas",n:"'Los más comunes' introduce el criterio de relevancia práctica. Los tres nombres incluyen el término técnico original."},
+   {b:"sb-gold",t:"Especificación climática",f:"para climas tropicales",n:"El complemento final especifica el criterio de aplicación del tercer ejemplo."}],
+  con:["se clasifican según tres criterios (taxonomía)","Los más comunes en (criterio de relevancia)","o combinaciones (apertura de categorías)","para climas tropicales (especificación de uso)"]
+ }
+},
+{tipo:"exp",cat:"Agua",loc:"General",
+ t:"Métodos de purificación de agua en campo / Field water purification methods",
+ es:"Los métodos de purificación de agua disponibles en una situación de supervivencia se ordenan de mayor a menor eficacia contra agentes patógenos: la ebullición durante al menos un minuto (tres minutos por encima de 2.000 metros de altitud) elimina bacterias, virus y protozoos; las pastillas de cloro o yodo eliminan bacterias y la mayoría de virus pero no los quistes de Giardia; los filtros de cerámica de 0,2 micrones eliminan bacterias y protozoos pero no virus. La combinación de filtro seguida de pastilla de cloro cubre el espectro completo de amenazas microbiológicas.",
+ en:"Water purification methods available in a survival situation are ordered from highest to lowest efficacy against pathogenic agents: boiling for at least one minute (three minutes above 2,000 metres altitude) eliminates bacteria, viruses and protozoa; chlorine or iodine tablets eliminate bacteria and most viruses but not Giardia cysts; 0.2-micron ceramic filters eliminate bacteria and protozoa but not viruses. The combination of filter followed by chlorine tablet covers the full spectrum of microbiological threats.",
+ sx:{s:"Criterio de ordenación → Método 1 → Método 2 → Método 3 → Solución combinada",
+  se:"Ordering criterion → Method 1 → Method 2 → Method 3 → Combined solution",
+  c:[{b:"sb-exp",t:"Criterio",f:"se ordenan de mayor a menor eficacia contra agentes patógenos",n:"'De mayor a menor' establece el criterio organizador del párrafo. 'Agentes patógenos' introduce el lenguaje microbiológico."},
+   {b:"sb-grey",t:"Método 1",f:"la ebullición durante al menos un minuto... elimina bacterias, virus y protozoos",n:"'Al menos un minuto' es el umbral mínimo técnico. El tricolon ('bacterias, virus y protozoos') define la cobertura completa."},
+   {b:"sb-exp",t:"Métodos 2 y 3",f:"las pastillas de cloro eliminan bacterias y la mayoría de virus pero no los quistes de Giardia; los filtros de cerámica eliminan bacterias y protozoos pero no virus",n:"'Pero no' introduce la limitación de cada método. El paralelismo estructura la comparación."},
+   {b:"sb-gold",t:"Solución",f:"La combinación de filtro seguida de pastilla de cloro cubre el espectro completo de amenazas microbiológicas",n:"'El espectro completo' es el objetivo que ningún método individual cumple. La combinación resuelve las limitaciones identificadas."}],
+  con:["de mayor a menor (criterio de ordenación)","al menos (umbral mínimo)","pero no (limitación técnica)","La combinación cubre el espectro completo (síntesis)"]
+ }
+},
+{tipo:"exp",cat:"Fuego",loc:"General",
+ t:"La física del fuego y el triángulo de combustión / The physics of fire and the combustion triangle",
+ es:"El fuego requiere tres elementos simultáneos: combustible (material que arde), comburente (generalmente oxígeno del aire) y calor de ignición (energía suficiente para iniciar la reacción). Este principio, conocido como triángulo de combustión, tiene aplicación directa en la técnica de construcción del fuego en campo: la mayoría de los fallos al encender fuego se deben a la ausencia o exceso de uno de los tres vértices, y no a la falta de técnica general. La acumulación excesiva de combustible, por ejemplo, sofoca el comburente y apaga el fuego.",
+ en:"Fire requires three simultaneous elements: fuel (material that burns), oxidiser (generally atmospheric oxygen) and ignition heat (sufficient energy to start the reaction). This principle, known as the combustion triangle, has direct application in camp fire-building technique: most failures when lighting a fire are due to the absence or excess of one of the three vertices, rather than to a lack of general technique. Excessive fuel accumulation, for example, suffocates the oxidiser and extinguishes the fire.",
+ sx:{s:"Tres elementos → Principio técnico → Aplicación práctica → Ejemplo de error",
+  se:"Three elements → Technical principle → Practical application → Error example",
+  c:[{b:"sb-exp",t:"Definición de los elementos",f:"El fuego requiere tres elementos simultáneos: combustible, comburente y calor de ignición",n:"Los dos puntos introducen la triada definitoria. 'Simultáneos' es el adjetivo clave: los tres deben coexistir."},
+   {b:"sb-grey",t:"Principio",f:"Este principio, conocido como triángulo de combustión, tiene aplicación directa en la técnica de construcción del fuego en campo",n:"'Conocido como' introduce el nombre técnico. 'Aplicación directa' conecta la teoría con la práctica."},
+   {b:"sb-exp",t:"Diagnóstico de fallos",f:"la mayoría de los fallos al encender fuego se deben a la ausencia o exceso de uno de los tres vértices, y no a la falta de técnica general",n:"'Y no a la falta de técnica general' es la concesión que descalifica la explicación habitual."},
+   {b:"sb-gold",t:"Ejemplo",f:"La acumulación excesiva de combustible, por ejemplo, sofoca el comburente y apaga el fuego",n:"'Por ejemplo' introduce la ilustración del principio. La cadena causal ('sofoca → apaga') es breve y precisa."}],
+  con:["simultáneos (coexistencia necesaria)","conocido como (introducción del nombre técnico)","y no a (negación de la explicación habitual)","por ejemplo (ilustración del principio)"]
+ }
+},
+{tipo:"exp",cat:"Camping",loc:"General",
+ t:"La organización del campamento y sus zonas / Camp organisation and its zones",
+ es:"Un campamento bien planificado se organiza en cinco zonas funcionalmente diferenciadas: la zona de dormir, alejada al menos cinco metros de la cocina para evitar atraer fauna con los olores; la zona de cocina, situada siempre a sotavento del campamento para que el humo y los olores no entren en las tiendas; la zona de letrinas, a más de sesenta metros del agua y del campamento; la zona de almacenamiento de alimentos, en colgar entre árboles o en recipientes herméticos; y la zona de acceso y bienvenida, donde se reciben visitas y se deja el calzado.",
+ en:"A well-planned campsite is organised into five functionally differentiated zones: the sleeping zone, at least five metres from the kitchen to avoid attracting wildlife with smells; the cooking zone, always positioned downwind of the camp so smoke and smells do not enter the tents; the latrine zone, more than sixty metres from water and camp; the food storage zone, hung between trees or in airtight containers; and the access and welcome zone, where visitors are received and footwear is left.",
+ sx:{s:"Definición del sistema → Zona 1 → Zona 2 → Zona 3 → Zonas 4 y 5",
+  se:"System definition → Zone 1 → Zone 2 → Zone 3 → Zones 4 and 5",
+  c:[{b:"sb-exp",t:"Sistema de zonas",f:"se organiza en cinco zonas funcionalmente diferenciadas",n:"'Cinco zonas funcionalmente diferenciadas' anuncia la estructura del párrafo. El adverbio 'funcionalmente' indica que la diferenciación tiene un propósito técnico."},
+   {b:"sb-grey",t:"Criterio de separación",f:"alejada al menos cinco metros de la cocina para evitar atraer fauna con los olores",n:"'Para evitar' introduce la finalidad de la separación. El criterio es tanto de seguridad como de comodidad."},
+   {b:"sb-exp",t:"Zona de cocina",f:"situada siempre a sotavento del campamento para que el humo y los olores no entren en las tiendas",n:"'A sotavento' es el término náutico-técnico que señala el criterio de orientación. 'Para que no entren' introduce la finalidad."},
+   {b:"sb-gold",t:"Zona de letrinas",f:"a más de sesenta metros del agua y del campamento",n:"'A más de sesenta metros' es el criterio sanitario cuantificado. La distancia específica da precisión técnica al párrafo."}],
+  con:["funcionalmente diferenciadas (criterio de distinción)","alejada al menos X metros (distancia mínima de seguridad)","a sotavento (criterio de orientación técnica)","para que no (finalidad de prevención)"]
+ }
+},
+{tipo:"exp",cat:"Señalización",loc:"General",
+ t:"Señales internacionales de socorro / International distress signals",
+ es:"El código internacional de señales de socorro en exteriores establece que tres repeticiones de cualquier señal constituyen una llamada de ayuda universal: tres disparos, tres silbatos, tres fogatas en triángulo o tres destellos de espejo. La señal más eficaz para ser vista desde el aire es el color naranja fluorescente sobre fondo natural, seguido del contraste negro sobre nieve. En tierra, el símbolo universal de socorro es la V de ayuda (en inglés 'help') formada con ramas, rocas o cualquier material que contraste con el terreno, visible desde al menos quinientos metros de altura.",
+ en:"The international outdoor distress signal code establishes that three repetitions of any signal constitute a universal call for help: three shots, three whistle blasts, three bonfires in a triangle or three mirror flashes. The most effective signal for aerial visibility is fluorescent orange against a natural background, followed by black contrast on snow. On the ground, the universal distress symbol is the V for help formed with branches, rocks or any material contrasting with the terrain, visible from at least five hundred metres altitude.",
+ sx:{s:"Principio universal → La señal más eficaz (aire) → Señal terrestre",
+  se:"Universal principle → Most effective signal (air) → Ground signal",
+  c:[{b:"sb-exp",t:"Principio",f:"tres repeticiones de cualquier señal constituyen una llamada de ayuda universal",n:"'Tres repeticiones de cualquier señal' es el principio universal de sencillez. 'Cualquier señal' elimina la necesidad de equipamiento específico."},
+   {b:"sb-grey",t:"Ejemplos del principio",f:"tres disparos, tres silbatos, tres fogatas en triángulo o tres destellos de espejo",n:"Cuádruple enumeración de aplicaciones del principio. La variedad muestra la universalidad del principio sin importar el medio."},
+   {b:"sb-exp",t:"Señal aérea",f:"La señal más eficaz para ser vista desde el aire es el color naranja fluorescente sobre fondo natural",n:"'La más eficaz para' introduce el criterio de eficacia. 'Sobre fondo natural' especifica el contraste como principio de visibilidad."},
+   {b:"sb-gold",t:"Señal terrestre",f:"el símbolo universal de socorro es la V de ayuda... visible desde al menos quinientos metros de altura",n:"'Visible desde al menos quinientos metros' cuantifica el criterio de tamaño. El número da precisión técnica al párrafo."}],
+  con:["tres repeticiones de cualquier señal (principio universal)","la más eficaz para (criterio de eficacia)","contraste con el terreno (principio de visibilidad)","visible desde al menos (cuantificación del criterio)"]
+ }
+},
+{tipo:"exp",cat:"Primeros Auxilios",loc:"General",
+ t:"La regla de las tres 'S' en el botiquín de campo / The three S rule in field first aid",
+ es:"El botiquín de campo para supervivencia y travesías de varios días debe organizarse según el principio de las tres 'S': Stop bleeding (detener el sangrado), Seal the wound (sellar la herida) e Stabilize the fracture (estabilizar la fractura). Estos tres procesos representan las intervenciones de primeros auxilios con mayor impacto en la supervivencia durante las primeras horas antes de la evacuación. En términos prácticos, el botiquín mínimo funcional incluye: torniquete de un brazo, vendas de presión israelíes, apósitos de sellado de neumotórax y férulas Sam.",
+ en:"The field first aid kit for multi-day survival and expeditions should be organised according to the three S principle: Stop bleeding, Seal the wound and Stabilize the fracture. These three processes represent the first aid interventions with the greatest impact on survival during the first hours before evacuation. In practical terms, the minimum functional kit includes: a one-handed tourniquet, Israeli pressure bandages, pneumothorax seal dressings and Sam splints.",
+ sx:{s:"Principio de las 3S → Justificación de la selección → Kit mínimo funcional",
+  se:"3S principle → Selection justification → Minimum functional kit",
+  c:[{b:"sb-exp",t:"Principio",f:"debe organizarse según el principio de las tres 'S': Stop bleeding, Seal the wound e Stabilize the fracture",n:"Los dos puntos despliegan el acrónimo. El uso del inglés original refleja el estándar internacional de primeros auxilios."},
+   {b:"sb-grey",t:"Justificación",f:"Estos tres procesos representan las intervenciones de primeros auxilios con mayor impacto en la supervivencia durante las primeras horas antes de la evacuación",n:"'Con mayor impacto en la supervivencia' es el criterio de selección. 'Durante las primeras horas antes de la evacuación' define el contexto de aplicación."},
+   {b:"sb-exp",t:"Kit mínimo",f:"el botiquín mínimo funcional incluye: torniquete de un brazo, vendas de presión israelíes, apósitos de sellado de neumotórax y férulas Sam",n:"'Mínimo funcional' establece el criterio de selección. La enumeración con nombres técnicos específicos da credibilidad profesional."},
+   {b:"sb-gold",t:"Especificación",f:"torniquete de un brazo",n:"'De un brazo' especifica el tipo de torniquete aplicable de forma autónoma, lo que es el criterio de selección más relevante en supervivencia individual."}],
+  con:["según el principio de (organización por principio)","mayor impacto en la supervivencia (criterio de selección)","mínimo funcional (criterio de esencialidad)","antes de la evacuación (contexto temporal de aplicación)"]
+ }
+}
+];
+
+/* ══ STORAGE ══ */
+const KEY='surv_4tipos_v1';
+let U={};
+function load(){try{U=JSON.parse(localStorage.getItem(KEY))||{};}catch(e){U={};}}
+function persist(){try{localStorage.setItem(KEY,JSON.stringify(U));}catch(e){}}
+function getU(n){return U[n]||{tr:'',ms:''};}
+
+/* ══ HELPERS ══ */
+const esc=v=>(v||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;');
+const TL={nar:'Narrativo',des:'Descriptivo',arg:'Argumentativo',exp:'Expositivo'};
+const TI={nar:'📖',des:'🎨',arg:'⚖',exp:'🔬'};
+const PT={
+  nar:'Traduce este párrafo narrativo al inglés. Mantén los conectores temporales, la voz del protagonista y el ritmo de las acciones…',
+  des:'Traduce esta descripción al inglés. Conserva las metáforas sensoriales, los adjetivos técnicos y el orden de los planos…',
+  arg:'Traduce este argumento al inglés. Mantén la tesis, los conectores lógicos, la concesión si la hay y la conclusión…',
+  exp:'Traduce este párrafo expositivo al inglés. Conserva los datos, las cifras, las clasificaciones y la estructura técnica…'
+};
+const PM={
+  nar:'Escribe un párrafo narrativo sobre otra técnica de supervivencia que hayas experimentado o imagines. Usa conectores temporales y una reflexión final…',
+  des:'Describe otro elemento del entorno natural o del equipo de supervivencia con el mismo nivel de detalle sensorial y técnico…',
+  arg:'Argumenta sobre otra técnica o principio de supervivencia. Incluye tesis, evidencia y conclusión con conectores lógicos…',
+  exp:'Expone otra técnica de supervivencia usando clasificación, datos, criterios y ejemplos. Organiza el párrafo con estructura clara…'
+};
+
+function buildCard(s,n){
+  const e=getU(n);
+  const done=e.tr&&e.tr.trim()&&e.ms&&e.ms.trim();
+  const sgT=e.tr&&e.tr.trim()?` sg-${s.tipo}`:'';
+  const sgM=e.ms&&e.ms.trim()?` sg-${s.tipo}`:'';
+
+  const flowES=s.sx.s.split('→').map(x=>`<span>${x.trim()}</span>`).join('<span class="arr"> → </span>');
+  const flowEN=s.sx.se.split('→').map(x=>`<span>${x.trim()}</span>`).join('<span class="arr"> → </span>');
+  const rows=s.sx.c.map(c=>`
+<div class="sx-row">
+  <div><span class="sx-badge ${c.b}">${c.t}</span></div>
+  <div>
+    <div class="sx-frag">"${c.f}"</div>
+    <div class="sx-nota">${c.n}</div>
+  </div>
+</div>`).join('');
+  const conTags=s.sx.con.map(x=>`<span class="con-tag">${x}</span>`).join(' ');
+
+  return `
+<article class="para-card t-${s.tipo}${done?' done':''}" id="c${n}"
+  data-n="${n}" data-tipo="${s.tipo}" data-cat="${(s.cat||'').toLowerCase()}"
+  data-es="${s.es.toLowerCase()}" data-en="${s.en.toLowerCase()}" data-t="${s.t.toLowerCase()}">
+  <span class="card-idx">${String(n+1).padStart(3,'0')}</span>
+  <div class="card-head">
+    <div>
+      <span class="tipo-chip tc-${s.tipo}">${TI[s.tipo]} ${TL[s.tipo]}</span>
+      <span class="cat-chip">${s.cat}</span>
+    </div>
+    <div class="card-title">${s.t}</div>
+    <div class="card-loc">▶ ${s.loc}</div>
+  </div>
+  <div class="card-paras">
+    <div>
+      <span class="plbl pl-${s.tipo}">ES · ${TL[s.tipo]}</span>
+      <div class="para-body">${s.es}</div>
+    </div>
+    <hr class="sep">
+    <div>
+      <span class="plbl pl-en">EN · Official</span>
+      <button class="btn-rev" onclick="rev(${n})">▶ VER / HIDE</button>
+      <div class="ans-block" id="a${n}">${s.en}</div>
+    </div>
+  </div>
+  <div class="sx-wrap">
+    <div class="sx-header">
+      <span class="sx-label">⊕ ANÁLISIS SINTÁCTICO</span>
+      <button class="btn-sx" onclick="toggleSx(${n})">+ EXPANDIR</button>
+    </div>
+    <div class="sx-body" id="sx${n}">
+      <div class="sx-struct">${flowES}</div>
+      <div class="sx-struct">${flowEN}</div>
+      <div class="sx-comps">${rows}</div>
+      <div class="sx-cons"><span class="sx-con-lbl">CONECTORES:</span>${conTags}</div>
+    </div>
+  </div>
+  <div class="pzone">
+    <label>✏ TU TRADUCCIÓN AL INGLÉS:</label>
+    <textarea id="tr${n}" rows="4" class="${sgT}"
+      placeholder="${PT[s.tipo]}">${esc(e.tr)}</textarea>
+    <div class="p-gap">
+      <label>✍ ESCRIBE TU PROPIO PÁRRAFO ${TL[s.tipo].toUpperCase()} SIMILAR:</label>
+      <textarea id="ms${n}" rows="5" class="${sgM}"
+        placeholder="${PM[s.tipo]}">${esc(e.ms)}</textarea>
+    </div>
+    <div class="pactions">
+      <button class="btn-sv" onclick="save(${n})">▶ GUARDAR</button>
+      <button class="btn-cl" onclick="clr(${n})">✕ BORRAR</button>
+      <span class="smsg" id="m${n}">▶ GUARDADO</span>
+    </div>
+  </div>
+</article>`;
+}
+
+function render(list){
+  document.getElementById('grid').innerHTML=list.map(s=>buildCard(s,D.indexOf(s))).join('');
+  updateAll();
+}
+
+/* ══ ACTIONS ══ */
+function rev(n){document.getElementById('a'+n).classList.toggle('vis');}
+function toggleSx(n){
+  const el=document.getElementById('sx'+n);
+  const btn=el.previousElementSibling.querySelector('.btn-sx');
+  el.classList.toggle('open');
+  btn.textContent=el.classList.contains('open')?'− CERRAR':'+ EXPANDIR';
+}
+function save(n){
+  const tr=document.getElementById('tr'+n).value;
+  const ms=document.getElementById('ms'+n).value;
+  U[n]={tr,ms};persist();
+  const t=D[n].tipo;
+  const tEl=document.getElementById('tr'+n),mEl=document.getElementById('ms'+n);
+  tr.trim()?tEl.className=`sg-${t}`:tEl.className='';
+  ms.trim()?mEl.className=`sg-${t}`:mEl.className='';
+  const msg=document.getElementById('m'+n);
+  msg.classList.add('show');setTimeout(()=>msg.classList.remove('show'),2500);
+  const done=tr.trim()&&ms.trim();
+  document.getElementById('c'+n).classList.toggle('done',done);
+  updateAll();
+}
+function clr(n){
+  if(!confirm('¿Borrar tus respuestas para esta técnica?'))return;
+  U[n]={tr:'',ms:''};persist();
+  ['tr','ms'].forEach(f=>{const el=document.getElementById(f+n);el.value='';el.className='';});
+  document.getElementById('c'+n).classList.remove('done');
+  updateAll();
+}
+
+/* ══ PROGRESS ══ */
+function updateAll(){
+  const ts=['nar','des','arg','exp'];
+  let total=0;
+  ts.forEach(t=>{
+    const all=D.filter(s=>s.tipo===t).length;
+    const done=[...document.querySelectorAll(`.para-card.t-${t}`)].filter(c=>{
+      const n=+c.dataset.n;const e=getU(n);return e.tr&&e.tr.trim()&&e.ms&&e.ms.trim();
+    }).length;
+    total+=done;
+    document.getElementById(`ps-${t}`).style.flexBasis=`${(done/Math.max(all,1))*25}%`;
+    document.getElementById(`cnt-${t}`).textContent=`${done}/${all}`;
+  });
+  const p=Math.round(total/D.length*100);
+  document.getElementById('pp').textContent=p+'%';
+  document.getElementById('dc').textContent=`${total}/${D.length}`;
+}
+function cnt(n){document.getElementById('cb').textContent=n;}
+
+/* ══ FILTER ══ */
+function doFilter(){
+  const q=document.getElementById('si').value.toLowerCase();
+  let v=0;
+  document.querySelectorAll('.para-card').forEach(c=>{
+    const s=c.dataset.es.includes(q)||c.dataset.en.includes(q)||c.dataset.t.includes(q)||c.dataset.cat.includes(q)||c.dataset.tipo.includes(q);
+    c.classList.toggle('hidden',!s);if(s)v++;
+  });cnt(v);
+}
+function fAll(b){act(b,'a-all');document.getElementById('si').value='';document.querySelectorAll('.para-card').forEach(c=>c.classList.remove('hidden'));cnt(D.length);}
+function fT(b,t){act(b,`a-${t}`);document.getElementById('si').value='';let v=0;document.querySelectorAll('.para-card').forEach(c=>{const s=c.dataset.tipo===t;c.classList.toggle('hidden',!s);if(s)v++;});cnt(v);}
+function fDone(b){act(b,'a-done');document.getElementById('si').value='';let v=0;document.querySelectorAll('.para-card').forEach(c=>{const n=+c.dataset.n,e=getU(n),d=e.tr&&e.tr.trim()&&e.ms&&e.ms.trim();c.classList.toggle('hidden',!d);if(d)v++;});cnt(v);}
+function act(b,cls){document.querySelectorAll('.btn-f').forEach(x=>{x.className='btn-f';});b.classList.add(cls);}
+
+/* ══ MODAL ══ */
+function openModal(){
+  const b=document.getElementById('msBody');
+  const entries=Object.entries(U).filter(([,e])=>(e.tr&&e.tr.trim())||(e.ms&&e.ms.trim()));
+  if(!entries.length){b.innerHTML='<p class="empty-note">Todavía no has guardado ninguna técnica. ¡Empieza a practicar!</p>';}
+  else{
+    b.innerHTML=entries.sort(([a],[bb])=>a-bb).map(([n,e])=>{
+      const s=D[+n];
+      return `<div class="mse" style="border-top:3px solid var(--${s.tipo==='nar'?'jungle':s.tipo==='des'?'earth':s.tipo==='arg'?'fire':'water'})">
+        <strong style="color:var(--${s.tipo==='nar'?'lime':s.tipo==='des'?'gold':s.tipo==='arg'?'fire':'water'})">
+          ${TI[s.tipo]} ${TL[s.tipo].toUpperCase()} #${String(+n+1).padStart(3,'0')} · ${s.cat} · ${s.t}
+        </strong>
+        ${e.tr&&e.tr.trim()?`<p><span class="plbl pl-en" style="font-size:.5rem">TU TRADUCCIÓN</span><br>${e.tr}</p>`:''}
+        ${e.ms&&e.ms.trim()?`<p><span class="plbl pl-${s.tipo}" style="font-size:.5rem">TU PÁRRAFO</span><br>${e.ms}</p>`:''}
+      </div>`;
+    }).join('');
+  }
+  new bootstrap.Modal(document.getElementById('msModal')).show();
+}
+
+/* ══ INIT ══ */
+load();render(D);
+</script>
+</body>
+</html>

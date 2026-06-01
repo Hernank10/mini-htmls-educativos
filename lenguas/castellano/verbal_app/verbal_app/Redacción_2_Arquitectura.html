@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>Arquitectura Verbal · 100 técnicas de redacción</title>
+  <style>
+    /* ----- VARIABLES CSS (paleta cálida, fatiga visual reducida) ----- */
+    :root {
+      --fondo-piel: #fef7e6;         /* pergamino claro */
+      --texto-principal: #3b2a1f;    /* marrón oscuro suave */
+      --arena: #e9dbc3;
+      --ámbar: #c28135;
+      --ámbar-claro: #e0a46b;
+      --sombra-calida: rgba(100, 60, 20, 0.08);
+      --borde-suave: #d9c8ae;
+      --acierto: #2c6e2c;
+      --fallo: #b1624b;
+      --card-bg: #fffbf0;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background-color: var(--fondo-piel);
+      color: var(--texto-principal);
+      font-family: 'Segoe UI', 'Roboto', 'Georgia', serif;
+      line-height: 1.5;
+      padding: 1rem;
+      min-height: 100vh;
+    }
+
+    /* contenedor principal */
+    .app-container {
+      max-width: 1300px;
+      margin: 0 auto;
+      background: var(--card-bg);
+      border-radius: 2rem;
+      box-shadow: 0 12px 30px var(--sombra-calida);
+      overflow: hidden;
+      backdrop-filter: blur(0px);
+      border: 1px solid var(--borde-suave);
+    }
+
+    /* cabecera */
+    header {
+      background: #fff3e0;
+      padding: 1.2rem 2rem;
+      border-bottom: 3px solid var(--ámbar);
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 1rem;
+    }
+    h1 {
+      font-size: 1.7rem;
+      font-weight: 500;
+      letter-spacing: -0.3px;
+      color: #5a3a22;
+    }
+    h1 small {
+      font-size: 0.8rem;
+      font-weight: normal;
+      color: #7a5a3a;
+      margin-left: 0.5rem;
+    }
+
+    /* navegación */
+    nav {
+      display: flex;
+      gap: 0.5rem;
+      background: #f5ebda;
+      padding: 0.6rem 2rem;
+      border-bottom: 1px solid var(--borde-suave);
+    }
+    .nav-btn {
+      background: transparent;
+      border: none;
+      font-size: 1.05rem;
+      padding: 0.5rem 1.2rem;
+      border-radius: 40px;
+      cursor: pointer;
+      font-weight: 500;
+      color: #634e2e;
+      transition: all 0.2s;
+    }
+    .nav-btn.active {
+      background-color: var(--ámbar);
+      color: white;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+    .nav-btn:hover:not(.active) {
+      background-color: var(--arena);
+    }
+
+    /* vistas */
+    .view {
+      display: none;
+      padding: 2rem;
+      animation: fade 0.2s ease;
+    }
+    .view.active-view {
+      display: block;
+    }
+    @keyframes fade {
+      from { opacity: 0; transform: translateY(6px);}
+      to { opacity: 1; transform: translateY(0);}
+    }
+
+    /* tarjetas genéricas */
+    .card {
+      background: white;
+      border-radius: 1.8rem;
+      padding: 1.2rem 1.5rem;
+      box-shadow: 0 4px 12px var(--sombra-calida);
+      border: 1px solid var(--borde-suave);
+      margin-bottom: 1.5rem;
+    }
+
+    /* dashboard: estadísticas */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 1.2rem;
+      margin-bottom: 2rem;
+    }
+    .stat-card {
+      background: var(--fondo-piel);
+      border-radius: 1.5rem;
+      padding: 1rem;
+      text-align: center;
+      border-left: 8px solid var(--ámbar);
+    }
+    .stat-number {
+      font-size: 2.6rem;
+      font-weight: 700;
+      color: var(--ámbar);
+    }
+    .progress-bar-bg {
+      background: #e2d5c0;
+      border-radius: 40px;
+      height: 12px;
+      overflow: hidden;
+      margin: 0.8rem 0;
+    }
+    .progress-fill {
+      background: var(--ámbar);
+      width: 0%;
+      height: 100%;
+      border-radius: 40px;
+      transition: width 0.2s;
+    }
+
+    /* listado */
+    .tecnicas-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+      gap: 1.2rem;
+      max-height: 65vh;
+      overflow-y: auto;
+      padding-right: 0.5rem;
+    }
+    .tecnica-item {
+      background: white;
+      border-radius: 1.2rem;
+      padding: 0.8rem 1rem;
+      border-left: 5px solid var(--ámbar-claro);
+      transition: 0.1s;
+    }
+    .tecnica-titulo {
+      font-weight: 700;
+      font-size: 0.95rem;
+      color: #5c3b1a;
+    }
+    .tecnica-ejemplo {
+      font-size: 0.85rem;
+      color: #6f5a42;
+      margin-top: 6px;
+      border-top: 1px dashed #ecdca8;
+      padding-top: 6px;
+    }
+    .badge-progreso {
+      font-size: 0.7rem;
+      background: #e9dbc3;
+      border-radius: 20px;
+      padding: 2px 8px;
+      display: inline-block;
+      margin-top: 6px;
+    }
+
+    /* práctica */
+    .flashcard {
+      background: #fff7ed;
+      border-radius: 2rem;
+      padding: 2rem;
+      text-align: center;
+      box-shadow: 0 15px 30px rgba(0,0,0,0.05);
+      border: 1px solid var(--borde-suave);
+      max-width: 750px;
+      margin: 0 auto;
+    }
+    .pregunta {
+      font-size: 1.5rem;
+      font-weight: 500;
+      margin-bottom: 2rem;
+      background: #fdf3e2;
+      padding: 1.2rem;
+      border-radius: 1.5rem;
+    }
+    .respuesta-oculta {
+      background: #efe2cf;
+      border-radius: 1.2rem;
+      padding: 1rem;
+      margin: 1rem 0;
+      color: #2f241b;
+      display: none;
+    }
+    .btn {
+      background: var(--arena);
+      border: none;
+      padding: 0.6rem 1.5rem;
+      border-radius: 3rem;
+      font-weight: 600;
+      margin: 0.3rem;
+      cursor: pointer;
+      transition: 0.1s;
+      font-family: inherit;
+    }
+    .btn-primary {
+      background: var(--ámbar);
+      color: white;
+    }
+    .btn-acierto {
+      background: var(--acierto);
+      color: white;
+    }
+    .btn-fallo {
+      background: var(--fallo);
+      color: white;
+    }
+    .modo-selector {
+      display: flex;
+      justify-content: center;
+      gap: 0.8rem;
+      margin-bottom: 1.5rem;
+    }
+    footer {
+      text-align: center;
+      padding: 1rem;
+      font-size: 0.75rem;
+      border-top: 1px solid var(--borde-suave);
+      background: #faf1e2;
+    }
+    @media (max-width: 680px) {
+      .view { padding: 1rem; }
+      .pregunta { font-size: 1.1rem; }
+      .tecnicas-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+<div class="app-container">
+  <header>
+    <h1>📐 Arquitectura Verbal <small>100 técnicas de redacción</small></h1>
+    <div style="font-size:0.85rem;">✍️ para estudiantes de arquitectura</div>
+  </header>
+  <nav>
+    <button class="nav-btn active" data-view="dashboard">📊 Panel</button>
+    <button class="nav-btn" data-view="listado">📜 Listado técnico</button>
+    <button class="nav-btn" data-view="practica">🃏 Práctica</button>
+  </nav>
+
+  <!-- VISTA DASHBOARD -->
+  <section id="dashboard" class="view active-view">
+    <div class="stats-grid" id="statsContainer"></div>
+    <div class="card">
+      <h3>📈 Progreso general</h3>
+      <div class="progress-bar-bg"><div class="progress-fill" id="globalProgressFill"></div></div>
+      <p id="globalProgressText"></p>
+      <p style="margin-top:1rem; font-size:0.85rem;">✅ Aciertos registrados en modo práctica. Cada técnica puede practicarse múltiples veces.</p>
+      <button id="resetProgresoBtn" class="btn" style="background:#d9b48b;">🔄 Reiniciar progreso</button>
+    </div>
+  </section>
+
+  <!-- VISTA LISTADO DE TÉCNICAS -->
+  <section id="listado" class="view">
+    <input type="text" id="filtroListado" placeholder="🔍 Filtrar por técnica o ejemplo..." style="width:100%; padding:10px; margin-bottom:15px; border-radius:40px; border:1px solid var(--borde-suave);">
+    <div id="tecnicasListadoContainer" class="tecnicas-grid"></div>
+  </section>
+
+  <!-- VISTA PRÁCTICA (flashcards) -->
+  <section id="practica" class="view">
+    <div class="modo-selector">
+      <button id="modoTecnicaEjemplo" class="btn btn-primary">📖 Técnica → Ejemplo</button>
+      <button id="modoEjemploTecnica" class="btn">🔄 Ejemplo → Técnica</button>
+    </div>
+    <div class="flashcard">
+      <div id="cardPregunta" class="pregunta"></div>
+      <button id="mostrarRespuestaBtn" class="btn">📖 Mostrar respuesta</button>
+      <div id="respuestaDiv" class="respuesta-oculta"></div>
+      <div style="margin-top: 1.5rem;" id="botonesAccion">
+        <button id="aciertoBtn" class="btn btn-acierto" disabled>✅ Acierto</button>
+        <button id="falloBtn" class="btn btn-fallo" disabled>❌ Fallo</button>
+      </div>
+      <button id="siguienteCardBtn" class="btn" style="margin-top:1rem;">⏩ Siguiente técnica</button>
+      <p id="infoProgresoCard" style="margin-top:0.8rem; font-size:0.8rem;"></p>
+    </div>
+  </section>
+  <footer>Memoria local · tus aciertos se guardan en el navegador · diseñado para fatiga visual baja</footer>
+</div>
+
+<script>
+  // --------------------------------------------------------------
+  // 1. BASE DE DATOS CON LAS 100 TÉCNICAS (número, técnica, ejemplo)
+  //    Extraído textualmente del mensaje anterior (completo)
+  // --------------------------------------------------------------
+  const tecnicasData = [
+    [1, "Usa 'planta', no 'dibujo de arriba'", "En la planta del primer piso se distribuyen las aulas alrededor del patio central."],
+    [2, "Emplea 'alzado' en lugar de 'vista de frente'", "El alzado norte muestra la continuidad de la fachada de vidrio."],
+    [3, "Distingue 'sección' de 'corte'", "La sección longitudinal atraviesa el edificio por el eje de simetría, mientras que un corte local detalla la unión del pilar con la viga."],
+    [4, "Usa 'axonometría' y 'perspectiva' con propiedad", "En la axonometría se conservan las paralelas, ideal para medir; en la perspectiva cónica las líneas convergen, siendo más realista."],
+    [5, "Nombra los materiales por su nombre técnico", "La estructura es de hormigón armado HA-30, los cerramientos de bloque de hormigón celular curado en autoclave."],
+    [6, "Emplea verbos de transformación", "El volumen se extruye desde el suelo y luego se perfora para crear un patio interior."],
+    [7, "Describe texturas con léxico específico", "El revestimiento de la fachada es rugoso al tacto y mate a la vista, en contraste con el pulido brillante del pavimento."],
+    [8, "Diferencia 'estructura portante' de 'cerramiento'", "Los pilares de acero forman la estructura portante, mientras que los paneles de lana de roca son cerramiento no estructural."],
+    [9, "Usa 'circulación', 'recorrido', 'itinerario'", "El recorrido peatonal serpentea entre pérgolas; la circulación vertical se resuelve con dos núcleos de ascensores."],
+    [10, "Emplea 'escala' cualitativamente", "El espacio de la biblioteca, con su doble altura, adquiere una escala monumental, frente a la escala íntima de las salas de lectura individual."],
+    [11, "Nombra correctamente los elementos", "El pilar metálico HEB-200 recibe la viga IPE-300, y sobre ella apoya el forjado de losa colaborante."],
+    [12, "Utiliza 'percepción secuencial'", "Al avanzar, se percibe secuencialmente el umbral oscuro, luego la explosión de luz cenital y finalmente la apertura hacia el paisaje."],
+    [13, "Denomina 'hueco' a la abertura", "La fachada este se compone de tres huecos verticales que enmarcan las vistas, no se trata simplemente de ventanas."],
+    [14, "Usa 'envolvente'", "La envolvente del edificio combina una cámara de aire con aislamiento de lana de roca para controlar la transferencia térmica."],
+    [15, "Emplea 'programa de necesidades'", "El programa de necesidades exige 200 m² para talleres, 150 m² para oficinas y un espacio polivalente de 300 m²."],
+    [16, "Aplica la estructura clásica", "Introducción: se analiza el contexto urbano. Desarrollo: se describen las decisiones de implantación. Conclusión: se resume la adecuación del proyecto al lugar."],
+    [17, "Redacta frases cortas", "El muro de carga es de ladrillo visto. Tiene 30 cm de espesor. Soporta las vigas de madera. Cada viga separa 60 cm."],
+    [18, "Usa orden lógico (general a particular)", "El edificio se ubica en una ladera. En planta baja se sitúa el acceso. El núcleo de comunicaciones conecta con el primer piso. Allí, el detalle de la barandilla es de acero inoxidable."],
+    [19, "Encadena ideas con conectores espaciales", "El acceso principal está al sur; colindante con él, una rampa accesible; hacia el norte, el patio de luces; en paralelo a la rampa, una jardinera."],
+    [20, "Utiliza listas numeradas para secuencias", "El montaje de la cubierta sigue estos pasos: 1) Colocación de correas; 2) Instalación de panel sándwich; 3) Sellado de juntas; 4) Colocación de remates."],
+    [21, "Escribe párrafos temáticos", "[Párrafo 1] La estructura resistente. [Párrafo 2] La envolvente térmica. [Párrafo 3] Los acabados interiores."],
+    [22, "Evita el 'estilo telegrama' sin verbos", "Incorrecto: 'Cubierta inclinada. Teja curva.' Correcto: 'La cubierta inclinada se resuelve con teja curva.'"],
+    [23, "Define los acrónimos la primera vez", "El PTFE (politetrafluoroetileno) recubre la membrana textil. El PTFE es resistente a los rayos UV."],
+    [24, "Separa claramente descripción, análisis y opinión", "Descripción: el muro cortina es de vidrio. Análisis: coeficiente U 1,1. Opinión: debería incorporar lamas."],
+    [25, "Usa la voz activa para dar fuerza", "El arquitecto dispuso los pilares cada 6 metros. (no 'fueron dispuestos')"],
+    [26, "Redacta la memoria descriptiva en presente atemporal", "El edificio se compone de dos volúmenes. La fachada utiliza piedra caliza."],
+    [27, "Emplea el condicional para hipótesis", "Si el terreno tuviera mayor pendiente, podría optarse por una cimentación con pilotes."],
+    [28, "Alinea el texto con los planos", "Como se observa en el plano 5 (detalle A), la junta de dilatación se numera como J-03."],
+    [29, "Escribe primero el título y el índice", "Título: 'Memoria de pasarela'. Índice: 1. Contexto; 2. Geometría; 3. Materialidad."],
+    [30, "Relee en voz alta para detectar frases enrevesadas", "Al leer en voz alta: 'Acertamos al optar por el arriostramiento en X tras analizar las cargas.'"],
+    [31, "Describe el espacio empezando por el acceso", "Desde la acera se cruza un umbral de granito. Luego se atraviesa una galería y finalmente se llega al vacío central."],
+    [32, "Utiliza referencias sensoriales", "La luz cenital tamizada baña el muro de piedra, cuyo eco recuerda una catedral."],
+    [33, "Nombra la proporción", "El pasillo es alto y esbelto (altura 4 m, ancho 1,2 m), el salón ancho y comprimido."],
+    [34, "Contrapone conceptos", "La fachada alterna lleno de hormigón y vacío de vidrio; lo opaco enmarca lo transparente."],
+    [35, "Describe la secuencia", "Antes de entrar se divisa la marquesina; al atravesar la puerta se abre el lobby; después de doblar aparecen escaleras."],
+    [36, "Usa verbos de percepción", "Desde la entrada se divisa la chimenea; al acercarse se intuye la salida; tras el pilar se revela el comedor."],
+    [37, "Explica cómo se habita un lugar", "La sala invita al recogimiento; la terraza invita al encuentro."],
+    [38, "Relaciona interior y exterior", "El patio interior filtra la luz solar y enmarca el cielo, creando transición."],
+    [39, "Emplea la metáfora arquitectónica con moderación", "La cubierta vuela sobre los soportes como un ala suspendida."],
+    [40, "Describe los límites", "El suelo es de terrazo, las paredes de yeso blanco, el techo de placas acústicas."],
+    [41, "Crea ritmo con la puntuación", "El espacio se comprime. Un breve pasillo. Luego explota: doble altura. Finalmente la terraza."],
+    [42, "Usa la escala humana como referencia", "La barandilla a 1,10 m (altura de cintura), el pomo a 0,90 m."],
+    [43, "Describe la luz por su efecto", "Luz rasante que resalta texturas; luz difusa y uniforme."],
+    [44, "Nombra el color con precisión", "Verde botella, óxido, terracota."],
+    [45, "Indica el factor tiempo", "El vestíbulo espacio de paso; la biblioteca de estancia; la galería dinámica."],
+    [46, "Formula una tesis clara", "Tesis: el proyecto fracasa en integrarse al paisaje por escala y materiales."],
+    [47, "Sustenta cada afirmación con razones", "La fachada no protege del sol (falta de lamas) y el acero se oxida (drenaje insuficiente)."],
+    [48, "Diferencia 'me gusta' de 'es eficaz porque'", "Me gusta el color verde, pero es eficaz porque reduce ganancia solar."],
+    [49, "Emplea comparaciones con referentes", "A diferencia de Mies, aquí el vidrio se fragmenta con parteluces."],
+    [50, "Usa citas textuales con formato adecuado", "Zumthor: 'La belleza reside en su capacidad de conmover'."],
+    [51, "Contraargumenta", "Aunque parece ahorrar cimentación, en realidad genera momentos flectores encarecidos."],
+    [52, "Aplica criterios de evaluación", "Sostenibilidad (geotermia) bien, pero suspende en adecuación al lugar."],
+    [53, "Evita adjetivos vacíos", "En lugar de 'bonito' diga 'proporcionado', 'bien resuelto', 'luminoso'."],
+    [54, "Utiliza 'por lo tanto' y 'en consecuencia'", "Cargas elevadas, terreno blando; por lo tanto se requiere pilotaje."],
+    [55, "Fundamenta decisiones formales", "Forma curva no por estética, sino porque reduce coeficiente de viento."],
+    [56, "Reconoce limitaciones propias", "No aborda la accesibilidad universal en sótano; limitación a corregir."],
+    [57, "Jerarquiza problemas resueltos", "Estructura antisísmica; luego envolvente térmica; detalle de remates."],
+    [58, "Evita la falacia de autoridad", "'Lo dice Zumthor' no basta; se necesita análisis de continuidad visual."],
+    [59, "Concluye con un resumen evaluativo", "Logra integración urbana pero falla en modulación; se recomienda rediseño."],
+    [60, "Redacta la crítica como un servicio", "La rampa supera el 8%; corregir mejora accesibilidad sin alterar forma."],
+    [61, "Concuerda en número y género", "Las losas apoyan sobre los muros (plural correcto)."],
+    [62, "No uses 'el mismo' para sustituir 'eso'", "Incorrecto: 'el mismo exige ensayos'; correcto: 'eso exige ensayos'."],
+    [63, "Distingue 'a parte' de 'aparte'", "Maqueta a parte del resto. Aparte, conviene memoria fotográfica."],
+    [64, "Emplea 'sino' (contraste) y no 'si no'", "No es fallo de cálculo, sino de ejecución. Si no se corrige, colapsará."],
+    [65, "Escribe 'porqué' y 'porque'", "No entiendo el porqué de esa solución porque no se justifica."],
+    [66, "No leas 'haber' como 'a ver'", "Va a haber reunión. A ver si asistes."],
+    [67, "Pon comas después de conectores", "Sin embargo, la tabiquería no es estructural. Además, deberá anclarse."],
+    [68, "Usa punto y coma para enumeraciones complejas", "Planta baja: acceso principal, con dos puertas; recepción de 50 m²; aseos."],
+    [69, "No abuses de 'muy'", "Enorme, descomunal, luminiscente en lugar de 'muy grande', 'muy brillante'."],
+    [70, "Coloca los adverbios cerca del verbo", "Rápidamente se construyó la cimentación."],
+    [71, "Evita el gerundio de posterioridad", "Se colocó la cubierta y se creó un voladizo (no 'creando')."],
+    [72, "Revisa los dequeísmos", "Pienso que la junta debe ser sellada. Me alegro de que hayas venido."],
+    [73, "Evita el 'estilo pasivo reflejo' continuo", "El contratista construyó el muro, pintó y colocó el aislamiento."],
+    [74, "Emplea el subjuntivo para dudas o deseos", "Espero que esté fijado. Dudo que sea necesario refuerzo."],
+    [75, "No confundas 'hecho' con 'echo'", "Hemos hecho análisis. Luego echo la espuma."],
+    [76, "Escribe 'a través de', no 'atreves de'", "La luz entra a través de lucernarios."],
+    [77, "Sustituye 'cosa' o 'algo'", "El dintel apoya en el pilar."],
+    [78, "Usa 'sino que' con verbo", "No es ladrillo macizo, sino que es bloque cerámico."],
+    [79, "Evita muletillas escritas", "Escriba directamente 'Colocamos la viga'."],
+    [80, "Lee un manual de estilo", "Consulta la Ortografía de la RAE."],
+    [81, "Memoria descriptiva: presente y orden sistemático", "Ubicación: calle Mayor. Concepto: diálogo con soportales. Planta baja: local."],
+    [82, "Memoria constructiva: voz pasiva técnica", "Se dispondrá junta de dilatación cada 10 m. Se ejecutará recrecido."],
+    [83, "Pliego de condiciones: futuro de mandato", "El contratista ejecutará las cimentaciones. Verificará la densidad."],
+    [84, "Brief o programa: listas y frases funcionales", "Cocina 15 m² con isla. Comedor conexión visual. Dormitorio sureste."],
+    [85, "Comentario de plano: leer de izquierda a derecha", "Planta: izquierda núcleo escaleras; derecha sala diáfana; culmina terraza."],
+    [86, "Reseña de edificio: descripción + juicio", "Fachada de paneles perfilados. Descripción homogeneidad; juicio critica falta de sombras."],
+    [87, "Artículo de opinión: primera persona con rigor", "Considero que la normativa evita barreras visuales porque mantiene escala peatonal."],
+    [88, "Presentación oral (guion telegráfico)", "Diapo 1: Contexto. Diapo 2: Idea fuerza: vacío central. Diapo 3: Sección."],
+    [89, "Correo a cliente o aparejador", "Asunto: Reunión replanteo. Adjunto acta. Viñetas: 1) replanteo aprobado."],
+    [90, "Informe pericial: pretérito perfecto compuesto", "Se ha detectado fisura de 2 mm. Se ha medido evolución semanal."],
+    [91, "Propuesta de concurso: primera página concepto", "Concepto: 'El puente habitable'. Estructura de acero integra circulación."],
+    [92, "Acta de reunión: verbos en pasado y acuerdos", "Se acordó replantear cota. Se revisó planificación. Acuerdo 1: adenda."],
+    [93, "Descripción para redes sociales: directo y evocador", "Hormigón visto + luz cenital. Atmósfera casi sagrada."],
+    [94, "Ficha de material: tabla + frase", "Pladur Aquaboard 120x240 cm. Colocar a trasdós de ducha."],
+    [95, "Texto de panel expositivo: 15 palabras", "Fachada ventilada con panel HPL. Aislamiento lana de roca."],
+    [96, "Leyenda de plano: coherencia", "E-01 Pilar metálico; E-02 Viga IPE; J-01 Junta dilatación."],
+    [97, "Defensa ante tribunal: bullet points", "Estrategia pasiva: ventilación cruzada. Material reciclado 40%."],
+    [98, "Síntesis ejecutiva de análisis urbano", "Diagnóstico: déficit zonas verdes. Propuesta: parque lineal 2 km."],
+    [99, "Cita bibliográfica UNE-ISO 690", "ZUMTHOR, Peter. Pensar la arquitectura. Barcelona: Gustavo Gili, 2010."],
+    [100, "Currículum vitae: logros medibles", "Proyecto 5 viviendas. Reducción 30% consumo. Tutoría 2 tesis."]
+  ];
+
+  // --------------------- ESTADO Y LOCALSTORAGE -------------------------
+  let progreso = {};  // clave id (1..100): { aciertos, fallos, ultimaPractica }
+  const STORAGE_KEY = "arqRedaccionProgreso";
+
+  function cargarProgreso() {
+    const guardado = localStorage.getItem(STORAGE_KEY);
+    if(guardado) {
+      progreso = JSON.parse(guardado);
+    } else {
+      progreso = {};
+      for(let i=1; i<=100; i++) {
+        progreso[i] = { aciertos: 0, fallos: 0, ultimaPractica: null };
+      }
+    }
+  }
+  function guardarProgreso() {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(progreso));
+  }
+  function registrarResultado(id, acierto) {
+    if(!progreso[id]) progreso[id] = { aciertos:0, fallos:0, ultimaPractica: null };
+    if(acierto) progreso[id].aciertos += 1;
+    else progreso[id].fallos += 1;
+    progreso[id].ultimaPractica = new Date().toISOString();
+    guardarProgreso();
+    renderDashboard();
+    renderListado();   // actualiza listado badges
+  }
+
+  // ---- utilidades render ----
+  let modoPractica = "tecnica_ejemplo"; // o "ejemplo_tecnica"
+  let currentCardIndex = 0;
+  let cardsArray = [];       // array de objetos { id, pregunta, respuestaCorrecta }
+  let respuestaRevelada = false;
+  let currentCardId = null;
+
+  function construirCardsSegunModo() {
+    cardsArray = tecnicasData.map(tec => {
+      const id = tec[0];
+      if(modoPractica === "tecnica_ejemplo") {
+        return { id, pregunta: `📘 Técnica ${tec[0]}: ${tec[1]}`, respuestaCorrecta: tec[2] };
+      } else {
+        return { id, pregunta: `✍️ Ejemplo: "${tec[2].substring(0, 100)}${tec[2].length>100?'…':''}"`, respuestaCorrecta: `Técnica ${tec[0]}: ${tec[1]}` };
+      }
+    });
+  }
+
+  function actualizarCardUI() {
+    const card = cardsArray[currentCardIndex];
+    if(!card) return;
+    currentCardId = card.id;
+    document.getElementById("cardPregunta").innerHTML = card.pregunta;
+    document.getElementById("respuestaDiv").innerHTML = `<strong>Respuesta:</strong><br>${card.respuestaCorrecta}`;
+    document.getElementById("respuestaDiv").style.display = "none";
+    respuestaRevelada = false;
+    document.getElementById("aciertoBtn").disabled = true;
+    document.getElementById("falloBtn").disabled = true;
+    const infoProgress = progreso[card.id] || { aciertos:0, fallos:0 };
+    document.getElementById("infoProgresoCard").innerHTML = `📊 Técnica ${card.id} · ✅ ${infoProgress.aciertos} aciertos · ❌ ${infoProgress.fallos} fallos`;
+  }
+
+  function mostrarRespuesta() {
+    if(!respuestaRevelada) {
+      document.getElementById("respuestaDiv").style.display = "block";
+      respuestaRevelada = true;
+      document.getElementById("aciertoBtn").disabled = false;
+      document.getElementById("falloBtn").disabled = false;
+    }
+  }
+
+  function siguienteTarjeta() {
+    currentCardIndex = (currentCardIndex + 1) % cardsArray.length;
+    actualizarCardUI();
+  }
+
+  function manejarAcierto() {
+    if(currentCardId && respuestaRevelada) {
+      registrarResultado(currentCardId, true);
+      siguienteTarjeta();
+    } else alert("Primero muestra la respuesta.");
+  }
+  function manejarFallo() {
+    if(currentCardId && respuestaRevelada) {
+      registrarResultado(currentCardId, false);
+      siguienteTarjeta();
+    } else alert("Primero muestra la respuesta.");
+  }
+
+  // RENDER DASHBOARD
+  function renderDashboard() {
+    let totalAciertos = 0, totalFallos = 0, tecnicasConAcierto = 0;
+    for(let i=1; i<=100; i++) {
+      const p = progreso[i] || {aciertos:0, fallos:0};
+      totalAciertos += p.aciertos;
+      totalFallos += p.fallos;
+      if(p.aciertos > 0) tecnicasConAcierto++;
+    }
+    const porcentajeTecnicas = (tecnicasConAcierto/100)*100;
+    document.getElementById("globalProgressFill").style.width = `${porcentajeTecnicas}%`;
+    document.getElementById("globalProgressText").innerHTML = `${tecnicasConAcierto} de 100 técnicas registran al menos 1 acierto (${Math.round(porcentajeTecnicas)}%).`;
+    document.getElementById("statsContainer").innerHTML = `
+      <div class="stat-card"><div class="stat-number">${totalAciertos}</div>✅ Aciertos totales</div>
+      <div class="stat-card"><div class="stat-number">${totalFallos}</div>❌ Fallos</div>
+      <div class="stat-card"><div class="stat-number">${tecnicasConAcierto}</div>📘 Técnicas con acierto</div>
+      <div class="stat-card"><div class="stat-number">${Math.round((totalAciertos/(totalAciertos+totalFallos+0.001))*100)}%</div>📈 Ratio acierto/fallo</div>
+    `;
+  }
+
+  function renderListado(filtro="") {
+    const container = document.getElementById("tecnicasListadoContainer");
+    container.innerHTML = "";
+    const filtroLower = filtro.toLowerCase();
+    tecnicasData.forEach(tec => {
+      const [id, tecnica, ejemplo] = tec;
+      const prog = progreso[id] || {aciertos:0, fallos:0};
+      if(filtro && !tecnica.toLowerCase().includes(filtroLower) && !ejemplo.toLowerCase().includes(filtroLower)) return;
+      const div = document.createElement("div");
+      div.className = "tecnica-item";
+      div.innerHTML = `<div class="tecnica-titulo">${id}. ${tecnica}</div>
+                       <div class="tecnica-ejemplo">📝 ${ejemplo.substring(0,140)}${ejemplo.length>140?'…':''}</div>
+                       <span class="badge-progreso">✅ ${prog.aciertos} aciertos · ❌ ${prog.fallos} fallos</span>`;
+      container.appendChild(div);
+    });
+  }
+
+  function resetProgreso() {
+    if(confirm("¿Reiniciar todo el progreso? Se perderán todos los aciertos y fallos.")) {
+      for(let i=1;i<=100;i++) progreso[i] = { aciertos:0, fallos:0, ultimaPractica: null };
+      guardarProgreso();
+      renderDashboard();
+      renderListado(document.getElementById("filtroListado")?.value || "");
+      if(cardsArray.length) actualizarCardUI();
+    }
+  }
+
+  // CAMBIO DE VISTAS
+  function initNavigation() {
+    document.querySelectorAll(".nav-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const viewId = btn.getAttribute("data-view");
+        document.querySelectorAll(".view").forEach(v => v.classList.remove("active-view"));
+        document.getElementById(viewId).classList.add("active-view");
+        document.querySelectorAll(".nav-btn").forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+        if(viewId === "listado") renderListado(document.getElementById("filtroListado").value);
+        if(viewId === "dashboard") renderDashboard();
+        if(viewId === "practica") { construirCardsSegunModo(); currentCardIndex = 0; actualizarCardUI(); }
+      });
+    });
+  }
+
+  // EVENTOS DOM
+  window.addEventListener("DOMContentLoaded", () => {
+    cargarProgreso();
+    construirCardsSegunModo();
+    currentCardIndex = 0;
+    actualizarCardUI();
+    renderDashboard();
+    renderListado();
+    initNavigation();
+    document.getElementById("modoTecnicaEjemplo").addEventListener("click", () => {
+      modoPractica = "tecnica_ejemplo";
+      construirCardsSegunModo();
+      currentCardIndex = 0;
+      actualizarCardUI();
+      document.getElementById("modoTecnicaEjemplo").classList.add("btn-primary");
+      document.getElementById("modoEjemploTecnica").classList.remove("btn-primary");
+    });
+    document.getElementById("modoEjemploTecnica").addEventListener("click", () => {
+      modoPractica = "ejemplo_tecnica";
+      construirCardsSegunModo();
+      currentCardIndex = 0;
+      actualizarCardUI();
+      document.getElementById("modoEjemploTecnica").classList.add("btn-primary");
+      document.getElementById("modoTecnicaEjemplo").classList.remove("btn-primary");
+    });
+    document.getElementById("mostrarRespuestaBtn").addEventListener("click", mostrarRespuesta);
+    document.getElementById("aciertoBtn").addEventListener("click", manejarAcierto);
+    document.getElementById("falloBtn").addEventListener("click", manejarFallo);
+    document.getElementById("siguienteCardBtn").addEventListener("click", () => { siguienteTarjeta(); });
+    document.getElementById("resetProgresoBtn").addEventListener("click", resetProgreso);
+    const filtroInput = document.getElementById("filtroListado");
+    if(filtroInput) filtroInput.addEventListener("input", (e) => renderListado(e.target.value));
+  });
+</script>
+</body>
+</html>

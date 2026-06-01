@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>Marketing Digital · Contaduría Pública · Colombia</title>
+  <style>
+    /* ----- VARIABLES CSS: paleta contabilidad (verde, azul, gris) ----- */
+    :root {
+      --fondo: #f4f9f4;
+      --texto: #1e3a2f;
+      --verde-contable: #2a7a4b;
+      --azul-finanzas: #2c6e9e;
+      --gris-corporativo: #7f8c8d;
+      --acierto: #2b9348;
+      --fallo: #e85d04;
+      --sombra: rgba(40, 70, 50, 0.08);
+      --card-bg: #ffffff;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: var(--fondo);
+      color: var(--texto);
+      font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
+      line-height: 1.5;
+      padding: 1rem;
+    }
+
+    .app-container {
+      max-width: 1300px;
+      margin: 0 auto;
+      background: var(--card-bg);
+      border-radius: 2rem;
+      box-shadow: 0 12px 28px var(--sombra);
+      overflow: hidden;
+      border: 1px solid #cde0ce;
+    }
+
+    header {
+      background: #eef5ea;
+      padding: 1.2rem 2rem;
+      border-bottom: 3px solid var(--verde-contable);
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 1rem;
+    }
+    h1 {
+      font-size: 1.7rem;
+      font-weight: 600;
+      color: #2a7a4b;
+      letter-spacing: -0.2px;
+    }
+    h1 small {
+      font-size: 0.7rem;
+      font-weight: normal;
+      color: #6c9e7a;
+    }
+
+    nav {
+      display: flex;
+      gap: 0.5rem;
+      background: #e2ece1;
+      padding: 0.6rem 2rem;
+      border-bottom: 1px solid #cde0ce;
+      flex-wrap: wrap;
+    }
+    .nav-btn {
+      background: transparent;
+      border: none;
+      font-size: 0.95rem;
+      padding: 0.5rem 1.2rem;
+      border-radius: 40px;
+      cursor: pointer;
+      font-weight: 500;
+      transition: all 0.2s;
+      color: #2a7a4b;
+    }
+    .nav-btn.active {
+      background-color: var(--verde-contable);
+      color: white;
+    }
+    .nav-btn:hover:not(.active) {
+      background-color: #cfdec9;
+    }
+
+    .view {
+      display: none;
+      padding: 2rem;
+      animation: fade 0.2s ease;
+    }
+    .active-view { display: block; }
+    @keyframes fade { from { opacity: 0; transform: translateY(5px);} to { opacity: 1; transform: translateY(0);} }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+    .stat-card {
+      background: var(--fondo);
+      border-radius: 1.5rem;
+      padding: 1rem;
+      text-align: center;
+      border-left: 6px solid var(--azul-finanzas);
+      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    }
+    .stat-number {
+      font-size: 2.2rem;
+      font-weight: 700;
+      color: var(--verde-contable);
+    }
+    .progress-bar-bg {
+      background: #e2e8f0;
+      border-radius: 40px;
+      height: 12px;
+      overflow: hidden;
+      margin: 0.8rem 0;
+    }
+    .progress-fill {
+      background: var(--verde-contable);
+      width: 0%;
+      height: 100%;
+      transition: width 0.2s;
+    }
+
+    .conceptos-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+      gap: 1rem;
+      max-height: 65vh;
+      overflow-y: auto;
+      padding-right: 0.3rem;
+    }
+    .concepto-item {
+      background: white;
+      border-radius: 1.2rem;
+      padding: 0.8rem 1rem;
+      border-left: 5px solid var(--gris-corporativo);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+    .concepto-titulo {
+      font-weight: 700;
+      color: #2a7a4b;
+    }
+    .concepto-desc {
+      font-size: 0.85rem;
+      color: #4a6e5a;
+      margin-top: 6px;
+      border-top: 1px solid #e2ecd9;
+      padding-top: 6px;
+    }
+    .badge-progreso {
+      font-size: 0.7rem;
+      background: #eaf3e5;
+      border-radius: 20px;
+      padding: 2px 10px;
+      display: inline-block;
+      margin-top: 8px;
+    }
+
+    /* práctica */
+    .flashcard {
+      background: #ffffff;
+      border-radius: 2rem;
+      padding: 1.8rem;
+      text-align: center;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+      border: 1px solid #cde0ce;
+      max-width: 750px;
+      margin: 0 auto;
+    }
+    .pregunta {
+      font-size: 1.4rem;
+      font-weight: 500;
+      margin-bottom: 1.8rem;
+      background: #eef5ea;
+      padding: 1.2rem;
+      border-radius: 1.5rem;
+    }
+    .respuesta-oculta {
+      background: #f8fbf4;
+      border-radius: 1.2rem;
+      padding: 1rem;
+      margin: 1rem 0;
+      display: none;
+    }
+    .palabras-baraja {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 0.6rem;
+      margin: 1.5rem 0;
+    }
+    .palabra-btn {
+      background: var(--verde-contable);
+      color: white;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 2rem;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: 0.1s;
+    }
+    .orden-actual {
+      background: #fefef9;
+      border-radius: 1rem;
+      padding: 1rem;
+      min-height: 80px;
+      margin: 1rem 0;
+      text-align: left;
+      border: 1px dashed #cde0ce;
+    }
+    .btn {
+      background: #e2e8f0;
+      border: none;
+      padding: 0.6rem 1.5rem;
+      border-radius: 3rem;
+      font-weight: 600;
+      margin: 0.3rem;
+      cursor: pointer;
+      font-family: inherit;
+    }
+    .btn-primary { background: var(--verde-contable); color: white; }
+    .btn-acierto { background: var(--acierto); color: white; }
+    .btn-fallo { background: var(--fallo); color: white; }
+    .modo-selector { display: flex; justify-content: center; gap: 0.8rem; margin-bottom: 1.5rem; flex-wrap: wrap; }
+    footer {
+      text-align: center;
+      padding: 1rem;
+      font-size: 0.75rem;
+      border-top: 1px solid #cde0ce;
+      background: #fafdf7;
+    }
+    @media (max-width: 680px) {
+      .view { padding: 1rem; }
+      .pregunta { font-size: 1rem; }
+    }
+  </style>
+</head>
+<body>
+<div class="app-container">
+  <header>
+    <h1>📊 Marketing Digital · Contaduría Pública <small>100 conceptos para contadores en Colombia</small></h1>
+    <div style="font-size:0.8rem;">🧾 Captación de clientes · SEO · Redes profesionales · Email marketing · Automatización</div>
+  </header>
+  <nav>
+    <button class="nav-btn active" data-view="dashboard">📊 Panel</button>
+    <button class="nav-btn" data-view="listado">📚 Compendio</button>
+    <button class="nav-btn" data-view="practica">🃏 Práctica</button>
+  </nav>
+
+  <section id="dashboard" class="view active-view">
+    <div class="stats-grid" id="statsContainer"></div>
+    <div class="card" style="background:white; border-radius:1.6rem; padding:1.2rem;">
+      <h3>📈 Progreso en marketing digital para contadores</h3>
+      <div class="progress-bar-bg"><div class="progress-fill" id="globalProgressFill"></div></div>
+      <p id="globalProgressText"></p>
+      <button id="resetProgresoBtn" class="btn" style="background:#cfdec9;">🔄 Reiniciar progreso</button>
+    </div>
+  </section>
+
+  <section id="listado" class="view">
+    <input type="text" id="filtroListado" placeholder="🔍 Buscar concepto o definición..." style="width:100%; padding:10px; margin-bottom:15px; border-radius:40px; border:1px solid #cde0ce;">
+    <div id="conceptosListadoContainer" class="conceptos-grid"></div>
+  </section>
+
+  <section id="practica" class="view">
+    <div class="modo-selector">
+      <button id="modoConceptoDef" class="btn btn-primary">📖 Concepto → Definición</button>
+      <button id="modoDefConcepto" class="btn">🔄 Definición → Concepto</button>
+      <button id="modoOrdenar" class="btn">🧩 Ordenar definición</button>
+    </div>
+    <div id="practicaContainer"></div>
+  </section>
+  <footer>Progreso guardado localmente · Ejercicio de ordenar definición · Enfoque en marketing digital para contadores públicos colombianos</footer>
+</div>
+
+<script>
+  // --------------------------------------------------------------
+  // 100 CONCEPTOS DE MARKETING DIGITAL PARA CONTADURÍA PÚBLICA (Colombia)
+  // --------------------------------------------------------------
+  const conceptosData = [
+    [1, "Marketing contable digital", "Estrategias online para promocionar servicios de contabilidad, auditoría, asesoría fiscal y outsourcing."],
+    [2, "Portafolio de servicios contables", "Página web que detalla servicios: declaraciones de renta, impuestos, revisoria fiscal, nómina."],
+    [3, "Lead empresarial", "Potencial cliente (pyme, persona natural, empresa) interesado en servicios contables."],
+    [4, "SEO para contadores", "Optimización para palabras clave como 'contador en Bogotá', 'revisor fiscal Medellín', 'declaración de renta online'."],
+    [5, "Palabra clave local contable", "Términos geográficos específicos de ciudades colombianas para aparecer en búsquedas cercanas."],
+    [6, "Google My Business para contadores", "Perfil gratuito que muestra dirección, teléfono, horario y reseñas en mapas."],
+    [7, "Landing page de servicio fiscal", "Página diseñada para un servicio específico (ej. 'Preparación de impuestos 2024') con formulario de contacto."],
+    [8, "Call to action contable", "Botón o mensaje que invita a agendar asesoría, descargar guía o solicitar cotización."],
+    [9, "Formulario de captación", "Herramienta para que potenciales clientes dejen nombre, empresa, correo y teléfono."],
+    [10, "WhatsApp Business para contadores", "Canal directo para resolver dudas rápidas, enviar recordatorios fiscales o recibir documentos."],
+    [11, "Lead magnet contable", "Ofrecimiento gratuito a cambio del correo: guía de deducciones, checklist de cierre fiscal, calculadora de impuestos."],
+    [12, "Email marketing para firmas contables", "Newsletter con tips tributarios, cambios normativos, ofertas de servicios."],
+    [13, "Automatización de seguimiento", "Correos automáticos para quienes descargan recursos pero aún no contratan."],
+    [14, "Segmentación de clientes", "Clasificar leads por tamaño de empresa (pyme, autónomo, gran empresa) o tipo de servicio."],
+    [15, "CRM para contadores", "Sistema que gestiona contactos, propuestas, seguimiento y facturación."],
+    [16, "Blog contable", "Artículos sobre reformas tributarias, plazos DIAN, beneficios fiscales, atrayendo tráfico orgánico."],
+    [17, "Checklist fiscal descargable", "Lista de documentos necesarios para declaración de renta, a cambio del email."],
+    [18, "Webinar de actualización tributaria", "Seminario online gratuito sobre cambios en la normativa colombiana."],
+    [19, "Caso de éxito de cliente", "Testimonio o estudio de caso mostrando cómo se ahorró impuestos o se evitó sanción."],
+    [20, "Sello de confianza", "Certificaciones como Revisor Fiscal, contador público titulado, membresía en Instituto de Contadores."],
+    [21, "Anuncios en Google Ads para contadores", "Aparecer cuando alguien busca 'contador para pyme en Cali' o 'declaración de renta 2025'."],
+    [22, "CPL (Costo por lead) contable", "Inversión necesaria para conseguir cada contacto calificado de empresa o persona."],
+    [23, "Remarketing para contadores", "Mostrar anuncios a quienes visitaron la web pero no contactaron."],
+    [24, "Anuncios en Facebook / LinkedIn", "Segmentar por profesión (emprendedores, gerentes) e intereses financieros."],
+    [25, "LinkedIn para contadores públicos", "Red profesional para conectar con dueños de empresas y posibles clientes corporativos."],
+    [26, "Instagram para firma contable", "Publicar tips fiscales en Reels, infografías de plazos DIAN, testimonios."],
+    [27, "TikTok para contadores", "Videos cortos explicando deducciones comunes, errores fiscales, humor contable."],
+    [28, "Hashtags para contadores", "#ContadorColombia, #DeclaraciónDeRenta, #RevisorFiscal, #DIAN."],
+    [29, "YouTube para firmas contables", "Canal con tutoriales de facturación electrónica, software contable, explicaciones normativas."],
+    [30, "Google Analytics para contador", "Mide tráfico al sitio, páginas más vistas, procedencia de visitantes."],
+    [31, "Tasa de conversión de contacto", "Porcentaje de visitantes que llenan el formulario o escriben a WhatsApp."],
+    [32, "Presupuesto mensual de marketing", "Recomendado 5-10% de ingresos proyectados para contadores independientes."],
+    [33, "Página de testimonios de clientes", "Sección con reseñas escritas o en video de empresarios satisfechos."],
+    [34, "Video presentación del contador", "Breve clip donde el contador explica su experiencia y servicios clave."],
+    [35, "Contenido perenne (evergreen)", "Artículos siempre útiles como 'Calendario tributario 2025 DIAN'."],
+    [36, "Oferta de lanzamiento", "Descuento por tiempo limitado para nuevos clientes (primer mes gratis en declaración)."],
+    [37, "Programa de referidos contable", "Beneficio para clientes que recomiendan otros negocios (descuento en honorarios)."],
+    [38, "Certificado de confidencialidad", "Documento digital que garantiza manejo seguro de datos, genera confianza."],
+    [39, "Plan de servicios visible", "Tabla con precios y alcance de cada servicio (contabilidad básica, auditoría, outsourcing)."],
+    [40, "Calculadora de impuestos estimados", "Herramienta online que pide ingresos y gastos, muestra probable declaración."],
+    [41, "Checklist de documentos", "Lista personalizable que el cliente descarga y completa antes de la reunión."],
+    [42, "Encuesta de necesidades fiscales", "Formulario breve para identificar qué servicio requiere el prospecto."],
+    [43, "Chat en vivo en sitio web", "Integración con WhatsApp o Messenger para responder al instante."],
+    [44, "Calendario de reserva online", "Herramienta (Calendly) para agendar consultas directo desde la web."],
+    [45, "Página de preguntas frecuentes (FAQ)", "Resuelve dudas comunes sobre costos, plazos, documentación."],
+    [46, "Optimización para móviles", "Diseño responsive, pues muchos empresarios buscan desde celular."],
+    [47, "Carga rápida del sitio", "Imágenes ligeras y hosting eficiente; factor de retención."],
+    [48, "Certificado SSL", "Seguridad que genera confianza al enviar datos financieros."],
+    [49, "Mapa del sitio (sitemap)", "Ayuda a Google a indexar todas las páginas de servicios."],
+    [50, "Google Search Console", "Informa de palabras clave que llevan tráfico y errores de rastreo."],
+    [51, "Enlaces internos entre servicios", "Relacionar página de declaración de renta con página de asesoría fiscal."],
+    [52, "Backlinks desde directorios profesionales", "Conseguir enlaces en directorios como ContadoresColombia.com."],
+    [53, "Reseñas en Google Maps", "Opiniones de clientes que mejoran reputación local."],
+    [54, "Estrellas en resultados de búsqueda", "Aumentan el porcentaje de clics (CTR) al mostrar calificaciones."],
+    [55, "Facebook Pixel", "Código para rastrear conversiones y crear audiencias similares."],
+    [56, "Anuncio de retargeting dinámico", "Mostrar al usuario el recurso que descargó o la página que visitó."],
+    [57, "Lead scoring contable", "Puntuación según interacción: descargó guía, vio video, asistió a webinar."],
+    [58, "Página de agradecimiento", "Después del formulario, ofrecer contenido extra o descuento."],
+    [59, "A/B testing en formulario", "Probar versiones con más o menos campos para aumentar conversión."],
+    [60, "Mapa de calor (heatmap)", "Herramienta que muestra dónde hacen clic los usuarios en el sitio."],
+    [61, "Grabación de sesiones", "Revisar el recorrido de un visitante para detectar puntos de abandono."],
+    [62, "SEO para búsqueda por voz", "Optimizar para frases como 'dónde encontrar contador en Barranquilla'."],
+    [63, "Colaboración con abogados", "Ofrecer servicios complementarios (constitución de empresas) referidos."],
+    [64, "Artículo en revista financiera", "Publicar como guest post en portales como La República, Dinero."],
+    [65, "Lista de correo segmentada", "Boletines diferentes para pymes y para personas naturales."],
+    [66, "Serie de correos de bienvenida", "Secuencia de 3-4 emails presentando al contador, servicios y oferta."],
+    [67, "Calendario editorial contable", "Plan mensual de temas de blog, redes y newsletter (fechas DIAN)."],
+    [68, "Campaña de lanzamiento de servicio", "Teaser en redes, video en vivo, descuento por inscripción anticipada."],
+    [69, "Consulta gratuita (15 min)", "Oferta inicial para calificar prospects y demostrar valor."],
+    [70, "Merchandising corporativo", "Vender calendarios fiscales, cuadernos con normativa, para clientes."],
+    [71, "Afiliados con software contable", "Comisión por recomendar herramientas como Alegra, Siigo, Nubox."],
+    [72, "Web push notifications", "Notificaciones en navegador para avisar de nuevo contenido o fechas clave."],
+    [73, "Botón de compartir contenido", "Facilitar que clientes compartan artículos normativos en redes."],
+    [74, "Concurso de mejor gestión fiscal", "Promoción donde clientes participan y ganan descuento."],
+    [75, "Encuesta de satisfacción post-servicio", "Recoger testimonios y medir NPS."],
+    [76, "Retención de clientes", "Estrategias como recordatorios de vencimientos, informes de gestión."],
+    [77, "Upselling", "Ofrecer auditoría externa o asesoría internacional a quien ya lleva contabilidad."],
+    [78, "Cross-selling", "Vender servicio de nómina o facturación electrónica adicional."],
+    [79, "Plan de membresía mensual", "Pago recurrente por asesoría continua y generación de informes."],
+    [80, "Contrato de prestación de servicios online", "Documento con condiciones, firmado electrónicamente."],
+    [81, "Pago recurrente con Stripe / Wompi", "Suscripción automática para membresías contables."],
+    [82, "Plataforma de firma contable", "Suite como QuickBooks Online o Xero integrada al sitio."],
+    [83, "Webinar automatizado", "Grabación que se reproduce como si fuera en vivo con registro previo."],
+    [84, "Leadbot en Messenger", "Chatbot que califica al prospecto y agenda reunión."],
+    [85, "QR código en tarjetas de presentación", "Dirigir a landing page de agendamiento."],
+    [86, "Cupón de descuento por tiempo limitado", "Urgencia para convertir leads."],
+    [87, "Anuncios en TikTok para contadores", "Segmentar por edad (jóvenes emprendedores) para constitución de empresas."],
+    [88, "Podcast financiero", "Episodios sobre reformas tributarias, planificación fiscal."],
+    [89, "Transcripción de podcast a blog", "Optimizar contenido para SEO y accesibilidad."],
+    [90, "Community manager para firma contable", "Profesional que gestiona redes, responde dudas y comparte normativas."],
+    [91, "Consejos de ahorro de impuestos en stories", "Formato visual rápido y compartible."],
+    [92, "Encuesta en Instagram / LinkedIn", "Preguntar qué tema quieren aprender (IVA, retención, RUT)."],
+    [93, "Grupo de Facebook privado para clientes", "Resolución de dudas rápidas y comunidad."],
+    [94, "LinkedIn como vitrina profesional", "Compartir logros, recomendaciones, artículos propios."],
+    [95, "KPI para contadores digitales", "Indicadores: leads, tasa conversión, ingresos, satisfacción."],
+    [96, "ROI de marketing contable", "Ingresos generados por campañas menos inversión, dividido por inversión."],
+    [97, "CAC (Costo de adquisición de cliente)", "Total gastos marketing / número de nuevos clientes."],
+    [98, "LTV (Valor de vida del cliente contable)", "Ingreso total esperado de un cliente a lo largo de su relación."],
+    [99, "Benchmarking con otros contadores", "Comparar precios, estrategias y posicionamiento digital."],
+    [100, "Plan estratégico de marketing para contadores", "Documento anual con objetivos, canales, presupuesto y calendario."]
+  ];
+
+  // --------------------- LOCALSTORAGE Y PROGRESO -------------------------
+  let progreso = {};
+  const STORAGE_KEY = "marketingContaduriaProgreso";
+
+  function cargarProgreso() {
+    const guardado = localStorage.getItem(STORAGE_KEY);
+    if (guardado) progreso = JSON.parse(guardado);
+    else {
+      progreso = {};
+      for (let i = 1; i <= 100; i++) progreso[i] = { aciertos: 0, fallos: 0 };
+    }
+  }
+  function guardarProgreso() { localStorage.setItem(STORAGE_KEY, JSON.stringify(progreso)); }
+  function registrarResultado(id, acierto) {
+    if (!progreso[id]) progreso[id] = { aciertos: 0, fallos: 0 };
+    if (acierto) progreso[id].aciertos += 1;
+    else progreso[id].fallos += 1;
+    guardarProgreso();
+    renderDashboard();
+    renderListado(document.getElementById("filtroListado")?.value || "");
+    if (window.currentCardId === id && document.getElementById("infoProgresoCard")) {
+      document.getElementById("infoProgresoCard").innerHTML = `📊 Concepto ${id} · ✅ ${progreso[id].aciertos} aciertos · ❌ ${progreso[id].fallos} fallos`;
+    }
+  }
+
+  function renderDashboard() {
+    let totalAciertos = 0, totalFallos = 0, conceptosConAcierto = 0;
+    for (let i = 1; i <= 100; i++) {
+      const p = progreso[i] || { aciertos: 0, fallos: 0 };
+      totalAciertos += p.aciertos;
+      totalFallos += p.fallos;
+      if (p.aciertos > 0) conceptosConAcierto++;
+    }
+    const porcentaje = (conceptosConAcierto / 100) * 100;
+    document.getElementById("globalProgressFill").style.width = `${porcentaje}%`;
+    document.getElementById("globalProgressText").innerHTML = `${conceptosConAcierto} de 100 conceptos con al menos 1 acierto (${Math.round(porcentaje)}%).`;
+    document.getElementById("statsContainer").innerHTML = `
+      <div class="stat-card"><div class="stat-number">${totalAciertos}</div>✅ Aciertos totales</div>
+      <div class="stat-card"><div class="stat-number">${totalFallos}</div>❌ Fallos</div>
+      <div class="stat-card"><div class="stat-number">${conceptosConAcierto}</div>📘 Conceptos dominados</div>
+      <div class="stat-card"><div class="stat-number">${Math.round((totalAciertos/(totalAciertos+totalFallos+0.001))*100)}%</div>📊 Tasa éxito</div>
+    `;
+  }
+
+  function renderListado(filtro = "") {
+    const container = document.getElementById("conceptosListadoContainer");
+    container.innerHTML = "";
+    const filtroLower = filtro.toLowerCase();
+    for (let c of conceptosData) {
+      const [id, nombre, definicion] = c;
+      const prog = progreso[id] || { aciertos: 0, fallos: 0 };
+      if (filtro && !nombre.toLowerCase().includes(filtroLower) && !definicion.toLowerCase().includes(filtroLower)) continue;
+      const div = document.createElement("div");
+      div.className = "concepto-item";
+      div.innerHTML = `<div class="concepto-titulo">${id}. ${nombre}</div>
+                       <div class="concepto-desc">📊 ${definicion.substring(0, 150)}${definicion.length > 150 ? '…' : ''}</div>
+                       <span class="badge-progreso">✅ ${prog.aciertos} aciertos · ❌ ${prog.fallos} fallos</span>`;
+      container.appendChild(div);
+    }
+  }
+
+  // --------------------- PRÁCTICA: TRES MODOS -------------------------
+  let currentMode = "concepto_def";
+  let cardsArray = [];
+  let currentCardIndex = 0;
+  let currentCardId = null;
+  let currentOrdenarPalabras = [];
+  let shuffledPalabras = [];
+  let selectedOrder = [];
+  let ordenarRespuestaCorrecta = "";
+
+  const practicaDiv = document.getElementById("practicaContainer");
+
+  function construirCards() {
+    cardsArray = conceptosData.map(item => {
+      const [id, concepto, definicion] = item;
+      if (currentMode === "concepto_def") {
+        return { id, pregunta: `📊 Concepto: ${concepto}`, respuestaCorrecta: definicion };
+      } else if (currentMode === "def_concepto") {
+        let defCorta = definicion.length > 130 ? definicion.substring(0, 127) + "…" : definicion;
+        return { id, pregunta: `✍️ Definición: "${defCorta}"`, respuestaCorrecta: concepto };
+      } else {
+        return { id, concepto, definicion };
+      }
+    });
+  }
+
+  function renderFlashcardNormal() {
+    if (!cardsArray.length) return;
+    const card = cardsArray[currentCardIndex];
+    currentCardId = card.id;
+    practicaDiv.innerHTML = `
+      <div class="flashcard">
+        <div class="pregunta">${card.pregunta}</div>
+        <button id="mostrarRespuestaBtn" class="btn">📖 Mostrar respuesta</button>
+        <div id="respuestaDiv" class="respuesta-oculta"><strong>Respuesta:</strong><br>${card.respuestaCorrecta}</div>
+        <div style="margin-top:1rem;">
+          <button id="aciertoBtn" class="btn btn-acierto" disabled>✅ Acierto</button>
+          <button id="falloBtn" class="btn btn-fallo" disabled>❌ Fallo</button>
+        </div>
+        <button id="siguienteCardBtn" class="btn" style="margin-top:1rem;">⏩ Siguiente</button>
+        <p id="infoProgresoCard" style="margin-top:0.8rem;">📊 ${currentMode === "concepto_def" ? "Concepto" : "Definición"} ${card.id} · ✅ ${progreso[card.id]?.aciertos||0} aciertos · ❌ ${progreso[card.id]?.fallos||0} fallos</p>
+      </div>
+    `;
+    document.getElementById("mostrarRespuestaBtn").onclick = () => {
+      const respDiv = document.getElementById("respuestaDiv");
+      if (respDiv.style.display !== "block") {
+        respDiv.style.display = "block";
+        document.getElementById("aciertoBtn").disabled = false;
+        document.getElementById("falloBtn").disabled = false;
+      }
+    };
+    document.getElementById("aciertoBtn").onclick = () => { registrarResultado(currentCardId, true); siguienteNormal(); };
+    document.getElementById("falloBtn").onclick = () => { registrarResultado(currentCardId, false); siguienteNormal(); };
+    document.getElementById("siguienteCardBtn").onclick = () => siguienteNormal();
+  }
+
+  function siguienteNormal() {
+    currentCardIndex = (currentCardIndex + 1) % cardsArray.length;
+    renderFlashcardNormal();
+  }
+
+  function inicializarOrdenar() {
+    const card = cardsArray[currentCardIndex];
+    currentCardId = card.id;
+    const definicionOriginal = card.definicion;
+    ordenarRespuestaCorrecta = definicionOriginal;
+    let palabras = definicionOriginal.split(/\s+/).filter(p => p.length > 0);
+    currentOrdenarPalabras = [...palabras];
+    shuffledPalabras = [...palabras];
+    for (let i = shuffledPalabras.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [shuffledPalabras[i], shuffledPalabras[j]] = [shuffledPalabras[j], shuffledPalabras[i]];
+    }
+    selectedOrder = [];
+    renderOrdenarUI();
+  }
+
+  function renderOrdenarUI() {
+    const card = cardsArray[currentCardIndex];
+    const prog = progreso[currentCardId] || { aciertos:0, fallos:0 };
+    let palabrasHTML = shuffledPalabras.map(p => `<button class="palabra-btn" data-palabra="${p.replace(/"/g, '&quot;')}">${p}</button>`).join('');
+    let ordenHTML = selectedOrder.map(p => `<span style="background:#eef5ea; padding:0.2rem 0.6rem; margin:0.2rem; border-radius:1rem;">${p}</span>`).join(' ');
+    if (ordenHTML === "") ordenHTML = "<em>Haz clic en las palabras en el orden correcto...</em>";
+    practicaDiv.innerHTML = `
+      <div class="flashcard">
+        <h3>🧩 Ordena la definición de:</h3>
+        <div class="pregunta" style="background:#eef5ea;">📌 ${card.concepto}</div>
+        <div class="orden-actual"><strong>Tu orden actual:</strong><br> ${ordenHTML}</div>
+        <div class="palabras-baraja" id="palabrasBaraja">${palabrasHTML}</div>
+        <div>
+          <button id="resetOrdenBtn" class="btn" style="background:#cfdec9;">🔁 Reiniciar orden</button>
+          <button id="comprobarOrdenBtn" class="btn btn-primary">✓ Comprobar</button>
+        </div>
+        <button id="siguienteOrdenBtn" class="btn" style="margin-top:1rem;">⏩ Siguiente concepto</button>
+        <p id="infoProgresoCard">✅ ${prog.aciertos} aciertos · ❌ ${prog.fallos} fallos</p>
+        <div id="feedbackOrden" style="margin-top:0.8rem; font-weight:bold;"></div>
+      </div>
+    `;
+    document.querySelectorAll(".palabra-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const palabra = btn.getAttribute("data-palabra");
+        const idx = shuffledPalabras.indexOf(palabra);
+        if (idx !== -1) {
+          shuffledPalabras.splice(idx, 1);
+          selectedOrder.push(palabra);
+          renderOrdenarUI();
+        }
+      });
+    });
+    document.getElementById("resetOrdenBtn").onclick = () => {
+      shuffledPalabras = [...currentOrdenarPalabras];
+      for (let i = shuffledPalabras.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [shuffledPalabras[i], shuffledPalabras[j]] = [shuffledPalabras[j], shuffledPalabras[i]];
+      }
+      selectedOrder = [];
+      renderOrdenarUI();
+    };
+    document.getElementById("comprobarOrdenBtn").onclick = () => {
+      const ordenUsuario = selectedOrder.join(" ");
+      if (ordenUsuario === ordenarRespuestaCorrecta) {
+        document.getElementById("feedbackOrden").innerHTML = "<span style='color:#2b9348'>✅ ¡Correcto! Definición ordenada correctamente.</span>";
+        registrarResultado(currentCardId, true);
+        setTimeout(() => siguienteOrdenar(), 1200);
+      } else {
+        document.getElementById("feedbackOrden").innerHTML = `<span style='color:#e85d04'>❌ Incorrecto. La definición correcta es: "${ordenarRespuestaCorrecta}"</span>`;
+        registrarResultado(currentCardId, false);
+        setTimeout(() => siguienteOrdenar(), 2000);
+      }
+      document.getElementById("comprobarOrdenBtn").disabled = true;
+      document.querySelectorAll(".palabra-btn").forEach(b => b.style.pointerEvents = "none");
+      setTimeout(() => {
+        if (document.getElementById("comprobarOrdenBtn")) document.getElementById("comprobarOrdenBtn").disabled = false;
+        document.querySelectorAll(".palabra-btn").forEach(b => b.style.pointerEvents = "auto");
+      }, 2000);
+    };
+    document.getElementById("siguienteOrdenBtn").onclick = () => siguienteOrdenar();
+  }
+
+  function siguienteOrdenar() {
+    currentCardIndex = (currentCardIndex + 1) % cardsArray.length;
+    inicializarOrdenar();
+  }
+
+  function setMode(mode) {
+    currentMode = mode;
+    construirCards();
+    currentCardIndex = 0;
+    if (mode === "ordenar") inicializarOrdenar();
+    else renderFlashcardNormal();
+  }
+
+  function initUI() {
+    document.querySelectorAll(".nav-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const viewId = btn.getAttribute("data-view");
+        document.querySelectorAll(".view").forEach(v => v.classList.remove("active-view"));
+        document.getElementById(viewId).classList.add("active-view");
+        document.querySelectorAll(".nav-btn").forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+        if (viewId === "listado") renderListado(document.getElementById("filtroListado").value);
+        if (viewId === "dashboard") renderDashboard();
+        if (viewId === "practica") setMode(currentMode);
+      });
+    });
+    document.getElementById("modoConceptoDef").addEventListener("click", () => {
+      currentMode = "concepto_def";
+      setMode("concepto_def");
+      document.getElementById("modoConceptoDef").classList.add("btn-primary");
+      document.getElementById("modoDefConcepto").classList.remove("btn-primary");
+      document.getElementById("modoOrdenar").classList.remove("btn-primary");
+    });
+    document.getElementById("modoDefConcepto").addEventListener("click", () => {
+      currentMode = "def_concepto";
+      setMode("def_concepto");
+      document.getElementById("modoDefConcepto").classList.add("btn-primary");
+      document.getElementById("modoConceptoDef").classList.remove("btn-primary");
+      document.getElementById("modoOrdenar").classList.remove("btn-primary");
+    });
+    document.getElementById("modoOrdenar").addEventListener("click", () => {
+      currentMode = "ordenar";
+      setMode("ordenar");
+      document.getElementById("modoOrdenar").classList.add("btn-primary");
+      document.getElementById("modoConceptoDef").classList.remove("btn-primary");
+      document.getElementById("modoDefConcepto").classList.remove("btn-primary");
+    });
+    document.getElementById("resetProgresoBtn").addEventListener("click", () => {
+      if (confirm("¿Reiniciar todo el progreso? Se perderán aciertos y fallos.")) {
+        for (let i = 1; i <= 100; i++) progreso[i] = { aciertos: 0, fallos: 0 };
+        guardarProgreso();
+        renderDashboard();
+        renderListado(document.getElementById("filtroListado")?.value || "");
+        if (currentMode === "ordenar") inicializarOrdenar();
+        else if (currentMode !== "ordenar") renderFlashcardNormal();
+      }
+    });
+    document.getElementById("filtroListado").addEventListener("input", (e) => renderListado(e.target.value));
+  }
+
+  window.addEventListener("DOMContentLoaded", () => {
+    cargarProgreso();
+    construirCards();
+    setMode("concepto_def");
+    renderDashboard();
+    renderListado();
+    initUI();
+  });
+</script>
+</body>
+</html>

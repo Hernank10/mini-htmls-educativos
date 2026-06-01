@@ -1,0 +1,1811 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Redacción Científica · Química e Ingeniería Química</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,600;1,8..60,300;1,8..60,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<style>
+/* ═══════════════════════════════════════════
+   DESIGN TOKENS — Paleta ámbar-laboratorio
+═══════════════════════════════════════════ */
+:root {
+  --bg:          #f6f1e7;
+  --bg-alt:      #ede6d3;
+  --bg-card:     #faf7f0;
+  --bg-hover:    #ede3cc;
+  --bg-dark:     #1e1a14;
+  --border:      #cdb98a;
+  --border-soft: #e2d5b8;
+  --ink:         #221c0f;
+  --ink-soft:    #4a3d22;
+  --ink-muted:   #7a6840;
+  --amber:       #b5620e;      /* acento principal */
+  --amber-light: #e8a04a;
+  --teal:        #1a6b6b;      /* acento ciencia */
+  --teal-light:  #2a9090;
+  --rust:        #8b2e10;
+  --green:       #2e6b3e;
+  --tag-bg:      #e5d9b8;
+  --code-bg:     #1e1a14;
+  --code-fg:     #e8d4a0;
+
+  --font-head:   'Lora', Georgia, serif;
+  --font-body:   'Source Serif 4', Georgia, serif;
+  --font-mono:   'JetBrains Mono', 'Courier New', monospace;
+
+  --r:     8px;
+  --r-lg: 14px;
+  --shadow:    0 2px 12px rgba(34,28,15,.09);
+  --shadow-md: 0 5px 24px rgba(34,28,15,.14);
+  --t: .2s ease;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: 17px; scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-weight: 300;
+  line-height: 1.72;
+  min-height: 100vh;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='280' height='280'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='280' height='280' filter='url(%23n)' opacity='.04'/%3E%3C/svg%3E");
+}
+
+a { color: var(--amber); text-decoration: none; }
+button { cursor: pointer; font-family: var(--font-body); }
+input, select, textarea { font-family: var(--font-body); font-size: 1rem; }
+
+/* ── LAYOUT ── */
+.app { display: flex; flex-direction: column; min-height: 100vh; }
+
+/* ── NAV ── */
+nav {
+  background: var(--bg-dark);
+  border-bottom: 2px solid var(--amber);
+  padding: .7rem 1.5rem;
+  display: flex; align-items: center; gap: .75rem;
+  position: sticky; top: 0; z-index: 100;
+  box-shadow: 0 2px 16px rgba(0,0,0,.35);
+}
+.nav-logo {
+  font-family: var(--font-head);
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: var(--amber-light);
+  letter-spacing: .02em;
+  margin-right: auto;
+  white-space: nowrap;
+}
+.nav-logo span { color: #8abebd; font-weight: 400; font-size: .95rem; }
+.nav-btn {
+  padding: .38rem .85rem;
+  border: 1.5px solid #4a3d22;
+  border-radius: var(--r);
+  background: transparent;
+  color: #c4b48a;
+  font-size: .88rem;
+  letter-spacing: .04em;
+  transition: var(--t);
+  white-space: nowrap;
+}
+.nav-btn:hover, .nav-btn.active {
+  background: var(--amber);
+  border-color: var(--amber);
+  color: #fff;
+}
+.nav-burger { display: none; background: none; border: none; font-size: 1.5rem; color: var(--amber-light); }
+
+/* ── PAGES ── */
+.page { display: none; animation: fadein .3s ease both; }
+.page.active { display: block; }
+@keyframes fadein { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+
+.container { max-width: 1120px; margin: 0 auto; padding: 2rem 1.5rem; }
+
+/* ══════════════════════════════════════════
+   DASHBOARD
+══════════════════════════════════════════ */
+.dash-hero {
+  background: linear-gradient(135deg, var(--bg-dark) 0%, #2a2010 100%);
+  color: #f0e6cc;
+  padding: 3rem 2rem 2.5rem;
+  border-radius: var(--r-lg);
+  margin-bottom: 2rem;
+  border: 1.5px solid var(--amber);
+  box-shadow: var(--shadow-md);
+  position: relative;
+  overflow: hidden;
+}
+.dash-hero::before {
+  content: '⚗';
+  position: absolute; right: 1.5rem; top: 1rem;
+  font-size: 6rem; opacity: .07; line-height: 1;
+}
+.dash-hero h1 {
+  font-family: var(--font-head);
+  font-size: clamp(1.6rem, 4vw, 2.6rem);
+  font-weight: 600;
+  color: var(--amber-light);
+  line-height: 1.2;
+  margin-bottom: .4rem;
+}
+.dash-hero p { color: #b0a080; font-style: italic; font-size: 1rem; }
+.hero-badge {
+  display: inline-flex; align-items: center; gap: .4rem;
+  background: rgba(181,98,14,.2); border: 1px solid var(--amber);
+  border-radius: 99px; padding: .2rem .7rem;
+  font-size: .8rem; color: var(--amber-light); margin-top: .8rem;
+  font-family: var(--font-mono);
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+  gap: 1rem; margin-bottom: 1.75rem;
+}
+.stat-card {
+  background: var(--bg-card);
+  border: 1.5px solid var(--border);
+  border-radius: var(--r-lg);
+  padding: 1.3rem 1.1rem;
+  text-align: center;
+  box-shadow: var(--shadow);
+  transition: var(--t);
+}
+.stat-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); }
+.stat-num {
+  font-family: var(--font-head);
+  font-size: 2.6rem; font-weight: 400;
+  color: var(--amber); line-height: 1;
+}
+.stat-label {
+  font-size: .78rem; color: var(--ink-muted);
+  letter-spacing: .07em; margin-top: .35rem;
+  text-transform: uppercase;
+  font-family: var(--font-mono);
+}
+
+.progress-wrap {
+  background: var(--bg-card); border: 1.5px solid var(--border);
+  border-radius: var(--r-lg); padding: 1.4rem 1.8rem;
+  margin-bottom: 1.75rem; box-shadow: var(--shadow);
+}
+.progress-wrap h2 { font-family: var(--font-head); font-size: 1.1rem; color: var(--ink-soft); margin-bottom: .9rem; }
+.progress-bar-outer {
+  height: 12px; background: var(--bg-alt);
+  border-radius: 99px; border: 1px solid var(--border); overflow: hidden;
+}
+.progress-bar-inner {
+  height: 100%;
+  background: linear-gradient(90deg, var(--amber), var(--teal-light));
+  border-radius: 99px; transition: width .6s ease;
+}
+.progress-pct { font-family: var(--font-head); font-size: 1.7rem; color: var(--amber); margin-top: .5rem; }
+
+.epoch-grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+  gap: .9rem; margin-bottom: 2rem;
+}
+.epoch-card {
+  background: var(--bg-card); border: 1.5px solid var(--border);
+  border-radius: var(--r-lg); padding: 1.1rem;
+  cursor: pointer; transition: var(--t); box-shadow: var(--shadow);
+}
+.epoch-card:hover { background: var(--bg-hover); transform: translateY(-2px); box-shadow: var(--shadow-md); }
+.epoch-num {
+  font-family: var(--font-mono); font-size: .75rem;
+  color: var(--amber); letter-spacing: .1em; margin-bottom: .2rem;
+}
+.epoch-name { font-family: var(--font-head); font-size: 1rem; font-weight: 600; color: var(--ink-soft); margin-bottom: .5rem; line-height: 1.3; }
+.epoch-meta { font-size: .82rem; color: var(--ink-muted); margin-bottom: .5rem; }
+.mini-bar { height: 5px; background: var(--bg-alt); border-radius: 99px; overflow: hidden; }
+.mini-bar-fill { height: 100%; background: var(--teal); border-radius: 99px; transition: width .5s ease; }
+
+.dash-actions { display: flex; gap: .85rem; flex-wrap: wrap; margin-bottom: 2rem; }
+.btn {
+  display: inline-flex; align-items: center; gap: .45rem;
+  padding: .6rem 1.3rem; border-radius: var(--r);
+  border: 1.5px solid; font-size: .93rem;
+  letter-spacing: .02em; transition: var(--t); font-weight: 400;
+}
+.btn-primary { background: var(--amber); border-color: var(--amber); color: #fff; }
+.btn-primary:hover { background: var(--rust); border-color: var(--rust); }
+.btn-teal { background: var(--teal); border-color: var(--teal); color: #fff; }
+.btn-teal:hover { background: #155555; border-color: #155555; }
+.btn-secondary { background: transparent; border-color: var(--border); color: var(--ink-soft); }
+.btn-secondary:hover { background: var(--bg-hover); }
+.btn-ghost { background: transparent; border-color: var(--amber); color: var(--amber); }
+.btn-ghost:hover { background: var(--amber); color: #fff; }
+
+/* ══════════════════════════════════════════
+   LISTA
+══════════════════════════════════════════ */
+.list-toolbar {
+  display: flex; gap: .7rem; flex-wrap: wrap; align-items: center;
+  background: var(--bg-card); border: 1.5px solid var(--border);
+  border-radius: var(--r-lg); padding: .9rem 1.2rem;
+  margin-bottom: 1.4rem; box-shadow: var(--shadow);
+}
+.search-wrap { position: relative; flex: 1; min-width: 200px; }
+.search-wrap input {
+  width: 100%; padding: .5rem 1rem .5rem 2.1rem;
+  border: 1.5px solid var(--border); border-radius: var(--r);
+  background: var(--bg); color: var(--ink); font-size: .93rem;
+  transition: var(--t);
+}
+.search-wrap input:focus { outline: none; border-color: var(--amber); box-shadow: 0 0 0 3px rgba(181,98,14,.12); }
+.search-icon { position: absolute; left: .6rem; top: 50%; transform: translateY(-50%); color: var(--ink-muted); pointer-events: none; font-size: .9rem; }
+.filter-select {
+  padding: .5rem .85rem; border: 1.5px solid var(--border);
+  border-radius: var(--r); background: var(--bg); color: var(--ink); font-size: .88rem;
+}
+.filter-select:focus { outline: none; border-color: var(--amber); }
+
+.techniques-grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(310px, 1fr));
+  gap: 1rem;
+}
+.tech-card {
+  background: var(--bg-card); border: 1.5px solid var(--border);
+  border-radius: var(--r-lg); padding: 1.2rem 1.25rem;
+  cursor: pointer; transition: var(--t); box-shadow: var(--shadow);
+  display: flex; flex-direction: column; gap: .45rem;
+  position: relative;
+}
+.tech-card:hover { background: var(--bg-hover); transform: translateY(-2px); box-shadow: var(--shadow-md); }
+.tech-card.done { border-left: 4px solid var(--green); }
+.tech-card.fav  { border-left: 4px solid var(--amber); }
+.tech-card.done.fav { border-left: 4px solid var(--amber); }
+.tech-num { font-family: var(--font-mono); font-size: .73rem; color: var(--ink-muted); letter-spacing: .08em; }
+.tech-title { font-family: var(--font-head); font-size: 1.05rem; font-weight: 600; color: var(--amber); line-height: 1.25; }
+.tech-example {
+  font-size: .88rem; color: var(--ink-soft); font-style: italic;
+  background: var(--bg-alt); border-left: 2px solid var(--border);
+  padding: .25rem .6rem; border-radius: 0 var(--r) var(--r) 0;
+  font-family: var(--font-mono); line-height: 1.5;
+}
+.tech-epoch-tag {
+  display: inline-block; padding: .12rem .55rem; border-radius: 99px;
+  font-size: .72rem; background: var(--tag-bg); color: var(--ink-soft);
+  border: 1px solid var(--border-soft); letter-spacing: .04em;
+  font-family: var(--font-mono);
+}
+.tech-actions { display: flex; gap: .45rem; margin-top: .2rem; }
+.icon-btn {
+  background: none; border: 1.5px solid var(--border); border-radius: var(--r);
+  padding: .22rem .5rem; font-size: .82rem; color: var(--ink-muted);
+  transition: var(--t);
+}
+.icon-btn:hover { border-color: var(--amber); color: var(--amber); }
+.icon-btn.active-done { border-color: var(--green); color: var(--green); background: rgba(46,107,62,.08); }
+.icon-btn.active-fav  { border-color: var(--amber); color: var(--amber); background: rgba(181,98,14,.08); }
+
+/* ── MODAL ── */
+.modal-overlay {
+  position: fixed; inset: 0; z-index: 200;
+  background: rgba(22,18,10,.6);
+  display: flex; align-items: center; justify-content: center;
+  padding: 1rem; opacity: 0; pointer-events: none; transition: opacity .25s;
+}
+.modal-overlay.open { opacity: 1; pointer-events: all; }
+.modal {
+  background: var(--bg-card); border: 2px solid var(--border);
+  border-radius: var(--r-lg); padding: 2rem 2.2rem;
+  max-width: 640px; width: 100%; box-shadow: var(--shadow-md);
+  position: relative; transform: translateY(14px); transition: transform .25s;
+  max-height: 90vh; overflow-y: auto;
+}
+.modal-overlay.open .modal { transform: none; }
+.modal-close {
+  position: absolute; top: .85rem; right: 1rem;
+  background: none; border: none; font-size: 1.4rem;
+  color: var(--ink-muted); cursor: pointer; transition: var(--t);
+}
+.modal-close:hover { color: var(--amber); }
+.modal-num { font-family: var(--font-mono); font-size: .75rem; color: var(--ink-muted); letter-spacing: .1em; }
+.modal-title { font-family: var(--font-head); font-size: 1.65rem; font-weight: 600; color: var(--amber); line-height: 1.2; margin: .3rem 0 .7rem; }
+.modal-section { margin-top: 1rem; }
+.modal-section-label { font-family: var(--font-mono); font-size: .75rem; color: var(--ink-muted); letter-spacing: .1em; text-transform: uppercase; margin-bottom: .3rem; }
+.modal-example {
+  font-family: var(--font-mono); font-size: .9rem;
+  background: var(--code-bg); color: var(--code-fg);
+  padding: .7rem 1rem; border-radius: var(--r);
+  line-height: 1.6; white-space: pre-wrap;
+}
+.modal-bad { background: rgba(139,46,16,.15); border: 1px solid var(--rust); border-radius: var(--r); padding: .5rem .9rem; margin-bottom: .4rem; font-size: .9rem; color: var(--rust); }
+.modal-good { background: rgba(46,107,62,.12); border: 1px solid var(--green); border-radius: var(--r); padding: .5rem .9rem; font-size: .9rem; color: var(--green); }
+.modal-explanation { font-size: .97rem; color: var(--ink-soft); line-height: 1.78; }
+.modal-actions { display: flex; gap: .7rem; margin-top: 1.4rem; flex-wrap: wrap; }
+.modal-ref { font-family: var(--font-mono); font-size: .78rem; color: var(--teal); margin-top: .8rem; }
+
+/* ══════════════════════════════════════════
+   PRÁCTICA
+══════════════════════════════════════════ */
+.practice-layout { display: grid; grid-template-columns: 270px 1fr; gap: 1.4rem; align-items: start; }
+@media(max-width:760px) { .practice-layout { grid-template-columns: 1fr; } }
+
+.practice-sidebar {
+  background: var(--bg-card); border: 1.5px solid var(--border);
+  border-radius: var(--r-lg); padding: 1.2rem;
+  box-shadow: var(--shadow); position: sticky; top: 5rem;
+}
+.sidebar-title {
+  font-family: var(--font-mono); font-size: .78rem; color: var(--ink-muted);
+  letter-spacing: .1em; text-transform: uppercase;
+  margin-bottom: .85rem; border-bottom: 1px solid var(--border-soft); padding-bottom: .45rem;
+}
+.mode-btn {
+  display: flex; align-items: center; gap: .55rem;
+  width: 100%; text-align: left; padding: .55rem .75rem;
+  border: 1.5px solid var(--border-soft); border-radius: var(--r);
+  background: transparent; color: var(--ink-soft); font-size: .9rem;
+  margin-bottom: .45rem; transition: var(--t);
+}
+.mode-btn:hover, .mode-btn.active { background: var(--amber); border-color: var(--amber); color: #fff; }
+
+.score-bar {
+  display: flex; gap: .9rem; align-items: center;
+  background: var(--bg-card); border: 1.5px solid var(--border);
+  border-radius: var(--r); padding: .65rem 1.1rem;
+  margin-bottom: .9rem; font-size: .9rem; color: var(--ink-soft);
+  font-family: var(--font-mono);
+}
+.score-num { font-size: 1.2rem; font-weight: 600; color: var(--amber); }
+.score-divider { color: var(--border); }
+
+.exercise-card {
+  background: var(--bg-card); border: 1.5px solid var(--border);
+  border-radius: var(--r-lg); padding: 1.8rem 2rem;
+  box-shadow: var(--shadow-md); margin-bottom: 1.1rem;
+}
+.ex-question {
+  font-family: var(--font-head); font-size: 1.2rem; color: var(--ink);
+  margin-bottom: 1.1rem; line-height: 1.5;
+}
+.ex-snippet {
+  font-family: var(--font-mono); font-size: .85rem;
+  background: var(--code-bg); color: var(--code-fg);
+  padding: .65rem .9rem; border-radius: var(--r);
+  margin-bottom: 1.1rem; line-height: 1.6; white-space: pre-wrap;
+}
+.ex-options { display: flex; flex-direction: column; gap: .6rem; margin-bottom: 1.1rem; }
+.ex-option {
+  display: flex; align-items: flex-start; gap: .7rem;
+  padding: .65rem .9rem; border: 1.5px solid var(--border);
+  border-radius: var(--r); background: var(--bg); cursor: pointer;
+  transition: var(--t); font-size: .93rem; color: var(--ink-soft);
+}
+.ex-option:hover:not(.disabled) { background: var(--bg-hover); border-color: var(--amber); }
+.ex-option.correct { border-color: var(--green); background: rgba(46,107,62,.09); color: var(--green); }
+.ex-option.wrong   { border-color: var(--rust);  background: rgba(139,46,16,.08);  color: var(--rust);  }
+.ex-option.disabled { cursor: default; }
+.ex-opt-letter { font-family: var(--font-mono); font-size: .78rem; color: var(--ink-muted); min-width: 1.1rem; padding-top: .1rem; }
+.ex-feedback {
+  padding: .75rem 1rem; border-radius: var(--r); font-size: .92rem;
+  margin-bottom: .9rem; display: none;
+}
+.ex-feedback.show { display: block; }
+.ex-feedback.ok { background: rgba(46,107,62,.12); color: var(--green); border: 1px solid var(--green); }
+.ex-feedback.ko { background: rgba(139,46,16,.10); color: var(--rust);  border: 1px solid var(--rust);  }
+
+.ex-blank-wrap { display: flex; gap: .7rem; flex-wrap: wrap; align-items: center; margin-bottom: .9rem; }
+.ex-blank-input {
+  padding: .5rem .85rem; border: 1.5px solid var(--border);
+  border-radius: var(--r); background: var(--bg); color: var(--ink);
+  font-size: .95rem; flex: 1; min-width: 180px; transition: var(--t);
+  font-family: var(--font-mono);
+}
+.ex-blank-input:focus { outline: none; border-color: var(--amber); box-shadow: 0 0 0 3px rgba(181,98,14,.12); }
+.ex-blank-input.correct-input { border-color: var(--green); }
+.ex-blank-input.wrong-input   { border-color: var(--rust);  }
+
+.flashcard {
+  background: var(--bg-card); border: 2px solid var(--border);
+  border-radius: var(--r-lg); padding: 2.3rem 2rem;
+  text-align: center; cursor: pointer; transition: var(--t);
+  min-height: 230px; display: flex; flex-direction: column;
+  justify-content: center; align-items: center; gap: .9rem;
+  box-shadow: var(--shadow-md);
+}
+.flashcard:hover { box-shadow: 0 6px 30px rgba(34,28,15,.18); }
+.flashcard-front { font-family: var(--font-head); font-size: 1.5rem; color: var(--amber); }
+.flashcard-back  { display: none; font-size: .95rem; color: var(--ink-soft); line-height: 1.75; max-width: 500px; }
+.flashcard.flipped .flashcard-front { display: none; }
+.flashcard.flipped .flashcard-back  { display: block; }
+.flashcard-hint { font-size: .82rem; color: var(--ink-muted); font-style: italic; }
+.fc-nav { display: flex; gap: .9rem; justify-content: center; margin-top: 1rem; }
+
+.empty { text-align: center; padding: 3rem 1rem; font-family: var(--font-head); font-size: 1.1rem; color: var(--ink-muted); font-style: italic; }
+
+/* ── RESPONSIVE ── */
+@media(max-width:720px) {
+  .nav-btn:not(.nav-burger) { display: none; }
+  .nav-btn.active { display: none; }
+  .nav-burger { display: block; }
+  nav.open .nav-btn { display: block; width: 100%; text-align: left; margin: .18rem 0; }
+  nav { flex-wrap: wrap; }
+  .techniques-grid { grid-template-columns: 1fr; }
+  .modal { padding: 1.3rem 1.1rem; }
+  .exercise-card { padding: 1.2rem 1.1rem; }
+  .stats-grid { grid-template-columns: repeat(2,1fr); }
+}
+@media(max-width:400px) { .stats-grid { grid-template-columns: 1fr; } }
+
+::-webkit-scrollbar { width: 7px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 99px; }
+::-webkit-scrollbar-thumb:hover { background: var(--amber); }
+
+.toast {
+  position: fixed; bottom: 1.5rem; right: 1.5rem; z-index: 500;
+  background: var(--bg-dark); color: var(--amber-light);
+  padding: .65rem 1.2rem; border-radius: var(--r); font-size: .88rem;
+  opacity: 0; transform: translateY(8px);
+  transition: all .3s; pointer-events: none; max-width: 280px;
+  font-family: var(--font-mono); border: 1px solid var(--amber);
+}
+.toast.show { opacity: 1; transform: none; }
+</style>
+</head>
+<body>
+<div class="app">
+
+<!-- ── NAV ── -->
+<nav id="mainNav">
+  <div class="nav-logo">⚗ Redacción Científica <span>· Química &amp; Ing. Química</span></div>
+  <button class="nav-btn active" data-page="dashboard">⊞ Inicio</button>
+  <button class="nav-btn" data-page="lista">⊟ Técnicas</button>
+  <button class="nav-btn" data-page="practica">✎ Práctica</button>
+  <button class="nav-burger" id="burgerBtn" aria-label="Menú">☰</button>
+</nav>
+
+<!-- ══ DASHBOARD ══ -->
+<div class="page active" id="page-dashboard">
+<div class="container">
+  <div class="dash-hero">
+    <h1>100 Técnicas de Redacción Científica</h1>
+    <p>Para estudiantes de Química e Ingeniería Química · Contexto colombiano</p>
+    <div class="hero-badge">ICONTEC · IUPAC · ACS · IEEE · Norma NTC</div>
+  </div>
+  <div class="stats-grid" id="statsGrid"></div>
+  <div class="progress-wrap">
+    <h2>Progreso global</h2>
+    <div class="progress-bar-outer"><div class="progress-bar-inner" id="progressBar" style="width:0%"></div></div>
+    <div class="progress-pct" id="progressPct">0 %</div>
+  </div>
+  <div class="dash-actions">
+    <button class="btn btn-primary" onclick="navigate('practica')">✎ Practicar ahora</button>
+    <button class="btn btn-teal"    onclick="navigate('lista')">⊟ Ver catálogo</button>
+    <button class="btn btn-ghost"   id="resetBtn">↺ Reiniciar progreso</button>
+  </div>
+  <h2 style="font-family:var(--font-head);font-size:1.2rem;color:var(--ink-soft);margin-bottom:1rem">Bloques temáticos</h2>
+  <div class="epoch-grid" id="epochGrid"></div>
+</div>
+</div>
+
+<!-- ══ LISTA ══ -->
+<div class="page" id="page-lista">
+<div class="container">
+  <h1 style="font-family:var(--font-head);font-size:1.9rem;font-weight:600;color:var(--amber);margin-bottom:1.4rem">Catálogo de técnicas</h1>
+  <div class="list-toolbar">
+    <div class="search-wrap">
+      <span class="search-icon">🔍</span>
+      <input type="search" id="searchInput" placeholder="Buscar técnica, ejemplo…" autocomplete="off">
+    </div>
+    <select class="filter-select" id="epochFilter"><option value="">Todos los bloques</option></select>
+    <select class="filter-select" id="statusFilter">
+      <option value="">Todos los estados</option>
+      <option value="done">✓ Completadas</option>
+      <option value="fav">★ Favoritas</option>
+      <option value="pending">○ Pendientes</option>
+    </select>
+    <select class="filter-select" id="sortFilter">
+      <option value="num">Orden numérico</option>
+      <option value="alpha">A → Z</option>
+      <option value="epoch">Por bloque</option>
+    </select>
+  </div>
+  <div class="techniques-grid" id="techniquesGrid"></div>
+</div>
+</div>
+
+<!-- ══ PRÁCTICA ══ -->
+<div class="page" id="page-practica">
+<div class="container">
+  <h1 style="font-family:var(--font-head);font-size:1.9rem;font-weight:600;color:var(--amber);margin-bottom:1.4rem">Zona de práctica</h1>
+  <div class="practice-layout">
+    <aside class="practice-sidebar">
+      <div class="sidebar-title">Modo</div>
+      <button class="mode-btn active" onclick="setPracticeMode('multiple',this)"><span>◉</span> Opción múltiple</button>
+      <button class="mode-btn" onclick="setPracticeMode('blank',this)"><span>✏</span> Completar frase</button>
+      <button class="mode-btn" onclick="setPracticeMode('flashcard',this)"><span>⟳</span> Tarjetas flash</button>
+      <div style="margin-top:1.3rem;border-top:1px solid var(--border-soft);padding-top:.9rem">
+        <div class="sidebar-title">Filtrar</div>
+        <select class="filter-select" id="practiceEpochFilter" style="width:100%;margin-bottom:.65rem" onchange="resetExercise()">
+          <option value="">Todos los bloques</option>
+        </select>
+        <label style="display:flex;align-items:center;gap:.45rem;font-size:.88rem;color:var(--ink-muted);cursor:pointer">
+          <input type="checkbox" id="onlyPending" onchange="resetExercise()"> Solo pendientes
+        </label>
+      </div>
+      <div style="margin-top:1.3rem;border-top:1px solid var(--border-soft);padding-top:.9rem">
+        <div class="sidebar-title">Sesión actual</div>
+        <div id="sessionScore" style="font-family:var(--font-mono);font-size:.88rem;color:var(--ink-muted)">—</div>
+      </div>
+    </aside>
+    <main id="practiceMain"></main>
+  </div>
+</div>
+</div>
+</div>
+
+<!-- ── MODAL ── -->
+<div class="modal-overlay" id="modalOverlay" onclick="closeModal(event)">
+  <div class="modal" id="modalContent" role="dialog" aria-modal="true"></div>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+/* ══════════════════════════════════════════════════
+   ÉPOCAS / BLOQUES TEMÁTICOS
+══════════════════════════════════════════════════ */
+const EPOCHS = [
+  {id:'I',   name:'Claridad, precisión y objetividad',          range:[1,10]  },
+  {id:'II',  name:'Estructura del texto científico (IMRyD)',     range:[11,20] },
+  {id:'III', name:'Conectores, cohesión y coherencia',           range:[21,30] },
+  {id:'IV',  name:'Nominalización y terminología IUPAC',         range:[31,40] },
+  {id:'V',   name:'Citas, referencias y normas (ICONTEC/ACS)',   range:[41,50] },
+  {id:'VI',  name:'Informe de laboratorio y bitácora',           range:[51,60] },
+  {id:'VII', name:'Artículo científico y revisión de literatura',range:[61,70] },
+  {id:'VIII','name':'Propuestas, memorias e informes técnicos',  range:[71,80] },
+  {id:'IX',  name:'Representación de datos, tablas y figuras',   range:[81,90] },
+  {id:'X',   name:'Ética, revisión y comunicación oral',         range:[91,100]},
+];
+
+/* ══════════════════════════════════════════════════
+   100 FENÓMENOS / TÉCNICAS
+══════════════════════════════════════════════════ */
+const PHENOMENA = [
+
+/* ── BLOQUE I: Claridad, precisión y objetividad ────────── */
+{id:1,epoch:'I',
+ title:'Voz pasiva impersonal en textos científicos',
+ example:'✗ Yo mezclé el ácido con la base.\n✓ Se mezcló el ácido con la base.',
+ explanation:'La redacción científica colombiana prefiere la voz pasiva refleja o la impersonal («se determinó», «se obtuvo») para eliminar referencias al autor y mantener la objetividad. La primera persona solo se acepta en trabajos de tesis con aval del director.',
+ blank:'«_____ calentó la muestra a 80 °C» (forma impersonal correcta)',
+ blank_answer:'Se calentó',
+ options:['Nosotros calentamos','Se calentó','Yo calenté','El autor calentó'],answer_idx:1,
+ ref:'Norma ICONTEC NTC 1486'},
+
+{id:2,epoch:'I',
+ title:'Precisión cuantitativa: cifras significativas',
+ example:'✗ La temperatura fue de unos 25 grados.\n✓ La temperatura fue de (25,0 ± 0,1) °C.',
+ explanation:'Todo dato experimental debe expresarse con sus cifras significativas correctas y su incertidumbre asociada. En Colombia, los informes de laboratorio siguen las guías del IDEAM y el INVIMA, que exigen incertidumbre expandida (k=2).',
+ blank:'La expresión correcta de un resultado con incertidumbre es (valor ± _____)',
+ blank_answer:'incertidumbre',
+ options:['Error','Varianza','Incertidumbre','Precisión'],answer_idx:2,
+ ref:'GUM — Guía para la Expresión de la Incertidumbre de Medida'},
+
+{id:3,epoch:'I',
+ title:'Eliminación de redundancias léxicas',
+ example:'✗ El proceso fue completamente finalizado en su totalidad.\n✓ El proceso finalizó.',
+ explanation:'Las redundancias («proceso continuo e ininterrumpido», «resultado final obtenido») debilitan la prosa científica. En química e ingeniería, donde la precisión es técnica, la redundancia puede confundir o falsear el significado.',
+ blank:'«Resultado final obtenido» es redundante; la forma precisa es _____',
+ blank_answer:'resultado obtenido',
+ options:['Resultado obtenido','Resultado final','Resultado final conseguido','El resultado que se obtuvo'],answer_idx:0,
+ ref:'Manual de estilo ACS (traducción al español)'},
+
+{id:4,epoch:'I',
+ title:'Uso del tiempo verbal en secciones IMRyD',
+ example:'Introducción: presente. Métodos/Resultados: pasado. Discusión: presente/pasado.',
+ explanation:'Cada sección del artículo científico usa un tiempo verbal propio: la introducción presenta el estado del arte en presente; los métodos y resultados narran lo que se hizo (pasado); la discusión interpreta en presente.',
+ blank:'En la sección de Métodos, el tiempo verbal predominante es el _____',
+ blank_answer:'pasado (pretérito)',
+ options:['Presente','Futuro','Pasado (pretérito)','Condicional'],answer_idx:2,
+ ref:'Day & Gastel, Cómo escribir y publicar trabajos científicos'},
+
+{id:5,epoch:'I',
+ title:'Definición operacional de términos técnicos',
+ example:'✗ La muestra fue grande.\n✓ La muestra constó de 50 g de Na₂CO₃ (p.a., Merck ≥99,5 %).',
+ explanation:'Todo sustantivo que pueda interpretarse ambiguamente debe definirse operacionalmente en su primera aparición: masa, concentración, temperatura, tiempo y especificación del reactivo. En Colombia, la referencia del reactivo incluye proveedor y grado de pureza conforme al INVIMA.',
+ blank:'La especificación del reactivo debe incluir proveedor y grado de _____',
+ blank_answer:'pureza',
+ options:['Precio','Pureza','Color','Volumen'],answer_idx:1,
+ ref:'INVIMA · Guía de reactivos de referencia'},
+
+{id:6,epoch:'I',
+ title:'Evitar el lenguaje coloquial en ciencia',
+ example:'✗ El líquido se puso rojo rapidito.\n✓ La solución adquirió una coloración roja en 30 s.',
+ explanation:'Palabras como «rápido», «bastante», «un poco» o «a ojo» carecen de precisión cuantitativa. Deben sustituirse por magnitudes medibles. En informes de laboratorio universitarios colombianos, los docentes descuentan puntos por coloquialismos.',
+ blank:'«Un poco de ácido» debe sustituirse por _____',
+ blank_answer:'una cantidad definida (p. ej. 5 mL de ácido)',
+ options:['Algo de ácido','Una pizca de ácido','Una cantidad definida (p. ej. 5 mL)','Un chorrito de ácido'],answer_idx:2,
+ ref:'ACS Style Guide, cap. 3'},
+
+{id:7,epoch:'I',
+ title:'Objetividad: evitar afirmaciones no sustentadas',
+ example:'✗ Evidentemente, la reacción fue exotérmica.\n✓ El aumento de temperatura de 3,4 °C indica carácter exotérmico (ΔH < 0).',
+ explanation:'En redacción científica, ninguna afirmación puede sustentarse con adverbios de evidencia («evidentemente», «claramente», «obviamente»). Toda conclusión debe referirse a datos medidos o a literatura citada.',
+ blank:'El adverbio _____ no puede sustituir a datos medidos en un informe científico',
+ blank_answer:'evidentemente / claramente / obviamente',
+ options:['Cuantitativamente','Comparativamente','Evidentemente / claramente / obviamente','Significativamente'],answer_idx:2,
+ ref:'Day & Gastel, op. cit., cap. 2'},
+
+{id:8,epoch:'I',
+ title:'Consistencia terminológica a lo largo del texto',
+ example:'✗ catalizador / promotor / activador (para el mismo concepto)\n✓ catalizador (término único)',
+ explanation:'Un concepto = un término. Usar sinónimos como variedad estilística es práctica literaria, no científica. La variación terminológica en un informe puede inducir a pensar que se habla de cosas distintas.',
+ blank:'Usar «catalizador», «promotor» y «activador» para el mismo concepto viola la _____',
+ blank_answer:'consistencia terminológica',
+ options:['Norma ICONTEC','Consistencia terminológica','Regla de IUPAC','Norma APA'],answer_idx:1,
+ ref:'IUPAC Nomenclature of Inorganic Chemistry (Libro Rojo)'},
+
+{id:9,epoch:'I',
+ title:'Precisión en el uso de «significativo»',
+ example:'✗ La diferencia fue significativa.\n✓ La diferencia fue estadísticamente significativa (p < 0,05, prueba t de Student).',
+ explanation:'«Significativo» en ciencia implica un test estadístico. Debe acompañarse del estadístico, el nivel de significancia (α) y el test empleado. Sin esos datos, el término es vacío.',
+ blank:'Para usar «estadísticamente significativo» debe indicarse el valor de _____',
+ blank_answer:'p (p-value)',
+ options:['Media','Desviación','p (p-value)','Error absoluto'],answer_idx:2,
+ ref:'Guía ACS — Estadística en artículos químicos'},
+
+{id:10,epoch:'I',
+ title:'Uso correcto de «comparar» vs. «contrastar»',
+ example:'Comparar: buscar semejanzas y diferencias.\nContrastar: destacar las diferencias.',
+ explanation:'En la redacción de discusiones, «comparar» y «contrastar» no son sinónimos. Comparar implica análisis de similitudes y diferencias; contrastar enfatiza las diferencias. La elección del verbo orienta al lector sobre el tipo de análisis.',
+ blank:'«Contrastar» dos valores implica destacar sus _____',
+ blank_answer:'diferencias',
+ options:['Similitudes','Promedios','Diferencias','Tendencias'],answer_idx:2,
+ ref:'Turk & Kirkman, Effective Writing (adaptación colombiana)'},
+
+/* ── BLOQUE II: Estructura IMRyD ────────── */
+{id:11,epoch:'II',
+ title:'La estructura IMRyD',
+ example:'Introducción · Materiales y Métodos · Resultados · y Discusión',
+ explanation:'La estructura IMRyD (o IMRD) es el estándar internacional para artículos de investigación en ciencias. En Colombia, las revistas indexadas (Scielo, Redalyc) y los trabajos de grado de ingenierías y ciencias exigen esta estructura.',
+ blank:'Las cuatro partes de la estructura IMRyD son: I, M, R y _____',
+ blank_answer:'Discusión',
+ options:['Determinación','Discusión','Datos','Desarrollo'],answer_idx:1,
+ ref:'NTC-ICONTEC 1486 · Norma para presentación de trabajos'},
+
+{id:12,epoch:'II',
+ title:'El resumen o «abstract»: estructura y límite de palabras',
+ example:'Objetivo · Método · Resultado principal · Conclusión\n(150-250 palabras)',
+ explanation:'El resumen es autónomo: no puede citar referencias ni abreviaturas sin definir. Debe presentar el objetivo, la metodología en términos generales, el resultado cuantitativo más importante y la conclusión principal. En Colombia, revistas como Ingeniería e Investigación exigen resumen en español e inglés.',
+ blank:'El resumen científico no puede incluir _____',
+ blank_answer:'referencias bibliográficas',
+ options:['El objetivo','Referencias bibliográficas','Resultados cuantitativos','La conclusión'],answer_idx:1,
+ ref:'ICONTEC NTC 1487 (Resúmenes para publicaciones)'},
+
+{id:13,epoch:'II',
+ title:'La introducción: embudo de lo general a lo específico',
+ example:'1. Contexto amplio → 2. Problema específico → 3. Brecha → 4. Objetivo del trabajo',
+ explanation:'La introducción sigue una estructura de embudo: parte del contexto general, estrecha hacia el problema específico, identifica la brecha en el conocimiento y termina con el objetivo o hipótesis del trabajo.',
+ blank:'La introducción sigue una estructura de _____ (de lo general a lo particular)',
+ blank_answer:'embudo',
+ options:['Pirámide invertida','Embudo','Lista','Árbol'],answer_idx:1,
+ ref:'Swales, Create a Research Space (CARS)'},
+
+{id:14,epoch:'II',
+ title:'Materiales y métodos: reproducibilidad',
+ example:'✗ Se usó HCl concentrado.\n✓ Se empleó HCl (37 %, Merck, grado p.a.) a una concentración de 1,0 mol/L.',
+ explanation:'El criterio de la sección de métodos es la reproducibilidad: cualquier investigador con el texto debe poder repetir el experimento. Esto exige especificidad en reactivos, equipos (marca, modelo, precisión), condiciones y protocolo.',
+ blank:'El criterio fundamental de la sección de Métodos es la _____',
+ blank_answer:'reproducibilidad',
+ options:['Brevedad','Originalidad','Reproducibilidad','Creatividad'],answer_idx:2,
+ ref:'ACS Style Guide, cap. 6'},
+
+{id:15,epoch:'II',
+ title:'Resultados: datos sin interpretación',
+ example:'✗ Se obtuvo un 92 % de rendimiento, lo que demuestra la eficacia del método.\n✓ El rendimiento fue del (92 ± 2) %.',
+ explanation:'La sección de Resultados presenta datos objetivos sin interpretarlos. La interpretación pertenece a la Discusión. Mezclar ambas secciones es error frecuente en informes universitarios colombianos.',
+ blank:'La sección de Resultados presenta datos SIN _____',
+ blank_answer:'interpretación',
+ options:['Tablas','Figuras','Interpretación','Referencias'],answer_idx:2,
+ ref:'Day & Gastel, op. cit., cap. 7'},
+
+{id:16,epoch:'II',
+ title:'La discusión: interpretar, comparar y explicar',
+ example:'El rendimiento del (92 ± 2) % supera el reportado por García et al. (2019, 87 %), posiblemente debido a la temperatura de reflujo optimizada (85 °C frente a 75 °C).',
+ explanation:'La Discusión interpreta los resultados, los compara con literatura previa, explica las diferencias y propone mecanismos. Es la sección más compleja y la más valorada por los jurados de tesis en Colombia.',
+ blank:'En la Discusión se comparan los resultados propios con la _____',
+ blank_answer:'literatura previa',
+ options:['Introducción','Literatura previa','Metodología','Norma ICONTEC'],answer_idx:1,
+ ref:'ICONTEC NTC 1486 · Sección 5.4'},
+
+{id:17,epoch:'II',
+ title:'Conclusiones: generalizaciones sustentadas',
+ example:'✗ La reacción fue perfecta.\n✓ Las condiciones optimizadas (T = 85 °C, t = 2 h) maximizaron el rendimiento al (92 ± 2) % (n=3).',
+ explanation:'Las conclusiones son generalizaciones sustentadas en los resultados. No deben introducir información nueva, ni repetir los resultados literalmente, ni usar lenguaje especulativo sin evidencia.',
+ blank:'Las conclusiones deben sustentarse en los _____ del trabajo',
+ blank_answer:'resultados',
+ options:['Objetivos','Resultados','Antecedentes','Métodos'],answer_idx:1,
+ ref:'Norma ICONTEC NTC 1486'},
+
+{id:18,epoch:'II',
+ title:'Palabras clave: indexación y pertinencia',
+ example:'5-8 términos · DeCS / MeSH / tesauro disciplinar · sin artículos',
+ explanation:'Las palabras clave facilitan la indexación en bases de datos. Deben extraerse de tesauros (DeCS para ciencias de la salud, Chemical Abstracts para química). Se escriben en minúscula, separadas por punto y coma, sin artículos.',
+ blank:'Las palabras clave deben extraerse de _____ para facilitar la indexación',
+ blank_answer:'tesauros disciplinares',
+ options:['El título','Tesauros disciplinares','El resumen','El criterio del autor'],answer_idx:1,
+ ref:'CAS (Chemical Abstracts Service) · Instrucciones a autores'},
+
+{id:19,epoch:'II',
+ title:'Título: informativo, conciso y sin abreviaturas',
+ example:'✗ Estudio sobre la síntesis.\n✓ Síntesis y caracterización de nanopartículas de ZnO por precipitación química a 60 °C',
+ explanation:'El título debe informar sobre el qué (proceso o compuesto), el cómo (método) y, si es relevante, las condiciones clave. Máximo 15 palabras. Sin abreviaturas que no sean universales.',
+ blank:'El título científico no debe contener _____',
+ blank_answer:'abreviaturas no universales',
+ options:['El método','El compuesto estudiado','Abreviaturas no universales','Las condiciones de reacción'],answer_idx:2,
+ ref:'ACS Author Guidelines'},
+
+{id:20,epoch:'II',
+ title:'Sección de agradecimientos y declaración de conflicto de interés',
+ example:'Los autores agradecen al Programa de Química de la Universidad Nacional de Colombia y declaran no tener conflicto de interés.',
+ explanation:'Los agradecimientos mencionan financiación (código del proyecto Minciencias/Colciencias), entidades colaboradoras y asistencia técnica. En Colombia, las revistas Colciencias exigen la declaración de conflicto de interés.',
+ blank:'En Colombia, los proyectos de investigación financiados por el Estado se financian a través de _____',
+ blank_answer:'Minciencias (antes Colciencias)',
+ options:['El DNP','El SENA','Minciencias (antes Colciencias)','El ICETEX'],answer_idx:2,
+ ref:'Resolución Minciencias — Política de acceso abierto'},
+
+/* ── BLOQUE III: Conectores y cohesión ────────── */
+{id:21,epoch:'III',
+ title:'Conectores de adición en la discusión',
+ example:'Además, asimismo, igualmente, del mismo modo, por otra parte',
+ explanation:'Los conectores de adición encadenan argumentos del mismo tipo. En la discusión científica se prefieren «asimismo» y «adicionalmente» sobre el coloquial «también», que se percibe como poco formal en redacción académica colombiana.',
+ blank:'El conector de adición más formal en redacción científica colombiana es _____',
+ blank_answer:'asimismo / adicionalmente',
+ options:['También','Y además','Asimismo / adicionalmente','Y encima'],answer_idx:2,
+ ref:'Montolío, Manual de escritura académica y profesional'},
+
+{id:22,epoch:'III',
+ title:'Conectores de contraste y concesión',
+ example:'Sin embargo · No obstante · A pesar de que · Aunque · Contrariamente',
+ explanation:'Al comparar resultados con literatura, los conectores de contraste articulan las diferencias. «Sin embargo» va seguido de coma cuando inicia oración; «aunque» puede ir con indicativo (hecho establecido) o con subjuntivo (hipótesis).',
+ blank:'«Sin embargo» al inicio de oración va seguido de _____',
+ blank_answer:'coma',
+ options:['Punto','Punto y coma','Coma','Dos puntos'],answer_idx:2,
+ ref:'RAE, Diccionario panhispánico de dudas'},
+
+{id:23,epoch:'III',
+ title:'Conectores de causa y consecuencia',
+ example:'Por lo tanto · En consecuencia · Debido a · Por esta razón · Dado que',
+ explanation:'Articulan la relación causa-efecto, fundamental en la explicación científica. «Por lo tanto» y «en consecuencia» expresan consecuencia lógica; «debido a» y «dado que» expresan causa. No son intercambiables.',
+ blank:'«_____ el aumento de temperatura, la velocidad de reacción se incrementó» (causa)',
+ blank_answer:'Debido a',
+ options:['En consecuencia','Por lo tanto','Debido a','Sin embargo'],answer_idx:2,
+ ref:'Cassany, La cocina de la escritura'},
+
+{id:24,epoch:'III',
+ title:'Conectores de finalidad',
+ example:'Con el fin de · Para · Con el propósito de · A fin de',
+ explanation:'Expresan el objetivo de un procedimiento. En la sección de Métodos son especialmente frecuentes: «Con el fin de minimizar errores, se calibró el equipo antes de cada medición».',
+ blank:'El conector «Con el fin de» expresa _____',
+ blank_answer:'finalidad',
+ options:['Contraste','Causa','Finalidad','Adición'],answer_idx:2,
+ ref:'Norma de redacción ACS, cap. 4'},
+
+{id:25,epoch:'III',
+ title:'Referencia anafórica: uso de pronombres y sintagmas',
+ example:'✗ El catalizador aumentó la velocidad. Él fue recuperado al 95 %.\n✓ El catalizador aumentó la velocidad. Este fue recuperado al 95 %.',
+ explanation:'En español científico, «él/ella» como pronombre sujeto de tercera persona puede generar ambigüedad. Se prefiere el demostrativo («este», «dicho» + nombre) o la repetición del sustantivo para mantener la claridad.',
+ blank:'Para referirse a un sustantivo técnico sin ambigüedad se prefiere el _____',
+ blank_answer:'demostrativo (este, dicho…)',
+ options:['Pronombre personal «él»','Demostrativo (este, dicho…)','Artículo neutro','Elipsis'],answer_idx:1,
+ ref:'Montolío, op. cit., vol. II'},
+
+{id:26,epoch:'III',
+ title:'Progresión temática: tema conocido → rema nuevo',
+ example:'El rendimiento fue del 92 %. [tema: rendimiento] Este valor supera el reportado previamente. [nuevo: comparación]',
+ explanation:'La información fluye mejor cuando cada oración toma como punto de partida (tema) algo ya mencionado y añade información nueva (rema). Romper este patrón produce textos difíciles de leer.',
+ blank:'En la progresión temática, el elemento nuevo de cada oración se llama _____',
+ blank_answer:'rema',
+ options:['Tema','Rema','Tópico','Nexo'],answer_idx:1,
+ ref:'Halliday — Introducción a la gramática funcional'},
+
+{id:27,epoch:'III',
+ title:'Párrafo científico: oración temática + desarrollo + cierre',
+ example:'[Temática] El método gravimétrico presentó la mayor exactitud. [Desarrollo] Los resultados mostraron un error relativo < 0,5 % en los tres ensayos. [Cierre] Esto confirma su idoneidad para el análisis de sulfatos en aguas industriales.',
+ explanation:'El párrafo científico bien estructurado comienza con la oración temática (la idea principal), la desarrolla con datos o argumentos y cierra con una síntesis o transición. En Colombia, los trabajos de grado se evalúan por coherencia intraparrafo.',
+ blank:'La primera oración de un párrafo científico se llama oración _____',
+ blank_answer:'temática',
+ options:['Conclusiva','Temática','Expositiva','Referencial'],answer_idx:1,
+ ref:'ICONTEC NTC 1486 · Requisitos de presentación'},
+
+{id:28,epoch:'III',
+ title:'Uso correcto de los dos puntos en listas técnicas',
+ example:'Los reactivos utilizados fueron: HCl, NaOH, H₂SO₄ y KMnO₄.',
+ explanation:'Los dos puntos introducen enumeraciones, aclaraciones o citas. En química, se usan frecuentemente antes de listas de compuestos o parámetros. Tras los dos puntos, la lista puede escribirse en minúscula (si continúa la oración) o en mayúscula (si la lista es independiente).',
+ blank:'Tras «Los reactivos utilizados fueron_____» se escribe con dos puntos y minúscula',
+ blank_answer:':',
+ options:['.','—',':',';'],answer_idx:2,
+ ref:'RAE, Ortografía de la lengua española (2010), § 4.7'},
+
+{id:29,epoch:'III',
+ title:'Punto y coma para separar elementos complejos en listas',
+ example:'Los grupos experimentales fueron: A, con catalizador de Pt; B, con catalizador de Pd; C, sin catalizador.',
+ explanation:'Cuando los elementos de una lista contienen comas internas, se usa el punto y coma como separador de mayor jerarquía. Es error frecuente en informes de laboratorio usar solo coma, lo que genera ambigüedad.',
+ blank:'En listas con elementos que contienen comas internas, el separador correcto es _____',
+ blank_answer:'el punto y coma',
+ options:['La coma','El punto','El punto y coma','La raya'],answer_idx:2,
+ ref:'RAE, Ortografía (2010), § 4.8'},
+
+{id:30,epoch:'III',
+ title:'Coherencia global: hilo argumental entre secciones',
+ example:'El objetivo planteado en la Introducción debe responderse en las Conclusiones.',
+ explanation:'Un texto coherente muestra correspondencia entre el objetivo declarado en la introducción, la metodología elegida, los resultados obtenidos y las conclusiones. En los trabajos de grado colombianos, la falta de coherencia global es causal de devolución por el comité evaluador.',
+ blank:'La correspondencia entre objetivo, método, resultados y conclusiones garantiza la _____ global del texto',
+ blank_answer:'coherencia',
+ options:['Cohesión','Coherencia','Claridad','Precisión'],answer_idx:1,
+ ref:'ICONTEC NTC 1486 · Criterios de evaluación'},
+
+/* ── BLOQUE IV: Nominalización y terminología IUPAC ────────── */
+{id:31,epoch:'IV',
+ title:'Nominalización: sustantivación del verbo en ciencia',
+ example:'✗ Se analizó para conocer cuánto hierro había.\n✓ El análisis cuantitativo de hierro se realizó por espectrofotometría.',
+ explanation:'La nominalización convierte procesos verbales en conceptos sustantivados, lo que permite mayor densidad informativa. En textos científicos es recurso válido, pero en exceso produce textos opacos. Se recomienda nominalizar solo cuando el proceso es el tópico, no el agente.',
+ blank:'La conversión de un verbo en sustantivo en redacción científica se llama _____',
+ blank_answer:'nominalización',
+ options:['Pasivización','Nominalización','Elipsis','Anáfora'],answer_idx:1,
+ ref:'Halliday & Martin, Writing Science'},
+
+{id:32,epoch:'IV',
+ title:'Nomenclatura IUPAC para compuestos inorgánicos',
+ example:'NaCl = cloruro de sodio (no «sal de mesa» en un informe)\nFe₂O₃ = óxido de hierro(III)',
+ explanation:'La nomenclatura IUPAC es obligatoria en redacción científica. Para óxidos metálicos, la carga del metal se indica con número de oxidación en romano entre paréntesis, sin espacio antes del paréntesis.',
+ blank:'Fe₂O₃ se nombra según IUPAC como óxido de hierro_____',
+ blank_answer:'(III)',
+ options:['3','(3)','(III)','-III'],answer_idx:2,
+ ref:'IUPAC Libro Rojo (2005) — Nomenclatura de inorgánica'},
+
+{id:33,epoch:'IV',
+ title:'Nomenclatura IUPAC para compuestos orgánicos',
+ example:'CH₃CH₂OH = etanol (no alcohol etílico)\nCH₃COOH = ácido acético (nombre retenido) o ácido etanoico',
+ explanation:'La nomenclatura IUPAC de orgánica sigue las Recomendaciones 2013 (Libro Azul). Algunos nombres «retenidos» como ácido acético o glucosa son aceptados por IUPAC junto al nombre sistemático.',
+ blank:'Según la nomenclatura IUPAC, CH₃CH₂OH se denomina _____',
+ blank_answer:'etanol',
+ options:['Alcohol etílico','Metanol','Etanol','Propanol'],answer_idx:2,
+ ref:'IUPAC Libro Azul (2013) — Nomenclatura de orgánica'},
+
+{id:34,epoch:'IV',
+ title:'Sistema Internacional de Unidades (SI) en textos químicos',
+ example:'✗ 250 mls · ✗ 5 Kgs · ✓ 250 mL · ✓ 5 kg\nSímbolo sin punto, espacio entre número y unidad.',
+ explanation:'Los símbolos del SI no llevan punto (abreviatura) ni plural. Van separados del número por un espacio duro. La «L» para litro puede escribirse en mayúscula para evitar confusión con el número «1».',
+ blank:'El símbolo correcto del litro en el SI es _____',
+ blank_answer:'L (mayúscula es aceptada)',
+ options:['lt','lts','l','L (mayúscula es aceptada)'],answer_idx:3,
+ ref:'BIPM — Le Système International d\'Unités (SI), 9.ª ed.'},
+
+{id:35,epoch:'IV',
+ title:'Escritura de fórmulas y ecuaciones químicas',
+ example:'2H₂ + O₂ → 2H₂O\nSubíndices en fórmulas, flechas de reacción, balanceo',
+ explanation:'Las ecuaciones químicas se numeran entre paréntesis al margen derecho (como las matemáticas) cuando se citan en el texto. Los subíndices y superíndices deben ser correctos tipográficamente, no escritos en línea.',
+ blank:'Las ecuaciones químicas se numeran para poder citarlas en el _____',
+ blank_answer:'texto (con referencia a la ecuación)',
+ options:['Resumen','Texto (con referencia a la ecuación)','Título','Bibliografía'],answer_idx:1,
+ ref:'ACS Style Guide — Fórmulas y ecuaciones'},
+
+{id:36,epoch:'IV',
+ title:'Abreviaturas de uso internacional en química',
+ example:'p.a. (pro analysi) · GC-MS · HPLC · UV-Vis · NMR/RMN · IR',
+ explanation:'Las abreviaturas deben definirse en su primera aparición en el texto. Algunas son universalmente reconocidas en química (HPLC, UV-Vis, pH) y pueden usarse sin definición en artículos especializados, pero en informes de grado siempre se definen.',
+ blank:'En un informe de grado, la abreviatura HPLC debe definirse en su _____',
+ blank_answer:'primera aparición',
+ options:['Última aparición','Abstract','Primera aparición','Conclusión'],answer_idx:2,
+ ref:'IUPAC — Abbreviations and Symbols in Chemistry'},
+
+{id:37,epoch:'IV',
+ title:'Uso de «concentración», «título», «tasa» y «proporción»',
+ example:'Concentración: mol/L · Título: g/100 mL · Tasa: cambio por unidad de tiempo · Proporción: adimensional',
+ explanation:'Estos cuatro términos se confunden frecuentemente en informes colombianos. «Concentración» es cantidad de soluto por volumen de solución; «título» se usa en análisis clínico para expresar g por 100 mL; «tasa» implica cambio temporal; «proporción» es relación adimensional.',
+ blank:'La unidad mol/L corresponde al concepto de _____',
+ blank_answer:'concentración molar',
+ options:['Título','Concentración molar','Tasa','Proporción'],answer_idx:1,
+ ref:'IUPAC Green Book — Magnitudes físico-químicas'},
+
+{id:38,epoch:'IV',
+ title:'Denominación de equipos e instrumentos',
+ example:'✗ Se usó un espectro.\n✓ Se empleó un espectrofotómetro UV-Vis (Shimadzu UV-1800, Japón).',
+ explanation:'Los equipos se nombran con su término técnico completo, seguido de marca y modelo entre paréntesis en la primera mención. Esto garantiza la reproducibilidad y la trazabilidad del experimento.',
+ blank:'Al mencionar un equipo por primera vez se indica: nombre técnico, _____ y modelo',
+ blank_answer:'marca',
+ options:['Precio','Marca','Color','País de fabricación'],answer_idx:1,
+ ref:'ACS Style Guide — Equipos e instrumentos'},
+
+{id:39,epoch:'IV',
+ title:'Uso de «respectivamente» para listas paralelas',
+ example:'Los rendimientos de A, B y C fueron del 85, 90 y 78 %, respectivamente.',
+ explanation:'«Respectivamente» exige que los elementos de dos listas paralelas tengan el mismo número y orden. Es error frecuente en informes colombianos usar «respectivamente» con listas de distinta longitud o en distinto orden.',
+ blank:'«Respectivamente» exige que las dos listas tengan el mismo _____ y orden',
+ blank_answer:'número de elementos',
+ options:['Tipo de unidades','Número de elementos','Valor numérico','Signo'],answer_idx:1,
+ ref:'ACS Style Guide, cap. 5'},
+
+{id:40,epoch:'IV',
+ title:'Uso del guion en nomenclatura química',
+ example:'2-propanol · n-hexano · p-xileno · tert-butilo\nPrefijos de posición siempre en cursiva o con guion',
+ explanation:'Los localizadores numéricos y los prefijos de posición (n-, sec-, tert-, o-, m-, p-) se separan del nombre con guion. Los prefijos multiplicadores (di, tri, tetra) no llevan guion. En cursiva en publicaciones formales.',
+ blank:'El prefijo «n-» en «n-hexano» se separa del nombre con _____',
+ blank_answer:'guion',
+ options:['Espacio','Coma','Guion','Punto'],answer_idx:2,
+ ref:'IUPAC Libro Azul (2013), regla P-14'},
+
+/* ── BLOQUE V: Citas y referencias ────────── */
+{id:41,epoch:'V',
+ title:'Sistema de citas autor-año (APA/ICONTEC)',
+ example:'(García, 2020) · (García y López, 2018) · (García et al., 2021)',
+ explanation:'En ciencias sociales y algunas revistas colombianas de ingeniería se usa el sistema autor-año. «Et al.» se usa desde el tercer autor. ICONTEC permite este sistema en trabajos de grado cuando lo especifica el programa académico.',
+ blank:'«Et al.» en las citas se usa a partir del _____ autor',
+ blank_answer:'tercer',
+ options:['Segundo','Tercer','Cuarto','Quinto'],answer_idx:1,
+ ref:'ICONTEC NTC 5613 — Sistema de referencias bibliográficas'},
+
+{id:42,epoch:'V',
+ title:'Sistema de citas numéricas (ACS/Vancouver)',
+ example:'El rendimiento fue del 92 % [1]. · La síntesis se realizó según el protocolo de Smith [2,3].',
+ explanation:'Las revistas de química (Journal of the American Chemical Society, Revista Colombiana de Química) usan el sistema numérico entre corchetes o superíndice. Los números siguen el orden de aparición en el texto.',
+ blank:'En el sistema ACS de citas numéricas, los números siguen el orden de _____ en el texto',
+ blank_answer:'aparición',
+ options:['Importancia','Aparición','Autor','Año de publicación'],answer_idx:1,
+ ref:'ACS Style Guide — References'},
+
+{id:43,epoch:'V',
+ title:'Referencia de artículo en revista (formato ACS)',
+ example:'García, J.; López, M. Rev. Colomb. Quím. 2021, 50 (2), 45–52.',
+ explanation:'Formato ACS: Apellido, Inicial.; Nombre de revista en cursiva y abreviada, año, volumen (en negrita), número entre paréntesis, páginas. En Colombia, Revista Colombiana de Química usa este formato en su guía de autores.',
+ blank:'En el formato ACS, el volumen de la revista se escribe en _____',
+ blank_answer:'negrita',
+ options:['Cursiva','Negrita','Versalita','Subrayado'],answer_idx:1,
+ ref:'ACS Style Guide, apéndice 2'},
+
+{id:44,epoch:'V',
+ title:'Referencia de libro (ICONTEC NTC 5613)',
+ example:'SKOOG, D.A.; WEST, D.M.; HOLLER, F.J. Fundamentos de química analítica. 9.ª ed. México: Cengage, 2015.',
+ explanation:'En ICONTEC, el apellido del autor va en versalitas o mayúsculas, seguido de iniciales, título en cursiva, edición (desde la segunda), ciudad, editorial y año. Es el formato estándar en trabajos de grado de ingeniería química en Colombia.',
+ blank:'En la norma ICONTEC, el apellido del autor de una referencia va en _____',
+ blank_answer:'mayúsculas (o versalitas)',
+ options:['Cursiva','Negrita','Mayúsculas (o versalitas)','Subrayado'],answer_idx:2,
+ ref:'ICONTEC NTC 5613'},
+
+{id:45,epoch:'V',
+ title:'Paráfrasis vs. cita textual',
+ example:'✗ García (2019) dice: «el rendimiento fue alto».\n✓ García (2019) reportó rendimientos superiores al 90 %.',
+ explanation:'En redacción científica se prefiere la paráfrasis sobre la cita textual. La cita textual se reserva para definiciones normativas, citas de leyes o cuando el fraseo exacto es relevante. Las citas textuales largas (> 40 palabras) van en párrafo aparte con sangría.',
+ blank:'En ciencia, se prefiere la _____ a la cita textual para incorporar fuentes',
+ blank_answer:'paráfrasis',
+ options:['Cita textual','Paráfrasis','Nota al pie','Definición'],answer_idx:1,
+ ref:'APA Publication Manual (7.ª ed.), § 8.23'},
+
+{id:46,epoch:'V',
+ title:'Uso de «et al.» con cursiva',
+ example:'García et al. (2021) … · no: García y otros (2021)',
+ explanation:'«Et al.» es locución latina y debe escribirse en cursiva en publicaciones formales. En español, algunas normas aceptan «y cols.» (y colaboradores), pero «et al.» es más universal en contextos científicos internacionales.',
+ blank:'«Et al.» se escribe en _____ por ser locución latina',
+ blank_answer:'cursiva',
+ options:['Negrita','Mayúsculas','Cursiva','Versalita'],answer_idx:2,
+ ref:'ACS Style Guide · ISO 4'},
+
+{id:47,epoch:'V',
+ title:'Plagio y autocita: ética de las referencias',
+ example:'Parafrasear sin citar = plagio. Citar excesivamente el trabajo propio sin nueva aportación = autocita indebida.',
+ explanation:'El plagio académico es causal de sanción disciplinaria en las universidades colombianas según el Decreto 1295 de 2010. Las herramientas Turnitin y Compilatio se usan en muchas universidades nacionales para detectarlo.',
+ blank:'En Colombia, el Decreto _____ de 2010 regula la calidad de los programas académicos e implica sanciones por plagio',
+ blank_answer:'1295',
+ options:['1234','1295','2020','860'],answer_idx:1,
+ ref:'Decreto 1295 de 2010 — MEN Colombia'},
+
+{id:48,epoch:'V',
+ title:'DOI: identificador permanente de publicaciones',
+ example:'https://doi.org/10.1021/jacs.0c01234',
+ explanation:'El DOI (Digital Object Identifier) es el identificador permanente de un artículo científico. Debe incluirse en todas las referencias que lo tengan. Las revistas colombianas indexadas en Scopus y WoS exigen DOI en los metadatos.',
+ blank:'DOI significa _____',
+ blank_answer:'Digital Object Identifier',
+ options:['Database Online Index','Digital Object Identifier','Directory of Open Investigations','Data Output Interface'],answer_idx:1,
+ ref:'International DOI Foundation'},
+
+{id:49,epoch:'V',
+ title:'Gestor bibliográfico: Zotero, Mendeley, EndNote',
+ example:'Importar desde DOI → citar en texto → generar lista automática',
+ explanation:'Los gestores bibliográficos automatizan el formateo de citas. En Colombia, Zotero es el más usado en universidades públicas por ser gratuito y de código abierto. Permiten cambiar el estilo de cita (ACS, ICONTEC, APA) con un clic.',
+ blank:'El gestor bibliográfico gratuito más común en universidades públicas colombianas es _____',
+ blank_answer:'Zotero',
+ options:['Mendeley','EndNote','Zotero','RefWorks'],answer_idx:2,
+ ref:'Universidad Nacional de Colombia — Biblioteca digital'},
+
+{id:50,epoch:'V',
+ title:'Fuentes primarias vs. secundarias',
+ example:'Primaria: artículo original · Secundaria: revisión, libro de texto, manual',
+ explanation:'En redacción científica se prefieren las fuentes primarias (artículos de investigación originales) sobre las secundarias (libros de texto, revisiones). Citar un libro de texto cuando existe el artículo original es debilidad argumentativa.',
+ blank:'Un artículo de investigación original es una fuente _____',
+ blank_answer:'primaria',
+ options:['Secundaria','Terciaria','Primaria','Gris'],answer_idx:2,
+ ref:'ACS Style Guide, cap. 1'},
+
+/* ── BLOQUE VI: Informe de laboratorio ────────── */
+{id:51,epoch:'VI',
+ title:'Estructura del informe de laboratorio colombiano',
+ example:'Portada · Resumen · Introducción · Objetivos · Materiales y métodos · Resultados · Discusión · Conclusiones · Referencias',
+ explanation:'La mayoría de programas de química e ingeniería química en Colombia (UNAL, UIS, UdeA, UniAndes) exigen esta estructura para informes de laboratorio. La norma ICONTEC NTC 1486 es la referencia general para trabajos académicos.',
+ blank:'La norma colombiana que regula la presentación de trabajos académicos es _____',
+ blank_answer:'ICONTEC NTC 1486',
+ options:['NTC 1487','NTC 1486','NTC 5613','NTC 4490'],answer_idx:1,
+ ref:'ICONTEC NTC 1486 — Documentación. Presentación de tesis, trabajos de grado'},
+
+{id:52,epoch:'VI',
+ title:'Bitácora de laboratorio: registro en tiempo real',
+ example:'Fecha · Hora · Condición observada · Lectura del instrumento · Firma del analista',
+ explanation:'La bitácora de laboratorio es un documento legal. Debe escribirse con tinta indeleble, sin borrar (tachar con una línea y firmar el error), con fecha y hora. Es exigencia de laboratorios acreditados ante el IDEAM y el ONAC en Colombia.',
+ blank:'En la bitácora, los errores se corrigen _____',
+ blank_answer:'tachando y firmando, nunca borrando',
+ options:['Usando corrector blanco','Tachando y firmando, nunca borrando','Reescribiendo la hoja','Usando lápiz'],answer_idx:1,
+ ref:'ONAC — Requisitos de acreditación ISO/IEC 17025'},
+
+{id:53,epoch:'VI',
+ title:'Tratamiento de datos atípicos (outliers)',
+ example:'Prueba de Grubbs o Dixon para n < 30 · Justificación estadística obligatoria',
+ explanation:'Un dato atípico no puede eliminarse sin justificación estadística. Las pruebas de Grubbs y Dixon son las más usadas en química analítica. Eliminar datos sin justificación es considerado fraude científico.',
+ blank:'La eliminación de un dato atípico requiere justificación _____, no subjetiva',
+ blank_answer:'estadística',
+ options:['Visual','Estadística','Del director','Ética'],answer_idx:1,
+ ref:'ASTM E178 — Standard Practice for Dealing with Outlying Observations'},
+
+{id:54,epoch:'VI',
+ title:'Propagación de incertidumbre en cálculos',
+ example:'Si y = a + b: u(y) = √[u(a)² + u(b)²]\nSi y = a·b: u(y)/y = √[(u(a)/a)² + (u(b)/b)²]',
+ explanation:'Toda magnitud calculada hereda la incertidumbre de las magnitudes medidas. La propagación debe reportarse explícitamente en la sección de Resultados de los informes de laboratorio cuantitativos.',
+ blank:'La incertidumbre de una suma se calcula como la raíz cuadrada de la suma de _____',
+ blank_answer:'los cuadrados de las incertidumbres individuales',
+ options:['Las incertidumbres','Los cuadrados de las incertidumbres individuales','Los errores absolutos','Las desviaciones estándar'],answer_idx:1,
+ ref:'GUM (JCGM 100:2008) — Guía para la expresión de la incertidumbre'},
+
+{id:55,epoch:'VI',
+ title:'Descripción del procedimiento en pasado y voz pasiva',
+ example:'✗ Tomamos 25 mL de la solución.\n✓ Se tomaron 25,00 mL de la solución mediante pipeta volumétrica calibrada.',
+ explanation:'En la sección de Materiales y Métodos del informe de laboratorio, el procedimiento se narra en pasado y voz pasiva refleja. Se especifican el instrumento y su precisión siempre que sea relevante.',
+ blank:'En la sección de Métodos, el procedimiento se narra en _____ y voz pasiva',
+ blank_answer:'pasado',
+ options:['Presente','Pasado','Futuro','Condicional'],answer_idx:1,
+ ref:'ACS Style Guide — Sección de Métodos'},
+
+{id:56,epoch:'VI',
+ title:'Diagramas de flujo de procesos en informes de ingeniería',
+ example:'BLOQUE → CONECTOR → DECISIÓN (rombo) → RESULTADO\nSimbología ISA-5.1 para instrumentación',
+ explanation:'Los informes de ingeniería química incluyen diagramas P&ID y de flujo de proceso. La simbología sigue la norma ISA-5.1 (Instrument Society of America) y las convenciones de la norma ASME Y14.5 para planos técnicos.',
+ blank:'La simbología estándar para instrumentación en diagramas de ingeniería es la norma _____',
+ blank_answer:'ISA-5.1',
+ options:['ASTM E178','ISO 9001','ISA-5.1','ANSI Z49'],answer_idx:2,
+ ref:'ISA-5.1-2009 — Instrumentation Symbols and Identification'},
+
+{id:57,epoch:'VI',
+ title:'Balance de masa en informes de proceso',
+ example:'Entrada = Salida + Acumulación\nEnunciar la frontera del sistema antes del balance.',
+ explanation:'Todo balance de masa en un informe de ingeniería química debe especificar: el sistema (frontera), el componente balanceado, el estado estacionario o transitorio y las hipótesis simplificadoras. Omitir la frontera del sistema es error conceptual grave.',
+ blank:'Antes de plantear un balance de masa, debe definirse la _____ del sistema',
+ blank_answer:'frontera (límites del sistema)',
+ options:['Temperatura','Frontera (límites del sistema)','Presión','Composición'],answer_idx:1,
+ ref:'Felder & Rousseau, Principios elementales de los procesos químicos'},
+
+{id:58,epoch:'VI',
+ title:'Expresión de resultados con unidades correctas',
+ example:'✗ El pH fue de 7 unidades.\n✓ El pH fue de 7,05 (adimensional, sin unidades).',
+ explanation:'El pH, el índice de refracción, la densidad relativa y la fracción molar son magnitudes adimensionales. Escribir «unidades de pH» es error conceptual frecuente en informes colombianos de primer año.',
+ blank:'El pH es una magnitud _____',
+ blank_answer:'adimensional (sin unidades)',
+ options:['En mol/L','En molar','Adimensional (sin unidades)','En Pa·s'],answer_idx:2,
+ ref:'IUPAC Green Book (3.ª ed.), § 2.1'},
+
+{id:59,epoch:'VI',
+ title:'Análisis de error: error sistemático vs. aleatorio',
+ example:'Sistemático: equipo descalibrado, reactivo impuro.\nAleatorio: fluctuaciones del operador, vibraciones.',
+ explanation:'El análisis de error en un informe debe distinguir entre errores sistemáticos (sesgos, controlables) y aleatorios (estadísticos, reducibles aumentando n). No identificar el origen del error es análisis superficial.',
+ blank:'Un equipo descalibrado produce error _____, no aleatorio',
+ blank_answer:'sistemático',
+ options:['Aleatorio','Sistemático','De precisión','Instrumental'],answer_idx:1,
+ ref:'Harris, Análisis químico cuantitativo'},
+
+{id:60,epoch:'VI',
+ title:'Normas de seguridad en la sección de métodos',
+ example:'EPP requerido: bata, guantes nitrilo, gafas de seguridad.\nResiduo: RESPEL clase X, tratamiento Y.',
+ explanation:'En Colombia, el manejo de residuos peligrosos en laboratorios universitarios se rige por el Decreto 4741 de 2005 (RESPEL). Los informes de laboratorio deben incluir la clasificación del residuo generado y el tratamiento aplicado.',
+ blank:'En Colombia, la norma que regula los residuos peligrosos de laboratorio es el Decreto _____',
+ blank_answer:'4741 de 2005',
+ options:['1295 de 2010','4741 de 2005','0472 de 2017','1843 de 1991'],answer_idx:1,
+ ref:'Decreto 4741 de 2005 — MAVDT Colombia'},
+
+/* ── BLOQUE VII: Artículo científico ────────── */
+{id:61,epoch:'VII',
+ title:'Tipos de artículo científico',
+ example:'Original · Revisión · Nota corta · Comunicación rápida · Reporte de caso',
+ explanation:'Cada tipo de artículo tiene extensión y estructura específicas. Las revistas colombianas indexadas distinguen entre artículos de investigación (resultados originales), artículos de revisión (síntesis crítica) y notas cortas. Minciencias clasifica los artículos para la categorización de investigadores.',
+ blank:'Un artículo que sintetiza críticamente la literatura existente es un artículo de _____',
+ blank_answer:'revisión',
+ options:['Investigación original','Revisión','Nota corta','Comunicación rápida'],answer_idx:1,
+ ref:'Minciencias — Modelo de medición de grupos de investigación'},
+
+{id:62,epoch:'VII',
+ title:'Revisión de literatura: análisis, no lista',
+ example:'✗ Autor A dijo X. Autor B dijo Y. Autor C dijo Z.\n✓ El mecanismo de X ha sido estudiado bajo tres enfoques: cinético (A), termodinámico (B) y computacional (C).',
+ explanation:'Una revisión de literatura no es un catálogo de autores: es un análisis temático que agrupa, contrasta y sintetiza los aportes. Organizar por temas (no por autores) es la marca de madurez académica más valorada en trabajos de posgrado colombianos.',
+ blank:'La revisión de literatura debe organizarse por _____, no por autores',
+ blank_answer:'temas',
+ options:['Autores','Fechas','Temas','Instituciones'],answer_idx:2,
+ ref:'Machi & McEvoy, The Literature Review'},
+
+{id:63,epoch:'VII',
+ title:'Estado del arte: identificar la brecha',
+ example:'«A pesar de los estudios existentes sobre X, no se ha investigado el efecto de Y bajo condiciones Z, lo que limita…»',
+ explanation:'La brecha del conocimiento (research gap) es la justificación del trabajo. Debe articularse explícitamente al final de la introducción. Presentarla con el conector «sin embargo» o «no obstante» señala la necesidad del estudio.',
+ blank:'La brecha del conocimiento identifica lo que _____ se ha investigado sobre el tema',
+ blank_answer:'aún no',
+ options:['Ya','Aún no','Siempre','Completamente'],answer_idx:1,
+ ref:'Swales, CARS Model for Research Introductions'},
+
+{id:64,epoch:'VII',
+ title:'Hipótesis: enunciado falsable y operacional',
+ example:'✗ Los catalizadores son útiles.\n✓ El aumento de la concentración de Pd de 1 a 5 % en peso incrementará el rendimiento de la reacción de hidrogenación en > 20 % a 50 °C.',
+ explanation:'Una hipótesis científica debe ser falsable (Popper) y operacional: especifica variables, condiciones y magnitud esperada del efecto. Las hipótesis vagas no orientan el diseño experimental.',
+ blank:'Una hipótesis científica debe ser _____ (refutable experimentalmente)',
+ blank_answer:'falsable',
+ options:['Subjetiva','Falsable','Obvia','Descriptiva'],answer_idx:1,
+ ref:'Popper, La lógica de la investigación científica'},
+
+{id:65,epoch:'VII',
+ title:'Gráfica de resultados: selección del tipo correcto',
+ example:'Tendencia continua → línea · Categorías → barras · Distribución → histograma · Correlación → dispersión',
+ explanation:'El tipo de gráfica debe corresponder al tipo de dato. Una gráfica de línea para datos categóricos o una de barras para una función continua son errores conceptuales frecuentes en informes universitarios colombianos.',
+ blank:'Para mostrar la correlación entre dos variables continuas se usa un gráfico de _____',
+ blank_answer:'dispersión (scatter plot)',
+ options:['Barras','Pastel','Dispersión (scatter plot)','Histograma'],answer_idx:2,
+ ref:'Tufte, The Visual Display of Quantitative Information'},
+
+{id:66,epoch:'VII',
+ title:'Pie de figura vs. título de tabla',
+ example:'Figura 1. Espectro UV-Vis del complejo [Cu(NH₃)₄]²⁺ en agua a 25 °C.\nTabla 1. Parámetros cinéticos de la reacción de esterificación.',
+ explanation:'Las tablas llevan título encima; las figuras llevan pie debajo. El pie de figura es descriptivo y autónomo: el lector no debe ir al texto para entender la figura. Este es criterio de las revistas colombianas indexadas.',
+ blank:'En un artículo científico, el título de una tabla se coloca _____',
+ blank_answer:'encima de la tabla',
+ options:['Debajo de la tabla','Encima de la tabla','Al margen derecho','En el pie de página'],answer_idx:1,
+ ref:'ACS Style Guide — Tablas y figuras'},
+
+{id:67,epoch:'VII',
+ title:'Selección de la revista de publicación',
+ example:'Factor de impacto · Cuartil (Q1–Q4) · Alcance temático · Indexación en Scopus/WoS · Open Access',
+ explanation:'La selección de la revista debe basarse en el alcance temático, el público objetivo y el índice de impacto. En Colombia, Minciencias clasifica las revistas en categorías A1, A2, B, C para efectos de medición de investigadores.',
+ blank:'Minciencias clasifica las revistas científicas en categorías A1, A2, B y _____',
+ blank_answer:'C',
+ options:['D','C','E','F'],answer_idx:1,
+ ref:'Minciencias — Política de indexación de revistas (2022)'},
+
+{id:68,epoch:'VII',
+ title:'Proceso de revisión por pares (peer review)',
+ example:'Envío → Editor verifica → Revisores (2-3) → Decisión: aceptar/revisar/rechazar',
+ explanation:'La revisión por pares es el mecanismo de control de calidad de la ciencia. Las respuestas a los revisores deben ser punto por punto, numeradas, con referencia a los cambios en el manuscrito. Es habilidad comunicativa esencial para investigadores.',
+ blank:'La respuesta a los revisores debe ser _____, numerada y referenciada',
+ blank_answer:'punto por punto',
+ options:['General','Breve','Punto por punto','Solo positiva'],answer_idx:2,
+ ref:'Elsevier — How to respond to peer reviewer comments'},
+
+{id:69,epoch:'VII',
+ title:'Declaración de autoría y orden de autores',
+ example:'Primer autor: mayor contribución. Último: director/tutor. Orden intermedio: por contribución.',
+ explanation:'El orden de autores refleja la contribución al trabajo. La declaración de autoría (CRediT taxonomy) especifica el rol de cada autor: conceptualización, metodología, análisis, escritura, etc. Publicar sin haber contribuido es autoría honoraria, práctica cuestionada éticamente.',
+ blank:'La autoría honoraria ocurre cuando alguien figura como autor sin haber _____',
+ blank_answer:'contribuido al trabajo',
+ options:['Leído el artículo','Contribuido al trabajo','Pagado la publicación','Elegido la revista'],answer_idx:1,
+ ref:'ICMJE — Defining the Role of Authors and Contributors'},
+
+{id:70,epoch:'VII',
+ title:'Acceso abierto y licencias Creative Commons',
+ example:'CC BY (atribución) · CC BY-NC (no comercial) · CC BY-SA (compartir igual)',
+ explanation:'Minciencias exige acceso abierto para los resultados de investigación financiada con recursos públicos en Colombia (Ley 1753 de 2015). La licencia CC BY permite reutilización con atribución, la más permisiva y la más exigida por las políticas de ciencia abierta.',
+ blank:'La licencia Creative Commons más permisiva, que solo exige atribución, es _____',
+ blank_answer:'CC BY',
+ options:['CC BY-NC','CC BY-SA','CC BY-ND','CC BY'],answer_idx:3,
+ ref:'Ley 1753 de 2015 (Plan Nacional de Desarrollo) — Colombia'},
+
+/* ── BLOQUE VIII: Propuestas e informes técnicos ────────── */
+{id:71,epoch:'VIII',
+ title:'Estructura de una propuesta de investigación (Minciencias)',
+ example:'Título · Resumen · Planteamiento del problema · Objetivos · Marco teórico · Metodología · Cronograma · Presupuesto · Bibliografía',
+ explanation:'Las convocatorias de Minciencias (antes Colciencias) exigen una estructura específica para propuestas. La sección de presupuesto debe justificar cada rubro con criterio de pertinencia y coherencia con el plan de trabajo.',
+ blank:'En una propuesta Minciencias, cada rubro del presupuesto debe justificarse con criterio de _____',
+ blank_answer:'pertinencia',
+ options:['Economía','Pertinencia','Oportunidad','Creatividad'],answer_idx:1,
+ ref:'Minciencias — Términos de referencia convocatorias abiertas'},
+
+{id:72,epoch:'VIII',
+ title:'Árbol de problema y árbol de objetivos',
+ example:'Árbol de problema: causa → problema central → efecto.\nÁrbol de objetivos: medio → objetivo → fin.',
+ explanation:'Los árboles de problema y objetivos son herramientas de la metodología del marco lógico usada en propuestas de ingeniería y proyectos de cooperación internacional financiados por entidades como el BID o la CAF en Colombia.',
+ blank:'En el árbol de problema, los efectos corresponden a los _____ en el árbol de objetivos',
+ blank_answer:'fines',
+ options:['Medios','Causas','Fines','Actividades'],answer_idx:2,
+ ref:'BID — Marco Lógico para la gestión de proyectos'},
+
+{id:73,epoch:'VIII',
+ title:'Memoria de cálculo en ingeniería química',
+ example:'Datos · Hipótesis · Ecuaciones aplicadas · Cálculo numérico · Resultado con unidades · Verificación',
+ explanation:'La memoria de cálculo documenta el razonamiento de un diseño de ingeniería. Debe ser reproducible: incluir todos los datos de entrada, las ecuaciones con referencia, el desarrollo numérico y la verificación dimensional.',
+ blank:'La verificación dimensional en una memoria de cálculo comprueba la consistencia de las _____',
+ blank_answer:'unidades',
+ options:['Cifras significativas','Unidades','Hipótesis','Ecuaciones'],answer_idx:1,
+ ref:'ICONTEC — Guías para memorias de cálculo en ingeniería'},
+
+{id:74,epoch:'VIII',
+ title:'Diagrama de Gantt: cronograma de actividades',
+ example:'Actividad | Mes 1 | Mes 2 | … | Mes N\n[Barra por duración de cada actividad]',
+ explanation:'El diagrama de Gantt es herramienta estándar para presentar el cronograma de un proyecto de investigación o ingeniería. Las actividades críticas deben identificarse. En proyectos Minciencias, el cronograma debe ser coherente con el presupuesto por período.',
+ blank:'Las actividades cuya demora retrasaría todo el proyecto son actividades _____',
+ blank_answer:'críticas',
+ options:['Opcionales','Secundarias','Críticas','Paralelas'],answer_idx:2,
+ ref:'PMI — Guía del PMBOK (6.ª ed.)'},
+
+{id:75,epoch:'VIII',
+ title:'Estudio de impacto ambiental (EIA) en proyectos químicos',
+ example:'Descripción del proyecto · Diagnóstico ambiental · Evaluación de impactos · Plan de manejo',
+ explanation:'En Colombia, los proyectos de la industria química que requieren licencia ambiental deben presentar un EIA ante la ANLA. La metodología de evaluación de impactos más usada en Colombia es la Matriz de Leopold.',
+ blank:'En Colombia, la entidad que otorga licencias ambientales para proyectos industriales es _____',
+ blank_answer:'ANLA',
+ options:['IDEAM','INVIMA','ANLA','DIAN'],answer_idx:2,
+ ref:'Decreto 2041 de 2014 — ANLA Colombia'},
+
+{id:76,epoch:'VIII',
+ title:'Ficha técnica de un producto químico',
+ example:'Nombre · Fórmula · N.º CAS · Propiedades físicas · Peligros · Almacenamiento · Primeros auxilios',
+ explanation:'La ficha de datos de seguridad (SDS/MSDS) sigue el formato GHS (Sistema Globalmente Armonizado). En Colombia es obligatoria para todas las sustancias químicas peligrosas según la Resolución 0773 de 2021 del Ministerio de Trabajo.',
+ blank:'El sistema internacional que estandariza las fichas de seguridad química se llama _____',
+ blank_answer:'GHS (Sistema Globalmente Armonizado)',
+ options:['ISO 9001','GHS (Sistema Globalmente Armonizado)','IUPAC 2013','ASTM E300'],answer_idx:1,
+ ref:'Resolución 0773 de 2021 — Ministerio de Trabajo Colombia'},
+
+{id:77,epoch:'VIII',
+ title:'Informe de auditoría de calidad en laboratorio',
+ example:'Hallazgos clasificados en: No conformidad mayor · No conformidad menor · Observación',
+ explanation:'Los laboratorios acreditados ante el ONAC (Organismo Nacional de Acreditación de Colombia) bajo la norma ISO/IEC 17025 deben redactar informes de auditoría con clasificación de hallazgos y planes de acción correctiva.',
+ blank:'El organismo colombiano de acreditación de laboratorios de ensayo y calibración es _____',
+ blank_answer:'ONAC',
+ options:['IDEAM','INVIMA','ANLA','ONAC'],answer_idx:3,
+ ref:'ISO/IEC 17025:2017 — ONAC Colombia'},
+
+{id:78,epoch:'VIII',
+ title:'Resumen ejecutivo en informes técnicos',
+ example:'1 página · Problema · Método · Hallazgos · Recomendaciones · Sin detalles técnicos',
+ explanation:'El resumen ejecutivo está escrito para tomadores de decisión no técnicos. Difiere del abstract científico en que incluye recomendaciones concretas y evita el detalle técnico. Es habilidad clave en la ingeniería colombiana de consultoría.',
+ blank:'El resumen ejecutivo, a diferencia del abstract, incluye _____',
+ blank_answer:'recomendaciones',
+ options:['Ecuaciones','Referencias','Recomendaciones','Tablas de datos'],answer_idx:2,
+ ref:'ICONTEC — Guía para informes técnicos'},
+
+{id:79,epoch:'VIII',
+ title:'Especificación técnica vs. norma vs. código',
+ example:'Especificación: requisitos de un producto específico.\nNorma: requisito consensuado (ICONTEC/ISO).\nCódigo: conjunto normativo de obligatorio cumplimiento.',
+ explanation:'En ingeniería química colombiana se trabaja con especificaciones de proceso, normas técnicas (NTC) e ICONTEC y códigos de diseño (ASME, API). Confundir estos documentos lleva a errores de referencia en informes técnicos.',
+ blank:'Una norma ICONTEC es un documento de requisitos _____',
+ blank_answer:'consensuados (de aplicación voluntaria u obligatoria)',
+ options:['Solo obligatorios','Solo voluntarios','Consensuados (de aplicación voluntaria u obligatoria)','Internacionales únicamente'],answer_idx:2,
+ ref:'ICONTEC — Misión y estructura normativa'},
+
+{id:80,epoch:'VIII',
+ title:'Carta técnica: formato y protocolo',
+ example:'Encabezado · Fecha · Destinatario (cargo) · Asunto · Cuerpo · Despedida · Firma',
+ explanation:'La carta técnica en ingeniería sigue el formato de la NTC 3393 (ICONTEC). El asunto debe ser claro y específico. La despedida formal en Colombia es «Cordialmente» o «Atentamente»; «Con estima» o «Con afecto» son informales.',
+ blank:'La norma ICONTEC para la elaboración de cartas es la _____',
+ blank_answer:'NTC 3393',
+ options:['NTC 1486','NTC 5613','NTC 3393','NTC 1487'],answer_idx:2,
+ ref:'ICONTEC NTC 3393 — Elaboración de cartas'},
+
+/* ── BLOQUE IX: Datos, tablas y figuras ────────── */
+{id:81,epoch:'IX',
+ title:'Tabla: diseño sin líneas verticales (estilo científico)',
+ example:'Las tablas científicas solo llevan líneas horizontales: encima, tras el encabezado y al final.',
+ explanation:'El estilo científico (ACS, APA, ICONTEC) prohíbe las líneas verticales en tablas porque crean «ruido visual». Solo se usan tres líneas horizontales: sobre el encabezado, bajo el encabezado y al pie de la tabla.',
+ blank:'En tablas científicas se usan solo líneas _____, no verticales',
+ blank_answer:'horizontales',
+ options:['Dobles','Diagonales','Horizontales','En color'],answer_idx:2,
+ ref:'ACS Style Guide — Diseño de tablas'},
+
+{id:82,epoch:'IX',
+ title:'Notación científica: cuándo usarla',
+ example:'✗ 0,000045 g · ✓ 4,5 × 10⁻⁵ g\n✗ 4500000 Pa · ✓ 4,5 × 10⁶ Pa o 4,5 MPa',
+ explanation:'Se usa notación científica cuando el número tiene más de 4 ceros antes o después del punto decimal. La base siempre es 10; el coeficiente va entre 1 y 10. En español se usa coma decimal, no punto.',
+ blank:'En español, el separador decimal es _____',
+ blank_answer:'la coma',
+ options:['El punto','La coma','El guion','El punto y coma'],answer_idx:1,
+ ref:'RAE — Ortografía (2010) · BIPM SI'},
+
+{id:83,epoch:'IX',
+ title:'Ejes de una gráfica: escala, unidades y rótulo',
+ example:'Eje X: Temperatura / °C · Eje Y: Rendimiento / %\nUnidad separada por barra o entre corchetes',
+ explanation:'El rótulo del eje se escribe como «Magnitud / Unidad» (norma ISO 80000) o «Magnitud (Unidad)». Esto se interpreta como «valores de la magnitud divididos por la unidad», produciendo una tabla de números puros, lo cual es formalmente correcto.',
+ blank:'La forma correcta de rotular el eje Y con temperatura en grados Celsius es _____',
+ blank_answer:'Temperatura / °C',
+ options:['Temperatura °C','T(grados)','Temperatura / °C','°C de temperatura'],answer_idx:2,
+ ref:'ISO 80000-1 — Quantities and Units'},
+
+{id:84,epoch:'IX',
+ title:'Barras de error en gráficas',
+ example:'Las barras de error representan ± desviación estándar (o ± incertidumbre expandida).',
+ explanation:'Toda gráfica de datos experimentales debe incluir barras de error. La leyenda debe especificar qué representa la barra: ± desviación estándar, ± error estándar de la media o ± incertidumbre expandida. Sin barra de error, la gráfica es incompleta.',
+ blank:'La leyenda de una gráfica debe especificar qué representa la barra de _____',
+ blank_answer:'error',
+ options:['Color','Escala','Error','Título'],answer_idx:2,
+ ref:'ACS Style Guide — Gráficas y figuras'},
+
+{id:85,epoch:'IX',
+ title:'Resolución y formato de imagen para publicación',
+ example:'Mínimo 300 dpi para impresión · TIFF o EPS para figuras vectoriales · JPEG para fotografías',
+ explanation:'Las revistas científicas exigen resolución mínima de 300 dpi (puntos por pulgada) para figuras de línea y 600 dpi para figuras combinadas. Los formatos vectoriales (EPS, SVG) escalan sin pérdida de calidad.',
+ blank:'El formato de imagen que escala sin pérdida de calidad porque es vectorial es _____',
+ blank_answer:'EPS o SVG',
+ options:['JPEG','PNG','BMP','EPS o SVG'],answer_idx:3,
+ ref:'Elsevier — Artwork and Media Instructions'},
+
+{id:86,epoch:'IX',
+ title:'Espectro de RMN: interpretación y reporte',
+ example:'¹H NMR (400 MHz, CDCl₃): δ 7,25 (s, 1H), 3,72 (t, J = 7,1 Hz, 2H)',
+ explanation:'El reporte de RMN sigue el formato: desplazamiento en ppm (δ), multiplicidad (s=singlete, d=doblete, t=triplete), constante de acoplamiento J en Hz y número de protones. Es formato universalmente exigido por revistas de síntesis orgánica.',
+ blank:'En el reporte de RMN, «s» significa _____',
+ blank_answer:'singlete',
+ options:['Solvente','Singlete','Señal','Saturado'],answer_idx:1,
+ ref:'ACS — NMR Reporting Guidelines'},
+
+{id:87,epoch:'IX',
+ title:'Curva de calibración: ecuación, R² y rango lineal',
+ example:'y = 0,0452x + 0,003; R² = 0,9997; rango: 0,5–10 mg/L',
+ explanation:'La curva de calibración debe reportar: ecuación de regresión, coeficiente de determinación (R²), rango de linealidad y límite de detección. Un R² < 0,999 en química analítica es insuficiente en la mayoría de métodos acreditados.',
+ blank:'En una curva de calibración analítica, el R² aceptable mínimo suele ser _____',
+ blank_answer:'≥ 0,999',
+ options:['≥ 0,90','≥ 0,95','≥ 0,999','= 1,000'],answer_idx:2,
+ ref:'ISO 8466 — Calibración de métodos de análisis de agua'},
+
+{id:88,epoch:'IX',
+ title:'Diagrama de caja (boxplot) para comparar distribuciones',
+ example:'Mediana · Q1 · Q3 · Bigotes (1,5 × IQR) · Outliers como puntos',
+ explanation:'El diagrama de caja muestra la distribución sin asumir normalidad. Es preferible al histograma cuando n < 30. En la comparación de múltiples grupos en trabajos de tesis colombianos de química analítica, se usa junto a la prueba ANOVA.',
+ blank:'El diagrama de caja muestra la mediana, los cuartiles y los _____',
+ blank_answer:'valores atípicos (outliers)',
+ options:['Valores medios','Valores atípicos (outliers)','Desviaciones estándar','Errores aleatorios'],answer_idx:1,
+ ref:'Tukey, Exploratory Data Analysis (1977)'},
+
+{id:89,epoch:'IX',
+ title:'Color vs. escala de grises en figuras para impresión',
+ example:'Diseñar siempre en escala de grises si puede publicarse en B/N;\nsi se usa color, que sea distinguible también en escala de grises.',
+ explanation:'Muchas revistas cobran suplemento por figuras en color o publican solo en blanco y negro. Las figuras deben ser interpretables en escala de grises. Usar rojo/verde es inaccesible para personas con deuteranopía (8 % de hombres).',
+ blank:'Para garantizar accesibilidad visual, se debe evitar la combinación de colores _____',
+ blank_answer:'rojo y verde (inaccesible para daltónicos)',
+ options:['Azul y amarillo','Rojo y verde (inaccesible para daltónicos)','Negro y blanco','Azul y naranja'],answer_idx:1,
+ ref:'Tufte · Wong, Points of View: Color Blindness (Nature Methods)'},
+
+{id:90,epoch:'IX',
+ title:'Cromatograma: anotación e interpretación',
+ example:'Tiempo de retención · Área del pico · Factor de asimetría · Platos teóricos (N)',
+ explanation:'En la sección de Resultados, cada pico de un cromatograma debe identificarse con el compuesto, el tiempo de retención y el área (o porcentaje de área). Los parámetros de calidad del sistema cromatográfico (N, As) van en la sección de Métodos.',
+ blank:'El tiempo de _____ es el parámetro principal para identificar un compuesto en cromatografía',
+ blank_answer:'retención',
+ options:['Elución','Retención','Inyección','Análisis'],answer_idx:1,
+ ref:'IUPAC — Nomenclature in Chromatography (Pure Appl. Chem., 1993)'},
+
+/* ── BLOQUE X: Ética, revisión y comunicación oral ────────── */
+{id:91,epoch:'X',
+ title:'Revisión de pares (corrección entre estudiantes)',
+ example:'Lista de verificación: ¿Tiene hipótesis? ¿Los resultados responden al objetivo? ¿Las referencias son correctas?',
+ explanation:'La revisión entre pares (peer feedback) es práctica pedagógica consolidada en programas de ingeniería química en Colombia. Se evalúa con rúbricas que valoran estructura, argumentación, precisión técnica y formato normativo.',
+ blank:'La revisión de un texto entre compañeros usando una rúbrica se llama _____',
+ blank_answer:'revisión por pares (peer feedback)',
+ options:['Coevaluación ciega','Revisión por pares (peer feedback)','Autoevaluación','Evaluación sumativa'],answer_idx:1,
+ ref:'Hattie & Timperley — Feedback (Review of Educational Research, 2007)'},
+
+{id:92,epoch:'X',
+ title:'Checklist de revisión antes de entregar un informe',
+ example:'✓ Objetivos respondidos · ✓ Unidades correctas · ✓ Referencias completas · ✓ Formato ICONTEC · ✓ Sin faltas ortográficas',
+ explanation:'Revisar un texto con una lista de comprobación estructurada reduce errores en más del 30 % (estudios en educación en ingeniería). Los programas de excelencia en Colombia incorporan checklists de entrega en sus sistemas de gestión de calidad académica.',
+ blank:'Una lista de verificación antes de entregar reduce _____ en el texto',
+ blank_answer:'errores',
+ options:['La extensión','Los errores','El tiempo de escritura','Las referencias'],answer_idx:1,
+ ref:'ABET — Criterios de evaluación de programas de ingeniería'},
+
+{id:93,epoch:'X',
+ title:'Fabricación, falsificación y omisión de datos',
+ example:'Fabricar: inventar datos. Falsificar: alterar datos. Omitir: no reportar resultados desfavorables.',
+ explanation:'Las tres conductas graves en integridad científica son fabricación, falsificación y plagio (FFP). La omisión de datos desfavorables (sesgo de publicación) es una forma de mala conducta más difícil de detectar pero igualmente dañina.',
+ blank:'La omisión de datos desfavorables produce sesgo de _____',
+ blank_answer:'publicación',
+ options:['Selección','Publicación','Confirmación','Medición'],answer_idx:1,
+ ref:'ORI (Office of Research Integrity) — Definiciones de mala conducta científica'},
+
+{id:94,epoch:'X',
+ title:'Presentación oral científica: estructura y tiempo',
+ example:'1 min/diapositiva · Apertura → problema → método → resultados → conclusiones → preguntas',
+ explanation:'En congresos y sustentaciones colombianas, la presentación de 15 minutos cubre: apertura impactante (1 min), planteamiento del problema (2 min), metodología (3 min), resultados y discusión (7 min), conclusiones (2 min). Exceder el tiempo es falta de respeto al auditorio.',
+ blank:'Una presentación oral de 15 diapositivas toma aproximadamente _____ minutos',
+ blank_answer:'15',
+ options:['5','10','15','30'],answer_idx:2,
+ ref:'Alley, The Craft of Scientific Presentations'},
+
+{id:95,epoch:'X',
+ title:'Póster científico: diseño y densidad de texto',
+ example:'Título grande · Secciones visuales · Máx. 800 palabras · Resultados como figura principal',
+ explanation:'El póster científico comunica un resultado en formato visual. El error más frecuente es incluir demasiado texto. La regla de oro: si caben más de 800 palabras, hay demasiado texto. El resultado principal ocupa el 40 % del área.',
+ blank:'En un póster científico, el máximo recomendado de palabras es _____',
+ blank_answer:'800',
+ options:['200','500','800','2000'],answer_idx:2,
+ ref:'Erren & Bourne, Ten Simple Rules for a Good Poster (PLoS Comp. Biol., 2007)'},
+
+{id:96,epoch:'X',
+ title:'Responder preguntas del jurado en sustentación',
+ example:'Escuchar completo → reformular para confirmar → responder con datos → admitir limitaciones',
+ explanation:'Ante una pregunta del jurado que no se sabe responder, la respuesta correcta es: «No contamos con datos sobre eso, pero es una línea de trabajo futuro». Inventar respuestas o evadir con rodeos afecta la credibilidad del investigador.',
+ blank:'Si no se sabe responder una pregunta del jurado, la respuesta correcta es _____',
+ blank_answer:'admitir el límite del conocimiento y señalarlo como trabajo futuro',
+ options:['Cambiar el tema','Inventar una explicación','Admitir el límite del conocimiento y señalarlo como trabajo futuro','Repetir lo que está en el póster'],answer_idx:2,
+ ref:'Day & Gastel, op. cit., cap. 16'},
+
+{id:97,epoch:'X',
+ title:'Comunicación con no especialistas: divulgación científica',
+ example:'Eliminar jerga · Usar analogías · Narrativa con problema → solución · Énfasis en impacto',
+ explanation:'El ingeniero y el químico colombiano deben comunicar su trabajo a comunidades, empresas y medios. La divulgación científica usa lenguaje accesible, analogías cotidianas y énfasis en el beneficio social. Es evaluada en los proyectos de extensión universitaria.',
+ blank:'En divulgación científica, la jerga técnica debe sustituirse por _____',
+ blank_answer:'analogías y lenguaje accesible',
+ options:['Más ecuaciones','Analogías y lenguaje accesible','Abreviaturas','Palabras en inglés'],answer_idx:1,
+ ref:'Sagan, El mundo y sus demonios · Ziman, La fuerza del conocimiento'},
+
+{id:98,epoch:'X',
+ title:'Inteligencia artificial en la escritura científica',
+ example:'IA como herramienta de apoyo, no de autoría · Declarar su uso · Verificar toda afirmación generada',
+ explanation:'En 2023-2024, revistas como Nature, Science y Cell establecieron políticas claras: la IA no puede figurar como autora. Los autores deben declarar el uso de herramientas de IA y son responsables de toda afirmación del texto. Los programas colombianos comienzan a regular esto.',
+ blank:'Según las políticas de grandes revistas, la IA _____ puede figurar como autora',
+ blank_answer:'no',
+ options:['Sí','No','Solo si contribuyó más del 50 %','Solo en revisiones'],answer_idx:1,
+ ref:'Nature — Tools such as ChatGPT threaten transparent science (2023)'},
+
+{id:99,epoch:'X',
+ title:'Ortografía y gramática: tildes en tecnicismos',
+ example:'análisis · síntesis · átomo · óxido · válvula · catálisis · álcali',
+ explanation:'Los esdrújulos son frecuentes en terminología química y deben tildarse siempre. «Analisis» sin tilde, «acido» sin tilde o «catálisis» con tilde en la i son errores comunes que afectan la credibilidad del informe.',
+ blank:'La palabra «análisis» es esdrújula y por tanto siempre lleva _____',
+ blank_answer:'tilde',
+ options:['Mayúscula','Tilde','Punto final','Comillas'],answer_idx:1,
+ ref:'RAE, Diccionario de la lengua española · Ortografía (2010)'},
+
+{id:100,epoch:'X',
+ title:'El informe como evidencia de competencia profesional',
+ example:'Un informe bien redactado = dominio técnico + comunicación + ética + norma',
+ explanation:'En Colombia, el Consejo Profesional de Química (Ley 28 de 1984) y el Consejo Profesional de Ingeniería exigen competencia comunicativa como parte del perfil del profesional. Un informe deficiente en una empresa puede tener consecuencias legales y técnicas. La redacción científica no es accesoria: es competencia nuclear.',
+ blank:'En Colombia, el ejercicio profesional de la Química está regulado por la Ley _____ de 1984',
+ blank_answer:'28',
+ options:['30','28','100','1295'],answer_idx:1,
+ ref:'Ley 28 de 1984 — Consejo Profesional de Química · Colombia'},
+
+];
+
+/* ══════════════════════════════════════════════════
+   STORAGE
+══════════════════════════════════════════════════ */
+const LS_DONE='cq_done', LS_FAV='cq_fav';
+function loadSet(k){try{return new Set(JSON.parse(localStorage.getItem(k)||'[]'))}catch{return new Set()}}
+function saveSet(k,s){try{localStorage.setItem(k,JSON.stringify([...s]))}catch{}}
+let DONE=loadSet(LS_DONE), FAV=loadSet(LS_FAV);
+function toggleDone(id){id=+id;DONE.has(id)?DONE.delete(id):DONE.add(id);saveSet(LS_DONE,DONE)}
+function toggleFav(id){id=+id;FAV.has(id)?FAV.delete(id):FAV.add(id);saveSet(LS_FAV,FAV)}
+
+/* ══════════════════════════════════════════════════
+   NAVIGATION
+══════════════════════════════════════════════════ */
+function navigate(p){
+  document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));
+  document.querySelectorAll('.nav-btn[data-page]').forEach(x=>x.classList.remove('active'));
+  document.getElementById('page-'+p)?.classList.add('active');
+  document.querySelector(`.nav-btn[data-page="${p}"]`)?.classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+  if(p==='dashboard')renderDashboard();
+  if(p==='lista')renderList();
+  if(p==='practica')renderPractice();
+}
+document.querySelectorAll('.nav-btn[data-page]').forEach(b=>b.addEventListener('click',()=>{navigate(b.dataset.page);document.getElementById('mainNav').classList.remove('open')}));
+document.getElementById('burgerBtn').addEventListener('click',()=>document.getElementById('mainNav').classList.toggle('open'));
+
+/* ══════════════════════════════════════════════════
+   DASHBOARD
+══════════════════════════════════════════════════ */
+function renderDashboard(){
+  const done=DONE.size, fav=FAV.size, total=PHENOMENA.length;
+  const pct=Math.round(done/total*100);
+  document.getElementById('statsGrid').innerHTML=`
+    <div class="stat-card"><div class="stat-num">${total}</div><div class="stat-label">Técnicas totales</div></div>
+    <div class="stat-card"><div class="stat-num" style="color:var(--green)">${done}</div><div class="stat-label">Completadas</div></div>
+    <div class="stat-card"><div class="stat-num" style="color:var(--amber)">${fav}</div><div class="stat-label">Favoritas</div></div>
+    <div class="stat-card"><div class="stat-num" style="color:var(--teal)">${total-done}</div><div class="stat-label">Pendientes</div></div>`;
+  document.getElementById('progressBar').style.width=pct+'%';
+  document.getElementById('progressPct').textContent=pct+' %';
+  document.getElementById('epochGrid').innerHTML=EPOCHS.map(ep=>{
+    const items=PHENOMENA.filter(p=>p.epoch===ep.id);
+    const dc=items.filter(p=>DONE.has(p.id)).length;
+    const pp=Math.round(dc/items.length*100);
+    return `<div class="epoch-card" onclick="goToEpoch('${ep.id}')">
+      <div class="epoch-num">Bloque ${ep.id}</div>
+      <div class="epoch-name">${ep.name}</div>
+      <div class="epoch-meta">${dc}/${items.length} · ${pp} %</div>
+      <div class="mini-bar"><div class="mini-bar-fill" style="width:${pp}%"></div></div>
+    </div>`;
+  }).join('');
+}
+
+function goToEpoch(id){navigate('lista');setTimeout(()=>{const s=document.getElementById('epochFilter');if(s){s.value=id;filterAndRender();}},120);}
+
+document.getElementById('resetBtn').addEventListener('click',()=>{
+  if(!confirm('¿Reiniciar todo el progreso?'))return;
+  DONE=new Set();FAV=new Set();saveSet(LS_DONE,DONE);saveSet(LS_FAV,FAV);
+  renderDashboard();showToast('Progreso reiniciado');
+});
+
+/* ══════════════════════════════════════════════════
+   LISTA
+══════════════════════════════════════════════════ */
+function populateFilters(){
+  const opts=EPOCHS.map(e=>`<option value="${e.id}">Bloque ${e.id} — ${e.name.substring(0,32)}…</option>`).join('');
+  ['epochFilter','practiceEpochFilter'].forEach(id=>{const s=document.getElementById(id);if(s&&s.children.length<=1)s.innerHTML+= opts;});
+}
+
+function getFiltered(){
+  const q=(document.getElementById('searchInput')?.value||'').toLowerCase();
+  const ep=document.getElementById('epochFilter')?.value||'';
+  const st=document.getElementById('statusFilter')?.value||'';
+  const so=document.getElementById('sortFilter')?.value||'num';
+  let list=PHENOMENA.filter(p=>{
+    if(q&&!(p.title.toLowerCase().includes(q)||p.example.toLowerCase().includes(q)||p.explanation.toLowerCase().includes(q)))return false;
+    if(ep&&p.epoch!==ep)return false;
+    if(st==='done'&&!DONE.has(p.id))return false;
+    if(st==='fav'&&!FAV.has(p.id))return false;
+    if(st==='pending'&&(DONE.has(p.id)||FAV.has(p.id)))return false;
+    return true;
+  });
+  if(so==='alpha')list.sort((a,b)=>a.title.localeCompare(b.title,'es'));
+  else if(so==='epoch')list.sort((a,b)=>a.epoch.localeCompare(b.epoch)||a.id-b.id);
+  else list.sort((a,b)=>a.id-b.id);
+  return list;
+}
+
+function renderList(){
+  const list=getFiltered();
+  const grid=document.getElementById('techniquesGrid');
+  if(!list.length){grid.innerHTML='<div class="empty">Ninguna técnica coincide con los filtros.</div>';return;}
+  grid.innerHTML=list.map(p=>{
+    const isDone=DONE.has(p.id),isFav=FAV.has(p.id);
+    const ep=EPOCHS.find(e=>e.id===p.epoch);
+    const ex=p.example.replace(/\n/g,' · ').substring(0,80)+'…';
+    return `<article class="tech-card ${isDone?'done':''} ${isFav?'fav':''}" onclick="openModal(${p.id})">
+      <div class="tech-num">N.º ${p.id} · Bloque ${p.epoch}</div>
+      <div class="tech-title">${p.title}</div>
+      <div class="tech-example">${ex}</div>
+      <div><span class="tech-epoch-tag">${ep?ep.name.substring(0,30)+'…':p.epoch}</span></div>
+      <div class="tech-actions" onclick="event.stopPropagation()">
+        <button class="icon-btn ${isDone?'active-done':''}" onclick="hDone(${p.id})">${isDone?'✓':'○'} Hecha</button>
+        <button class="icon-btn ${isFav?'active-fav':''}" onclick="hFav(${p.id})">${isFav?'★':'☆'} Fav.</button>
+      </div>
+    </article>`;
+  }).join('');
+}
+
+function hDone(id){toggleDone(id);renderList();renderDashboard();showToast(DONE.has(id)?'Marcada ✓':'Desmarcada');}
+function hFav(id){toggleFav(id);renderList();renderDashboard();showToast(FAV.has(id)?'Añadida ★':'Eliminada de favoritas');}
+function filterAndRender(){renderList();}
+
+['searchInput','epochFilter','statusFilter','sortFilter'].forEach(id=>{
+  const el=document.getElementById(id);
+  if(el)el.addEventListener('input',filterAndRender),el.addEventListener('change',filterAndRender);
+});
+
+/* ══════════════════════════════════════════════════
+   MODAL
+══════════════════════════════════════════════════ */
+function openModal(id){
+  const p=PHENOMENA.find(x=>x.id===+id);
+  if(!p)return;
+  const ep=EPOCHS.find(e=>e.id===p.epoch);
+  const isDone=DONE.has(p.id),isFav=FAV.has(p.id);
+  const exLines=p.example.split('\n');
+  const badLine=exLines.find(l=>l.startsWith('✗'));
+  const goodLine=exLines.find(l=>l.startsWith('✓'));
+  const rest=exLines.filter(l=>!l.startsWith('✗')&&!l.startsWith('✓')).join('\n');
+  let exHtml='';
+  if(badLine) exHtml+=`<div class="modal-bad">${badLine}</div>`;
+  if(goodLine)exHtml+=`<div class="modal-good">${goodLine}</div>`;
+  if(rest.trim())exHtml+=`<div class="modal-example">${rest.trim()}</div>`;
+  if(!badLine&&!goodLine)exHtml=`<div class="modal-example">${p.example}</div>`;
+
+  document.getElementById('modalContent').innerHTML=`
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    <div class="modal-num">Técnica N.º ${p.id} · Bloque ${p.epoch}</div>
+    <div class="modal-title">${p.title}</div>
+    <span class="tech-epoch-tag">${ep?ep.name:p.epoch}</span>
+    <div class="modal-section">
+      <div class="modal-section-label">Ejemplo</div>
+      ${exHtml}
+    </div>
+    <div class="modal-section">
+      <div class="modal-section-label">Explicación</div>
+      <div class="modal-explanation">${p.explanation}</div>
+    </div>
+    ${p.ref?`<div class="modal-ref">📖 Referencia: ${p.ref}</div>`:''}
+    <div class="modal-actions">
+      <button class="btn ${isDone?'btn-primary':'btn-secondary'}" onclick="hDone(${p.id});openModal(${p.id})">${isDone?'✓ Completada':'○ Marcar hecha'}</button>
+      <button class="btn ${isFav?'btn-ghost':'btn-secondary'}"   onclick="hFav(${p.id});openModal(${p.id})">${isFav?'★ Favorita':'☆ Favorita'}</button>
+      <button class="btn btn-teal" onclick="closeModal();setTimeout(()=>practiceOne(${p.id}),200)">✎ Practicar</button>
+    </div>`;
+  document.getElementById('modalOverlay').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+function closeModal(e){
+  if(e&&e.target!==document.getElementById('modalOverlay'))return;
+  document.getElementById('modalOverlay').classList.remove('open');
+  document.body.style.overflow='';
+}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal();});
+
+/* ══════════════════════════════════════════════════
+   PRÁCTICA
+══════════════════════════════════════════════════ */
+let practiceMode='multiple', practiceQueue=[], practiceIdx=0;
+let sessionCorrect=0, sessionTotal=0, fcFlipped=false;
+
+function setPracticeMode(m,btn){
+  practiceMode=m;
+  document.querySelectorAll('.mode-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  resetExercise();
+}
+function getPracticePool(){
+  const ep=document.getElementById('practiceEpochFilter')?.value||'';
+  const pnd=document.getElementById('onlyPending')?.checked||false;
+  return PHENOMENA.filter(p=>{
+    if(ep&&p.epoch!==ep)return false;
+    if(pnd&&DONE.has(p.id))return false;
+    return true;
+  });
+}
+function shuffle(a){return[...a].sort(()=>Math.random()-.5)}
+function resetExercise(){
+  sessionCorrect=0;sessionTotal=0;
+  practiceQueue=shuffle(getPracticePool());
+  practiceIdx=0;fcFlipped=false;
+  updateSessionScore();renderPractice();
+}
+function renderPractice(){
+  const main=document.getElementById('practiceMain');
+  if(!main)return;
+  if(!practiceQueue.length){main.innerHTML='<div class="empty">No hay técnicas con los filtros seleccionados.</div>';return;}
+  if(practiceIdx>=practiceQueue.length){
+    const pct=sessionTotal?Math.round(sessionCorrect/sessionTotal*100):0;
+    main.innerHTML=`<div class="exercise-card" style="text-align:center">
+      <div style="font-family:var(--font-head);font-size:1.9rem;color:var(--amber);margin-bottom:.5rem">¡Sesión completada!</div>
+      <div style="font-size:1.05rem;color:var(--ink-muted);margin-bottom:1.4rem">
+        Resultado: <strong>${sessionCorrect}/${sessionTotal}</strong> correctas (${pct} %)
+      </div>
+      <button class="btn btn-primary" onclick="resetExercise()">↺ Nueva sesión</button>
+    </div>`;return;
+  }
+  const p=practiceQueue[practiceIdx];
+  if(practiceMode==='multiple')renderMultiple(p,main);
+  else if(practiceMode==='blank')renderBlank(p,main);
+  else renderFlashcard(p,main);
+}
+function updateSessionScore(){
+  const el=document.getElementById('sessionScore');
+  if(el)el.textContent=sessionTotal?`${sessionCorrect} correctas / ${sessionTotal} intentadas`:'—';
+}
+
+/* Opción múltiple */
+function renderMultiple(p,c){
+  const letters=['A','B','C','D'];
+  const hasSnippet=p.example&&p.example.length<200;
+  c.innerHTML=`
+    <div class="score-bar"><span>Progreso:</span><span class="score-num">${practiceIdx+1}/${practiceQueue.length}</span><span class="score-divider">|</span><span>Correctas: <strong>${sessionCorrect}</strong></span></div>
+    <div class="exercise-card">
+      <div class="ex-question">${p.title}</div>
+      ${hasSnippet?`<div class="ex-snippet">${p.example.replace(/\n/g,'\n')}</div>`:''}
+      <div style="font-size:.92rem;color:var(--ink-soft);margin-bottom:.9rem">¿Cuál es la respuesta correcta?</div>
+      <div class="ex-options">${p.options.map((o,i)=>`<div class="ex-option" data-idx="${i}" onclick="checkMultiple(${i},${p.answer_idx},${p.id})"><span class="ex-opt-letter">${letters[i]}</span>${o}</div>`).join('')}</div>
+      <div class="ex-feedback" id="exFeedback"></div>
+      <div id="exNext" style="display:none"><button class="btn btn-primary" onclick="nextExercise()">Siguiente →</button></div>
+    </div>`;
+}
+function checkMultiple(chosen,correct,pid){
+  const opts=document.querySelectorAll('.ex-option');
+  opts.forEach(o=>o.classList.add('disabled'));
+  opts[correct].classList.add('correct');
+  const fb=document.getElementById('exFeedback');fb.classList.add('show');
+  sessionTotal++;
+  if(chosen===correct){
+    opts[chosen].classList.add('correct');
+    fb.className='ex-feedback show ok';fb.innerHTML='✓ ¡Correcto!';
+    sessionCorrect++;if(!DONE.has(pid))toggleDone(pid);
+  }else{
+    opts[chosen].classList.add('wrong');
+    const ph=PHENOMENA.find(x=>x.id===pid);
+    fb.className='ex-feedback show ko';fb.innerHTML=`✗ La respuesta correcta es: <strong>${ph.options[correct]}</strong>`;
+  }
+  document.getElementById('exNext').style.display='block';updateSessionScore();
+}
+
+/* Completar frase */
+function renderBlank(p,c){
+  c.innerHTML=`
+    <div class="score-bar"><span>Progreso:</span><span class="score-num">${practiceIdx+1}/${practiceQueue.length}</span><span class="score-divider">|</span><span>Correctas: <strong>${sessionCorrect}</strong></span></div>
+    <div class="exercise-card">
+      <div class="ex-question">${p.blank}</div>
+      <div class="ex-blank-wrap">
+        <input class="ex-blank-input" id="blankInput" placeholder="Escribe la respuesta…" autocomplete="off">
+        <button class="btn btn-primary" onclick="checkBlank(${p.id})">Comprobar</button>
+      </div>
+      <div class="ex-feedback" id="exFeedback"></div>
+      <div id="exNext" style="display:none"><button class="btn btn-primary" onclick="nextExercise()">Siguiente →</button></div>
+    </div>`;
+  const inp=document.getElementById('blankInput');
+  inp.addEventListener('keydown',e=>{if(e.key==='Enter')checkBlank(p.id)});inp.focus();
+}
+function checkBlank(pid){
+  const p=PHENOMENA.find(x=>x.id===+pid);
+  const inp=document.getElementById('blankInput');
+  const val=inp.value.trim().toLowerCase();
+  const exp=p.blank_answer.toLowerCase();
+  const ok=val===exp||exp.includes(val)||(val.length>3&&exp.split(' ').some(w=>val.includes(w)));
+  inp.disabled=true;
+  const fb=document.getElementById('exFeedback');fb.classList.add('show');
+  sessionTotal++;
+  if(ok){
+    inp.classList.add('correct-input');fb.className='ex-feedback show ok';
+    fb.innerHTML=`✓ ¡Correcto! Respuesta: <strong>${p.blank_answer}</strong>`;
+    sessionCorrect++;if(!DONE.has(p.id))toggleDone(p.id);
+  }else{
+    inp.classList.add('wrong-input');fb.className='ex-feedback show ko';
+    fb.innerHTML=`✗ La respuesta era: <strong>${p.blank_answer}</strong>`;
+  }
+  document.getElementById('exNext').style.display='block';updateSessionScore();
+}
+
+/* Flashcards */
+function renderFlashcard(p,c){
+  fcFlipped=false;
+  c.innerHTML=`
+    <div class="score-bar"><span>Tarjeta:</span><span class="score-num">${practiceIdx+1}/${practiceQueue.length}</span></div>
+    <div class="flashcard" id="flashcard" onclick="flipCard()">
+      <div class="flashcard-front"><div>${p.title}</div><div class="flashcard-hint">Pulsa para ver el ejemplo y la explicación</div></div>
+      <div class="flashcard-back"><div style="font-family:var(--font-mono);font-size:.88rem;color:var(--amber);margin-bottom:.6rem">${p.example.replace(/\n/g,' · ')}</div><div>${p.explanation.substring(0,280)}…</div></div>
+    </div>
+    <div class="fc-nav">
+      <button class="btn btn-secondary" onclick="fcAnswer(false,${p.id})">✗ No la sabía</button>
+      <button class="btn btn-teal"      onclick="fcAnswer(true,${p.id})">✓ La sabía</button>
+    </div>`;
+}
+function flipCard(){fcFlipped=!fcFlipped;document.getElementById('flashcard')?.classList.toggle('flipped',fcFlipped);}
+function fcAnswer(ok,pid){sessionTotal++;if(ok){sessionCorrect++;if(!DONE.has(pid))toggleDone(pid);}updateSessionScore();nextExercise();}
+function nextExercise(){practiceIdx++;fcFlipped=false;renderPractice();}
+
+function practiceOne(id){
+  navigate('practica');
+  setTimeout(()=>{practiceQueue=[PHENOMENA.find(p=>p.id===+id),...shuffle(PHENOMENA.filter(p=>p.id!==+id))];practiceIdx=0;renderPractice();},160);
+}
+
+/* ══════════════════════════════════════════════════
+   TOAST
+══════════════════════════════════════════════════ */
+let toastTimer=null;
+function showToast(msg){
+  const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');
+  if(toastTimer)clearTimeout(toastTimer);
+  toastTimer=setTimeout(()=>t.classList.remove('show'),2200);
+}
+
+/* ══════════════════════════════════════════════════
+   INIT
+══════════════════════════════════════════════════ */
+(function(){populateFilters();renderDashboard();renderList();resetExercise();})();
+</script>
+</body>
+</html>

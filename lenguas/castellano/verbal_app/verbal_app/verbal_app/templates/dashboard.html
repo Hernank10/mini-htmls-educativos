@@ -1,0 +1,140 @@
+{% extends 'base.html' %}
+{% block title %}Dashboard · VerbalMaster{% endblock %}
+{% block body %}
+<div class="page">
+<div class="container animate">
+
+  <!-- HEADER ROW -->
+  <div class="flex-between mb-3">
+    <div>
+      <div class="page-title">Hola, {{ user.username }} {{ medal.icon }}</div>
+      <div class="page-sub">{{ level.name }} · Nivel {{ level.level }}</div>
+    </div>
+    <div style="text-align:right">
+      <div style="font-family:var(--font-display);font-size:2rem;font-weight:900;color:var(--gold)">{{ sc.total }}</div>
+      <div class="text-xs text-muted">PUNTOS TOTALES</div>
+    </div>
+  </div>
+
+  <!-- LEVEL PROGRESS -->
+  <div class="card mb-2">
+    <div class="flex-between mb-1">
+      <div class="text-xs text-muted">PROGRESO AL NIVEL {{ level.level + 1 if next_lvl else 'MÁXIMO' }}</div>
+      <div class="text-sm text-gold">{{ progress }}%</div>
+    </div>
+    <div class="prog-bar">
+      <div class="prog-fill" style="width:{{ progress }}%;background:linear-gradient(90deg,var(--gold),var(--es))"></div>
+    </div>
+    {% if next_lvl %}
+    <div class="text-xs text-muted mt-1">{{ next_lvl.min - sc.total }} puntos para {{ next_lvl.name }}</div>
+    {% else %}
+    <div class="text-xs text-gold mt-1">🏆 ¡Nivel máximo alcanzado!</div>
+    {% endif %}
+  </div>
+
+  <!-- STATS GRID -->
+  <div class="grid-3 mb-3">
+    <div class="card" style="border-left:3px solid var(--gold)">
+      <div style="font-size:1.6rem;font-weight:700;color:var(--gold)">{{ sc.total }}</div>
+      <div class="text-xs text-muted mt-1">PUNTOS TOTALES</div>
+    </div>
+    <div class="card" style="border-left:3px solid var(--ru)">
+      <div style="font-size:1.6rem;font-weight:700;color:var(--ru)">{{ sc.correct }}</div>
+      <div class="text-xs text-muted mt-1">RESPUESTAS CORRECTAS</div>
+    </div>
+    <div class="card" style="border-left:3px solid var(--en)">
+      <div style="font-size:1.6rem;font-weight:700;color:var(--en)">{{ sc.attempted }}</div>
+      <div class="text-xs text-muted mt-1">INTENTOS TOTALES</div>
+    </div>
+    <div class="card" style="border-left:3px solid var(--hi)">
+      <div style="font-size:1.6rem;font-weight:700;color:var(--hi)">
+        {% if sc.attempted > 0 %}{{ ((sc.correct / sc.attempted)*100)|int }}%{% else %}—{% endif %}
+      </div>
+      <div class="text-xs text-muted mt-1">PRECISIÓN</div>
+    </div>
+    <div class="card" style="border-left:3px solid var(--es)">
+      <div style="font-size:1.6rem;font-weight:700;color:var(--es)">{{ medal.icon }} {{ medal.name }}</div>
+      <div class="text-xs text-muted mt-1">MEDALLA ACTUAL</div>
+    </div>
+    <div class="card" style="border-left:3px solid var(--zh)">
+      <div style="font-size:1.6rem;font-weight:700;color:var(--zh)">Nv.{{ level.level }}</div>
+      <div class="text-xs text-muted mt-1">NIVEL — {{ level.name }}</div>
+    </div>
+  </div>
+
+  <!-- ACTIONS + LEADERBOARD -->
+  <div style="display:grid;grid-template-columns:2fr 1fr;gap:1rem;align-items:start">
+
+    <!-- ACTIONS -->
+    <div>
+      <div class="text-xs text-muted mb-2" style="letter-spacing:.1em">ACTIVIDADES</div>
+      <div style="display:flex;flex-direction:column;gap:0.7rem">
+        <a href="/flashcards" class="card" style="border-left:3px solid var(--en);display:flex;align-items:center;gap:1rem;transition:transform 0.15s" onmouseover="this.style.transform='translateX(4px)'" onmouseout="this.style.transform=''">
+          <div style="font-size:1.6rem">⚡</div>
+          <div>
+            <div style="font-weight:600;font-size:0.85rem">Flashcards</div>
+            <div class="text-xs text-muted">50 tarjetas · Estudio rápido</div>
+          </div>
+          <div style="margin-left:auto;color:var(--muted)">→</div>
+        </a>
+        <a href="/exercises" class="card" style="border-left:3px solid var(--hi);display:flex;align-items:center;gap:1rem;transition:transform 0.15s" onmouseover="this.style.transform='translateX(4px)'" onmouseout="this.style.transform=''">
+          <div style="font-size:1.6rem">✍️</div>
+          <div>
+            <div style="font-weight:600;font-size:0.85rem">Ejercicios escritos</div>
+            <div class="text-xs text-muted">100 ejercicios · Escritura y comprensión</div>
+          </div>
+          <div style="margin-left:auto;color:var(--muted)">→</div>
+        </a>
+        <a href="/exam" class="card" style="border-left:3px solid var(--gold);display:flex;align-items:center;gap:1rem;transition:transform 0.15s" onmouseover="this.style.transform='translateX(4px)'" onmouseout="this.style.transform=''">
+          <div style="font-size:1.6rem">🎯</div>
+          <div>
+            <div style="font-weight:600;font-size:0.85rem">Examen</div>
+            <div class="text-xs text-muted">Prueba cronometrada · Con nivel y medalla</div>
+          </div>
+          <div style="margin-left:auto;color:var(--muted)">→</div>
+        </a>
+      </div>
+
+      <!-- BY LANG BREAKDOWN -->
+      {% if sc.by_lang %}
+      <div class="text-xs text-muted mb-2 mt-3" style="letter-spacing:.1em">PUNTOS POR IDIOMA</div>
+      <div class="card">
+        {% set langs = [('es','🇪🇸 Español','--es'),('en','🇬🇧 Inglés','--en'),('zh','🇨🇳 Chino','--zh'),('hi','🇮🇳 Hindi','--hi'),('ru','🇷🇺 Ruso','--ru')] %}
+        {% for code,name,col in langs %}
+        {% set bl = sc.by_lang.get(code,{'pts':0,'correct':0,'attempted':0}) %}
+        <div style="display:flex;align-items:center;gap:0.8rem;margin-bottom:0.7rem">
+          <div style="width:110px;font-size:0.68rem;color:var(--muted)">{{ name }}</div>
+          <div class="prog-bar" style="flex:1">
+            <div class="prog-fill" style="width:{% if bl.attempted %}{{ [(bl.correct/bl.attempted*100)|int, 100]|min }}{% else %}0{% endif %}%;background:var({{ col }})"></div>
+          </div>
+          <div style="font-size:0.68rem;width:40px;text-align:right;color:var(--text)">{{ bl.pts }}pts</div>
+        </div>
+        {% endfor %}
+      </div>
+      {% endif %}
+    </div>
+
+    <!-- LEADERBOARD -->
+    <div>
+      <div class="text-xs text-muted mb-2" style="letter-spacing:.1em">🏆 TABLA DE LÍDERES</div>
+      <div class="card">
+        {% for i,entry in board|enumerate %}
+        <div style="display:flex;align-items:center;gap:0.7rem;padding:0.5rem 0;{% if not loop.last %}border-bottom:1px solid var(--border){% endif %}">
+          <div style="font-size:0.7rem;color:var(--muted);width:16px;text-align:center">
+            {% if i==0 %}🥇{% elif i==1 %}🥈{% elif i==2 %}🥉{% else %}{{ i+1 }}{% endif %}
+          </div>
+          <div class="nav-avatar" style="width:24px;height:24px;font-size:0.6rem">{{ entry.user[0].upper() }}</div>
+          <div style="flex:1;font-size:0.72rem">{{ entry.user }}</div>
+          <div style="font-size:0.72rem;color:var(--gold);font-weight:600">{{ entry.pts }}</div>
+        </div>
+        {% endfor %}
+        {% if not board %}
+        <div class="text-muted text-sm" style="text-align:center;padding:1rem">Sin datos aún</div>
+        {% endif %}
+      </div>
+    </div>
+
+  </div>
+</div>
+</div>
+{% endblock %}

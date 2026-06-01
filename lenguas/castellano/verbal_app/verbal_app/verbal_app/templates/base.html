@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{% block title %}VerbalMaster{% endblock %}</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#08080f; --s1:#111118; --s2:#1a1a24; --s3:#22222f;
+  --border:#2e2e3e; --text:#e4e4f0; --muted:#6a6a80; --faint:#3a3a50;
+  --es:#f97316; --en:#3b82f6; --zh:#ef4444; --hi:#a855f7; --ru:#22c55e;
+  --gold:#fbbf24; --silver:#94a3b8; --radius:10px;
+  --font-display:'Playfair Display',serif; --font-mono:'DM Mono',monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;background:var(--bg);color:var(--text);font-family:var(--font-mono)}
+a{color:inherit;text-decoration:none}
+/* SCROLLBAR */
+::-webkit-scrollbar{width:5px;height:5px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
+/* NOISE */
+body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;
+background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.025'/%3E%3C/svg%3E")}
+
+/* NAV */
+nav{display:flex;align-items:center;gap:1rem;padding:0.9rem 1.5rem;
+  border-bottom:1px solid var(--border);background:var(--s1);position:sticky;top:0;z-index:100}
+.nav-logo{font-family:var(--font-display);font-size:1.2rem;font-weight:900;
+  background:linear-gradient(135deg,var(--gold),var(--es));-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-right:auto}
+.nav-link{font-size:0.7rem;color:var(--muted);padding:0.4rem 0.8rem;border-radius:6px;
+  transition:all 0.15s;letter-spacing:0.05em;border:1px solid transparent}
+.nav-link:hover{color:var(--text);background:var(--s2);border-color:var(--border)}
+.nav-link.active{color:var(--text);background:var(--s2);border-color:var(--border)}
+.nav-badge{background:var(--gold);color:#000;font-size:0.6rem;padding:0.1rem 0.4rem;
+  border-radius:999px;margin-left:0.3rem;font-weight:600}
+.nav-avatar{width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,var(--es),var(--gold));
+  display:flex;align-items:center;justify-content:center;font-size:0.75rem;font-weight:700;color:#000;flex-shrink:0}
+.nav-divider{width:1px;height:18px;background:var(--border)}
+
+/* LAYOUT */
+.page{min-height:calc(100vh - 52px);padding:1.5rem}
+.container{max-width:1100px;margin:0 auto}
+.container-md{max-width:700px;margin:0 auto}
+.container-sm{max-width:480px;margin:0 auto}
+
+/* CARDS */
+.card{background:var(--s1);border:1px solid var(--border);border-radius:var(--radius);padding:1.2rem}
+.card-sm{padding:0.8rem}
+
+/* BUTTONS */
+.btn{display:inline-flex;align-items:center;gap:0.4rem;padding:0.55rem 1.2rem;border-radius:7px;
+  border:none;cursor:pointer;font-family:var(--font-mono);font-size:0.72rem;font-weight:500;
+  transition:all 0.15s;letter-spacing:0.05em}
+.btn-primary{background:var(--gold);color:#0a0a0f}
+.btn-primary:hover{background:#f59e0b;transform:translateY(-1px)}
+.btn-outline{background:transparent;color:var(--muted);border:1px solid var(--border)}
+.btn-outline:hover{color:var(--text);border-color:var(--faint)}
+.btn-danger{background:rgba(239,68,68,0.12);color:#ef4444;border:1px solid rgba(239,68,68,0.3)}
+.btn-danger:hover{background:rgba(239,68,68,0.2)}
+.btn-sm{padding:0.35rem 0.8rem;font-size:0.65rem}
+.btn:disabled{opacity:0.4;cursor:not-allowed;transform:none!important}
+
+/* FORM */
+.form-group{margin-bottom:1.1rem}
+label{display:block;font-size:0.65rem;color:var(--muted);letter-spacing:0.1em;
+  text-transform:uppercase;margin-bottom:0.4rem}
+input,textarea,select{width:100%;background:var(--s2);border:1px solid var(--border);
+  border-radius:7px;padding:0.7rem 0.9rem;color:var(--text);font-family:var(--font-mono);
+  font-size:0.8rem;transition:border-color 0.2s}
+input:focus,textarea:focus,select:focus{outline:none;border-color:var(--gold)}
+textarea{resize:vertical;min-height:90px}
+
+/* BADGE */
+.badge{display:inline-block;font-size:0.6rem;padding:0.2rem 0.55rem;border-radius:999px;
+  letter-spacing:0.08em;text-transform:uppercase}
+.badge-es{background:rgba(249,115,22,0.15);color:var(--es);border:1px solid rgba(249,115,22,0.3)}
+.badge-en{background:rgba(59,130,246,0.15);color:var(--en);border:1px solid rgba(59,130,246,0.3)}
+.badge-zh{background:rgba(239,68,68,0.15);color:var(--zh);border:1px solid rgba(239,68,68,0.3)}
+.badge-hi{background:rgba(168,85,247,0.15);color:var(--hi);border:1px solid rgba(168,85,247,0.3)}
+.badge-ru{background:rgba(34,197,94,0.15);color:var(--ru);border:1px solid rgba(34,197,94,0.3)}
+
+/* PROGRESS BAR */
+.prog-bar{height:4px;background:var(--s3);border-radius:2px;overflow:hidden}
+.prog-fill{height:100%;border-radius:2px;transition:width 0.4s ease}
+
+/* ALERTS */
+.alert{padding:0.8rem 1rem;border-radius:7px;font-size:0.75rem;margin-bottom:1rem}
+.alert-err{background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.3);color:#fca5a5}
+.alert-ok{background:rgba(34,197,94,0.1);border:1px solid rgba(34,197,94,0.3);color:#86efac}
+
+/* PAGE TITLE */
+.page-title{font-family:var(--font-display);font-size:1.8rem;font-weight:900;margin-bottom:0.3rem}
+.page-sub{color:var(--muted);font-size:0.72rem;letter-spacing:0.05em}
+
+/* GRID */
+.grid-2{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1rem}
+.grid-3{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:1rem}
+.flex{display:flex;align-items:center;gap:0.8rem}
+.flex-between{display:flex;align-items:center;justify-content:space-between;gap:1rem}
+.mt-1{margin-top:0.5rem}.mt-2{margin-top:1rem}.mt-3{margin-top:1.5rem}.mt-4{margin-top:2rem}
+.mb-1{margin-bottom:0.5rem}.mb-2{margin-bottom:1rem}.mb-3{margin-bottom:1.5rem}
+.text-muted{color:var(--muted)}.text-gold{color:var(--gold)}.text-sm{font-size:0.7rem}
+.text-xs{font-size:0.62rem;letter-spacing:0.05em}.text-right{text-align:right}
+.separator{height:1px;background:var(--border);margin:1rem 0}
+.hidden{display:none}
+
+/* TOAST */
+#toast{position:fixed;bottom:1.5rem;right:1.5rem;z-index:9999;
+  background:var(--s2);border:1px solid var(--border);border-radius:8px;
+  padding:0.8rem 1.2rem;font-size:0.72rem;transform:translateY(100px);opacity:0;
+  transition:all 0.3s;max-width:300px}
+#toast.show{transform:translateY(0);opacity:1}
+#toast.ok{border-color:rgba(34,197,94,0.5);color:#86efac}
+#toast.err{border-color:rgba(239,68,68,0.5);color:#fca5a5}
+
+@keyframes fadeIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+.animate{animation:fadeIn 0.35s ease forwards}
+</style>
+{% block head %}{% endblock %}
+</head>
+<body>
+{% if session.user_id %}
+<nav>
+  <div class="nav-logo">⚡ VerbalMaster</div>
+  <a href="/dashboard" class="nav-link {% if request.path=='/dashboard' %}active{% endif %}">Dashboard</a>
+  <a href="/flashcards" class="nav-link {% if request.path=='/flashcards' %}active{% endif %}">Flashcards</a>
+  <a href="/exercises" class="nav-link {% if request.path=='/exercises' %}active{% endif %}">Ejercicios</a>
+  <a href="/exam" class="nav-link {% if request.path=='/exam' %}active{% endif %}">Examen</a>
+  {% if session.get('is_admin') %}<a href="/admin" class="nav-link {% if request.path=='/admin' %}active{% endif %}">Admin</a>{% endif %}
+  <div class="nav-divider"></div>
+  <a href="/profile" class="nav-link {% if request.path=='/profile' %}active{% endif %}">Perfil</a>
+  <a href="/logout" class="nav-link">Salir</a>
+  <div class="nav-avatar">{{ session.username[0].upper() }}</div>
+</nav>
+{% endif %}
+<div id="toast"></div>
+{% block body %}{% endblock %}
+<script>
+function toast(msg, type='ok'){
+  const t=document.getElementById('toast');
+  t.textContent=msg; t.className='show '+(type==='ok'?'ok':'err');
+  setTimeout(()=>t.className='',3000);
+}
+function post(url,data){
+  return fetch(url,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)}).then(r=>r.json());
+}
+</script>
+{% block scripts %}{% endblock %}
+</body>
+</html>

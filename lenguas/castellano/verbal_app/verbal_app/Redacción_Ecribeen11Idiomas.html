@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>Escritura Global · Practica palabras, frases, párrafos en 11 idiomas</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700;800&family=Noto+Sans+SC:wght@400;500;700&family=Noto+Sans+JP:wght@400;500;700&family=Noto+Sans+KR:wght@400;500;700&family=Noto+Sans+Arabic:wght@400;500;700&family=Noto+Sans+Hebrew:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #2C5F8A;
+      --primary-dark: #1E3F5A;
+      --secondary: #D9A13B;
+      --bg-dark: #1a1a1a;
+      --bg-light: #F5F0E8;
+      --card-dark: #252525;
+      --card-light: #FFFFFF;
+    }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg-dark);
+      color: #E5E5E5;
+      transition: all 0.3s;
+    }
+    body.light-mode {
+      background: var(--bg-light);
+      color: #1E1E1E;
+    }
+    .sidebar {
+      background: #1E1E1E;
+      border-radius: 1.5rem;
+      padding: 1rem;
+      height: fit-content;
+      position: sticky;
+      top: 20px;
+    }
+    body.light-mode .sidebar { background: #FFF; }
+    .nav-item-custom {
+      padding: 0.8rem 1rem;
+      border-radius: 1rem;
+      cursor: pointer;
+      margin-bottom: 0.5rem;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: #AAA;
+    }
+    .nav-item-custom i { width: 24px; }
+    .nav-item-custom.active { background: var(--primary); color: white; }
+    .language-selector {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-bottom: 1.5rem;
+    }
+    .lang-btn {
+      background: transparent;
+      border: 1px solid #3A3A3A;
+      border-radius: 2rem;
+      padding: 0.3rem 0.8rem;
+      cursor: pointer;
+      transition: 0.1s;
+      font-size: 0.8rem;
+    }
+    .lang-btn.active {
+      background: var(--primary);
+      border-color: var(--primary);
+      color: white;
+    }
+    body.light-mode .lang-btn { border-color: #D0D0D0; }
+    .practice-card {
+      background: var(--card-dark);
+      border-radius: 1rem;
+      padding: 1.2rem;
+      margin-bottom: 1rem;
+      border: 1px solid #3A3A3A;
+    }
+    body.light-mode .practice-card { background: var(--card-light); border-color: #E0E0E0; }
+    .example-text {
+      font-size: 1.2rem;
+      padding: 1rem;
+      background: rgba(0,0,0,0.2);
+      border-radius: 0.8rem;
+      margin-bottom: 1rem;
+    }
+    .chinese-text { font-family: 'Noto Sans SC', monospace; }
+    .japanese-text { font-family: 'Noto Sans JP', monospace; }
+    .korean-text { font-family: 'Noto Sans KR', monospace; }
+    .arabic-text { font-family: 'Noto Sans Arabic', monospace; direction: rtl; text-align: right; }
+    .hebrew-text { font-family: 'Noto Sans Hebrew', monospace; direction: rtl; text-align: right; }
+    .writing-input {
+      background: #2A2A2A;
+      border: 1px solid #3A3A3A;
+      color: #E5E5E5;
+      border-radius: 0.8rem;
+      padding: 0.8rem;
+      width: 100%;
+      font-family: monospace;
+      font-size: 1rem;
+    }
+    body.light-mode .writing-input { background: #FFF; border-color: #D0D0D0; color: #1E1E1E; }
+    .progress-custom { height: 4px; background: #3A3A3A; border-radius: 2px; }
+    .progress-fill-custom { height: 100%; background: var(--primary); width: 0%; transition: width 0.3s; }
+    footer { background: #141414; padding: 1rem 0; margin-top: 2rem; text-align: center; }
+    .level-badge { font-size: 0.7rem; padding: 0.2rem 0.5rem; border-radius: 20px; background: var(--secondary); color: #2C2A29; }
+  </style>
+</head>
+<body>
+
+<div class="container-fluid px-4 py-3">
+  <div class="row g-4">
+    
+    <!-- SIDEBAR -->
+    <div class="col-lg-3 col-md-4">
+      <div class="sidebar">
+        <div class="text-center py-3">
+          <i class="bi bi-pencil-square" style="font-size: 2rem; color: var(--primary);"></i>
+          <h5 class="mt-2">Escritura Global</h5>
+          <small class="text-muted">11 idiomas · Palabras → Textos</small>
+        </div>
+        <hr>
+        <div class="nav-item-custom active" data-view="practica">
+          <i class="bi bi-pencil"></i> <span>✍️ Practicar escritura</span>
+        </div>
+        <div class="nav-item-custom" data-view="ejemplos">
+          <i class="bi bi-book"></i> <span>📖 Ver ejemplos</span>
+        </div>
+        <hr>
+        <div class="mt-3">
+          <div class="d-flex justify-content-between small"><span>Ejercicios completados</span><span id="completedCount">0</span><span>/55</span></div>
+          <div class="progress-custom mt-1"><div class="progress-fill-custom" id="progressFill"></div></div>
+        </div>
+        <hr>
+        <button id="themeToggleBtn" class="btn btn-sm w-100 mt-2"><i class="bi bi-moon-stars-fill"></i> Modo oscuro</button>
+      </div>
+    </div>
+    
+    <!-- CONTENIDO PRINCIPAL -->
+    <div class="col-lg-9 col-md-8">
+      
+      <!-- VISTA PRÁCTICA -->
+      <div id="practicaView">
+        <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+          <h3><i class="bi bi-pencil me-2"></i>Practica escritura por niveles</h3>
+          <div class="language-selector" id="langSelector"></div>
+        </div>
+        
+        <div class="row">
+          <div class="col-md-6 mb-4">
+            <div class="practice-card">
+              <h5><span class="level-badge">📝 NIVEL 1</span> Palabras</h5>
+              <p class="text-muted small">Escribe la palabra que ves</p>
+              <div id="wordExample" class="example-text"></div>
+              <input type="text" id="wordInput" class="writing-input" placeholder="Escribe aquí...">
+              <button id="checkWordBtn" class="btn btn-sm btn-primary mt-2">✓ Verificar palabra</button>
+              <div id="wordFeedback" class="mt-2 small"></div>
+            </div>
+          </div>
+          
+          <div class="col-md-6 mb-4">
+            <div class="practice-card">
+              <h5><span class="level-badge">🔤 NIVEL 2</span> Frases cortas</h5>
+              <p class="text-muted small">Escribe la frase completa</p>
+              <div id="phraseExample" class="example-text"></div>
+              <input type="text" id="phraseInput" class="writing-input" placeholder="Escribe aquí...">
+              <button id="checkPhraseBtn" class="btn btn-sm btn-primary mt-2">✓ Verificar frase</button>
+              <div id="phraseFeedback" class="mt-2 small"></div>
+            </div>
+          </div>
+          
+          <div class="col-md-12 mb-4">
+            <div class="practice-card">
+              <h5><span class="level-badge">📖 NIVEL 3</span> Oraciones completas</h5>
+              <p class="text-muted small">Escribe la oración correctamente</p>
+              <div id="sentenceExample" class="example-text"></div>
+              <textarea id="sentenceInput" rows="2" class="writing-input" placeholder="Escribe aquí..."></textarea>
+              <button id="checkSentenceBtn" class="btn btn-sm btn-primary mt-2">✓ Verificar oración</button>
+              <div id="sentenceFeedback" class="mt-2 small"></div>
+            </div>
+          </div>
+          
+          <div class="col-md-12 mb-4">
+            <div class="practice-card">
+              <h5><span class="level-badge">📚 NIVEL 4</span> Párrafo corto</h5>
+              <p class="text-muted small">Transcribe el párrafo</p>
+              <div id="paragraphExample" class="example-text"></div>
+              <textarea id="paragraphInput" rows="4" class="writing-input" placeholder="Escribe aquí..."></textarea>
+              <button id="checkParagraphBtn" class="btn btn-sm btn-primary mt-2">✓ Verificar párrafo</button>
+              <div id="paragraphFeedback" class="mt-2 small"></div>
+            </div>
+          </div>
+          
+          <div class="col-md-12">
+            <div class="practice-card">
+              <h5><span class="level-badge">📜 NIVEL 5</span> Texto breve</h5>
+              <p class="text-muted small">Transcribe el texto completo (mini texto)</p>
+              <div id="textExample" class="example-text"></div>
+              <textarea id="textInput" rows="6" class="writing-input" placeholder="Escribe aquí..."></textarea>
+              <button id="checkTextBtn" class="btn btn-sm btn-primary mt-2">✓ Verificar texto</button>
+              <div id="textFeedback" class="mt-2 small"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- VISTA EJEMPLOS -->
+      <div id="ejemplosView" style="display: none;">
+        <h3><i class="bi bi-book me-2"></i>Galería de ejemplos por idioma</h3>
+        <p class="text-muted small">Selecciona un idioma para ver ejemplos de todos los niveles</p>
+        <div class="language-selector mb-3" id="ejemplosLangSelector"></div>
+        <div id="ejemplosContainer" class="row g-3"></div>
+      </div>
+    </div>
+  </div>
+</div>
+<footer><div class="container"><small>✍️ Escritura Global · Practica palabras, frases, oraciones, párrafos y textos en 11 idiomas</small></div></footer>
+
+<script>
+  // ============================================================
+  // DATOS DE EJEMPLOS POR IDIOMA (5 niveles)
+  // ============================================================
+  const idiomasData = {
+    "Chino": {
+      script: "chinese-text",
+      palabra: "咖啡", frase: "你好吗", oracion: "哥伦比亚是一个美丽的国家。", parrafo: "哥伦比亚位于南美洲。它有咖啡、鲜花和美丽的海滩。首都是波哥大。", texto: "哥伦比亚是一个充满自然美景的国家。从加勒比海到亚马逊雨林，从安第斯山脉到太平洋海岸，每个地区都有独特的魅力。哥伦比亚咖啡享誉世界，这里的人民热情友好。" },
+    "Español": {
+      script: "", palabra: "arte", frase: "Buenos días", oracion: "El cañón del Chicamocha es impresionante.", parrafo: "Colombia es un país diverso. Tiene montañas, playas y selvas. Su gente es muy amable.", texto: "Colombia ofrece una gran variedad de paisajes. Desde las playas del Caribe hasta la Amazonía, pasando por los Andes y el Pacífico, cada región tiene su encanto único. El café colombiano es reconocido mundialmente." },
+    "Inglés": {
+      script: "", palabra: "sun", frase: "Good morning", oracion: "The Chicamocha Canyon is breathtaking.", parrafo: "Colombia is a diverse country. It has mountains, beaches, and jungles. Its people are very friendly.", texto: "Colombia offers a wide variety of landscapes. From the Caribbean beaches to the Amazon rainforest, through the Andes and the Pacific coast, each region has its unique charm. Colombian coffee is world famous." },
+    "Francés": {
+      script: "", palabra: "soleil", frase: "Bonjour", oracion: "Le canyon de Chicamocha est impressionnant.", parrafo: "La Colombie est un pays diversifié. Elle a des montagnes, des plages et des jungles. Ses habitants sont très sympathiques.", texto: "La Colombie offre une grande variété de paysages. Des plages des Caraïbes à la forêt amazonienne, en passant par les Andes et la côte Pacifique, chaque région a son charme unique. Le café colombien est mondialement connu." },
+    "Alemán": {
+      script: "", palabra: "Sonne", frase: "Guten Morgen", oracion: "Die Chicamocha-Schlucht ist atemberaubend.", parrafo: "Kolumbien ist ein vielfältiges Land. Es hat Berge, Strände und Dschungel. Seine Leute sind sehr freundlich.", texto: "Kolumbien bietet eine große Vielfalt an Landschaften. Von den karibischen Stränden bis zum Amazonas-Regenwald, über die Anden und die Pazifikküste, jede Region hat ihren eigenen Charme. Kolumbianischer Kaffee ist weltberühmt." },
+    "Ruso": {
+      script: "", palabra: "солнце", frase: "Доброе утро", oracion: "Каньон Чикамоча впечатляет.", parrafo: "Колумбия - разнообразная страна. У нее есть горы, пляжи и джунгли. Ее люди очень дружелюбны.", texto: "Колумбия предлагает большое разнообразие ландшафтов. От карибских пляжей до тропических лесов Амазонки, через Анды и тихоокеанское побережье, каждый регион имеет свое неповторимое очарование. Колумбийский кофе известен во всем мире." },
+    "Árabe": {
+      script: "arabic-text", palabra: "شمس", frase: "صباح الخير", oracion: "وادي شيكاموتشا مذهل", parrafo: "كولومبيا بلد متنوع. لديها جبال وشواطئ وغابات. شعبها ودود للغاية.", texto: "تقدم كولومبيا مجموعة واسعة من المناظر الطبيعية. من شواطئ البحر الكاريبي إلى غابات الأمازون المطيرة، عبر جبال الأنديز وساحل المحيط الهادئ، كل منطقة لها سحرها الفريد. القهوة الكولومبية مشهورة عالمياً." },
+    "Hebreo": {
+      script: "hebrew-text", palabra: "שמש", frase: "בוקר טוב", oracion: "קניון צ'יקמוצ'ה מרהיב", parrafo: "קולומביה היא מדינה מגוונת. יש לה הרים, חופים וג'ונגלים. האנשים שלה ידידותיים מאוד.", texto: "קולומביה מציעה מגוון רחב של נופים. מחופי הים הקריבי ועד יער הגשם באמזונס, דרך הרי האנדים וחוף האוקיינוס השקט, לכל אזור יש את הקסם הייחודי שלו. הקפה הקולומביאני מפורסם בעולם." },
+    "Hindi": {
+      script: "", palabra: "सूर्य", frase: "सुप्रभात", oracion: "चिकामोचा घाटी अद्भुत है", parrafo: "कोलंबिया एक विविध देश है। इसमें पहाड़, समुद्र तट और जंगल हैं। इसके लोग बहुत मिलनसार हैं।", texto: "कोलंबिया परिदृश्य की एक विस्तृत विविधता प्रदान करता है। कैरेबियन समुद्र तटों से लेकर अमेज़न वर्षावन तक, एंडीज और प्रशांत तट के माध्यम से, प्रत्येक क्षेत्र का अपना अनूठा आकर्षण है। कोलंबियाई कॉफी विश्व प्रसिद्ध है।" },
+    "Coreano": {
+      script: "korean-text", palabra: "태양", frase: "안녕하세요", oracion: "치카모차 협곡은 장관입니다", parrafo: "콜롬비아는 다양한 나라입니다. 산, 해변, 정글이 있습니다. 사람들은 매우 친절합니다.", texto: "콜롬비아는 다양한 경치를 제공합니다. 카리브 해변에서 아마존 열대 우림까지, 안데스 산맥과 태평양 연안을 거쳐 각 지역마다 고유한 매력이 있습니다. 콜롬비아 커피는 세계적으로 유명합니다." },
+    "Japonés": {
+      script: "japanese-text", palabra: "太陽", frase: "こんにちは", oracion: "チカモチャ渓谷は素晴らしいです", parrafo: "コロンビアは多様な国です。山、ビーチ、ジャングルがあります。人々はとても親切です。", texto: "コロンビアは多様な景観を提供しています。カリブ海のビーチからアマゾンの熱帯雨林まで、アンデス山脈と太平洋岸を通って、各地域には独自の魅力があります。コロンビアのコーヒーは世界的に有名です。" }
+  };
+  
+  const idiomasList = ["Chino", "Español", "Inglés", "Francés", "Alemán", "Ruso", "Árabe", "Hebreo", "Hindi", "Coreano", "Japonés"];
+  let currentLang = "Chino";
+  let progress = {};
+  const STORAGE_KEY = "escritura_global_progreso";
+  
+  // 5 niveles de práctica
+  const niveles = ["palabra", "frase", "oracion", "parrafo", "texto"];
+  
+  function loadProgress() {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if(saved) progress = JSON.parse(saved);
+    for(let l of idiomasList) for(let n of niveles) {
+      if(!progress[l]) progress[l] = {};
+      if(progress[l][n] === undefined) progress[l][n] = false;
+    }
+    updateStats();
+  }
+  function saveProgress() { localStorage.setItem(STORAGE_KEY, JSON.stringify(progress)); updateStats(); }
+  function updateStats() {
+    let total = 0; let completed = 0;
+    for(let l of idiomasList) for(let n of niveles) {
+      total++;
+      if(progress[l] && progress[l][n]) completed++;
+    }
+    document.getElementById("completedCount").innerText = completed;
+    document.getElementById("progressFill").style.width = `${(completed/total)*100}%`;
+  }
+  function markComplete(lang, nivel, isCorrect) {
+    if(isCorrect && !progress[lang][nivel]) {
+      progress[lang][nivel] = true;
+      saveProgress();
+    }
+  }
+  
+  function updateExamples() {
+    const data = idiomasData[currentLang];
+    const scriptClass = data.script;
+    document.getElementById("wordExample").innerHTML = `<span class="${scriptClass}">${data.palabra}</span>`;
+    document.getElementById("phraseExample").innerHTML = `<span class="${scriptClass}">${data.frase}</span>`;
+    document.getElementById("sentenceExample").innerHTML = `<span class="${scriptClass}">${data.oracion}</span>`;
+    document.getElementById("paragraphExample").innerHTML = `<span class="${scriptClass}">${data.parrafo}</span>`;
+    document.getElementById("textExample").innerHTML = `<span class="${scriptClass}">${data.texto}</span>`;
+    
+    // Limpiar inputs y feedbacks
+    document.getElementById("wordInput").value = "";
+    document.getElementById("phraseInput").value = "";
+    document.getElementById("sentenceInput").value = "";
+    document.getElementById("paragraphInput").value = "";
+    document.getElementById("textInput").value = "";
+    ["word", "phrase", "sentence", "paragraph", "text"].forEach(id => {
+      document.getElementById(`${id}Feedback`).innerHTML = "";
+    });
+  }
+  
+  function setupCheckers() {
+    const data = idiomasData[currentLang];
+    
+    document.getElementById("checkWordBtn").onclick = () => {
+      let user = document.getElementById("wordInput").value.trim().toLowerCase();
+      let correct = data.palabra.toLowerCase();
+      let isCorrect = user === correct;
+      document.getElementById("wordFeedback").innerHTML = isCorrect ? "<span class='text-success'>✅ ¡Correcto!</span>" : `<span class='text-danger'>❌ Incorrecto. La palabra es: ${data.palabra}</span>`;
+      markComplete(currentLang, "palabra", isCorrect);
+    };
+    document.getElementById("checkPhraseBtn").onclick = () => {
+      let user = document.getElementById("phraseInput").value.trim().toLowerCase();
+      let correct = data.frase.toLowerCase();
+      let isCorrect = user === correct;
+      document.getElementById("phraseFeedback").innerHTML = isCorrect ? "<span class='text-success'>✅ ¡Correcto!</span>" : `<span class='text-danger'>❌ Incorrecto. La frase es: ${data.frase}</span>`;
+      markComplete(currentLang, "frase", isCorrect);
+    };
+    document.getElementById("checkSentenceBtn").onclick = () => {
+      let user = document.getElementById("sentenceInput").value.trim().toLowerCase();
+      let correct = data.oracion.toLowerCase();
+      let isCorrect = user === correct;
+      document.getElementById("sentenceFeedback").innerHTML = isCorrect ? "<span class='text-success'>✅ ¡Correcto!</span>" : `<span class='text-danger'>❌ Incorrecto. La oración es: ${data.oracion}</span>`;
+      markComplete(currentLang, "oracion", isCorrect);
+    };
+    document.getElementById("checkParagraphBtn").onclick = () => {
+      let user = document.getElementById("paragraphInput").value.trim().toLowerCase();
+      let correct = data.parrafo.toLowerCase();
+      let isCorrect = user === correct;
+      document.getElementById("paragraphFeedback").innerHTML = isCorrect ? "<span class='text-success'>✅ ¡Correcto!</span>" : `<span class='text-danger'>❌ Incorrecto. El párrafo es: ${data.parrafo}</span>`;
+      markComplete(currentLang, "parrafo", isCorrect);
+    };
+    document.getElementById("checkTextBtn").onclick = () => {
+      let user = document.getElementById("textInput").value.trim().toLowerCase();
+      let correct = data.texto.toLowerCase();
+      let isCorrect = user === correct;
+      document.getElementById("textFeedback").innerHTML = isCorrect ? "<span class='text-success'>✅ ¡Correcto!</span>" : `<span class='text-danger'>❌ Incorrecto. El texto es: ${data.texto.substring(0,100)}...</span>`;
+      markComplete(currentLang, "texto", isCorrect);
+    };
+  }
+  
+  function renderLanguageSelector() {
+    const container = document.getElementById("langSelector");
+    container.innerHTML = idiomasList.map(lang => `<button class="lang-btn ${currentLang === lang ? 'active' : ''}" data-lang="${lang}">${lang}</button>`).join('');
+    document.querySelectorAll(".lang-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        currentLang = btn.getAttribute("data-lang");
+        document.querySelectorAll(".lang-btn").forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+        updateExamples();
+        setupCheckers();
+      });
+    });
+  }
+  
+  function renderEjemplos() {
+    const container = document.getElementById("ejemplosContainer");
+    let html = '';
+    for(let lang of idiomasList) {
+      const data = idiomasData[lang];
+      const scriptClass = data.script;
+      html += `
+        <div class="col-md-6 col-lg-4">
+          <div class="practice-card">
+            <h5><span class="level-badge">${lang}</span></h5>
+            <div class="mb-2"><strong>📝 Palabra:</strong> <span class="${scriptClass}">${data.palabra}</span></div>
+            <div class="mb-2"><strong>🔤 Frase:</strong> <span class="${scriptClass}">${data.frase}</span></div>
+            <div class="mb-2"><strong>📖 Oración:</strong> <span class="${scriptClass}">${data.oracion.substring(0,60)}...</span></div>
+            <div class="mb-2"><strong>📚 Párrafo:</strong> <span class="${scriptClass}">${data.parrafo.substring(0,60)}...</span></div>
+            <div><strong>📜 Texto:</strong> <span class="${scriptClass}">${data.texto.substring(0,80)}...</span></div>
+          </div>
+        </div>
+      `;
+    }
+    container.innerHTML = html;
+  }
+  
+  function renderEjemplosLangSelector() {
+    const container = document.getElementById("ejemplosLangSelector");
+    container.innerHTML = idiomasList.map(lang => `<button class="lang-btn" data-lang="${lang}">${lang}</button>`).join('');
+    document.querySelectorAll("#ejemplosLangSelector .lang-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        currentLang = btn.getAttribute("data-lang");
+        renderEjemplos();
+      });
+    });
+  }
+  
+  // Navegación
+  function switchToPractica() {
+    document.getElementById("practicaView").style.display = "block";
+    document.getElementById("ejemplosView").style.display = "none";
+    document.querySelectorAll(".nav-item-custom").forEach(i=>i.classList.remove("active"));
+    document.querySelector(".nav-item-custom[data-view='practica']").classList.add("active");
+    updateExamples();
+    setupCheckers();
+  }
+  function switchToEjemplos() {
+    document.getElementById("practicaView").style.display = "none";
+    document.getElementById("ejemplosView").style.display = "block";
+    document.querySelectorAll(".nav-item-custom").forEach(i=>i.classList.remove("active"));
+    document.querySelector(".nav-item-custom[data-view='ejemplos']").classList.add("active");
+    renderEjemplos();
+  }
+  
+  document.getElementById("themeToggleBtn")?.addEventListener("click", () => document.body.classList.toggle("light-mode"));
+  document.querySelector(".nav-item-custom[data-view='practica']")?.addEventListener("click", switchToPractica);
+  document.querySelector(".nav-item-custom[data-view='ejemplos']")?.addEventListener("click", switchToEjemplos);
+  
+  loadProgress();
+  renderLanguageSelector();
+  updateExamples();
+  setupCheckers();
+  renderEjemplosLangSelector();
+  switchToPractica();
+</script>
+</body>
+</html>

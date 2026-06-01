@@ -1,0 +1,1184 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Taller Integral · Redacción Castellana</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400;1,700&family=Josefin+Sans:ital,wght@0,300;0,400;0,600;0,700;1,300&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#0c0a08; --bg2:#120f0a; --bg3:#1a1510; --surf:#201a12; --surf2:#2a221a; --surf3:#342b20;
+  --ink:#f0e8d8; --ink2:#c0a878; --ink3:#7a6040; --ink4:#483820;
+  --gold:#d4960a; --gold2:#f0b020; --gold3:#ffc840; --gdim:rgba(212,150,10,0.15); --gglow:rgba(212,150,10,0.35);
+  --teal:#0a8080; --teal2:#10a0a0; --tdim:rgba(10,128,128,0.12); --tglow:rgba(10,128,128,0.3);
+  --rose:#c03050; --rose2:#e04060; --rdim:rgba(192,48,80,0.12);
+  --grn:#20a060; --grn2:#30c078; --gdim2:rgba(32,160,96,0.12);
+  --vio:#8040c0; --vio2:#a060e0;
+  --border:rgba(212,150,10,0.12); --border2:rgba(212,150,10,0.25);
+  --sh:rgba(0,0,0,0.5);
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{
+  background:var(--bg);color:var(--ink);
+  font-family:'Cormorant Garamond',Georgia,serif;
+  font-size:17px;line-height:1.75;min-height:100vh;
+  background-image:
+    linear-gradient(rgba(212,150,10,0.025)1px,transparent 1px),
+    linear-gradient(90deg,rgba(212,150,10,0.025)1px,transparent 1px);
+  background-size:60px 60px;
+  cursor:default;
+}
+
+/* ─── TOP NEON RULE ─── */
+.neon-rule{height:3px;background:linear-gradient(90deg,transparent,var(--teal2),var(--gold2),var(--rose2),transparent);box-shadow:0 0 14px var(--gglow);animation:glow 3s ease-in-out infinite;}
+@keyframes glow{0%,100%{opacity:.7}50%{opacity:1;box-shadow:0 0 24px var(--gglow);}}
+
+/* ─── PARTICLES ─── */
+.ptcls{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden;}
+.pt{position:absolute;width:2px;height:2px;border-radius:50%;background:var(--gold2);box-shadow:0 0 6px var(--gold2);opacity:0;animation:ptFly linear infinite;}
+@keyframes ptFly{0%{opacity:0;transform:translateY(100vh) rotate(0deg);}15%{opacity:.8;}85%{opacity:.3;}100%{opacity:0;transform:translateY(-50px) rotate(540deg) translateX(40px);}}
+.fth{position:absolute;font-size:1rem;color:var(--gold2);opacity:0;animation:fthFly linear infinite;filter:drop-shadow(0 0 6px var(--gglow));}
+@keyframes fthFly{0%{opacity:0;transform:translateY(100vh) rotate(0deg);}10%{opacity:.5;}90%{opacity:.2;}100%{opacity:0;transform:translateY(-80px) rotate(720deg);}}
+
+/* ─── HEADER ─── */
+header{
+  position:relative;z-index:5;
+  padding:48px 40px 36px;
+  background:linear-gradient(180deg,var(--bg2),transparent);
+  border-bottom:1px solid var(--border2);text-align:center;
+}
+.hdr-tag{font-family:'Josefin Sans',sans-serif;font-size:.65rem;font-weight:700;letter-spacing:.4em;text-transform:uppercase;color:var(--teal2);margin-bottom:16px;display:flex;align-items:center;justify-content:center;gap:14px;}
+.hdr-tag::before,.hdr-tag::after{content:'';width:40px;height:1px;background:var(--teal2);}
+h1{font-size:clamp(2.2rem,5vw,3.8rem);font-weight:700;font-style:italic;color:var(--gold2);line-height:1.1;margin-bottom:10px;text-shadow:0 0 40px var(--gglow);}
+h1 b{font-style:normal;color:var(--ink);font-weight:300;}
+.hdr-sub{font-family:'Josefin Sans',sans-serif;font-size:.78rem;color:var(--ink3);letter-spacing:.12em;font-weight:300;}
+.hdr-stats{display:flex;justify-content:center;gap:32px;margin-top:28px;flex-wrap:wrap;}
+.stat{text-align:center;}
+.stat-n{font-size:2rem;font-weight:700;color:var(--gold2);line-height:1;font-family:'Josefin Sans',sans-serif;text-shadow:0 0 12px var(--gglow);}
+.stat-l{font-size:.6rem;font-family:'Josefin Sans',sans-serif;letter-spacing:.18em;text-transform:uppercase;color:var(--ink3);margin-top:2px;}
+
+/* ─── NAV ─── */
+.nav{
+  position:sticky;top:0;z-index:100;
+  background:rgba(12,10,8,.95);
+  backdrop-filter:blur(16px);
+  border-bottom:1px solid var(--border2);
+  display:flex;justify-content:center;gap:0;
+  overflow-x:auto;scrollbar-width:none;
+}
+.nav::-webkit-scrollbar{display:none;}
+.ntab{
+  padding:0 28px;height:48px;
+  display:flex;align-items:center;gap:8px;
+  font-family:'Josefin Sans',sans-serif;
+  font-size:.68rem;font-weight:700;
+  letter-spacing:.18em;text-transform:uppercase;
+  color:var(--ink3);cursor:pointer;border:none;
+  background:transparent;white-space:nowrap;
+  border-bottom:2px solid transparent;
+  margin-bottom:-1px;transition:all .2s;
+}
+.ntab:hover{color:var(--ink2);}
+.ntab.active{color:var(--gold2);border-bottom-color:var(--gold2);}
+.ntab svg{width:14px;height:14px;flex-shrink:0;}
+
+/* ─── PANELS ─── */
+.panel{display:none;}
+.panel.active{display:block;}
+.wrap{max-width:1120px;margin:0 auto;padding:40px 32px;}
+
+/* ─── SEARCH & FILTER ─── */
+.ctrl-bar{display:flex;gap:12px;margin-bottom:28px;flex-wrap:wrap;}
+.srch{flex:1;min-width:200px;position:relative;}
+.srch input{width:100%;padding:10px 16px 10px 40px;background:var(--surf);border:1px solid var(--border2);color:var(--ink);font-family:'Cormorant Garamond',serif;font-size:.95rem;outline:none;transition:border-color .2s;}
+.srch input:focus{border-color:var(--gold);}
+.srch input::placeholder{color:var(--ink3);font-style:italic;}
+.si{position:absolute;left:13px;top:50%;transform:translateY(-50%);color:var(--ink3);pointer-events:none;}
+.filt{display:flex;gap:6px;flex-wrap:wrap;}
+.fb{padding:6px 14px;border:1px solid var(--border);background:transparent;color:var(--ink3);font-family:'Josefin Sans',sans-serif;font-size:.62rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;transition:all .18s;}
+.fb:hover{border-color:var(--gold);color:var(--gold);}
+.fb.on{background:var(--gold);border-color:var(--gold);color:var(--bg);}
+.rcount{font-family:'Josefin Sans',sans-serif;font-size:.65rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--ink3);margin-bottom:18px;padding-bottom:12px;border-bottom:1px solid var(--border);}
+.rcount strong{color:var(--gold2);}
+
+/* ─── CARDS GRID ─── */
+.cgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:16px;}
+.card{
+  background:var(--surf);border:1px solid var(--border);
+  position:relative;overflow:hidden;transition:all .22s;
+}
+.card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--gold),var(--teal));transform:scaleX(0);transform-origin:left;transition:transform .3s;}
+.card:hover{border-color:var(--border2);box-shadow:0 6px 28px var(--sh);transform:translateY(-2px);}
+.card:hover::before{transform:scaleX(1);}
+.ci{padding:20px 22px 18px;}
+.ctop{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px;}
+.ccat{font-family:'Josefin Sans',sans-serif;font-size:.6rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--teal2);}
+.cnum{font-size:2rem;font-weight:700;color:var(--surf3);font-family:'Josefin Sans',sans-serif;line-height:1;user-select:none;}
+.cname{font-size:1.05rem;font-weight:600;font-style:italic;color:var(--ink);margin-bottom:8px;line-height:1.3;}
+.cdesc{font-size:.85rem;color:var(--ink2);line-height:1.65;font-weight:300;margin-bottom:12px;}
+.cex{background:var(--bg3);border-left:2px solid var(--gold);padding:10px 14px;margin-bottom:14px;}
+.cex-l{font-family:'Josefin Sans',sans-serif;font-size:.58rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--gold2);margin-bottom:5px;}
+.cex-t{font-size:.83rem;color:var(--ink2);font-style:italic;line-height:1.6;}
+
+/* TTS inside card */
+.card-tts{
+  display:flex;align-items:center;gap:8px;padding:10px 14px;
+  background:var(--bg);border-top:1px solid var(--border);
+  flex-wrap:wrap;
+}
+.tts-play{
+  width:32px;height:32px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  border:none;cursor:pointer;transition:all .2s;flex-shrink:0;
+}
+.tts-play.es{background:var(--gold);color:var(--bg);}
+.tts-play.en{background:var(--teal2);color:var(--bg);}
+.tts-play:hover{transform:scale(1.1);}
+.tts-play svg{width:12px;height:12px;}
+.tts-speed{background:var(--surf);border:1px solid var(--border);color:var(--ink2);font-family:'Josefin Sans',sans-serif;font-size:.6rem;padding:3px 8px;outline:none;cursor:pointer;}
+.tts-speed option{background:var(--surf);}
+.tts-prog{flex:1;height:3px;background:var(--surf3);min-width:60px;cursor:pointer;}
+.tts-fill{height:100%;width:0%;background:var(--gold2);transition:width .1s;}
+.tts-status{font-family:'Josefin Sans',sans-serif;font-size:.58rem;color:var(--ink3);white-space:nowrap;}
+.tts-stop{width:24px;height:24px;border-radius:3px;border:1px solid var(--border);background:transparent;color:var(--ink3);cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.tts-stop svg{width:10px;height:10px;}
+.tts-stop:hover{border-color:var(--rose2);color:var(--rose2);}
+/* highlight overlay */
+.card-tts-overlay{
+  position:absolute;inset:0;pointer-events:none;
+  font-family:'Cormorant Garamond',serif;font-size:.83rem;
+  line-height:1.6;font-style:italic;color:transparent;
+  padding:10px 14px;white-space:pre-wrap;word-wrap:break-word;
+  overflow:hidden;
+}
+.whl{background:var(--gold2);color:var(--bg);border-radius:2px;padding:0 2px;}
+
+/* action buttons */
+.cbtns{display:flex;gap:7px;padding:0 22px 16px;}
+.cbtn{flex:1;padding:8px;border:1px solid;font-family:'Josefin Sans',sans-serif;font-size:.62rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;transition:all .18s;background:transparent;}
+.cba{border-color:var(--teal);color:var(--teal);}
+.cba:hover{background:var(--teal);color:var(--bg);}
+.cbp{border-color:var(--gold);color:var(--gold);}
+.cbp:hover{background:var(--gold);color:var(--bg);}
+
+/* ─── MODAL ANALYSIS ─── */
+.mbg{position:fixed;inset:0;z-index:500;background:rgba(0,0,0,.85);backdrop-filter:blur(8px);display:none;align-items:center;justify-content:center;padding:20px;}
+.mbg.open{display:flex;}
+.modal{background:var(--bg2);border:1px solid var(--border2);max-width:780px;width:100%;max-height:88vh;overflow-y:auto;box-shadow:0 20px 80px rgba(0,0,0,.7);animation:mIn .28s ease;}
+@keyframes mIn{from{opacity:0;transform:scale(.93)translateY(16px);}to{opacity:1;transform:none;}}
+.mbar{height:3px;background:linear-gradient(90deg,var(--gold),var(--teal2),var(--rose2));}
+.mhead{padding:22px 26px 16px;border-bottom:1px solid var(--border);position:relative;}
+.mx{position:absolute;top:14px;right:18px;background:none;border:none;color:var(--ink3);font-size:1.5rem;cursor:pointer;line-height:1;transition:color .15s;}
+.mx:hover{color:var(--gold2);}
+.mcat{font-family:'Josefin Sans',sans-serif;font-size:.62rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--gold2);margin-bottom:4px;}
+.mname{font-size:1.45rem;font-weight:700;font-style:italic;color:var(--ink);}
+/* modal TTS bar */
+.modal-tts{
+  display:flex;align-items:center;gap:8px;
+  padding:10px 26px;background:var(--surf);
+  border-bottom:1px solid var(--border);flex-wrap:wrap;
+}
+.mbody{padding:22px 26px;}
+/* analysis sections */
+.as{margin-bottom:22px;}
+.asl{display:flex;align-items:center;gap:8px;font-family:'Josefin Sans',sans-serif;font-size:.6rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--ink3);margin-bottom:10px;padding-bottom:7px;border-bottom:1px solid var(--border);}
+.adot{width:7px;height:7px;flex-shrink:0;}
+.dg{background:var(--gold2);}
+.dt{background:var(--teal2);}
+.dr{background:var(--rose2);}
+.dv{background:var(--vio2);}
+.dgrn{background:var(--grn2);}
+.atxt{font-size:.93rem;color:var(--ink2);line-height:1.8;font-weight:300;}
+.atxt strong{color:var(--gold2);font-weight:600;}
+/* syntax colorizer box */
+.synbox{background:var(--bg3);border:1px solid var(--border);padding:16px 18px;font-size:.9rem;line-height:2.1;font-style:italic;color:var(--ink2);margin-bottom:10px;}
+.sv{color:#ff8080;font-weight:700;font-style:normal;border-bottom:1px solid rgba(255,128,128,.5);}
+.ss{color:var(--teal2);font-weight:700;font-style:normal;}
+.so{color:var(--gold2);font-weight:700;font-style:normal;}
+.sa{color:var(--vio2);font-weight:600;font-style:normal;}
+.sad{color:var(--grn2);}
+.sc{color:var(--ink4);}
+.synleg{display:flex;flex-wrap:wrap;gap:12px;margin-top:8px;}
+.sli{font-family:'Josefin Sans',sans-serif;font-size:.62rem;color:var(--ink3);display:flex;align-items:center;gap:5px;}
+.sld{width:10px;height:3px;}
+/* advice */
+.advice{background:var(--gdim);border:1px solid rgba(212,150,10,.2);border-left:3px solid var(--gold2);padding:14px 18px;margin-top:4px;}
+.adv-l{font-family:'Josefin Sans',sans-serif;font-size:.6rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--gold2);margin-bottom:7px;}
+.adv-t{font-size:.9rem;color:var(--ink2);font-style:italic;line-height:1.7;}
+.spin{display:inline-block;width:22px;height:22px;border:2px solid var(--border2);border-top-color:var(--gold2);border-radius:50%;animation:sp .8s linear infinite;}
+@keyframes sp{to{transform:rotate(360deg);}}
+.loading{text-align:center;padding:48px;color:var(--ink3);}
+
+/* ─── WORKSHOP ─── */
+.wwrap{max-width:920px;margin:0 auto;padding:40px 32px;}
+.wtit{font-size:2rem;font-weight:700;font-style:italic;color:var(--gold2);margin-bottom:4px;text-shadow:0 0 20px var(--gglow);}
+.wsub{font-family:'Josefin Sans',sans-serif;font-size:.75rem;color:var(--ink3);font-weight:300;margin-bottom:32px;letter-spacing:.05em;}
+.flbl{display:block;font-family:'Josefin Sans',sans-serif;font-size:.62rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);margin-bottom:8px;}
+select.fsel{width:100%;padding:10px 36px 10px 14px;background:var(--surf);border:1px solid var(--border2);color:var(--ink);font-family:'Cormorant Garamond',serif;font-style:italic;font-size:.95rem;appearance:none;outline:none;cursor:pointer;transition:border-color .2s;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23d4960a' stroke-width='1.5' fill='none'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center;}
+select.fsel:focus{border-color:var(--gold);}
+select.fsel option{font-style:normal;background:var(--surf2);}
+.fblk{margin-bottom:20px;}
+.expanel{background:var(--bg3);border:1px solid var(--border);border-left:3px solid var(--teal);padding:16px 20px;margin-bottom:20px;display:none;animation:fu .3s ease;}
+.expanel.show{display:block;}
+@keyframes fu{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:none;}}
+.exl{font-family:'Josefin Sans',sans-serif;font-size:.6rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--teal2);margin-bottom:8px;}
+.ext{font-size:.92rem;color:var(--ink2);font-style:italic;line-height:1.72;}
+/* Workshop TTS for example */
+.exp-tts{display:flex;align-items:center;gap:8px;margin-top:10px;padding-top:10px;border-top:1px solid var(--border);flex-wrap:wrap;}
+/* textarea */
+.wtarea{
+  width:100%;min-height:220px;
+  background:var(--surf);border:1px solid var(--border2);
+  color:var(--ink);font-family:'Cormorant Garamond',serif;
+  font-size:1rem;line-height:1.85;
+  padding:20px 24px;resize:vertical;outline:none;
+  caret-color:var(--gold2);
+  transition:border-color .2s,box-shadow .2s;
+  background-image:repeating-linear-gradient(transparent,transparent 35px,rgba(212,150,10,.04)35px,rgba(212,150,10,.04)36px);
+}
+.wtarea:focus{border-color:var(--gold);box-shadow:0 0 0 2px var(--gdim);}
+.wtarea::placeholder{color:var(--ink4);font-style:italic;}
+.wcinf{display:flex;justify-content:space-between;align-items:center;margin:6px 0 18px;}
+.wcnt{font-family:'Josefin Sans',sans-serif;font-size:.65rem;font-weight:600;letter-spacing:.1em;color:var(--ink3);}
+.wcnt strong{color:var(--gold2);}
+/* practice TTS */
+.prac-tts{display:flex;align-items:center;gap:8px;margin-bottom:18px;flex-wrap:wrap;}
+.actrow{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:28px;}
+.bmain{flex:1;min-width:150px;padding:12px 22px;background:var(--gold);border:none;color:var(--bg);font-family:'Josefin Sans',sans-serif;font-size:.68rem;font-weight:700;letter-spacing:.15em;text-transform:uppercase;cursor:pointer;transition:all .2s;}
+.bmain:hover{background:var(--gold2);box-shadow:0 4px 18px var(--gglow);}
+.bsec{flex:1;min-width:130px;padding:12px 22px;background:transparent;border:1px solid var(--border2);color:var(--ink2);font-family:'Josefin Sans',sans-serif;font-size:.68rem;font-weight:700;letter-spacing:.15em;text-transform:uppercase;cursor:pointer;transition:all .2s;}
+.bsec:hover{border-color:var(--teal);color:var(--teal2);}
+.bgh{padding:12px 18px;background:transparent;border:1px solid var(--border);color:var(--ink3);font-family:'Josefin Sans',sans-serif;font-size:.65rem;cursor:pointer;transition:all .2s;}
+.bgh:hover{border-color:var(--rose);color:var(--rose2);}
+/* eval card */
+.ecard{background:var(--surf);border:1px solid var(--border2);overflow:hidden;display:none;animation:fu .4s ease;margin-bottom:28px;}
+.ecard.show{display:block;}
+.ebar{height:3px;background:linear-gradient(90deg,var(--gold),var(--teal2),var(--grn2));}
+.ehead{padding:16px 22px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;}
+.etit{font-family:'Josefin Sans',sans-serif;font-size:.62rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--grn2);}
+.pills{display:flex;gap:7px;flex-wrap:wrap;}
+.pill{padding:4px 13px;border:1px solid;font-family:'Josefin Sans',sans-serif;font-size:.65rem;font-weight:700;letter-spacing:.06em;}
+.pg{border-color:var(--gold);color:var(--gold2);background:var(--gdim);}
+.pt{border-color:var(--teal);color:var(--teal2);background:var(--tdim);}
+.prn{border-color:var(--grn);color:var(--grn2);background:var(--gdim2);}
+.pr{border-color:var(--rose);color:var(--rose2);background:var(--rdim);}
+.ebody{padding:20px 22px;}
+/* syntax match section */
+.syn-match{
+  background:var(--bg3);border:1px solid rgba(32,160,96,.2);
+  border-left:3px solid var(--grn2);
+  padding:14px 18px;margin-bottom:18px;
+}
+.sm-title{font-family:'Josefin Sans',sans-serif;font-size:.6rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--grn2);margin-bottom:10px;}
+.sm-row{display:flex;gap:8px;margin-bottom:8px;align-items:flex-start;}
+.sm-label{font-family:'Josefin Sans',sans-serif;font-size:.62rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;flex-shrink:0;width:110px;padding-top:2px;}
+.sm-label.ref{color:var(--gold2);}
+.sm-label.usr{color:var(--teal2);}
+.sm-text{font-size:.88rem;color:var(--ink2);line-height:1.5;font-style:italic;}
+.sm-score-bar{margin-top:8px;}
+.sm-bar-row{display:flex;justify-content:space-between;font-family:'Josefin Sans',sans-serif;font-size:.65rem;color:var(--ink3);margin-bottom:4px;}
+.sm-track{height:4px;background:var(--bg);border-radius:2px;overflow:hidden;}
+.sm-fill{height:100%;background:var(--grn2);border-radius:2px;transition:width 1.2s cubic-bezier(.2,.8,.3,1);}
+.verdict{
+  display:inline-flex;align-items:center;gap:6px;
+  font-family:'Josefin Sans',sans-serif;font-size:.65rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
+  padding:5px 14px;border:1px solid;margin-top:8px;
+}
+.v-match{border-color:var(--grn2);color:var(--grn2);background:var(--gdim2);}
+.v-partial{border-color:var(--gold);color:var(--gold2);background:var(--gdim);}
+.v-mismatch{border-color:var(--rose);color:var(--rose2);background:var(--rdim);}
+/* result TTS */
+.result-tts{display:flex;align-items:center;gap:8px;padding:10px 22px;background:var(--bg3);border-top:1px solid var(--border);flex-wrap:wrap;}
+.esec{margin-bottom:18px;}
+.estit{font-family:'Josefin Sans',sans-serif;font-size:.62rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--ink3);margin-bottom:6px;}
+.etxt{font-size:.88rem;color:var(--ink2);line-height:1.75;font-weight:300;}
+.bargrp{margin-bottom:8px;}
+.brow{display:flex;justify-content:space-between;font-family:'Josefin Sans',sans-serif;font-size:.65rem;color:var(--ink3);margin-bottom:3px;}
+.btrack{height:4px;background:var(--surf3);}
+.bfill{height:100%;transition:width 1.1s cubic-bezier(.2,.8,.3,1);}
+.fgold{background:var(--gold2);}
+.fteal{background:var(--teal2);}
+.fgrn{background:var(--grn2);}
+.frose{background:var(--rose2);}
+.rwbox{background:var(--tdim);border:1px solid rgba(10,128,128,.2);border-left:3px solid var(--teal2);padding:14px 18px;margin-top:6px;}
+.rwl{font-family:'Josefin Sans',sans-serif;font-size:.6rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--teal2);margin-bottom:6px;}
+.rwt{font-size:.88rem;color:var(--ink2);font-style:italic;line-height:1.7;}
+
+/* ─── LIBRARY ─── */
+.libwrap{max-width:860px;margin:0 auto;padding:40px 32px;}
+.libtit{font-size:1.8rem;font-weight:700;font-style:italic;color:var(--gold2);margin-bottom:4px;}
+.libsub{font-family:'Josefin Sans',sans-serif;font-size:.72rem;color:var(--ink3);font-weight:300;margin-bottom:28px;}
+.lib-empty{text-align:center;padding:60px;color:var(--ink3);border:1px dashed var(--border2);font-style:italic;}
+.lcard{background:var(--surf);border:1px solid var(--border);margin-bottom:14px;overflow:hidden;}
+.lcard:hover{border-color:var(--border2);}
+.ltop{padding:12px 18px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:flex-start;gap:12px;}
+.lmeta{}
+.ltech{font-family:'Josefin Sans',sans-serif;font-size:.62rem;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--gold2);margin-bottom:2px;}
+.ldate{font-family:'Josefin Sans',sans-serif;font-size:.68rem;color:var(--ink3);}
+.lacts{display:flex;gap:6px;flex-shrink:0;}
+.lbtn{padding:5px 12px;border:1px solid var(--border);background:transparent;color:var(--ink3);font-family:'Josefin Sans',sans-serif;font-size:.62rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;transition:all .15s;}
+.lbtn:hover{border-color:var(--rose);color:var(--rose2);}
+.lbtn.load:hover{border-color:var(--teal);color:var(--teal2);}
+.lbody{padding:14px 18px;}
+.ltxt{font-size:.88rem;color:var(--ink2);line-height:1.65;white-space:pre-wrap;}
+.lscores{display:flex;gap:14px;flex-wrap:wrap;padding:10px 18px;background:var(--bg3);border-top:1px solid var(--border);}
+.lsc{font-family:'Josefin Sans',sans-serif;font-size:.68rem;color:var(--ink3);}
+.lsc span{font-weight:700;}
+.lg span{color:var(--gold2);}
+.lt span{color:var(--teal2);}
+.lgrn span{color:var(--grn2);}
+.lr span{color:var(--rose2);}
+
+/* ─── NOTIF ─── */
+.notif{position:fixed;bottom:28px;left:50%;transform:translateX(-50%)translateY(12px);background:var(--gold);color:var(--bg);padding:10px 24px;font-family:'Josefin Sans',sans-serif;font-size:.75rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;opacity:0;transition:all .3s;pointer-events:none;z-index:999;white-space:nowrap;}
+.notif.show{opacity:1;transform:translateX(-50%)translateY(0);}
+
+::-webkit-scrollbar{width:4px;}
+::-webkit-scrollbar-track{background:var(--bg2);}
+::-webkit-scrollbar-thumb{background:var(--surf3);}
+
+@media(max-width:640px){
+  .wrap,.wwrap,.libwrap{padding:24px 16px;}
+  h1{font-size:2rem;}
+  .cgrid{grid-template-columns:1fr;}
+  .actrow{flex-direction:column;}
+  .hdr-stats{gap:18px;}
+}
+</style>
+</head>
+<body>
+<div class="neon-rule"></div>
+<div class="ptcls" id="ptcls"></div>
+
+<header>
+  <div class="hdr-tag">Taller Integral de Redacción</div>
+  <h1>Técnicas de <b>Escritura</b><br><span style="font-size:.55em;color:var(--teal2);font-style:normal;font-family:'Josefin Sans',sans-serif;letter-spacing:.08em;">CUENTOS · ENSAYOS · ESCRITURA UNIVERSITARIA</span></h1>
+  <p class="hdr-sub">Análisis sintáctico · Lector de voz · Verificación sintáctica de práctica · Biblioteca personal</p>
+  <div class="hdr-stats">
+    <div class="stat"><div class="stat-n">100</div><div class="stat-l">Técnicas</div></div>
+    <div class="stat"><div class="stat-n">12</div><div class="stat-l">Categorías</div></div>
+    <div class="stat"><div class="stat-n">🔊</div><div class="stat-l">Lector voz</div></div>
+    <div class="stat"><div class="stat-n">✦</div><div class="stat-l">Verif. sintáctica</div></div>
+  </div>
+</header>
+
+<div class="nav">
+  <button class="ntab active" data-p="tecnicas">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg>
+    Técnicas
+  </button>
+  <button class="ntab" data-p="taller">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+    Taller
+  </button>
+  <button class="ntab" data-p="biblioteca">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 01-2 2H4a2 2 0 01-2-2V5a2 2 0 012-2h5l2 3h9a2 2 0 012 2z"/></svg>
+    Biblioteca
+  </button>
+</div>
+
+<!-- ═══ TÉCNICAS ═══ -->
+<div class="panel active" id="panel-tecnicas">
+<div class="wrap">
+  <div class="ctrl-bar">
+    <div class="srch">
+      <svg class="si" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input type="text" id="srchInp" placeholder="Buscar técnica, categoría…">
+    </div>
+    <div class="filt" id="filtBtns"></div>
+  </div>
+  <div class="rcount" id="rcount"></div>
+  <div class="cgrid" id="cgrid"></div>
+</div>
+</div>
+
+<!-- ═══ TALLER ═══ -->
+<div class="panel" id="panel-taller">
+<div class="wwrap">
+  <div class="wtit">Taller de Escritura</div>
+  <div class="wsub">Selecciona · Lee el ejemplo · Escucha la voz · Escribe · Evalúa la sintaxis</div>
+
+  <div class="fblk">
+    <label class="flbl">Técnica a practicar</label>
+    <select class="fsel" id="wSel"><option value="">— Elige una técnica —</option></select>
+  </div>
+
+  <div class="expanel" id="exPanel">
+    <div class="exl">Ejemplo de referencia</div>
+    <div class="ext" id="exTxt"></div>
+    <div class="exp-tts" id="expTts">
+      <button class="tts-play es" id="exPlay" title="Leer ejemplo">
+        <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="5,3 19,12 5,21"/></svg>
+      </button>
+      <button class="tts-stop" id="exStop">
+        <svg viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="6" width="12" height="12" rx="1"/></svg>
+      </button>
+      <select class="tts-speed" id="exSpeed">
+        <option value=".75">0.75×</option>
+        <option value="1" selected>1×</option>
+        <option value="1.25">1.25×</option>
+        <option value="1.5">1.5×</option>
+      </select>
+      <div class="tts-prog" id="exProg"><div class="tts-fill" id="exProgFill" style="background:var(--teal2)"></div></div>
+      <span class="tts-status" id="exStatus">Listo</span>
+    </div>
+  </div>
+
+  <div class="fblk">
+    <label class="flbl">Tu práctica</label>
+    <textarea class="wtarea" id="wText" placeholder="Escribe aquí tu texto aplicando la técnica seleccionada…&#10;&#10;Se verificará la coincidencia sintáctica con el patrón de la técnica."></textarea>
+    <div class="wcinf">
+      <span class="wcnt"><strong id="wCount">0</strong> palabras</span>
+    </div>
+  </div>
+
+  <!-- TTS para práctica -->
+  <div class="prac-tts">
+    <button class="tts-play es" id="pracPlay" title="Leer tu texto">
+      <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="5,3 19,12 5,21"/></svg>
+    </button>
+    <button class="tts-stop" id="pracStop">
+      <svg viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="6" width="12" height="12" rx="1"/></svg>
+    </button>
+    <select class="tts-speed" id="pracSpeed">
+      <option value=".75">0.75×</option>
+      <option value="1" selected>1×</option>
+      <option value="1.25">1.25×</option>
+      <option value="1.5">1.5×</option>
+    </select>
+    <div class="tts-prog" id="pracProg"><div class="tts-fill" id="pracProgFill"></div></div>
+    <span class="tts-status" id="pracStatus">Listo</span>
+  </div>
+
+  <div class="actrow">
+    <button class="bmain" id="btnEval">⚡ Evaluar texto y sintaxis</button>
+    <button class="bsec" id="btnSave">✦ Guardar en biblioteca</button>
+    <button class="bgh" id="btnClr">Limpiar</button>
+  </div>
+
+  <div class="ecard" id="ecard">
+    <div class="ebar"></div>
+    <div class="ehead">
+      <span class="etit">◈ Análisis completo</span>
+      <div class="pills" id="ePills"></div>
+    </div>
+    <div class="ebody" id="eBody">
+      <div class="loading"><div class="spin"></div></div>
+    </div>
+    <!-- TTS result reader -->
+    <div class="result-tts" id="resultTtsBar">
+      <span style="font-family:'Josefin Sans',sans-serif;font-size:.6rem;letter-spacing:.15em;text-transform:uppercase;color:var(--ink3);">Leer resultado:</span>
+      <button class="tts-play es" id="resPlay" title="Leer análisis">
+        <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="5,3 19,12 5,21"/></svg>
+      </button>
+      <button class="tts-stop" id="resStop">
+        <svg viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="6" width="12" height="12" rx="1"/></svg>
+      </button>
+      <select class="tts-speed" id="resSpeed">
+        <option value=".75">0.75×</option>
+        <option value="1" selected>1×</option>
+        <option value="1.25">1.25×</option>
+      </select>
+      <div class="tts-prog"><div class="tts-fill" id="resProgFill" style="background:var(--grn2)"></div></div>
+      <span class="tts-status" id="resStatus">Listo</span>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ═══ BIBLIOTECA ═══ -->
+<div class="panel" id="panel-biblioteca">
+<div class="libwrap">
+  <div class="libtit">Mi Biblioteca</div>
+  <div class="libsub">Textos guardados con evaluación sintáctica y de técnica</div>
+  <div id="libCont"></div>
+</div>
+</div>
+
+<!-- MODAL -->
+<div class="mbg" id="mbg">
+<div class="modal">
+  <div class="mbar"></div>
+  <div class="mhead">
+    <button class="mx" id="mx">×</button>
+    <div class="mcat" id="mcat"></div>
+    <div class="mname" id="mname"></div>
+  </div>
+  <!-- Modal TTS bar -->
+  <div class="modal-tts" id="modalTtsBar">
+    <span style="font-family:'Josefin Sans',sans-serif;font-size:.6rem;letter-spacing:.15em;text-transform:uppercase;color:var(--ink3);">Leer análisis:</span>
+    <button class="tts-play es" id="modalPlay">
+      <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="5,3 19,12 5,21"/></svg>
+    </button>
+    <button class="tts-stop" id="modalStop">
+      <svg viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="6" width="12" height="12" rx="1"/></svg>
+    </button>
+    <select class="tts-speed" id="modalSpeed">
+      <option value=".75">0.75×</option>
+      <option value="1" selected>1×</option>
+      <option value="1.25">1.25×</option>
+    </select>
+    <div class="tts-prog"><div class="tts-fill" id="modalProgFill"></div></div>
+    <span class="tts-status" id="modalStatus">Listo</span>
+  </div>
+  <div class="mbody" id="mbody">
+    <div class="loading"><div class="spin"></div></div>
+  </div>
+</div>
+</div>
+
+<div class="notif" id="notif"></div>
+
+<script>
+// ══════════════════════════════════════════
+// TECHNIQUES DATA (30 representative, one per major subcategory across cuento/ensayo/uni)
+// ══════════════════════════════════════════
+const T = [
+  // CUENTOS
+  {id:1,cat:"Cuento · Inicio",name:"El comienzo in medias res",
+   desc:"Iniciar el relato en pleno conflicto, sin preámbulos. La información contextual se revela después, por goteo, mientras la acción ya avanza a toda velocidad.",
+   ex:"La bala ya había atravesado la ventana cuando Martín comprendió que llevaba tres días sin dormir y que alguien sabía exactamente dónde vivía.",
+   synPattern:"Pluscuamperfecto de apertura + cláusula temporal + revelación interna."},
+  {id:2,cat:"Cuento · Voz",name:"El narrador no confiable",
+   desc:"El narrador miente, omite o no comprende lo que cuenta. El lector percibe la grieta entre el relato oficial y la realidad subyacente.",
+   ex:"Yo nunca le hice daño a nadie. Pregúntenle a cualquiera. Lo que pasó aquella noche fue un accidente, y si él no hubiera dicho lo que dijo, nada de esto habría ocurrido.",
+   synPattern:"Primera persona con negación enfática + imperativo de búsqueda de testigos + condicional exculpatorio."},
+  {id:3,cat:"Cuento · Tiempo",name:"La elipsis dramática",
+   desc:"Saltar deliberadamente sobre un evento importante. Lo que se calla pesa más que lo que se dice. Teoría del iceberg: el texto es la punta visible.",
+   ex:"Se dijeron todo lo que se habían callado durante años. Cuando salieron del café, ya no eran las mismas personas que habían entrado.",
+   synPattern:"Oración de acción total → conector temporal → oración de estado transformado. Ausencia total del evento central."},
+  {id:4,cat:"Cuento · Personaje",name:"El detalle metonímico",
+   desc:"Un detalle físico o gestual que condensa toda la psicología del personaje. Vale más que tres páginas de descripción psicológica.",
+   ex:"Siempre doblaba los billetes por la mitad, por el centro exacto, con una precisión que a todos incomodaba. Nadie le preguntó nunca por qué.",
+   synPattern:"Adverbio de frecuencia + verbo habitual + complemento de modo preciso + oración negativa con tiempo universal."},
+  {id:5,cat:"Cuento · Diálogo",name:"El diálogo que revela sin declarar",
+   desc:"Los personajes nunca dicen directamente lo que sienten. La tensión está en lo no dicho, en la respuesta que evita la pregunta.",
+   ex:"—¿Ya comiste? —preguntó ella. —Sí. —¿Seguro? —Sí. Silencio. —Hay sobras en el refrigerador. —Ya sé. —Solo por si acaso. —Ya sé.",
+   synPattern:"Preguntas de verificación + respuestas monosilábicas + repetición de fórmula + oración de oferta oblicua."},
+  {id:6,cat:"Cuento · Espacio",name:"El espacio como estado de ánimo",
+   desc:"La descripción del entorno no es decorado sino exteriorización de la psicología del personaje o del tono del relato.",
+   ex:"La habitación olía a cerrado, a papeles viejos, a algo que había dejado de esperar. Las ventanas tenían esa clase de suciedad que tarda años en acumularse.",
+   synPattern:"Enumeración olfativa con gradación abstracta + relativa especificativa con verbo de proceso lento."},
+  {id:7,cat:"Cuento · Lenguaje",name:"La economía léxica",
+   desc:"Cada palabra debe ganar su lugar en el texto. Eliminar adjetivos redundantes, adverbios que debilitan el verbo, frases que repiten lo ya dicho.",
+   ex:"Llovía. Él esperaba. Ella no llegó. Eso fue todo, aunque ninguno de los dos lo supo hasta mucho después.",
+   synPattern:"Tres oraciones unimembres + coordinación adversativa con cláusula temporal de revelación diferida."},
+  {id:8,cat:"Cuento · Final",name:"El final de imagen",
+   desc:"Cerrar con una imagen visual, sin comentario ni interpretación del narrador. La imagen resuena en silencio después de la última palabra.",
+   ex:"Salió a la calle. La ciudad seguía igual que siempre. Encendió un cigarrillo y miró el cielo que empezaba a aclararse, sin prisa, como si no supiera lo que había pasado adentro.",
+   synPattern:"Acciones breves en secuencia + oración de continuidad del mundo + gerundio de mirada + comparativa de ignorancia."},
+  {id:9,cat:"Cuento · Fantástico",name:"Lo fantástico por tono neutro",
+   desc:"Narrar hechos imposibles con la misma distancia con que se narran los cotidianos. La magia no sorprende al narrador; ese tono obliga al lector a aceptar lo extraordinario.",
+   ex:"Esa mañana, como todas las mañanas desde hacía un mes, el muerto desayunó en silencio, dobló el periódico, y dejó las tazas en el fregadero antes de desaparecer.",
+   synPattern:"Locución temporal de hábito + acumulación de acciones domésticas en serie + verbo imposible intercalado sin marca de extrañeza."},
+  {id:10,cat:"Cuento · Microrrelato",name:"El final que relee el comienzo",
+   desc:"La última frase cambia el sentido de todo lo anterior, obligando a una segunda lectura. El efecto de sorpresa es también un efecto de profundidad.",
+   ex:"Llevaba años esperándola en el mismo banco. Esa tarde, por fin, ella llegó. No lo reconoció.",
+   synPattern:"Imperfecto de duración + pretérito de llegada + negación de reconocimiento como vuelta de tuerca."},
+  // ENSAYO
+  {id:11,cat:"Ensayo · Tesis",name:"La tesis como paradoja",
+   desc:"Formular la posición central del ensayo como una afirmación que contradice el sentido común. La paradoja genera curiosidad y obliga a seguir leyendo.",
+   ex:"Cuanto más intentamos proteger a los niños del fracaso, más los preparamos para fracasar como adultos.",
+   synPattern:"Correlativo cuanto más + verbo de intento + complemento negativo, más + consecuencia opuesta."},
+  {id:12,cat:"Ensayo · Argumento",name:"La concesión estratégica",
+   desc:"Reconocer los puntos válidos de la posición contraria antes de refutarlos. La concesión aumenta la credibilidad del ensayista.",
+   ex:"Es cierto que la regulación del mercado puede desincentivar la innovación. Sin embargo, la historia de las crisis financieras demuestra que los mercados no regulados no producen innovación sino concentración de riesgo.",
+   synPattern:"'Es cierto que' + afirmación del adversario + 'Sin embargo' + evidencia histórica + negación doble de la promesa opositora."},
+  {id:13,cat:"Ensayo · Estructura",name:"La introducción en tres tiempos",
+   desc:"La introducción canónica avanza de lo general a lo particular: sitúa el tema en contexto amplio, precisa el problema específico y formula la tesis.",
+   ex:"El debate sobre la educación pública ha estructurado la política latinoamericana durante dos siglos. Sin embargo, en la última década ese debate ha adoptado una nueva dimensión: la privatización encubierta. Este ensayo argumenta que los vouchers educativos consolidan la segregación social.",
+   synPattern:"Oración de contexto amplio + conector adversativo + especificación del nicho + oración de tesis con verbo de argumentación."},
+  {id:14,cat:"Ensayo · Lenguaje",name:"La frase corta como golpe retórico",
+   desc:"Después de análisis complejo, una frase breve sirve como punto de inflexión, conclusión rotunda. La brevedad en contexto tiene la contundencia de un veredicto.",
+   ex:"Se han propuesto decenas de soluciones técnicas al problema de la desinformación. Ninguna ha funcionado. La razón es que se trata de un problema político, no técnico.",
+   synPattern:"Oración amplia de inventario + oración negativa ultracorta + oración explicativa con estructura 'es que'."},
+  {id:15,cat:"Ensayo · Retórica",name:"La anáfora argumentativa",
+   desc:"Repetir la misma estructura sintáctica al inicio de frases consecutivas para crear efecto acumulativo. La anáfora en el ensayo es ritmo al servicio del razonamiento.",
+   ex:"No es que no tengamos los datos. No es que no tengamos los recursos. No es que no tengamos los precedentes. Lo que no tenemos es la voluntad política.",
+   synPattern:"Triple 'No es que no tengamos' + sustantivo clave → resolución con 'Lo que no tenemos es'."},
+  {id:16,cat:"Ensayo · Apertura",name:"La apertura con anécdota",
+   desc:"Comenzar con una historia breve que encarne el problema abstracto que el ensayo va a desarrollar. La anécdota humaniza la tesis y captura la atención.",
+   ex:"En 2019, una maestra rural de Oaxaca me mostró los libros de texto que usaba para enseñar ciencias naturales. Eran de 1987. Esa imagen es más elocuente que cualquier estadística sobre la brecha educativa.",
+   synPattern:"Fecha + personaje + acción de mostrar + dato de antigüedad aislado + oración evaluativa comparativa."},
+  {id:17,cat:"Ensayo · Cierre",name:"La conclusión que abre, no cierra",
+   desc:"En lugar de resumir, la conclusión formula las preguntas que el análisis ha abierto y señala implicaciones prácticas.",
+   ex:"Si la tesis de este ensayo es correcta —que el lenguaje no solo describe el mundo sino que lo constituye—, entonces la reforma del lenguaje político no es un ejercicio retórico sino una intervención sobre la realidad.",
+   synPattern:"Condicional con tesis entre guiones + 'entonces' + reencuadre de la implicación con negación de la concepción reducida."},
+  {id:18,cat:"Ensayo · Crítica",name:"La genealogía del concepto",
+   desc:"Rastrear el origen histórico de un concepto para revelar que lo que parece natural es en realidad una construcción histórica específica.",
+   ex:"El concepto de 'adolescencia' como fase vital distinta no tiene más de ciento cincuenta años: fue construido por la psicología del siglo XIX para gestionar el tiempo libre de los jóvenes burgueses.",
+   synPattern:"Sujeto entre comillas + predicado de inexistencia con límite temporal + dos puntos + oración de origen con agente e instrumento."},
+  {id:19,cat:"Ensayo · Ideas",name:"La provocación fundada",
+   desc:"Formular una afirmación deliberadamente provocadora para sacudir al lector, respaldada por un argumento riguroso.",
+   ex:"La tolerancia no es una virtud. Es, en el mejor de los casos, un estado de resignación ante lo que no podemos cambiar.",
+   synPattern:"Negación rotunda de la virtud convencional + corrección con 'en el mejor de los casos' + definición degradada."},
+  {id:20,cat:"Ensayo · Intertextualidad",name:"El diálogo con un texto clásico",
+   desc:"Tomar un texto canónico como interlocutor: citarlo, discutirlo, actualizarlo o refutarlo.",
+   ex:"Cuando Tocqueville describió el 'despotismo suave' de la democracia —una tiranía que no aplasta sino que adormece—, no estaba describiendo un peligro futuro sino el presente de su época. Y el nuestro.",
+   synPattern:"Cuando + nombre canónico + verbo de descripción + cita entre comillas + corrección temporal con 'no... sino' + cierre lapidario."},
+  // UNIVERSITARIA
+  {id:21,cat:"Universitaria · Síntesis",name:"La paráfrasis académica",
+   desc:"Reformular las ideas de un autor con palabras propias sin cambiar el significado. La paráfrasis demuestra comprensión real y evita el plagio.",
+   ex:"El capital social designa el conjunto de redes interpersonales y los valores de reciprocidad y confianza que esas redes generan y sostienen.",
+   synPattern:"Sujeto técnico + verbo 'designar' en presente + complemento nominal complejo con relativa de producción."},
+  {id:22,cat:"Universitaria · Formal",name:"El párrafo PEEL",
+   desc:"Point → Evidence → Explanation → Link. Garantiza párrafos completos y argumentalmente sólidos en escritura académica.",
+   ex:"La educación pública de calidad reduce la desigualdad de ingresos. Según Chetty et al., un aumento del 10% en gasto por alumno se asocia a un incremento del 7% en ingresos adultos. Esto sugiere que los recursos educativos compensan las desventajas de origen. Por tanto, las políticas de equidad educativa son también políticas económicas.",
+   synPattern:"[P] Afirmación + [E] Fuente + dato + [E] 'Esto sugiere que' + [L] 'Por tanto' + implicación ampliada."},
+  {id:23,cat:"Universitaria · Cita",name:"La integración de la fuente en el argumento",
+   desc:"Las fuentes no deben aparecer como islas sino integradas en el argumento. Flujo: afirmación propia → evidencia → interpretación propia.",
+   ex:"La desigualdad educativa no solo reproduce la desigualdad económica sino que la amplifica generacionalmente. Los datos de Piketty (2014) muestran que la correlación entre nivel educativo de los padres e ingresos de los hijos ha aumentado, lo que sugiere que el sistema educativo actual refuerza las ventajas de origen.",
+   synPattern:"Afirmación propia con intensificador 'no solo... sino que' + referencia + dato + 'lo que sugiere que' + interpretación."},
+  {id:24,cat:"Universitaria · Argumentación",name:"La distinción analítica",
+   desc:"Diferenciar con precisión dos conceptos que el uso común confunde. La distinción analítica es una de las operaciones más frecuentes del ensayo filosófico.",
+   ex:"Hay que distinguir entre la tolerancia y la aceptación: tolerar es soportar lo que se considera inaceptable; aceptar es reconocer la legitimidad de lo diferente.",
+   synPattern:"'Hay que distinguir entre X y Y:' + definición de X con verbo + cláusula relativa; + definición paralela de Y."},
+  {id:25,cat:"Universitaria · Científica",name:"El lenguaje de la probabilidad científica",
+   desc:"Usar hedging apropiado: 'sugiere', 'indica', 'es consistente con'. Evitar 'prueba' y 'demuestra' salvo cuando el diseño lo justifique.",
+   ex:"Los resultados son consistentes con la hipótesis de que X contribuye a Y, aunque la causalidad no puede establecerse con este diseño transversal.",
+   synPattern:"'Los resultados son consistentes con la hipótesis de que' + afirmación + 'aunque' + limitación de diseño."},
+  {id:26,cat:"Universitaria · Proceso",name:"La revisión en tres pasadas",
+   desc:"(1) Revisión de contenido. (2) Revisión de organización. (3) Revisión de estilo y corrección. Nunca hacer las tres a la vez.",
+   ex:"En la primera pasada se identifica si el argumento es completo. En la segunda, si la estructura lo facilita. En la tercera, si el lenguaje es preciso. Cada pasada tiene un único foco.",
+   synPattern:"Triple estructura 'En la [ordinal] pasada + se + verbo + si + cláusula'. Oración de cierre con principio unificador."},
+  {id:27,cat:"Universitaria · Crítica",name:"La identificación de supuestos implícitos",
+   desc:"Todo argumento descansa sobre supuestos no explícitos. El pensamiento crítico consiste en identificarlos y evaluar si son justificados.",
+   ex:"El argumento de [autor] asume implícitamente que [supuesto], lo cual no se justifica en el texto. Si este supuesto es incorrecto, entonces la conclusión no se sostiene.",
+   synPattern:"'El argumento de X asume implícitamente que' + supuesto + 'lo cual no se justifica' + condicional con 'Si... entonces'."},
+  {id:28,cat:"Universitaria · Disciplinar",name:"El análisis con IRAC",
+   desc:"Issue → Rule → Application → Conclusion. Estructura fundamental del análisis jurídico y normativo.",
+   ex:"[Problema] ¿Constituye la conducta X una violación del artículo Y? [Norma] El artículo Y dispone que... [Aplicación] En el caso en cuestión, se dan los elementos A y B pero no el elemento C. [Conclusión] Por tanto, la conducta no constituye una violación.",
+   synPattern:"Pregunta de identificación de problema + enunciado normativo + aplicación con presencia/ausencia de elementos + 'Por tanto' + conclusión jurídica."},
+  {id:29,cat:"Universitaria · Síntesis",name:"La síntesis vs. el resumen",
+   desc:"El resumen reproduce las ideas del autor en orden; la síntesis las reorganiza según la lógica propia del escritor. La escritura universitaria exige síntesis.",
+   ex:"La posición de [autor] sobre [tema] puede entenderse como una defensa de X, fundamentada en Y y Z, que contrasta con la perspectiva de [otro autor] en los siguientes aspectos clave.",
+   synPattern:"'La posición de X puede entenderse como' + síntesis + 'fundamentada en' + razones + 'que contrasta con' + contrapunto."},
+  {id:30,cat:"Universitaria · Ética",name:"El manejo ético de las fuentes",
+   desc:"El plagio incluye parafrasear sin citar, usar ideas ajenas sin reconocimiento, y presentar como propios textos generados por IA.",
+   ex:"En este trabajo se utilizan fuentes primarias y secundarias debidamente referenciadas. Todo texto parafraseado incluye su cita correspondiente. Las ideas propias se distinguen claramente de las ajenas.",
+   synPattern:"Triple declaración de transparencia en presente pasivo + criterio de distinción explícito."},
+];
+
+// ══════════════════════════════════════════
+// PARTICLES
+// ══════════════════════════════════════════
+const pc = document.getElementById('ptcls');
+['✦','❧','✿','⸙'].forEach((g,i) => {
+  const e = document.createElement('div');
+  e.className='fth'; e.textContent=g;
+  e.style.cssText=`left:${8+i*24}vw;animation-duration:${20+i*5}s;animation-delay:${i*4}s;font-size:${.9+i*.2}rem;`;
+  pc.appendChild(e);
+});
+for(let i=0;i<20;i++){
+  const e=document.createElement('div');
+  e.className='pt';
+  e.style.cssText=`left:${Math.random()*100}vw;animation-duration:${10+Math.random()*14}s;animation-delay:${Math.random()*14}s;`;
+  pc.appendChild(e);
+}
+
+// ══════════════════════════════════════════
+// NAV
+// ══════════════════════════════════════════
+document.querySelectorAll('.ntab').forEach(t=>{
+  t.addEventListener('click',()=>{
+    document.querySelectorAll('.ntab').forEach(x=>x.classList.remove('active'));
+    document.querySelectorAll('.panel').forEach(x=>x.classList.remove('active'));
+    t.classList.add('active');
+    document.getElementById('panel-'+t.dataset.p).classList.add('active');
+    if(t.dataset.p==='biblioteca') renderLib();
+  });
+});
+
+// ══════════════════════════════════════════
+// TTS ENGINE
+// ══════════════════════════════════════════
+const synth = ('speechSynthesis' in window) ? window.speechSynthesis : null;
+let activeTTS = null; // { utterance, source }
+
+function ttsStop(source) {
+  if(synth) synth.cancel();
+  activeTTS = null;
+}
+
+function ttsSpeak(text, lang='es-ES', rate=1, onWord, onEnd) {
+  if(!synth || !text.trim()) return;
+  ttsStop();
+  const u = new SpeechSynthesisUtterance(text);
+  u.lang = lang; u.rate = rate;
+  const voices = synth.getVoices();
+  const v = voices.find(v=>v.lang.startsWith(lang.slice(0,2)) && (v.name.includes('Google')||v.name.includes('Natural'))) ||
+            voices.find(v=>v.lang.startsWith(lang.slice(0,2)));
+  if(v) u.voice = v;
+  u.onboundary = e => { if(e.name==='word' && onWord) onWord(e.charIndex); };
+  u.onend = () => { if(onEnd) onEnd(); };
+  u.onerror = () => { if(onEnd) onEnd(); };
+  activeTTS = u;
+  synth.speak(u);
+}
+
+function buildTTSControls({playBtn, stopBtn, speedSel, progFill, statusEl, getText, getLang}) {
+  let words=[], isPlaying=false, isPaused=false;
+
+  function updateUI(mode) {
+    const icons = {
+      play:`<polygon points="5,3 19,12 5,21"/>`,
+      pause:`<rect x="6" y="4" width="4" height="16" rx="1"/><rect x="14" y="4" width="4" height="16" rx="1"/>`
+    };
+    if(playBtn) playBtn.innerHTML = `<svg viewBox="0 0 24 24" fill="currentColor">${mode==='playing'?icons.pause:icons.play}</svg>`;
+    if(statusEl) statusEl.textContent = mode==='playing'?'Leyendo…':mode==='paused'?'Pausado':'Listo';
+  }
+
+  function getRate() { return speedSel ? parseFloat(speedSel.value)||1 : 1; }
+
+  if(playBtn) playBtn.addEventListener('click', ()=>{
+    const text = getText();
+    if(!text.trim()){showNotif('⚠ No hay texto que leer');return;}
+    if(isPaused && synth){
+      synth.resume(); isPaused=false; isPlaying=true; updateUI('playing'); return;
+    }
+    words = text.trim().split(/\s+/);
+    isPlaying=true; isPaused=false;
+    ttsSpeak(text, getLang?getLang():'es-ES', getRate(),
+      charIdx => {
+        let pos=0, wi=0;
+        for(let i=0;i<words.length;i++){
+          if(charIdx>=pos && charIdx<pos+words[i].length){wi=i;break;}
+          pos+=words[i].length+1;
+        }
+        if(progFill) progFill.style.width = words.length>1 ? (wi/(words.length-1)*100)+'%' : '0%';
+      },
+      ()=>{isPlaying=false;isPaused=false;updateUI('idle');if(progFill)progFill.style.width='0%';}
+    );
+    updateUI('playing');
+  });
+
+  if(stopBtn) stopBtn.addEventListener('click', ()=>{
+    ttsStop(); isPlaying=false; isPaused=false;
+    updateUI('idle'); if(progFill)progFill.style.width='0%';
+  });
+}
+
+// ══════════════════════════════════════════
+// COLORIZER
+// ══════════════════════════════════════════
+const VERBS=['es','son','fue','fueron','ha','han','tenía','tiene','dijo','era','había','llegó','salió','miró','recordó','olía','encendió','llovía','esperaba','parecía','resulta','sugiere','indica','muestra','demuestra','argumenta','afirma','señala','puede','debe','requiere','permite','implica','produce','designa','distinguir','constituye','considera','asume'];
+const ADVS=['no','nunca','siempre','también','además','sin','embargo','aunque','precisamente','solo','aún','todavía','tanto','así','incluso','muy','más','menos','ya','por','tanto','entonces','ahora','antes','después'];
+const CONNS=['que','como','pero','y','o','ni','porque','cuando','si','aunque','de','en','a','la','el','lo','las','los','un','una','unos','unas','le','se','me','te','nos','por','para','con','al','del','su','sus','este','esta','estos','estas','ese','esa','esos','esas'];
+function colorize(text){
+  return text.split(/(\s+)/).map(w=>{
+    const c=w.toLowerCase().replace(/[^a-záéíóúüñ]/g,'');
+    if(!c) return w;
+    if(VERBS.some(v=>c===v)) return `<span class="sv">${w}</span>`;
+    if(ADVS.some(v=>c===v)) return `<span class="sad">${w}</span>`;
+    if(CONNS.some(v=>c===v)) return `<span class="sc">${w}</span>`;
+    return w;
+  }).join('');
+}
+
+// ══════════════════════════════════════════
+// CATEGORIES & FILTER
+// ══════════════════════════════════════════
+const CATS = ['Todas', 'Cuento', 'Ensayo', 'Universitaria'];
+let activeCat = 'Todas';
+const filtCont = document.getElementById('filtBtns');
+CATS.forEach(c=>{
+  const b=document.createElement('button');
+  b.className='fb'+(c==='Todas'?' on':'');
+  b.textContent=c;
+  b.addEventListener('click',()=>{
+    activeCat=c;
+    document.querySelectorAll('.fb').forEach(x=>x.classList.remove('on'));
+    b.classList.add('on');
+    renderGrid();
+  });
+  filtCont.appendChild(b);
+});
+
+// ══════════════════════════════════════════
+// RENDER GRID
+// ══════════════════════════════════════════
+function renderGrid(q=''){
+  let list = T;
+  if(activeCat!=='Todas') list=list.filter(t=>t.cat.includes(activeCat));
+  if(q){ const ql=q.toLowerCase(); list=list.filter(t=>t.name.toLowerCase().includes(ql)||t.cat.toLowerCase().includes(ql)||t.desc.toLowerCase().includes(ql)); }
+  document.getElementById('rcount').innerHTML=`Mostrando <strong>${list.length}</strong> de <strong>${T.length}</strong> técnicas`;
+  const grid=document.getElementById('cgrid');
+  grid.innerHTML=list.map(t=>`
+    <div class="card">
+      <div class="card-accent"></div>
+      <div class="ci">
+        <div class="ctop"><span class="ccat">${t.cat}</span><span class="cnum">${String(t.id).padStart(2,'0')}</span></div>
+        <div class="cname">${t.name}</div>
+        <div class="cdesc">${t.desc}</div>
+        <div class="cex" id="cex-${t.id}">
+          <div class="cex-l">Ejemplo</div>
+          <div class="cex-t">${t.ex}</div>
+        </div>
+      </div>
+      <div class="card-tts">
+        <button class="tts-play es" data-tts="${t.id}" title="Leer ejemplo">
+          <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="5,3 19,12 5,21"/></svg>
+        </button>
+        <button class="tts-stop" data-tstop="${t.id}">
+          <svg viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="6" width="12" height="12" rx="1"/></svg>
+        </button>
+        <select class="tts-speed" id="sp-${t.id}">
+          <option value=".75">0.75×</option>
+          <option value="1" selected>1×</option>
+          <option value="1.25">1.25×</option>
+          <option value="1.5">1.5×</option>
+        </select>
+        <div class="tts-prog"><div class="tts-fill" id="tf-${t.id}"></div></div>
+        <span class="tts-status" id="ts-${t.id}">Listo</span>
+      </div>
+      <div class="cbtns">
+        <button class="cbtn cba" data-aid="${t.id}">Análisis sintáctico</button>
+        <button class="cbtn cbp" data-pid="${t.id}">Practicar</button>
+      </div>
+    </div>
+  `).join('');
+
+  // Card TTS buttons
+  grid.querySelectorAll('[data-tts]').forEach(btn=>{
+    const id=+btn.dataset.tts;
+    const tech=T.find(x=>x.id===id);
+    if(!tech) return;
+    let playing=false;
+    btn.addEventListener('click',()=>{
+      if(playing){ ttsStop(); playing=false; btn.innerHTML=`<svg viewBox="0 0 24 24" fill="currentColor"><polygon points="5,3 19,12 5,21"/></svg>`; document.getElementById(`ts-${id}`).textContent='Listo'; document.getElementById(`tf-${id}`).style.width='0%'; return; }
+      const words=tech.ex.trim().split(/\s+/);
+      playing=true;
+      btn.innerHTML=`<svg viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16" rx="1"/><rect x="14" y="4" width="4" height="16" rx="1"/></svg>`;
+      document.getElementById(`ts-${id}`).textContent='Leyendo…';
+      const rate=parseFloat(document.getElementById(`sp-${id}`).value)||1;
+      ttsSpeak(tech.ex,'es-ES',rate,
+        ci=>{ let pos=0,wi=0; for(let i=0;i<words.length;i++){if(ci>=pos&&ci<pos+words[i].length){wi=i;break;}pos+=words[i].length+1;} document.getElementById(`tf-${id}`).style.width=words.length>1?(wi/(words.length-1)*100)+'%':'0%'; },
+        ()=>{ playing=false; btn.innerHTML=`<svg viewBox="0 0 24 24" fill="currentColor"><polygon points="5,3 19,12 5,21"/></svg>`; document.getElementById(`ts-${id}`).textContent='Listo'; document.getElementById(`tf-${id}`).style.width='0%'; }
+      );
+    });
+  });
+  grid.querySelectorAll('[data-tstop]').forEach(btn=>btn.addEventListener('click',()=>{ ttsStop(); const id=+btn.dataset.tstop; const pb=grid.querySelector(`[data-tts="${id}"]`); if(pb)pb.innerHTML=`<svg viewBox="0 0 24 24" fill="currentColor"><polygon points="5,3 19,12 5,21"/></svg>`; const ts=document.getElementById(`ts-${id}`); const tf=document.getElementById(`tf-${id}`); if(ts)ts.textContent='Listo'; if(tf)tf.style.width='0%'; }));
+
+  grid.querySelectorAll('[data-aid]').forEach(b=>b.addEventListener('click',()=>openModal(+b.dataset.aid)));
+  grid.querySelectorAll('[data-pid]').forEach(b=>b.addEventListener('click',()=>openWorkshop(+b.dataset.pid)));
+}
+document.getElementById('srchInp').addEventListener('input',e=>renderGrid(e.target.value));
+renderGrid();
+
+// Populate workshop select
+const wSel=document.getElementById('wSel');
+T.forEach(t=>{const o=document.createElement('option');o.value=t.id;o.textContent=`${String(t.id).padStart(2,'0')}. [${t.cat}] ${t.name}`;wSel.appendChild(o);});
+
+// ══════════════════════════════════════════
+// WORKSHOP SELECT CHANGE
+// ══════════════════════════════════════════
+wSel.addEventListener('change',()=>{
+  const t=T.find(x=>x.id===+wSel.value);
+  const ep=document.getElementById('exPanel');
+  if(t){ document.getElementById('exTxt').textContent=t.ex; ep.classList.add('show'); }
+  else ep.classList.remove('show');
+  document.getElementById('ecard').classList.remove('show');
+});
+
+function openWorkshop(id){
+  document.querySelectorAll('.ntab').forEach(x=>x.classList.remove('active'));
+  document.querySelectorAll('.panel').forEach(x=>x.classList.remove('active'));
+  document.querySelector('[data-p="taller"]').classList.add('active');
+  document.getElementById('panel-taller').classList.add('active');
+  wSel.value=id; wSel.dispatchEvent(new Event('change'));
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+// Workshop TTS bindings
+buildTTSControls({
+  playBtn:document.getElementById('exPlay'), stopBtn:document.getElementById('exStop'),
+  speedSel:document.getElementById('exSpeed'), progFill:document.getElementById('exProgFill'),
+  statusEl:document.getElementById('exStatus'),
+  getText:()=>document.getElementById('exTxt').textContent
+});
+buildTTSControls({
+  playBtn:document.getElementById('pracPlay'), stopBtn:document.getElementById('pracStop'),
+  speedSel:document.getElementById('pracSpeed'), progFill:document.getElementById('pracProgFill'),
+  statusEl:document.getElementById('pracStatus'),
+  getText:()=>document.getElementById('wText').value
+});
+
+// Word count
+document.getElementById('wText').addEventListener('input',()=>{
+  const w=document.getElementById('wText').value.trim();
+  document.getElementById('wCount').textContent=w?w.split(/\s+/).length:0;
+  document.getElementById('ecard').classList.remove('show');
+});
+document.getElementById('btnClr').addEventListener('click',()=>{
+  document.getElementById('wText').value='';
+  document.getElementById('wCount').textContent='0';
+  document.getElementById('ecard').classList.remove('show');
+});
+
+// ══════════════════════════════════════════
+// MODAL ANALYSIS
+// ══════════════════════════════════════════
+document.getElementById('mx').addEventListener('click',()=>document.getElementById('mbg').classList.remove('open'));
+document.getElementById('mbg').addEventListener('click',e=>{if(e.target===document.getElementById('mbg'))document.getElementById('mbg').classList.remove('open');});
+
+let modalAnalysisText = '';
+
+async function openModal(id){
+  const t=T.find(x=>x.id===id);if(!t)return;
+  document.getElementById('mcat').textContent=`Técnica ${String(id).padStart(2,'0')} · ${t.cat}`;
+  document.getElementById('mname').textContent=t.name;
+  document.getElementById('mbody').innerHTML=`<div class="loading"><div class="spin"></div><br><br>Analizando estructura sintáctica…</div>`;
+  document.getElementById('mbg').classList.add('open');
+  modalAnalysisText='';
+  try{
+    const res=await fetch("https://api.anthropic.com/v1/messages",{
+      method:"POST",headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({model:"claude-sonnet-4-20250514",max_tokens:1000,
+        messages:[{role:"user",content:`Eres lingüista experto en castellano. Analiza la técnica narrativa/académica con máximo rigor.
+Responde SOLO en JSON sin backticks:
+{"descripcion":"Análisis profundo de la técnica y su función discursiva. 3-4 oraciones.",
+"analisis_sintactico":"Analiza en detalle la estructura sintáctica del ejemplo: tipos de oraciones (simple/compuesta/subordinada), tiempos verbales, voz activa/pasiva, concordancias, nexos subordinantes, y figuras sintácticas como anáfora, hipérbaton, paralelismo, elipsis. 4-5 oraciones.",
+"patron_dominante":"Describe el patrón sintáctico dominante del ejemplo en 1-2 oraciones. Nombra el patrón específico que lo define.",
+"recursos_estilisticos":"Lista los 3 principales recursos estilísticos con su función específica en este texto.",
+"efecto_discursivo":"Qué efecto produce esta construcción sintáctica en el lector y para qué sirve en su contexto (cuento/ensayo/académico). 2 oraciones.",
+"marca_sintactica":"Una frase técnica que describa la 'firma sintáctica' de esta técnica: el patrón que debe reproducirse en la práctica para que se considere bien aplicada.",
+"consejo":"Consejo práctico y concreto para aplicar esta técnica con excelencia."}
+Técnica: "${t.name}" | Categoría: "${t.cat}"
+Descripción: "${t.desc}"
+Patrón sintáctico esperado: "${t.synPattern}"
+Ejemplo: "${t.ex}"`}]})
+    });
+    const data=await res.json();
+    const raw=data.content?.find(b=>b.type==='text')?.text||'{}';
+    const obj=JSON.parse(raw.replace(/```json|```/g,'').trim());
+    // Build readable text for TTS
+    modalAnalysisText=`Análisis de la técnica: ${t.name}. Descripción: ${obj.descripcion||''}. Análisis sintáctico: ${obj.analisis_sintactico||''}. Patrón dominante: ${obj.patron_dominante||''}. Recursos estilísticos: ${obj.recursos_estilisticos||''}. Consejo: ${obj.consejo||''}`;
+    document.getElementById('mbody').innerHTML=`
+      <div class="as"><div class="asl"><span class="adot dg"></span><span>Función discursiva</span></div><div class="atxt">${obj.descripcion||''}</div></div>
+      <div class="as">
+        <div class="asl"><span class="adot dt"></span><span>Análisis sintáctico del ejemplo</span></div>
+        <div class="synbox">${colorize(t.ex)}</div>
+        <div class="synleg">
+          <div class="sli"><div class="sld" style="background:#ff8080"></div>Verbo</div>
+          <div class="sli"><div class="sld" style="background:var(--teal2)"></div>Sujeto/Núcleo</div>
+          <div class="sli"><div class="sld" style="background:var(--gold2)"></div>Objeto/Compl.</div>
+          <div class="sli"><div class="sld" style="background:var(--vio2)"></div>Adjetivo</div>
+          <div class="sli"><div class="sld" style="background:var(--grn2)"></div>Adverbio/Conector</div>
+          <div class="sli"><div class="sld" style="background:var(--ink4)"></div>Conector neutro</div>
+        </div>
+        <div class="atxt" style="margin-top:12px;">${obj.analisis_sintactico||''}</div>
+      </div>
+      <div class="as"><div class="asl"><span class="adot dv"></span><span>Patrón sintáctico dominante</span></div><div class="atxt">${obj.patron_dominante||''}</div></div>
+      <div class="as"><div class="asl"><span class="adot dr"></span><span>Recursos estilísticos</span></div><div class="atxt">${obj.recursos_estilisticos||''}</div></div>
+      <div class="as"><div class="asl"><span class="adot dgrn"></span><span>Efecto discursivo</span></div><div class="atxt">${obj.efecto_discursivo||''}</div></div>
+      <div class="as">
+        <div class="asl"><span class="adot dg"></span><span>Firma sintáctica de la técnica</span></div>
+        <div class="synbox" style="font-style:normal;font-size:.82rem;color:var(--gold2);">${obj.marca_sintactica||t.synPattern}</div>
+      </div>
+      <div class="advice"><div class="adv-l">Consejo del maestro</div><div class="adv-t">"${obj.consejo||''}"</div></div>
+    `;
+  }catch(e){
+    document.getElementById('mbody').innerHTML=`<p style="color:var(--rose2);padding:20px;">Error al cargar el análisis.</p>`;
+  }
+}
+
+// Modal TTS
+buildTTSControls({
+  playBtn:document.getElementById('modalPlay'), stopBtn:document.getElementById('modalStop'),
+  speedSel:document.getElementById('modalSpeed'), progFill:document.getElementById('modalProgFill'),
+  statusEl:document.getElementById('modalStatus'),
+  getText:()=>modalAnalysisText||document.getElementById('mbody').innerText
+});
+
+// ══════════════════════════════════════════
+// EVALUATE — WITH SYNTACTIC VERIFICATION
+// ══════════════════════════════════════════
+let lastScores=null, lastEvalText='';
+
+document.getElementById('btnEval').addEventListener('click', async()=>{
+  const text=document.getElementById('wText').value.trim();
+  const tid=+wSel.value;
+  const tech=T.find(x=>x.id===tid);
+  if(!text){showNotif('⚠ Escribe algo primero');return;}
+  if(!tech){showNotif('⚠ Selecciona una técnica');return;}
+  if(text.split(/\s+/).length<8){showNotif('⚠ Escribe al menos 8 palabras');return;}
+
+  const ec=document.getElementById('ecard');
+  ec.classList.add('show');
+  document.getElementById('ePills').innerHTML='';
+  document.getElementById('eBody').innerHTML=`<div class="loading"><div class="spin"></div><br><br>Evaluando técnica y verificando sintaxis…</div>`;
+
+  try{
+    const res=await fetch("https://api.anthropic.com/v1/messages",{
+      method:"POST",headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({model:"claude-sonnet-4-20250514",max_tokens:1200,
+        messages:[{role:"user",content:`Eres maestro de escritura y lingüista experto en castellano. Evalúa el texto del estudiante y VERIFICA que su sintaxis coincida con la firma sintáctica de la técnica practicada.
+
+TÉCNICA: "${tech.name}" (${tech.cat})
+PATRÓN SINTÁCTICO ESPERADO: "${tech.synPattern}"
+EJEMPLO DE REFERENCIA: "${tech.ex}"
+TEXTO DEL ESTUDIANTE: "${text}"
+
+Responde SOLO en JSON sin backticks:
+{
+  "pt":<0-10>,
+  "ps":<0-10>,
+  "pe":<0-10>,
+  "coincidencia_sintactica":<0-100 número entero: porcentaje de coincidencia entre el patrón sintáctico de la técnica y el texto del estudiante>,
+  "veredicto_sintactico":"match|partial|mismatch",
+  "sintaxis_ref":"Describe en 1 oración técnica la firma sintáctica del EJEMPLO DE REFERENCIA.",
+  "sintaxis_usuario":"Describe en 1 oración técnica la firma sintáctica del TEXTO DEL ESTUDIANTE.",
+  "diferencias_sintacticas":"Explica específicamente en qué difiere la sintaxis del estudiante del patrón esperado, o confirma la coincidencia. 2-3 oraciones.",
+  "uso_tecnica":"¿Aplicó la técnica correctamente? Análisis específico. 2-3 oraciones.",
+  "analisis_sintactico":"Analiza las estructuras oracionales, conectores, tiempos verbales, voz del texto del estudiante. 2-3 oraciones.",
+  "fortalezas":"2-3 fortalezas con citas del texto.",
+  "mejoras":"2-3 sugerencias específicas y accionables.",
+  "reescritura":"Reescribe la primera oración del texto con mayor potencia técnica."
+}`}]})
+    });
+    const data=await res.json();
+    const raw=data.content?.find(b=>b.type==='text')?.text||'{}';
+    const obj=JSON.parse(raw.replace(/```json|```/g,'').trim());
+    const{pt=0,ps=0,pe=0,coincidencia_sintactica=0}=obj;
+    lastScores={pt,ps,pe,cs:coincidencia_sintactica};
+
+    document.getElementById('ePills').innerHTML=`
+      <span class="pill pg">Técnica ${pt}/10</span>
+      <span class="pill pt">Sintaxis ${ps}/10</span>
+      <span class="pill prn">Estilo ${pe}/10</span>
+      <span class="pill ${obj.veredicto_sintactico==='match'?'prn':obj.veredicto_sintactico==='partial'?'pg':'pr'}">Sint.Match ${coincidencia_sintactica}%</span>
+    `;
+
+    const verdClass = obj.veredicto_sintactico==='match'?'v-match':obj.veredicto_sintactico==='partial'?'v-partial':'v-mismatch';
+    const verdLabel = obj.veredicto_sintactico==='match'?'✓ Patrón coincide':obj.veredicto_sintactico==='partial'?'◐ Coincidencia parcial':'✗ Patrón difiere';
+
+    lastEvalText=`Evaluación de tu texto. Puntuación de técnica: ${pt} sobre 10. Sintaxis: ${ps} sobre 10. Estilo: ${pe} sobre 10. Coincidencia sintáctica: ${coincidencia_sintactica} por ciento. ${obj.uso_tecnica||''} ${obj.analisis_sintactico||''} Fortalezas: ${obj.fortalezas||''} Sugerencias: ${obj.mejoras||''} Reescritura sugerida: ${obj.reescritura||''}`;
+
+    document.getElementById('eBody').innerHTML=`
+      <div class="esec">
+        <div class="estit">Puntuaciones</div>
+        <div class="bargrp"><div class="brow"><span>Aplicación de la técnica</span><span>${pt}/10</span></div><div class="btrack"><div class="bfill fgold" style="width:${pt*10}%"></div></div></div>
+        <div class="bargrp"><div class="brow"><span>Corrección sintáctica</span><span>${ps}/10</span></div><div class="btrack"><div class="bfill fteal" style="width:${ps*10}%"></div></div></div>
+        <div class="bargrp"><div class="brow"><span>Calidad estilística</span><span>${pe}/10</span></div><div class="btrack"><div class="bfill fgrn" style="width:${pe*10}%"></div></div></div>
+      </div>
+
+      <div class="syn-match">
+        <div class="sm-title">◈ Verificación sintáctica — coincidencia con el patrón de la técnica</div>
+        <div class="sm-row">
+          <span class="sm-label ref">Patrón técnica</span>
+          <span class="sm-text">${obj.sintaxis_ref||tech.synPattern}</span>
+        </div>
+        <div class="sm-row">
+          <span class="sm-label usr">Tu sintaxis</span>
+          <span class="sm-text">${obj.sintaxis_usuario||''}</span>
+        </div>
+        <div class="sm-score-bar">
+          <div class="sm-bar-row"><span>Coincidencia sintáctica</span><span>${coincidencia_sintactica}%</span></div>
+          <div class="sm-track"><div class="sm-fill" style="width:${coincidencia_sintactica}%"></div></div>
+        </div>
+        <div class="${verdClass} verdict">${verdLabel}</div>
+        <div class="atxt" style="margin-top:10px;font-size:.85rem;">${obj.diferencias_sintacticas||''}</div>
+      </div>
+
+      <div class="esec"><div class="estit">Uso de la técnica</div><div class="etxt">${obj.uso_tecnica||''}</div></div>
+      <div class="esec"><div class="estit">Análisis sintáctico de tu texto</div><div class="etxt">${obj.analisis_sintactico||''}</div></div>
+      <div class="esec"><div class="estit">✦ Fortalezas</div><div class="etxt" style="color:var(--grn2)">${obj.fortalezas||''}</div></div>
+      <div class="esec"><div class="estit">⚡ Sugerencias de mejora</div><div class="etxt">${obj.mejoras||''}</div></div>
+      <div class="rwbox"><div class="rwl">Reescritura sugerida</div><div class="rwt">"${obj.reescritura||''}"</div></div>
+    `;
+  }catch(e){
+    document.getElementById('eBody').innerHTML=`<p style="color:var(--rose2);padding:20px;">Error al evaluar. Intenta de nuevo.</p>`;
+  }
+});
+
+// Result TTS
+buildTTSControls({
+  playBtn:document.getElementById('resPlay'), stopBtn:document.getElementById('resStop'),
+  speedSel:document.getElementById('resSpeed'), progFill:document.getElementById('resProgFill'),
+  statusEl:document.getElementById('resStatus'),
+  getText:()=>lastEvalText||document.getElementById('eBody').innerText
+});
+
+// ══════════════════════════════════════════
+// SAVE
+// ══════════════════════════════════════════
+let inMem=[];
+document.getElementById('btnSave').addEventListener('click',async()=>{
+  const text=document.getElementById('wText').value.trim();
+  const tid=+wSel.value;
+  const tech=T.find(x=>x.id===tid);
+  if(!text){showNotif('⚠ Escribe algo primero');return;}
+  if(!tech){showNotif('⚠ Selecciona una técnica');return;}
+  const entry={id:Date.now(),techId:tid,techName:tech.name,cat:tech.cat,text,
+    date:new Date().toLocaleDateString('es-ES',{day:'2-digit',month:'long',year:'numeric'}),
+    scores:lastScores};
+  try{
+    const ex=await window.storage.get('integral-works').catch(()=>null);
+    const arr=ex?JSON.parse(ex.value):[];
+    arr.unshift(entry);
+    await window.storage.set('integral-works',JSON.stringify(arr.slice(0,60)));
+  }catch{inMem.unshift(entry);}
+  showNotif('✦ Guardado en tu biblioteca');
+});
+
+// ══════════════════════════════════════════
+// LIBRARY
+// ══════════════════════════════════════════
+async function renderLib(){
+  const c=document.getElementById('libCont');
+  c.innerHTML=`<div class="loading"><div class="spin"></div></div>`;
+  let works=[];
+  try{const r=await window.storage.get('integral-works').catch(()=>null);if(r)works=JSON.parse(r.value);}catch{}
+  works=[...inMem,...works];
+  if(!works.length){c.innerHTML=`<div class="lib-empty">Tu biblioteca está vacía.<br>Escribe y guarda textos desde el Taller.</div>`;return;}
+  c.innerHTML=works.map(w=>`
+    <div class="lcard">
+      <div class="ltop">
+        <div class="lmeta">
+          <div class="ltech">${w.cat} · ${w.techName}</div>
+          <div class="ldate">${w.date}</div>
+        </div>
+        <div class="lacts">
+          <button class="lbtn load" data-id="${w.id}">Cargar</button>
+          <button class="lbtn" data-del="${w.id}">Eliminar</button>
+        </div>
+      </div>
+      <div class="lbody"><div class="ltxt">${w.text.slice(0,500)}${w.text.length>500?'…':''}</div></div>
+      ${w.scores?`
+      <div class="lscores">
+        <span class="lsc lg">Técnica <span>${w.scores.pt}/10</span></span>
+        <span class="lsc lt">Sintaxis <span>${w.scores.ps}/10</span></span>
+        <span class="lsc lgrn">Estilo <span>${w.scores.pe}/10</span></span>
+        ${w.scores.cs!=null?`<span class="lsc lr">Sint.Match <span>${w.scores.cs}%</span></span>`:''}
+      </div>`:''}
+    </div>`).join('');
+  c.querySelectorAll('.load').forEach(b=>b.addEventListener('click',()=>{
+    const w=works.find(x=>x.id===+b.dataset.id);if(!w)return;
+    openWorkshop(w.techId);
+    setTimeout(()=>{document.getElementById('wText').value=w.text;document.getElementById('wCount').textContent=w.text.split(/\s+/).length;},120);
+    showNotif('✓ Texto cargado en el taller');
+  }));
+  c.querySelectorAll('[data-del]').forEach(b=>b.addEventListener('click',async()=>{
+    const id=+b.dataset.del;
+    inMem=inMem.filter(x=>x.id!==id);
+    try{const r=await window.storage.get('integral-works').catch(()=>null);if(r){const arr=JSON.parse(r.value).filter(x=>x.id!==id);await window.storage.set('integral-works',JSON.stringify(arr));}}catch{}
+    renderLib();showNotif('✓ Eliminado');
+  }));
+}
+
+// ══════════════════════════════════════════
+// NOTIF
+// ══════════════════════════════════════════
+function showNotif(msg,ms=2600){
+  const n=document.getElementById('notif');
+  n.textContent=msg;n.classList.add('show');
+  setTimeout(()=>n.classList.remove('show'),ms);
+}
+
+// Load voices
+if(synth && typeof synth.onvoiceschanged!=='undefined') synth.onvoiceschanged=()=>{};
+if(synth) synth.getVoices();
+</script>
+</body>
+</html>

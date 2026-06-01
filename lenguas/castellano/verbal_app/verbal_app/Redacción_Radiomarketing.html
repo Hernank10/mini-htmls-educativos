@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>Radio Web Colombia · 100 conceptos para emisoras online</title>
+  <style>
+    /* ----- VARIABLES CSS: paleta digital/radio web (morado, cian, gris) ----- */
+    :root {
+      --fondo: #f6f3fc;
+      --texto: #2c2a3e;
+      --morado-stream: #6c43b0;
+      --cian-online: #1eacc7;
+      --gris-digital: #7e8494;
+      --acierto: #2b9348;
+      --fallo: #e85d04;
+      --sombra: rgba(0, 0, 0, 0.05);
+      --card-bg: #ffffff;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: var(--fondo);
+      color: var(--texto);
+      font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
+      line-height: 1.5;
+      padding: 1rem;
+    }
+
+    .app-container {
+      max-width: 1300px;
+      margin: 0 auto;
+      background: var(--card-bg);
+      border-radius: 2rem;
+      box-shadow: 0 12px 28px var(--sombra);
+      overflow: hidden;
+      border: 1px solid #e0d9f0;
+    }
+
+    header {
+      background: #ece8f5;
+      padding: 1.2rem 2rem;
+      border-bottom: 3px solid var(--morado-stream);
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 1rem;
+    }
+    h1 {
+      font-size: 1.7rem;
+      font-weight: 600;
+      color: #5a32a3;
+      letter-spacing: -0.2px;
+    }
+    h1 small {
+      font-size: 0.7rem;
+      font-weight: normal;
+      color: #7c6c9e;
+    }
+
+    nav {
+      display: flex;
+      gap: 0.5rem;
+      background: #e2daf0;
+      padding: 0.6rem 2rem;
+      border-bottom: 1px solid #cec4e0;
+      flex-wrap: wrap;
+    }
+    .nav-btn {
+      background: transparent;
+      border: none;
+      font-size: 0.95rem;
+      padding: 0.5rem 1.2rem;
+      border-radius: 40px;
+      cursor: pointer;
+      font-weight: 500;
+      transition: all 0.2s;
+      color: #5a32a3;
+    }
+    .nav-btn.active {
+      background-color: var(--morado-stream);
+      color: white;
+    }
+    .nav-btn:hover:not(.active) {
+      background-color: #cdc2e4;
+    }
+
+    .view {
+      display: none;
+      padding: 2rem;
+      animation: fade 0.2s ease;
+    }
+    .active-view { display: block; }
+    @keyframes fade { from { opacity: 0; transform: translateY(5px);} to { opacity: 1; transform: translateY(0);} }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+    .stat-card {
+      background: var(--fondo);
+      border-radius: 1.5rem;
+      padding: 1rem;
+      text-align: center;
+      border-left: 6px solid var(--cian-online);
+      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    }
+    .stat-number {
+      font-size: 2.2rem;
+      font-weight: 700;
+      color: var(--morado-stream);
+    }
+    .progress-bar-bg {
+      background: #e2e8f0;
+      border-radius: 40px;
+      height: 12px;
+      overflow: hidden;
+      margin: 0.8rem 0;
+    }
+    .progress-fill {
+      background: var(--morado-stream);
+      width: 0%;
+      height: 100%;
+      transition: width 0.2s;
+    }
+
+    .conceptos-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+      gap: 1rem;
+      max-height: 65vh;
+      overflow-y: auto;
+      padding-right: 0.3rem;
+    }
+    .concepto-item {
+      background: white;
+      border-radius: 1.2rem;
+      padding: 0.8rem 1rem;
+      border-left: 5px solid var(--gris-digital);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+    .concepto-titulo {
+      font-weight: 700;
+      color: #5a32a3;
+    }
+    .concepto-desc {
+      font-size: 0.85rem;
+      color: #4a3e6e;
+      margin-top: 6px;
+      border-top: 1px solid #ede8f5;
+      padding-top: 6px;
+    }
+    .badge-progreso {
+      font-size: 0.7rem;
+      background: #ece8f5;
+      border-radius: 20px;
+      padding: 2px 10px;
+      display: inline-block;
+      margin-top: 8px;
+    }
+
+    /* práctica */
+    .flashcard {
+      background: #ffffff;
+      border-radius: 2rem;
+      padding: 1.8rem;
+      text-align: center;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+      border: 1px solid #e0d9f0;
+      max-width: 750px;
+      margin: 0 auto;
+    }
+    .pregunta {
+      font-size: 1.4rem;
+      font-weight: 500;
+      margin-bottom: 1.8rem;
+      background: #ece8f5;
+      padding: 1.2rem;
+      border-radius: 1.5rem;
+    }
+    .respuesta-oculta {
+      background: #f4f1fc;
+      border-radius: 1.2rem;
+      padding: 1rem;
+      margin: 1rem 0;
+      display: none;
+    }
+    .palabras-baraja {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 0.6rem;
+      margin: 1.5rem 0;
+    }
+    .palabra-btn {
+      background: var(--morado-stream);
+      color: white;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 2rem;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: 0.1s;
+    }
+    .orden-actual {
+      background: #f8f6fe;
+      border-radius: 1rem;
+      padding: 1rem;
+      min-height: 80px;
+      margin: 1rem 0;
+      text-align: left;
+      border: 1px dashed #cec4e0;
+    }
+    .btn {
+      background: #e2e8f0;
+      border: none;
+      padding: 0.6rem 1.5rem;
+      border-radius: 3rem;
+      font-weight: 600;
+      margin: 0.3rem;
+      cursor: pointer;
+      font-family: inherit;
+    }
+    .btn-primary { background: var(--morado-stream); color: white; }
+    .btn-acierto { background: var(--acierto); color: white; }
+    .btn-fallo { background: var(--fallo); color: white; }
+    .modo-selector { display: flex; justify-content: center; gap: 0.8rem; margin-bottom: 1.5rem; flex-wrap: wrap; }
+    footer {
+      text-align: center;
+      padding: 1rem;
+      font-size: 0.75rem;
+      border-top: 1px solid #e0d9f0;
+      background: #faf9fe;
+    }
+    @media (max-width: 680px) {
+      .view { padding: 1rem; }
+      .pregunta { font-size: 1rem; }
+    }
+  </style>
+</head>
+<body>
+<div class="app-container">
+  <header>
+    <h1>🌐 Radio Web Colombia <small>100 conceptos para emisoras online</small></h1>
+    <div style="font-size:0.8rem;">🎧 Streaming · Podcasting · Plataformas · Automatización · Monetización · Legislación digital</div>
+  </header>
+  <nav>
+    <button class="nav-btn active" data-view="dashboard">📊 Panel</button>
+    <button class="nav-btn" data-view="listado">📚 Compendio</button>
+    <button class="nav-btn" data-view="practica">🃏 Práctica</button>
+  </nav>
+
+  <section id="dashboard" class="view active-view">
+    <div class="stats-grid" id="statsContainer"></div>
+    <div class="card" style="background:white; border-radius:1.6rem; padding:1.2rem;">
+      <h3>📈 Progreso en conceptos de radio web</h3>
+      <div class="progress-bar-bg"><div class="progress-fill" id="globalProgressFill"></div></div>
+      <p id="globalProgressText"></p>
+      <button id="resetProgresoBtn" class="btn" style="background:#cdc2e4;">🔄 Reiniciar progreso</button>
+    </div>
+  </section>
+
+  <section id="listado" class="view">
+    <input type="text" id="filtroListado" placeholder="🔍 Buscar concepto o definición..." style="width:100%; padding:10px; margin-bottom:15px; border-radius:40px; border:1px solid #cdc2e4;">
+    <div id="conceptosListadoContainer" class="conceptos-grid"></div>
+  </section>
+
+  <section id="practica" class="view">
+    <div class="modo-selector">
+      <button id="modoConceptoDef" class="btn btn-primary">📖 Concepto → Definición</button>
+      <button id="modoDefConcepto" class="btn">🔄 Definición → Concepto</button>
+      <button id="modoOrdenar" class="btn">🧩 Ordenar definición</button>
+    </div>
+    <div id="practicaContainer"></div>
+  </section>
+  <footer>Progreso guardado localmente · Ejercicio de ordenar definición · Enfoque en webradio, streaming y plataformas online</footer>
+</div>
+
+<script>
+  // --------------------------------------------------------------
+  // 100 CONCEPTOS DE RADIO WEB / EMISORAS ONLINE (Colombia)
+  // --------------------------------------------------------------
+  const conceptosData = [
+    [1, "Radio web", "Emisora de audio que se transmite exclusivamente por internet, sin necesidad de frecuencia AM/FM."],
+    [2, "Streaming", "Tecnología que permite reproducir audio o video en tiempo real sin descargar el archivo completo."],
+    [3, "Servidor de streaming", "Computadora o servicio en la nube que recibe y distribuye el flujo de audio a los oyentes."],
+    [4, "Codificador (encoder)", "Software o hardware que convierte el audio en un formato digital comprimido para streaming."],
+    [5, "Bitrate", "Cantidad de bits por segundo que se utilizan para codificar el audio (kbps); mayor bitrate, mejor calidad."],
+    [6, "Códec de audio", "Algoritmo que comprime y descomprime audio digital (MP3, AAC, OGG, Opus)."],
+    [7, "HLS (HTTP Live Streaming)", "Protocolo de streaming desarrollado por Apple, adapta la calidad según la conexión del usuario."],
+    [8, "RTMP (Real-Time Messaging Protocol)", "Protocolo usado para enviar flujo desde el encoder al servidor de streaming."],
+    [9, "Icecast", "Servidor de streaming de código abierto muy usado para radio web."],
+    [10, "SHOUTcast", "Servidor de streaming propietario, popular en los inicios de la radio online."],
+    [11, "Plataforma de radio online", "Servicio que aloja la emisora, provee reproductor y herramientas de gestión (Live365, radio.co, ZenoRadio)."],
+    [12, "Panel de control", "Interfaz web para gestionar la programación, horarios, metadatos y estadísticas."],
+    [13, "Reproductor web (player)", "Widget HTML5 que permite a los oyentes escuchar la emisora desde el sitio web."],
+    [14, "Radio en la nube", "Infraestructura de servidores remotos que maneja la transmisión sin necesidad de hardware propio."],
+    [15, "Latencia", "Retardo entre la emisión en estudio y la recepción por el oyente; en streaming puede ser de 5 a 30 segundos."],
+    [16, "Buffer", "Memoria temporal que acumula datos para evitar cortes por fluctuaciones de la red."],
+    [17, "CDN (Content Delivery Network)", "Red de servidores distribuidos que entrega contenido multimedia más rápido y estable."],
+    [18, "Webradio en vivo", "Transmisión simultánea (live) de eventos o programación continua con interacción."],
+    [19, "Radio automatizada", "Emisora que funciona con programación predefinida (playlists, podcasts) sin operador en vivo."],
+    [20, "Software de automatización", "Aplicación como SAM Broadcaster, RadioBOSS, Airtime, que programa pistas y transiciones."],
+    [21, "Playlist", "Lista ordenada de canciones o programas que se reproducen automáticamente."],
+    [22, "Metadata", "Información que se muestra en el reproductor: título de canción, artista, nombre del programa."],
+    [23, "MP3", "Formato de compresión de audio con pérdida, ampliamente soportado por reproductores web."],
+    [24, "AAC", "Formato de audio avanzado, mejor calidad que MP3 al mismo bitrate."],
+    [25, "Opus", "Códec de última generación, excelente relación calidad/bitrate, recomendado para streaming."],
+    [26, "Podcast", "Serie de episodios de audio bajo demanda, distribuida por RSS."],
+    [27, "RSS (Really Simple Syndication)", "Formato XML que permite a los oyentes suscribirse a podcasts automáticamente."],
+    [28, "Directorio de podcasts", "Plataforma como Spotify, Apple Podcasts, Google Podcasts donde se publican episodios."],
+    [29, "Capítulo de podcast", "Marcador dentro de un episodio que permite navegar entre secciones."],
+    [30, "Monetización de radio web", "Estrategias para generar ingresos: publicidad, membresías, donaciones, patrocinios."],
+    [31, "Publicidad programática", "Compra automática de espacios publicitarios en streaming mediante plataformas como Adswizz."],
+    [32, "Cuña publicitaria digital", "Audio comercial grabado que se inserta en la programación en vivo o bajo demanda."],
+    [33, "Marketing de afiliados", "Promoción de productos con comisión por venta, usado por radios web temáticas."],
+    [34, "Membresía (suscripción)", "Modelo donde los oyentes pagan una cuota mensual por contenido exclusivo."],
+    [35, "Crowdfunding", "Financiación colectiva para sostener la emisora (Patronio, Kickstarter)."],
+    [36, "Estadísticas de streaming", "Datos sobre oyentes concurrentes, ubicación geográfica, dispositivos y duración de escucha."],
+    [37, "Oyente concurrente (CCU)", "Número de personas escuchando en un mismo momento."],
+    [38, "Hora pico", "Franja horaria con mayor audiencia."],
+    [39, "Tasa de retención", "Porcentaje de oyentes que continúan escuchando después de cierto tiempo."],
+    [40, "Dropout", "Abandono de la escucha por problemas técnicos o pérdida de interés."],
+    [41, "Webcaster", "Persona o entidad que opera una estación de radio por internet."],
+    [42, "Licencia de derechos de autor", "Permiso para reproducir música protegida en streaming; en Colombia gestionada por SAYCO y ACINPRO."],
+    [43, "SAYCO", "Sociedad de Autores y Compositores de Colombia, recauda derechos de autor por comunicación pública."],
+    [44, "ACINPRO", "Asociación Colombiana de Intérpretes y Productores Fonográficos, protege derechos conexos."],
+    [45, "Registro de emisora online", "Trámite ante el Ministerio de Tecnologías de la Información (MinTIC) para operar legalmente."],
+    [46, "Ley 1915 de 2018", "Norma colombiana que regula los derechos de autor en plataformas digitales y streaming."],
+    [47, "Creative Commons", "Licencias libres que permiten usar música con atribución, ideales para radios web sin fines comerciales."],
+    [48, "Radio universitaria online", "Emisora digital gestionada por estudiantes universitarios en Colombia (ej. Unimedios - UN Radio)."],
+    [49, "ZenoRadio", "Plataforma colombiana de radio online muy usada por emisoras comunitarias y virtuales."],
+    [50, "Colombia Podcast Network", "Red de podcasters colombianos que promueve la producción nacional."],
+    [51, "Radio. co", "Plataforma global de radio online que también agrupa emisoras colombianas."],
+    [52, "Apps móviles para radio web", "Aplicaciones Android/iOS que permiten escuchar emisoras online (TuneIn, Simple Radio, MyRadioApp)."],
+    [53, "Aplicación de emisora propia", "App personalizada (ej. con React Native) para fidelizar audiencia."],
+    [54, "WebRTC", "Tecnología para comunicación en tiempo real, usada en radio web con baja latencia."],
+    [55, "SRT (Secure Reliable Transport)", "Protocolo diseñado para streaming de bajo retardo sobre redes no confiables."],
+    [56, "VoIP", "Voz sobre IP, usado para entrevistas remotas y colaboraciones en vivo."],
+    [57, "Mezclador virtual", "Software que simula una consola de audio para mezclar micrófonos, música y efectos."],
+    [58, "VST (Virtual Studio Technology)", "Plugins de efectos (compresor, ecualizador, reverb) para procesar audio en vivo."],
+    [59, "Grabación multipista online", "Registro de cada participante por separado en la nube para edición posterior."],
+    [60, "Fallo técnico", "Interrupción no planificada del streaming por caída de internet o servidor."],
+    [61, "Plan de contingencia", "Procedimiento para reanudar la emisión rápidamente ante un fallo (contenido de respaldo)."],
+    [62, "Ancho de banda", "Capacidad de transmisión de datos; necesario un uplink estable para emitir en vivo."],
+    [63, "Firewall", "Sistema de seguridad que puede bloquear puertos necesarios para streaming; se debe configurar."],
+    [64, "Proxy inverso", "Servidor intermedio que distribuye el flujo a múltiples oyentes sin exponer el servidor original."],
+    [65, "SSL/TLS", "Certificado de seguridad para cifrar la transmisión y evitar interferencias."],
+    [66, "Retransmisión", "Tomar la señal de una emisora y reenviarla a otros servidores para ampliar alcance."],
+    [67, "Audio en directo (live)", "Transmisión sin edición previa, donde el locutor interactúa con la audiencia."],
+    [68, "Moderación de chat", "Control de los comentarios de oyentes en tiempo real para evitar contenidos inapropiados."],
+    [69, "Encuesta en vivo", "Herramienta para preguntar a la audiencia y mostrar resultados al instante."],
+    [70, "Llamada telefónica al aire", "Integración de llamadas mediante servicios como Voipy o Telos."],
+    [71, "Mensajes de voz", "Audios enviados por los oyentes a través de WhatsApp o Telegram que se reproducen en el programa."],
+    [72, "Planificación de contenidos", "Calendario editorial que define temas, horarios y responsables."],
+    [73, "Segmento", "Parte de un programa con identidad propia (bloque de noticias, música, entrevista)."],
+    [74, "Identidad sonora", "Conjunto de elementos auditivos (careta, jingles, voz institucional) que distinguen a la emisora."],
+    [75, "Imagen digital", "Logo, colores y tipografía que se usan en el sitio web y redes sociales de la radio web."],
+    [76, "SEO para radio", "Optimización del sitio web para aparecer en buscadores y atraer oyentes."],
+    [77, "Redes sociales para radio", "Facebook, Instagram, TikTok, X, usadas para promocionar contenidos y conectar con oyentes."],
+    [78, "Clip de audio", "Fragmento corto de un programa o canción compartido en redes para generar expectativa."],
+    [79, "Invitado remoto", "Participante que se conecta a través de Zoom, Skype o Discord para entrevistas."],
+    [80, "Software de grabación remota", "Cleanfeed, SquadCast, Riverside.fm que graban alta calidad desde la nube."],
+    [81, "Transcripción automática", "Conversión de voz a texto para generar subtítulos o artículos."],
+    [82, "Radio híbrida", "Emisora que combina transmisión tradicional AM/FM con streaming y contenidos digitales."],
+    [83, "Webcasting", "Difusión de audio/vivo por internet, similar a la radio pero con mayor alcance global."],
+    [84, "Netcasting", "Término antiguo para webcasting, hoy en desuso."],
+    [85, "Directo (stream)", "Evento transmitido en vivo sin edición, equivalente al concepto 'en vivo'."],
+    [86, "On-demand", "Contenido disponible para escuchar cuando el usuario lo desee (podcasts, programas grabados)."],
+    [87, "Curador de música", "Persona que selecciona las canciones y define el estilo musical de la emisora."],
+    [88, "Biblioteca musical digital", "Base de datos de canciones almacenadas en la nube o disco duro para la programación."],
+    [89, "Sincronización de metadatos", "Actualización automática del título y artista en los reproductores."],
+    [90, "API de streaming", "Interfaz de programación para integrar la emisora con aplicaciones externas (bots, asistentes de voz)."],
+    [91, "Asistente de voz", "Dispositivo como Alexa o Google Home que puede sintonizar emisoras web."],
+    [92, "Smart speaker", "Altavoz inteligente que reproduce streaming por comandos de voz."],
+    [93, "Roku TV", "Plataforma de Smart TV que también permite aplicaciones de radio web."],
+    [94, "Código de inserción (embed)", "HTML para incrustar el reproductor en cualquier página web."],
+    [95, "Federación de servidores", "Red de servidores que comparten carga; usada por Icecast."],
+    [96, "Streaming de eventos", "Transmisión de conciertos, conferencias o ceremonias en vivo a través del sitio web."],
+    [97, "Monitoreo de calidad", "Herramienta que alerta si el bitrate baja o el servidor se cae."],
+    [98, "Panel de oyentes", "Mapa interactivo que muestra la ubicación de los usuarios conectados."],
+    [99, "Radio streaming en Colombia", "Auge impulsado por la pandemia; muchas emisoras locales crearon versión web."],
+    [100, "Futuro de la radio web", "Integración con inteligencia artificial para recomendaciones personalizadas y publicidad dinámica."]
+  ];
+
+  // --------------------- LOCALSTORAGE Y PROGRESO -------------------------
+  let progreso = {};
+  const STORAGE_KEY = "radioWebColombiaProgreso";
+
+  function cargarProgreso() {
+    const guardado = localStorage.getItem(STORAGE_KEY);
+    if (guardado) progreso = JSON.parse(guardado);
+    else {
+      progreso = {};
+      for (let i = 1; i <= 100; i++) progreso[i] = { aciertos: 0, fallos: 0 };
+    }
+  }
+  function guardarProgreso() { localStorage.setItem(STORAGE_KEY, JSON.stringify(progreso)); }
+  function registrarResultado(id, acierto) {
+    if (!progreso[id]) progreso[id] = { aciertos: 0, fallos: 0 };
+    if (acierto) progreso[id].aciertos += 1;
+    else progreso[id].fallos += 1;
+    guardarProgreso();
+    renderDashboard();
+    renderListado(document.getElementById("filtroListado")?.value || "");
+    if (window.currentCardId === id && document.getElementById("infoProgresoCard")) {
+      document.getElementById("infoProgresoCard").innerHTML = `📊 Concepto ${id} · ✅ ${progreso[id].aciertos} aciertos · ❌ ${progreso[id].fallos} fallos`;
+    }
+  }
+
+  function renderDashboard() {
+    let totalAciertos = 0, totalFallos = 0, conceptosConAcierto = 0;
+    for (let i = 1; i <= 100; i++) {
+      const p = progreso[i] || { aciertos: 0, fallos: 0 };
+      totalAciertos += p.aciertos;
+      totalFallos += p.fallos;
+      if (p.aciertos > 0) conceptosConAcierto++;
+    }
+    const porcentaje = (conceptosConAcierto / 100) * 100;
+    document.getElementById("globalProgressFill").style.width = `${porcentaje}%`;
+    document.getElementById("globalProgressText").innerHTML = `${conceptosConAcierto} de 100 conceptos con al menos 1 acierto (${Math.round(porcentaje)}%).`;
+    document.getElementById("statsContainer").innerHTML = `
+      <div class="stat-card"><div class="stat-number">${totalAciertos}</div>✅ Aciertos totales</div>
+      <div class="stat-card"><div class="stat-number">${totalFallos}</div>❌ Fallos</div>
+      <div class="stat-card"><div class="stat-number">${conceptosConAcierto}</div>📘 Conceptos dominados</div>
+      <div class="stat-card"><div class="stat-number">${Math.round((totalAciertos/(totalAciertos+totalFallos+0.001))*100)}%</div>📊 Tasa éxito</div>
+    `;
+  }
+
+  function renderListado(filtro = "") {
+    const container = document.getElementById("conceptosListadoContainer");
+    container.innerHTML = "";
+    const filtroLower = filtro.toLowerCase();
+    for (let c of conceptosData) {
+      const [id, nombre, definicion] = c;
+      const prog = progreso[id] || { aciertos: 0, fallos: 0 };
+      if (filtro && !nombre.toLowerCase().includes(filtroLower) && !definicion.toLowerCase().includes(filtroLower)) continue;
+      const div = document.createElement("div");
+      div.className = "concepto-item";
+      div.innerHTML = `<div class="concepto-titulo">${id}. ${nombre}</div>
+                       <div class="concepto-desc">🌐 ${definicion.substring(0, 150)}${definicion.length > 150 ? '…' : ''}</div>
+                       <span class="badge-progreso">✅ ${prog.aciertos} aciertos · ❌ ${prog.fallos} fallos</span>`;
+      container.appendChild(div);
+    }
+  }
+
+  // --------------------- PRÁCTICA: TRES MODOS -------------------------
+  let currentMode = "concepto_def";
+  let cardsArray = [];
+  let currentCardIndex = 0;
+  let currentCardId = null;
+  let currentOrdenarPalabras = [];
+  let shuffledPalabras = [];
+  let selectedOrder = [];
+  let ordenarRespuestaCorrecta = "";
+
+  const practicaDiv = document.getElementById("practicaContainer");
+
+  function construirCards() {
+    cardsArray = conceptosData.map(item => {
+      const [id, concepto, definicion] = item;
+      if (currentMode === "concepto_def") {
+        return { id, pregunta: `🌐 Concepto: ${concepto}`, respuestaCorrecta: definicion };
+      } else if (currentMode === "def_concepto") {
+        let defCorta = definicion.length > 130 ? definicion.substring(0, 127) + "…" : definicion;
+        return { id, pregunta: `✍️ Definición: "${defCorta}"`, respuestaCorrecta: concepto };
+      } else {
+        return { id, concepto, definicion };
+      }
+    });
+  }
+
+  function renderFlashcardNormal() {
+    if (!cardsArray.length) return;
+    const card = cardsArray[currentCardIndex];
+    currentCardId = card.id;
+    practicaDiv.innerHTML = `
+      <div class="flashcard">
+        <div class="pregunta">${card.pregunta}</div>
+        <button id="mostrarRespuestaBtn" class="btn">📖 Mostrar respuesta</button>
+        <div id="respuestaDiv" class="respuesta-oculta"><strong>Respuesta:</strong><br>${card.respuestaCorrecta}</div>
+        <div style="margin-top:1rem;">
+          <button id="aciertoBtn" class="btn btn-acierto" disabled>✅ Acierto</button>
+          <button id="falloBtn" class="btn btn-fallo" disabled>❌ Fallo</button>
+        </div>
+        <button id="siguienteCardBtn" class="btn" style="margin-top:1rem;">⏩ Siguiente</button>
+        <p id="infoProgresoCard" style="margin-top:0.8rem;">📊 ${currentMode === "concepto_def" ? "Concepto" : "Definición"} ${card.id} · ✅ ${progreso[card.id]?.aciertos||0} aciertos · ❌ ${progreso[card.id]?.fallos||0} fallos</p>
+      </div>
+    `;
+    document.getElementById("mostrarRespuestaBtn").onclick = () => {
+      const respDiv = document.getElementById("respuestaDiv");
+      if (respDiv.style.display !== "block") {
+        respDiv.style.display = "block";
+        document.getElementById("aciertoBtn").disabled = false;
+        document.getElementById("falloBtn").disabled = false;
+      }
+    };
+    document.getElementById("aciertoBtn").onclick = () => { registrarResultado(currentCardId, true); siguienteNormal(); };
+    document.getElementById("falloBtn").onclick = () => { registrarResultado(currentCardId, false); siguienteNormal(); };
+    document.getElementById("siguienteCardBtn").onclick = () => siguienteNormal();
+  }
+
+  function siguienteNormal() {
+    currentCardIndex = (currentCardIndex + 1) % cardsArray.length;
+    renderFlashcardNormal();
+  }
+
+  function inicializarOrdenar() {
+    const card = cardsArray[currentCardIndex];
+    currentCardId = card.id;
+    const definicionOriginal = card.definicion;
+    ordenarRespuestaCorrecta = definicionOriginal;
+    let palabras = definicionOriginal.split(/\s+/).filter(p => p.length > 0);
+    currentOrdenarPalabras = [...palabras];
+    shuffledPalabras = [...palabras];
+    for (let i = shuffledPalabras.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [shuffledPalabras[i], shuffledPalabras[j]] = [shuffledPalabras[j], shuffledPalabras[i]];
+    }
+    selectedOrder = [];
+    renderOrdenarUI();
+  }
+
+  function renderOrdenarUI() {
+    const card = cardsArray[currentCardIndex];
+    const prog = progreso[currentCardId] || { aciertos:0, fallos:0 };
+    let palabrasHTML = shuffledPalabras.map(p => `<button class="palabra-btn" data-palabra="${p.replace(/"/g, '&quot;')}">${p}</button>`).join('');
+    let ordenHTML = selectedOrder.map(p => `<span style="background:#ece8f5; padding:0.2rem 0.6rem; margin:0.2rem; border-radius:1rem;">${p}</span>`).join(' ');
+    if (ordenHTML === "") ordenHTML = "<em>Haz clic en las palabras en el orden correcto...</em>";
+    practicaDiv.innerHTML = `
+      <div class="flashcard">
+        <h3>🧩 Ordena la definición de:</h3>
+        <div class="pregunta" style="background:#ece8f5;">📌 ${card.concepto}</div>
+        <div class="orden-actual"><strong>Tu orden actual:</strong><br> ${ordenHTML}</div>
+        <div class="palabras-baraja" id="palabrasBaraja">${palabrasHTML}</div>
+        <div>
+          <button id="resetOrdenBtn" class="btn" style="background:#cdc2e4;">🔁 Reiniciar orden</button>
+          <button id="comprobarOrdenBtn" class="btn btn-primary">✓ Comprobar</button>
+        </div>
+        <button id="siguienteOrdenBtn" class="btn" style="margin-top:1rem;">⏩ Siguiente concepto</button>
+        <p id="infoProgresoCard">✅ ${prog.aciertos} aciertos · ❌ ${prog.fallos} fallos</p>
+        <div id="feedbackOrden" style="margin-top:0.8rem; font-weight:bold;"></div>
+      </div>
+    `;
+    document.querySelectorAll(".palabra-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const palabra = btn.getAttribute("data-palabra");
+        const idx = shuffledPalabras.indexOf(palabra);
+        if (idx !== -1) {
+          shuffledPalabras.splice(idx, 1);
+          selectedOrder.push(palabra);
+          renderOrdenarUI();
+        }
+      });
+    });
+    document.getElementById("resetOrdenBtn").onclick = () => {
+      shuffledPalabras = [...currentOrdenarPalabras];
+      for (let i = shuffledPalabras.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [shuffledPalabras[i], shuffledPalabras[j]] = [shuffledPalabras[j], shuffledPalabras[i]];
+      }
+      selectedOrder = [];
+      renderOrdenarUI();
+    };
+    document.getElementById("comprobarOrdenBtn").onclick = () => {
+      const ordenUsuario = selectedOrder.join(" ");
+      if (ordenUsuario === ordenarRespuestaCorrecta) {
+        document.getElementById("feedbackOrden").innerHTML = "<span style='color:#2b9348'>✅ ¡Correcto! Definición ordenada correctamente.</span>";
+        registrarResultado(currentCardId, true);
+        setTimeout(() => siguienteOrdenar(), 1200);
+      } else {
+        document.getElementById("feedbackOrden").innerHTML = `<span style='color:#e85d04'>❌ Incorrecto. La definición correcta es: "${ordenarRespuestaCorrecta}"</span>`;
+        registrarResultado(currentCardId, false);
+        setTimeout(() => siguienteOrdenar(), 2000);
+      }
+      document.getElementById("comprobarOrdenBtn").disabled = true;
+      document.querySelectorAll(".palabra-btn").forEach(b => b.style.pointerEvents = "none");
+      setTimeout(() => {
+        if (document.getElementById("comprobarOrdenBtn")) document.getElementById("comprobarOrdenBtn").disabled = false;
+        document.querySelectorAll(".palabra-btn").forEach(b => b.style.pointerEvents = "auto");
+      }, 2000);
+    };
+    document.getElementById("siguienteOrdenBtn").onclick = () => siguienteOrdenar();
+  }
+
+  function siguienteOrdenar() {
+    currentCardIndex = (currentCardIndex + 1) % cardsArray.length;
+    inicializarOrdenar();
+  }
+
+  function setMode(mode) {
+    currentMode = mode;
+    construirCards();
+    currentCardIndex = 0;
+    if (mode === "ordenar") inicializarOrdenar();
+    else renderFlashcardNormal();
+  }
+
+  function initUI() {
+    document.querySelectorAll(".nav-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const viewId = btn.getAttribute("data-view");
+        document.querySelectorAll(".view").forEach(v => v.classList.remove("active-view"));
+        document.getElementById(viewId).classList.add("active-view");
+        document.querySelectorAll(".nav-btn").forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+        if (viewId === "listado") renderListado(document.getElementById("filtroListado").value);
+        if (viewId === "dashboard") renderDashboard();
+        if (viewId === "practica") setMode(currentMode);
+      });
+    });
+    document.getElementById("modoConceptoDef").addEventListener("click", () => {
+      currentMode = "concepto_def";
+      setMode("concepto_def");
+      document.getElementById("modoConceptoDef").classList.add("btn-primary");
+      document.getElementById("modoDefConcepto").classList.remove("btn-primary");
+      document.getElementById("modoOrdenar").classList.remove("btn-primary");
+    });
+    document.getElementById("modoDefConcepto").addEventListener("click", () => {
+      currentMode = "def_concepto";
+      setMode("def_concepto");
+      document.getElementById("modoDefConcepto").classList.add("btn-primary");
+      document.getElementById("modoConceptoDef").classList.remove("btn-primary");
+      document.getElementById("modoOrdenar").classList.remove("btn-primary");
+    });
+    document.getElementById("modoOrdenar").addEventListener("click", () => {
+      currentMode = "ordenar";
+      setMode("ordenar");
+      document.getElementById("modoOrdenar").classList.add("btn-primary");
+      document.getElementById("modoConceptoDef").classList.remove("btn-primary");
+      document.getElementById("modoDefConcepto").classList.remove("btn-primary");
+    });
+    document.getElementById("resetProgresoBtn").addEventListener("click", () => {
+      if (confirm("¿Reiniciar todo el progreso? Se perderán aciertos y fallos.")) {
+        for (let i = 1; i <= 100; i++) progreso[i] = { aciertos: 0, fallos: 0 };
+        guardarProgreso();
+        renderDashboard();
+        renderListado(document.getElementById("filtroListado")?.value || "");
+        if (currentMode === "ordenar") inicializarOrdenar();
+        else if (currentMode !== "ordenar") renderFlashcardNormal();
+      }
+    });
+    document.getElementById("filtroListado").addEventListener("input", (e) => renderListado(e.target.value));
+  }
+
+  window.addEventListener("DOMContentLoaded", () => {
+    cargarProgreso();
+    construirCards();
+    setMode("concepto_def");
+    renderDashboard();
+    renderListado();
+    initUI();
+  });
+</script>
+</body>
+</html>

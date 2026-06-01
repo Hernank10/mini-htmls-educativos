@@ -1,0 +1,939 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>100 Descripciones Artísticas de Londres · Bilingüe</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Josefin+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0d0d0f;
+  --card:#141418;
+  --border:#2a2a32;
+  --gold:#c9a84c;
+  --gold2:#e8d08a;
+  --smoke:#a0a0b0;
+  --cream:#f0ece4;
+  --accent:#7c6f9f;
+  --red:#8b2635;
+  --green:#2e6e4e;
+  --w:#ffffff;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);font-family:'Cormorant Garamond',serif;color:var(--cream);min-height:100vh;}
+
+/* ── NOISE OVERLAY ── */
+body::before{
+  content:'';position:fixed;inset:0;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events:none;z-index:0;opacity:.6;
+}
+
+/* ── HEADER ── */
+.site-header{
+  position:relative;z-index:1;
+  padding:4rem 2rem 3rem;
+  text-align:center;
+  border-bottom:1px solid var(--border);
+  background:linear-gradient(180deg,#0a0a0c 0%,transparent 100%);
+}
+.header-eyebrow{
+  font-family:'Josefin Sans',sans-serif;
+  font-size:.65rem;font-weight:600;
+  letter-spacing:.3em;text-transform:uppercase;
+  color:var(--gold);margin-bottom:1.2rem;
+}
+.site-header h1{
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(2rem,6vw,4.5rem);
+  font-weight:300;font-style:italic;
+  color:var(--cream);line-height:1.1;
+  margin-bottom:.5rem;
+}
+.site-header h1 em{color:var(--gold);font-style:normal;}
+.site-header .sub{
+  font-family:'Josefin Sans',sans-serif;
+  font-size:.72rem;letter-spacing:.18em;
+  color:var(--smoke);margin-top:1rem;
+}
+.ornament{color:var(--gold);font-size:1.2rem;letter-spacing:.8rem;display:block;margin:.8rem 0;}
+
+/* ── PROGRESS ── */
+.prog-strip{
+  position:relative;z-index:1;
+  background:#0f0f12;
+  border-bottom:1px solid var(--border);
+  padding:.6rem 2rem;
+  display:flex;align-items:center;gap:1.2rem;flex-wrap:wrap;
+}
+.prog-label{font-family:'Josefin Sans',sans-serif;font-size:.65rem;letter-spacing:.15em;color:var(--smoke);}
+.prog-track{flex:1;min-width:100px;height:3px;background:var(--border);border-radius:99px;overflow:hidden;}
+.prog-fill{height:100%;background:var(--gold);border-radius:99px;transition:width .5s ease;width:0%;}
+.prog-pct{font-family:'Josefin Sans',sans-serif;font-size:.7rem;color:var(--gold);min-width:32px;}
+.cnt-pill{font-family:'Josefin Sans',sans-serif;font-size:.65rem;letter-spacing:.1em;color:var(--smoke);background:var(--border);padding:.2rem .6rem;border-radius:99px;}
+
+/* ── TOOLBAR ── */
+.toolbar{
+  position:sticky;top:0;z-index:100;
+  background:rgba(13,13,15,.95);
+  backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--border);
+  padding:.6rem 1.2rem;
+  display:flex;flex-wrap:wrap;gap:.5rem;align-items:center;justify-content:center;
+}
+.toolbar input[type=text]{
+  background:#1a1a20;border:1px solid var(--border);
+  color:var(--cream);border-radius:2px;
+  padding:.3rem .8rem;font-family:'Josefin Sans',sans-serif;
+  font-size:.72rem;letter-spacing:.06em;width:200px;
+}
+.toolbar input:focus{outline:1px solid var(--gold);border-color:var(--gold);}
+.toolbar input::placeholder{color:var(--smoke);}
+.btn-f{
+  background:transparent;color:var(--smoke);
+  border:1px solid var(--border);border-radius:2px;
+  padding:.28rem .7rem;font-family:'Josefin Sans',sans-serif;
+  font-size:.65rem;letter-spacing:.12em;text-transform:uppercase;
+  cursor:pointer;transition:all .2s;
+}
+.btn-f:hover{border-color:var(--gold);color:var(--gold);}
+.btn-f.active{background:var(--gold);color:#000;border-color:var(--gold);}
+
+/* ── GRID ── */
+.desc-grid{
+  position:relative;z-index:1;
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(340px,1fr));
+  gap:1.5px;
+  padding:1.5px;
+  max-width:1600px;margin:0 auto;
+}
+
+/* ── CARD ── */
+.desc-card{
+  background:var(--card);
+  display:flex;flex-direction:column;
+  border:1px solid var(--border);
+  transition:border-color .3s;
+  position:relative;overflow:hidden;
+}
+.desc-card::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,transparent,var(--gold),transparent);
+  opacity:0;transition:opacity .3s;
+}
+.desc-card:hover{border-color:rgba(201,168,76,.3);}
+.desc-card:hover::before{opacity:1;}
+.desc-card.done{border-color:rgba(46,110,78,.4);}
+.desc-card.done::before{background:linear-gradient(90deg,transparent,var(--green),transparent);opacity:1;}
+.desc-card.hidden{display:none;}
+
+.card-index{
+  position:absolute;top:.8rem;right:.9rem;
+  font-family:'Josefin Sans',sans-serif;
+  font-size:.6rem;letter-spacing:.15em;color:rgba(201,168,76,.4);
+}
+
+.card-header-zone{padding:1.1rem 1.2rem .8rem;}
+.cat-tag{
+  display:inline-block;
+  font-family:'Josefin Sans',sans-serif;
+  font-size:.55rem;letter-spacing:.18em;text-transform:uppercase;
+  border:1px solid currentColor;padding:.1rem .45rem;border-radius:1px;
+  margin-bottom:.6rem;
+}
+.cat-tag.atmosfera{color:#7c9fbf;border-color:#7c9fbf;}
+.cat-tag.color{color:#bf9f7c;border-color:#bf9f7c;}
+.cat-tag.sonido{color:#9f7cbf;border-color:#9f7cbf;}
+.cat-tag.olor{color:#7cbf9f;border-color:#7cbf9f;}
+.cat-tag.textura{color:#bf7c9f;border-color:#bf7c9f;}
+.cat-tag.luz{color:#d4c06a;border-color:#d4c06a;}
+.cat-tag.movimiento{color:#bf7c7c;border-color:#bf7c7c;}
+.cat-tag.silencio{color:#8a8aaa;border-color:#8a8aaa;}
+
+.card-title{
+  font-family:'Cormorant Garamond',serif;
+  font-size:1.05rem;font-weight:600;
+  color:var(--cream);line-height:1.25;
+  padding-right:2rem;
+}
+.loc-line{
+  font-family:'Josefin Sans',sans-serif;
+  font-size:.6rem;letter-spacing:.12em;color:var(--gold);
+  margin-top:.3rem;
+}
+
+.card-body-zone{padding:.2rem 1.2rem 1rem;flex:1;display:flex;flex-direction:column;gap:.75rem;}
+
+.lang-block{font-size:.95rem;line-height:1.8;}
+.lang-lbl{
+  display:inline-block;
+  font-family:'Josefin Sans',sans-serif;
+  font-size:.55rem;letter-spacing:.18em;text-transform:uppercase;
+  padding:.08rem .4rem;margin-bottom:.4rem;border-radius:1px;
+}
+.lang-lbl.es{background:var(--red);color:#fff;}
+.lang-lbl.en{background:#1a3a5c;color:#8ab4d4;}
+.lang-lbl.usr{background:var(--gold);color:#000;}
+.lang-lbl.ms{background:var(--green);color:#fff;}
+.lang-block p{color:var(--smoke);font-style:italic;letter-spacing:.01em;}
+
+.sep{border:none;border-top:1px solid var(--border);margin:.1rem 0;}
+
+/* reveal */
+.btn-rev{
+  background:transparent;color:var(--accent);
+  border:1px solid var(--accent);border-radius:1px;
+  padding:.18rem .55rem;
+  font-family:'Josefin Sans',sans-serif;font-size:.6rem;letter-spacing:.1em;
+  cursor:pointer;transition:all .2s;margin-top:.3rem;
+}
+.btn-rev:hover{background:var(--accent);color:#fff;}
+.ans{
+  display:none;margin-top:.5rem;
+  padding:.5rem .7rem;
+  background:rgba(124,111,159,.1);
+  border-left:2px solid var(--accent);
+  font-size:.92rem;line-height:1.78;
+  color:rgba(160,160,176,.85);font-style:italic;
+}
+.ans.vis{display:block;}
+
+/* practice zone */
+.pzone{
+  background:#0f0f12;
+  border:1px solid var(--border);
+  border-radius:1px;
+  padding:.85rem;
+  display:flex;flex-direction:column;gap:.65rem;
+  margin:0 1.2rem 1.2rem;
+}
+.pzone label{
+  font-family:'Josefin Sans',sans-serif;
+  font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--smoke);margin-bottom:.2rem;display:block;
+}
+.pzone textarea{
+  width:100%;background:#17171c;
+  border:1px solid var(--border);border-radius:1px;
+  color:var(--cream);
+  padding:.5rem .65rem;font-family:'Cormorant Garamond',serif;
+  font-size:.92rem;line-height:1.7;resize:vertical;min-height:70px;
+  transition:border-color .2s;
+}
+.pzone textarea:focus{outline:none;border-color:var(--gold);}
+.pzone textarea.sg{border-color:var(--green);background:rgba(46,110,78,.06);}
+.pzone textarea::placeholder{color:rgba(160,160,176,.35);font-style:italic;}
+.pactions{display:flex;gap:.5rem;align-items:center;flex-wrap:wrap;}
+.btn-save{
+  background:transparent;color:var(--gold);
+  border:1px solid var(--gold);border-radius:1px;
+  padding:.28rem .65rem;font-family:'Josefin Sans',sans-serif;
+  font-size:.62rem;letter-spacing:.1em;cursor:pointer;transition:all .2s;
+}
+.btn-save:hover{background:var(--gold);color:#000;}
+.btn-clr{
+  background:transparent;color:var(--smoke);
+  border:1px solid var(--border);border-radius:1px;
+  padding:.28rem .6rem;font-family:'Josefin Sans',sans-serif;
+  font-size:.62rem;letter-spacing:.08em;cursor:pointer;transition:all .2s;
+}
+.btn-clr:hover{border-color:var(--smoke);}
+.smsg{font-family:'Josefin Sans',sans-serif;font-size:.6rem;letter-spacing:.1em;color:var(--green);display:none;}
+.smsg.show{display:inline;}
+
+/* FAB */
+.fab{
+  position:fixed;bottom:1.8rem;right:1.8rem;
+  background:var(--gold);color:#000;border:none;border-radius:50%;
+  width:52px;height:52px;font-size:1.2rem;cursor:pointer;
+  box-shadow:0 4px 20px rgba(201,168,76,.3);z-index:200;
+  transition:transform .2s,box-shadow .2s;
+}
+.fab:hover{transform:scale(1.1);box-shadow:0 6px 28px rgba(201,168,76,.5);}
+
+/* MODAL */
+#msModal .modal-content{background:#141418;border:1px solid var(--border);color:var(--cream);}
+#msModal .modal-header{background:#0f0f12;border-bottom:1px solid var(--border);}
+#msModal .modal-title{font-family:'Cormorant Garamond',serif;font-size:1.3rem;font-weight:300;font-style:italic;color:var(--gold);}
+#msModal .btn-close{filter:invert(1) opacity(.5);}
+#msModal .modal-footer{border-top:1px solid var(--border);}
+.mse{border:1px solid var(--border);border-radius:1px;padding:.8rem 1rem;margin-bottom:.8rem;background:#0f0f12;}
+.mse strong{font-family:'Josefin Sans',sans-serif;font-size:.65rem;letter-spacing:.1em;color:var(--gold);}
+.mse p{margin:.3rem 0 0;font-size:.92rem;line-height:1.7;color:var(--smoke);font-style:italic;}
+.empty-note{color:var(--smoke);font-style:italic;text-align:center;padding:2rem;}
+
+/* FOOTER */
+footer{
+  position:relative;z-index:1;
+  background:#0a0a0c;border-top:1px solid var(--border);
+  text-align:center;padding:1.5rem;
+  font-family:'Josefin Sans',sans-serif;font-size:.6rem;
+  letter-spacing:.15em;color:rgba(160,160,176,.4);
+}
+footer span{color:var(--gold);}
+
+@media(max-width:480px){.desc-grid{grid-template-columns:1fr;}}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="site-header">
+  <p class="header-eyebrow">Recurso didáctico · Párrafo Descriptivo Bilingüe</p>
+  <h1>Londres<br><em>100 Descripciones Artísticas</em></h1>
+  <span class="ornament">✦ ✦ ✦</span>
+  <p class="sub">El ocio ciudadano observado con mirada de artista · Español &amp; English · Practica, traduce, escribe</p>
+</header>
+
+<!-- PROGRESS -->
+<div class="prog-strip">
+  <span class="prog-label">PROGRESO</span>
+  <div class="prog-track"><div class="prog-fill" id="pf"></div></div>
+  <span class="prog-pct" id="pp">0%</span>
+  <span class="cnt-pill" id="dc">0 / 100</span>
+</div>
+
+<!-- TOOLBAR -->
+<div class="toolbar">
+  <input type="text" id="si" placeholder="Buscar / Search…" oninput="doFilter()">
+  <button class="btn-f active" onclick="fAll(this)">Todas</button>
+  <button class="btn-f" onclick="fCat(this,'atmosfera')">Atmósfera</button>
+  <button class="btn-f" onclick="fCat(this,'color')">Color</button>
+  <button class="btn-f" onclick="fCat(this,'sonido')">Sonido</button>
+  <button class="btn-f" onclick="fCat(this,'luz')">Luz</button>
+  <button class="btn-f" onclick="fCat(this,'movimiento')">Movimiento</button>
+  <button class="btn-f" onclick="fCat(this,'silencio')">Silencio</button>
+  <button class="btn-f" onclick="fCat(this,'olor')">Olor</button>
+  <button class="btn-f" onclick="fDone(this)">✦ Completadas</button>
+  <span class="cnt-pill" id="cb">100</span>
+</div>
+
+<!-- GRID -->
+<div class="desc-grid" id="grid"></div>
+
+<footer><span>Londres</span> · Descripciones Artísticas del Ocio Ciudadano · Párrafo Descriptivo Bilingüe · Tus escritos se guardan en tu navegador</footer>
+
+<button class="fab" title="Mis escritos" onclick="openModal()">✦</button>
+
+<div class="modal fade" id="msModal" tabindex="-1">
+  <div class="modal-dialog modal-lg modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">✦ Mis Descripciones y Traducciones</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body" id="msBody"></div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+/* ══════════════════════════════════════════
+   DATA — 100 descripciones artísticas
+   Categorías: atmosfera · color · sonido · olor · textura · luz · movimiento · silencio
+══════════════════════════════════════════ */
+const D=[
+  {c:"atmosfera",l:"Hyde Park",t:"El Parque en Niebla de Octubre / Hyde Park in October Mist",
+   es:"La niebla de octubre envuelve Hyde Park como un velo de seda gris. Los árboles se difuminan en siluetas espectrales y el suelo húmedo absorbe cada pisada en silencio. El olor a tierra mojada y hojas en descomposición impregna el aire frío con una dulzura melancólica.",
+   en:"October mist wraps Hyde Park like a veil of grey silk. The trees dissolve into spectral silhouettes and the damp ground absorbs every footstep in silence. The smell of wet earth and decaying leaves permeates the cold air with a melancholy sweetness."},
+
+  {c:"color",l:"Borough Market",t:"La Paleta del Mercado / The Market's Palette",
+   es:"Borough Market es una explosión de pigmentos al mediodía: el naranja encendido de los tomates cherry, el verde limón de los aguacates abiertos, el morado profundo de los higos maduros y el dorado tostado de los panes artesanales que relucen bajo las lámparas cálidas.",
+   en:"Borough Market is an explosion of pigments at midday: the blazing orange of cherry tomatoes, the lime green of split avocados, the deep purple of ripe figs, and the toasted gold of artisan loaves gleaming beneath warm lamps."},
+
+  {c:"sonido",l:"The Tube",t:"La Sinfonía del Metro / The Tube Symphony",
+   es:"El metro de Londres tiene su propia partitura: el chirrido metálico de los frenos al entrar en la curva de Bank, el susurro continuo del aire en los túneles, el golpe seco de los torniquetes y la voz nasal grabada que advierte sobre la brecha con el andén.",
+   en:"The London Underground has its own score: the metallic screech of brakes rounding the Bank curve, the continuous whisper of air through the tunnels, the sharp thud of turnstiles, and the recorded nasal voice warning about the gap between train and platform."},
+
+  {c:"luz",l:"South Bank",t:"La Hora Dorada sobre el Támesis / Golden Hour on the Thames",
+   es:"A las seis de la tarde, el sol poniente convierte el Támesis en una lámina de bronce fundido. Los puentes proyectan sombras largas y paralelas sobre el agua en movimiento, y cada ola rompe en destellos que duran solo un instante antes de volver a fundirse con el río.",
+   en:"At six in the afternoon, the setting sun turns the Thames into a sheet of molten bronze. The bridges cast long, parallel shadows on the moving water, and each wave breaks into flashes that last only an instant before dissolving back into the river."},
+
+  {c:"movimiento",l:"Waterloo Station",t:"La Coreografía de la Estación / The Station Choreography",
+   es:"En Waterloo a las ocho de la mañana, miles de personas se mueven con una precisión involuntaria: maletines que oscilan al mismo ritmo, abrigos negros que rozan sin tocarse, ojos fijos en las pantallas de llegadas que parpadean. Es una coreografía sin director, perfecta en su caos.",
+   en:"At Waterloo at eight in the morning, thousands of people move with involuntary precision: briefcases swinging in the same rhythm, black coats brushing without touching, eyes fixed on blinking arrivals boards. It is a choreography without a director, perfect in its chaos."},
+
+  {c:"silencio",l:"Highgate Cemetery",t:"El Silencio del Cementerio Victoriano / The Victorian Cemetery Silence",
+   es:"Highgate Cemetery tiene un silencio que pesa. Entre las lápidas cubiertas de musgo y las estatuas de ángeles con las alas erosionadas, el tiempo parece detenido. Solo el graznido lejano de un cuervo interrumpe de vez en cuando esa quietud densa como el mármol.",
+   en:"Highgate Cemetery has a silence that weighs. Among moss-covered tombstones and statues of angels with eroded wings, time seems suspended. Only the distant caw of a crow occasionally breaks that stillness, as dense as marble."},
+
+  {c:"olor",l:"Brick Lane",t:"El Olfato de Brick Lane / Brick Lane's Scent",
+   es:"Brick Lane huele a capas: primero el curry rojo y el comino tostado de los restaurantes bengalíes, después el café fuerte de las cafeterías de especialidad, y por debajo, casi imperceptible, el aceite viejo de las freidoras que llevan décadas en el mismo local.",
+   en:"Brick Lane smells in layers: first the red curry and toasted cumin from the Bengali restaurants, then the strong coffee from the specialty cafés, and beneath it all, almost imperceptible, the old oil from fryers that have been in the same spot for decades."},
+
+  {c:"textura",l:"Notting Hill",t:"La Textura de Portobello / The Texture of Portobello",
+   es:"En el mercado de Portobello, todo invita al tacto: la madera astillada de los marcos antiguos, el cuero agrietado de los maletines de los años cincuenta, la superficie fría y suave de las bandejas de plata bruñida, y el terciopelo desgastado de las sillas que nadie se atreve a restaurar.",
+   en:"At Portobello market, everything invites touch: the splintered wood of antique frames, the cracked leather of 1950s briefcases, the cold smooth surface of burnished silver trays, and the worn velvet of chairs that nobody dares to restore."},
+
+  {c:"atmosfera",l:"St. James's Park",t:"El Parque al Amanecer / The Park at Dawn",
+   es:"St. James's Park al amanecer pertenece a los cisnes y a los corredores solitarios. La superficie del lago refleja un cielo rosa pálido que aún no se ha decidido entre la noche y el día. El césped brilla con rocío y cada hoja sostiene una gota perfecta como un espejo diminuto.",
+   en:"St. James's Park at dawn belongs to the swans and the solitary runners. The lake's surface reflects a pale pink sky that has not yet decided between night and day. The lawn glitters with dew and every leaf holds a perfect drop like a tiny mirror."},
+
+  {c:"color",l:"Shoreditch",t:"Los Murales de Shoreditch / Shoreditch Murals",
+   es:"Las fachadas de Shoreditch son un lienzo sin marco: el azul cobalto de un retrato de tres metros, el amarillo ácido de una tipografía que ocupa toda una pared, el naranja quemado de un mural que imita la puesta de sol y el gris urbano que se filtra entre cada color para recordarle a todos que esto es Londres.",
+   en:"Shoreditch's façades are a frameless canvas: the cobalt blue of a three-metre portrait, the acid yellow of typography covering an entire wall, the burnt orange of a mural imitating sunset, and the urban grey that seeps between each colour to remind everyone that this is London."},
+
+  {c:"sonido",l:"Covent Garden",t:"El Músico Callejero / The Street Musician",
+   es:"El violinista de Covent Garden toca Piazzolla a las once de la mañana. Su arco convierte el aire en algo tangible: la nota larga vibra entre las piedras coloniales, rebota en los techos de vidrio y llega amortiguada a quienes toman café en la terraza, que siguen bebiendo pero han dejado de hablar.",
+   en:"The violinist at Covent Garden plays Piazzolla at eleven in the morning. His bow turns the air into something tangible: the long note vibrates among the colonial stones, bounces off the glass rooftops and arrives muffled to those drinking coffee on the terrace, who keep drinking but have stopped talking."},
+
+  {c:"luz",l:"National Gallery",t:"La Luz de los Cuadros / The Light of the Paintings",
+   es:"Dentro de la National Gallery, la luz es artificial pero perfecta: cálida, dirigida, sin sombras errantes. Cae sobre cada cuadro como si el sol hubiera aprendido a detenerse. Los Renoir resplandecen con una suavidad que parece húmeda, y los Turner arden con una luz que el propio río nunca tuvo.",
+   en:"Inside the National Gallery, the light is artificial but perfect: warm, directed, with no stray shadows. It falls on each painting as if the sun had learned to stop. The Renoirs glow with a softness that seems damp, and the Turners burn with a light the river itself never possessed."},
+
+  {c:"movimiento",l:"Oxford Street",t:"La Marea Humana / The Human Tide",
+   es:"Oxford Street en sábado es movimiento sin pausa: paraguas que chocan en las esquinas, bolsas de papel que dibujan arcos entre las manos y los escaparates, grupos que se detienen sin aviso y flujos de personas que los rodean con la naturalidad del agua alrededor de una roca.",
+   en:"Oxford Street on a Saturday is movement without pause: umbrellas colliding at corners, paper bags tracing arcs between hands and shop windows, groups stopping without warning and flows of people circling them with the ease of water around a stone."},
+
+  {c:"silencio",l:"British Library",t:"El Silencio de los Lectores / The Readers' Silence",
+   es:"En la sala de lectura de la British Library, el silencio tiene texturas: el roce de páginas viejas, el golpe amortiguado de un libro que se cierra, el tecleo discreto de un teclado. Es un silencio construido por muchas personas juntas, cada una habitando su propio mundo en voz baja.",
+   en:"In the reading room of the British Library, silence has textures: the rustle of old pages, the muffled thud of a closing book, the discreet tapping of a keyboard. It is a silence built by many people together, each one inhabiting their own world in a whisper."},
+
+  {c:"olor",l:"Kew Gardens",t:"El Invernadero Tropical / The Tropical Greenhouse",
+   es:"El invernadero de Kew huele a tierra caliente y a flores que sudan en el calor artificial. El aroma de la vainilla salvaje se mezcla con el perfume denso de las orquídeas y con algo verde e indescifrable que recuerda a la lluvia sobre piedra caliente en un trópico que Londres solo puede imitar.",
+   en:"The Kew greenhouse smells of warm earth and flowers sweating in artificial heat. The scent of wild vanilla mixes with the dense perfume of orchids and with something green and indescribable that recalls rain on hot stone in a tropical place that London can only imitate."},
+
+  {c:"textura",l:"The Shard",t:"El Vidrio del Rascacielos / The Skyscraper Glass",
+   es:"La fachada del Shard no es plana: cada panel de vidrio está inclinado en un ángulo ligeramente distinto, de modo que la superficie parece vibrar con la luz cambiante del día. Al tocarlo desde la terraza, el cristal está frío como el invierno y liso como el agua en calma.",
+   en:"The Shard's façade is not flat: each glass panel is tilted at a slightly different angle, so the surface seems to vibrate with the day's changing light. Touching it from the terrace, the glass is cold as winter and smooth as still water."},
+
+  {c:"atmosfera",l:"Hampstead Heath",t:"La Colina de los Cometas / The Kite Hill",
+   es:"Desde Parliament Hill, Londres se extiende debajo como una maqueta infinita. El viento que llega desde el norte levanta los cometas de los niños y arrastra el cabello de los paseantes. En los días claros de invierno, el horizonte de rascacielos flota en una neblina azul que lo hace parecer pintado.",
+   en:"From Parliament Hill, London stretches below like an infinite scale model. The wind arriving from the north lifts children's kites and pulls at the hair of walkers. On clear winter days, the skyscraper skyline floats in a blue haze that makes it seem painted."},
+
+  {c:"color",l:"Covent Garden",t:"Las Flores del Mercado / The Market Flowers",
+   es:"Los puestos de flores de Columbia Road el domingo por la mañana son una orquesta de colores que duran poco. El magenta intenso de las peonías, el blanco hueso de los ranúnculos y el amarillo-azufre de los girasoles tempranos se agolpan en cubos metálicos que gotean sobre los adoquines.",
+   en:"Columbia Road flower stalls on Sunday morning are an orchestra of short-lived colours. The deep magenta of peonies, the bone white of ranunculi and the sulphur-yellow of early sunflowers crowd into metal buckets that drip onto the cobblestones."},
+
+  {c:"sonido",l:"Borough Market",t:"El Ruido del Mercado al Mediodía / The Market Noise at Noon",
+   es:"Borough Market a mediodía suena a feria medieval: el golpe del cuchillo sobre la tabla de madera del carnicero, el chisporroteo de la carne en la plancha, las voces de los vendedores que se superponen en idiomas distintos, y por encima de todo, el constante murmullo de la multitud hambrienta.",
+   en:"Borough Market at noon sounds like a medieval fair: the thud of the butcher's knife on the wooden block, the sizzle of meat on the grill, the voices of vendors layering over each other in different languages, and above it all, the constant murmur of the hungry crowd."},
+
+  {c:"luz",l:"St. Paul's Cathedral",t:"La Cúpula y la Luz / The Dome and the Light",
+   es:"La cúpula de St. Paul's filtra la luz por sus ventanas altas en haces diagonales que cortan la penumbra interior. Las partículas de polvo flotan visibles en esos rayos, convertidas en algo sagrado por el ángulo exacto del sol. Es la misma luz que pintaron los barrocos, atrapada en piedra.",
+   en:"St. Paul's dome filters light through its high windows in diagonal beams that cut through the interior dusk. Dust particles float visibly in those rays, rendered sacred by the exact angle of the sun. It is the same light the Baroque painters captured, trapped in stone."},
+
+  {c:"movimiento",l:"Tower Bridge",t:"La Apertura del Puente / The Bridge Opening",
+   es:"Cuando el Tower Bridge se abre para dejar pasar un barco alto, el movimiento es lento y solemne: las dos mitades del puente se elevan como alas que nunca han olvidado cómo volar. El tráfico se detiene, los peatones se acodan en las barandillas, y la ciudad entera contiene el aliento un instante.",
+   en:"When Tower Bridge opens to let through a tall vessel, the movement is slow and solemn: the two halves of the bridge rise like wings that have never forgotten how to fly. Traffic stops, pedestrians lean on the railings, and the whole city holds its breath for a moment."},
+
+  {c:"silencio",l:"Kenwood House",t:"La Casa en el Heath / The House on the Heath",
+   es:"Kenwood House en un martes de invierno está casi vacía. Las salas con sus Rembrandt y sus Vermeer respiran un silencio que huele a cera y a tiempo detenido. Los pasos sobre el parqué retumban con una solemnidad que nadie pide pero que todos adoptan al entrar.",
+   en:"Kenwood House on a winter Tuesday is almost empty. The rooms with their Rembrandts and Vermeers breathe a silence that smells of wax and stopped time. Footsteps on the parquet floor resound with a solemnity no one requests but everyone adopts on entering."},
+
+  {c:"olor",l:"Soho",t:"El Olor de la Noche en Soho / The Smell of Night in Soho",
+   es:"Soho de noche huele a capas que se superponen en cada esquina: el humo de cigarrillos que ya nadie fuma adentro, el perfume de los transeúntes que rozan al pasar, la grasa frita que sale por las rejillas de ventilación de los restaurantes y un dulzor fermentado que asciende desde los sótanos donde envejece la cerveza.",
+   en:"Soho at night smells in layers that overlap at every corner: cigarette smoke that no one smokes indoors anymore, the perfume of passers-by brushing past, fried fat rising through restaurant ventilation grilles, and a fermented sweetness drifting up from the cellars where beer ages."},
+
+  {c:"textura",l:"Greenwich",t:"La Piedra del Observatorio / The Observatory Stone",
+   es:"Las paredes del Observatorio de Greenwich están hechas de una piedra rojiza y porosa que absorbe la humedad y la devuelve en forma de humedad fría al tacto. Cada ladrillo guarda las marcas del tiempo: líquenes amarillos, grietas que siguen el ángulo del mármol y una aspereza que el tiempo ha convertido en historia.",
+   en:"The walls of Greenwich Observatory are built of porous reddish stone that absorbs moisture and returns it as cold dampness to the touch. Each brick holds the marks of time: yellow lichens, cracks following the marble's angle, and a roughness that time has turned into history."},
+
+  {c:"atmosfera",l:"Regent's Canal",t:"El Canal al Atardecer / The Canal at Dusk",
+   es:"El canal de Regent's al atardecer es un espejo verde oscuro que refleja las casas flotantes pintadas de rojo y azul. Los patos nadan lentamente contra la corriente sin llegar a ningún sitio. El olor a agua estancada y a pintura de barco se mezcla con el humo de las chimeneas de leña de las barcazas.",
+   en:"Regent's Canal at dusk is a dark green mirror reflecting houseboats painted in red and blue. Ducks swim slowly against the current, going nowhere. The smell of stagnant water and boat paint mingles with the wood smoke from the barges' chimneys."},
+
+  {c:"color",l:"Tate Modern",t:"El Turbine Hall / The Turbine Hall",
+   es:"El Turbine Hall de la Tate Modern es un espacio que cambia de color con cada instalación. Sin obra, es gris acero y luz neutra que cae desde las claraboyas industriales. Con obra, puede ser rojo sangre de piso a techo, o un amarillo solar que hace parpadear a los visitantes como si miraran al sol.",
+   en:"The Turbine Hall at Tate Modern is a space that changes colour with each installation. Without a work, it is steel grey with neutral light falling from industrial skylights. With a work, it can be blood red from floor to ceiling, or a solar yellow that makes visitors blink as if staring at the sun."},
+
+  {c:"sonido",l:"Notting Hill Carnival",t:"El Sonido del Carnaval / The Sound of Carnival",
+   es:"El sonido del Carnaval de Notting Hill comienza antes de verlo: un bajo profundo que vibra en el suelo a tres calles de distancia, las trompetas de los sound systems que se superponen en disonancia temporal y el grito colectivo de la multitud cuando el ritmo cambia y la calle entera se convierte en un instrumento.",
+   en:"The sound of the Notting Hill Carnival begins before you see it: a deep bass vibrating in the ground three streets away, trumpets from sound systems layering in temporary dissonance, and the collective cry of the crowd when the rhythm shifts and the whole street becomes an instrument."},
+
+  {c:"luz",l:"Victoria and Albert Museum",t:"El Patio Interior / The Inner Courtyard",
+   es:"El patio interior del Victoria and Albert tiene una cúpula de cristal que transforma la lluvia londinense en espectáculo: el agua cae sobre el cristal en diagonal, dibujando líneas efímeras de plata, y la luz que llega al suelo ya no es la de afuera sino una versión filtrada, más suave, casi acuosa.",
+   en:"The inner courtyard of the Victoria and Albert has a glass dome that transforms London rain into spectacle: water falls on the glass diagonally, drawing ephemeral silver lines, and the light reaching the floor is no longer that of outside but a filtered version, softer, almost watery."},
+
+  {c:"movimiento",l:"Piccadilly Circus",t:"El Torbellino de Piccadilly / Piccadilly's Whirlpool",
+   es:"Piccadilly Circus es un torbellino de tráfico y turistas que giran alrededor de la estatua de Eros como planetas en órbita irregular. Los autobuses rojos cortan la circulación en ángulos imposibles, los taxis negros aceleran en los huecos y los peatones cruzan sin mirar porque aquí, de algún modo, todos sobreviven.",
+   en:"Piccadilly Circus is a whirlpool of traffic and tourists circling the Eros statue like planets in irregular orbit. Red buses cut across lanes at impossible angles, black cabs accelerate into the gaps, and pedestrians cross without looking because here, somehow, everyone survives."},
+
+  {c:"silencio",l:"Postman's Park",t:"El Parque de los Héroes Anónimos / The Park of Anonymous Heroes",
+   es:"Postman's Park esconde en su rincón más callado el Memorial a la Heroica Abnegación: una galería de azulejos victorianos donde están escritos los nombres de personas ordinarias que murieron salvando a otras. El silencio aquí es diferente: no es vacío, sino la suma de todas esas historias que nadie recuerda en voz alta.",
+   en:"Postman's Park hides in its quietest corner the Memorial to Heroic Self-Sacrifice: a gallery of Victorian tiles inscribed with the names of ordinary people who died saving others. The silence here is different: not empty, but the sum of all those stories that no one remembers aloud."},
+
+  {c:"olor",l:"Portobello Market",t:"El Mercado de los Sábados / The Saturday Market",
+   es:"El Portobello de los sábados huele a polvo viejo y a aceite de máquina de los puestos de antigüedades, a azúcar caramelizado de los crepes callejeros y, entre todo eso, al perfume de flores frescas que alguien ha colocado en un cubo de agua junto a los relojes de bolsillo del siglo XIX.",
+   en:"Saturday's Portobello smells of old dust and machine oil from the antique stalls, caramelised sugar from the street crêpes, and amid it all, the scent of fresh flowers someone has placed in a water bucket beside the 19th-century pocket watches."},
+
+  {c:"textura",l:"Westminster Bridge",t:"La Barandilla del Puente / The Bridge Railing",
+   es:"La barandilla de Westminster Bridge está desgastada en los puntos exactos donde miles de manos se han apoyado para mirar el río. El hierro negro, pintado muchas veces encima de sí mismo, tiene una superficie que es a la vez lisa y granulada, fría siempre, incluso en agosto.",
+   en:"Westminster Bridge's railing is worn at the exact points where thousands of hands have leaned to look at the river. The black iron, painted many times over itself, has a surface that is simultaneously smooth and granular, always cold, even in August."},
+
+  {c:"atmosfera",l:"Crossrail Place Roof Garden",t:"El Jardín sobre el Metro / The Garden Above the Tube",
+   es:"El jardín en la cubierta de Crossrail Place en Canary Wharf existe en una paradoja: rodeado de rascacielos de cristal, alberga bambúes, helechos y flores tropicales bajo una estructura de madera que filtra la luz. El contraste entre la jungla verde y los edificios especulares que la rodean tiene algo de surrealismo domesticado.",
+   en:"The rooftop garden at Crossrail Place in Canary Wharf exists in a paradox: surrounded by glass towers, it harbours bamboo, ferns and tropical flowers beneath a timber structure that filters the light. The contrast between the green jungle and the mirror-like buildings surrounding it has something of tamed surrealism."},
+
+  {c:"color",l:"Columbia Road",t:"El Domingo de las Flores / The Sunday of Flowers",
+   es:"Columbia Road los domingos es un pasillo de color vivo que se estrecha con cada hora que pasa. El rojo de los tulipanes contra el verde oscuro de los arbustos recortados, el rosa empolvado de las rosas inglesas y el malva de las lavandas crean una paleta que el pintor más atrevido dudaría en mezclar.",
+   en:"Columbia Road on Sundays is a corridor of vivid colour that narrows with each passing hour. The red of tulips against the dark green of clipped shrubs, the powdery pink of English roses and the mauve of lavender create a palette that the boldest painter would hesitate to mix."},
+
+  {c:"sonido",l:"London Eye",t:"La Cápsula en Silencio / The Silent Capsule",
+   es:"Dentro de la cápsula del London Eye, el sonido del mundo desaparece casi por completo. El único ruido es el del mecanismo suave que gira sin detenerse y el murmullo de los pasajeros que bajan la voz sin que nadie les pida que lo hagan, como si la altura impusiera su propio código de silencio.",
+   en:"Inside the London Eye capsule, the sound of the world almost completely disappears. The only noise is the soft mechanism turning without stopping and the murmur of passengers who lower their voices without anyone asking them to, as if the height imposed its own code of silence."},
+
+  {c:"luz",l:"Leadenhall Market",t:"El Mercado de Cristal / The Glass Market",
+   es:"Leadenhall Market tiene un techo de vidrio y hierro pintado en rojo y crema que convierte el mediodía en teatro de luz: el sol de otoño entra en ángulo y dora los adoquines del suelo, proyecta la celosía de hierro como una red sobre las tiendas y hace que cada botella de vino en los escaparates resplandezca como una joya.",
+   en:"Leadenhall Market has a roof of glass and iron painted red and cream that turns midday into a theatre of light: the autumn sun enters at an angle and gilds the ground's cobblestones, projects the iron latticework as a net over the shops, and makes every wine bottle in the windows gleam like a jewel."},
+
+  {c:"movimiento",l:"Trafalgar Square",t:"Las Palomas y los Turistas / The Pigeons and the Tourists",
+   es:"En Trafalgar Square, el movimiento es doble: arriba, las palomas dibujan círculos que se abren y cierran en respuesta a cada movimiento brusco desde abajo; abajo, los turistas orbitan los leones, se acercan, retroceden para la foto, avanzan de nuevo, en una danza sin música pero perfectamente coreografiada.",
+   en:"In Trafalgar Square, movement is double: above, the pigeons draw circles that open and close in response to each sudden movement from below; below, tourists orbit the lions, approach, step back for the photo, advance again, in a dance with no music but perfectly choreographed."},
+
+  {c:"silencio",l:"Temple Church",t:"La Iglesia de los Caballeros / The Knights' Church",
+   es:"Temple Church, enterrada entre los Inns of Court, guarda un silencio que tiene siglos de espesor. Las figuras de piedra de los caballeros cruzados yacen en el suelo con los ojos cerrados para siempre. El eco de un solo paso tarda en apagarse más de lo que parece razonable.",
+   en:"Temple Church, buried among the Inns of Court, holds a silence centuries thick. The stone figures of the crusader knights lie on the floor with their eyes closed forever. The echo of a single step takes longer to fade than seems reasonable."},
+
+  {c:"olor",l:"Spitalfields Market",t:"El Mercado del Este / The East Market",
+   es:"Spitalfields huele diferente según la hora: por la mañana, a café negro y cruasanes recién horneados; al mediodía, a incienso de los puestos de ropa vintage y a cuero de los bolsos artesanales; y al atardecer, cuando los puestos cierran, a madera mojada y a las flores no vendidas que alguien deja en el suelo.",
+   en:"Spitalfields smells different depending on the hour: in the morning, of black coffee and freshly baked croissants; at noon, of incense from vintage clothing stalls and leather from handmade bags; and at dusk, when the stalls close, of wet wood and the unsold flowers someone leaves on the ground."},
+
+  {c:"textura",l:"Bankside",t:"La Orilla del Támesis / The Riverside Shore",
+   es:"La orilla del Támesis en Bankside, expuesta con la marea baja, tiene la textura de un archivo geológico: barro negro y suave que cede al peso de la bota, fragmentos de cerámica romana que el río devuelve, conchas quebradas, vidrio de colores frosted por el agua y, de vez en cuando, algo metálico y misterioso.",
+   en:"The Thames shore at Bankside, exposed at low tide, has the texture of a geological archive: soft black mud that yields to a boot's weight, fragments of Roman pottery returned by the river, broken shells, glass frosted by water in colours, and occasionally something metallic and mysterious."},
+
+  {c:"atmosfera",l:"Bermondsey",t:"El Amanecer en el Mercado de Antigüedades / Dawn at the Antiques Market",
+   es:"El mercado de antigüedades de Bermondsey comienza antes del amanecer, cuando los anticuarios llegan con linternas. La penumbra azul del alba hace que los objetos sobre las mesas parezcan hallazgos arqueológicos: candelabros que brillan en la oscuridad, espejos que reflejan la calle vacía, relojes parados en horas distintas.",
+   en:"Bermondsey antiques market starts before dawn, when dealers arrive with torches. The blue half-light of daybreak makes the objects on the tables look like archaeological finds: candlesticks gleaming in the dark, mirrors reflecting the empty street, clocks stopped at different hours."},
+
+  {c:"color",l:"National Portrait Gallery",t:"Los Retratos del Tiempo / The Portraits of Time",
+   es:"La National Portrait Gallery colecciona los rostros del tiempo: la palidez verdosa de la piel isabelina en los retratos del siglo XVI, el carmín exagerado de los labios georgianos, el sepia fotográfico de los victorianos y el color directo, sin filtro, de los retratos contemporáneos que miran al espectador sin ceremonia.",
+   en:"The National Portrait Gallery collects the faces of time: the greenish pallor of Elizabethan skin in 16th-century portraits, the exaggerated crimson of Georgian lips, the photographic sepia of Victorians, and the direct, unfiltered colour of contemporary portraits that look at the viewer without ceremony."},
+
+  {c:"sonido",l:"Hampstead Heath",t:"El Canto de los Pájaros del Heath / The Heath Birdsong",
+   es:"En los bosques del Hampstead Heath, el sonido de la ciudad se filtra hasta volverse casi inaudible. Lo que queda es el canto superpuesto de pájaros que no se ven: el piqui-piqui del carbonero, el trino descendente del mirlo y el cuervo que grazna desde una rama alta con autoridad de propietario.",
+   en:"In the woods of Hampstead Heath, the sound of the city filters down until almost inaudible. What remains is the overlapping birdsong of birds that cannot be seen: the tit's chick-a-dee, the descending trill of the blackbird, and the crow that caws from a high branch with the authority of an owner."},
+
+  {c:"luz",l:"Tate Modern",t:"La Ventana Industrial / The Industrial Window",
+   es:"Las ventanas industriales de la antigua central eléctrica de la Tate Modern tienen marcos de acero oxidado que parten la vista del Támesis en rectángulos. La luz que entra por ellas en la mañana es horizontal y afilada, y traza líneas perfectas sobre el suelo de hormigón que duran exactamente mientras el sol no cambia de posición.",
+   en:"The industrial windows of the former Tate power station have rusted steel frames that divide the Thames view into rectangles. The morning light entering through them is horizontal and sharp, tracing perfect lines on the concrete floor that last exactly as long as the sun holds its position."},
+
+  {c:"movimiento",l:"Camden Lock",t:"El Puente del Canal / The Canal Bridge",
+   es:"El puente sobre el canal de Camden Lock es un punto de convergencia: ciclistas que frenan al cruzar, paseantes que se detienen a mirar el agua, turistas que fotografían las barcazas pintadas y grupos de amigos que se apoyan en la barandilla durante horas sin que el canal parezca cansarse de ser contemplado.",
+   en:"The bridge over Camden Lock canal is a convergence point: cyclists braking to cross, strollers stopping to look at the water, tourists photographing the painted barges, and groups of friends leaning on the railing for hours without the canal seeming to tire of being contemplated."},
+
+  {c:"silencio",l:"Chelsea Physic Garden",t:"El Jardín Medicinal / The Medicinal Garden",
+   es:"El Chelsea Physic Garden, escondido detrás de un muro de ladrillo rojo, tiene el silencio específico de los jardines que llevan siglos siendo cuidados. Las plantas medicinales crecen en filas ordenadas con una serenidad botánica. El único sonido es el de las abejas que trabajan con el mismo rigor desde 1673.",
+   en:"Chelsea Physic Garden, hidden behind a red brick wall, has the specific silence of gardens that have been tended for centuries. The medicinal plants grow in orderly rows with a botanical serenity. The only sound is that of the bees working with the same rigour since 1673."},
+
+  {c:"olor",l:"Carnaby Street",t:"El Olor de la Moda / The Smell of Fashion",
+   es:"Carnaby Street huele a la moda de cada década superpuesta: el almizcle de los perfumes de los años setenta que permanece en la tela de los locales vintage, el plástico nuevo de las tiendas de ropa rápida, el cuero sintético de los zapatos expuestos en la calle y, muy de fondo, el aceite de las frituras del pub de la esquina.",
+   en:"Carnaby Street smells of each decade's fashion layered one over another: the musk of 1970s perfumes remaining in the fabric of vintage shops, the new plastic of fast-fashion stores, the synthetic leather of shoes displayed on the street, and far in the background, the frying oil from the corner pub."},
+
+  {c:"textura",l:"The Barbican",t:"El Hormigón Brutalista / The Brutalist Concrete",
+   es:"El Barbican Centre tiene una textura que no pide permiso: el hormigón expuesto está nervado, áspero, moldeado en aristas y cavidades que retienen el polvo negro de la ciudad. Al pasar la mano, la superficie roza los dedos con la rugosidad de algo que fue diseñado para durar más que sus habitantes.",
+   en:"The Barbican Centre has a texture that asks no permission: the exposed concrete is ribbed, rough, moulded in edges and cavities that retain the city's black dust. Running a hand over it, the surface grazes the fingers with the roughness of something designed to outlast its inhabitants."},
+
+  {c:"atmosfera",l:"Waterloo Bridge",t:"El Puente de las Mujeres / The Women's Bridge",
+   es:"Waterloo Bridge, construido en gran parte por mujeres durante la Segunda Guerra Mundial, tiene una vista que no cansa: al este, la silueta de la City con sus cúpulas y agujas; al oeste, el Parlamento y el Big Ben. La brisa del río es siempre más fuerte aquí que en tierra, y en los días de lluvia, las gotas vuelan horizontales.",
+   en:"Waterloo Bridge, built largely by women during the Second World War, offers a view that never tires: to the east, the City skyline with its domes and spires; to the west, Parliament and Big Ben. The river breeze is always stronger here than on land, and on rainy days, the drops fly horizontal."},
+
+  {c:"color",l:"Chelsea Flower Show",t:"Los Jardines Imposibles / The Impossible Gardens",
+   es:"El Chelsea Flower Show instala jardines en miniatura que concentran colores que la naturaleza distribuye en kilómetros. El azul celeste de las delphiniums junto al naranja ardiente de las cannas, el blanco hueso de los rosales trepadores contra el verde oscuro de los bojes recortados: cada jardín es un cuadro que se puede oler.",
+   en:"The Chelsea Flower Show installs miniature gardens that concentrate colours nature distributes over kilometres. The sky blue of delphiniums beside the blazing orange of cannas, the bone white of climbing roses against the dark green of clipped box: each garden is a painting you can smell."},
+
+  {c:"sonido",l:"Southwark Cathedral",t:"Las Campanas del Mediodía / The Midday Bells",
+   es:"Las campanas de la Catedral de Southwark al mediodía hacen vibrar el aire del mercado adyacente con un sonido que viene del siglo XII y llega al siglo XXI sin haberse disculpado por su volumen. Los vendedores siguen hablando, los compradores siguen eligiendo quesos, pero algo en todos se detiene un instante.",
+   en:"The bells of Southwark Cathedral at midday set the air of the adjacent market vibrating with a sound that comes from the 12th century and arrives in the 21st without apologising for its volume. The vendors keep talking, the shoppers keep choosing cheeses, but something in everyone pauses for a moment."},
+
+  {c:"luz",l:"Museum of London Docklands",t:"El Almacén de Azúcar / The Sugar Warehouse",
+   es:"El Museum of London Docklands ocupa un antiguo almacén de azúcar cuyas paredes de ladrillo han absorbido décadas de humedad y luz escasa. La iluminación interior reproduce esa penumbra histórica: cálida, ambarosa, que hace que los objetos expuestos parezcan encontrados, no exhibidos.",
+   en:"The Museum of London Docklands occupies a former sugar warehouse whose brick walls have absorbed decades of dampness and sparse light. The interior lighting reproduces that historical half-dark: warm, amber-toned, making the displayed objects look found rather than exhibited."},
+
+  {c:"movimiento",l:"London Marathon",t:"La Marea de los Corredores / The Runners' Tide",
+   es:"El día del maratón de Londres, la ciudad transforma sus calles en un río humano de colores: los dorsales naranja y los calcetines de colores imposibles, los disfraces que ralentizan el paso y los corredores de élite que pasan como destellos antes de que nadie haya podido verlos bien.",
+   en:"On London Marathon day, the city transforms its streets into a human river of colours: orange race bibs and impossibly coloured socks, fancy dress that slows the pace, and elite runners who pass like flashes before anyone has had time to see them properly."},
+
+  {c:"silencio",l:"Tower of London",t:"Los Fosos Vacíos / The Empty Moats",
+   es:"El foso vacío de la Torre de Londres en un martes de enero, sin turistas, tiene una quietud que los ocho siglos de historia del lugar justifican plenamente. El viento que circula por ese espacio huele a piedra fría y a la hierba que crece donde antes había agua. Los cuervos no vuelan: caminan.",
+   en:"The empty moat of the Tower of London on a January Tuesday, without tourists, holds a stillness that the site's eight centuries of history fully justify. The wind circulating through that space smells of cold stone and the grass growing where water once stood. The ravens do not fly: they walk."},
+
+  {c:"olor",l:"Greenwich Market",t:"El Mercado de las Especias / The Spice Market",
+   es:"El mercado cubierto de Greenwich huele a una mezcla improbable: la canela y el cardamomo de los puestos de especias mezclados con el aceite de palma del puesto ghanés, el hinojo de los embutidos italianos y el olor limpio y vegetal de los jabones artesanales que alguien vende en la esquina.",
+   en:"The covered market in Greenwich smells of an improbable blend: cinnamon and cardamom from the spice stalls mixed with palm oil from the Ghanaian stall, fennel from the Italian deli, and the clean, vegetal smell of handmade soaps someone sells in the corner."},
+
+  {c:"textura",l:"Victoria Embankment",t:"Los Muros del Embankment / The Embankment Walls",
+   es:"Los muros de granito del Victoria Embankment están cubiertos de incrustaciones de tiempo: el verdín de las salpicaduras del río a lo largo de décadas, las marcas de niveles de inundación históricas grabadas en la piedra y la pátina negra del hollín de una ciudad que dejó de quemarse carbón pero cuyos muros guardan la memoria.",
+   en:"The granite walls of Victoria Embankment are covered in encrustatins of time: the verdigris of river spray accumulated over decades, historic flood level marks inscribed in the stone, and the black patina of soot from a city that stopped burning coal but whose walls hold the memory."},
+
+  {c:"atmosfera",l:"Peckham",t:"El Horizonte desde el Tejado / The Horizon from the Rooftop",
+   es:"El bar en la azotea del Frank's en Peckham tiene el mejor horizonte de Londres sin precio de entrada. Al atardecer, el skyline de la City flotante a lo lejos sobre un cielo que va del naranja al violeta, y debajo el ruido del sur de Londres que sube amortiguado como la banda sonora de una ciudad que no para.",
+   en:"The rooftop bar at Frank's in Peckham has the best London horizon with no entry fee. At dusk, the City skyline floats in the distance against a sky shifting from orange to violet, and below it the noise of south London rises muffled like the soundtrack of a city that never stops."},
+
+  {c:"color",l:"Chinatown",t:"Los Farolillos de Gerrard Street / The Gerrard Street Lanterns",
+   es:"Gerrard Street en el Año Nuevo Lunar se cuelga de centenares de farolillos rojos que convierten la calle en un corredor de luz rojiza y sombras que oscilan. El rojo chino —más intenso que el rojo inglés, más festivo que cualquier color londinense— transforma la calle durante semanas en algo que no es del todo esta ciudad.",
+   en:"Gerrard Street during the Lunar New Year hangs with hundreds of red lanterns that turn the street into a corridor of reddish light and swaying shadows. The Chinese red — more intense than English red, more festive than any London colour — transforms the street for weeks into something not entirely of this city."},
+
+  {c:"sonido",l:"Portobello Road",t:"El Sábado de los Vendedores / The Sellers' Saturday",
+   es:"Los vendedores de Portobello tienen su propio repertorio vocal: el anciano que llama a los compradores con una voz que suena a radio de los años cincuenta, la mujer que anuncia sus joyas con susurros calculados para que solo se acerque quien quiera, el chico que pone música para vender discos de vinilo que recogen polvo desde Reagan.",
+   en:"Portobello vendors have their own vocal repertoire: the old man who calls shoppers with a voice that sounds like 1950s radio, the woman who announces her jewellery in whispers calculated so that only those who want to will approach, the boy who plays music to sell vinyl records gathering dust since Reagan."},
+
+  {c:"luz",l:"Sir John Soane's Museum",t:"El Museo de la Luz Robada / The Museum of Stolen Light",
+   es:"La casa-museo de Sir John Soane es un experimento continuo con la luz: espejos colocados en ángulos imposibles multiplican las ventanas, los pozos de luz caen desde techos que no se ven y la lámpara de aceite que se enciende en las visitas nocturnas devuelve el edificio al siglo en que fue construido.",
+   en:"Sir John Soane's house-museum is a continuous experiment with light: mirrors placed at impossible angles multiply the windows, light wells fall from unseen ceilings, and the oil lamp lit during evening visits returns the building to the century in which it was built."},
+
+  {c:"movimiento",l:"Canary Wharf",t:"La Hora de la Salida / The Rush Hour Exit",
+   es:"Canary Wharf a las seis de la tarde es un estudio en movimiento rectilíneo: los trabajadores financieros salen de los rascacielos en oleadas, todos hacia el mismo punto de conexión del metro, los abrigos oscuros se mueven en paralelo como fichas de dominó bien alineadas que caen de forma perfectamente predecible.",
+   en:"Canary Wharf at six in the afternoon is a study in rectilinear movement: finance workers exit the towers in waves, all heading toward the same tube connection point, dark coats moving in parallel like well-aligned dominoes falling in a perfectly predictable manner."},
+
+  {c:"silencio",l:"Wallace Collection",t:"La Sala de las Armaduras / The Armour Room",
+   es:"La sala de armaduras de la Wallace Collection en Manchester Square tiene la quietud de lo que ya no tiene uso. Las corazas de acero bruñido, los yelmos con viseras bajadas y los guanteletes abiertos como manos que esperan están suspendidos en un silencio que tiene algo de sueño y algo de museovigilante.",
+   en:"The armour room at the Wallace Collection on Manchester Square holds the stillness of what no longer has purpose. The burnished steel breastplates, the helmets with visors lowered, and the gauntlets open like waiting hands are suspended in a silence that has something of sleep and something of a museum guardian."},
+
+  {c:"olor",l:"Columbia Road",t:"El Olor del Domingo Vegetal / The Sunday Vegetable Scent",
+   es:"Columbia Road el domingo, cuando el mercado termina y los vendedores barren los pétalos caídos, huele a flores aplastadas y a hierba cortada. Es un olor dulce y melancólico al mismo tiempo, el olor de las cosas bellas que han cumplido su función y están a punto de desaparecer.",
+   en:"Columbia Road on Sunday, when the market ends and vendors sweep the fallen petals, smells of crushed flowers and cut grass. It is a simultaneously sweet and melancholy smell, the scent of beautiful things that have served their purpose and are about to disappear."},
+
+  {c:"textura",l:"Marylebone",t:"Las Puertas de los Townhouses / The Townhouse Doors",
+   es:"Las puertas de los townhouses de Marylebone son objetos de deseo arquitectónico: lacas de colores saturados —el negro lustroso, el azul marino, el rojo sangre de buey— con herrajes de latón que alguien limpia cada mañana. Al pasar la mano por una aldaba de bronce pulido, se siente el peso de dos siglos de visitas.",
+   en:"The doors of Marylebone townhouses are objects of architectural desire: saturated lacquered colours — lustrous black, navy blue, ox-blood red — with brass fittings that someone polishes every morning. Running a hand over a polished bronze knocker, one feels the weight of two centuries of visitors."},
+
+  {c:"atmosfera",l:"Brick Lane",t:"El Domingo del East End / The East End Sunday",
+   es:"El Brick Lane de los domingos tiene la atmósfera de un mercado persa trasladado a un callejón victoriano. Las escaleras de incendios cuelgan sobre las mesas de libros de segunda mano, los vendedores de especias improvisan tejados con cartón y el olor a curry se mezcla con el hip-hop que alguien escucha en un altavoz portátil.",
+   en:"Sunday's Brick Lane has the atmosphere of a Persian bazaar relocated to a Victorian alleyway. Fire escapes hang over second-hand book tables, spice vendors improvise roofs from cardboard, and the smell of curry mixes with hip-hop someone is playing on a portable speaker."},
+
+  {c:"color",l:"Greenwich Park",t:"Los Castaños en Otoño / The Chestnut Trees in Autumn",
+   es:"Los castaños de Greenwich Park en octubre tienen un color que el idioma no ha terminado de nombrar: entre el cobre y el oro, con reflejos rojizos cuando el sol los atraviesa. Las hojas caídas forman en el suelo una alfombra de tonos que va del amarillo limón al marrón oscuro en el espacio de un metro.",
+   en:"The chestnut trees in Greenwich Park in October have a colour that language has not quite finished naming: between copper and gold, with reddish glints when the sun shines through them. The fallen leaves form on the ground a carpet of tones ranging from lemon yellow to dark brown within the space of a metre."},
+
+  {c:"sonido",l:"St. James's Park",t:"Los Patos del Lago / The Lake Ducks",
+   es:"El lago de St. James's Park tiene una banda sonora propia: el chapoteo de los patos que se lanzan al agua desde la orilla, el graznido ocasional de los gansos canadienses que reclaman más espacio y, por encima de todo, el rumor constante de la ciudad que el parque atenúa pero no consigue callar del todo.",
+   en:"St. James's Park lake has its own soundtrack: the splash of ducks launching themselves into the water from the bank, the occasional honk of Canadian geese claiming more space, and above it all, the constant rumble of the city that the park softens but cannot quite silence."},
+
+  {c:"luz",l:"Canary Wharf",t:"El Reflejo en los Rascacielos / The Reflection in the Towers",
+   es:"Los rascacielos de Canary Wharf son espejos imperfectos que cambian el color del cielo según el ángulo. Al amanecer reflejan un rosa pálido; al mediodía, un azul glacial; al atardecer, el naranja y el violeta del cielo se mezclan en sus fachadas en un cuadro abstracto que nadie firmó y que dura exactamente tres minutos.",
+   en:"The Canary Wharf skyscrapers are imperfect mirrors that change the colour of the sky depending on the angle. At dawn they reflect a pale pink; at midday, a glacial blue; at dusk, the orange and violet of the sky blend on their façades in an abstract painting nobody signed that lasts exactly three minutes."},
+
+  {c:"movimiento",l:"Covent Garden",t:"Los Artistas Callejeros / The Street Artists",
+   es:"Los artistas callejeros de Covent Garden son expertos en el arte de crear audiencia: el mago que empieza su actuación en solitario y detiene a la primera persona que pasa, el equilibrista que lleva diez minutos preparando su número para que la expectativa sea el espectáculo, el mimo que no actúa hasta que hay cincuenta personas mirando.",
+   en:"Covent Garden's street artists are experts in the art of creating an audience: the magician who starts his act alone and stops the first person who passes, the acrobat who spends ten minutes preparing his act so that the expectation is the show, the mime who does not perform until there are fifty people watching."},
+
+  {c:"silencio",l:"Dulwich Picture Gallery",t:"La Galería del Suburbio / The Suburban Gallery",
+   es:"La Dulwich Picture Gallery, la primera galería pública de Inglaterra, tiene la proporción perfecta entre el cuadro y el silencio que lo rodea. Sus salas pequeñas y su luz cenital crean una intimidad que no se encuentra en los grandes museos: aquí los Rembrandt y los Rubens parecen estar esperando a un solo visitante a la vez.",
+   en:"Dulwich Picture Gallery, England's first public gallery, has the perfect proportion between the painting and the silence surrounding it. Its small rooms and overhead light create an intimacy not found in major museums: here the Rembrandts and Rubens seem to be waiting for one visitor at a time."},
+
+  {c:"olor",l:"Maltby Street Market",t:"El Mercado del Sábado / Saturday's Market",
+   es:"Maltby Street en el Bermondsey Arch los sábados huele a ahumado y a fermentado: el humo de las carnes en la parrilla al aire libre, el vinagre de los encurtidos artesanales, el lúpulo de las cervezas de barril y, de manera inesperada, la lavanda de las velas que alguien vende en un rincón como si fuera la Provenza.",
+   en:"Maltby Street in the Bermondsey Arch on Saturdays smells of smoke and fermentation: the smoke from meats on the open-air grill, the vinegar of artisan pickles, the hops from draft beers, and unexpectedly, the lavender from candles someone sells in a corner as if it were Provence."},
+
+  {c:"textura",l:"Southwark Cathedral",t:"El Suelo de la Nave / The Nave Floor",
+   es:"El suelo de la Catedral de Southwark está hecho de losas de piedra desgastadas por siglos de pisadas. Algunas tienen inscripciones casi borradas por el paso del tiempo; otras guardan las marcas de bancos que ya no existen. Caminar sobre ellas es caminar sobre un texto que el tiempo ha ido borrando con paciencia.",
+   en:"The floor of Southwark Cathedral is made of stone slabs worn smooth by centuries of footsteps. Some bear inscriptions almost erased by time; others carry the marks of benches that no longer exist. Walking on them is walking on a text that time has been patiently erasing."},
+
+  {c:"atmosfera",l:"Dalston",t:"El Bar de la Azotea / The Rooftop Bar",
+   es:"Los bares en las azoteas de Dalston tienen una atmósfera de ciudad provisional: las luces de cadena oscilan con el viento, las plantas en macetas de plástico bordean los bordes y el horizonte de antenas y tejados planos convierte la banalidad urbana en algo que, a la tercera cerveza, parece bello.",
+   en:"Dalston's rooftop bars have an atmosphere of provisional city: string lights swinging in the breeze, plants in plastic pots lining the edges, and the horizon of aerials and flat rooftops turning urban banality into something that, by the third beer, seems beautiful."},
+
+  {c:"color",l:"Primrose Hill",t:"El Ocaso sobre la Ciudad / Sunset over the City",
+   es:"Desde Primrose Hill al atardecer, el horizonte de Londres se convierte en un ejercicio de gradación: el azul cobalto del cielo alto, el cerúleo del horizonte, el gris rosado de la contaminación lumínica y por encima de los rascacielos, un filo de naranja que dura exactamente hasta que el sol toca el horizonte.",
+   en:"From Primrose Hill at sunset, London's skyline becomes an exercise in gradation: the cobalt blue of the high sky, the cerulean at the horizon, the rosy grey of light pollution, and above the skyscrapers, a sliver of orange that lasts exactly until the sun touches the horizon."},
+
+  {c:"sonido",l:"Piccadilly Circus",t:"El Ruido del Centro / The Centre's Noise",
+   es:"Piccadilly Circus tiene una densidad sonora propia de los nudos del tráfico: el claxon de los taxis, el silbato de los autobuses al frenar, el rumor de múltiples conversaciones en idiomas que se superponen y, por encima de todo, el ruido blanco de la ciudad que ya no es un sonido sino una condición del ambiente.",
+   en:"Piccadilly Circus has a sound density befitting a traffic node: taxi horns, the hiss of buses braking, the murmur of multiple conversations in overlapping languages, and above it all, the white noise of the city that is no longer a sound but a condition of the environment."},
+
+  {c:"luz",l:"Design Museum",t:"La Rampa de Luz / The Light Ramp",
+   es:"La rampa interior del Design Museum en Kensington High Street es un recorrido a través de la luz natural que cambia con cada planta: en la baja, fría y lateral; en la primera, más cálida y difusa; en la segunda, casi vertical desde un lucernario que convierte el techo en una pantalla de luz blanca.",
+   en:"The interior ramp of the Design Museum on Kensington High Street is a journey through natural light that changes with each floor: at ground level, cold and lateral; on the first, warmer and diffuse; on the second, almost vertical from a skylight that turns the ceiling into a screen of white light."},
+
+  {c:"movimiento",l:"Borough Market",t:"El Flujo del Mercado / The Market Flow",
+   es:"El movimiento en Borough Market tiene su propia hidrodinámica: la corriente principal fluye de norte a sur entre los puestos de queso y de pan, los remolinos se forman en los puestos de comida caliente donde la gente se detiene, y los contraflujos de los que salen con bolsas llenas se abren paso con codos amables.",
+   en:"Movement at Borough Market has its own hydrodynamics: the main current flows north to south between the cheese and bread stalls, eddies form at the hot food stalls where people stop, and counter-flows of those leaving with full bags make their way through with polite elbows."},
+
+  {c:"silencio",l:"St. Dunstan-in-the-East",t:"La Iglesia Jardín / The Garden Church",
+   es:"La iglesia de St. Dunstan-in-the-East, destruida en el Blitz y nunca reconstruida, tiene ahora un jardín en sus ruinas que es uno de los lugares más callados del City. Las plantas trepadoras cubren los arcos góticos y la fuente en el centro murmura con la discreción de algo que sabe que está en un lugar sagrado.",
+   en:"St. Dunstan-in-the-East, destroyed in the Blitz and never rebuilt, now has a garden in its ruins that is one of the quietest places in the City. Climbing plants cover the Gothic arches and the central fountain murmurs with the discretion of something that knows it is in a sacred place."},
+
+  {c:"olor",l:"Chelsea",t:"Las Flores del King's Road / The King's Road Flowers",
+   es:"Las floristerías del King's Road exponen sus cubos en la acera y perfuman la calle con una intensidad que parece calculada: el dulzor penetrante de los jacintos en enero, el perfume femenino de las rosas en mayo y el aroma casi picante de los crisantemos en octubre, que huelen a iglesia y a otoño al mismo tiempo.",
+   en:"King's Road florists display their buckets on the pavement and perfume the street with an intensity that seems calculated: the penetrating sweetness of hyacinths in January, the feminine fragrance of roses in May, and the almost spicy scent of chrysanthemums in October, smelling of church and autumn simultaneously."},
+
+  {c:"textura",l:"The Barbican",t:"Los Lagos del Barbican / The Barbican Lakes",
+   es:"Los estanques del Barbican tienen una textura que cambia con el viento: en calma, son superficies perfectamente negras que reflejan las torres de hormigón como un daguerrotipo. Con viento, el agua se arruga en patrones que van del círculo perfecto a la línea quebrada, y la imagen de las torres se fragmenta en miles de piezas.",
+   en:"The Barbican's ponds have a texture that changes with the wind: in stillness, they are perfectly black surfaces reflecting the concrete towers like a daguerreotype. In wind, the water wrinkles into patterns ranging from perfect circles to broken lines, and the image of the towers shatters into thousands of pieces."},
+
+  {c:"atmosfera",l:"Shoreditch",t:"La Noche del Fin de Semana / The Weekend Night",
+   es:"Shoreditch los viernes por la noche tiene una atmósfera de energía contenida que se libera en la segunda copa: las colas fuera de los locales con música que se filtra por las costuras, los grupos que deciden en la acera a dónde ir a continuación, los taxis que pasan lentos como tiburones buscando presa.",
+   en:"Shoreditch on Friday nights has an atmosphere of contained energy that releases at the second drink: queues outside venues with music seeping through the seams, groups deciding on the pavement where to go next, taxis passing slowly like sharks searching for prey."},
+
+  {c:"color",l:"Kew Gardens",t:"El Otoño en los Jardines / Autumn in the Gardens",
+   es:"Kew Gardens en otoño es una exposición de pigmentos naturales que ningún pintor ha podido mejorar: el amarillo cadmio del ginkgo biloba, el rojo veneciano de los arces japoneses, el marrón Van Dyck de los robles y el verde permanente que se niega a cambiar en los magnolios que ya preparan sus brotes para la primavera.",
+   en:"Kew Gardens in autumn is an exhibition of natural pigments that no painter has ever bettered: cadmium yellow of the ginkgo biloba, Venetian red of the Japanese maples, Van Dyck brown of the oaks, and the permanent green refusing to change on the magnolias already preparing their buds for spring."},
+
+  {c:"sonido",l:"Soho",t:"El Ruido del Pub en Viernes / The Pub Noise on Friday",
+   es:"Los pubs de Soho los viernes a las seis de la tarde derraman su conversación a la calle: el choque de las pints, las carcajadas que suben de tono con cada ronda, la voz que se eleva para ser escuchada por encima del ruido y que termina siendo demasiado alta cuando la música baja un momento sin avisar.",
+   en:"Soho pubs on Friday at six in the afternoon spill their conversation onto the street: pint glasses clinking, laughter rising with each round, the voice raised to be heard above the noise that ends up too loud when the music drops unexpectedly for a moment."},
+
+  {c:"luz",l:"Borough Market",t:"Las Luces del Mercado / The Market Lights",
+   es:"Borough Market en los meses de invierno funciona bajo una iluminación artificial de tungsteno que convierte todo en ámbar: los quesos parecen más maduros bajo esa luz, los panes más dorados y la gente que los compra tiene en las mejillas el color que solo da el frío y la calidez al mismo tiempo.",
+   en:"Borough Market in the winter months operates under tungsten artificial lighting that turns everything amber: the cheeses look more aged under that light, the bread more golden, and the people buying them have on their cheeks the colour that only cold and warmth together can give."},
+
+  {c:"movimiento",l:"Notting Hill",t:"El Mercado que Crece / The Growing Market",
+   es:"El mercado de Portobello los sábados no abre: crece. Empieza con cuatro puestos a las seis de la mañana y hacia las once es una ciudad dentro de la ciudad, con sus calles principales y sus callejones, sus zonas de alta densidad y sus rincones tranquilos donde un vendedor y un comprador negocian un precio sin testigos.",
+   en:"Portobello market on Saturdays does not open: it grows. It starts with four stalls at six in the morning and by eleven is a city within the city, with its main streets and alleyways, its high-density zones and quiet corners where a seller and a buyer negotiate a price without witnesses."},
+
+  {c:"silencio",l:"Bunhill Fields",t:"El Cementerio Disidente / The Dissenter's Cemetery",
+   es:"Bunhill Fields, el cementerio de los no conformistas en el City, guarda entre sus lápidas los restos de John Bunyan, Daniel Defoe y William Blake. Es un silencio literario, el tipo de quietud que hace que uno hable en voz baja por respeto a lo que aquí fue pensado y escrito antes de ser enterrado.",
+   en:"Bunhill Fields, the nonconformists' burial ground in the City, holds among its headstones the remains of John Bunyan, Daniel Defoe and William Blake. It is a literary silence, the kind of stillness that makes one speak in a low voice out of respect for what was thought and written here before being buried."},
+
+  {c:"olor",l:"Hackney",t:"El Mercado de Broadway / Broadway Market",
+   es:"Broadway Market los sábados huele a la diversidad de lo artesanal: el café de filtro de extracción lenta, el kimchi que fermenta en tarros abiertos, el pan de masa madre recién cortado y el jabón de glicerina de lavanda que dos artesanas venden desde una furgoneta aparcada junto al canal.",
+   en:"Broadway Market on Saturdays smells of artisanal diversity: slow-drip filter coffee, kimchi fermenting in open jars, freshly cut sourdough bread, and lavender glycerin soap that two craftswomen sell from a van parked by the canal."},
+
+  {c:"textura",l:"Bermondsey",t:"Los Adoquines del Borough / Borough's Cobblestones",
+   es:"Las calles adoquinadas del Borough antiguo tienen una irregularidad que es historia geológica: cada piedra fue colocada a mano en el siglo XIX y el tiempo las ha asentado de modo que caminar sobre ellas requiere una atención a los pies que rara vez exige el asfalto liso.",
+   en:"The cobblestone streets of the old Borough have an irregularity that is geological history: each stone was laid by hand in the 19th century and time has settled them so that walking over them requires an attention to one's feet rarely demanded by smooth asphalt."},
+
+  {c:"atmosfera",l:"Fitzrovia",t:"El Café de la Tarde / The Afternoon Café",
+   es:"Las cafeterías de Fitzrovia a las tres de la tarde tienen la atmósfera específica de los martes que no son festivos: el portatil abierto en la mitad de las mesas, las tazas que se enfríen sin que nadie las beba, la canción de fondo que nadie eligió y que sin embargo va bien con la luz gris que entra por las ventanas emplomadas.",
+   en:"Fitzrovia cafés at three in the afternoon have the specific atmosphere of non-holiday Tuesdays: laptops open at half the tables, cups cooling undrunk, the background song nobody chose that nonetheless suits the grey light entering through the leaded windows."},
+
+  {c:"color",l:"Bermondsey Street",t:"Los Colores del Street Art / The Street Art Colours",
+   es:"Bermondsey Street tiene un código cromático entre lo industrial y lo artístico: el gris acero de las estructuras de hierro, el terracota oxidado de los ladrillos victorianos y, en contraste, los murales de color saturado que los artistas han pintado en las paredes como si quisieran responder a la ciudad con su propio idioma.",
+   en:"Bermondsey Street has a chromatic code between industrial and artistic: the steel grey of iron structures, the oxidised terracotta of Victorian bricks, and in contrast, the saturated-colour murals that artists have painted on the walls as if wanting to answer the city in its own language."},
+
+  {c:"sonido",l:"Regent's Park",t:"La Banda del Parque / The Park Band",
+   es:"La banda que toca en el quiosco de Regent's Park los domingos de verano suena con la certeza de lo que lleva décadas haciéndose igual: los cobres brillan al sol, el director lleva el paso con el pie y las melodías conocidas flotan sobre el parque mezclándose con las risas de los niños y el ladrido lejano de los perros.",
+   en:"The band that plays at Regent's Park bandstand on summer Sundays sounds with the certainty of something done the same way for decades: the brass gleams in the sun, the conductor keeps time with their foot, and familiar melodies float over the park mixing with children's laughter and the distant barking of dogs."},
+
+  {c:"luz",l:"Hampstead",t:"La Luz de los Estudios / The Studio Light",
+   es:"Los barrios de Hampstead tienen una luz que los artistas han buscado desde el siglo XVIII: difusa, nórdica, sin sombras duras. Es la luz que eligió Constable para sus cielos y Keats para escribir sus odas. En los días cubiertos de invierno, esa luz convierte las fachadas de ladrillo en algo que parece un cuadro al óleo.",
+   en:"The streets of Hampstead have a light that artists have sought since the 18th century: diffuse, Nordic, without hard shadows. It is the light that Constable chose for his skies and Keats for writing his odes. On overcast winter days, that light turns brick façades into something resembling an oil painting."},
+
+  {c:"movimiento",l:"South Bank",t:"Los Ciclistas del Embankment / The Embankment Cyclists",
+   es:"Los ciclistas del embankment del Támesis circulan en una corriente separada del peatón: veloz, rítmica, con sus propias señales no escritas. Los más rápidos adelantan por la derecha, los más lentos dan paso, y en los cruces peatonales todos frenan con la misma resignación educada de quien sabe que los peatones tienen el derecho de paso.",
+   en:"The cyclists on the Thames embankment move in a current separate from pedestrians: fast, rhythmic, with their own unwritten signals. The fastest overtake on the right, the slower ones give way, and at pedestrian crossings all brake with the same polite resignation of those who know pedestrians have right of way."},
+
+  {c:"silencio",l:"Brompton Oratory",t:"La Iglesia del Silencio Elegante / The Church of Elegant Silence",
+   es:"El Brompton Oratory en South Kensington tiene un silencio diferente al de otras iglesias: no es austero sino opulento, rodeado de mármol, dorado y frescos. Es el silencio de los que se detienen a contemplar la belleza, un silencio que pesa menos que el de la piedra desnuda pero que dura igual de largo.",
+   en:"Brompton Oratory in South Kensington has a silence different from other churches: not austere but opulent, surrounded by marble, gold and frescoes. It is the silence of those who stop to contemplate beauty, a silence that weighs less than bare stone but lasts just as long."},
+
+  {c:"olor",l:"East London",t:"El Olor del Támesis en Marea Baja / The Thames Smell at Low Tide",
+   es:"El Támesis en marea baja tiene un olor que nadie describe con exactitud porque no tiene equivalente en tierra: el barro negro del fondo del río, la sal vestigial del estuario que llega hasta aquí y algo putrefacto y vital al mismo tiempo, el olor de un río que ha recibido la ciudad durante dos milenios y no se ha quejado.",
+   en:"The Thames at low tide has a smell that nobody describes accurately because it has no land equivalent: the black mud from the river's bed, the vestigial salt from the estuary that reaches this far, and something putrid and vital simultaneously, the smell of a river that has received the city for two millennia without complaint."},
+
+  {c:"textura",l:"Wapping",t:"Los Almacenes del Antiguo Puerto / The Old Dockside Warehouses",
+   es:"Los almacenes de ladrillo rojo de Wapping, convertidos en apartamentos de lujo, mantienen en sus fachadas la memoria del trabajo: las argollas de hierro donde ataban los barcos, los enganches de las grúas que descargaban azúcar y especias, las marcas de nivel del agua en el ladrillo que recuerdan las inundaciones del siglo pasado.",
+   en:"The red brick warehouses of Wapping, converted into luxury flats, retain in their façades the memory of labour: the iron rings where ships were tied, the crane hooks that unloaded sugar and spices, the water level marks on the brick recalling the floods of the last century."},
+
+  {c:"atmosfera",l:"Clerkenwell",t:"El Barrio de los Relojeros / The Clockmakers' Quarter",
+   es:"Clerkenwell fue durante dos siglos el barrio de los relojeros y los joyeros de Londres, y algo de esa precisión obsesiva permanece en su ambiente: los talleres aún existen entre las galerías de arte, los escaparates muestran piezas únicas con la misma seriedad con que se exponía el tiempo en el siglo XVIII.",
+   en:"Clerkenwell was for two centuries London's clockmakers' and jewellers' quarter, and something of that obsessive precision remains in its atmosphere: the workshops still exist among the art galleries, and the shop windows display unique pieces with the same gravity with which time was displayed in the 18th century."},
+
+  {c:"color",l:"East End",t:"Los Murales de Whitechapel / Whitechapel Murals",
+   es:"Los murales de Whitechapel Road cambian con cada año: artistas que llegan de distintos continentes y dejan en las paredes una geometría de colores que cuenta la historia de los barrios que han pasado por esta calle. El azul turquesa del mural bangladesí junto al naranja del mural africano junto al verde del muralista latinoamericano.",
+   en:"Whitechapel Road murals change with each year: artists arriving from different continents leaving on the walls a geometry of colours telling the story of the communities that have passed through this street. The turquoise blue of the Bangladeshi mural beside the orange of the African mural beside the green of the Latin American muralist."},
+
+  {c:"sonido",l:"Waterloo",t:"El Anuncio de la Estación / The Station Announcement",
+   es:"La voz sintética que anuncia los trenes en Waterloo tiene una entonación particular, siempre ligeramente ascendente en las estaciones intermedias y descendente en el destino final, como si los trenes fueran preguntas que solo se resuelven en la última parada.",
+   en:"The synthetic voice announcing trains at Waterloo has a particular intonation, always slightly rising at the intermediate stations and falling at the final destination, as if the trains were questions that only resolve at the last stop."},
+
+  {c:"luz",l:"The Monument",t:"La Columna de la Memoria / The Column of Memory",
+   es:"El Monument, la columna que conmemora el Gran Incendio de 1666, tiene una altura exactamente igual a la distancia que la separa del lugar donde comenzó el fuego en Pudding Lane: un juego geométrico de la luz y la memoria. En los días claros, su sombra cae sobre el City con la precisión de un reloj de sol.",
+   en:"The Monument, the column commemorating the Great Fire of 1666, stands at a height exactly equal to its distance from where the fire began on Pudding Lane: a geometric game of light and memory. On clear days, its shadow falls on the City with the precision of a sundial."},
+
+  {c:"movimiento",l:"Heathrow Express",t:"El Tren al Aeropuerto / The Airport Train",
+   es:"El Heathrow Express es el movimiento de la partida: las maletas que llenan el pasillo, los viajeros que miran el teléfono con la ansiedad de quien va a cortar un hilo, las ventanas que muestran los suburbios de ladrillo que se aceleran hasta convertirse en mancha y luego el negro del túnel final que precede al aeropuerto.",
+   en:"The Heathrow Express is the movement of departure: suitcases filling the aisle, travellers staring at phones with the anxiety of those about to sever a thread, windows showing brick suburbs accelerating into a blur and then the black of the final tunnel that precedes the airport."},
+
+  {c:"silencio",l:"Crossbones Graveyard",t:"El Cementerio de los Olvidados / The Cemetery of the Forgotten",
+   es:"Crossbones Graveyard en Southwark es el enterramiento de las prostitutas medievales de la ciudad, excluidas de la tierra consagrada. Hoy sus verjas están cubiertas de cintas, flores y mensajes que los visitantes dejan para las mujeres sin nombre. El silencio aquí tiene la densidad de la culpa colectiva y la belleza del reconocimiento tardío.",
+   en:"Crossbones Graveyard in Southwark is the burial ground for the city's medieval sex workers, excluded from consecrated ground. Today its gates are covered in ribbons, flowers and messages left by visitors for the nameless women. The silence here has the density of collective guilt and the beauty of belated recognition."},
+
+  {c:"olor",l:"Mayfair",t:"Las Perfumerías de Bond Street / Bond Street Perfumers",
+   es:"Las perfumerías de Bond Street construyen sus escaparates como altares: un frasco solitario sobre terciopelo negro iluminado desde abajo. Al entrar, el primer impacto olfativo es la suma de todas las fragancias del establecimiento, una mezcla que paradójicamente no huele a nada reconocible sino a algo abstracto y opulento.",
+   en:"The perfumeries on Bond Street build their windows like altars: a single bottle on black velvet lit from below. On entering, the first olfactory impact is the sum of all the establishment's fragrances, a blend that paradoxically smells like nothing recognisable but something abstract and opulent."},
+
+  {c:"textura",l:"St. John's Wood",t:"Las Aceras de Abbey Road / The Abbey Road Pavement",
+   es:"El paso de peatones de Abbey Road está formado por un asfalto ordinario que el mundo ha convertido en objeto sagrado. Cada día, decenas de personas cruzan en fila india con la misma disposición de los cuatro de la portada, y la superficie ordinaria del asfalto londinense acumula el peso simbólico de lo que en él sucedió.",
+   en:"The Abbey Road zebra crossing is made of ordinary asphalt that the world has turned into a sacred object. Each day, dozens of people cross in single file with the same formation as the four on the cover, and the ordinary surface of London asphalt accumulates the symbolic weight of what happened on it."},
+
+  {c:"atmosfera",l:"The Gherkin",t:"El Pepinillo en la City / The Gherkin in the City",
+   es:"El 30 St Mary Axe —el Gherkin— visto desde la calle parece cambiar de tamaño con la distancia: de cerca, su escala aplasta; de lejos, su silueta ovoide encaja con naturalidad entre las torres rectangulares como si siempre hubiera estado ahí. Los días de nublado lo envuelven en gris y desaparece; los días despejados, brilla como un insecto gigante de cristal.",
+   en:"30 St Mary Axe — the Gherkin — seen from the street seems to change size with distance: up close, its scale overwhelms; from afar, its ovoid silhouette fits naturally among the rectangular towers as if it had always been there. Overcast days wrap it in grey and it disappears; clear days, it glints like a giant glass insect."},
+
+  {c:"color",l:"Kensington",t:"Las Puertas de Holland Park / Holland Park Doors",
+   es:"Las casas de Holland Park compiten en silencio por la puerta más perfecta: el negro sin reflejo del número 12, el azul noche del número 34 con su aldaba de latón, el amarillo mostaza del número 7 que parece importado de otra ciudad, el verde bosque del número 21 que se funde con el roble que lo sombrea.",
+   en:"Holland Park houses compete silently for the most perfect door: the matte black of number 12, the midnight blue of number 34 with its brass knocker, the mustard yellow of number 7 that seems imported from another city, the forest green of number 21 that blends into the oak tree shading it."},
+
+  {c:"sonido",l:"Whitechapel",t:"La Campana de la Fundición / The Foundry Bell",
+   es:"La Whitechapel Bell Foundry fundió las campanas del Big Ben y lleva campanando a Londres desde 1570. Cuando los artesanos prueban una campana recién fundida en el taller, el sonido que sale por las ventanas abiertas tiene una pureza de metal templado que contrasta extrañamente con el ruido del tráfico de la Whitechapel Road.",
+   en:"The Whitechapel Bell Foundry cast the bells of Big Ben and has been ringing London since 1570. When the craftspeople test a newly cast bell in the workshop, the sound coming through the open windows has a purity of tempered metal that contrasts strangely with the traffic noise on Whitechapel Road."},
+
+  {c:"luz",l:"Natural History Museum",t:"La Fachada de Terracota / The Terracotta Façade",
+   es:"La fachada del Natural History Museum en South Kensington tiene una terracota de color salmón que responde diferente a cada luz: con el sol de la tarde, resplandece como una joya antigua; bajo el cielo gris del invierno, se oscurece en un ocre profundo; con la lluvia, el agua oscurece sus relieves de animales y plantas hasta hacerlos parecer modelados en chocolate.",
+   en:"The Natural History Museum façade in South Kensington has a salmon-coloured terracotta that responds differently to each light: in afternoon sun it glows like an ancient jewel; under the grey winter sky it darkens into deep ochre; in rain, the water darkens its reliefs of animals and plants until they seem modelled in chocolate."},
+
+  {c:"movimiento",l:"Angel",t:"El Mercado Cubierto de Camden Passage / Camden Passage Covered Market",
+   es:"El mercado cubierto de Camden Passage en Angel es el movimiento de las búsquedas: compradores que abren cajones de plata, que levantan cuadros para ver las marcas del marco, que sostienen una taza de porcelana contra la luz para comprobar la transparencia. Es el movimiento lento y meticuloso de quien busca sin saber exactamente qué.",
+   en:"Camden Passage covered market in Angel is the movement of searches: shoppers opening silver drawers, lifting pictures to check the frame's marks, holding a porcelain cup to the light to check its translucency. It is the slow, meticulous movement of those searching without knowing exactly for what."},
+
+  {c:"silencio",l:"Morden Hall Park",t:"El Parque del Río Wandle / The River Wandle Park",
+   es:"Morden Hall Park, en los suburbios del sur, tiene un río —el Wandle— que corre entre árboles tan viejos que sus raíces se confunden con las orillas. El silencio aquí es de los que se hacen físicos: el musgo amortigua el suelo, el agua amortigua el sonido y el follaje amortigua la luz hasta que el parque se vuelve una versión atenuada del mundo.",
+   en:"Morden Hall Park, in the southern suburbs, has a river — the Wandle — running between trees so old their roots merge with the banks. The silence here is the kind that becomes physical: moss cushions the ground, water cushions the sound, and foliage cushions the light until the park becomes a muted version of the world."},
+
+  {c:"olor",l:"Peckham",t:"El Supermercado Internacional / The International Supermarket",
+   es:"El supermercado del este de Peckham huele a mundos superpuestos: la sección africana con su aceite de palma y los plátanos machos, la sección caribeña con el allspice y el escabeche de pepinos, la sección asiática con el jengibre fresco y la pasta de miso, y en la caja, la mezcla de todos ellos que es el olor de una ciudad que no cocina solo una cosa.",
+   en:"The east Peckham supermarket smells of overlapping worlds: the African section with its palm oil and plantains, the Caribbean section with allspice and pickled cucumbers, the Asian section with fresh ginger and miso paste, and at the checkout, the blend of all of them which is the smell of a city that does not cook only one thing."},
+
+  {c:"textura",l:"Pimlico",t:"Las Losas de las Aceras / The Pavement Slabs",
+   es:"Las aceras de Pimlico tienen losas de piedra Portland que el tiempo ha vuelto resbaladizas y luminosas al mismo tiempo. Pulidas por décadas de suelas, reflejan el cielo en los días de lluvia con una precisión inesperada: cada losa es un espejo imperfecto que duplica los paraguas y los tobillos de los transeúntes.",
+   en:"Pimlico pavements have Portland stone slabs that time has made simultaneously slippery and luminous. Polished by decades of soles, they reflect the sky on rainy days with unexpected precision: each slab is an imperfect mirror that duplicates the umbrellas and ankles of passers-by."}
+];
+
+/* ══════════════════════════════════════════
+   STORAGE
+══════════════════════════════════════════ */
+const KEY='lon_desc_v1';
+let U={};
+function load(){try{U=JSON.parse(localStorage.getItem(KEY))||{};}catch(e){U={};}}
+function persist(){try{localStorage.setItem(KEY,JSON.stringify(U));}catch(e){}}
+function getU(n){return U[n]||{tr:'',ms:''};}
+
+/* ══════════════════════════════════════════
+   RENDER
+══════════════════════════════════════════ */
+function esc(v){return(v||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;');}
+
+function buildCard(s,n){
+  const e=getU(n);
+  const done=e.tr&&e.tr.trim()&&e.ms&&e.ms.trim();
+  const sgT=e.tr&&e.tr.trim()?' sg':'';
+  const sgM=e.ms&&e.ms.trim()?' sg':'';
+  return `
+<article class="desc-card${done?' done':''}" id="c${n}" data-n="${n}" data-cat="${s.c}" data-loc="${s.l}"
+  data-es="${s.es.toLowerCase()}" data-en="${s.en.toLowerCase()}" data-t="${s.t.toLowerCase()}">
+  <span class="card-index">${String(n+1).padStart(3,'0')}</span>
+  <div class="card-header-zone">
+    <span class="cat-tag ${s.c}">${s.c.charAt(0).toUpperCase()+s.c.slice(1)}</span>
+    <h2 class="card-title">${s.t}</h2>
+    <p class="loc-line">✦ ${s.l}</p>
+  </div>
+  <div class="card-body-zone">
+    <div class="lang-block">
+      <span class="lang-lbl es">ES · Descripción</span>
+      <p>${s.es}</p>
+    </div>
+    <hr class="sep">
+    <div class="lang-block">
+      <span class="lang-lbl en">EN · Descripción oficial</span>
+      <button class="btn-rev" onclick="rev(${n})">Ver / Hide</button>
+      <div class="ans" id="a${n}">${s.en}</div>
+    </div>
+  </div>
+  <div class="pzone">
+    <div>
+      <label>✏ Tu traducción al inglés</label>
+      <textarea id="tr${n}" rows="3" class="${sgT}"
+        placeholder="Traduce el párrafo descriptivo al inglés con tus propias palabras…">${esc(e.tr)}</textarea>
+    </div>
+    <div>
+      <label>✍ Escribe una descripción similar de otro espacio (ES o EN)</label>
+      <textarea id="ms${n}" rows="4" class="${sgM}"
+        placeholder="Describe un lugar que conozcas con la misma categoría sensorial: atmósfera, color, sonido, luz…">${esc(e.ms)}</textarea>
+    </div>
+    <div class="pactions">
+      <button class="btn-save" onclick="save(${n})">Guardar</button>
+      <button class="btn-clr" onclick="clr(${n})">Borrar</button>
+      <span class="smsg" id="m${n}">Guardado ✦</span>
+    </div>
+  </div>
+</article>`;
+}
+
+function render(list){
+  document.getElementById('grid').innerHTML=list.map(s=>buildCard(s,D.indexOf(s))).join('');
+  prog(); cnt(list.length);
+}
+
+/* ══════════════════════════════════════════
+   ACTIONS
+══════════════════════════════════════════ */
+function rev(n){document.getElementById('a'+n).classList.toggle('vis');}
+
+function save(n){
+  const tr=document.getElementById('tr'+n).value;
+  const ms=document.getElementById('ms'+n).value;
+  U[n]={tr,ms}; persist();
+  const tEl=document.getElementById('tr'+n),mEl=document.getElementById('ms'+n);
+  tr.trim()?tEl.classList.add('sg'):tEl.classList.remove('sg');
+  ms.trim()?mEl.classList.add('sg'):mEl.classList.remove('sg');
+  const msg=document.getElementById('m'+n);
+  msg.classList.add('show');setTimeout(()=>msg.classList.remove('show'),2200);
+  const done=tr.trim()&&ms.trim();
+  const c=document.getElementById('c'+n);
+  done?c.classList.add('done'):c.classList.remove('done');
+  prog();
+}
+
+function clr(n){
+  if(!confirm('¿Borrar tus respuestas para esta descripción?'))return;
+  U[n]={tr:'',ms:''}; persist();
+  document.getElementById('tr'+n).value='';
+  document.getElementById('ms'+n).value='';
+  ['tr','ms'].forEach(f=>document.getElementById(f+n).classList.remove('sg'));
+  document.getElementById('c'+n).classList.remove('done');
+  prog();
+}
+
+/* ══════════════════════════════════════════
+   PROGRESS
+══════════════════════════════════════════ */
+function prog(){
+  const done=Object.values(U).filter(e=>e.tr&&e.tr.trim()&&e.ms&&e.ms.trim()).length;
+  const p=Math.round(done/D.length*100);
+  document.getElementById('pf').style.width=p+'%';
+  document.getElementById('pp').textContent=p+'%';
+  document.getElementById('dc').textContent=done+' / '+D.length;
+}
+
+/* ══════════════════════════════════════════
+   FILTER
+══════════════════════════════════════════ */
+function doFilter(){
+  const q=document.getElementById('si').value.toLowerCase();
+  let v=0;
+  document.querySelectorAll('.desc-card').forEach(c=>{
+    const show=c.dataset.es.includes(q)||c.dataset.en.includes(q)||c.dataset.t.includes(q)||c.dataset.loc.toLowerCase().includes(q)||c.dataset.cat.includes(q);
+    c.classList.toggle('hidden',!show);if(show)v++;
+  });
+  cnt(v);
+}
+function fAll(b){act(b);document.getElementById('si').value='';document.querySelectorAll('.desc-card').forEach(c=>c.classList.remove('hidden'));cnt(D.length);}
+function fCat(b,cat){act(b);document.getElementById('si').value='';let v=0;document.querySelectorAll('.desc-card').forEach(c=>{const s=c.dataset.cat===cat;c.classList.toggle('hidden',!s);if(s)v++;});cnt(v);}
+function fDone(b){act(b);document.getElementById('si').value='';let v=0;document.querySelectorAll('.desc-card').forEach(c=>{const n=+c.dataset.n,e=getU(n),d=e.tr&&e.tr.trim()&&e.ms&&e.ms.trim();c.classList.toggle('hidden',!d);if(d)v++;});cnt(v);}
+function act(b){document.querySelectorAll('.btn-f').forEach(x=>x.classList.remove('active'));b.classList.add('active');}
+function cnt(n){document.getElementById('cb').textContent=n;}
+
+/* ══════════════════════════════════════════
+   MODAL
+══════════════════════════════════════════ */
+function openModal(){
+  const b=document.getElementById('msBody');
+  const entries=Object.entries(U).filter(([,e])=>(e.tr&&e.tr.trim())||(e.ms&&e.ms.trim()));
+  if(!entries.length){b.innerHTML='<p class="empty-note">Todavía no has guardado ninguna descripción. ¡Empieza a escribir! ✦</p>';}
+  else{
+    b.innerHTML=entries.sort(([a],[bb])=>a-bb).map(([n,e])=>{
+      const s=D[+n];
+      return `<div class="mse">
+        <strong>${String(+n+1).padStart(3,'0')} · ${s.t} · <em>${s.l}</em></strong>
+        ${e.tr&&e.tr.trim()?`<p><span class="lang-lbl en" style="font-size:.55rem">Tu traducción</span><br>${e.tr}</p>`:''}
+        ${e.ms&&e.ms.trim()?`<p><span class="lang-lbl ms" style="font-size:.55rem">Tu descripción</span><br>${e.ms}</p>`:''}
+      </div>`;
+    }).join('');
+  }
+  new bootstrap.Modal(document.getElementById('msModal')).show();
+}
+
+/* ══════════════════════════════════════════
+   INIT
+══════════════════════════════════════════ */
+load(); render(D);
+</script>
+</body>
+</html>

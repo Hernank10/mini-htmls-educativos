@@ -1,0 +1,1337 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>100 Técnicas de Redacción · Ingenierías Colombia</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,600;0,700;1,400&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:    #f0ede8;
+  --bg2:   #e8e4de;
+  --bg3:   #dedad3;
+  --card:  #faf9f7;
+  --border:#c8c2b8;
+  --ink:   #1a1814;
+  --ink2:  #4a4640;
+  --ink3:  #8a8480;
+  --accent:#c0392b;
+  --accent2:#1a5276;
+  --accent3:#117a65;
+  --gold:  #b7860b;
+  --radius:10px;
+  --r2:    6px;
+  --shadow:0 2px 16px rgba(26,24,20,0.12);
+  --shadow2:0 6px 32px rgba(26,24,20,0.18);
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+
+body{
+  font-family:'IBM Plex Sans',sans-serif;
+  background:var(--bg);
+  color:var(--ink);
+  min-height:100vh;
+  overflow-x:hidden;
+  background-image:
+    repeating-linear-gradient(0deg,transparent,transparent 27px,rgba(26,24,20,0.04) 27px,rgba(26,24,20,0.04) 28px),
+    repeating-linear-gradient(90deg,transparent,transparent 27px,rgba(26,24,20,0.04) 27px,rgba(26,24,20,0.04) 28px);
+}
+
+/* ── HEADER ── */
+header{
+  background:var(--ink);
+  border-bottom:3px solid var(--accent);
+  padding:0 2rem;
+  position:sticky;top:0;z-index:100;
+}
+.header-inner{
+  max-width:1440px;margin:0 auto;
+  display:flex;align-items:center;justify-content:space-between;
+  height:60px;gap:1rem;
+}
+.logo{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:1.5rem;letter-spacing:0.08em;
+  color:#fff;line-height:1;
+}
+.logo em{color:var(--accent);font-style:normal;}
+.logo small{
+  font-family:'IBM Plex Mono',monospace;
+  font-size:0.6rem;color:rgba(255,255,255,0.45);
+  display:block;letter-spacing:0.15em;font-style:normal;
+  margin-top:2px;
+}
+
+.nav-tabs{
+  display:flex;gap:2px;
+  background:rgba(255,255,255,0.08);
+  border:1px solid rgba(255,255,255,0.12);
+  border-radius:6px;padding:3px;
+}
+.nav-tab{
+  padding:6px 18px;border-radius:4px;border:none;cursor:pointer;
+  font-family:'IBM Plex Mono',monospace;font-size:0.75rem;font-weight:600;
+  letter-spacing:0.08em;text-transform:uppercase;
+  color:rgba(255,255,255,0.5);background:transparent;transition:all 0.2s;
+}
+.nav-tab.active{background:var(--accent);color:#fff;}
+.nav-tab:hover:not(.active){background:rgba(255,255,255,0.1);color:#fff;}
+
+.hdr-right{display:flex;align-items:center;gap:12px;}
+.prog-wrap{display:flex;align-items:center;gap:8px;font-size:0.72rem;color:rgba(255,255,255,0.5);font-family:'IBM Plex Mono',monospace;}
+.prog-bar{width:100px;height:4px;background:rgba(255,255,255,0.15);border-radius:99px;overflow:hidden;}
+.prog-fill{height:100%;background:linear-gradient(90deg,var(--accent),var(--gold));border-radius:99px;transition:width 0.4s;}
+.prog-n{color:var(--accent);font-weight:700;}
+.btn-rst-all{
+  padding:5px 12px;border-radius:4px;
+  border:1px solid rgba(255,255,255,0.15);background:transparent;
+  color:rgba(255,255,255,0.4);cursor:pointer;font-size:0.7rem;
+  font-family:'IBM Plex Mono',monospace;transition:all 0.2s;
+}
+.btn-rst-all:hover{border-color:var(--accent);color:var(--accent);}
+
+/* ── CONTAINER ── */
+.container{max-width:1440px;margin:0 auto;padding:2rem;}
+
+/* ── FLASHCARD MODE ── */
+#mode-fc{display:none;}
+.fc-nav{
+  display:flex;align-items:center;justify-content:space-between;
+  margin-bottom:1.5rem;
+}
+.fc-counter{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:1.2rem;letter-spacing:0.06em;color:var(--ink2);
+}
+.fc-counter strong{font-size:2rem;color:var(--ink);line-height:1;}
+.fc-ctrls{display:flex;gap:8px;align-items:center;}
+.btn-nav{
+  width:40px;height:40px;border-radius:50%;
+  border:2px solid var(--border);background:var(--card);
+  color:var(--ink);cursor:pointer;font-size:1.1rem;
+  display:flex;align-items:center;justify-content:center;
+  transition:all 0.2s;font-family:'IBM Plex Mono',monospace;
+}
+.btn-nav:hover{border-color:var(--accent);color:var(--accent);}
+.btn-nav:disabled{opacity:0.3;cursor:not-allowed;}
+.btn-shuffle{
+  padding:7px 16px;border-radius:4px;
+  border:2px solid var(--accent2);background:transparent;
+  color:var(--accent2);cursor:pointer;font-size:0.72rem;font-weight:700;
+  font-family:'IBM Plex Mono',monospace;letter-spacing:0.06em;
+  text-transform:uppercase;transition:all 0.2s;
+}
+.btn-shuffle:hover{background:var(--accent2);color:#fff;}
+
+/* ── MAIN CARD ── */
+.fc-layout{display:grid;grid-template-columns:1fr 1fr;gap:1.25rem;align-items:start;}
+@media(max-width:900px){.fc-layout{grid-template-columns:1fr;}}
+
+.fc-card{
+  background:var(--card);
+  border:2px solid var(--border);
+  border-radius:var(--radius);
+  padding:2rem;
+  box-shadow:var(--shadow2);
+  position:relative;overflow:hidden;
+}
+.fc-card::before{
+  content:'';
+  position:absolute;top:0;left:0;right:0;height:4px;
+  background:var(--accent);
+}
+.fc-card-stripe{
+  position:absolute;top:0;right:0;bottom:0;width:4px;
+  background:repeating-linear-gradient(180deg,var(--accent2) 0,var(--accent2) 8px,transparent 8px,transparent 16px);
+  opacity:0.4;
+}
+
+.card-eyebrow{
+  font-family:'IBM Plex Mono',monospace;
+  font-size:0.68rem;font-weight:600;letter-spacing:0.15em;
+  text-transform:uppercase;color:var(--ink3);
+  display:flex;align-items:center;gap:8px;margin-bottom:1rem;
+}
+.card-id{color:var(--accent);font-size:0.85rem;}
+.cat-badge{
+  padding:2px 8px;border-radius:3px;font-size:0.62rem;
+  font-weight:700;letter-spacing:0.1em;text-transform:uppercase;
+  border:1px solid;
+}
+.done-badge{
+  position:absolute;top:1rem;right:1.25rem;
+  width:28px;height:28px;border-radius:50%;
+  background:var(--accent3);color:#fff;
+  display:flex;align-items:center;justify-content:center;
+  font-size:0.85rem;opacity:0;transition:opacity 0.3s;
+}
+.done-badge.on{opacity:1;}
+
+.card-title{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:1.8rem;letter-spacing:0.04em;color:var(--ink);
+  line-height:1.1;margin-bottom:0.6rem;
+}
+.card-def{font-size:0.88rem;color:var(--ink2);line-height:1.7;margin-bottom:1rem;}
+.card-example{
+  background:var(--bg2);
+  border-left:3px solid var(--accent);
+  padding:0.875rem 1rem;border-radius:0 var(--r2) var(--r2) 0;
+  font-size:0.85rem;color:var(--ink);line-height:1.7;
+  font-style:italic;margin-bottom:1rem;
+}
+.card-tags{display:flex;gap:6px;flex-wrap:wrap;}
+.eng-tag{
+  padding:3px 10px;border-radius:3px;font-size:0.68rem;font-weight:600;
+  letter-spacing:0.06em;text-transform:uppercase;
+  background:var(--bg2);border:1px solid var(--border);color:var(--ink2);
+}
+
+/* ── RIGHT PANEL: TABS ── */
+.fc-right{
+  background:var(--card);border:2px solid var(--border);
+  border-radius:var(--radius);overflow:hidden;
+  box-shadow:var(--shadow);
+}
+.fc-tabs{
+  display:flex;border-bottom:2px solid var(--border);
+  background:var(--bg2);
+}
+.fc-tab{
+  flex:1;padding:10px 8px;border:none;cursor:pointer;
+  font-family:'IBM Plex Mono',monospace;font-size:0.66rem;font-weight:600;
+  letter-spacing:0.08em;text-transform:uppercase;
+  color:var(--ink3);background:transparent;transition:all 0.2s;
+  border-bottom:2px solid transparent;margin-bottom:-2px;
+}
+.fc-tab.active{color:var(--ink);border-bottom-color:var(--accent);background:var(--card);}
+.fc-tab:hover:not(.active){color:var(--ink2);background:var(--bg3);}
+
+.fc-panel{display:none;padding:1.5rem;}
+.fc-panel.active{display:block;}
+
+/* ── EXERCISE PANEL ── */
+.ex-label{
+  font-family:'IBM Plex Mono',monospace;
+  font-size:0.65rem;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;
+  color:var(--accent);margin-bottom:0.75rem;
+  display:flex;align-items:center;gap:8px;
+}
+.ex-label::after{content:'';flex:1;height:1px;background:var(--border);}
+.ex-instr{font-size:0.82rem;color:var(--ink2);margin-bottom:1rem;line-height:1.5;}
+
+.word-bank{
+  display:flex;flex-wrap:wrap;gap:6px;
+  min-height:42px;padding:8px;
+  background:var(--bg2);border:2px dashed var(--border);
+  border-radius:var(--r2);margin-bottom:0.875rem;
+}
+.word-token{
+  padding:5px 12px;background:var(--card);
+  border:1.5px solid var(--border);border-radius:4px;
+  font-size:0.78rem;color:var(--ink);cursor:grab;
+  user-select:none;transition:all 0.15s;
+  font-family:'IBM Plex Sans',sans-serif;white-space:nowrap;
+}
+.word-token:hover{border-color:var(--accent);color:var(--accent);transform:translateY(-1px);box-shadow:0 3px 8px rgba(192,57,43,0.15);}
+.word-token.dragging{opacity:0.35;cursor:grabbing;}
+.word-token.placed{opacity:0.3;cursor:not-allowed;pointer-events:none;}
+
+.drop-zone{
+  display:flex;flex-wrap:wrap;gap:5px;min-height:46px;
+  padding:8px;background:rgba(192,57,43,0.03);
+  border:2px dashed rgba(192,57,43,0.25);
+  border-radius:var(--r2);margin-bottom:1rem;transition:all 0.15s;
+}
+.drop-zone.drag-over{border-color:var(--accent);background:rgba(192,57,43,0.06);}
+.dz-label{font-size:0.72rem;color:var(--ink3);align-self:center;width:100%;text-align:center;}
+.drop-token{
+  padding:5px 12px;background:rgba(192,57,43,0.1);
+  border:1.5px solid rgba(192,57,43,0.3);
+  border-radius:4px;font-size:0.78rem;color:var(--accent);cursor:pointer;
+  transition:all 0.12s;font-family:'IBM Plex Sans',sans-serif;
+}
+.drop-token:hover{background:rgba(192,57,43,0.18);}
+.drop-token::after{content:'×';margin-left:5px;opacity:0.5;font-size:0.85rem;}
+
+.ex-ctrls{display:flex;gap:8px;flex-wrap:wrap;}
+.btn-check{
+  padding:8px 20px;border-radius:4px;border:none;
+  background:var(--accent);color:#fff;font-weight:700;cursor:pointer;
+  font-family:'IBM Plex Mono',monospace;font-size:0.75rem;
+  letter-spacing:0.06em;text-transform:uppercase;transition:all 0.15s;
+}
+.btn-check:hover{background:#a93226;transform:translateY(-1px);}
+.btn-reset{
+  padding:8px 16px;border-radius:4px;
+  border:1.5px solid var(--border);background:transparent;
+  color:var(--ink2);cursor:pointer;font-size:0.75rem;
+  font-family:'IBM Plex Mono',monospace;transition:all 0.15s;
+}
+.btn-reset:hover{border-color:var(--ink);color:var(--ink);}
+.btn-mark{
+  padding:8px 14px;border-radius:4px;
+  border:1.5px solid var(--accent3);background:transparent;
+  color:var(--accent3);cursor:pointer;font-size:0.75rem;
+  font-family:'IBM Plex Mono',monospace;transition:all 0.15s;margin-left:auto;
+}
+.btn-mark:hover,.btn-mark.done{background:var(--accent3);color:#fff;}
+
+.result-msg{margin-top:0.75rem;padding:8px 12px;border-radius:4px;font-size:0.82rem;font-weight:600;display:none;}
+.result-msg.ok{background:rgba(17,122,101,0.1);color:var(--accent3);border:1px solid rgba(17,122,101,0.25);display:block;}
+.result-msg.fail{background:rgba(192,57,43,0.08);color:var(--accent);border:1px solid rgba(192,57,43,0.2);display:block;}
+
+/* ── SYNTAX PANEL ── */
+.syn-sentence{
+  font-size:0.88rem;line-height:2;margin-bottom:1rem;
+  padding:0.875rem;background:var(--bg2);border-radius:var(--r2);
+  border:1px solid var(--border);
+}
+.syn-s{background:rgba(26,82,118,0.12);color:var(--accent2);border-bottom:2px solid var(--accent2);padding:1px 3px;border-radius:2px 2px 0 0;}
+.syn-v{background:rgba(192,57,43,0.1);color:var(--accent);border-bottom:2px solid var(--accent);padding:1px 3px;border-radius:2px 2px 0 0;}
+.syn-p{background:rgba(183,134,11,0.1);color:var(--gold);border-bottom:2px solid var(--gold);padding:1px 3px;border-radius:2px 2px 0 0;}
+.syn-c{background:rgba(17,122,101,0.1);color:var(--accent3);border-bottom:2px dashed var(--accent3);padding:1px 3px;border-radius:2px 2px 0 0;}
+.syn-nx{background:rgba(100,100,100,0.1);color:var(--ink2);border-bottom:2px dotted var(--ink3);padding:1px 3px;border-radius:2px 2px 0 0;}
+.syn-legend{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:0.875rem;}
+.leg{display:flex;align-items:center;gap:4px;font-size:0.68rem;color:var(--ink2);}
+.leg-dot{width:10px;height:4px;border-radius:2px;}
+.l-s{background:var(--accent2);}
+.l-v{background:var(--accent);}
+.l-p{background:var(--gold);}
+.l-c{background:var(--accent3);}
+.l-n{background:var(--ink3);}
+.syn-notes{
+  font-size:0.8rem;color:var(--ink2);line-height:1.7;
+  border-left:2px solid var(--accent2);padding-left:0.75rem;
+}
+.syn-notes strong{color:var(--ink);}
+
+/* ── WRITE PANEL ── */
+.write-instr{font-size:0.83rem;color:var(--ink2);line-height:1.6;margin-bottom:0.875rem;}
+.write-instr strong{color:var(--ink);}
+.change-tabs{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:0.75rem;}
+.chg-tab{
+  padding:4px 12px;border-radius:3px;
+  border:1.5px solid var(--border);background:var(--bg2);
+  color:var(--ink2);cursor:pointer;font-size:0.7rem;font-weight:700;
+  font-family:'IBM Plex Mono',monospace;letter-spacing:0.06em;text-transform:uppercase;
+  transition:all 0.15s;
+}
+.chg-tab.active{background:var(--accent2);border-color:var(--accent2);color:#fff;}
+.chg-tab:hover:not(.active){border-color:var(--accent2);color:var(--accent2);}
+.write-hint{
+  font-size:0.78rem;color:var(--ink2);line-height:1.6;
+  padding:8px 10px;background:var(--bg2);
+  border-left:2px solid var(--accent2);border-radius:0 4px 4px 0;
+  margin-bottom:0.75rem;
+}
+.write-ta{
+  width:100%;min-height:82px;
+  background:var(--bg2);border:1.5px solid var(--border);
+  color:var(--ink);padding:10px;border-radius:var(--r2);
+  font-family:'IBM Plex Sans',sans-serif;font-size:0.83rem;line-height:1.6;
+  resize:vertical;outline:none;transition:border-color 0.15s;
+  margin-bottom:0.75rem;
+}
+.write-ta:focus{border-color:var(--accent2);}
+.write-ta::placeholder{color:var(--ink3);font-style:italic;}
+.write-ctrls{display:flex;gap:8px;align-items:center;flex-wrap:wrap;}
+.btn-save{
+  padding:7px 18px;border-radius:4px;border:none;
+  background:var(--accent2);color:#fff;font-weight:700;cursor:pointer;
+  font-family:'IBM Plex Mono',monospace;font-size:0.72rem;
+  letter-spacing:0.06em;text-transform:uppercase;transition:all 0.15s;
+}
+.btn-save:hover{background:#154360;}
+.btn-export{
+  padding:7px 14px;border-radius:4px;
+  border:1.5px solid var(--gold);background:transparent;
+  color:var(--gold);cursor:pointer;font-size:0.7rem;font-weight:700;
+  font-family:'IBM Plex Mono',monospace;letter-spacing:0.06em;text-transform:uppercase;
+  transition:all 0.15s;
+}
+.btn-export:hover{background:var(--gold);color:#fff;}
+.char-c{font-size:0.68rem;color:var(--ink3);margin-left:auto;font-family:'IBM Plex Mono',monospace;}
+.write-saved{display:none;margin-top:0.875rem;}
+.write-saved.on{display:block;}
+.saved-hdr{font-size:0.68rem;color:var(--ink3);font-family:'IBM Plex Mono',monospace;letter-spacing:0.08em;margin-bottom:6px;}
+.s-entry{
+  background:var(--bg2);border:1px solid var(--border);
+  border-radius:4px;padding:8px 10px;margin-bottom:5px;
+  font-size:0.8rem;color:var(--ink2);line-height:1.6;
+  position:relative;animation:slideIn 0.2s ease;
+}
+.s-meta{font-size:0.65rem;color:var(--ink3);font-family:'IBM Plex Mono',monospace;margin-bottom:3px;display:flex;justify-content:space-between;}
+.s-del{position:absolute;top:6px;right:8px;background:none;border:none;color:var(--ink3);cursor:pointer;font-size:0.85rem;padding:2px 4px;border-radius:3px;transition:all 0.12s;}
+.s-del:hover{background:rgba(192,57,43,0.1);color:var(--accent);}
+
+/* ── LIST MODE ── */
+#mode-list{display:none;}
+.filter-bar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:1.25rem;align-items:center;}
+.search-in{
+  flex:1;min-width:180px;
+  background:var(--card);border:1.5px solid var(--border);
+  color:var(--ink);padding:8px 12px;border-radius:var(--r2);
+  font-family:'IBM Plex Sans',sans-serif;font-size:0.82rem;outline:none;
+  transition:border-color 0.15s;
+}
+.search-in:focus{border-color:var(--accent2);}
+.search-in::placeholder{color:var(--ink3);}
+.cat-btns{display:flex;gap:5px;flex-wrap:wrap;}
+.cat-btn{
+  padding:5px 12px;border-radius:3px;
+  border:1.5px solid var(--border);background:var(--card);
+  color:var(--ink2);cursor:pointer;font-size:0.68rem;font-weight:700;
+  font-family:'IBM Plex Mono',monospace;letter-spacing:0.06em;text-transform:uppercase;
+  transition:all 0.15s;
+}
+.cat-btn.active,.cat-btn:hover{border-color:var(--accent);color:var(--accent);background:rgba(192,57,43,0.05);}
+.stats-row{display:flex;gap:10px;margin-bottom:1.25rem;flex-wrap:wrap;}
+.stat-chip{
+  padding:6px 14px;background:var(--card);border:1px solid var(--border);
+  border-radius:4px;font-size:0.72rem;color:var(--ink2);
+  font-family:'IBM Plex Mono',monospace;display:flex;align-items:center;gap:5px;
+}
+.stat-chip strong{color:var(--ink);}
+.dot-g{width:7px;height:7px;border-radius:50%;background:var(--accent3);}
+.dot-p{width:7px;height:7px;border-radius:50%;background:var(--ink3);}
+
+.cards-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(360px,1fr));gap:1rem;}
+.l-card{
+  background:var(--card);border:1.5px solid var(--border);
+  border-radius:var(--radius);overflow:hidden;
+  transition:border-color 0.15s,transform 0.15s,box-shadow 0.15s;
+}
+.l-card:hover{border-color:var(--accent);transform:translateY(-2px);box-shadow:var(--shadow2);}
+.l-card.done{border-color:var(--accent3);}
+.l-hdr{padding:1rem 1.25rem;border-bottom:1px solid var(--border);display:flex;gap:10px;align-items:flex-start;}
+.l-num{font-family:'IBM Plex Mono',monospace;font-size:0.65rem;color:var(--ink3);min-width:28px;margin-top:2px;}
+.l-info{flex:1;}
+.l-title{font-family:'Bebas Neue',sans-serif;font-size:1rem;letter-spacing:0.04em;color:var(--ink);margin-bottom:0.25rem;}
+.l-def{font-size:0.78rem;color:var(--ink2);line-height:1.6;}
+.l-ck{font-size:1rem;}
+.l-body{padding:1rem 1.25rem;}
+.l-ex{
+  background:var(--bg2);border-left:2px solid var(--accent);
+  padding:0.625rem 0.875rem;border-radius:0 4px 4px 0;
+  font-size:0.78rem;color:var(--ink2);font-style:italic;
+  line-height:1.6;margin-bottom:0.875rem;
+}
+.l-toggle{
+  width:100%;padding:7px;background:var(--bg2);
+  border:1.5px solid var(--border);color:var(--ink2);
+  border-radius:4px;cursor:pointer;font-size:0.72rem;
+  font-family:'IBM Plex Mono',monospace;letter-spacing:0.06em;text-transform:uppercase;
+  text-align:left;transition:all 0.15s;display:flex;justify-content:space-between;
+}
+.l-toggle:hover{border-color:var(--accent);color:var(--accent);}
+.l-toggle .chv{transition:transform 0.2s;}
+.l-toggle.open .chv{transform:rotate(180deg);}
+.l-ex-wrap{display:none;margin-top:0.875rem;}
+.l-ex-wrap.open{display:block;}
+
+/* ── CATEGORY COLORS ── */
+.cat-tecnica{border-color:rgba(192,57,43,0.4);color:var(--accent);background:rgba(192,57,43,0.07);}
+.cat-informe{border-color:rgba(26,82,118,0.4);color:var(--accent2);background:rgba(26,82,118,0.07);}
+.cat-cientifico{border-color:rgba(17,122,101,0.4);color:var(--accent3);background:rgba(17,122,101,0.07);}
+.cat-normativa{border-color:rgba(183,134,11,0.4);color:var(--gold);background:rgba(183,134,11,0.07);}
+.cat-argumentacion{border-color:rgba(80,60,100,0.4);color:#7d5ba6;background:rgba(80,60,100,0.07);}
+
+/* ── EMPTY ── */
+.empty{text-align:center;padding:4rem 2rem;color:var(--ink3);display:none;}
+.empty.on{display:block;}
+.empty-ico{font-size:2.5rem;margin-bottom:0.75rem;}
+
+/* ── SCROLLBAR ── */
+::-webkit-scrollbar{width:5px;}
+::-webkit-scrollbar-track{background:var(--bg2);}
+::-webkit-scrollbar-thumb{background:var(--border);border-radius:99px;}
+
+/* ── ANIMATIONS ── */
+@keyframes fadeUp{from{opacity:0;transform:translateY(14px);}to{opacity:1;transform:translateY(0);}}
+@keyframes slideIn{from{opacity:0;transform:translateX(-10px);}to{opacity:1;transform:translateX(0);}}
+.fc-card,.fc-right{animation:fadeUp 0.3s ease both;}
+.l-card{animation:fadeUp 0.2s ease both;}
+
+@media(max-width:700px){
+  .header-inner{flex-wrap:wrap;height:auto;padding:0.5rem 0;gap:6px;}
+  .hdr-right{display:none;}
+  .container{padding:1rem;}
+  .cards-grid{grid-template-columns:1fr;}
+  .card-title{font-size:1.4rem;}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <div class="logo">
+      <em>100</em> Técnicas de Redacción
+      <small>Ingenierías · Colombia · Nivel Universitario</small>
+    </div>
+    <div class="nav-tabs">
+      <button class="nav-tab active" onclick="setMode('fc')">▣ Flashcards</button>
+      <button class="nav-tab" onclick="setMode('list')">≡ Lista</button>
+    </div>
+    <div class="hdr-right">
+      <div class="prog-wrap">
+        <div class="prog-bar"><div class="prog-fill" id="prog-fill" style="width:0%"></div></div>
+        <span><span class="prog-n" id="prog-n">0</span>/100</span>
+      </div>
+      <button class="btn-rst-all" onclick="resetAll()">↺ Reset</button>
+    </div>
+  </div>
+</header>
+
+<div class="container">
+
+<!-- ══════ FLASHCARD MODE ══════ -->
+<div id="mode-fc">
+  <div class="fc-nav">
+    <div class="fc-counter">Técnica <strong id="fc-cur">1</strong> / 100</div>
+    <div class="fc-ctrls">
+      <button class="btn-shuffle" onclick="shuffleDeck()">⇄ MEZCLAR</button>
+      <button class="btn-nav" id="btn-prev" onclick="navigate(-1)">←</button>
+      <button class="btn-nav" id="btn-next" onclick="navigate(1)">→</button>
+    </div>
+  </div>
+
+  <div class="fc-layout">
+    <!-- LEFT: card info -->
+    <div class="fc-card" id="main-card">
+      <div class="fc-card-stripe"></div>
+      <div class="card-eyebrow">
+        <span class="card-id" id="fc-id">T·001</span>
+        <span class="cat-badge" id="fc-cat"></span>
+      </div>
+      <div class="done-badge" id="fc-done">✓</div>
+      <div class="card-title" id="fc-title"></div>
+      <div class="card-def" id="fc-def"></div>
+      <div class="card-example" id="fc-ex"></div>
+      <div class="card-tags" id="fc-tags"></div>
+    </div>
+
+    <!-- RIGHT: tabs -->
+    <div class="fc-right">
+      <div class="fc-tabs">
+        <button class="fc-tab active" onclick="switchTab('ejercicio',this)">⚙ Ejercicio</button>
+        <button class="fc-tab" onclick="switchTab('sintaxis',this)">∑ Sintaxis</button>
+        <button class="fc-tab" onclick="switchTab('escritura',this)">✎ Mi ejemplo</button>
+      </div>
+
+      <!-- TAB 1: Drag & Drop -->
+      <div class="fc-panel active" id="tab-ejercicio">
+        <div class="ex-label">Ordenar el ejemplo</div>
+        <div class="ex-instr" id="fc-instr">Arrastra las palabras para reconstruir el ejemplo correcto.</div>
+        <div class="word-bank" id="fc-bank"></div>
+        <div class="drop-zone" id="fc-dz"><span class="dz-label">Arrastra aquí las palabras</span></div>
+        <div class="ex-ctrls">
+          <button class="btn-check" onclick="checkEx('fc')">✓ Verificar</button>
+          <button class="btn-reset" onclick="resetEx()">↺ Reiniciar</button>
+          <button class="btn-mark" id="fc-mark" onclick="toggleDone()">☐ Completada</button>
+        </div>
+        <div class="result-msg" id="fc-res"></div>
+      </div>
+
+      <!-- TAB 2: Sintaxis -->
+      <div class="fc-panel" id="tab-sintaxis">
+        <div class="ex-label">Análisis sintáctico</div>
+        <div class="syn-legend">
+          <div class="leg"><div class="leg-dot l-s"></div>Sujeto</div>
+          <div class="leg"><div class="leg-dot l-v"></div>NV/Verbo</div>
+          <div class="leg"><div class="leg-dot l-p"></div>Predicado/OD</div>
+          <div class="leg"><div class="leg-dot l-c"></div>Complemento</div>
+          <div class="leg"><div class="leg-dot l-n"></div>Nexo</div>
+        </div>
+        <div class="syn-sentence" id="fc-syn-html"></div>
+        <div class="syn-notes" id="fc-syn-notes"></div>
+      </div>
+
+      <!-- TAB 3: Escritura -->
+      <div class="fc-panel" id="tab-escritura">
+        <div class="ex-label">Crea tu ejemplo</div>
+        <div class="write-instr" id="fc-winstr"></div>
+        <div class="change-tabs" id="fc-ctabs"></div>
+        <div class="write-hint" id="fc-whint"></div>
+        <textarea class="write-ta" id="fc-wta" placeholder="Escribe aquí tu propio ejemplo de ingeniería…" oninput="updCC()"></textarea>
+        <div class="write-ctrls">
+          <button class="btn-save" onclick="saveEntry()">💾 Guardar</button>
+          <button class="btn-export" onclick="exportTxt()">⬇ Exportar .txt</button>
+          <span class="char-c" id="fc-cc">0 chars</span>
+        </div>
+        <div class="write-saved" id="fc-wsaved">
+          <div class="saved-hdr">ENTRADAS GUARDADAS · <span id="fc-sc">0</span></div>
+          <div id="fc-elist"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════ LIST MODE ══════ -->
+<div id="mode-list">
+  <div class="filter-bar">
+    <input class="search-in" id="search-in" type="text" placeholder="🔍 Buscar técnica, definición, disciplina…" oninput="filterList()">
+    <div class="cat-btns" id="cat-btns"></div>
+  </div>
+  <div class="stats-row">
+    <div class="stat-chip"><div class="dot-g"></div><strong id="s-done">0</strong> completadas</div>
+    <div class="stat-chip"><div class="dot-p"></div><strong id="s-pend">100</strong> pendientes</div>
+    <div class="stat-chip">▣ <strong id="s-shown">100</strong> visibles</div>
+  </div>
+  <div class="cards-grid" id="cards-grid"></div>
+  <div class="empty" id="empty"><div class="empty-ico">⚙</div>Sin resultados.</div>
+</div>
+
+</div><!-- /container -->
+
+<script>
+// ════════════════════════════════════════════════════════════
+// DATA — 100 TÉCNICAS DE REDACCIÓN PARA INGENIERÍAS
+// ════════════════════════════════════════════════════════════
+const T = [
+// ── TÉCNICA ESCRITA (informes, manuales) ──
+{id:1,cat:"tecnica",titulo:"Especificación técnica",def:"Descripción precisa de las características, dimensiones, materiales y tolerancias de un componente o sistema.",disc:["Civil","Mecánica","Industrial"],
+ejemplo:"El acero estructural A36 utilizado en las vigas de cubierta debe presentar un límite de fluencia mínimo de 250 MPa y una resistencia a la tracción de entre 400 y 550 MPa.",
+sint:{h:`<span class="syn-s">El acero estructural A36 utilizado en las vigas de cubierta</span> <span class="syn-v">debe presentar</span> <span class="syn-p">un límite de fluencia mínimo de 250 MPa</span> <span class="syn-nx">y</span> <span class="syn-p">una resistencia a la tracción de entre 400 y 550 MPa.</span>`,n:`<strong>Sujeto:</strong> "El acero estructural A36 utilizado en las vigas de cubierta" (SN con participio especificativo).<br><strong>NV modal:</strong> "debe presentar" (perífrasis de obligación: deber+infinitivo).<br><strong>OD coordinado:</strong> dos SN nominales unidos por nexo copulativo "y" que enumeran propiedades cuantificadas.`,s:"El acero estructural A36",v:"debe presentar",p:"un límite de fluencia mínimo de 250 MPa"}},
+{id:2,cat:"tecnica",titulo:"Descripción de procedimiento",def:"Secuencia de pasos ordenados en modo impersonal o infinitivo que explica cómo ejecutar una tarea técnica.",disc:["Todas las ingenierías"],
+ejemplo:"Para realizar el ensayo de compresión, se coloca el cilindro de concreto centrado en la prensa, se aplica la carga a una velocidad constante de 0,25 MPa/s y se registra la carga máxima.",
+sint:{h:`<span class="syn-nx">Para realizar el ensayo de compresión,</span> <span class="syn-v">se coloca</span> <span class="syn-p">el cilindro de concreto centrado en la prensa,</span> <span class="syn-v">se aplica</span> <span class="syn-p">la carga a una velocidad constante de 0,25 MPa/s</span> <span class="syn-nx">y</span> <span class="syn-v">se registra</span> <span class="syn-c">la carga máxima.</span>`,n:`<strong>CC Final (nexo):</strong> "Para realizar el ensayo de compresión" (infinitivo con valor final).<br><strong>Voz pasiva refleja:</strong> "se coloca / se aplica / se registra" (serie de tres verbos coordinados sin sujeto explícito).<br><strong>Paralelismo:</strong> la estructura tripartita refuerza la secuencia procedimental.`,s:"(sujeto implícito: el operario)",v:"se coloca … se aplica … se registra",p:"el cilindro de concreto centrado en la prensa"}},
+{id:3,cat:"tecnica",titulo:"Definición operacional",def:"Especifica el significado de una magnitud en términos de cómo se mide o calcula dentro de un protocolo.",disc:["Eléctrica","Mecánica","Sistemas"],
+ejemplo:"La eficiencia térmica del ciclo Rankine se define operacionalmente como el cociente entre el trabajo neto producido por la turbina y el calor absorbido en la caldera, expresado en porcentaje.",
+sint:{h:`<span class="syn-s">La eficiencia térmica del ciclo Rankine</span> <span class="syn-v">se define operacionalmente</span> <span class="syn-nx">como</span> <span class="syn-p">el cociente entre el trabajo neto producido por la turbina y el calor absorbido en la caldera,</span> <span class="syn-c">expresado en porcentaje.</span>`,n:`<strong>Voz pasiva refleja:</strong> "se define" (impersonal con sujeto paciente temático).<br><strong>CC Modo:</strong> "operacionalmente" (adverbio derivado de adjetivo).<br><strong>Nexo comparativo:</strong> "como" introduce el atributo definitorio.<br><strong>Participio adjunto:</strong> "expresado en porcentaje" modifica al OD.`,s:"La eficiencia térmica del ciclo Rankine",v:"se define operacionalmente",p:"como el cociente entre el trabajo neto y el calor absorbido"}},
+{id:4,cat:"tecnica",titulo:"Lista de materiales (BOM)",def:"Enumeración estructurada de componentes con cantidad, unidad y especificación técnica.",disc:["Industrial","Mecánica","Civil"],
+ejemplo:"Los materiales requeridos para fabricar el prototipo de brazo robótico incluyen: cuatro servomotores de 12 V/10 kg·cm, doce tornillos M4×20 de acero inoxidable y dos placas de aluminio 6061-T6 de 200×100×3 mm.",
+sint:{h:`<span class="syn-s">Los materiales requeridos para fabricar el prototipo de brazo robótico</span> <span class="syn-v">incluyen:</span> <span class="syn-p">cuatro servomotores de 12 V/10 kg·cm,</span> <span class="syn-p">doce tornillos M4×20 de acero inoxidable</span> <span class="syn-nx">y</span> <span class="syn-p">dos placas de aluminio 6061-T6 de 200×100×3 mm.</span>`,n:`<strong>Sujeto:</strong> SN largo con participio especificativo "requeridos para fabricar…".<br><strong>Verbo:</strong> "incluyen" (transitivo, introduce lista de OD).<br><strong>Serie enumerativa:</strong> tres OD coordinados con "y" al final; cada uno lleva especificación técnica completa.`,s:"Los materiales requeridos para fabricar el prototipo",v:"incluyen",p:"cuatro servomotores, doce tornillos y dos placas"}},
+{id:5,cat:"tecnica",titulo:"Redacción de objetivo de proyecto",def:"Formulación en infinitivo que expresa la meta medible y alcanzable de un proyecto de ingeniería.",disc:["Todas las ingenierías"],
+ejemplo:"Diseñar un sistema de tratamiento de aguas residuales industriales para la planta de galvanoplastia de Palmira que reduzca la concentración de cromo hexavalente a menos de 0,1 mg/L antes de la descarga al alcantarillado.",
+sint:{h:`<span class="syn-v">Diseñar</span> <span class="syn-p">un sistema de tratamiento de aguas residuales industriales</span> <span class="syn-c">para la planta de galvanoplastia de Palmira</span> <span class="syn-nx">que</span> <span class="syn-v">reduzca</span> <span class="syn-p">la concentración de cromo hexavalente a menos de 0,1 mg/L</span> <span class="syn-c">antes de la descarga al alcantarillado.</span>`,n:`<strong>Infinitivo:</strong> "Diseñar" (núcleo en forma no personal, típico de objetivos).<br><strong>OD:</strong> "un sistema de tratamiento de aguas residuales industriales".<br><strong>CC Destinatario:</strong> "para la planta de galvanoplastia de Palmira".<br><strong>Subordinada relativa especificativa:</strong> "que reduzca la concentración…".`,s:"(sujeto implícito: el equipo de ingeniería)",v:"Diseñar",p:"un sistema de tratamiento de aguas residuales"}},
+{id:6,cat:"tecnica",titulo:"Nota técnica aclaratoria",def:"Apunte breve que aclara una restricción, condición de uso o advertencia dentro de un documento técnico.",disc:["Civil","Eléctrica","Mecánica"],
+ejemplo:"NOTA: Los valores de carga indicados en la Tabla 3 son válidos únicamente para temperatura ambiente entre 15 °C y 40 °C; fuera de este rango se debe aplicar el factor de corrección del Anexo B.",
+sint:{h:`<span class="syn-nx">NOTA:</span> <span class="syn-s">Los valores de carga indicados en la Tabla 3</span> <span class="syn-v">son válidos</span> <span class="syn-c">únicamente para temperatura ambiente entre 15 °C y 40 °C;</span> <span class="syn-c">fuera de este rango</span> <span class="syn-v">se debe aplicar</span> <span class="syn-p">el factor de corrección del Anexo B.</span>`,n:`<strong>Marcador discursivo:</strong> "NOTA:" introduce comentario meta-textual.<br><strong>Oración copulativa restrictiva:</strong> "son válidos únicamente para…" (adverbio restrictivo "únicamente").<br><strong>Segunda oración condicional elíptica:</strong> "fuera de este rango" (CC de condición implícita).`,s:"Los valores de carga indicados en la Tabla 3",v:"son válidos",p:"únicamente para temperatura ambiente entre 15 °C y 40 °C"}},
+{id:7,cat:"tecnica",titulo:"Descripción de diagrama o plano",def:"Verbalización de la información visual de un dibujo técnico, diagrama de flujo o plano de planta.",disc:["Civil","Mecánica","Sistemas"],
+ejemplo:"El diagrama de flujo de proceso presentado en la Figura 4 ilustra las cinco etapas del tratamiento primario: sedimentación, filtración, coagulación, floculación y desinfección con cloro gaseoso.",
+sint:{h:`<span class="syn-s">El diagrama de flujo de proceso presentado en la Figura 4</span> <span class="syn-v">ilustra</span> <span class="syn-p">las cinco etapas del tratamiento primario:</span> <span class="syn-p">sedimentación, filtración, coagulación, floculación y desinfección con cloro gaseoso.</span>`,n:`<strong>Sujeto:</strong> SN con participio adjunto "presentado en la Figura 4" (restricción referencial).<br><strong>Verbo transitivo:</strong> "ilustra" (señalamiento de contenido gráfico).<br><strong>OD con serie enumerativa:</strong> cinco etapas nominales en aposición explicativa.`,s:"El diagrama de flujo presentado en la Figura 4",v:"ilustra",p:"las cinco etapas del tratamiento primario"}},
+{id:8,cat:"tecnica",titulo:"Descripción de tabla de datos",def:"Integración textual del encabezado y tendencia principal de una tabla dentro del cuerpo del informe.",disc:["Todas las ingenierías"],
+ejemplo:"La Tabla 2 presenta los valores de resistencia a la compresión simple (f'c) obtenidos para seis mezclas de concreto con relaciones agua/cemento de 0,40, 0,45 y 0,50 a los 7, 14 y 28 días de curado.",
+sint:{h:`<span class="syn-s">La Tabla 2</span> <span class="syn-v">presenta</span> <span class="syn-p">los valores de resistencia a la compresión simple (f'c)</span> <span class="syn-c">obtenidos para seis mezclas de concreto</span> <span class="syn-c">con relaciones agua/cemento de 0,40, 0,45 y 0,50</span> <span class="syn-c">a los 7, 14 y 28 días de curado.</span>`,n:`<strong>Sujeto corto:</strong> "La Tabla 2" (referencia al elemento visual).<br><strong>OD:</strong> "los valores de resistencia a la compresión simple" (con acrónimo entre paréntesis).<br><strong>Cadena de CC:</strong> tres complementos circunstanciales de referencia técnica encadenados.`,s:"La Tabla 2",v:"presenta",p:"los valores de resistencia a la compresión simple (f'c)"}},
+{id:9,cat:"tecnica",titulo:"Uso de unidades SI y nomenclatura",def:"Escritura correcta de magnitudes con unidades del Sistema Internacional, símbolos y cifras significativas.",disc:["Todas las ingenierías"],
+ejemplo:"La potencia eléctrica consumida por el motor de inducción trifásico es de 15 kW, con una tensión de alimentación de 440 V (60 Hz) y un factor de potencia de 0,87 en adelanto.",
+sint:{h:`<span class="syn-s">La potencia eléctrica consumida por el motor de inducción trifásico</span> <span class="syn-v">es de</span> <span class="syn-p">15 kW,</span> <span class="syn-c">con una tensión de alimentación de 440 V (60 Hz)</span> <span class="syn-nx">y</span> <span class="syn-c">un factor de potencia de 0,87 en adelanto.</span>`,n:`<strong>Oración copulativa cuantitativa:</strong> "es de 15 kW" (ser + magnitud).<br><strong>CC de acompañamiento técnico:</strong> dos CC con preposición "con" que detallan condiciones nominales.<br><strong>Paréntesis:</strong> "(60 Hz)" amplía la especificación de frecuencia sin interrumpir el flujo.`,s:"La potencia eléctrica consumida por el motor",v:"es de",p:"15 kW"}},
+{id:10,cat:"tecnica",titulo:"Alcances y limitaciones",def:"Declaración explícita del ámbito de aplicación del estudio y de los factores que restringen sus conclusiones.",disc:["Todas las ingenierías"],
+ejemplo:"Este estudio se limita al análisis estructural de puentes simplemente apoyados de luz entre 10 y 30 metros en zonas sísmicas intermedias de Colombia (zona 2 según NSR-10) y no incluye estructuras con voladizos ni pilas de más de 8 metros.",
+sint:{h:`<span class="syn-s">Este estudio</span> <span class="syn-v">se limita</span> <span class="syn-c">al análisis estructural de puentes simplemente apoyados de luz entre 10 y 30 metros en zonas sísmicas intermedias de Colombia (zona 2 según NSR-10)</span> <span class="syn-nx">y</span> <span class="syn-v">no incluye</span> <span class="syn-p">estructuras con voladizos ni pilas de más de 8 metros.</span>`,n:`<strong>Voz media reflexiva:</strong> "se limita" (restricción del agente sobre sí mismo).<br><strong>Coordinación adversativa:</strong> segunda cláusula con negación "no incluye" contrapone lo excluido.<br><strong>Referencia normativa:</strong> "(zona 2 según NSR-10)" entre paréntesis ancla la afirmación a norma colombiana.`,s:"Este estudio",v:"se limita",p:"al análisis estructural de puentes simplemente apoyados"}},
+// ── INFORME DE INGENIERÍA ──
+{id:11,cat:"informe",titulo:"Resumen ejecutivo",def:"Síntesis de una página que presenta problema, metodología, resultados clave y recomendación para tomadores de decisiones.",disc:["Todas las ingenierías"],
+ejemplo:"Este informe evaluó la viabilidad técnica y económica de instalar 480 kWp de paneles fotovoltaicos en la planta cementera de Yumbo; el análisis arrojó una TIR del 18 % y un período de recuperación de 5,2 años.",
+sint:{h:`<span class="syn-s">Este informe</span> <span class="syn-v">evaluó</span> <span class="syn-p">la viabilidad técnica y económica de instalar 480 kWp de paneles fotovoltaicos en la planta cementera de Yumbo;</span> <span class="syn-s">el análisis</span> <span class="syn-v">arrojó</span> <span class="syn-p">una TIR del 18 % y un período de recuperación de 5,2 años.</span>`,n:`<strong>Dos oraciones yuxtapuestas:</strong> separadas por punto y coma para comprimir dos resultados en una sola unidad.<br><strong>Verbos de acción investigativa:</strong> "evaluó" y "arrojó" (pasado simple, tipico del resumen ejecutivo).<br><strong>Indicadores financieros:</strong> TIR y período de recuperación como evidencia cuantitativa compacta.`,s:"Este informe",v:"evaluó",p:"la viabilidad técnica y económica de instalar 480 kWp"}},
+{id:12,cat:"informe",titulo:"Introducción de informe",def:"Párrafo que contextualiza el problema de ingeniería, justifica el trabajo y anuncia la estructura del documento.",disc:["Todas las ingenierías"],
+ejemplo:"El colapso parcial del pavimento flexible en el tramo Km 12+400 al Km 14+200 de la vía Bogotá–Villavicencio motivó este estudio, cuyo objetivo es identificar las causas del fallo y proponer medidas de rehabilitación.",
+sint:{h:`<span class="syn-s">El colapso parcial del pavimento flexible en el tramo Km 12+400 al Km 14+200 de la vía Bogotá–Villavicencio</span> <span class="syn-v">motivó</span> <span class="syn-p">este estudio,</span> <span class="syn-nx">cuyo</span> <span class="syn-p">objetivo es identificar las causas del fallo y proponer medidas de rehabilitación.</span>`,n:`<strong>Sujeto largo:</strong> describe el evento que da origen al informe (problema de ingeniería).<br><strong>Subordinada relativa con "cuyo":</strong> posesivo relativo que conecta el objetivo con el estudio.<br><strong>Infinitivos nominales:</strong> "identificar" y "proponer" en coordinación describen el alcance.`,s:"El colapso parcial del pavimento flexible",v:"motivó",p:"este estudio"}},
+{id:13,cat:"informe",titulo:"Análisis de resultados",def:"Interpretación crítica de los datos obtenidos, conectándolos con los objetivos y el marco teórico.",disc:["Todas las ingenierías"],
+ejemplo:"Los valores de CBR medidos en situ (4,2 % en promedio) son inferiores en un 58 % al valor de diseño original, lo que explica la pérdida de capacidad portante y la formación de grietas por fatiga.",
+sint:{h:`<span class="syn-s">Los valores de CBR medidos en situ (4,2 % en promedio)</span> <span class="syn-v">son inferiores</span> <span class="syn-p">en un 58 % al valor de diseño original,</span> <span class="syn-nx">lo que</span> <span class="syn-v">explica</span> <span class="syn-p">la pérdida de capacidad portante y la formación de grietas por fatiga.</span>`,n:`<strong>Oración copulativa comparativa:</strong> "son inferiores en un 58%…" (comparación cuantificada).<br><strong>Relativa explicativa con "lo que":</strong> introduce la consecuencia interpretativa.<br><strong>OD coordinado:</strong> "la pérdida de capacidad portante" y "la formación de grietas".`,s:"Los valores de CBR medidos in situ",v:"son inferiores",p:"en un 58 % al valor de diseño original"}},
+{id:14,cat:"informe",titulo:"Conclusión de informe",def:"Síntesis del hallazgo principal que responde directamente a los objetivos planteados.",disc:["Todas las ingenierías"],
+ejemplo:"Se concluye que la sub-rasante blanda de arcilla expansiva bajo el tramo evaluado es la causa primaria del daño; su reemplazo por material granular compactado al 95 % Proctor modificado es la solución más efectiva.",
+sint:{h:`<span class="syn-v">Se concluye</span> <span class="syn-nx">que</span> <span class="syn-s">la sub-rasante blanda de arcilla expansiva bajo el tramo evaluado</span> <span class="syn-v">es</span> <span class="syn-p">la causa primaria del daño;</span> <span class="syn-s">su reemplazo por material granular compactado al 95 % Proctor modificado</span> <span class="syn-v">es</span> <span class="syn-p">la solución más efectiva.</span>`,n:`<strong>Impersonal de conclusión:</strong> "Se concluye que…" (fórmula canónica en informes).<br><strong>Subordinada sustantiva:</strong> toda la explicación causal como CD.<br><strong>Segunda oración copulativa:</strong> introduce la recomendación técnica concreta.`,s:"la sub-rasante blanda de arcilla expansiva",v:"es",p:"la causa primaria del daño"}},
+{id:15,cat:"informe",titulo:"Recomendación técnica",def:"Propuesta de acción fundamentada en los resultados del análisis, redactada en modo condicional o imperativo técnico.",disc:["Todas las ingenierías"],
+ejemplo:"Se recomienda reemplazar los transformadores de distribución 13,2/0,22 kV con más de 25 años de servicio por unidades tipo seco de 250 kVA con protección IP54 antes del inicio de la temporada de lluvias.",
+sint:{h:`<span class="syn-v">Se recomienda</span> <span class="syn-p">reemplazar los transformadores de distribución 13,2/0,22 kV con más de 25 años de servicio</span> <span class="syn-c">por unidades tipo seco de 250 kVA con protección IP54</span> <span class="syn-c">antes del inicio de la temporada de lluvias.</span>`,n:`<strong>Impersonal de recomendación:</strong> "Se recomienda" + infinitivo (patrón normativo).<br><strong>OD especificado:</strong> "los transformadores de distribución 13,2/0,22 kV con más de 25 años" (criterio de selección cuantificado).<br><strong>CC Tiempo límite:</strong> "antes del inicio de la temporada de lluvias" (urgencia implícita).`,s:"(implícito: el autor del informe)",v:"Se recomienda",p:"reemplazar los transformadores de distribución"}},
+{id:16,cat:"informe",titulo:"Antecedentes del proyecto",def:"Descripción del contexto histórico, técnico y legal que precede al trabajo de ingeniería reportado.",disc:["Civil","Ambiental","Industrial"],
+ejemplo:"La planta de producción de acido sulfúrico de Barrancabermeja opera desde 1956 bajo licencia ambiental vencida desde 2018; el presente proyecto responde a la Resolución 1280 de 2022 del MADS que exige su actualización.",
+sint:{h:`<span class="syn-s">La planta de producción de ácido sulfúrico de Barrancabermeja</span> <span class="syn-v">opera</span> <span class="syn-c">desde 1956</span> <span class="syn-c">bajo licencia ambiental vencida desde 2018;</span> <span class="syn-s">el presente proyecto</span> <span class="syn-v">responde</span> <span class="syn-c">a la Resolución 1280 de 2022 del MADS que exige su actualización.</span>`,n:`<strong>Dos cláusulas yuxtapuestas:</strong> la primera establece el antecedente, la segunda la motivación normativa.<br><strong>CC Temporales:</strong> "desde 1956" y "desde 2018" anclan la cronología.<br><strong>Referencia normativa colombiana:</strong> "Resolución 1280 de 2022 del MADS".`,s:"La planta de producción de ácido sulfúrico de Barrancabermeja",v:"opera",p:"desde 1956 bajo licencia ambiental vencida"}},
+{id:17,cat:"informe",titulo:"Descripción de metodología",def:"Explicación del enfoque, técnicas y herramientas utilizadas para resolver el problema de ingeniería.",disc:["Todas las ingenierías"],
+ejemplo:"La metodología empleada consistió en el levantamiento topográfico con estación total Leica TS09, el análisis de suelos según NTC 1537 y el modelado estructural en SAP2000 v22 con cargas según NSR-10 título A y B.",
+sint:{h:`<span class="syn-s">La metodología empleada</span> <span class="syn-v">consistió en</span> <span class="syn-p">el levantamiento topográfico con estación total Leica TS09,</span> <span class="syn-p">el análisis de suelos según NTC 1537</span> <span class="syn-nx">y</span> <span class="syn-p">el modelado estructural en SAP2000 v22 con cargas según NSR-10 título A y B.</span>`,n:`<strong>Perífrasis "consistir en":</strong> verbo copulativo que introduce la descripción de actividades.<br><strong>Serie tripartita de OD:</strong> tres fases metodológicas con referencias técnicas específicas.<br><strong>Referencias normativas colombianas:</strong> NTC 1537 y NSR-10.`,s:"La metodología empleada",v:"consistió en",p:"el levantamiento topográfico, el análisis de suelos y el modelado estructural"}},
+{id:18,cat:"informe",titulo:"Planteamiento del problema",def:"Formulación clara y delimitada de la situación de ingeniería que justifica la investigación o el proyecto.",disc:["Todas las ingenierías"],
+ejemplo:"El sistema de bombeo de agua potable del municipio de Quibdó presenta fallas recurrentes que generan 14 horas diarias de desabastecimiento y pérdidas no técnicas del 62 %, lo que exige un rediseño hidráulico urgente.",
+sint:{h:`<span class="syn-s">El sistema de bombeo de agua potable del municipio de Quibdó</span> <span class="syn-v">presenta</span> <span class="syn-p">fallas recurrentes</span> <span class="syn-nx">que</span> <span class="syn-v">generan</span> <span class="syn-p">14 horas diarias de desabastecimiento y pérdidas no técnicas del 62 %,</span> <span class="syn-nx">lo que</span> <span class="syn-v">exige</span> <span class="syn-p">un rediseño hidráulico urgente.</span>`,n:`<strong>Cadena de relativas:</strong> "que generan…" → "lo que exige…" (encadenamiento causal-consecuente).<br><strong>Datos cuantitativos:</strong> "14 horas" y "62 %" miden la magnitud del problema.<br><strong>Adjetivo de urgencia:</strong> "urgente" al final cierra con énfasis retórico.`,s:"El sistema de bombeo de agua potable del municipio de Quibdó",v:"presenta",p:"fallas recurrentes"}},
+{id:19,cat:"informe",titulo:"Marco normativo",def:"Enumeración y explicación de las normas, decretos o estándares que rigen el proyecto de ingeniería.",disc:["Civil","Ambiental","Eléctrica"],
+ejemplo:"El diseño de la red de alcantarillado se rige por el Reglamento Técnico del Sector de Agua Potable y Saneamiento (RAS 2000), la NTC 1022 para tubería PVC y la Resolución 0330 de 2017 del MinVivienda.",
+sint:{h:`<span class="syn-s">El diseño de la red de alcantarillado</span> <span class="syn-v">se rige por</span> <span class="syn-p">el Reglamento Técnico del Sector de Agua Potable y Saneamiento (RAS 2000),</span> <span class="syn-p">la NTC 1022 para tubería PVC</span> <span class="syn-nx">y</span> <span class="syn-p">la Resolución 0330 de 2017 del MinVivienda.</span>`,n:`<strong>Voz pasiva refleja:</strong> "se rige por" (agente = las normas).<br><strong>Serie enumerativa normativa:</strong> tres referentes legales separados por coma + "y".<br><strong>Siglas entre paréntesis:</strong> "(RAS 2000)" y "(NTC 1022)" facilitan la referencia cruzada.`,s:"El diseño de la red de alcantarillado",v:"se rige por",p:"el RAS 2000, la NTC 1022 y la Resolución 0330 de 2017"}},
+{id:20,cat:"informe",titulo:"Discusión de errores e incertidumbre",def:"Análisis de las fuentes de error sistemático y aleatorio que afectan la validez de los resultados.",disc:["Todas las ingenierías"],
+ejemplo:"La incertidumbre combinada en la medición del caudal es de ±3,2 L/s (k=2, nivel de confianza del 95 %), atribuible principalmente a la resolución del medidor electromagnético y a la variación de temperatura del fluido.",
+sint:{h:`<span class="syn-s">La incertidumbre combinada en la medición del caudal</span> <span class="syn-v">es de</span> <span class="syn-p">±3,2 L/s (k=2, nivel de confianza del 95 %),</span> <span class="syn-c">atribuible principalmente a la resolución del medidor electromagnético y a la variación de temperatura del fluido.</span>`,n:`<strong>Oración copulativa cuantitativa:</strong> "es de ±3,2 L/s" con factor de cobertura entre paréntesis.<br><strong>Adjetivo participial adjunto:</strong> "atribuible principalmente a…" (causa de la incertidumbre).<br><strong>Adverbio de grado:</strong> "principalmente" jerarquiza las fuentes de error.`,s:"La incertidumbre combinada en la medición del caudal",v:"es de",p:"±3,2 L/s (k=2, nivel de confianza del 95 %)"}},
+// ── REDACCIÓN CIENTÍFICA ──
+{id:21,cat:"cientifico",titulo:"Hipótesis de ingeniería",def:"Afirmación provisional que relaciona variables técnicas y orienta el proceso de diseño o experimentación.",disc:["Todas las ingenierías"],
+ejemplo:"Si se aumenta el porcentaje de fibra de vidrio E en la mezcla de polipropileno de 10 % a 20 % en masa, entonces el módulo de elasticidad del compuesto aumentará al menos un 35 % manteniendo la elongación a la rotura por encima del 2 %.",
+sint:{h:`<span class="syn-nx">Si</span> <span class="syn-v">se aumenta</span> <span class="syn-p">el porcentaje de fibra de vidrio E en la mezcla de polipropileno de 10 % a 20 % en masa,</span> <span class="syn-nx">entonces</span> <span class="syn-s">el módulo de elasticidad del compuesto</span> <span class="syn-v">aumentará</span> <span class="syn-p">al menos un 35 %</span> <span class="syn-c">manteniendo la elongación a la rotura por encima del 2 %.</span>`,n:`<strong>Hipótesis condicional:</strong> prótasis "Si se aumenta…" + apódosis "entonces…aumentará".<br><strong>Cuantificación doble:</strong> rango de variación (10→20%) y umbral de aumento (35%).<br><strong>Gerundio de condición:</strong> "manteniendo la elongación…" fija la restricción secundaria.`,s:"el módulo de elasticidad del compuesto",v:"aumentará",p:"al menos un 35 % manteniendo la elongación a la rotura por encima del 2 %"}},
+{id:22,cat:"cientifico",titulo:"Marco teórico de ingeniería",def:"Presentación de los principios físicos, ecuaciones y modelos que sustentan el diseño o análisis realizado.",disc:["Mecánica","Civil","Eléctrica"],
+ejemplo:"El análisis de esfuerzos en el eje del reductor se fundamenta en la teoría de energía de distorsión de von Mises, según la cual la falla dúctil ocurre cuando el esfuerzo equivalente supera el límite de fluencia del material.",
+sint:{h:`<span class="syn-s">El análisis de esfuerzos en el eje del reductor</span> <span class="syn-v">se fundamenta en</span> <span class="syn-p">la teoría de energía de distorsión de von Mises,</span> <span class="syn-nx">según la cual</span> <span class="syn-s">la falla dúctil</span> <span class="syn-v">ocurre</span> <span class="syn-c">cuando el esfuerzo equivalente supera el límite de fluencia del material.</span>`,n:`<strong>Voz pasiva reflexiva:</strong> "se fundamenta en" (base teórica).<br><strong>Relativa con "según la cual":</strong> subordinada adjetiva explicativa de la teoría.<br><strong>Subordinada temporal/condicional:</strong> "cuando el esfuerzo equivalente supera…".`,s:"El análisis de esfuerzos en el eje del reductor",v:"se fundamenta en",p:"la teoría de energía de distorsión de von Mises"}},
+{id:23,cat:"cientifico",titulo:"Descripción de variables",def:"Identificación y clasificación de las variables independientes, dependientes y de control en un experimento o diseño.",disc:["Todas las ingenierías"],
+ejemplo:"La variable independiente es la velocidad de enfriamiento del acero (°C/s), la variable dependiente es la dureza Vickers resultante (HV), y las variables de control son la temperatura de austenización (950 °C) y el porcentaje de carbono (0,45 %).",
+sint:{h:`<span class="syn-s">La variable independiente</span> <span class="syn-v">es</span> <span class="syn-p">la velocidad de enfriamiento del acero (°C/s),</span> <span class="syn-s">la variable dependiente</span> <span class="syn-v">es</span> <span class="syn-p">la dureza Vickers resultante (HV),</span> <span class="syn-nx">y</span> <span class="syn-s">las variables de control</span> <span class="syn-v">son</span> <span class="syn-p">la temperatura de austenización (950 °C) y el porcentaje de carbono (0,45 %).</span>`,n:`<strong>Serie de oraciones copulativas paralelas:</strong> tres estructuras "S + es/son + Atributo" coordinadas.<br><strong>Unidades entre paréntesis:</strong> "(°C/s)", "(HV)" y "(°C)" normalizan la nomenclatura.<br><strong>Paralelismo sintáctico:</strong> refuerza la distinción metodológica entre tipos de variables.`,s:"La variable independiente",v:"es",p:"la velocidad de enfriamiento del acero (°C/s)"}},
+{id:24,cat:"cientifico",titulo:"Presentación de ecuación",def:"Integración de una fórmula matemática en el texto con descripción de cada término y sus unidades.",disc:["Mecánica","Eléctrica","Sistemas"],
+ejemplo:"La potencia disipada en una resistencia se calcula mediante P = I²·R, donde P es la potencia en vatios (W), I es la corriente eficaz en amperios (A) y R es la resistencia en ohmios (Ω).",
+sint:{h:`<span class="syn-s">La potencia disipada en una resistencia</span> <span class="syn-v">se calcula</span> <span class="syn-c">mediante P = I²·R,</span> <span class="syn-nx">donde</span> <span class="syn-p">P es la potencia en vatios (W), I es la corriente eficaz en amperios (A) y R es la resistencia en ohmios (Ω).</span>`,n:`<strong>Voz pasiva refleja:</strong> "se calcula mediante" (agente = la fórmula).<br><strong>CC Instrumento:</strong> "mediante P = I²·R" (preposición "mediante" + ecuación).<br><strong>Subordinada nominal con "donde":</strong> introduce glosario integrado de la fórmula.`,s:"La potencia disipada en una resistencia",v:"se calcula",p:"mediante P = I²·R"}},
+{id:25,cat:"cientifico",titulo:"Cita de norma técnica colombiana",def:"Referencia a una NTC, RETIE, NSR u otro estándar colombiano integrada en el argumento técnico.",disc:["Eléctrica","Civil","Ambiental"],
+ejemplo:"Según el RETIE (Reglamento Técnico de Instalaciones Eléctricas, Resolución 90708 de 2013 del MME), todo tablero de distribución en baja tensión debe tener un grado de protección mínimo IP2X en instalaciones industriales.",
+sint:{h:`<span class="syn-nx">Según el RETIE (Resolución 90708 de 2013 del MME),</span> <span class="syn-s">todo tablero de distribución en baja tensión</span> <span class="syn-v">debe tener</span> <span class="syn-p">un grado de protección mínimo IP2X</span> <span class="syn-c">en instalaciones industriales.</span>`,n:`<strong>Complemento de fuente:</strong> "Según el RETIE" (CC encuadrante de norma técnica).<br><strong>Sujeto universal:</strong> "todo tablero de distribución" (cuantificador universal de obligación).<br><strong>Perífrasis de obligación:</strong> "debe tener" (deber + infinitivo).`,s:"todo tablero de distribución en baja tensión",v:"debe tener",p:"un grado de protección mínimo IP2X en instalaciones industriales"}},
+{id:26,cat:"cientifico",titulo:"Análisis de incertidumbre",def:"Cuantificación y propagación del error en mediciones y cálculos de ingeniería.",disc:["Mecánica","Eléctrica","Industrial"],
+ejemplo:"La incertidumbre en la medición del torque con el dinamómetro digital FLUKE 1760 es de ±0,5 N·m (resolución del instrumento: ±0,1 N·m; variabilidad experimental: ±0,4 N·m, k=1).",
+sint:{h:`<span class="syn-s">La incertidumbre en la medición del torque con el dinamómetro digital FLUKE 1760</span> <span class="syn-v">es de</span> <span class="syn-p">±0,5 N·m</span> <span class="syn-c">(resolución del instrumento: ±0,1 N·m; variabilidad experimental: ±0,4 N·m, k=1).</span>`,n:`<strong>Oración copulativa cuantitativa:</strong> "es de ±0,5 N·m".<br><strong>Amplificación parentética:</strong> desglosa las fuentes de incertidumbre con sus magnitudes.<br><strong>Nombre del instrumento:</strong> "FLUKE 1760" vincula la medición con el equipo específico.`,s:"La incertidumbre en la medición del torque",v:"es de",p:"±0,5 N·m"}},
+{id:27,cat:"cientifico",titulo:"Comparación de alternativas",def:"Evaluación paralela de dos o más soluciones técnicas según criterios ponderados.",disc:["Todas las ingenierías"],
+ejemplo:"La alternativa A (hormigón pretensado) ofrece mayor durabilidad con un costo de construcción 18 % superior; la alternativa B (acero laminado en caliente) reduce el tiempo de montaje en un 40 % pero exige mayor mantenimiento anticorrosivo.",
+sint:{h:`<span class="syn-s">La alternativa A (hormigón pretensado)</span> <span class="syn-v">ofrece</span> <span class="syn-p">mayor durabilidad con un costo de construcción 18 % superior;</span> <span class="syn-s">la alternativa B (acero laminado en caliente)</span> <span class="syn-v">reduce</span> <span class="syn-p">el tiempo de montaje en un 40 %</span> <span class="syn-nx">pero</span> <span class="syn-v">exige</span> <span class="syn-p">mayor mantenimiento anticorrosivo.</span>`,n:`<strong>Estructura contrastiva doble:</strong> punto y coma separa los dos bloques de comparación.<br><strong>Nexo adversativo:</strong> "pero" dentro de la alternativa B introduce su desventaja.<br><strong>Cuantificación comparativa:</strong> "18 % superior" y "40 %" hacen objetiva la comparación.`,s:"La alternativa A (hormigón pretensado)",v:"ofrece",p:"mayor durabilidad con un costo de construcción 18 % superior"}},
+{id:28,cat:"cientifico",titulo:"Validación de modelo computacional",def:"Comparación entre resultados de simulación y datos experimentales para verificar la precisión del modelo.",disc:["Mecánica","Civil","Sistemas"],
+ejemplo:"El modelo de elementos finitos desarrollado en ANSYS Mechanical sobreestima la deflexión máxima de la viga en un 4,3 % respecto a los valores medidos con LVDT, diferencia aceptable según el criterio de validación del 5 % establecido en ASME V&V 10.",
+sint:{h:`<span class="syn-s">El modelo de elementos finitos desarrollado en ANSYS Mechanical</span> <span class="syn-v">sobreestima</span> <span class="syn-p">la deflexión máxima de la viga en un 4,3 % respecto a los valores medidos con LVDT,</span> <span class="syn-c">diferencia aceptable según el criterio de validación del 5 % establecido en ASME V&V 10.</span>`,n:`<strong>Sujeto con participio adjunto:</strong> "desarrollado en ANSYS Mechanical" especifica la herramienta.<br><strong>CC Comparativa:</strong> "respecto a los valores medidos con LVDT" (referente experimental).<br><strong>Aposición evaluativa:</strong> "diferencia aceptable según…" emite el juicio de validación.`,s:"El modelo de elementos finitos desarrollado en ANSYS Mechanical",v:"sobreestima",p:"la deflexión máxima de la viga en un 4,3 %"}},
+{id:29,cat:"cientifico",titulo:"Nota al pie técnica",def:"Aclaración o referencia ubicada al pie de página que amplía información sin interrumpir el flujo del texto principal.",disc:["Todas las ingenierías"],
+ejemplo:"² El factor de seguridad de 2,5 adoptado en el diseño del anclaje fue determinado con base en el coeficiente de variación del suelo medido (CV = 28 %), superior al 20 % recomendado por Das (2021) para suelos cohesivos blandos.",
+sint:{h:`<span class="syn-nx">²</span> <span class="syn-s">El factor de seguridad de 2,5 adoptado en el diseño del anclaje</span> <span class="syn-v">fue determinado</span> <span class="syn-c">con base en el coeficiente de variación del suelo medido (CV = 28 %),</span> <span class="syn-c">superior al 20 % recomendado por Das (2021) para suelos cohesivos blandos.</span>`,n:`<strong>Voz pasiva compuesta:</strong> "fue determinado" (pasiva perifrástica, énfasis en el proceso).<br><strong>CC de fundamento:</strong> "con base en…" (locución prepositiva técnica).<br><strong>Aposición comparativa:</strong> "superior al 20%…" justifica la elección del factor.`,s:"El factor de seguridad de 2,5 adoptado en el diseño del anclaje",v:"fue determinado",p:"con base en el coeficiente de variación del suelo medido (CV = 28 %)"}},
+{id:30,cat:"cientifico",titulo:"Propuesta de trabajo futuro",def:"Sugerencia de líneas de investigación o mejora derivadas de las limitaciones del estudio actual.",disc:["Todas las ingenierías"],
+ejemplo:"Se recomienda para estudios posteriores implementar sensores IoT en los nodos críticos de la red de distribución eléctrica del Valle del Cauca para obtener datos en tiempo real y alimentar modelos predictivos de falla.",
+sint:{h:`<span class="syn-v">Se recomienda</span> <span class="syn-c">para estudios posteriores</span> <span class="syn-p">implementar sensores IoT en los nodos críticos de la red de distribución eléctrica del Valle del Cauca</span> <span class="syn-c">para obtener datos en tiempo real y alimentar modelos predictivos de falla.</span>`,n:`<strong>Impersonal de recomendación:</strong> "Se recomienda" + infinitivo.<br><strong>CC Temporal prospectiva:</strong> "para estudios posteriores" (proyección hacia el futuro).<br><strong>Doble infinitivo final:</strong> "para obtener… y alimentar…" expresan propósito.`,s:"(implícito: los autores)",v:"Se recomienda",p:"implementar sensores IoT en los nodos críticos"}},
+// ── NORMATIVA Y DOCUMENTACIÓN ──
+{id:31,cat:"normativa",titulo:"Redacción de norma o procedimiento",def:"Escritura de instrucciones en modo imperativo o infinitivo para documentos de procedimientos operativos estándar (POS/SOP).",disc:["Industrial","Eléctrica","Química"],
+ejemplo:"Durante la calibración del manómetro de proceso: (1) verificar la presión atmosférica local con el barómetro de referencia; (2) ajustar el cero del instrumento; (3) aplicar presión patrón de 100 kPa y registrar la desviación.",
+sint:{h:`<span class="syn-nx">Durante la calibración del manómetro de proceso:</span> <span class="syn-v">(1) verificar</span> <span class="syn-p">la presión atmosférica local con el barómetro de referencia;</span> <span class="syn-v">(2) ajustar</span> <span class="syn-p">el cero del instrumento;</span> <span class="syn-v">(3) aplicar</span> <span class="syn-p">presión patrón de 100 kPa</span> <span class="syn-nx">y</span> <span class="syn-v">registrar</span> <span class="syn-p">la desviación.</span>`,n:`<strong>CC Marco temporal:</strong> "Durante la calibración…" encuadra todo el procedimiento.<br><strong>Serie de infinitivos numerados:</strong> estructura lista-orden canónica en SOPs.<br><strong>Paralelismo sintáctico:</strong> cada infinitivo inicia un paso independiente.`,s:"(sujeto implícito: el técnico operador)",v:"verificar, ajustar, aplicar, registrar",p:"la presión, el cero, presión patrón de 100 kPa"}},
+{id:32,cat:"normativa",titulo:"Citación de estándar internacional",def:"Integración de una referencia a norma ISO, ASTM, IEEE u otra dentro del argumento técnico.",disc:["Mecánica","Eléctrica","Civil"],
+ejemplo:"Conforme a la norma ISO 9001:2015 (cláusula 8.4), la empresa contratista debe demostrar que sus proveedores de materiales de construcción cuentan con un sistema de gestión de calidad certificado o auditable.",
+sint:{h:`<span class="syn-nx">Conforme a la norma ISO 9001:2015 (cláusula 8.4),</span> <span class="syn-s">la empresa contratista</span> <span class="syn-v">debe demostrar</span> <span class="syn-nx">que</span> <span class="syn-s">sus proveedores de materiales de construcción</span> <span class="syn-v">cuentan con</span> <span class="syn-p">un sistema de gestión de calidad certificado o auditable.</span>`,n:`<strong>CC de conformidad:</strong> "Conforme a la norma…" (marco normativo inicial).<br><strong>Perífrasis de obligación:</strong> "debe demostrar" (norma = exigencia).<br><strong>Subordinada sustantiva:</strong> "que sus proveedores… cuentan con…" (CD de demostrar).`,s:"la empresa contratista",v:"debe demostrar",p:"que sus proveedores cuentan con un sistema de gestión de calidad"}},
+{id:33,cat:"normativa",titulo:"Contrato y especificaciones de licitación",def:"Redacción de cláusulas técnicas precisas en documentos contractuales de obras de ingeniería.",disc:["Civil","Ambiental","Industrial"],
+ejemplo:"El contratista estará obligado a entregar el diseño ejecutivo de la planta de tratamiento de aguas residuales en formato BIM nivel LOD 350, compatible con Revit 2024, dentro de los treinta (30) días hábiles siguientes a la firma del contrato.",
+sint:{h:`<span class="syn-s">El contratista</span> <span class="syn-v">estará obligado a</span> <span class="syn-p">entregar el diseño ejecutivo de la planta de tratamiento de aguas residuales en formato BIM nivel LOD 350, compatible con Revit 2024,</span> <span class="syn-c">dentro de los treinta (30) días hábiles siguientes a la firma del contrato.</span>`,n:`<strong>Perífrasis contractual:</strong> "estará obligado a" + infinitivo (obligación futura).<br><strong>Especificación técnica compleja:</strong> "BIM nivel LOD 350, compatible con Revit 2024" dentro del OD.<br><strong>CC Plazo:</strong> "dentro de los treinta (30) días hábiles…" (cómputo de término con cifra y letra).`,s:"El contratista",v:"estará obligado a",p:"entregar el diseño ejecutivo de la planta de tratamiento"}},
+{id:34,cat:"normativa",titulo:"Manual de usuario de equipo",def:"Instrucciones para la operación segura y eficiente de un equipo o sistema técnico.",disc:["Mecánica","Eléctrica","Industrial"],
+ejemplo:"ADVERTENCIA: Antes de conectar el variador de frecuencia a la red trifásica de 440 V, verifique que el interruptor principal esté en posición OFF y que el capacitor de bus DC haya descargado completamente (tiempo mínimo de espera: 5 minutos).",
+sint:{h:`<span class="syn-nx">ADVERTENCIA:</span> <span class="syn-c">Antes de conectar el variador de frecuencia a la red trifásica de 440 V,</span> <span class="syn-v">verifique</span> <span class="syn-nx">que</span> <span class="syn-s">el interruptor principal</span> <span class="syn-v">esté</span> <span class="syn-p">en posición OFF</span> <span class="syn-nx">y que</span> <span class="syn-s">el capacitor de bus DC</span> <span class="syn-v">haya descargado</span> <span class="syn-p">completamente.</span>`,n:`<strong>Marcador de seguridad:</strong> "ADVERTENCIA:" (grado máximo de alerta en manuales).<br><strong>CC Temporal preventivo:</strong> "Antes de conectar…" antepone la condición a la acción.<br><strong>Imperativo formal:</strong> "verifique" (usted) + dos subordinadas sustantivas coordinadas.`,s:"(implícito: el usuario/técnico)",v:"verifique",p:"que el interruptor principal esté en posición OFF"}},
+{id:35,cat:"normativa",titulo:"Ficha técnica de producto",def:"Documento condensado que especifica las propiedades y condiciones de uso de un material o equipo.",disc:["Mecánica","Eléctrica","Química"],
+ejemplo:"La resina epoxi Sika Araldite AW106/HV953U presenta una resistencia a la tracción de 60 MPa, dureza Shore D 85, temperatura de servicio continuo de –40 °C a +120 °C y tiempo de curado a 23 °C de 24 horas.",
+sint:{h:`<span class="syn-s">La resina epoxi Sika Araldite AW106/HV953U</span> <span class="syn-v">presenta</span> <span class="syn-p">una resistencia a la tracción de 60 MPa,</span> <span class="syn-p">dureza Shore D 85,</span> <span class="syn-p">temperatura de servicio continuo de –40 °C a +120 °C</span> <span class="syn-nx">y</span> <span class="syn-p">tiempo de curado a 23 °C de 24 horas.</span>`,n:`<strong>Verbo de presentación técnica:</strong> "presenta" + serie de OD nominales.<br><strong>Serie enumerativa de cuatro propiedades:</strong> sin repetir el verbo (elipsis técnica).<br><strong>Rangos y valores precisos:</strong> todas las magnitudes llevan unidades SI o equivalentes.`,s:"La resina epoxi Sika Araldite AW106/HV953U",v:"presenta",p:"una resistencia a la tracción de 60 MPa"}},
+{id:36,cat:"normativa",titulo:"Reporte de no conformidad",def:"Descripción de una desviación respecto a los requisitos técnicos o de calidad, con trazabilidad y acción correctiva.",disc:["Industrial","Civil","Mecánica"],
+ejemplo:"Se detectó una no conformidad en el lote BG-2024-047 de varillas de acero corrugado φ12 mm: el límite de fluencia promedio medido (396 MPa) es inferior al mínimo de 420 MPa estipulado en la NTC 2289, por lo que el lote fue rechazado y devuelto al proveedor.",
+sint:{h:`<span class="syn-v">Se detectó</span> <span class="syn-p">una no conformidad en el lote BG-2024-047 de varillas de acero corrugado φ12 mm:</span> <span class="syn-s">el límite de fluencia promedio medido (396 MPa)</span> <span class="syn-v">es inferior a</span> <span class="syn-p">los 420 MPa estipulados en la NTC 2289,</span> <span class="syn-c">por lo que el lote fue rechazado y devuelto al proveedor.</span>`,n:`<strong>Impersonal de detección:</strong> "Se detectó" (hallazgo sin agente nombrado).<br><strong>Dos puntos explicativos:</strong> introducen la evidencia cuantitativa de la no conformidad.<br><strong>Consecutiva:</strong> "por lo que el lote fue rechazado…" expresa la acción correctiva.`,s:"el límite de fluencia promedio medido (396 MPa)",v:"es inferior a",p:"los 420 MPa estipulados en la NTC 2289"}},
+{id:37,cat:"normativa",titulo:"Registro de ensayo",def:"Documento que consigna las condiciones, resultados y responsables de una prueba técnica.",disc:["Civil","Mecánica","Eléctrica"],
+ejemplo:"Ensayo de resistividad del suelo realizado el 15/03/2024 en el punto P-7 (coordenadas N: 4°35'22'' / W: 74°04'11'') mediante el método de Wenner con separación entre electrodos a = 1,5 m; valor obtenido: 82 Ω·m.",
+sint:{h:`<span class="syn-p">Ensayo de resistividad del suelo</span> <span class="syn-v">realizado</span> <span class="syn-c">el 15/03/2024</span> <span class="syn-c">en el punto P-7 (coordenadas N: 4°35'22'' / W: 74°04'11'')</span> <span class="syn-c">mediante el método de Wenner con separación a = 1,5 m;</span> <span class="syn-p">valor obtenido: 82 Ω·m.</span>`,n:`<strong>Estructura nominal elíptica:</strong> sin verbo copulativo explícito (registro condensado).<br><strong>Serie de CC:</strong> cuatro circunstanciales (tiempo, lugar, instrumento, método) encadenados.<br><strong>Cierre nominal de resultado:</strong> "valor obtenido: 82 Ω·m" como enunciado nominal.`,s:"(sujeto implícito: el técnico laboratorista)",v:"realizado",p:"el ensayo de resistividad del suelo"}},
+{id:38,cat:"normativa",titulo:"Plan de gestión de riesgos",def:"Identificación, valoración y plan de respuesta ante los riesgos técnicos y de seguridad de un proyecto.",disc:["Civil","Industrial","Ambiental"],
+ejemplo:"El riesgo de colapso de la entibación durante la excavación en la calle 72 con carrera 7ª en Bogotá se clasifica como ALTO (probabilidad 3/5, impacto 5/5); la medida preventiva es instalar tablestacas metálicas antes de excavar por debajo de 2,5 m.",
+sint:{h:`<span class="syn-s">El riesgo de colapso de la entibación durante la excavación en la calle 72 con carrera 7ª en Bogotá</span> <span class="syn-v">se clasifica como</span> <span class="syn-p">ALTO (probabilidad 3/5, impacto 5/5);</span> <span class="syn-s">la medida preventiva</span> <span class="syn-v">es</span> <span class="syn-p">instalar tablestacas metálicas antes de excavar por debajo de 2,5 m.</span>`,n:`<strong>Voz pasiva reflexiva con atributo:</strong> "se clasifica como ALTO" (categorización de riesgo).<br><strong>Paréntesis de valoración matricial:</strong> "(probabilidad 3/5, impacto 5/5)".<br><strong>Segunda oración copulativa de solución:</strong> "la medida preventiva es + infinitivo".`,s:"El riesgo de colapso de la entibación",v:"se clasifica como",p:"ALTO (probabilidad 3/5, impacto 5/5)"}},
+{id:39,cat:"normativa",titulo:"Memoria de cálculo",def:"Documento que muestra paso a paso las operaciones matemáticas y criterios de diseño utilizados.",disc:["Civil","Mecánica","Eléctrica"],
+ejemplo:"Para el dimensionamiento del cable de acero del ascensor de carga, se adopta una carga última de 12 500 N, un factor de seguridad FS = 5 según NTC 4808, y se selecciona un cable 6×19 IWRC de diámetro nominal 16 mm.",
+sint:{h:`<span class="syn-nx">Para el dimensionamiento del cable de acero del ascensor de carga,</span> <span class="syn-v">se adopta</span> <span class="syn-p">una carga última de 12 500 N,</span> <span class="syn-v">se adopta</span> <span class="syn-c">un factor de seguridad FS = 5 según NTC 4808,</span> <span class="syn-nx">y</span> <span class="syn-v">se selecciona</span> <span class="syn-p">un cable 6×19 IWRC de diámetro nominal 16 mm.</span>`,n:`<strong>CC Final:</strong> "Para el dimensionamiento…" enmarca el propósito del cálculo.<br><strong>Serie de impersonales:</strong> "se adopta / se adopta / se selecciona" (toma de decisiones de diseño).<br><strong>Norma de referencia:</strong> "según NTC 4808" integrada como CC de base.`,s:"(implícito: el ingeniero de diseño)",v:"se adopta … se selecciona",p:"carga última de 12 500 N, FS = 5, cable 6×19 IWRC"}},
+{id:40,cat:"normativa",titulo:"Resumen de impacto ambiental",def:"Síntesis de los impactos negativos y positivos de un proyecto sobre los componentes ambientales.",disc:["Ambiental","Civil","Industrial"],
+ejemplo:"La construcción del embalse El Cercado en el río Ranchería afectará negativamente 340 hectáreas de ecosistema seco tropical, desplazará a 210 familias Wayuu y mejorará el suministro hídrico de 80 000 habitantes en La Guajira.",
+sint:{h:`<span class="syn-s">La construcción del embalse El Cercado en el río Ranchería</span> <span class="syn-v">afectará negativamente</span> <span class="syn-p">340 hectáreas de ecosistema seco tropical,</span> <span class="syn-v">desplazará</span> <span class="syn-c">a 210 familias Wayuu</span> <span class="syn-nx">y</span> <span class="syn-v">mejorará</span> <span class="syn-p">el suministro hídrico de 80 000 habitantes en La Guajira.</span>`,n:`<strong>Sujeto de acción:</strong> "La construcción del embalse…" (sustantivo deverbativo).<br><strong>Serie de tres predicados:</strong> dos negativos + uno positivo, refleja balance ambiental.<br><strong>Cuantificación de impacto:</strong> 340 ha, 210 familias, 80 000 habitantes dan escala real.`,s:"La construcción del embalse El Cercado en el río Ranchería",v:"afectará negativamente",p:"340 hectáreas de ecosistema seco tropical"}},
+// ── ARGUMENTACIÓN TÉCNICA ──
+{id:41,cat:"argumentacion",titulo:"Argumento por costo-beneficio",def:"Justificación de una decisión técnica comparando los costos totales con los beneficios cuantificados.",disc:["Industrial","Civil","Eléctrica"],
+ejemplo:"La inversión de $2 800 millones COP en la modernización del sistema de compresores se justifica porque reducirá el consumo energético en 1 200 MWh/año, generando un ahorro anual de $520 millones y un retorno de la inversión en 5,4 años.",
+sint:{h:`<span class="syn-s">La inversión de $2 800 millones COP en la modernización del sistema de compresores</span> <span class="syn-v">se justifica</span> <span class="syn-nx">porque</span> <span class="syn-v">reducirá</span> <span class="syn-p">el consumo energético en 1 200 MWh/año,</span> <span class="syn-c">generando un ahorro anual de $520 millones y un retorno de la inversión en 5,4 años.</span>`,n:`<strong>Voz media de justificación:</strong> "se justifica" (la inversión se valida a sí misma).<br><strong>Subordinada causal:</strong> "porque reducirá…" (argumento de consecuencia positiva).<br><strong>Gerundio de resultado:</strong> "generando un ahorro…" cuantifica el beneficio.`,s:"La inversión de $2 800 millones COP",v:"se justifica",p:"porque reducirá el consumo energético en 1 200 MWh/año"}},
+{id:42,cat:"argumentacion",titulo:"Argumento por evidencia normativa",def:"Uso de una norma o regulación como evidencia irrefutable para sustentar una decisión técnica.",disc:["Civil","Eléctrica","Ambiental"],
+ejemplo:"La instalación de pararrayos en la planta de almacenamiento de GLP de Mamonal no es opcional: el NFPA 780 (Estándar para la instalación de sistemas de protección contra rayos) exige protección tipo LPS-I en todas las instalaciones con riesgo de incendio categoría III.",
+sint:{h:`<span class="syn-s">La instalación de pararrayos en la planta de almacenamiento de GLP de Mamonal</span> <span class="syn-v">no es</span> <span class="syn-p">opcional:</span> <span class="syn-s">el NFPA 780</span> <span class="syn-v">exige</span> <span class="syn-p">protección tipo LPS-I en todas las instalaciones con riesgo de incendio categoría III.</span>`,n:`<strong>Oración copulativa negativa:</strong> "no es opcional" como afirmación fuerte de obligación.<br><strong>Dos puntos explicativos:</strong> introducen la evidencia normativa que justifica la afirmación.<br><strong>Verbo de exigencia normativa:</strong> "exige" (fuerza imperativa de la norma).`,s:"La instalación de pararrayos en la planta de almacenamiento de GLP de Mamonal",v:"no es",p:"opcional"}},
+{id:43,cat:"argumentacion",titulo:"Refutación técnica",def:"Identificación y desmontaje de un argumento técnico erróneo con evidencia o razonamiento estructural.",disc:["Todas las ingenierías"],
+ejemplo:"Aunque se afirma que el concreto de alta resistencia (f'c = 70 MPa) es frágil y, por tanto, inadecuado para estructuras sísmicas, los estudios de Wight y MacGregor (2018) demuestran que con el confinamiento adecuado del núcleo su ductilidad supera la del concreto convencional.",
+sint:{h:`<span class="syn-nx">Aunque</span> <span class="syn-v">se afirma</span> <span class="syn-nx">que</span> <span class="syn-s">el concreto de alta resistencia (f'c = 70 MPa)</span> <span class="syn-v">es</span> <span class="syn-p">frágil y, por tanto, inadecuado para estructuras sísmicas,</span> <span class="syn-s">los estudios de Wight y MacGregor (2018)</span> <span class="syn-v">demuestran</span> <span class="syn-nx">que</span> <span class="syn-p">con el confinamiento adecuado su ductilidad supera la del concreto convencional.</span>`,n:`<strong>Concesiva + principal:</strong> "Aunque se afirma que…, los estudios demuestran que…".<br><strong>Nexo concesivo adversativo:</strong> "Aunque" introduce la posición a refutar.<br><strong>Cita de autoridad:</strong> "Wight y MacGregor (2018)" aporta credibilidad.`,s:"los estudios de Wight y MacGregor (2018)",v:"demuestran",p:"que la ductilidad del concreto de alta resistencia supera la del convencional"}},
+{id:44,cat:"argumentacion",titulo:"Tesis de proyecto de grado",def:"Afirmación central del trabajo de ingeniería que el autor se propone demostrar o defender.",disc:["Todas las ingenierías"],
+ejemplo:"La implementación de un sistema de monitoreo estructural en tiempo real basado en sensores MEMS en el Puente Juanambú del departamento de Nariño permitirá detectar anomalías de vibración 72 horas antes de un evento de falla crítica.",
+sint:{h:`<span class="syn-s">La implementación de un sistema de monitoreo estructural en tiempo real basado en sensores MEMS en el Puente Juanambú</span> <span class="syn-v">permitirá</span> <span class="syn-p">detectar anomalías de vibración</span> <span class="syn-c">72 horas antes de un evento de falla crítica.</span>`,n:`<strong>Sujeto nominalizado:</strong> "La implementación de un sistema…" (infinitivo sustantivado).<br><strong>Verbo de predicción:</strong> "permitirá" (futuro, asertividad de tesis).<br><strong>CC Anticipación:</strong> "72 horas antes de…" cuantifica la ventana de alerta.`,s:"La implementación del sistema de monitoreo en el Puente Juanambú",v:"permitirá",p:"detectar anomalías de vibración 72 horas antes de un evento de falla"}},
+{id:45,cat:"argumentacion",titulo:"Argumento por analogía técnica",def:"Comparación entre dos sistemas o fenómenos técnicos similares para transferir conocimiento.",disc:["Mecánica","Eléctrica","Sistemas"],
+ejemplo:"El comportamiento de una red de distribución eléctrica ante sobrecargas es análogo al de un sistema hidráulico ante exceso de caudal: en ambos casos, el componente más débil falla primero para proteger el sistema completo.",
+sint:{h:`<span class="syn-s">El comportamiento de una red de distribución eléctrica ante sobrecargas</span> <span class="syn-v">es análogo</span> <span class="syn-c">al de un sistema hidráulico ante exceso de caudal:</span> <span class="syn-c">en ambos casos,</span> <span class="syn-s">el componente más débil</span> <span class="syn-v">falla primero</span> <span class="syn-c">para proteger el sistema completo.</span>`,n:`<strong>Oración copulativa de analogía:</strong> "es análogo al de…" (comparación estructural).<br><strong>Dos puntos explicativos:</strong> introducen la evidencia común de la analogía.<br><strong>CC de Propósito:</strong> "para proteger el sistema completo" (lógica del fusible técnico).`,s:"El comportamiento de una red de distribución eléctrica ante sobrecargas",v:"es análogo",p:"al de un sistema hidráulico ante exceso de caudal"}},
+{id:46,cat:"argumentacion",titulo:"Argumento por consecuencia",def:"Señala las consecuencias técnicas o económicas de no adoptar una medida de ingeniería.",disc:["Civil","Industrial","Ambiental"],
+ejemplo:"Si no se rehabilita el sistema de drenaje pluvial del barrio Moravia en Medellín antes de la temporada de lluvias de abril, las inundaciones provocarán daños estimados en $800 millones en infraestructura y afectarán a 3 400 familias.",
+sint:{h:`<span class="syn-nx">Si no</span> <span class="syn-v">se rehabilita</span> <span class="syn-p">el sistema de drenaje pluvial del barrio Moravia en Medellín</span> <span class="syn-c">antes de la temporada de lluvias de abril,</span> <span class="syn-s">las inundaciones</span> <span class="syn-v">provocarán</span> <span class="syn-p">daños estimados en $800 millones en infraestructura</span> <span class="syn-nx">y</span> <span class="syn-v">afectarán</span> <span class="syn-c">a 3 400 familias.</span>`,n:`<strong>Condicional negativa:</strong> "Si no se rehabilita…" prótasis de consecuencia catastrófica.<br><strong>CC Tiempo límite:</strong> "antes de la temporada de lluvias de abril" (urgencia temporal).<br><strong>Doble predicado de consecuencia:</strong> "provocarán" y "afectarán" cuantifican el impacto.`,s:"las inundaciones",v:"provocarán",p:"daños estimados en $800 millones en infraestructura"}},
+{id:47,cat:"argumentacion",titulo:"Deducción técnica",def:"Razonamiento que aplica un principio general de ingeniería a un caso específico para obtener una conclusión.",disc:["Mecánica","Civil","Eléctrica"],
+ejemplo:"Todo conductor eléctrico tiene resistencia que aumenta con la temperatura; el cable de aluminio AAC de la línea de transmisión aumenta su temperatura en verano; por tanto, su resistencia aumenta y la caída de tensión en el circuito se incrementa.",
+sint:{h:`<span class="syn-s">Todo conductor eléctrico</span> <span class="syn-v">tiene</span> <span class="syn-p">resistencia que aumenta con la temperatura;</span> <span class="syn-s">el cable de aluminio AAC de la línea de transmisión</span> <span class="syn-v">aumenta</span> <span class="syn-p">su temperatura en verano;</span> <span class="syn-nx">por tanto,</span> <span class="syn-s">su resistencia</span> <span class="syn-v">aumenta</span> <span class="syn-nx">y</span> <span class="syn-s">la caída de tensión</span> <span class="syn-v">se incrementa.</span>`,n:`<strong>Estructura silogística:</strong> premisa mayor (universal) → premisa menor (particular) → conclusión.<br><strong>Nexo conclusivo:</strong> "por tanto" separa las premisas de la conclusión.<br><strong>Coordinación en la conclusión:</strong> "y" encadena las dos consecuencias técnicas.`,s:"su resistencia",v:"aumenta",p:"(por tanto, la caída de tensión en el circuito se incrementa)"}},
+{id:48,cat:"argumentacion",titulo:"Comparación cuantitativa",def:"Contraste de magnitudes medidas para apoyar una decisión o conclusión técnica.",disc:["Todas las ingenierías"],
+ejemplo:"La eficiencia del motor de inducción de 55 kW (η = 93,4 %) supera en 6,2 puntos porcentuales a la del motor de corriente continua de igual potencia (η = 87,2 %), lo que justifica la sustitución tecnológica.",
+sint:{h:`<span class="syn-s">La eficiencia del motor de inducción de 55 kW (η = 93,4 %)</span> <span class="syn-v">supera en</span> <span class="syn-p">6,2 puntos porcentuales</span> <span class="syn-c">a la del motor de corriente continua de igual potencia (η = 87,2 %),</span> <span class="syn-nx">lo que</span> <span class="syn-v">justifica</span> <span class="syn-p">la sustitución tecnológica.</span>`,n:`<strong>OD comparativo:</strong> "6,2 puntos porcentuales" + referente "a la del motor de CC".<br><strong>Relativa explicativa "lo que":</strong> introduce la conclusión decisional.<br><strong>Datos entre paréntesis:</strong> los valores de η hacen comprobable la comparación.`,s:"La eficiencia del motor de inducción de 55 kW",v:"supera",p:"en 6,2 puntos porcentuales a la del motor de corriente continua"}},
+{id:49,cat:"argumentacion",titulo:"Llamado a la acción técnica",def:"Cierre de informe o propuesta que insta al decisor a actuar con base en los hallazgos presentados.",disc:["Todas las ingenierías"],
+ejemplo:"Ante los resultados expuestos, es imperativo que la Gerencia de Proyectos de Ecopetrol autorice la inspección ultrasónica de los 24 tanques de almacenamiento de crudo antes del 30 de junio de 2025, so pena de incumplir la Resolución 447 de 2021 del MADS.",
+sint:{h:`<span class="syn-c">Ante los resultados expuestos,</span> <span class="syn-v">es imperativo</span> <span class="syn-nx">que</span> <span class="syn-s">la Gerencia de Proyectos de Ecopetrol</span> <span class="syn-v">autorice</span> <span class="syn-p">la inspección ultrasónica de los 24 tanques de almacenamiento de crudo</span> <span class="syn-c">antes del 30 de junio de 2025,</span> <span class="syn-c">so pena de incumplir la Resolución 447 de 2021 del MADS.</span>`,n:`<strong>CC de anclaje:</strong> "Ante los resultados expuestos" vincula la acción con la evidencia.<br><strong>Impersonal imperativo:</strong> "es imperativo que…" + subjuntivo (máxima urgencia).<br><strong>CC de amenaza normativa:</strong> "so pena de incumplir la Resolución…" agrega presión regulatoria.`,s:"la Gerencia de Proyectos de Ecopetrol",v:"autorice",p:"la inspección ultrasónica de los 24 tanques de almacenamiento"}},
+{id:50,cat:"argumentacion",titulo:"Propuesta de solución técnica",def:"Presentación estructurada de una alternativa de ingeniería con sus fundamentos y ventajas.",disc:["Todas las ingenierías"],
+ejemplo:"Se propone implementar un sistema de recolección de aguas lluvias en la sede universitaria de la UPTC en Tunja, con capacidad de 200 m³, que reduciría el consumo de agua potable en un 35 % y disminuiría la carga al alcantarillado municipal en época de lluvias.",
+sint:{h:`<span class="syn-v">Se propone</span> <span class="syn-p">implementar un sistema de recolección de aguas lluvias en la sede universitaria de la UPTC en Tunja,</span> <span class="syn-c">con capacidad de 200 m³,</span> <span class="syn-nx">que</span> <span class="syn-v">reduciría</span> <span class="syn-p">el consumo de agua potable en un 35 %</span> <span class="syn-nx">y</span> <span class="syn-v">disminuiría</span> <span class="syn-c">la carga al alcantarillado municipal en época de lluvias.</span>`,n:`<strong>Impersonal propositivo:</strong> "Se propone" + infinitivo (modo canónico de propuesta).<br><strong>CC de capacidad:</strong> "con capacidad de 200 m³" (especificación de dimensionamiento).<br><strong>Condicional implícito:</strong> "reduciría…y disminuiría…" (condicional de beneficio proyectado).`,s:"(implícito: los autores del estudio)",v:"Se propone",p:"implementar un sistema de recolección de aguas lluvias"}},
+// ── TÉCNICA ADICIONAL (51-100) ──
+{id:51,cat:"tecnica",titulo:"Descripción de falla estructural",def:"Narración técnica del modo, causa y efecto de la falla de un elemento o sistema de ingeniería.",disc:["Civil","Mecánica"],
+ejemplo:"La viga IPE 300 de la cubierta industrial falló por pandeo lateral-torsional en el tramo de mayor momento flector, donde la longitud libre entre arriostramientos (6,2 m) superó la longitud crítica de pandeo (4,8 m) calculada según EN 1993-1-1.",
+sint:{h:`<span class="syn-s">La viga IPE 300 de la cubierta industrial</span> <span class="syn-v">falló</span> <span class="syn-c">por pandeo lateral-torsional en el tramo de mayor momento flector,</span> <span class="syn-nx">donde</span> <span class="syn-s">la longitud libre entre arriostramientos (6,2 m)</span> <span class="syn-v">superó</span> <span class="syn-p">la longitud crítica de pandeo (4,8 m)</span> <span class="syn-c">calculada según EN 1993-1-1.</span>`,n:`<strong>CC Causa:</strong> "por pandeo lateral-torsional" (preposición "por" + sustantivo técnico).<br><strong>Relativa especificativa:</strong> "donde la longitud libre… superó…" indica la condición de falla.<br><strong>Participio con referencia normativa:</strong> "calculada según EN 1993-1-1".`,s:"La viga IPE 300 de la cubierta industrial",v:"falló",p:"por pandeo lateral-torsional"}},
+{id:52,cat:"tecnica",titulo:"Redacción de supuestos de diseño",def:"Declaración explícita de las condiciones y parámetros asumidos que no pueden verificarse directamente.",disc:["Civil","Mecánica","Eléctrica"],
+ejemplo:"Para el presente diseño se asume que el terreno de fundación es homogéneo con capacidad portante neta de 120 kPa, que la napa freática se encuentra a más de 3 m de profundidad y que las cargas sísmicas siguen el espectro de diseño de la NSR-10 zona 2.",
+sint:{h:`<span class="syn-nx">Para el presente diseño</span> <span class="syn-v">se asume</span> <span class="syn-nx">que</span> <span class="syn-s">el terreno de fundación</span> <span class="syn-v">es</span> <span class="syn-p">homogéneo con capacidad portante neta de 120 kPa,</span> <span class="syn-nx">que</span> <span class="syn-s">la napa freática</span> <span class="syn-v">se encuentra a</span> <span class="syn-p">más de 3 m de profundidad</span> <span class="syn-nx">y que</span> <span class="syn-s">las cargas sísmicas</span> <span class="syn-v">siguen</span> <span class="syn-p">el espectro de diseño de la NSR-10 zona 2.</span>`,n:`<strong>CC Marco:</strong> "Para el presente diseño" delimita el alcance de los supuestos.<br><strong>Impersonal de asunción:</strong> "se asume que…" (verbo epistémico en voz refleja).<br><strong>Serie de tres subordinadas sustantivas:</strong> tres supuestos coordinados con "que…que…y que".`,s:"(implícito: el ingeniero de diseño)",v:"se asume",p:"que el terreno es homogéneo con capacidad portante de 120 kPa"}},
+{id:53,cat:"tecnica",titulo:"Descripción de ensayo de laboratorio",def:"Relato técnico del procedimiento, equipo y condiciones de una prueba realizada en laboratorio.",disc:["Mecánica","Civil","Química"],
+ejemplo:"El ensayo de tracción de la aleación Al 7075-T6 se realizó en la máquina universal Instron 5982 a una velocidad de desplazamiento de 2 mm/min, con probetas normalizadas según ASTM E8/E8M, en cámara de temperatura controlada a 23 ± 1 °C.",
+sint:{h:`<span class="syn-s">El ensayo de tracción de la aleación Al 7075-T6</span> <span class="syn-v">se realizó</span> <span class="syn-c">en la máquina universal Instron 5982</span> <span class="syn-c">a una velocidad de desplazamiento de 2 mm/min,</span> <span class="syn-c">con probetas normalizadas según ASTM E8/E8M,</span> <span class="syn-c">en cámara de temperatura controlada a 23 ± 1 °C.</span>`,n:`<strong>Voz pasiva:</strong> "se realizó" (énfasis en el proceso, no en el agente).<br><strong>Cuatro CC encadenados:</strong> instrumento, velocidad, normativa, temperatura (condiciones del ensayo).<br><strong>Referencia normativa:</strong> "según ASTM E8/E8M" certifica el procedimiento.`,s:"El ensayo de tracción de la aleación Al 7075-T6",v:"se realizó",p:"en la máquina universal Instron 5982 a 2 mm/min"}},
+{id:54,cat:"tecnica",titulo:"Interpretación de curva tensión-deformación",def:"Verbalización de los puntos característicos y regiones de la curva obtenida en un ensayo de materiales.",disc:["Mecánica","Civil"],
+ejemplo:"La curva tensión-deformación del acero ASTM A572 Gr.50 muestra una región elástica lineal hasta 345 MPa (límite de fluencia), una meseta de fluencia entre 0,2 % y 1,8 % de deformación y una región de endurecimiento por deformación hasta la resistencia última de 450 MPa.",
+sint:{h:`<span class="syn-s">La curva tensión-deformación del acero ASTM A572 Gr.50</span> <span class="syn-v">muestra</span> <span class="syn-p">una región elástica lineal hasta 345 MPa (límite de fluencia),</span> <span class="syn-p">una meseta de fluencia entre 0,2 % y 1,8 % de deformación</span> <span class="syn-nx">y</span> <span class="syn-p">una región de endurecimiento por deformación hasta la resistencia última de 450 MPa.</span>`,n:`<strong>OD tripartito:</strong> tres regiones de la curva como serie nominal.<br><strong>Paréntesis de equivalencia:</strong> "(límite de fluencia)" glosa el valor numérico.<br><strong>Valores de límites:</strong> 345 MPa, 0,2%–1,8%, 450 MPa estructuran la curva textualmente.`,s:"La curva tensión-deformación del acero ASTM A572 Gr.50",v:"muestra",p:"una región elástica lineal, una meseta de fluencia y una región de endurecimiento"}},
+{id:55,cat:"tecnica",titulo:"Descripción de sistema de control",def:"Explicación de los componentes, señales y lógica de un sistema de control automático.",disc:["Eléctrica","Industrial","Sistemas"],
+ejemplo:"El controlador PID implementado en el PLC Siemens S7-1500 regula la temperatura del horno de tratamiento térmico comparando la señal del termopar tipo K con el setpoint de 850 °C y ajustando la apertura de la válvula de gas proporcional cada 100 ms.",
+sint:{h:`<span class="syn-s">El controlador PID implementado en el PLC Siemens S7-1500</span> <span class="syn-v">regula</span> <span class="syn-p">la temperatura del horno de tratamiento térmico</span> <span class="syn-c">comparando la señal del termopar tipo K con el setpoint de 850 °C</span> <span class="syn-nx">y</span> <span class="syn-c">ajustando la apertura de la válvula de gas proporcional cada 100 ms.</span>`,n:`<strong>Sujeto con participio adjunto:</strong> "implementado en el PLC Siemens S7-1500".<br><strong>Gerundio de modo coordinado:</strong> "comparando… y ajustando…" describe cómo opera el control.<br><strong>CC Frecuencia:</strong> "cada 100 ms" cuantifica el ciclo de control.`,s:"El controlador PID implementado en el PLC Siemens S7-1500",v:"regula",p:"la temperatura del horno de tratamiento térmico"}},
+{id:56,cat:"tecnica",titulo:"Descripción de topología de red",def:"Explicación de la arquitectura y conexiones de una red de comunicaciones o eléctrica.",disc:["Sistemas","Eléctrica"],
+ejemplo:"La red de fibra óptica del campus de la Universidad del Norte en Barranquilla tiene topología estrella extendida con un nodo central de 10 Gbps, doce switches de distribución de 1 Gbps y 240 puntos de acceso inalámbrico IEEE 802.11ax.",
+sint:{h:`<span class="syn-s">La red de fibra óptica del campus de la Universidad del Norte en Barranquilla</span> <span class="syn-v">tiene</span> <span class="syn-p">topología estrella extendida</span> <span class="syn-c">con un nodo central de 10 Gbps,</span> <span class="syn-c">doce switches de distribución de 1 Gbps</span> <span class="syn-nx">y</span> <span class="syn-c">240 puntos de acceso inalámbrico IEEE 802.11ax.</span>`,n:`<strong>Verbo de posesión técnica:</strong> "tiene topología…" (descripción de arquitectura).<br><strong>Serie de CC técnicos:</strong> tres componentes de la red con especificación de velocidad y estándar.<br><strong>Referencia de estándar IEEE:</strong> "802.11ax" precisa la tecnología inalámbrica.`,s:"La red de fibra óptica del campus de la Universidad del Norte en Barranquilla",v:"tiene",p:"topología estrella extendida con nodo central de 10 Gbps"}},
+{id:57,cat:"tecnica",titulo:"Cálculo de carga eléctrica",def:"Determinación y justificación de la demanda eléctrica de una instalación según normativa.",disc:["Eléctrica","Industrial"],
+ejemplo:"La demanda máxima calculada para el hospital de tercer nivel de Manizales asciende a 3,8 MVA, determinada aplicando los factores de demanda del RETIE artículo 14 a las cargas de equipos médicos, iluminación, climatización y sistemas de emergencia.",
+sint:{h:`<span class="syn-s">La demanda máxima calculada para el hospital de tercer nivel de Manizales</span> <span class="syn-v">asciende a</span> <span class="syn-p">3,8 MVA,</span> <span class="syn-c">determinada aplicando los factores de demanda del RETIE artículo 14</span> <span class="syn-c">a las cargas de equipos médicos, iluminación, climatización y sistemas de emergencia.</span>`,n:`<strong>Verbo de cuantificación:</strong> "asciende a" (valor monetario/técnico que "sube" a ese nivel).<br><strong>Participio adjunto de justificación:</strong> "determinada aplicando…" explica el método.<br><strong>Referencia reglamentaria:</strong> "RETIE artículo 14" ancla el cálculo a la norma colombiana.`,s:"La demanda máxima calculada para el hospital de tercer nivel de Manizales",v:"asciende a",p:"3,8 MVA"}},
+{id:58,cat:"tecnica",titulo:"Descripción de proceso industrial",def:"Explicación de las etapas, equipos y parámetros de operación de un proceso de manufactura o transformación.",disc:["Industrial","Química","Mecánica"],
+ejemplo:"El proceso de galvanización en caliente del perfil de acero comprende las etapas de desengrase alcalino a 70 °C, decapado en HCl al 15 %, fluxado en ZnCl₂/NH₄Cl y sumersión en baño de zinc fundido a 455 °C durante 3 minutos.",
+sint:{h:`<span class="syn-s">El proceso de galvanización en caliente del perfil de acero</span> <span class="syn-v">comprende</span> <span class="syn-p">las etapas de desengrase alcalino a 70 °C,</span> <span class="syn-p">decapado en HCl al 15 %,</span> <span class="syn-p">fluxado en ZnCl₂/NH₄Cl</span> <span class="syn-nx">y</span> <span class="syn-p">sumersión en baño de zinc fundido a 455 °C durante 3 minutos.</span>`,n:`<strong>Verbo de composición:</strong> "comprende las etapas de…" (estructura de proceso secuencial).<br><strong>Serie de cuatro OD nominales:</strong> cada etapa lleva parámetros de proceso integrados.<br><strong>Especificaciones fisicoquímicas:</strong> temperaturas, concentraciones y tiempos precisos.`,s:"El proceso de galvanización en caliente del perfil de acero",v:"comprende",p:"las etapas de desengrase, decapado, fluxado y sumersión"}},
+{id:59,cat:"tecnica",titulo:"Reporte de avance de obra",def:"Documento que informa el porcentaje de ejecución, actividades realizadas y proyección de una obra de construcción.",disc:["Civil","Industrial"],
+ejemplo:"Al corte del 30 de septiembre de 2024, la obra de ampliación del terminal de carga del aeropuerto El Dorado presenta un avance físico del 68 %, con la estructura metálica al 100 %, la cubierta al 75 % y las obras civiles interiores al 42 %.",
+sint:{h:`<span class="syn-c">Al corte del 30 de septiembre de 2024,</span> <span class="syn-s">la obra de ampliación del terminal de carga del aeropuerto El Dorado</span> <span class="syn-v">presenta</span> <span class="syn-p">un avance físico del 68 %,</span> <span class="syn-c">con la estructura metálica al 100 %, la cubierta al 75 % y las obras civiles interiores al 42 %.</span>`,n:`<strong>CC Temporal de corte:</strong> "Al corte del 30 de septiembre de 2024" (fórmula de reporte periódico).<br><strong>Verbo de estado:</strong> "presenta" (situación actual de la obra).<br><strong>Desglose parentético:</strong> tres subactividades con porcentajes individuales de avance.`,s:"la obra de ampliación del terminal de carga del aeropuerto El Dorado",v:"presenta",p:"un avance físico del 68 %"}},
+{id:60,cat:"tecnica",titulo:"Descripción de software de ingeniería",def:"Especificación de la función, entradas, parámetros y salidas de una herramienta computacional de ingeniería.",disc:["Sistemas","Mecánica","Civil"],
+ejemplo:"El software EPANET 2.2, desarrollado por la US-EPA, modela el comportamiento hidráulico de redes de distribución de agua a presión; requiere como entradas el trazado georreferenciado, los diámetros de tuberías, las demandas nodales y las curvas de las bombas.",
+sint:{h:`<span class="syn-s">El software EPANET 2.2, desarrollado por la US-EPA,</span> <span class="syn-v">modela</span> <span class="syn-p">el comportamiento hidráulico de redes de distribución de agua a presión;</span> <span class="syn-v">requiere</span> <span class="syn-c">como entradas el trazado georreferenciado, los diámetros de tuberías, las demandas nodales y las curvas de las bombas.</span>`,n:`<strong>Aposición explicativa:</strong> "desarrollado por la US-EPA" presenta la fuente.<br><strong>Dos cláusulas yuxtapuestas:</strong> función (modela) + requerimientos (requiere).<br><strong>Serie de entradas:</strong> cuatro datos de entrada como OD de "requiere".`,s:"El software EPANET 2.2",v:"modela",p:"el comportamiento hidráulico de redes de distribución de agua a presión"}},
+{id:61,cat:"informe",titulo:"Diagnóstico técnico",def:"Identificación documentada de las condiciones actuales de un sistema, equipo o infraestructura.",disc:["Civil","Mecánica","Eléctrica"],
+ejemplo:"El diagnóstico de la subestación eléctrica de 115/13,2 kV de Cali Sur revela que el 40 % de los transformadores de potencia presentan aceite dieléctrico con índice de acidez superior a 0,3 mg KOH/g, indicativo de degradación acelerada del aislamiento.",
+sint:{h:`<span class="syn-s">El diagnóstico de la subestación eléctrica de 115/13,2 kV de Cali Sur</span> <span class="syn-v">revela</span> <span class="syn-nx">que</span> <span class="syn-s">el 40 % de los transformadores de potencia</span> <span class="syn-v">presentan</span> <span class="syn-p">aceite dieléctrico con índice de acidez superior a 0,3 mg KOH/g,</span> <span class="syn-c">indicativo de degradación acelerada del aislamiento.</span>`,n:`<strong>Verbo de hallazgo:</strong> "revela" (el diagnóstico descubre algo).<br><strong>Subordinada sustantiva:</strong> "que el 40%… presentan…" (CD de revelar).<br><strong>Aposición diagnóstica:</strong> "indicativo de degradación…" interpreta el dato.`,s:"El diagnóstico de la subestación eléctrica de Cali Sur",v:"revela",p:"que el 40 % de los transformadores presentan aceite con acidez superior a 0,3 mg KOH/g"}},
+{id:62,cat:"informe",titulo:"Evaluación de impacto",def:"Medición y valoración de las consecuencias de un proyecto sobre variables técnicas, sociales o ambientales.",disc:["Ambiental","Civil","Industrial"],
+ejemplo:"La operación del relleno sanitario regional de Antioquia lixivia concentraciones de amoniaco de 380 mg/L en las aguas subterráneas del área de influencia directa, valor que supera en 19 veces el límite de 20 mg/L establecido en el Decreto 1076 de 2015.",
+sint:{h:`<span class="syn-s">La operación del relleno sanitario regional de Antioquia</span> <span class="syn-v">lixivia</span> <span class="syn-p">concentraciones de amoniaco de 380 mg/L</span> <span class="syn-c">en las aguas subterráneas del área de influencia directa,</span> <span class="syn-c">valor que supera en 19 veces el límite de 20 mg/L establecido en el Decreto 1076 de 2015.</span>`,n:`<strong>Verbo técnico especializado:</strong> "lixivia" (proceso de filtración de contaminantes).<br><strong>CC de lugar preciso:</strong> "en las aguas subterráneas del área de influencia directa".<br><strong>Aposición comparativa normativa:</strong> "valor que supera en 19 veces…" cuantifica el incumplimiento.`,s:"La operación del relleno sanitario regional de Antioquia",v:"lixivia",p:"concentraciones de amoniaco de 380 mg/L"}},
+{id:63,cat:"informe",titulo:"Cronograma y hitos",def:"Descripción textual del plan de trabajo con fechas clave y actividades del proyecto.",disc:["Todas las ingenierías"],
+ejemplo:"El proyecto contempla cuatro hitos principales: la aprobación del diseño conceptual en la semana 4, el inicio de fabricación de módulos en la semana 10, las pruebas de aceptación en fábrica (FAT) en la semana 22 y la puesta en marcha en la semana 28.",
+sint:{h:`<span class="syn-s">El proyecto</span> <span class="syn-v">contempla</span> <span class="syn-p">cuatro hitos principales:</span> <span class="syn-p">la aprobación del diseño conceptual en la semana 4,</span> <span class="syn-p">el inicio de fabricación de módulos en la semana 10,</span> <span class="syn-p">las pruebas de aceptación en fábrica (FAT) en la semana 22</span> <span class="syn-nx">y</span> <span class="syn-p">la puesta en marcha en la semana 28.</span>`,n:`<strong>Verbo de planificación:</strong> "contempla" (el proyecto incluye en su alcance).<br><strong>Dos puntos de enumeración:</strong> introducen cuatro hitos nominales.<br><strong>CC Tiempo de hito:</strong> cada evento lleva su semana de referencia.`,s:"El proyecto",v:"contempla",p:"cuatro hitos principales"}},
+{id:64,cat:"informe",titulo:"Síntesis de estado del arte",def:"Resumen crítico del conocimiento existente sobre un tema de ingeniería basado en fuentes recientes.",disc:["Todas las ingenierías"],
+ejemplo:"Las investigaciones recientes de García et al. (2023) y Rodríguez & Park (2022) coinciden en que la adición de nanofibras de carbono al concreto en proporciones de 0,1 % a 0,5 % en masa incrementa la resistencia a la flexión entre un 20 % y un 45 %.",
+sint:{h:`<span class="syn-s">Las investigaciones recientes de García et al. (2023) y Rodríguez & Park (2022)</span> <span class="syn-v">coinciden en</span> <span class="syn-nx">que</span> <span class="syn-s">la adición de nanofibras de carbono al concreto en proporciones de 0,1 % a 0,5 % en masa</span> <span class="syn-v">incrementa</span> <span class="syn-p">la resistencia a la flexión entre un 20 % y un 45 %.</span>`,n:`<strong>Sujeto doble de autoría:</strong> dos citas APA como sujeto colectivo.<br><strong>Verbo de consenso:</strong> "coinciden en que…" (síntesis de acuerdo bibliográfico).<br><strong>Rango cuantitativo:</strong> "entre un 20 % y un 45 %" presenta la variación de resultados.`,s:"Las investigaciones de García et al. (2023) y Rodríguez & Park (2022)",v:"coinciden en",p:"que la adición de nanofibras incrementa la resistencia a la flexión entre 20 % y 45 %"}},
+{id:65,cat:"informe",titulo:"Descripción de cronograma de mantenimiento",def:"Especificación de las tareas, frecuencias y responsables del mantenimiento preventivo de un equipo.",disc:["Mecánica","Industrial","Eléctrica"],
+ejemplo:"El mantenimiento preventivo del compresor de tornillo Atlas Copco GA90 requiere cambio de aceite lubricante cada 4 000 horas de operación, revisión del filtro de aire cada 2 000 horas y calibración del presostato diferencial anualmente.",
+sint:{h:`<span class="syn-s">El mantenimiento preventivo del compresor de tornillo Atlas Copco GA90</span> <span class="syn-v">requiere</span> <span class="syn-p">cambio de aceite lubricante</span> <span class="syn-c">cada 4 000 horas de operación,</span> <span class="syn-p">revisión del filtro de aire</span> <span class="syn-c">cada 2 000 horas</span> <span class="syn-nx">y</span> <span class="syn-p">calibración del presostato diferencial</span> <span class="syn-c">anualmente.</span>`,n:`<strong>Verbo de requisito técnico:</strong> "requiere" (obligación de mantenimiento).<br><strong>Tres pares tarea+frecuencia:</strong> cada tarea va acompañada de su intervalo.<br><strong>Variación de CC temporales:</strong> "cada 4 000 h", "cada 2 000 h", "anualmente".`,s:"El mantenimiento preventivo del compresor Atlas Copco GA90",v:"requiere",p:"cambio de aceite, revisión del filtro y calibración del presostato"}},
+{id:66,cat:"cientifico",titulo:"Modelado matemático",def:"Formulación y justificación de las ecuaciones que representan el comportamiento de un sistema físico.",disc:["Mecánica","Eléctrica","Civil"],
+ejemplo:"El modelo dinámico del edificio de 10 pisos se representa mediante el sistema de ecuaciones diferenciales M·ẍ + C·ẋ + K·x = F(t), donde M, C y K son las matrices de masa, amortiguamiento y rigidez, y F(t) es el vector de fuerzas sísmicas.",
+sint:{h:`<span class="syn-s">El modelo dinámico del edificio de 10 pisos</span> <span class="syn-v">se representa</span> <span class="syn-c">mediante el sistema de ecuaciones diferenciales M·ẍ + C·ẋ + K·x = F(t),</span> <span class="syn-nx">donde</span> <span class="syn-p">M, C y K son las matrices de masa, amortiguamiento y rigidez, y F(t) es el vector de fuerzas sísmicas.</span>`,n:`<strong>Voz pasiva refleja:</strong> "se representa mediante" (instrumento = ecuación).<br><strong>Ecuación tipográfica:</strong> integrada como CC del instrumento.<br><strong>Glosario con "donde":</strong> cuatro términos matemáticos definidos en serie.`,s:"El modelo dinámico del edificio de 10 pisos",v:"se representa",p:"mediante el sistema de ecuaciones diferenciales M·ẍ + C·ẋ + K·x = F(t)"}},
+{id:67,cat:"cientifico",titulo:"Discusión de resultados de simulación",def:"Análisis crítico comparando los resultados de la simulación con los valores esperados o de referencia.",disc:["Mecánica","Civil","Sistemas"],
+ejemplo:"La simulación CFD del flujo turbulento en la tobera de la turbina Pelton subestima la presión dinámica en la zona de impacto en un 7,3 % respecto a los valores experimentales de Eisner (2019), diferencia atribuida a la modelación del salto hidráulico en la ecuación k-ε.",
+sint:{h:`<span class="syn-s">La simulación CFD del flujo turbulento en la tobera de la turbina Pelton</span> <span class="syn-v">subestima</span> <span class="syn-p">la presión dinámica en la zona de impacto en un 7,3 %</span> <span class="syn-c">respecto a los valores experimentales de Eisner (2019),</span> <span class="syn-c">diferencia atribuida a la modelación del salto hidráulico en la ecuación k-ε.</span>`,n:`<strong>Verbo de discrepancia:</strong> "subestima" (señala la dirección del error).<br><strong>Cuantificación del error:</strong> "en un 7,3 %" + referente experimental.<br><strong>Aposición causal:</strong> "diferencia atribuida a…" explica el origen del desacuerdo.`,s:"La simulación CFD del flujo turbulento en la tobera de la turbina Pelton",v:"subestima",p:"la presión dinámica en la zona de impacto en un 7,3 %"}},
+{id:68,cat:"cientifico",titulo:"Presentación de resultados estadísticos",def:"Descripción de medias, desviaciones estándar, intervalos de confianza y pruebas de hipótesis.",disc:["Industrial","Mecánica","Civil"],
+ejemplo:"El tiempo medio de ciclo del proceso de inyección de plástico fue de 38,4 s con una desviación estándar de 2,1 s (n = 120 muestras); la prueba t de Student confirma que difiere significativamente del tiempo objetivo de 35 s (p = 0,003 < 0,05).",
+sint:{h:`<span class="syn-s">El tiempo medio de ciclo del proceso de inyección de plástico</span> <span class="syn-v">fue de</span> <span class="syn-p">38,4 s con una desviación estándar de 2,1 s (n = 120 muestras);</span> <span class="syn-s">la prueba t de Student</span> <span class="syn-v">confirma</span> <span class="syn-nx">que</span> <span class="syn-p">difiere significativamente del tiempo objetivo de 35 s (p = 0,003 < 0,05).</span>`,n:`<strong>Oración copulativa estadística:</strong> "fue de 38,4 s" con parámetros entre paréntesis.<br><strong>Prueba de hipótesis citada:</strong> "la prueba t de Student confirma que…".<br><strong>Valor p entre paréntesis:</strong> "(p = 0,003 < 0,05)" justifica la significancia estadística.`,s:"El tiempo medio de ciclo del proceso de inyección de plástico",v:"fue de",p:"38,4 s con una desviación estándar de 2,1 s"}},
+{id:69,cat:"cientifico",titulo:"Descripción de material compuesto",def:"Caracterización técnica de las propiedades de un material obtenido de la combinación de dos o más componentes.",disc:["Mecánica","Civil","Industrial"],
+ejemplo:"El compuesto CFRP (fibra de carbono en matriz epoxi) utilizado en el refuerzo del ala del dron presenta una resistencia específica de 1 600 MPa/(g/cm³), cuatro veces superior a la del acero de alta resistencia, con una densidad de solo 1,6 g/cm³.",
+sint:{h:`<span class="syn-s">El compuesto CFRP (fibra de carbono en matriz epoxi) utilizado en el refuerzo del ala del dron</span> <span class="syn-v">presenta</span> <span class="syn-p">una resistencia específica de 1 600 MPa/(g/cm³),</span> <span class="syn-c">cuatro veces superior a la del acero de alta resistencia,</span> <span class="syn-c">con una densidad de solo 1,6 g/cm³.</span>`,n:`<strong>Sujeto con sigla explicada:</strong> "CFRP (fibra de carbono en matriz epoxi)".<br><strong>Comparación de ratio:</strong> "cuatro veces superior a…" (índice de mejora).<br><strong>CC de propiedad adicional:</strong> "con una densidad de solo 1,6 g/cm³" (adverbio "solo" resalta ligereza).`,s:"El compuesto CFRP utilizado en el refuerzo del ala del dron",v:"presenta",p:"una resistencia específica de 1 600 MPa/(g/cm³)"}},
+{id:70,cat:"cientifico",titulo:"Descripción de software científico",def:"Presentación del método numérico, las entradas y salidas de una herramienta de simulación científica.",disc:["Mecánica","Civil","Eléctrica"],
+ejemplo:"MATLAB R2024a resuelve el sistema de ecuaciones diferenciales parciales del modelo de conducción de calor en 2D mediante el método de diferencias finitas con paso de tiempo adaptativo (ODE45), generando como salida los campos de temperatura en formato .mat.",
+sint:{h:`<span class="syn-s">MATLAB R2024a</span> <span class="syn-v">resuelve</span> <span class="syn-p">el sistema de ecuaciones diferenciales parciales del modelo de conducción de calor en 2D</span> <span class="syn-c">mediante el método de diferencias finitas con paso de tiempo adaptativo (ODE45),</span> <span class="syn-c">generando como salida los campos de temperatura en formato .mat.</span>`,n:`<strong>Sujeto de herramienta:</strong> "MATLAB R2024a" (software como agente).<br><strong>CC Instrumento:</strong> "mediante el método de diferencias finitas…" especifica el método numérico.<br><strong>Gerundio de resultado:</strong> "generando como salida…" describe el output.`,s:"MATLAB R2024a",v:"resuelve",p:"el sistema de ecuaciones diferenciales del modelo de conducción de calor"}},
+{id:71,cat:"normativa",titulo:"Redacción de alcance de proyecto",def:"Delimitación precisa de lo que incluye y excluye el proyecto de ingeniería.",disc:["Todas las ingenierías"],
+ejemplo:"El alcance de este proyecto cubre el diseño, suministro e instalación del sistema de detección y supresión de incendios para los niveles 1 al 5 del edificio Torres del Parque en Bogotá, sin incluir la conexión a la central de monitoreo externa ni los permisos de Bomberos.",
+sint:{h:`<span class="syn-s">El alcance de este proyecto</span> <span class="syn-v">cubre</span> <span class="syn-p">el diseño, suministro e instalación del sistema de detección y supresión de incendios para los niveles 1 al 5 del edificio Torres del Parque en Bogotá,</span> <span class="syn-c">sin incluir la conexión a la central de monitoreo externa ni los permisos de Bomberos.</span>`,n:`<strong>Verbo de cobertura:</strong> "cubre" (alcance positivo).<br><strong>CC Exclusión:</strong> "sin incluir…" (gerundio de exclusión, lo que está fuera del alcance).<br><strong>Serie OD de entregables:</strong> "diseño, suministro e instalación" (tres verbos nominalizados).`,s:"El alcance de este proyecto",v:"cubre",p:"el diseño, suministro e instalación del sistema de detección y supresión"}},
+{id:72,cat:"normativa",titulo:"Especificación de prueba de aceptación",def:"Descripción de los criterios y procedimiento de la prueba que debe superar un equipo antes de su entrega.",disc:["Mecánica","Eléctrica","Industrial"],
+ejemplo:"Durante la prueba de aceptación en fábrica (FAT) del variador de frecuencia de 500 kW, se verificará que el tiempo de respuesta ante escalón de frecuencia del 10 % al 60 Hz sea inferior a 150 ms y que la distorsión armónica total (THD) en corriente no supere el 5 %.",
+sint:{h:`<span class="syn-c">Durante la prueba de aceptación en fábrica (FAT) del variador de frecuencia de 500 kW,</span> <span class="syn-v">se verificará</span> <span class="syn-nx">que</span> <span class="syn-s">el tiempo de respuesta ante escalón de frecuencia</span> <span class="syn-v">sea inferior a</span> <span class="syn-p">150 ms</span> <span class="syn-nx">y que</span> <span class="syn-s">la distorsión armónica total (THD)</span> <span class="syn-v">no supere</span> <span class="syn-p">el 5 %.</span>`,n:`<strong>CC Marco de prueba:</strong> "Durante la FAT del variador de 500 kW".<br><strong>Impersonal futuro:</strong> "se verificará" (protocolo de prueba obligatorio).<br><strong>Serie de criterios de aceptación:</strong> dos subordinadas sustantivas con umbrales numéricos.`,s:"(implícito: el equipo de pruebas)",v:"se verificará",p:"que el tiempo de respuesta sea inferior a 150 ms"}},
+{id:73,cat:"normativa",titulo:"Hoja de datos de seguridad",def:"Documento que describe los riesgos, propiedades peligrosas y medidas de seguridad de una sustancia química usada en ingeniería.",disc:["Química","Industrial","Ambiental"],
+ejemplo:"El hidróxido de sodio (NaOH, ficha de seguridad GHS05/GHS07) es corrosivo para piel y mucosas en concentraciones superiores al 0,5 % m/m; ante un derrame, se debe neutralizar con ácido acético diluido y contener con arena absorbente.",
+sint:{h:`<span class="syn-s">El hidróxido de sodio (NaOH, ficha GHS05/GHS07)</span> <span class="syn-v">es</span> <span class="syn-p">corrosivo para piel y mucosas en concentraciones superiores al 0,5 % m/m;</span> <span class="syn-c">ante un derrame,</span> <span class="syn-v">se debe neutralizar</span> <span class="syn-p">con ácido acético diluido</span> <span class="syn-nx">y</span> <span class="syn-v">contener</span> <span class="syn-c">con arena absorbente.</span>`,n:`<strong>Oración copulativa de caracterización de peligro:</strong> "es corrosivo…".<br><strong>CC Condicional de emergencia:</strong> "ante un derrame" (condición de accidente).<br><strong>Perífrasis de obligación de respuesta:</strong> "se debe neutralizar y contener" (protocolo).`,s:"El hidróxido de sodio (NaOH)",v:"es",p:"corrosivo para piel y mucosas en concentraciones superiores al 0,5 % m/m"}},
+{id:74,cat:"normativa",titulo:"Pliego de condiciones",def:"Documento contractual que establece las condiciones técnicas y administrativas de una licitación pública.",disc:["Civil","Industrial"],
+ejemplo:"El proponente deberá acreditar experiencia en construcción de puentes vehiculares de luz mayor a 40 m, con al menos dos contratos similares ejecutados en Colombia en los últimos diez años, cuya sumatoria de valor actualizado supere los $15 000 millones COP.",
+sint:{h:`<span class="syn-s">El proponente</span> <span class="syn-v">deberá acreditar</span> <span class="syn-p">experiencia en construcción de puentes vehiculares de luz mayor a 40 m,</span> <span class="syn-c">con al menos dos contratos similares ejecutados en Colombia en los últimos diez años,</span> <span class="syn-c">cuya sumatoria de valor actualizado supere los $15 000 millones COP.</span>`,n:`<strong>Perífrasis de obligación futura:</strong> "deberá acreditar" (futuro de obligación contractual).<br><strong>CC de acreditación:</strong> "con al menos dos contratos similares…" (condición de habilitación).<br><strong>Relativa posesiva:</strong> "cuya sumatoria… supere…" (requisito financiero).`,s:"El proponente",v:"deberá acreditar",p:"experiencia en construcción de puentes vehiculares de luz mayor a 40 m"}},
+{id:75,cat:"normativa",titulo:"Reglamento de operación",def:"Conjunto de reglas que gobiernan la operación segura y eficiente de un sistema o instalación.",disc:["Eléctrica","Industrial","Civil"],
+ejemplo:"Queda estrictamente prohibido operar el sistema de alta tensión de 115 kV sin la autorización escrita del jefe de operaciones y sin haber verificado la correcta instalación de las puestas a tierra temporales en los tres conductores de fase.",
+sint:{h:`<span class="syn-v">Queda estrictamente prohibido</span> <span class="syn-p">operar el sistema de alta tensión de 115 kV</span> <span class="syn-c">sin la autorización escrita del jefe de operaciones</span> <span class="syn-nx">y</span> <span class="syn-c">sin haber verificado la correcta instalación de las puestas a tierra temporales en los tres conductores de fase.</span>`,n:`<strong>Perífrasis de prohibición:</strong> "queda estrictamente prohibido" + infinitivo (norma absoluta).<br><strong>Adverbio intensificador:</strong> "estrictamente" refuerza la prohibición.<br><strong>Doble CC de condición negativa:</strong> "sin…y sin…" especifican las dos condiciones violadas.`,s:"(implícito: cualquier operador)",v:"Queda estrictamente prohibido",p:"operar el sistema de alta tensión de 115 kV sin autorización"}},
+{id:76,cat:"argumentacion",titulo:"Argumento de viabilidad técnica",def:"Demostración de que una solución de ingeniería es técnicamente realizable con los medios disponibles.",disc:["Todas las ingenierías"],
+ejemplo:"La instalación de una línea de transmisión de 220 kV entre Sogamoso y Yopal es técnicamente viable: la topografía del corredor permite la servidumbre de 30 m de ancho, las torres autosoportadas de 40 m están disponibles en el mercado nacional y la distancia de 180 km está dentro de los límites de eficiencia de la tecnología HVAC.",
+sint:{h:`<span class="syn-s">La instalación de una línea de transmisión de 220 kV entre Sogamoso y Yopal</span> <span class="syn-v">es</span> <span class="syn-p">técnicamente viable:</span> <span class="syn-s">la topografía del corredor</span> <span class="syn-v">permite</span> <span class="syn-p">la servidumbre de 30 m,</span> <span class="syn-s">las torres</span> <span class="syn-v">están disponibles</span> <span class="syn-c">en el mercado nacional</span> <span class="syn-nx">y</span> <span class="syn-s">la distancia de 180 km</span> <span class="syn-v">está dentro de</span> <span class="syn-p">los límites de eficiencia de la tecnología HVAC.</span>`,n:`<strong>Tesis copulativa:</strong> "es técnicamente viable" seguida de dos puntos explicativos.<br><strong>Tres argumentos en serie:</strong> topografía, disponibilidad de torres y distancia.<br><strong>Adverbio evaluativo:</strong> "técnicamente" modaliza la factibilidad.`,s:"La instalación de una línea de transmisión de 220 kV entre Sogamoso y Yopal",v:"es",p:"técnicamente viable"}},
+{id:77,cat:"argumentacion",titulo:"Argumento de sostenibilidad",def:"Justificación técnica basada en criterios de eficiencia energética, impacto ambiental o uso de recursos.",disc:["Ambiental","Civil","Industrial"],
+ejemplo:"La sustitución de los sistemas de iluminación de vapor de sodio por LED en las 12 000 luminarias de alumbrado público de Cali reduciría las emisiones de CO₂ en 4 800 toneladas/año y el consumo energético del municipio en un 58 %.",
+sint:{h:`<span class="syn-s">La sustitución de los sistemas de iluminación de vapor de sodio por LED en las 12 000 luminarias de alumbrado público de Cali</span> <span class="syn-v">reduciría</span> <span class="syn-p">las emisiones de CO₂ en 4 800 toneladas/año</span> <span class="syn-nx">y</span> <span class="syn-p">el consumo energético del municipio en un 58 %.</span>`,n:`<strong>Sujeto nominalizado largo:</strong> "La sustitución de… por LED…" (acción de ingeniería como sujeto).<br><strong>Condicional de beneficio:</strong> "reduciría" (condicional simple, proyección de mejora).<br><strong>OD doble coordinado:</strong> dos impactos cuantificados (CO₂ y energía).`,s:"La sustitución de los sistemas de iluminación de vapor de sodio por LED",v:"reduciría",p:"las emisiones de CO₂ en 4 800 toneladas/año"}},
+{id:78,cat:"argumentacion",titulo:"Argumento interdisciplinar",def:"Recurso a principios de otra disciplina de ingeniería para fortalecer un argumento técnico.",disc:["Mecánica","Civil","Sistemas"],
+ejemplo:"Desde la perspectiva de la ingeniería de sistemas, la red vial de Medellín puede modelarse como un grafo dirigido ponderado donde la resiliencia ante fallas de arco equivale a la redundancia estructural que analiza la ingeniería civil.",
+sint:{h:`<span class="syn-c">Desde la perspectiva de la ingeniería de sistemas,</span> <span class="syn-s">la red vial de Medellín</span> <span class="syn-v">puede modelarse como</span> <span class="syn-p">un grafo dirigido ponderado</span> <span class="syn-nx">donde</span> <span class="syn-s">la resiliencia ante fallas de arco</span> <span class="syn-v">equivale a</span> <span class="syn-p">la redundancia estructural que analiza la ingeniería civil.</span>`,n:`<strong>CC de perspectiva disciplinar:</strong> "Desde la perspectiva de la ingeniería de sistemas".<br><strong>Perífrasis modal:</strong> "puede modelarse como" (posibilidad analógica).<br><strong>Relativa con "donde":</strong> traduce el concepto entre disciplinas.`,s:"la red vial de Medellín",v:"puede modelarse como",p:"un grafo dirigido ponderado"}},
+{id:79,cat:"argumentacion",titulo:"Argumento de precedente",def:"Cita de un proyecto previo exitoso para justificar la adopción de una solución similar.",disc:["Civil","Eléctrica","Industrial"],
+ejemplo:"La experiencia del Túnel de la Línea, construido con tuneladora TBM en roca metamórfica de dureza 180 MPa, demuestra que es factible aplicar la misma tecnología en el proyecto del Túnel de Toyo en Antioquia, cuya roca presenta características geomecánicas similares.",
+sint:{h:`<span class="syn-s">La experiencia del Túnel de la Línea, construido con tuneladora TBM en roca metamórfica de dureza 180 MPa,</span> <span class="syn-v">demuestra</span> <span class="syn-nx">que</span> <span class="syn-v">es factible</span> <span class="syn-p">aplicar la misma tecnología en el proyecto del Túnel de Toyo en Antioquia,</span> <span class="syn-c">cuya roca presenta características geomecánicas similares.</span>`,n:`<strong>Sujeto de precedente:</strong> "La experiencia del Túnel de la Línea…" (caso previo colombiano).<br><strong>Verbo de demostración:</strong> "demuestra que es factible…".<br><strong>Relativa con "cuya":</strong> transfiere la similitud al nuevo proyecto.`,s:"La experiencia del Túnel de la Línea",v:"demuestra",p:"que es factible aplicar la misma tecnología en el Túnel de Toyo"}},
+{id:80,cat:"argumentacion",titulo:"Argumento de impacto social",def:"Cuantificación del beneficio del proyecto sobre la población o las condiciones de vida.",disc:["Civil","Ambiental","Industrial"],
+ejemplo:"La construcción del acueducto veredal de Uribia en La Guajira beneficiará a 8 400 personas que actualmente reciben agua de calidad no potable, reducirá la tasa de enfermedades diarreicas en un 70 % y disminuirá el tiempo de acarreo de agua de 4 horas a 15 minutos por familia.",
+sint:{h:`<span class="syn-s">La construcción del acueducto veredal de Uribia en La Guajira</span> <span class="syn-v">beneficiará a</span> <span class="syn-p">8 400 personas que actualmente reciben agua de calidad no potable,</span> <span class="syn-v">reducirá</span> <span class="syn-p">la tasa de enfermedades diarreicas en un 70 %</span> <span class="syn-nx">y</span> <span class="syn-v">disminuirá</span> <span class="syn-c">el tiempo de acarreo de agua de 4 horas a 15 minutos por familia.</span>`,n:`<strong>Sujeto de proyecto social:</strong> "La construcción del acueducto veredal…".<br><strong>Triada de predicados futuros:</strong> "beneficiará / reducirá / disminuirá" (impactos coordinados).<br><strong>Cuantificación social:</strong> 8 400 personas, 70 %, 4 h → 15 min.`,s:"La construcción del acueducto veredal de Uribia en La Guajira",v:"beneficiará",p:"a 8 400 personas que actualmente reciben agua de calidad no potable"}},
+{id:81,cat:"tecnica",titulo:"Descripción de sistema hidráulico",def:"Explicación de los componentes, presiones y caudales de un sistema de fluidos.",disc:["Civil","Mecánica","Industrial"],
+ejemplo:"El sistema hidráulico de la presa La Miel opera con una presión de trabajo de 12 MPa, válvulas de alivio taradas a 14 MPa, cilindros hidráulicos de doble efecto de 200 mm de diámetro y caudal nominal de la bomba de 80 L/min a 1 450 rpm.",
+sint:{h:`<span class="syn-s">El sistema hidráulico de la presa La Miel</span> <span class="syn-v">opera con</span> <span class="syn-p">una presión de trabajo de 12 MPa,</span> <span class="syn-p">válvulas de alivio taradas a 14 MPa,</span> <span class="syn-p">cilindros hidráulicos de doble efecto de 200 mm</span> <span class="syn-nx">y</span> <span class="syn-p">caudal nominal de la bomba de 80 L/min a 1 450 rpm.</span>`,n:`<strong>Perífrasis técnica:</strong> "opera con" + serie de OD nominales (descripción de parámetros de operación).<br><strong>Serie cuatripartita:</strong> cuatro parámetros sin repetir el verbo (elipsis técnica).<br><strong>Valores operativos:</strong> 12/14 MPa, 200 mm, 80 L/min, 1 450 rpm.`,s:"El sistema hidráulico de la presa La Miel",v:"opera con",p:"una presión de trabajo de 12 MPa"}},
+{id:82,cat:"tecnica",titulo:"Descripción de instalación fotovoltaica",def:"Especificación de los componentes, potencia y configuración de un sistema de generación solar.",disc:["Eléctrica","Industrial"],
+ejemplo:"La instalación fotovoltaica del Centro Logístico de Buenaventura cuenta con 240 módulos monocristalinos de 400 Wp conectados en 12 strings de 20 paneles, un inversor trifásico de 96 kW y un banco de baterías de litio de 200 kWh para autonomía nocturna de 6 horas.",
+sint:{h:`<span class="syn-s">La instalación fotovoltaica del Centro Logístico de Buenaventura</span> <span class="syn-v">cuenta con</span> <span class="syn-p">240 módulos monocristalinos de 400 Wp conectados en 12 strings,</span> <span class="syn-p">un inversor trifásico de 96 kW</span> <span class="syn-nx">y</span> <span class="syn-p">un banco de baterías de litio de 200 kWh para autonomía nocturna de 6 horas.</span>`,n:`<strong>Perífrasis de inventario:</strong> "cuenta con" (listado de componentes).<br><strong>Tres OD coordinados:</strong> módulos + inversor + baterías (sistema completo).<br><strong>CC Final de último OD:</strong> "para autonomía nocturna de 6 horas" especifica la función.`,s:"La instalación fotovoltaica del Centro Logístico de Buenaventura",v:"cuenta con",p:"240 módulos monocristalinos, un inversor de 96 kW y un banco de baterías de 200 kWh"}},
+{id:83,cat:"informe",titulo:"Resumen de auditoría energética",def:"Síntesis de los hallazgos de una auditoría de consumo energético con identificación de oportunidades de ahorro.",disc:["Eléctrica","Industrial","Civil"],
+ejemplo:"La auditoría energética de la planta textil de Itagüí identificó que el 38 % del consumo eléctrico total (1,2 GWh/año) corresponde a motores operando fuera de su punto óptimo de eficiencia, con un potencial de ahorro de $280 millones COP anuales mediante la instalación de variadores de velocidad.",
+sint:{h:`<span class="syn-s">La auditoría energética de la planta textil de Itagüí</span> <span class="syn-v">identificó</span> <span class="syn-nx">que</span> <span class="syn-s">el 38 % del consumo eléctrico total (1,2 GWh/año)</span> <span class="syn-v">corresponde a</span> <span class="syn-p">motores operando fuera de su punto óptimo de eficiencia,</span> <span class="syn-c">con un potencial de ahorro de $280 millones COP anuales mediante la instalación de variadores de velocidad.</span>`,n:`<strong>Verbo de hallazgo:</strong> "identificó" (resultado de la auditoría).<br><strong>CD proporcional:</strong> "que el 38%…" (porcentaje + equivalencia en GWh/año).<br><strong>CC de cuantificación de oportunidad:</strong> "con un potencial de ahorro…".`,s:"La auditoría energética de la planta textil de Itagüí",v:"identificó",p:"que el 38 % del consumo corresponde a motores operando fuera de eficiencia"}},
+{id:84,cat:"cientifico",titulo:"Descripción de método de elementos finitos",def:"Explicación del proceso de discretización, condiciones de contorno y solución en un análisis FEM.",disc:["Mecánica","Civil"],
+ejemplo:"El modelo de elementos finitos del chasis del vehículo fue mallado con 84 500 elementos tetraédricos de orden cuadrático (SOLID187), con condiciones de empotramiento en los puntos de anclaje de la suspensión y carga distribuida de 25 kN/m² en la bancada del motor.",
+sint:{h:`<span class="syn-s">El modelo de elementos finitos del chasis del vehículo</span> <span class="syn-v">fue mallado con</span> <span class="syn-p">84 500 elementos tetraédricos de orden cuadrático (SOLID187),</span> <span class="syn-c">con condiciones de empotramiento en los puntos de anclaje de la suspensión</span> <span class="syn-nx">y</span> <span class="syn-c">carga distribuida de 25 kN/m² en la bancada del motor.</span>`,n:`<strong>Voz pasiva con instrumento:</strong> "fue mallado con 84 500 elementos…".<br><strong>Dos CC de condiciones de contorno:</strong> empotramiento + carga (condiciones FEM).<br><strong>Tipo de elemento entre paréntesis:</strong> "(SOLID187)" referencia la librería de elementos.`,s:"El modelo de elementos finitos del chasis del vehículo",v:"fue mallado con",p:"84 500 elementos tetraédricos de orden cuadrático (SOLID187)"}},
+{id:85,cat:"cientifico",titulo:"Descripción de algoritmo de optimización",def:"Explicación de la función objetivo, variables de decisión y restricciones de un problema de optimización.",disc:["Industrial","Sistemas","Eléctrica"],
+ejemplo:"El problema de despacho económico de la red eléctrica del SIN colombiano minimiza el costo total de generación [$US/h] sujeto a las restricciones de balance de potencia nodal, límites de generación de cada planta y límites de transmisión de las líneas.",
+sint:{h:`<span class="syn-s">El problema de despacho económico de la red eléctrica del SIN colombiano</span> <span class="syn-v">minimiza</span> <span class="syn-p">el costo total de generación [$US/h]</span> <span class="syn-c">sujeto a las restricciones de balance de potencia nodal,</span> <span class="syn-c">límites de generación de cada planta</span> <span class="syn-nx">y</span> <span class="syn-c">límites de transmisión de las líneas.</span>`,n:`<strong>Verbo de optimización:</strong> "minimiza" (función objetivo del problema).<br><strong>Unidad entre corchetes:</strong> "[$US/h]" especifica la dimensión del objetivo.<br><strong>CC de restricciones coordinadas:</strong> tres restricciones técnicas del problema de optimización.`,s:"El problema de despacho económico del SIN colombiano",v:"minimiza",p:"el costo total de generación [$US/h]"}},
+{id:86,cat:"tecnica",titulo:"Descripción de cimentación profunda",def:"Especificación técnica del tipo, dimensiones y capacidad de carga de una cimentación en pilotes o pantallas.",disc:["Civil"],
+ejemplo:"La cimentación del edificio Atrio en Bogotá se resuelve mediante 180 pilotes de concreto reforzado de 800 mm de diámetro y 22 m de longitud, hincados hasta alcanzar la capa de gravas densas con N-SPT ≥ 50, con una carga de trabajo de 3 500 kN por pilote.",
+sint:{h:`<span class="syn-s">La cimentación del edificio Atrio en Bogotá</span> <span class="syn-v">se resuelve</span> <span class="syn-c">mediante 180 pilotes de concreto reforzado de 800 mm de diámetro y 22 m de longitud,</span> <span class="syn-c">hincados hasta alcanzar la capa de gravas densas con N-SPT ≥ 50,</span> <span class="syn-c">con una carga de trabajo de 3 500 kN por pilote.</span>`,n:`<strong>Voz pasiva refleja con instrumento:</strong> "se resuelve mediante…" (solución técnica).<br><strong>Participio adjunto de condición:</strong> "hincados hasta alcanzar…" especifica la profundidad.<br><strong>CC de capacidad:</strong> "con una carga de trabajo de 3 500 kN" cierra con la verificación estructural.`,s:"La cimentación del edificio Atrio en Bogotá",v:"se resuelve",p:"mediante 180 pilotes de concreto de 800 mm de diámetro y 22 m de longitud"}},
+{id:87,cat:"informe",titulo:"Análisis de ciclo de vida",def:"Evaluación del impacto ambiental y económico de un producto o proceso desde su fabricación hasta su disposición final.",disc:["Industrial","Ambiental","Mecánica"],
+ejemplo:"El análisis de ciclo de vida del cable de aluminio AAAC 336.4 MCM revela que la fase de producción del aluminio primario representa el 78 % de las emisiones de GEI totales (12,4 kg CO₂eq/kg), mientras que el reciclaje al final de vida útil recupera el 92 % del material.",
+sint:{h:`<span class="syn-s">El análisis de ciclo de vida del cable de aluminio AAAC 336.4 MCM</span> <span class="syn-v">revela</span> <span class="syn-nx">que</span> <span class="syn-s">la fase de producción del aluminio primario</span> <span class="syn-v">representa</span> <span class="syn-p">el 78 % de las emisiones de GEI totales (12,4 kg CO₂eq/kg),</span> <span class="syn-nx">mientras que</span> <span class="syn-s">el reciclaje al final de vida útil</span> <span class="syn-v">recupera</span> <span class="syn-p">el 92 % del material.</span>`,n:`<strong>Verbo de revelación:</strong> "revela" (el ACV como herramienta diagnóstica).<br><strong>Subordinada contrastiva:</strong> "mientras que el reciclaje…recupera…" (contraste de fases del ciclo).<br><strong>Paréntesis de unidad funcional:</strong> "(12,4 kg CO₂eq/kg)" expresa la huella de carbono.`,s:"La fase de producción del aluminio primario",v:"representa",p:"el 78 % de las emisiones de GEI totales"}},
+{id:88,cat:"normativa",titulo:"Protocolo de comisionamiento",def:"Documento que establece los pasos para verificar y activar un sistema técnico nuevo antes de su operación.",disc:["Mecánica","Eléctrica","Industrial"],
+ejemplo:"Antes del comisionamiento del sistema de enfriamiento de la planta de semiconductores, se deberá verificar la estanqueidad de las tuberías a 1,5 veces la presión de diseño (prueba hidrostática), purgar el sistema de aire y calibrar los termómetros de control con patrón trazable al INMETRO.",
+sint:{h:`<span class="syn-c">Antes del comisionamiento del sistema de enfriamiento de la planta de semiconductores,</span> <span class="syn-v">se deberá verificar</span> <span class="syn-p">la estanqueidad de las tuberías a 1,5 veces la presión de diseño (prueba hidrostática),</span> <span class="syn-v">purgar</span> <span class="syn-p">el sistema de aire</span> <span class="syn-nx">y</span> <span class="syn-v">calibrar</span> <span class="syn-c">los termómetros de control con patrón trazable al INMETRO.</span>`,n:`<strong>CC Temporal previo:</strong> "Antes del comisionamiento…" (secuencia pre-arranque).<br><strong>Perífrasis modal futura:</strong> "se deberá verificar" (obligación antes del arranque).<br><strong>Tres infinitivos coordinados:</strong> verificar, purgar, calibrar (pasos del protocolo).`,s:"(implícito: el equipo de comisionamiento)",v:"se deberá verificar, purgar y calibrar",p:"la estanqueidad, el sistema de aire y los termómetros"}},
+{id:89,cat:"tecnica",titulo:"Descripción de acero estructural",def:"Caracterización de las propiedades mecánicas, composición química y norma aplicable a un acero de construcción.",disc:["Civil","Mecánica"],
+ejemplo:"El acero ASTM A572 Grado 50 empleado en la estructura metálica del estadio tiene un límite de fluencia mínimo de 345 MPa, una resistencia última de 450 MPa, un módulo de elasticidad de 200 GPa y una composición de carbono máxima del 0,23 % en masa.",
+sint:{h:`<span class="syn-s">El acero ASTM A572 Grado 50 empleado en la estructura metálica del estadio</span> <span class="syn-v">tiene</span> <span class="syn-p">un límite de fluencia mínimo de 345 MPa,</span> <span class="syn-p">una resistencia última de 450 MPa,</span> <span class="syn-p">un módulo de elasticidad de 200 GPa</span> <span class="syn-nx">y</span> <span class="syn-p">una composición de carbono máxima del 0,23 % en masa.</span>`,n:`<strong>Verbo de posesión técnica:</strong> "tiene" + cuatro OD de propiedades mecánicas y químicas.<br><strong>Adjetivos cuantificadores:</strong> "mínimo", "última", "máxima" precisan el tipo de valor.<br><strong>Unidades variadas:</strong> MPa, GPa, % — coherencia con el SI.`,s:"El acero ASTM A572 Grado 50 empleado en la estructura metálica del estadio",v:"tiene",p:"un límite de fluencia mínimo de 345 MPa y una resistencia última de 450 MPa"}},
+{id:90,cat:"cientifico",titulo:"Descripción de sensor e instrumento",def:"Especificación del principio de funcionamiento, rango, resolución e incertidumbre de un instrumento de medición.",disc:["Mecánica","Eléctrica","Industrial"],
+ejemplo:"El acelerómetro piezoeléctrico PCB 352C03 mide vibraciones en el rango de 0,5 Hz a 10 kHz, con sensibilidad de 10 mV/(m/s²), rango dinámico de ±490 m/s², masa de 2,9 g e incertidumbre de calibración de ±1 % (k=2).",
+sint:{h:`<span class="syn-s">El acelerómetro piezoeléctrico PCB 352C03</span> <span class="syn-v">mide</span> <span class="syn-p">vibraciones en el rango de 0,5 Hz a 10 kHz,</span> <span class="syn-c">con sensibilidad de 10 mV/(m/s²),</span> <span class="syn-c">rango dinámico de ±490 m/s²,</span> <span class="syn-c">masa de 2,9 g</span> <span class="syn-nx">e</span> <span class="syn-c">incertidumbre de calibración de ±1 % (k=2).</span>`,n:`<strong>Sujeto con nombre comercial completo:</strong> "PCB 352C03" identifica el instrumento específico.<br><strong>Rango de medición:</strong> "de 0,5 Hz a 10 kHz" (CC de amplitud de medida).<br><strong>Serie de CC técnicos con "con":</strong> cuatro parámetros del datasheet.`,s:"El acelerómetro piezoeléctrico PCB 352C03",v:"mide",p:"vibraciones en el rango de 0,5 Hz a 10 kHz"}},
+{id:91,cat:"informe",titulo:"Carta de transmisión técnica",def:"Documento de acompañamiento que presenta formalmente un informe o plano al cliente o contratante.",disc:["Todas las ingenierías"],
+ejemplo:"Por medio de la presente, se remite al señor Gerente de Infraestructura de Grupo Argos el Informe Final IF-2024-018 correspondiente al estudio de factibilidad de la planta de almacenamiento de cemento a granel en Turbaco, Bolívar, con un total de 186 folios más doce planos.",
+sint:{h:`<span class="syn-c">Por medio de la presente,</span> <span class="syn-v">se remite</span> <span class="syn-c">al señor Gerente de Infraestructura de Grupo Argos</span> <span class="syn-p">el Informe Final IF-2024-018 correspondiente al estudio de factibilidad de la planta de almacenamiento de cemento a granel en Turbaco, Bolívar,</span> <span class="syn-c">con un total de 186 folios más doce planos.</span>`,n:`<strong>Locución de transmisión:</strong> "Por medio de la presente" (fórmula epistolar formal).<br><strong>Voz pasiva refleja:</strong> "se remite" (el remitente es implícito).<br><strong>Código de documento:</strong> "IF-2024-018" (sistema de referencia documental de ingeniería).`,s:"(implícito: la empresa consultora)",v:"se remite",p:"el Informe Final IF-2024-018 al Gerente de Infraestructura de Grupo Argos"}},
+{id:92,cat:"normativa",titulo:"Especificación de software embebido",def:"Descripción de los requisitos funcionales y de seguridad para el firmware de un sistema de control.",disc:["Sistemas","Eléctrica","Industrial"],
+ejemplo:"El firmware del controlador del sistema de frenos antibloqueo (ABS) debe garantizar un tiempo de respuesta inferior a 5 ms ante la señal de deslizamiento, debe cumplir con el nivel de integridad de seguridad SIL-2 según IEC 61508 y no debe generar condición de falla en el rango de temperatura de –40 °C a +85 °C.",
+sint:{h:`<span class="syn-s">El firmware del controlador del sistema de frenos antibloqueo (ABS)</span> <span class="syn-v">debe garantizar</span> <span class="syn-p">un tiempo de respuesta inferior a 5 ms ante la señal de deslizamiento,</span> <span class="syn-v">debe cumplir con</span> <span class="syn-c">el nivel SIL-2 según IEC 61508</span> <span class="syn-nx">y</span> <span class="syn-v">no debe generar</span> <span class="syn-p">condición de falla en el rango de –40 °C a +85 °C.</span>`,n:`<strong>Tres perífrasis de obligación:</strong> "debe garantizar / debe cumplir / no debe generar" (requisitos de software).<br><strong>Referencia de estándar funcional safety:</strong> "SIL-2 según IEC 61508".<br><strong>Rango de temperatura operativa:</strong> "de –40 °C a +85 °C" (requisito de robustez).`,s:"El firmware del controlador del sistema de frenos antibloqueo (ABS)",v:"debe garantizar",p:"un tiempo de respuesta inferior a 5 ms"}},
+{id:93,cat:"tecnica",titulo:"Descripción de ensayo no destructivo",def:"Explicación del principio físico y procedimiento de una técnica de inspección que no daña el componente.",disc:["Mecánica","Civil","Industrial"],
+ejemplo:"La inspección por ultrasonido por tiempo de vuelo (TOFD) del cordón de soldadura de la tubería API 5L X65 detectó dos indicaciones lineales en la zona de fusión, con longitud de 12 mm y profundidad de 4,5 mm, que superan el criterio de aceptación de la norma ASME B31.3.",
+sint:{h:`<span class="syn-s">La inspección por ultrasonido TOFD del cordón de soldadura de la tubería API 5L X65</span> <span class="syn-v">detectó</span> <span class="syn-p">dos indicaciones lineales en la zona de fusión,</span> <span class="syn-c">con longitud de 12 mm y profundidad de 4,5 mm,</span> <span class="syn-nx">que</span> <span class="syn-v">superan</span> <span class="syn-p">el criterio de aceptación de la norma ASME B31.3.</span>`,n:`<strong>OD calificado:</strong> "dos indicaciones lineales en la zona de fusión" (resultado del END).<br><strong>CC Dimensiones:</strong> "con longitud de 12 mm y profundidad de 4,5 mm".<br><strong>Relativa de evaluación:</strong> "que superan el criterio de aceptación" (juicio de calidad).`,s:"La inspección por ultrasonido TOFD del cordón de soldadura",v:"detectó",p:"dos indicaciones lineales con longitud de 12 mm y profundidad de 4,5 mm"}},
+{id:94,cat:"argumentacion",titulo:"Síntesis argumentativa",def:"Párrafo final que recapitula los argumentos principales y refuerza la conclusión del análisis de ingeniería.",disc:["Todas las ingenierías"],
+ejemplo:"En síntesis, los tres análisis realizados —estructural, hidráulico y sísmico— convergen en la misma conclusión: el diseño propuesto para el dique del embalse Troneras cumple todos los requisitos normativos colombianos y ofrece un factor de seguridad global de 2,3, superior al mínimo de 1,5 exigido.",
+sint:{h:`<span class="syn-nx">En síntesis,</span> <span class="syn-s">los tres análisis realizados —estructural, hidráulico y sísmico—</span> <span class="syn-v">convergen en</span> <span class="syn-p">la misma conclusión:</span> <span class="syn-s">el diseño propuesto para el dique del embalse Troneras</span> <span class="syn-v">cumple</span> <span class="syn-p">todos los requisitos normativos colombianos</span> <span class="syn-nx">y</span> <span class="syn-v">ofrece</span> <span class="syn-p">un factor de seguridad global de 2,3.</span>`,n:`<strong>Marcador de conclusión:</strong> "En síntesis" (conector resumitivo).<br><strong>Inciso aclaratorio con rayas:</strong> "—estructural, hidráulico y sísmico—" enumera los análisis.<br><strong>Dos puntos de evidencia:</strong> la conclusión se despliega en dos predicados coordinados.`,s:"los tres análisis realizados —estructural, hidráulico y sísmico—",v:"convergen en",p:"la misma conclusión: el diseño cumple los requisitos y ofrece FS = 2,3"}},
+{id:95,cat:"cientifico",titulo:"Descripción de modelo de predicción",def:"Explicación del tipo, entradas, salidas y límites de validez de un modelo predictivo de ingeniería.",disc:["Industrial","Sistemas","Civil"],
+ejemplo:"El modelo de regresión lineal múltiple calibrado para predecir el consumo específico de energía en hornos de secado de cerámica tiene un R² = 0,94, un error cuadrático medio de 2,3 kWh/ton y es válido para temperaturas entre 150 °C y 350 °C y producciones entre 5 y 50 ton/día.",
+sint:{h:`<span class="syn-s">El modelo de regresión lineal múltiple calibrado para predecir el consumo específico de energía en hornos de secado de cerámica</span> <span class="syn-v">tiene</span> <span class="syn-p">un R² = 0,94,</span> <span class="syn-p">un error cuadrático medio de 2,3 kWh/ton</span> <span class="syn-nx">y</span> <span class="syn-v">es válido para</span> <span class="syn-c">temperaturas entre 150 °C y 350 °C y producciones entre 5 y 50 ton/día.</span>`,n:`<strong>Dos predicados:</strong> "tiene" (métricas del modelo) + "es válido para" (dominio de aplicación).<br><strong>Métricas de bondad de ajuste:</strong> R² y RMSE son estándares de evaluación estadística.<br><strong>Rango de validez doble:</strong> temperatura + producción delimitan el espacio de aplicación.`,s:"El modelo de regresión lineal múltiple calibrado para los hornos de secado",v:"tiene",p:"un R² = 0,94 y un error cuadrático medio de 2,3 kWh/ton"}},
+{id:96,cat:"tecnica",titulo:"Especificación de soldadura",def:"Descripción del proceso, electrodo, parámetros eléctricos y calificación requerida para una unión soldada.",disc:["Mecánica","Civil","Industrial"],
+ejemplo:"La soldadura de la unión a tope de la tubería de acero P91 para vapor a alta temperatura debe realizarse mediante proceso GTAW (TIG) con metal de aporte ER90S-B9, precalentamiento a 200 °C, temperatura entre pasadas máxima de 300 °C y tratamiento térmico post-soldadura a 760 °C por dos horas.",
+sint:{h:`<span class="syn-s">La soldadura de la unión a tope de la tubería de acero P91</span> <span class="syn-v">debe realizarse</span> <span class="syn-c">mediante proceso GTAW (TIG) con metal de aporte ER90S-B9,</span> <span class="syn-c">precalentamiento a 200 °C,</span> <span class="syn-c">temperatura entre pasadas máxima de 300 °C</span> <span class="syn-nx">y</span> <span class="syn-c">tratamiento térmico post-soldadura a 760 °C por dos horas.</span>`,n:`<strong>Perífrasis de obligación técnica:</strong> "debe realizarse" (requisito de procedimiento).<br><strong>CC de proceso + cuatro parámetros:</strong> proceso, aporte, precalentamiento, PWHT (welding procedure).<br><strong>Acero especializado:</strong> "P91" (acero para alta temperatura con composición controlada).`,s:"La soldadura de la unión a tope de la tubería de acero P91",v:"debe realizarse",p:"mediante proceso GTAW (TIG) con metal de aporte ER90S-B9"}},
+{id:97,cat:"informe",titulo:"Ficha de inspección visual",def:"Documento que registra el estado físico observable de una estructura, equipo o instalación.",disc:["Civil","Mecánica","Eléctrica"],
+ejemplo:"La inspección visual del Puente Santander sobre el río Lebrija en el municipio de Girón registró: corrosión generalizada Grado 3 en la viga metálica central, fisuras de retracción de 0,3 mm en la losa del tablero y pérdida de sección del 15 % en dos apoyos de neopreno.",
+sint:{h:`<span class="syn-s">La inspección visual del Puente Santander sobre el río Lebrija en Girón</span> <span class="syn-v">registró:</span> <span class="syn-p">corrosión generalizada Grado 3 en la viga metálica central,</span> <span class="syn-p">fisuras de retracción de 0,3 mm en la losa del tablero</span> <span class="syn-nx">y</span> <span class="syn-p">pérdida de sección del 15 % en dos apoyos de neopreno.</span>`,n:`<strong>Verbo de registro:</strong> "registró:" seguido de dos puntos (lista de hallazgos).<br><strong>Tres OD nominales:</strong> corrosión, fisuras y pérdida de sección (anomalías observadas).<br><strong>Graduación técnica:</strong> "Grado 3", "0,3 mm", "15 %" cuantifican la severidad.`,s:"La inspección visual del Puente Santander sobre el río Lebrija en Girón",v:"registró",p:"corrosión Grado 3, fisuras de 0,3 mm y pérdida de sección del 15 %"}},
+{id:98,cat:"normativa",titulo:"Acta de entrega de obra",def:"Documento que certifica la finalización y entrega formal de una obra o sistema al cliente.",disc:["Civil","Industrial","Mecánica"],
+ejemplo:"El día 15 de noviembre de 2024, se hace entrega formal a Empresas Públicas de Medellín de la estación de bombeo No. 7 de la PTAP El Retiro, la cual ha superado satisfactoriamente las pruebas de operación continua de 72 horas y cumple con las especificaciones técnicas del contrato 1482-2023.",
+sint:{h:`<span class="syn-c">El día 15 de noviembre de 2024,</span> <span class="syn-v">se hace entrega formal</span> <span class="syn-c">a Empresas Públicas de Medellín</span> <span class="syn-p">de la estación de bombeo No. 7 de la PTAP El Retiro,</span> <span class="syn-nx">la cual</span> <span class="syn-v">ha superado</span> <span class="syn-p">satisfactoriamente las pruebas de operación continua de 72 horas</span> <span class="syn-nx">y</span> <span class="syn-v">cumple con</span> <span class="syn-p">las especificaciones técnicas del contrato 1482-2023.</span>`,n:`<strong>CC Fecha exacta:</strong> "El día 15 de noviembre de 2024" (acto formal con fecha precisa).<br><strong>Impersonal de entrega:</strong> "se hace entrega formal" (fórmula acta notarial).<br><strong>Relativa explicativa "la cual":</strong> certifica el cumplimiento en dos dimensiones.`,s:"la estación de bombeo No. 7 de la PTAP El Retiro",v:"ha superado",p:"satisfactoriamente las pruebas de operación continua de 72 horas"}},
+{id:99,cat:"argumentacion",titulo:"Análisis FODA técnico",def:"Identificación de fortalezas, oportunidades, debilidades y amenazas de una alternativa de ingeniería.",disc:["Industrial","Civil","Eléctrica"],
+ejemplo:"La principal fortaleza de la microcentraleléctrica de pasada en el río Fonce (Santander) es su bajo impacto ambiental; su mayor debilidad, la variabilidad estacional del caudal; su oportunidad clave, los incentivos fiscales de la Ley 1715 de 2014; y su amenaza crítica, los períodos de sequía prolongada asociados al fenómeno El Niño.",
+sint:{h:`<span class="syn-s">La principal fortaleza</span> <span class="syn-v">es</span> <span class="syn-p">su bajo impacto ambiental;</span> <span class="syn-s">su mayor debilidad,</span> <span class="syn-p">la variabilidad estacional del caudal;</span> <span class="syn-s">su oportunidad clave,</span> <span class="syn-p">los incentivos fiscales de la Ley 1715 de 2014;</span> <span class="syn-nx">y</span> <span class="syn-s">su amenaza crítica,</span> <span class="syn-p">los períodos de sequía prolongada.</span>`,n:`<strong>Estructura FODA textual:</strong> cuatro enunciados nominales con verbo copulativo en elipsis después del primero.<br><strong>Elipsis verbal:</strong> "fortaleza es… / debilidad, [es]… / oportunidad, [es]… / amenaza, [es]…" (economía lingüística).<br><strong>Referencia legislativa colombiana:</strong> "Ley 1715 de 2014" (Ley de energías renovables).`,s:"La principal fortaleza de la microcentraleléctrica",v:"es",p:"su bajo impacto ambiental"}},
+{id:100,cat:"argumentacion",titulo:"Párrafo de cierre de propuesta",def:"Conclusión persuasiva que resume los argumentos y solicita la aprobación del proyecto.",disc:["Todas las ingenierías"],
+ejemplo:"La propuesta técnica presentada demuestra que la modernización de la planta de producción de cloro-sosa de Cartagena con tecnología de membrana de intercambio iónico reducirá el consumo energético en un 30 %, eliminará el uso de mercurio y situará a la empresa en cumplimiento pleno de la Resolución 2254 de 2017, garantizando su operación sostenible por los próximos 25 años.",
+sint:{h:`<span class="syn-s">La propuesta técnica presentada</span> <span class="syn-v">demuestra</span> <span class="syn-nx">que</span> <span class="syn-s">la modernización de la planta con tecnología de membrana</span> <span class="syn-v">reducirá</span> <span class="syn-p">el consumo energético en un 30 %,</span> <span class="syn-v">eliminará</span> <span class="syn-p">el uso de mercurio</span> <span class="syn-nx">y</span> <span class="syn-v">situará a la empresa en</span> <span class="syn-p">cumplimiento pleno de la Resolución 2254 de 2017.</span>`,n:`<strong>Oración principal de demostración:</strong> "La propuesta demuestra que…".<br><strong>Tres predicados futuros coordinados:</strong> "reducirá / eliminará / situará" (triada de beneficios).<br><strong>Cierre temporal de garantía:</strong> "por los próximos 25 años" proyecta la sostenibilidad.`,s:"La modernización de la planta con tecnología de membrana",v:"reducirá",p:"el consumo energético en un 30 %"}},
+];
+// ════════════════════════════════════════════════════════════
+// STATE
+// ════════════════════════════════════════════════════════════
+let mode='fc', curIdx=0, deck=T.map((_,i)=>i);
+let done=new Set(), wLog=[], curChange='sujeto';
+let dragTok=null;
+
+const CAT={tecnica:"Técnica",informe:"Informe",cientifico:"Científico",normativa:"Normativa",argumentacion:"Argumentación"};
+const CAT_CSS={tecnica:"cat-tecnica",informe:"cat-informe",cientifico:"cat-cientifico",normativa:"cat-normativa",argumentacion:"cat-argumentacion"};
+const ALL_CATS=['all','tecnica','informe','cientifico','normativa','argumentacion'];
+let activeCats=new Set(['all']);
+
+function load(){
+  try{const d=localStorage.getItem('ing-done-v1');if(d)done=new Set(JSON.parse(d));}catch(e){}
+  try{const w=localStorage.getItem('ing-wlog-v1');if(w)wLog=JSON.parse(w);}catch(e){}
+}
+function save(){
+  localStorage.setItem('ing-done-v1',JSON.stringify([...done]));
+  updateProg();
+}
+function saveW(){localStorage.setItem('ing-wlog-v1',JSON.stringify(wLog));}
+function resetAll(){
+  if(!confirm('¿Reiniciar todo el progreso?'))return;
+  done=new Set();save();
+  if(mode==='fc')renderCard();else renderList();
+}
+function updateProg(){
+  const p=done.size;
+  document.getElementById('prog-fill').style.width=(p)+'%';
+  document.getElementById('prog-n').textContent=p;
+  document.getElementById('s-done').textContent=p;
+  document.getElementById('s-pend').textContent=100-p;
+}
+
+// ── MODE ──
+function setMode(m){
+  mode=m;
+  document.querySelectorAll('.nav-tab').forEach((t,i)=>t.classList.toggle('active',(i===0&&m==='fc')||(i===1&&m==='list')));
+  document.getElementById('mode-fc').style.display=m==='fc'?'block':'none';
+  document.getElementById('mode-list').style.display=m==='list'?'block':'none';
+  if(m==='list')renderList();
+}
+
+// ── FLASHCARD ──
+function navigate(d){
+  curIdx=Math.max(0,Math.min(deck.length-1,curIdx+d));
+  renderCard();
+}
+function shuffleDeck(){
+  for(let i=deck.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[deck[i],deck[j]]=[deck[j],deck[i]];}
+  curIdx=0;renderCard();
+}
+function toggleDone(){
+  const t=T[deck[curIdx]];
+  if(done.has(t.id))done.delete(t.id);else done.add(t.id);
+  save();renderCard();
+}
+
+function renderCard(){
+  const t=T[deck[curIdx]];
+  document.getElementById('fc-cur').textContent=curIdx+1;
+  document.getElementById('fc-id').textContent='T·'+String(t.id).padStart(3,'0');
+  const cb=document.getElementById('fc-cat');
+  cb.textContent=CAT[t.cat];cb.className='cat-badge '+CAT_CSS[t.cat];
+  document.getElementById('fc-title').textContent=t.titulo;
+  document.getElementById('fc-def').textContent=t.def;
+  document.getElementById('fc-ex').textContent='«'+t.ejemplo+'»';
+  document.getElementById('fc-tags').innerHTML=t.disc.map(d=>`<span class="eng-tag">${d}</span>`).join('');
+  const db=document.getElementById('fc-done');
+  db.classList.toggle('on',done.has(t.id));
+  const mk=document.getElementById('fc-mark');
+  mk.textContent=done.has(t.id)?'✓ Completada':'☐ Completada';
+  mk.classList.toggle('done',done.has(t.id));
+  document.getElementById('btn-prev').disabled=curIdx===0;
+  document.getElementById('btn-next').disabled=curIdx===deck.length-1;
+  buildExercise(t);
+  // reset tabs to ejercicio
+  switchTab('ejercicio',document.querySelector('.fc-tab'));
+  const mc=document.getElementById('main-card');
+  mc.style.animation='none';requestAnimationFrame(()=>{mc.style.animation='fadeUp 0.3s ease both';});
+}
+
+// ── TAB SWITCH ──
+function switchTab(name,btn){
+  document.querySelectorAll('.fc-panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.fc-tab').forEach(b=>b.classList.remove('active'));
+  document.getElementById('tab-'+name).classList.add('active');
+  btn.classList.add('active');
+  if(name==='sintaxis')renderSyntax();
+  if(name==='escritura')renderWrite();
+}
+
+// ── EXERCISE ──
+function buildExercise(t){
+  const ex=t.ejercicio||{tokens:t.ejemplo.split(' '),solucion:t.ejemplo.split(' ')};
+  const shuffled=[...ex.tokens].sort(()=>Math.random()-0.5);
+  const bank=document.getElementById('fc-bank');
+  bank.innerHTML='';bank.dataset.sol=JSON.stringify(ex.solucion);
+  shuffled.forEach((w,i)=>{
+    const el=mkToken(w,i,'bank');
+    bank.appendChild(el);
+  });
+  const dz=document.getElementById('fc-dz');
+  dz.innerHTML='<span class="dz-label">Arrastra aquí las palabras</span>';
+  const res=document.getElementById('fc-res');
+  res.className='result-msg';res.textContent='';
+  setupDnD('fc-bank','fc-dz');
+}
+function mkToken(w,i,src){
+  const el=document.createElement('div');
+  el.className='word-token';el.textContent=w;
+  el.dataset.w=w;el.dataset.src=src;el.draggable=true;
+  el.addEventListener('dragstart',e=>{dragTok=el;el.classList.add('dragging');e.dataTransfer.effectAllowed='move';});
+  el.addEventListener('dragend',()=>{if(dragTok){dragTok.classList.remove('dragging');dragTok=null;}});
+  return el;
+}
+function mkDropTok(w){
+  const el=document.createElement('div');
+  el.className='drop-token';el.textContent=w;el.dataset.w=w;el.dataset.src='zone';el.draggable=true;
+  el.addEventListener('dragstart',e=>{dragTok=el;el.classList.add('dragging');e.dataTransfer.effectAllowed='move';});
+  el.addEventListener('dragend',()=>{if(dragTok){dragTok.classList.remove('dragging');dragTok=null;}});
+  return el;
+}
+function setupDnD(bankId,dzId){
+  const bank=document.getElementById(bankId);
+  const dz=document.getElementById(dzId);
+  [bank,dz].forEach(zone=>{
+    zone.addEventListener('dragover',e=>{e.preventDefault();zone.classList.add('drag-over');});
+    zone.addEventListener('dragleave',()=>zone.classList.remove('drag-over'));
+    zone.addEventListener('drop',e=>{
+      e.preventDefault();zone.classList.remove('drag-over');
+      if(!dragTok)return;
+      if(zone===dz&&dragTok.dataset.src==='bank'){
+        const lbl=dz.querySelector('.dz-label');if(lbl)lbl.remove();
+        dz.appendChild(mkDropTok(dragTok.dataset.w));
+        dragTok.classList.add('placed');dragTok.draggable=false;
+      }else if(zone===bank&&dragTok.dataset.src==='zone'){
+        returnBank(dragTok.dataset.w,bank);dragTok.remove();
+        if(!dz.children.length)dz.innerHTML='<span class="dz-label">Arrastra aquí las palabras</span>';
+      }
+    });
+  });
+  dz.addEventListener('click',e=>{
+    const tok=e.target.closest('.drop-token');if(!tok)return;
+    returnBank(tok.dataset.w,bank);tok.remove();
+    if(!dz.children.length)dz.innerHTML='<span class="dz-label">Arrastra aquí las palabras</span>';
+  });
+}
+function returnBank(w,bank){
+  for(const bt of bank.querySelectorAll('.word-token')){
+    if(bt.dataset.w===w&&bt.classList.contains('placed')&&!bt.classList.contains('rb')){
+      bt.classList.remove('placed');bt.draggable=true;bt.classList.add('rb');
+      setTimeout(()=>bt.classList.remove('rb'),100);break;
+    }
+  }
+}
+function checkEx(p){
+  const dz=document.getElementById('fc-dz');
+  const bank=document.getElementById('fc-bank');
+  const sol=JSON.parse(bank.dataset.sol);
+  const placed=[...dz.querySelectorAll('.drop-token')].map(t=>t.dataset.w);
+  const res=document.getElementById('fc-res');
+  if(!placed.length){res.className='result-msg fail';res.textContent='⚠ Arrastra al menos una palabra.';return;}
+  const ok=placed.length===sol.length&&sol.every((w,i)=>placed[i]===w);
+  res.className='result-msg '+(ok?'ok':'fail');
+  res.textContent=ok?'✓ ¡Correcto! Ejemplo reconstruido.':'✗ Orden incorrecto. Inténtalo de nuevo.';
+  if(ok){done.add(T[deck[curIdx]].id);save();renderCard();}
+}
+function resetEx(){buildExercise(T[deck[curIdx]]);}
+
+// ── SYNTAX ──
+function renderSyntax(){
+  const t=T[deck[curIdx]];
+  document.getElementById('fc-syn-html').innerHTML=t.sint.h;
+  document.getElementById('fc-syn-notes').innerHTML=t.sint.n;
+}
+
+// ── WRITE ──
+const CHANGE_OPTIONS=[
+  {k:'sujeto',l:'Cambiar Sujeto'},
+  {k:'verbo',l:'Cambiar Verbo'},
+  {k:'predicado',l:'Cambiar Predicado'},
+  {k:'libre',l:'Ejemplo libre'},
+];
+function renderWrite(){
+  const t=T[deck[curIdx]];
+  document.getElementById('fc-winstr').innerHTML=
+    `Usa la técnica <strong>${t.titulo}</strong>. Elige qué parte del ejemplo quieres cambiar.`;
+  const tabs=document.getElementById('fc-ctabs');
+  tabs.innerHTML='';
+  CHANGE_OPTIONS.forEach(o=>{
+    const b=document.createElement('button');
+    b.className='chg-tab'+(o.k===curChange?' active':'');
+    b.textContent=o.l;
+    b.onclick=()=>{
+      curChange=o.k;
+      tabs.querySelectorAll('.chg-tab').forEach(x=>x.classList.remove('active'));
+      b.classList.add('active');
+      setWriteHint(t);
+    };
+    tabs.appendChild(b);
+  });
+  setWriteHint(t);
+  document.getElementById('fc-wta').value='';
+  document.getElementById('fc-cc').textContent='0 chars';
+  renderEntries();
+}
+function setWriteHint(t){
+  const hints={
+    sujeto:`Conserva el verbo y predicado del ejemplo. Reemplaza el sujeto <em>"${t.sint.s}"</em> por uno de tu área de ingeniería.`,
+    verbo:`Conserva el sujeto y predicado. Reemplaza el verbo <em>"${t.sint.v}"</em> por otro con sentido similar.`,
+    predicado:`Conserva el sujeto y el verbo. Reemplaza el predicado <em>"${t.sint.p.substring(0,55)}…"</em> por uno nuevo.`,
+    libre:`Escribe un ejemplo completamente nuevo aplicando la técnica <strong>${t.titulo}</strong> en cualquier campo de la ingeniería.`,
+  };
+  document.getElementById('fc-whint').innerHTML=hints[curChange]||hints.libre;
+}
+function updCC(){
+  document.getElementById('fc-cc').textContent=document.getElementById('fc-wta').value.length+' chars';
+}
+function saveEntry(){
+  const t=T[deck[curIdx]];
+  const txt=document.getElementById('fc-wta').value.trim();
+  if(!txt){alert('Escribe tu ejemplo antes de guardar.');return;}
+  wLog.unshift({id:t.id,titulo:t.titulo,cat:t.cat,chg:curChange,orig:t.ejemplo,txt,ts:new Date().toLocaleString('es-CO')});
+  saveW();
+  document.getElementById('fc-wta').value='';document.getElementById('fc-cc').textContent='0 chars';
+  renderEntries();
+  const b=document.querySelector('.btn-save');b.textContent='✓ Guardado';b.style.background='var(--accent3)';
+  setTimeout(()=>{b.textContent='💾 Guardar';b.style.background='';},1800);
+}
+function renderEntries(){
+  const ws=document.getElementById('fc-wsaved');
+  const el=document.getElementById('fc-elist');
+  const sc=document.getElementById('fc-sc');
+  if(!wLog.length){ws.classList.remove('on');return;}
+  ws.classList.add('on');sc.textContent=wLog.length;
+  el.innerHTML=wLog.map((e,i)=>`
+    <div class="s-entry">
+      <div class="s-meta">
+        <span>T·${String(e.id).padStart(3,'0')} ${e.titulo} · <em>${e.chg}</em></span>
+        <span>${e.ts}</span>
+      </div>
+      <div>${e.txt}</div>
+      <button class="s-del" onclick="delEntry(${i})">🗑</button>
+    </div>`).join('');
+}
+function delEntry(i){wLog.splice(i,1);saveW();renderEntries();}
+
+function exportTxt(){
+  const lines=['='.repeat(72),'  100 TÉCNICAS DE REDACCIÓN PARA INGENIERÍAS — REGISTRO DE PROGRESO',
+    '  Generado: '+new Date().toLocaleString('es-CO'),'='.repeat(72),'',
+    '── PROGRESO ─────────────────────────────────────────────────────────',
+    `Técnicas completadas: ${done.size}/100`,`Entradas de escritura: ${wLog.length}`,''];
+  const dl=T.filter(t=>done.has(t.id));
+  if(dl.length){
+    lines.push('Completadas:');
+    dl.forEach(t=>lines.push(`  [✓] T·${String(t.id).padStart(3,'0')} — ${t.titulo} (${CAT[t.cat]})`));
+    lines.push('');
+  }
+  if(wLog.length){
+    lines.push('── EJERCICIOS DE ESCRITURA ───────────────────────────────────────────');
+    wLog.forEach((e,i)=>{
+      lines.push('');
+      lines.push(`[${i+1}] T·${String(e.id).padStart(3,'0')} — ${e.titulo}`);
+      lines.push(`    Categoría   : ${CAT[e.cat]}`);
+      lines.push(`    Tipo cambio : ${e.chg}`);
+      lines.push(`    Guardado    : ${e.ts}`);
+      lines.push(`    Original    : ${e.orig}`);
+      lines.push(`    Mi ejemplo  : ${e.txt}`);
+      lines.push('    '+'-'.repeat(60));
+    });
+    lines.push('');
+  }
+  lines.push('='.repeat(72),'FIN DEL REGISTRO');
+  const blob=new Blob([lines.join('\n')],{type:'text/plain;charset=utf-8'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');a.href=url;a.download='redaccion-ingenieria-progreso.txt';a.click();URL.revokeObjectURL(url);
+}
+
+// ── LIST MODE ──
+function buildCatBtns(){
+  const wrap=document.getElementById('cat-btns');
+  const lbls={all:'Todas',tecnica:'Técnica',informe:'Informe',cientifico:'Científico',normativa:'Normativa',argumentacion:'Argumentación'};
+  ALL_CATS.forEach(c=>{
+    const b=document.createElement('button');
+    b.className='cat-btn'+(c==='all'?' active':'');
+    b.textContent=lbls[c];b.dataset.c=c;
+    b.onclick=()=>{toggleCat(c);filterList();updCatBtns();};
+    wrap.appendChild(b);
+  });
+}
+function toggleCat(c){
+  if(c==='all'){activeCats=new Set(['all']);return;}
+  activeCats.delete('all');
+  if(activeCats.has(c))activeCats.delete(c);else activeCats.add(c);
+  if(!activeCats.size)activeCats.add('all');
+}
+function updCatBtns(){document.querySelectorAll('.cat-btn').forEach(b=>b.classList.toggle('active',activeCats.has(b.dataset.c)));}
+
+function filterList(){
+  const q=document.getElementById('search-in').value.toLowerCase();
+  const grid=document.getElementById('cards-grid');
+  let n=0;
+  grid.querySelectorAll('.l-card').forEach(c=>{
+    const t=T.find(t=>t.id===parseInt(c.dataset.id));
+    if(!t)return;
+    const mc=activeCats.has('all')||activeCats.has(t.cat);
+    const mq=!q||t.titulo.toLowerCase().includes(q)||t.def.toLowerCase().includes(q)||t.ejemplo.toLowerCase().includes(q)||t.disc.join().toLowerCase().includes(q);
+    const show=mc&&mq;
+    c.style.display=show?'':'none';
+    if(show)n++;
+  });
+  document.getElementById('s-shown').textContent=n;
+  document.getElementById('empty').classList.toggle('on',n===0);
+}
+
+function renderList(){
+  const grid=document.getElementById('cards-grid');
+  grid.innerHTML='';
+  T.forEach(t=>grid.appendChild(buildListCard(t)));
+  document.getElementById('s-shown').textContent=100;
+  filterList();updateProg();
+}
+
+function buildListCard(t){
+  const c=document.createElement('div');
+  c.className='l-card'+(done.has(t.id)?' done':'');
+  c.dataset.id=t.id;
+  c.innerHTML=`
+    <div class="l-hdr">
+      <div class="l-num">${String(t.id).padStart(3,'0')}</div>
+      <div class="l-info">
+        <div class="l-title">${t.titulo} <span class="cat-badge ${CAT_CSS[t.cat]}">${CAT[t.cat]}</span></div>
+        <div class="l-def">${t.def}</div>
+      </div>
+      <div class="l-ck">${done.has(t.id)?'✅':''}</div>
+    </div>
+    <div class="l-body">
+      <div class="l-ex">«${t.ejemplo}»</div>
+      <button class="l-toggle" onclick="toggleLEx(this)" data-id="${t.id}">
+        ⚙ Ejercicio interactivo <span class="chv">▼</span>
+      </button>
+      <div class="l-ex-wrap" id="lx-${t.id}">
+        <div style="background:var(--bg3);border:1.5px solid var(--border);border-radius:6px;padding:1.25rem;margin-top:0.75rem;">
+          <div class="ex-label">Ordenar el ejemplo</div>
+          <div class="word-bank" id="lb-${t.id}"></div>
+          <div class="drop-zone" id="ld-${t.id}"><span class="dz-label">Arrastra aquí</span></div>
+          <div class="ex-ctrls">
+            <button class="btn-check" onclick="checkLEx(${t.id})">✓ Verificar</button>
+            <button class="btn-reset" onclick="resetLEx(${t.id})">↺ Reiniciar</button>
+            <button class="btn-mark ${done.has(t.id)?'done':''}" onclick="toggleDoneList(${t.id})">☐ Marcar</button>
+          </div>
+          <div class="result-msg" id="lr-${t.id}"></div>
+        </div>
+      </div>
+    </div>`;
+  return c;
+}
+function toggleLEx(btn){
+  const id=parseInt(btn.dataset.id);
+  const wrap=document.getElementById('lx-'+id);
+  const open=wrap.classList.toggle('open');
+  btn.classList.toggle('open',open);
+  if(open&&!document.getElementById('lb-'+id).children.length)buildLEx(id);
+}
+function buildLEx(id){
+  const t=T.find(t=>t.id===id);
+  const ex=t.ejercicio||{tokens:t.ejemplo.split(' '),solucion:t.ejemplo.split(' ')};
+  const shuffled=[...ex.tokens].sort(()=>Math.random()-0.5);
+  const bank=document.getElementById('lb-'+id);
+  bank.innerHTML='';bank.dataset.sol=JSON.stringify(ex.solucion);
+  shuffled.forEach(w=>{
+    const el=document.createElement('div');
+    el.className='word-token';el.textContent=w;el.dataset.w=w;el.dataset.src='bank';el.draggable=true;
+    el.addEventListener('dragstart',e=>{dragTok=el;el.classList.add('dragging');e.dataTransfer.effectAllowed='move';});
+    el.addEventListener('dragend',()=>{if(dragTok){dragTok.classList.remove('dragging');dragTok=null;}});
+    bank.appendChild(el);
+  });
+  const dz=document.getElementById('ld-'+id);
+  dz.innerHTML='<span class="dz-label">Arrastra aquí</span>';
+  [bank,dz].forEach(zone=>{
+    zone.addEventListener('dragover',e=>{e.preventDefault();zone.classList.add('drag-over');});
+    zone.addEventListener('dragleave',()=>zone.classList.remove('drag-over'));
+    zone.addEventListener('drop',e=>{
+      e.preventDefault();zone.classList.remove('drag-over');
+      if(!dragTok)return;
+      if(zone===dz&&dragTok.dataset.src==='bank'){
+        const l=dz.querySelector('.dz-label');if(l)l.remove();
+        const dt=document.createElement('div');
+        dt.className='drop-token';dt.textContent=dragTok.dataset.w;dt.dataset.w=dragTok.dataset.w;dt.dataset.src='zone';dt.draggable=true;
+        dt.addEventListener('dragstart',e2=>{dragTok=dt;dt.classList.add('dragging');e2.dataTransfer.effectAllowed='move';});
+        dt.addEventListener('dragend',()=>{if(dragTok){dragTok.classList.remove('dragging');dragTok=null;}});
+        dz.appendChild(dt);dragTok.classList.add('placed');dragTok.draggable=false;
+      }else if(zone===bank&&dragTok.dataset.src==='zone'){
+        returnBank(dragTok.dataset.w,bank);dragTok.remove();
+        if(!dz.children.length)dz.innerHTML='<span class="dz-label">Arrastra aquí</span>';
+      }
+    });
+  });
+  dz.addEventListener('click',e=>{
+    const tok=e.target.closest('.drop-token');if(!tok)return;
+    returnBank(tok.dataset.w,bank);tok.remove();
+    if(!dz.children.length)dz.innerHTML='<span class="dz-label">Arrastra aquí</span>';
+  });
+}
+function checkLEx(id){
+  const bank=document.getElementById('lb-'+id);
+  const dz=document.getElementById('ld-'+id);
+  const sol=JSON.parse(bank.dataset.sol);
+  const placed=[...dz.querySelectorAll('.drop-token')].map(t=>t.dataset.w);
+  const res=document.getElementById('lr-'+id);
+  if(!placed.length){res.className='result-msg fail';res.textContent='⚠ Arrastra al menos una palabra.';return;}
+  const ok=placed.length===sol.length&&sol.every((w,i)=>placed[i]===w);
+  res.className='result-msg '+(ok?'ok':'fail');
+  res.textContent=ok?'✓ ¡Correcto!':'✗ Orden incorrecto.';
+  if(ok){done.add(id);save();}
+}
+function resetLEx(id){buildLEx(id);const r=document.getElementById('lr-'+id);if(r){r.className='result-msg';r.textContent='';}}
+function toggleDoneList(id){if(done.has(id))done.delete(id);else done.add(id);save();renderList();}
+
+// ── KEYBOARD ──
+document.addEventListener('keydown',e=>{
+  if(mode!=='fc')return;
+  if(e.key==='ArrowRight'||e.key==='ArrowDown')navigate(1);
+  if(e.key==='ArrowLeft'||e.key==='ArrowUp')navigate(-1);
+});
+
+// ── INIT ──
+load();
+buildCatBtns();
+setMode('fc');
+renderCard();
+updateProg();
+</script>
+</body>
+</html>

@@ -1,0 +1,238 @@
+{% extends 'base.html' %}
+{% block title %}Examen · VerbalMaster{% endblock %}
+{% block head %}
+<style>
+.setup-card{max-width:560px;margin:0 auto}
+.exam-option{background:var(--s2);border:1px solid var(--border);border-radius:9px;
+  padding:1rem 1.2rem;cursor:pointer;transition:all 0.15s;display:flex;align-items:center;gap:1rem}
+.exam-option:hover{border-color:var(--faint);transform:translateX(3px)}
+.exam-option.sel{border-color:var(--gold);background:rgba(251,191,36,0.07)}
+.exam-option .dot{width:10px;height:10px;border-radius:50%;border:2px solid var(--border);flex-shrink:0;transition:all 0.15s}
+.exam-option.sel .dot{background:var(--gold);border-color:var(--gold)}
+
+#examView{display:none}
+.timer-ring{font-family:var(--font-display);font-size:3rem;font-weight:900;color:var(--gold);text-align:center}
+.timer-ring.urgent{color:var(--zh);animation:pulse 0.5s ease infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.5}}
+
+.result-big{font-family:var(--font-display);font-size:5rem;font-weight:900;text-align:center;
+  background:linear-gradient(135deg,var(--gold),var(--es));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+</style>
+{% endblock %}
+{% block body %}
+<div class="page">
+<div class="container-md animate">
+
+  <!-- SETUP -->
+  <div id="setupView">
+    <div class="page-title mb-1">🎯 Examen</div>
+    <div class="page-sub mb-4">Prueba cronometrada · Obtén medalla y sube de nivel</div>
+
+    <div class="setup-card">
+      <div class="card mb-2">
+        <div class="text-xs text-muted mb-2" style="letter-spacing:.1em">IDIOMA</div>
+        <div style="display:flex;flex-direction:column;gap:0.6rem" id="langOpts">
+          <div class="exam-option sel" data-lang="all" onclick="selOpt(this,'lang')">
+            <div class="dot"></div><div><div style="font-size:0.82rem;font-weight:600">✦ Todos los idiomas</div><div class="text-xs text-muted">Mezcla de los 5 idiomas</div></div>
+          </div>
+          <div class="exam-option" data-lang="es" onclick="selOpt(this,'lang')">
+            <div class="dot"></div><div><div style="font-size:0.82rem;font-weight:600">🇪🇸 Solo Español</div><div class="text-xs text-muted">20 técnicas disponibles</div></div>
+          </div>
+          <div class="exam-option" data-lang="en" onclick="selOpt(this,'lang')">
+            <div class="dot"></div><div><div style="font-size:0.82rem;font-weight:600">🇬🇧 Solo Inglés</div><div class="text-xs text-muted">20 técnicas disponibles</div></div>
+          </div>
+          <div class="exam-option" data-lang="zh" onclick="selOpt(this,'lang')">
+            <div class="dot"></div><div><div style="font-size:0.82rem;font-weight:600">🇨🇳 Solo Chino</div><div class="text-xs text-muted">20 técnicas disponibles</div></div>
+          </div>
+          <div class="exam-option" data-lang="hi" onclick="selOpt(this,'lang')">
+            <div class="dot"></div><div><div style="font-size:0.82rem;font-weight:600">🇮🇳 Solo Hindi</div><div class="text-xs text-muted">20 técnicas disponibles</div></div>
+          </div>
+          <div class="exam-option" data-lang="ru" onclick="selOpt(this,'lang')">
+            <div class="dot"></div><div><div style="font-size:0.82rem;font-weight:600">🇷🇺 Solo Ruso</div><div class="text-xs text-muted">20 técnicas disponibles</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card mb-3">
+        <div class="text-xs text-muted mb-2" style="letter-spacing:.1em">NÚMERO DE PREGUNTAS</div>
+        <div style="display:flex;flex-direction:column;gap:0.6rem" id="countOpts">
+          <div class="exam-option" data-count="10" onclick="selOpt(this,'count')">
+            <div class="dot"></div><div><div style="font-size:0.82rem;font-weight:600">10 preguntas</div><div class="text-xs text-muted">~5 minutos · Básico</div></div>
+          </div>
+          <div class="exam-option sel" data-count="20" onclick="selOpt(this,'count')">
+            <div class="dot"></div><div><div style="font-size:0.82rem;font-weight:600">20 preguntas</div><div class="text-xs text-muted">~10 minutos · Estándar</div></div>
+          </div>
+          <div class="exam-option" data-count="50" onclick="selOpt(this,'count')">
+            <div class="dot"></div><div><div style="font-size:0.82rem;font-weight:600">50 preguntas</div><div class="text-xs text-muted">~25 minutos · Completo</div></div>
+          </div>
+          <div class="exam-option" data-count="100" onclick="selOpt(this,'count')">
+            <div class="dot"></div><div><div style="font-size:0.82rem;font-weight:600">100 preguntas</div><div class="text-xs text-muted">~50 minutos · Maestro</div></div>
+          </div>
+        </div>
+      </div>
+
+      <button class="btn btn-primary" style="width:100%;justify-content:center;padding:0.8rem" onclick="startExam()">
+        Comenzar examen →
+      </button>
+    </div>
+  </div>
+
+  <!-- EXAM -->
+  <div id="examView">
+    <div class="flex-between mb-2">
+      <div>
+        <span class="text-xs text-muted">PREGUNTA </span><span id="qNum" style="font-weight:700"></span>
+        <span class="text-xs text-muted"> DE </span><span id="qTotal" style="font-weight:700"></span>
+      </div>
+      <div class="flex">
+        <span class="text-xs text-muted">⏱</span>
+        <span id="timerEl" class="timer-ring" style="font-size:1.2rem;line-height:1"></span>
+      </div>
+    </div>
+
+    <div class="prog-bar mb-3">
+      <div class="prog-fill" id="examProg" style="width:0%;background:linear-gradient(90deg,var(--gold),var(--es))"></div>
+    </div>
+
+    <div class="card" id="examCard">
+      <div class="flex mb-2">
+        <span class="badge" id="qLangBadge"></span>
+        <span class="text-xs text-muted" id="qNum2"></span>
+      </div>
+      <div style="font-family:var(--font-display);font-size:1.3rem;font-weight:700;margin-bottom:0.5rem" id="qTitle"></div>
+      <div style="font-size:0.78rem;color:var(--muted);margin-bottom:1rem" id="qQuestion"></div>
+      <textarea id="examAns" rows="4" placeholder="Describe la técnica y escribe un ejemplo..."></textarea>
+      <div class="flex mt-2" style="gap:0.6rem">
+        <button class="btn btn-primary" id="examSubmitBtn" onclick="submitExam()">Responder →</button>
+        <button class="btn btn-outline btn-sm" onclick="skipExam()">Omitir</button>
+      </div>
+      <div class="feedback" id="examFb">
+        <div id="examFbTitle" style="font-size:0.75rem;font-weight:600;margin-bottom:0.4rem"></div>
+        <div id="examFbBody" style="font-size:0.72rem;color:var(--text);line-height:1.7"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RESULTS -->
+  <div id="resultView" style="display:none;text-align:center;padding:2rem 0">
+    <div style="font-family:var(--font-display);font-size:1.8rem;font-weight:900;margin-bottom:0.5rem" id="rTitle"></div>
+    <div class="text-muted text-sm mb-3" id="rSub"></div>
+    <div class="result-big" id="rPct"></div>
+    <div class="text-xs text-muted mt-1 mb-4">PORCENTAJE DE ACIERTOS</div>
+    <div class="grid-3 mb-4" id="rStats"></div>
+    <div id="rMedal" style="font-size:2rem;margin-bottom:1.5rem"></div>
+    <div style="display:flex;gap:0.8rem;justify-content:center;flex-wrap:wrap">
+      <button class="btn btn-primary" onclick="location.reload()">Repetir examen</button>
+      <button class="btn btn-outline" onclick="window.location='/dashboard'">Dashboard</button>
+      <button class="btn btn-outline" onclick="window.location='/exercises'">Más ejercicios</button>
+    </div>
+  </div>
+
+</div>
+</div>
+{% endblock %}
+{% block scripts %}
+<script>
+const LANG_FLAGS={es:'🇪🇸 Español',en:'🇬🇧 Inglés',zh:'🇨🇳 Chino',hi:'🇮🇳 Hindi',ru:'🇷🇺 Ruso'};
+let selLang='all', selCount=20;
+let questions=[], qi=0, timer=null, elapsed=0, answered=false;
+let examPts=0, examCorrect=0;
+
+function selOpt(el,group){
+  document.querySelectorAll(`#${group}Opts .exam-option`).forEach(o=>o.classList.remove('sel'));
+  el.classList.add('sel');
+  if(group==='lang') selLang=el.dataset.lang;
+  else selCount=parseInt(el.dataset.count);
+}
+
+function startExam(){
+  fetch('/api/exercises?lang='+selLang).then(r=>r.json()).then(data=>{
+    questions=data.sort(()=>Math.random()-0.5).slice(0,selCount);
+    qi=0; examPts=0; examCorrect=0; elapsed=0;
+    document.getElementById('setupView').style.display='none';
+    document.getElementById('examView').style.display='block';
+    startTimer(); renderExamCard();
+  });
+}
+
+function startTimer(){
+  timer=setInterval(()=>{
+    elapsed++;
+    const m=Math.floor(elapsed/60).toString().padStart(2,'0');
+    const s=(elapsed%60).toString().padStart(2,'0');
+    const el=document.getElementById('timerEl');
+    el.textContent=m+':'+s;
+    if(elapsed%60>=50) el.classList.add('urgent');
+    else el.classList.remove('urgent');
+  },1000);
+}
+
+function renderExamCard(){
+  if(qi>=questions.length){endExam();return;}
+  const q=questions[qi];
+  answered=false;
+  document.getElementById('qNum').textContent=qi+1;
+  document.getElementById('qNum2').textContent=q.num;
+  document.getElementById('qTotal').textContent=questions.length;
+  document.getElementById('qLangBadge').textContent=LANG_FLAGS[q.lang];
+  document.getElementById('qLangBadge').className='badge badge-'+q.lang;
+  document.getElementById('qTitle').textContent=q.title;
+  document.getElementById('qQuestion').textContent=q.question;
+  document.getElementById('examAns').value='';
+  document.getElementById('examAns').disabled=false;
+  document.getElementById('examSubmitBtn').disabled=false;
+  document.getElementById('examFb').classList.remove('show','correct','partial','wrong');
+  document.getElementById('examProg').style.width=Math.max(2,(qi/questions.length*100))+'%';
+}
+
+function submitExam(){
+  if(answered) return nextExamQ();
+  const q=questions[qi];
+  const ans=document.getElementById('examAns').value.trim();
+  if(!ans){toast('Escribe una respuesta','err');return;}
+  document.getElementById('examAns').disabled=true;
+  document.getElementById('examSubmitBtn').textContent='Siguiente →';
+  answered=true;
+  post('/api/submit',{answer:ans,keywords:q.keywords,lang:q.lang}).then(d=>{
+    examPts+=d.pts;
+    if(d.correct) examCorrect++;
+    const fb=document.getElementById('examFb');
+    const ft=document.getElementById('examFbTitle');
+    const fb2=document.getElementById('examFbBody');
+    fb.classList.add('show');
+    if(d.pts===10){fb.className='feedback show correct';ft.style.color='var(--ru)';ft.textContent='✅ Correcto +10';}
+    else if(d.pts>0){fb.className='feedback show partial';ft.style.color='var(--gold)';ft.textContent='⚠️ Parcial +'+d.pts;}
+    else{fb.className='feedback show wrong';ft.style.color='var(--zh)';ft.textContent='❌ Incorrecto';}
+    fb2.innerHTML=`<strong>Respuesta:</strong> ${q.answer}<br><strong>Ejemplo:</strong> ${q.example}`;
+  });
+}
+function skipExam(){qi++;renderExamCard();}
+function nextExamQ(){qi++;renderExamCard();}
+
+function endExam(){
+  clearInterval(timer);
+  document.getElementById('examView').style.display='none';
+  document.getElementById('resultView').style.display='block';
+  const total=questions.length;
+  const pct=total>0?Math.round(examCorrect/total*100):0;
+  const m=Math.floor(elapsed/60), s=elapsed%60;
+  const medals=[
+    {min:90,icon:'💎',name:'Diamante',msg:'¡Extraordinario!'},
+    {min:75,icon:'🥇',name:'Oro',msg:'¡Excelente!'},
+    {min:60,icon:'🥈',name:'Plata',msg:'¡Muy bien!'},
+    {min:40,icon:'🥉',name:'Bronce',msg:'Buen progreso'},
+    {min:0,icon:'📚',name:'Principiante',msg:'Sigue practicando'},
+  ];
+  const medal=medals.find(m=>pct>=m.min);
+  document.getElementById('rTitle').textContent=medal.msg+' '+medal.icon;
+  document.getElementById('rSub').textContent=`${total} preguntas · Tiempo: ${m}m ${s}s`;
+  document.getElementById('rPct').textContent=pct+'%';
+  document.getElementById('rMedal').textContent=`${medal.icon} Medalla ${medal.name}`;
+  document.getElementById('rStats').innerHTML=`
+    <div class="card"><div style="font-size:1.4rem;font-weight:700;color:var(--gold)">${examPts}</div><div class="text-xs text-muted">PUNTOS GANADOS</div></div>
+    <div class="card"><div style="font-size:1.4rem;font-weight:700;color:var(--ru)">${examCorrect}</div><div class="text-xs text-muted">CORRECTAS</div></div>
+    <div class="card"><div style="font-size:1.4rem;font-weight:700;color:var(--zh)">${total-examCorrect}</div><div class="text-xs text-muted">INCORRECTAS</div></div>
+  `;
+}
+</script>
+{% endblock %}

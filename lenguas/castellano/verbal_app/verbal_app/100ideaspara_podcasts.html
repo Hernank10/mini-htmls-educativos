@@ -1,0 +1,797 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>100 Ideas Innovadoras para Podcasts · Santander y N. de Santander · B1 Bilingual</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --fondo: #fef7e8;
+      --texto: #2c3e2f;
+      --verde-radio: #2a7a4b;
+      --naranja-idea: #e67e22;
+      --azul-region: #1e5f8e;
+      --amarillo-oro: #d4af37;
+      --acierto: #27ae60;
+      --fallo: #e74c3c;
+      --sombra: rgba(0, 0, 0, 0.08);
+      --card-bg: #ffffff;
+    }
+
+    body {
+      background: var(--fondo);
+      color: var(--texto);
+      font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
+      line-height: 1.5;
+      padding: 1rem;
+    }
+
+    .app-container {
+      max-width: 1300px;
+      margin: 0 auto;
+      background: var(--card-bg);
+      border-radius: 2rem;
+      box-shadow: 0 12px 28px var(--sombra);
+      overflow: hidden;
+      border: 1px solid #f0e0c0;
+    }
+
+    header {
+      background: #fdf4df;
+      padding: 1rem 2rem;
+      border-bottom: 3px solid var(--azul-region);
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+    }
+    h1 {
+      font-size: 1.6rem;
+      font-weight: 600;
+      color: #1e5f8e;
+      letter-spacing: -0.2px;
+    }
+    h1 small {
+      font-size: 0.7rem;
+      font-weight: normal;
+      color: #b98f5c;
+    }
+
+    .lang-selector {
+      display: flex;
+      gap: 0.5rem;
+      background: white;
+      padding: 0.3rem;
+      border-radius: 40px;
+      border: 1px solid #f0e0c0;
+    }
+    .lang-btn {
+      background: transparent;
+      border: none;
+      padding: 0.4rem 1rem;
+      border-radius: 30px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.2s;
+      font-size: 0.85rem;
+    }
+    .lang-btn.active {
+      background: var(--azul-region);
+      color: white;
+    }
+
+    nav {
+      display: flex;
+      gap: 0.5rem;
+      background: #eaddc5;
+      padding: 0.6rem 2rem;
+      border-bottom: 1px solid #e6d5ba;
+      flex-wrap: wrap;
+    }
+    .nav-btn {
+      background: transparent;
+      border: none;
+      font-size: 0.95rem;
+      padding: 0.5rem 1.2rem;
+      border-radius: 40px;
+      cursor: pointer;
+      font-weight: 500;
+      transition: all 0.2s;
+      color: #1e5f8e;
+    }
+    .nav-btn.active {
+      background-color: var(--azul-region);
+      color: white;
+    }
+    .nav-btn:hover:not(.active) {
+      background-color: #cfdec9;
+    }
+
+    .view {
+      display: none;
+      padding: 2rem;
+      animation: fade 0.2s ease;
+    }
+    .active-view { display: block; }
+    @keyframes fade { from { opacity: 0; transform: translateY(5px);} to { opacity: 1; transform: translateY(0);} }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+    .stat-card {
+      background: var(--fondo);
+      border-radius: 1.5rem;
+      padding: 1rem;
+      text-align: center;
+      border-left: 6px solid var(--amarillo-oro);
+      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    }
+    .stat-number {
+      font-size: 2.2rem;
+      font-weight: 700;
+      color: var(--azul-region);
+    }
+
+    .progress-bar-bg {
+      background: #e2e8f0;
+      border-radius: 40px;
+      height: 12px;
+      overflow: hidden;
+      margin: 0.8rem 0;
+    }
+    .progress-fill {
+      background: var(--azul-region);
+      width: 0%;
+      height: 100%;
+      transition: width 0.2s;
+    }
+
+    .conceptos-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+      gap: 1rem;
+      max-height: 65vh;
+      overflow-y: auto;
+      padding-right: 0.3rem;
+    }
+    .concepto-item {
+      background: white;
+      border-radius: 1.2rem;
+      padding: 0.8rem 1rem;
+      border-left: 5px solid var(--naranja-idea);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+    .concepto-titulo {
+      font-weight: 700;
+      color: #1e5f8e;
+    }
+    .concepto-desc {
+      font-size: 0.85rem;
+      color: #6b5a44;
+      margin-top: 6px;
+      border-top: 1px solid #f5ebd8;
+      padding-top: 6px;
+    }
+    .badge-progreso {
+      font-size: 0.7rem;
+      background: #fef5e6;
+      border-radius: 20px;
+      padding: 2px 10px;
+      display: inline-block;
+      margin-top: 8px;
+    }
+
+    .flashcard {
+      background: #ffffff;
+      border-radius: 2rem;
+      padding: 1.8rem;
+      text-align: center;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+      border: 1px solid #f0e0c0;
+      max-width: 750px;
+      margin: 0 auto;
+    }
+    .pregunta {
+      font-size: 1.3rem;
+      font-weight: 500;
+      margin-bottom: 1.8rem;
+      background: #fdf4df;
+      padding: 1.2rem;
+      border-radius: 1.5rem;
+    }
+    .respuesta-oculta {
+      background: #fef9ec;
+      border-radius: 1.2rem;
+      padding: 1rem;
+      margin: 1rem 0;
+      display: none;
+    }
+    .orden-palabras {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 0.6rem;
+      margin: 1.5rem 0;
+    }
+    .palabra-btn {
+      background: var(--azul-region);
+      color: white;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 2rem;
+      font-size: 0.9rem;
+      cursor: pointer;
+    }
+    .orden-actual {
+      background: #fefef9;
+      border-radius: 1rem;
+      padding: 1rem;
+      min-height: 80px;
+      margin: 1rem 0;
+      text-align: left;
+      border: 1px dashed #e6d5ba;
+      font-size: 1rem;
+    }
+    .btn {
+      background: #e2e8f0;
+      border: none;
+      padding: 0.6rem 1.5rem;
+      border-radius: 3rem;
+      font-weight: 600;
+      margin: 0.3rem;
+      cursor: pointer;
+      font-family: inherit;
+    }
+    .btn-primary { background: var(--azul-region); color: white; }
+    .btn-acierto { background: var(--acierto); color: white; }
+    .btn-fallo { background: var(--fallo); color: white; }
+    .modo-selector {
+      display: flex;
+      justify-content: center;
+      gap: 0.8rem;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+    }
+    .modo-btn {
+      background: #e2e8f0;
+      border: none;
+      padding: 0.5rem 1.2rem;
+      border-radius: 40px;
+      cursor: pointer;
+      font-weight: 500;
+      transition: all 0.2s;
+    }
+    .modo-btn.active {
+      background: var(--azul-region);
+      color: white;
+    }
+    footer {
+      text-align: center;
+      padding: 1rem;
+      font-size: 0.75rem;
+      border-top: 1px solid #f0e0c0;
+      background: #fefcf7;
+    }
+    .translation-direction {
+      margin: 0.5rem 0;
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: var(--naranja-idea);
+    }
+    input {
+      padding: 0.8rem;
+      border-radius: 2rem;
+      border: 1px solid #cbd5e1;
+      font-size: 1rem;
+      width: 80%;
+      margin: 1rem auto;
+      display: block;
+      text-align: center;
+      font-family: inherit;
+    }
+    @media (max-width: 680px) {
+      .view { padding: 1rem; }
+      .pregunta { font-size: 1rem; }
+      .lang-selector { order: 2; width: 100%; justify-content: center; }
+      header { flex-direction: column; align-items: stretch; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+<div class="app-container">
+  <header>
+    <div>
+      <h1>🎧 100 Ideas para Podcasts · Santander y N. de Santander <small>B1 Bilingual · Intermedio</small></h1>
+    </div>
+    <div class="lang-selector">
+      <button id="langEsBtn" class="lang-btn active">🇪🇸 Español</button>
+      <button id="langEnBtn" class="lang-btn">🇬🇧 English</button>
+      <button id="langBothBtn" class="lang-btn">🌐 Bilingüe</button>
+    </div>
+  </header>
+  <nav>
+    <button class="nav-btn active" data-view="dashboard">📊 Panel</button>
+    <button class="nav-btn" data-view="listado">📚 100 Ideas</button>
+    <button class="nav-btn" data-view="practica">🃏 Práctica</button>
+  </nav>
+
+  <section id="dashboard" class="view active-view">
+    <div class="stats-grid" id="statsContainer"></div>
+    <div class="card" style="background:white; border-radius:1.6rem; padding:1.2rem;">
+      <h3 id="progressTitle">📈 Progreso en ideas regionales</h3>
+      <div class="progress-bar-bg"><div class="progress-fill" id="globalProgressFill"></div></div>
+      <p id="globalProgressText"></p>
+      <button id="resetProgresoBtn" class="btn" style="background:#eaddc5;">🔄 Reiniciar progreso</button>
+    </div>
+  </section>
+
+  <section id="listado" class="view">
+    <input type="text" id="filtroListado" placeholder="🔍 Buscar idea / Search idea..." style="width:100%; padding:10px; margin-bottom:15px; border-radius:40px; border:1px solid #e6d5ba;">
+    <div id="conceptosListadoContainer" class="conceptos-grid"></div>
+  </section>
+
+  <section id="practica" class="view">
+    <div class="modo-selector" id="modoSelector">
+      <button id="modoTraduccionDirecta" class="modo-btn active">📖 Idea → Traducción</button>
+      <button id="modoTraduccionInversa" class="modo-btn">🔄 Traducción → Idea</button>
+      <button id="modoOrdenar" class="modo-btn">🧩 Ordenar idea</button>
+      <button id="modoEspEng" class="modo-btn">🌐 ESP ↔ ENG</button>
+    </div>
+    <div id="practicaContainer"></div>
+  </section>
+  <footer>Progreso guardado localmente · 100 ideas innovadoras para podcasts regionales · Santander y Norte de Santander · Nivel B1</footer>
+</div>
+
+<script>
+  // --------------------------------------------------------------
+  // 100 IDEAS INNOVADORAS PARA PODCASTS (Español - Inglés)
+  // Enfoque regional: Santander y Norte de Santander, Colombia
+  // Nivel B1 (Intermedio)
+  // --------------------------------------------------------------
+  const vocabularioData = [
+    [1, "La ruta del café santandereano", "The Santander coffee route", "Exploramos las fincas cafeteras de la región, sus procesos tradicionales y la calidad del grano santandereano.", "We explore the coffee farms of the region, their traditional processes and the quality of Santander coffee."],
+    [2, "Mitos y leyendas de la mesa de los santos", "Myths and legends of Mesa de los Santos", "Relatos de aparecidos, tesoros escondidos y sucesos misteriosos en este emblemático lugar.", "Stories of ghosts, hidden treasures and mysterious events in this emblematic place."],
+    [3, "El río Chicamocha: fuente de vida y aventura", "The Chicamocha River: source of life and adventure", "Hablamos sobre la importancia del cañón del Chicamocha, su ecología y los deportes de aventura que ofrece.", "We talk about the importance of the Chicamocha canyon, its ecology and the adventure sports it offers."],
+    [4, "Artesanos de Girón: tradición en cuero", "Artisans of Girón: leather tradition", "Visitamos los talleres de marroquinería en Girón y aprendemos sobre sus técnicas ancestrales.", "We visit the leather workshops in Girón and learn about their ancestral techniques."],
+    [5, "La orquídea flor del año: especies de los Santanderes", "Orchid of the year: species from Santander", "Exploramos la diversidad de orquídeas en la región y los esfuerzos para conservarlas.", "We explore the diversity of orchids in the region and conservation efforts."],
+    [6, "Parque Nacional del Chicamocha: turismo para todos", "Chicamocha National Park: tourism for everyone", "Recorrido por el parque, sus teleféricos, museos y actividades para toda la familia.", "Tour of the park, its cable cars, museums and activities for the whole family."],
+    [7, "Música santandereana: del bambuco al pasillo", "Santander music: from bambuco to pasillo", "Repaso de los géneros musicales típicos y los compositores más destacados de la región.", "Review of typical musical genres and the most prominent composers of the region."],
+    [8, "La cueva del indio: historia precolombina", "Cueva del Indio: pre-Columbian history", "Exploramos este sitio arqueológico en Santander y las pinturas rupestres que alberga.", "We explore this archaeological site in Santander and its rock paintings."],
+    [9, "Emprendedores de Cúcuta: negocios que inspiran", "Entrepreneurs from Cúcuta: inspiring businesses", "Entrevistas a jóvenes emprendedores que están transformando la economía local.", "Interviews with young entrepreneurs who are transforming the local economy."],
+    [10, "Gastronomía de los Santanderes: hormigas culonas y más", "Santander gastronomy: big-bottomed ants and more", "Platos típicos como mute, pepitoria, arepas de choclo y el famoso manjar de hormigas.", "Typical dishes like mute, pepitoria, corn arepas and the famous ant delicacy."],
+    [11, "El petróleo en Norte de Santander: pasado y futuro", "Oil in Norte de Santander: past and future", "Análisis de la industria petrolera en la región, sus impactos y perspectivas de transición energética.", "Analysis of the oil industry in the region, its impacts and energy transition perspectives."],
+    [12, "La ruta de los pueblos patrimoniales", "The heritage towns route", "Recorrido por Barichara, San Gil, Zapatoca y otros pueblos con arquitectura colonial.", "Tour of Barichara, San Gil, Zapatoca and other towns with colonial architecture."],
+    [13, "Fútbol regional: el orgullo del Cúcuta Deportivo", "Regional football: pride of Cúcuta Deportivo", "Historia del equipo 'motilón', sus glorias, dificultades y la pasión de su hinchada.", "History of the 'motilón' team, its glories, difficulties and fan passion."],
+    [14, "Tejedoras de Los Santos: arte en fique", "Weavers of Los Santos: fique art", "Mujeres artesanas que convierten el fique en mochilas, sombreros y tapices exquisite.", "Women artisans who turn fique into beautiful bags, hats and tapestries."],
+    [15, "El Cañón del Chicamocha: geología e historia", "Chicamocha Canyon: geology and history", "Cómo se formó este cañón, su biodiversidad y los hallazgos paleontológicos en la zona.", "How this canyon was formed, its biodiversity and paleontological findings in the area."],
+    [16, "Productores de panela: la dulzura tradicional", "Panela producers: traditional sweetness", "Conocemos las trapiches paneleros de la región y el proceso de producción de la panela.", "We learn about the panela mills in the region and the panela production process."],
+    [17, "Cine en los Santanderes: festivales y realizadores", "Cinema in Santander: festivals and filmmakers", "Hablamos sobre el Festival de Cine de Santander y los realizadores audiovisuales locales.", "We talk about the Santander Film Festival and local audiovisual filmmakers."],
+    [18, "Reserva Natural de los Estoraques: paisaje lunar", "Estoraques Natural Reserve: lunar landscape", "Exploramos esta formación rocosa única en Norte de Santander y su flora adaptada.", "We explore this unique rock formation in Norte de Santander and its adapted flora."],
+    [19, "Pan artesanal de Cúcuta: tradición y sabor", "Artisan bread of Cúcuta: tradition and flavor", "Entrevista a panaderos que mantienen viva la receta del pan de la región.", "Interview with bakers who keep the region's bread recipe alive."],
+    [20, "San Gil: capital de los deportes extremos", "San Gil: capital of extreme sports", "Rafting, parapente, espeleología y más actividades que atraen turistas nacionales.", "Rafting, paragliding, caving and more activities that attract national tourists."],
+    [21, "El guane: cultura ancestral en Santander", "The Guane: ancestral culture in Santander", "Historia de esta civilización precolombina, sus costumbres y legado en la región.", "History of this pre-Columbian civilization, its customs and legacy in the region."],
+    [22, "Mujeres líderes en los Santanderes", "Women leaders in Santander", "Perfiles de mujeres que ocupan cargos importantes en política, academia y empresas.", "Profiles of women who hold important positions in politics, academia and business."],
+    [23, "La laguna de Ortices: misterio y ecoturismo", "Ortices Lagoon: mystery and ecotourism", "Leyendas sobre esta laguna en el páramo y su importancia para el ecosistema.", "Legends about this lagoon in the páramo and its importance for the ecosystem."],
+    [24, "Agricultura orgánica en los municipios", "Organic agriculture in municipalities", "Campesinos que han dejado los químicos para cultivar de manera sostenible.", "Farmers who have left chemicals to grow sustainably."],
+    [25, "Arquitectura de Barichara: belleza en piedra", "Barichara architecture: beauty in stone", "Por qué este pueblo es considerado el más bonito de Colombia y su técnica constructiva.", "Why this town is considered the most beautiful in Colombia and its construction technique."],
+    [26, "Reciclaje y sostenibilidad en Cúcuta", "Recycling and sustainability in Cúcuta", "Iniciativas ciudadanas y empresas que trabajan por una ciudad más limpia.", "Citizen initiatives and companies working for a cleaner city."],
+    [27, "La Batalla de Cúcuta: gesta libertadora", "The Battle of Cúcuta: liberating feat", "Relato histórico de cómo Simón Bolívar liberó la ciudad en 1813.", "Historical account of how Simón Bolívar liberated the city in 1813."],
+    [28, "Museo de Arte Moderno de Bucaramanga", "Bucaramanga Museum of Modern Art", "Recorrido por sus colecciones y entrevista con artistas plásticos de la región.", "Tour of its collections and interview with visual artists from the region."],
+    [29, "El puente internacional Simón Bolívar: conexión fronteriza", "Simón Bolívar International Bridge: border connection", "Historia y vida cotidiana en este paso fronterizo con Venezuela.", "History and daily life at this border crossing with Venezuela."],
+    [30, "Ciclo turismo en los Santanderes: rutas imperdibles", "Cycling tourism in Santander: unmissable routes", "Las mejores carreteras y caminos para recorrer en bicicleta por los dos departamentos.", "The best roads and trails to cycle through both departments."],
+    [31, "Feria de la Cultura en Ocaña", "Ocaña Culture Fair", "Eventos artísticos, gastronomía y tradiciones que se celebran en esta ciudad nortesantandereana.", "Artistic events, gastronomy and traditions celebrated in this Norte de Santander city."],
+    [32, "Producción de cacao en Santander", "Cocoa production in Santander", "Hablamos con cacaocultores sobre el cultivo, fermentación y transformación del cacao.", "We talk with cocoa growers about cultivation, fermentation and cocoa processing."],
+    [33, "Reserva de aves en Los Santos", "Bird reserve in Los Santos", "Avistamiento de aves endémicas y migratorias en esta zona de altísima biodiversidad.", "Birdwatching of endemic and migratory birds in this high biodiversity area."],
+    [34, "La industria del calzado en Cúcuta", "The footwear industry in Cúcuta", "Historia y situación actual de las fábricas de zapatos en la ciudad.", "History and current situation of shoe factories in the city."],
+    [35, "Parque Nacional de Pisba: páramo y conservación", "Pisba National Park: páramo and conservation", "Importancia de este ecosistema para el suministro de agua en la región.", "Importance of this ecosystem for water supply in the region."],
+    [36, "Los mejores panes de la región", "The best breads of the region", "Visita a panaderías tradicionales en Bucaramanga, San Gil y Cúcuta.", "Visit to traditional bakeries in Bucaramanga, San Gil and Cúcuta."],
+    [37, "Cuevas del Samán: ecoturismo subterráneo", "Samán Caves: underground ecotourism", "Exploramos estas formaciones kársticas en el municipio de Betulia.", "We explore these karst formations in Betulia municipality."],
+    [38, "Comercio binacional: historias de venezolanos en Colombia", "Binational trade: stories of Venezuelans in Colombia", "Testimonios de emprendedores venezolanos que han iniciado negocios en Cúcuta.", "Testimonies of Venezuelan entrepreneurs who have started businesses in Cúcuta."],
+    [39, "La represa del Río Táchira: divisoria de aguas", "The Táchira River dam: watershed", "Estructura que separa las cuencas del Orinoco y el Catatumbo, con gran importancia geopolítica.", "Structure that separates the Orinoco and Catatumbo basins, of great geopolitical importance."],
+    [40, "Silletería santandereana: arte en madera", "Santander saddlery: wood art", "Maestros carpinteros que crean muebles y objetos decorativos únicos en la región.", "Master carpenters who create unique furniture and decorative objects in the region."],
+    [41, "El picacho: mirador natural de Cúcuta", "El Picacho: natural viewpoint of Cúcuta", "Rutas para llegar a este cerro y las mejores vistas de la ciudad.", "Routes to reach this hill and the best views of the city."],
+    [42, "Haciendas coloniales en los Santanderes", "Colonial haciendas in Santander", "Recorrido por antiguas haciendas que hoy son hoteles o museos.", "Tour of old haciendas that today are hotels or museums."],
+    [43, "Producción lechera en la zona", "Milk production in the area", "Visita a fincas ganaderas y proceso de producción de quesos y lácteos regionales.", "Visit to cattle farms and production process of regional cheeses and dairy products."],
+    [44, "Río Pamplonita: historia y actualidad", "Pamplonita River: history and present", "El río que cruza Cúcuta y su importancia para la ciudad.", "The river that crosses Cúcuta and its importance for the city."],
+    [45, "Escalada en roca en el Chicamocha", "Rock climbing in Chicamocha", "Los mejores sitios para practicar escalada en el Cañón del Chicamocha.", "The best places to practice climbing in the Chicamocha Canyon."],
+    [46, "Alfarería en Zapatoca: barro con identidad", "Pottery in Zapatoca: clay with identity", "Talleres donde la arcilla se convierte en ollas, platos y figuras decorativas.", "Workshops where clay becomes pots, plates and decorative figures."],
+    [47, "Gastronomía del río: pescados de la región", "River gastronomy: fish from the region", "Platos con bocachico, nicuro y otras especies de los ríos de los Santanderes.", "Dishes with bocachico, nicuro and other species from Santander rivers."],
+    [48, "La vida en los corregimientos de Ocaña", "Life in the villages of Ocaña", "Costumbres y desafíos de las comunidades rurales alrededor de Ocaña.", "Customs and challenges of rural communities around Ocaña."],
+    [49, "Ecoturismo en el Páramo de Santurbán", "Ecotourism in Santurbán Páramo", "Importancia de este ecosistema para el agua de Bucaramanga y actividades sostenibles.", "Importance of this ecosystem for Bucaramanga's water and sustainable activities."],
+    [50, "Mango en la región: recetas deliziosas", "Mango in the region: delicious recipes", "Postres, bebidas y platos típicos elaborados con esta fruta tropical.", "Desserts, drinks and typical dishes made with this tropical fruit."],
+    [51, "El cementerio central de Cúcuta: historia", "Cúcuta Central Cemetery: history", "Personajes enterrados allí y la arquitectura de sus mausoleos.", "Characters buried there and the architecture of its mausoleums."],
+    [52, "Festival del Tiple en Girón", "Tiple Festival in Girón", "Evento que celebra este instrumento de cuerda y los músicos santandereanos.", "Event that celebrates this string instrument and Santander musicians."],
+    [53, "Ladrilleros artesanales en El Zulia", "Artisan brickmakers in Zulia", "Proceso tradicional de fabricación de ladrillos aún vigente.", "Traditional brick manufacturing process still in use."],
+    [54, "Caminos reales: historia caminando", "Royal roads: walking history", "Senderos antiguos que conectaban pueblos durante la colonia.", "Ancient trails that connected towns during colonial times."],
+    [55, "Apicultura: dulzura de los Santanderes", "Beekeeping: sweetness of Santander", "Productores de miel y sus técnicas de cuidado de abejas.", "Honey producers and their bee care techniques."],
+    [56, "La basílica de San Nicolás en Cúcuta", "San Nicolás Basilica in Cúcuta", "Historia y arquitectura del templo más emblemático de la ciudad.", "History and architecture of the city's most emblematic temple."],
+    [57, "Motociclismo en la región: cultura y rutas", "Motorcycling in the region: culture and routes", "Comunidad motera y las mejores carreteras para recorrer en moto.", "Motorcycle community and the best roads to ride."],
+    [58, "Platos callejeros de Bucaramanga", "Street food of Bucaramanga", "Arepas de huevo, mute, fritanga y otros antojitos populares.", "Arepas de huevo, mute, fritanga and other popular snacks."],
+    [59, "La música vallenata en la región", "Vallenato music in the region", "Influencia del vallenato en los Santanderes y sus exponentes.", "Influence of vallenato in Santander and its exponents."],
+    [60, "Parapente en Chicamocha: volar es soñar", "Paragliding in Chicamocha: flying is dreaming", "Los mejores sitios para volar en parapente y escuelas recomendadas.", "The best places to fly paragliding and recommended schools."],
+    [61, "Tela y algodón en el Socorro", "Fabric and cotton in Socorro", "Textilería tradicional del pueblo que le dio nombre al Socorro.", "Traditional textile of the town that gave the name to Socorro."],
+    [62, "Rituales de la semana santa en la región", "Holy week rituals in the region", "Procesiones y tradiciones religiosas únicas en los Santanderes.", "Unique processions and religious traditions in Santander."],
+    [63, "El tren de los santos: proyecto dormido", "The Santos train: dormant project", "Historia del proyecto ferroviario que nunca se completó.", "History of the railway project that was never completed."],
+    [64, "Pintura y murales callejeros en Cúcuta", "Street painting and murals in Cúcuta", "Artistas urbanos que embellecen la ciudad con sus obras.", "Urban artists who beautify the city with their works."],
+    [65, "Criadores de caballo en los Santanderes", "Horse breeders in Santander", "Cultura equina y caballos de paso fino.", "Equestrian culture and paso fino horses."],
+    [66, "Turismo médico en Cúcuta", "Medical tourism in Cúcuta", "Clínicas especializadas que atraen pacientes de Venezuela y otras zonas.", "Specialized clinics that attract patients from Venezuela and other areas."],
+    [67, "El río Suratá: paraíso pesquero", "The Suratá River: fishing paradise", "Especies y lugares para pescar en este afluente santandereano.", "Species and places for fishing in this Santander tributary."],
+    [68, "Danza contemporánea en la región", "Contemporary dance in the region", "Grupos de danza que innovan con coreografías originales.", "Dance groups that innovate with original choreographies."],
+    [69, "Cacao y chocolate en el Catatumbo", "Cocoa and chocolate in Catatumbo", "Cacaocultores y productores de chocolate artesanal.", "Cocoa growers and artisan chocolate producers."],
+    [70, "Las casitas de colores de la ciudad", "The colorful houses of the city", "Historia de los barrios más pintorescos de Cúcuta y Bucaramanga.", "History of the most picturesque neighborhoods in Cúcuta and Bucaramanga."],
+    [71, "La caña para el guarapo", "Sugarcane for guarapo", "Tradición de las trapiches y el refresco de caña.", "Tradition of sugar mills and sugarcane soft drink."],
+    [72, "Museo arqueológico de los Santanderes", "Santander archaeological museum", "Recolección de piezas indígenas encontradas en la región.", "Collection of indigenous pieces found in the region."],
+    [73, "Movimiento juvenil ambientalista", "Youth environmental movement", "Jóvenes que luchan por proteger el medio ambiente en la región.", "Young people fighting to protect the environment in the region."],
+    [74, "El ají santandereano: picante de la región", "Santander chili: spiciness of the region", "Cómo se cultiva y usa este condimento en la cocina local.", "How it is grown and used in local cuisine."],
+    [75, "Bordados y tejidos de la abuela", "Grandma's embroidery and weaving", "Técnicas tradicionales de bordado que pasan de generación en generación.", "Traditional embroidery techniques passed down through generations."],
+    [76, "Estación de tren de Puerto Santander", "Puerto Santander train station", "Historia del ferrocarril en esta zona fronteriza.", "History of the railway in this border area."],
+    [77, "Emisores y creadores de contenido local", "Local content creators", "Youtubers, tiktokers y podcasters de la región.", "YouTubers, TikTokers and podcasters from the region."],
+    [78, "La plaza de mercado de Pamplona", "Pamplona market square", "Productos típicos y encuentros cotidianos en este espacio.", "Typical products and daily encounters in this space."],
+    [79, "Bienestar animal en los Santanderes", "Animal welfare in Santander", "Refugios, campañas de adopción y nuevas leyes.", "Shelters, adoption campaigns and new laws."],
+    [80, "El turismo de reuniones en la región", "Meeting tourism in the region", "Centros de convenciones y hotelería para eventos grandes.", "Convention centers and hotels for large events."],
+    [81, "Literatura de los Santanderes", "Literature of Santander", "Escritores y poetas nacidos en la región y sus obras.", "Writers and poets born in the region and their works."],
+    [82, "El pan de bono del área metropolitana", "Bono bread of the metropolitan area", "Secretos de este pan tradicional de Bucaramanga.", "Secrets of this traditional bread from Bucaramanga."],
+    [83, "Jóvenes en la música académica", "Young people in academic music", "Orquestas juveniles y bandas sinfónicas de los Santanderes.", "Youth orchestras and symphonic bands of Santander."],
+    [84, "Futuro de la agricultura: tecnología y campo", "Future of agriculture: technology and field", "Cómo la tecnología está cambiando la agricultura regional.", "How technology is changing regional agriculture."],
+    [85, "El queque de la región: recetas secretas", "The region's cake: secret recipes", "Pasteles tradicionales que se preparan en cada hogar.", "Traditional cakes prepared in each home."],
+    [86, "Guardianes del bosque: campesinos y naturaleza", "Forest guardians: farmers and nature", "Historias de comunidades que protegen los bosques nativos.", "Stories of communities that protect native forests."],
+    [87, "La influencia del café en la arquitectura", "Coffee's influence on architecture", "Casas típicas construidas en la época de auge cafetero.", "Typical houses built during the coffee boom."],
+    [88, "Museo de los Niños en Cúcuta", "Children's Museum in Cúcuta", "Espacio interactivo para aprender jugando en la ciudad.", "Interactive space to learn by playing in the city."],
+    [89, "La fiesta de la Virgen del Carmen en barrios", "Virgin of Carmen festival in neighborhoods", "Cómo se celebra patrona en diferentes barrios.", "How the patron saint is celebrated in different neighborhoods."],
+    [90, "Recicladores del relleno sanitario", "Recyclers of the landfill", "Trabajo de los recuperadores ambientales y sus historias.", "Work of environmental waste pickers and their stories."],
+    [91, "La ruta de los molinos de viento", "The windmill route", "Proyectos de energía eólica en la región.", "Wind energy projects in the region."],
+    [92, "Cine club comunitario: función comentada", "Community cinema club: commented screening", "Proyección y debate de películas en espacios públicos.", "Screening and debate of films in public spaces."],
+    [93, "La piedra del indio en Ragonvalia", "The Indian stone in Ragonvalia", "Leyendas alrededor de esta formación rocosa.", "Legends around this rock formation."],
+    [94, "Semilleros de música tradicional", "Traditional music seedlings", "Escuelas donde niños aprenden a tocar instrumentos típicos.", "Schools where children learn to play typical instruments."],
+    [95, "Vivero de plantas nativas", "Native plant nursery", "Propagación de especies para restaurar ecosistemas.", "Propagation of species to restore ecosystems."],
+    [96, "La influencia de los migrantes en la gastronomía", "Influence of migrants on gastronomy", "Platos árabes, italianos y chinos que se mezclan con la tradición.", "Arabic, Italian and Chinese dishes that blend with tradition."],
+    [97, "Tardes de tertulia: historia oral", "Afternoons of talk: oral history", "Mayores que comparten recuerdos de la región.", "Elders sharing memories of the region."],
+    [98, "Bici-escuela para adultos mayores", "Bike school for older adults", "Aprendiendo a andar en bicicleta después de los 60.", "Learning to ride a bicycle after 60."],
+    [99, "La magdalena río grande: pasado y presente", "The Magdalena River: past and present", "El río que baña parte de los Santanderes.", "The river that bathes part of Santander."],
+    [100, "Futuro de los Santanderes: visión juvenil", "Future of Santander: youth vision", "Jóvenes comparten cómo imaginan la región en 20 años.", "Young people share how they imagine the region in 20 years."]
+  ];
+
+  // --------------------- LOCALSTORAGE Y PROGRESO -------------------------
+  let progreso = {};
+  let currentLang = "es";
+  let currentPracticeMode = "traduccion_directa";
+  let currentCardId = null;
+  let currentOrdenarPalabras = [];
+  let shuffledPalabras = [];
+  let selectedOrder = [];
+  let ordenarRespuestaCorrecta = "";
+
+  const STORAGE_KEY = "podcastIdeasSantanderB1Progreso";
+
+  function cargarProgreso() {
+    const guardado = localStorage.getItem(STORAGE_KEY);
+    if (guardado) progreso = JSON.parse(guardado);
+    else {
+      progreso = {};
+      for (let i = 1; i <= 100; i++) progreso[i] = { aciertos: 0, fallos: 0 };
+    }
+  }
+  function guardarProgreso() { localStorage.setItem(STORAGE_KEY, JSON.stringify(progreso)); }
+  function registrarResultado(id, acierto) {
+    if (!progreso[id]) progreso[id] = { aciertos: 0, fallos: 0 };
+    if (acierto) progreso[id].aciertos += 1;
+    else progreso[id].fallos += 1;
+    guardarProgreso();
+    renderDashboard();
+    renderListado(document.getElementById("filtroListado")?.value || "");
+  }
+
+  function obtenerTexto(item, tipo) {
+    if (currentLang === 'es') return tipo === 'palabra' ? item[1] : item[3];
+    if (currentLang === 'en') return tipo === 'palabra' ? item[2] : item[4];
+    return tipo === 'palabra' ? `${item[1]} / ${item[2]}` : `${item[3]} / ${item[4]}`;
+  }
+
+  function renderDashboard() {
+    let totalAciertos = 0, totalFallos = 0, conceptosConAcierto = 0;
+    for (let i = 1; i <= 100; i++) {
+      const p = progreso[i] || { aciertos: 0, fallos: 0 };
+      totalAciertos += p.aciertos;
+      totalFallos += p.fallos;
+      if (p.aciertos > 0) conceptosConAcierto++;
+    }
+    const porcentaje = (conceptosConAcierto / 100) * 100;
+    document.getElementById("globalProgressFill").style.width = `${porcentaje}%`;
+    document.getElementById("globalProgressText").innerHTML = `${conceptosConAcierto} de 100 ideas con al menos 1 acierto (${Math.round(porcentaje)}%).`;
+    document.getElementById("statsContainer").innerHTML = `
+      <div class="stat-card"><div class="stat-number">${totalAciertos}</div>✅ Aciertos totales</div>
+      <div class="stat-card"><div class="stat-number">${totalFallos}</div>❌ Fallos</div>
+      <div class="stat-card"><div class="stat-number">${conceptosConAcierto}</div>💡 Ideas dominadas</div>
+      <div class="stat-card"><div class="stat-number">${Math.round((totalAciertos/(totalAciertos+totalFallos+0.001))*100)}%</div>📊 Tasa éxito</div>
+    `;
+  }
+
+  function renderListado(filtro = "") {
+    const container = document.getElementById("conceptosListadoContainer");
+    container.innerHTML = "";
+    const filtroLower = filtro.toLowerCase();
+    for (let c of vocabularioData) {
+      const id = c[0];
+      const idea = obtenerTexto(c, 'palabra');
+      const descripcion = obtenerTexto(c, 'definicion');
+      const prog = progreso[id] || { aciertos: 0, fallos: 0 };
+      if (filtro && !idea.toLowerCase().includes(filtroLower) && !descripcion.toLowerCase().includes(filtroLower)) continue;
+      const div = document.createElement("div");
+      div.className = "concepto-item";
+      div.innerHTML = `<div class="concepto-titulo">${id}. ${idea}</div>
+                       <div class="concepto-desc">💡 ${descripcion}</div>
+                       <span class="badge-progreso">✅ ${prog.aciertos} aciertos · ❌ ${prog.fallos} fallos</span>`;
+      container.appendChild(div);
+    }
+  }
+
+  const practicaDiv = document.getElementById("practicaContainer");
+
+  function modoTraduccionDirecta() {
+    const randomIndex = Math.floor(Math.random() * vocabularioData.length);
+    const item = vocabularioData[randomIndex];
+    currentCardId = item[0];
+    const pregunta = obtenerTexto(item, 'palabra');
+    const respuestaCorrecta = obtenerTexto(item, 'palabra') === item[1] ? item[2] : item[1];
+    
+    practicaDiv.innerHTML = `
+      <div class="flashcard">
+        <div class="pregunta">💡 Idea:<br><strong>${pregunta}</strong></div>
+        <input type="text" id="respuestaInput" placeholder="Escribe la traducción / Type the translation...">
+        <button id="comprobarBtn" class="btn btn-primary">✓ Comprobar</button>
+        <div id="feedbackMsg" style="margin:1rem 0; font-weight:bold;"></div>
+        <button id="siguienteBtn" class="btn">⏩ Siguiente idea</button>
+        <p id="infoProgresoCard" style="margin-top:0.8rem;">📊 Idea ${currentCardId} · ✅ ${progreso[currentCardId]?.aciertos||0} aciertos · ❌ ${progreso[currentCardId]?.fallos||0} fallos</p>
+      </div>
+    `;
+    
+    document.getElementById("comprobarBtn").onclick = () => {
+      const userAnswer = document.getElementById("respuestaInput").value.trim().toLowerCase();
+      const correct = respuestaCorrecta.toLowerCase();
+      const isCorrect = userAnswer === correct;
+      const feedback = document.getElementById("feedbackMsg");
+      if (isCorrect) {
+        feedback.innerHTML = `<span style='color:#27ae60'>✅ ¡Correcto! "${respuestaCorrecta}"</span>`;
+        registrarResultado(currentCardId, true);
+      } else {
+        feedback.innerHTML = `<span style='color:#e67e22'>❌ Incorrecto. La traducción correcta es: "${respuestaCorrecta}"</span>`;
+        registrarResultado(currentCardId, false);
+      }
+      document.getElementById("comprobarBtn").disabled = true;
+      setTimeout(() => { document.getElementById("comprobarBtn").disabled = false; }, 1500);
+    };
+    document.getElementById("siguienteBtn").onclick = () => modoTraduccionDirecta();
+  }
+
+  function modoTraduccionInversa() {
+    const randomIndex = Math.floor(Math.random() * vocabularioData.length);
+    const item = vocabularioData[randomIndex];
+    currentCardId = item[0];
+    const traduccion = obtenerTexto(item, 'palabra') === item[1] ? item[2] : item[1];
+    const respuestaCorrecta = obtenerTexto(item, 'palabra');
+    
+    practicaDiv.innerHTML = `
+      <div class="flashcard">
+        <div class="pregunta">🔄 Traducción:<br><strong>${traduccion}</strong></div>
+        <input type="text" id="respuestaInput" placeholder="Escribe la idea original / Type the original idea...">
+        <button id="comprobarBtn" class="btn btn-primary">✓ Comprobar</button>
+        <div id="feedbackMsg" style="margin:1rem 0; font-weight:bold;"></div>
+        <button id="siguienteBtn" class="btn">⏩ Siguiente idea</button>
+        <p id="infoProgresoCard" style="margin-top:0.8rem;">📊 Idea ${currentCardId} · ✅ ${progreso[currentCardId]?.aciertos||0} aciertos · ❌ ${progreso[currentCardId]?.fallos||0} fallos</p>
+      </div>
+    `;
+    
+    document.getElementById("comprobarBtn").onclick = () => {
+      const userAnswer = document.getElementById("respuestaInput").value.trim().toLowerCase();
+      const correct = respuestaCorrecta.toLowerCase();
+      const isCorrect = userAnswer === correct;
+      const feedback = document.getElementById("feedbackMsg");
+      if (isCorrect) {
+        feedback.innerHTML = `<span style='color:#27ae60'>✅ ¡Correcto! "${respuestaCorrecta}"</span>`;
+        registrarResultado(currentCardId, true);
+      } else {
+        feedback.innerHTML = `<span style='color:#e67e22'>❌ Incorrecto. La idea correcta es: "${respuestaCorrecta}"</span>`;
+        registrarResultado(currentCardId, false);
+      }
+      document.getElementById("comprobarBtn").disabled = true;
+      setTimeout(() => { document.getElementById("comprobarBtn").disabled = false; }, 1500);
+    };
+    document.getElementById("siguienteBtn").onclick = () => modoTraduccionInversa();
+  }
+
+  function modoOrdenarPalabras() {
+    const randomIndex = Math.floor(Math.random() * vocabularioData.length);
+    const item = vocabularioData[randomIndex];
+    currentCardId = item[0];
+    const fraseOriginal = obtenerTexto(item, 'palabra');
+    ordenarRespuestaCorrecta = fraseOriginal;
+    let palabras = fraseOriginal.split(/\s+/).filter(p => p.length > 0);
+    currentOrdenarPalabras = [...palabras];
+    shuffledPalabras = [...palabras];
+    for (let i = shuffledPalabras.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [shuffledPalabras[i], shuffledPalabras[j]] = [shuffledPalabras[j], shuffledPalabras[i]];
+    }
+    selectedOrder = [];
+    
+    const renderUI = () => {
+      let palabrasHTML = shuffledPalabras.map(p => `<button class="palabra-btn" data-palabra="${p.replace(/"/g, '&quot;')}">${p}</button>`).join('');
+      let ordenHTML = selectedOrder.map(p => `<span style="background:#fdf4df; padding:0.2rem 0.6rem; margin:0.2rem; border-radius:1rem;">${p}</span>`).join(' ');
+      if (ordenHTML === "") ordenHTML = "<em>Haz clic en las palabras en el orden correcto...</em>";
+      practicaDiv.innerHTML = `
+        <div class="flashcard">
+          <h3>🧩 Ordena la idea:</h3>
+          <div class="pregunta" style="background:#fdf4df;">📌 ${obtenerTexto(item, 'definicion')}</div>
+          <div class="orden-actual"><strong>Tu orden:</strong><br> ${ordenHTML}</div>
+          <div class="orden-palabras" id="palabrasContainer">${palabrasHTML}</div>
+          <div>
+            <button id="resetBtn" class="btn" style="background:#eaddc5;">🔁 Reiniciar</button>
+            <button id="comprobarBtn" class="btn btn-primary">✓ Comprobar</button>
+          </div>
+          <button id="siguienteBtn" class="btn" style="margin-top:1rem;">⏩ Siguiente idea</button>
+          <p id="infoProgresoCard">📊 Idea ${currentCardId} · ✅ ${progreso[currentCardId]?.aciertos||0} aciertos · ❌ ${progreso[currentCardId]?.fallos||0} fallos</p>
+          <div id="feedbackMsg" style="margin-top:0.8rem; font-weight:bold;"></div>
+        </div>
+      `;
+      document.querySelectorAll(".palabra-btn").forEach(btn => {
+        btn.addEventListener("click", () => {
+          const palabra = btn.getAttribute("data-palabra");
+          const idx = shuffledPalabras.indexOf(palabra);
+          if (idx !== -1) {
+            shuffledPalabras.splice(idx, 1);
+            selectedOrder.push(palabra);
+            renderUI();
+          }
+        });
+      });
+      document.getElementById("resetBtn").onclick = () => {
+        shuffledPalabras = [...currentOrdenarPalabras];
+        for (let i = shuffledPalabras.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [shuffledPalabras[i], shuffledPalabras[j]] = [shuffledPalabras[j], shuffledPalabras[i]];
+        }
+        selectedOrder = [];
+        renderUI();
+      };
+      document.getElementById("comprobarBtn").onclick = () => {
+        const ordenUsuario = selectedOrder.join(" ");
+        if (ordenUsuario === ordenarRespuestaCorrecta) {
+          document.getElementById("feedbackMsg").innerHTML = "<span style='color:#27ae60'>✅ ¡Correcto! Idea ordenada correctamente.</span>";
+          registrarResultado(currentCardId, true);
+          setTimeout(() => modoOrdenarPalabras(), 1500);
+        } else {
+          document.getElementById("feedbackMsg").innerHTML = `<span style='color:#e67e22'>❌ Incorrecto. La idea correcta es: "${ordenarRespuestaCorrecta}"</span>`;
+          registrarResultado(currentCardId, false);
+          setTimeout(() => modoOrdenarPalabras(), 2000);
+        }
+        document.getElementById("comprobarBtn").disabled = true;
+        setTimeout(() => { if(document.getElementById("comprobarBtn")) document.getElementById("comprobarBtn").disabled = false; }, 2000);
+      };
+      document.getElementById("siguienteBtn").onclick = () => modoOrdenarPalabras();
+    };
+    renderUI();
+  }
+
+  function modoEspEng() {
+    const randomIndex = Math.floor(Math.random() * vocabularioData.length);
+    const item = vocabularioData[randomIndex];
+    currentCardId = item[0];
+    const direction = Math.random() < 0.5 ? "esp2eng" : "eng2esp";
+    const [pregunta, respuestaCorrecta] = direction === "esp2eng" ? [item[1], item[2]] : [item[2], item[1]];
+    const directionText = direction === "esp2eng" ? "🇪🇸 → 🇬🇧 Español a Inglés" : "🇬🇧 → 🇪🇸 English to Spanish";
+    
+    practicaDiv.innerHTML = `
+      <div class="flashcard">
+        <div class="translation-direction">${directionText}</div>
+        <div class="pregunta">📝 <strong>${pregunta}</strong></div>
+        <input type="text" id="respuestaInput" placeholder="Escribe la traducción / Type the translation...">
+        <button id="comprobarBtn" class="btn btn-primary">✓ Comprobar</button>
+        <div id="feedbackMsg" style="margin:1rem 0; font-weight:bold;"></div>
+        <button id="siguienteBtn" class="btn">⏩ Siguiente idea</button>
+        <p id="infoProgresoCard" style="margin-top:0.8rem;">📊 Idea ${currentCardId} · ✅ ${progreso[currentCardId]?.aciertos||0} aciertos · ❌ ${progreso[currentCardId]?.fallos||0} fallos</p>
+      </div>
+    `;
+    
+    document.getElementById("comprobarBtn").onclick = () => {
+      const userAnswer = document.getElementById("respuestaInput").value.trim().toLowerCase();
+      const correct = respuestaCorrecta.toLowerCase();
+      const isCorrect = userAnswer === correct;
+      const feedback = document.getElementById("feedbackMsg");
+      if (isCorrect) {
+        feedback.innerHTML = `<span style='color:#27ae60'>✅ ¡Correcto! "${respuestaCorrecta}"</span>`;
+        registrarResultado(currentCardId, true);
+      } else {
+        feedback.innerHTML = `<span style='color:#e67e22'>❌ Incorrecto. La respuesta correcta es: "${respuestaCorrecta}"</span>`;
+        registrarResultado(currentCardId, false);
+      }
+      document.getElementById("comprobarBtn").disabled = true;
+      setTimeout(() => { document.getElementById("comprobarBtn").disabled = false; }, 1500);
+    };
+    document.getElementById("siguienteBtn").onclick = () => modoEspEng();
+  }
+
+  function setPracticeMode(mode) {
+    currentPracticeMode = mode;
+    document.querySelectorAll(".modo-btn").forEach(btn => btn.classList.remove("active"));
+    if (mode === "traduccion_directa") document.getElementById("modoTraduccionDirecta").classList.add("active");
+    if (mode === "traduccion_inversa") document.getElementById("modoTraduccionInversa").classList.add("active");
+    if (mode === "ordenar") document.getElementById("modoOrdenar").classList.add("active");
+    if (mode === "esp_eng") document.getElementById("modoEspEng").classList.add("active");
+    
+    if (mode === "traduccion_directa") modoTraduccionDirecta();
+    else if (mode === "traduccion_inversa") modoTraduccionInversa();
+    else if (mode === "ordenar") modoOrdenarPalabras();
+    else if (mode === "esp_eng") modoEspEng();
+  }
+
+  function setLanguage(lang) {
+    currentLang = lang;
+    document.getElementById("langEsBtn").classList.toggle("active", lang === 'es');
+    document.getElementById("langEnBtn").classList.toggle("active", lang === 'en');
+    document.getElementById("langBothBtn").classList.toggle("active", lang === 'both');
+    document.getElementById("progressTitle").innerText = lang === 'es' ? "📈 Progreso en ideas regionales (B1)" : 
+                                                         (lang === 'en' ? "📈 Regional Ideas Progress (B1)" : "📈 Progreso / Progress");
+    const placeholder = document.querySelector("#listado input");
+    if (placeholder) {
+      placeholder.placeholder = lang === 'es' ? "🔍 Buscar idea..." :
+                                (lang === 'en' ? "🔍 Search idea..." : "🔍 Buscar / Search...");
+    }
+    renderListado(document.getElementById("filtroListado")?.value || "");
+    setPracticeMode(currentPracticeMode);
+  }
+
+  function initUI() {
+    document.querySelectorAll(".nav-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const viewId = btn.getAttribute("data-view");
+        document.querySelectorAll(".view").forEach(v => v.classList.remove("active-view"));
+        document.getElementById(viewId).classList.add("active-view");
+        document.querySelectorAll(".nav-btn").forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+        if (viewId === "listado") renderListado(document.getElementById("filtroListado").value);
+        if (viewId === "dashboard") renderDashboard();
+        if (viewId === "practica") setPracticeMode(currentPracticeMode);
+      });
+    });
+    
+    document.getElementById("modoTraduccionDirecta").addEventListener("click", () => setPracticeMode("traduccion_directa"));
+    document.getElementById("modoTraduccionInversa").addEventListener("click", () => setPracticeMode("traduccion_inversa"));
+    document.getElementById("modoOrdenar").addEventListener("click", () => setPracticeMode("ordenar"));
+    document.getElementById("modoEspEng").addEventListener("click", () => setPracticeMode("esp_eng"));
+    
+    document.getElementById("resetProgresoBtn").addEventListener("click", () => {
+      if (confirm("¿Reiniciar todo el progreso? Se perderán aciertos y fallos. / Reset all progress?")) {
+        for (let i = 1; i <= 100; i++) progreso[i] = { aciertos: 0, fallos: 0 };
+        guardarProgreso();
+        renderDashboard();
+        renderListado(document.getElementById("filtroListado")?.value || "");
+        setPracticeMode(currentPracticeMode);
+      }
+    });
+    document.getElementById("filtroListado").addEventListener("input", (e) => renderListado(e.target.value));
+    
+    document.getElementById("langEsBtn").addEventListener("click", () => setLanguage('es'));
+    document.getElementById("langEnBtn").addEventListener("click", () => setLanguage('en'));
+    document.getElementById("langBothBtn").addEventListener("click", () => setLanguage('both'));
+  }
+
+  window.addEventListener("DOMContentLoaded", () => {
+    cargarProgreso();
+    renderDashboard();
+    renderListado();
+    initUI();
+    setPracticeMode("traduccion_directa");
+  });
+</script>
+</body>
+</html>

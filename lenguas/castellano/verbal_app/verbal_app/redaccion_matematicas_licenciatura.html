@@ -1,0 +1,594 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Redacción Matemática — 100 técnicas para estudiantes colombianos</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ink:#1a1209; --parchment:#f5f0e8; --amber:#c8860a; --amber-light:#f0a830;
+  --amber-pale:#fdf3dc; --rust:#8b3a1a; --sage:#4a6741; --sage-light:#7a9e76;
+  --cream:#faf7f2; --border:#d4c9b0; --shadow:rgba(26,18,9,0.12);
+  --math:#1e3a5f; --math-light:#2c5282; --math-pale:#ebf4ff;
+  --math-orange:#dd6b20;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'DM Sans',sans-serif;background:var(--parchment);color:var(--ink);min-height:100vh;
+  background-image:radial-gradient(ellipse at 15% 0%,rgba(30,58,95,.07) 0%,transparent 55%),
+  radial-gradient(ellipse at 85% 100%,rgba(221,107,32,.05) 0%,transparent 55%);}
+h1,h2,h3,.serif{font-family:'Playfair Display',serif;}
+
+.app-nav{background:var(--ink);display:flex;align-items:center;gap:.75rem;
+  padding:.7rem 1.5rem;position:sticky;top:0;z-index:200;box-shadow:0 2px 18px rgba(0,0,0,.25);}
+.nav-brand{font-family:'Playfair Display',serif;font-weight:900;font-size:1.25rem;
+  color:var(--math-light);flex:1;white-space:nowrap;}
+.nav-brand span{color:#fff;}
+.nav-avatar{width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,var(--math),var(--math-orange));
+  display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.95rem;
+  color:#fff;font-family:'Playfair Display',serif;cursor:pointer;flex-shrink:0;
+  border:2px solid rgba(255,255,255,.2);transition:border-color .2s;}
+.nav-avatar:hover{border-color:var(--math-light);}
+.nav-username{color:rgba(255,255,255,.8);font-size:.85rem;font-weight:500;white-space:nowrap;}
+.btn-reset{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);
+  color:rgba(255,255,255,.7);border-radius:8px;padding:.32rem .75rem;font-size:.78rem;
+  cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .2s;}
+.btn-reset:hover{background:rgba(255,255,255,.18);color:#fff;}
+
+.app-tabs{background:#fff;border-bottom:2px solid var(--border);display:flex;
+  padding:0 1.5rem;overflow-x:auto;gap:0;position:sticky;top:58px;z-index:150;}
+.app-tab{padding:.85rem 1.1rem;border:none;background:transparent;font-family:'DM Sans',sans-serif;
+  font-weight:700;font-size:.82rem;color:#999;cursor:pointer;white-space:nowrap;
+  border-bottom:3px solid transparent;margin-bottom:-2px;transition:all .2s;
+  display:flex;align-items:center;gap:.35rem;}
+.app-tab:hover{color:var(--ink);}
+.app-tab.active{color:var(--math);border-bottom-color:var(--math);}
+
+.app-body{max-width:1080px;margin:0 auto;padding:2rem 1.5rem;}
+.page{display:none;animation:rise .28s ease;}
+.page.active{display:block;}
+
+.card-app{background:#fff;border:1.5px solid var(--border);border-radius:16px;
+  box-shadow:0 2px 10px var(--shadow);overflow:hidden;}
+.card-app-header{padding:1.1rem 1.4rem;border-bottom:1px solid var(--border);
+  display:flex;align-items:center;gap:.75rem;}
+.card-app-body{padding:1.4rem;}
+
+.stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:.9rem;margin-bottom:1.6rem;}
+.stat-box{background:#fff;border:1.5px solid var(--border);border-radius:14px;
+  padding:1.1rem 1rem;text-align:center;transition:transform .2s;cursor:default;}
+.stat-box:hover{transform:translateY(-3px);box-shadow:0 6px 18px var(--shadow);}
+.stat-num{font-family:'Playfair Display',serif;font-size:2rem;font-weight:900;
+  color:var(--math);line-height:1;margin-bottom:.2rem;}
+.stat-lbl{font-size:.73rem;font-weight:700;color:#aaa;text-transform:uppercase;letter-spacing:.05em;}
+
+.dot-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(26px,1fr));gap:4px;margin-bottom:1.6rem;}
+.dot{aspect-ratio:1;border-radius:6px;background:var(--border);cursor:pointer;
+  transition:all .18s;position:relative;display:flex;align-items:center;justify-content:center;}
+.dot.done{background:var(--sage);}
+.dot:hover{transform:scale(1.35);z-index:5;}
+.dot-tip{position:absolute;bottom:130%;left:50%;transform:translateX(-50%);
+  background:var(--ink);color:#fff;padding:.28rem .6rem;border-radius:6px;font-size:.68rem;
+  white-space:nowrap;pointer-events:none;opacity:0;transition:opacity .18s;z-index:99;}
+.dot:hover .dot-tip{opacity:1;}
+.dot-num{font-size:.5rem;font-weight:700;color:rgba(255,255,255,.7);}
+
+.search-field{border:1.5px solid var(--border);border-radius:10px;padding:.55rem 1rem .55rem 2.3rem;
+  font-family:'DM Sans',sans-serif;font-size:.87rem;background:#fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%23aaa' stroke-width='2.5'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cpath d='M21 21l-4.35-4.35'/%3E%3C/svg%3E") no-repeat .75rem center;
+  width:100%;max-width:260px;outline:none;transition:border-color .2s;}
+.search-field:focus{border-color:var(--math);}
+.pill{padding:.28rem .75rem;border-radius:20px;border:1.5px solid var(--border);background:#fff;
+  font-size:.75rem;font-weight:700;cursor:pointer;transition:all .2s;font-family:'DM Sans',sans-serif;color:#888;}
+.pill.on,.pill:hover{background:var(--math);border-color:var(--math);color:#fff;}
+
+.ex-card{background:#fff;border:1.5px solid var(--border);border-radius:13px;padding:1rem 1.2rem;
+  margin-bottom:.6rem;cursor:pointer;transition:all .18s;display:flex;align-items:flex-start;gap:.9rem;
+  box-shadow:0 1px 4px var(--shadow);}
+.ex-card:hover{border-color:var(--math);transform:translateX(5px);}
+.ex-card.done{border-left:4px solid var(--sage);}
+.ex-num-box{background:var(--parchment);border:1px solid var(--border);border-radius:8px;
+  width:42px;height:42px;display:flex;align-items:center;justify-content:center;
+  font-family:'DM Mono',monospace;font-size:.75rem;font-weight:600;color:var(--math);flex-shrink:0;}
+.ex-card.done .ex-num-box{background:var(--sage);color:#fff;border-color:var(--sage);}
+.ex-body{flex:1;min-width:0;}
+.ex-cat-tag{font-size:.7rem;font-weight:700;color:var(--math);text-transform:uppercase;letter-spacing:.05em;}
+.ex-name{font-weight:700;font-size:.9rem;margin:.1rem 0 .18rem;}
+.ex-short{font-size:.78rem;color:#777;line-height:1.5;}
+.badge-done{background:var(--sage);color:#fff;padding:.18rem .55rem;border-radius:9px;font-size:.7rem;font-weight:700;}
+.badge-new{background:var(--parchment);color:#bbb;padding:.18rem .55rem;border-radius:9px;font-size:.7rem;font-weight:700;border:1px solid var(--border);}
+
+.prac-header{background:#fff;border:1.5px solid var(--border);border-radius:16px;
+  padding:1.4rem 1.5rem;margin-bottom:1.2rem;box-shadow:0 2px 10px var(--shadow);}
+.prac-badge{display:inline-flex;align-items:center;gap:.35rem;background:var(--amber-pale);
+  border:1px solid rgba(200,134,10,.28);border-radius:8px;padding:.28rem .75rem;
+  font-size:.76rem;font-weight:700;color:var(--math);margin-bottom:.7rem;}
+.prac-title{font-size:1.3rem;font-weight:900;margin-bottom:.45rem;}
+.prac-explanation{font-size:.88rem;color:#555;line-height:1.7;margin:0;}
+.prac-example{background:var(--parchment);border-left:3px solid var(--math);
+  border-radius:0 9px 9px 0;padding:.7rem 1rem;margin-top:.9rem;font-size:.84rem;
+  color:var(--ink);font-style:italic;}
+
+.writing-zone{background:#fff;border:1.5px solid var(--border);border-radius:16px;
+  padding:1.4rem 1.5rem;margin-bottom:1rem;box-shadow:0 2px 10px var(--shadow);}
+.writing-prompt{background:linear-gradient(135deg,var(--math-pale),#fffcf5);
+  border:1px solid rgba(30,58,95,.22);border-radius:10px;padding:.9rem 1.1rem;
+  margin-bottom:1rem;font-size:.87rem;line-height:1.65;}
+.writing-prompt strong{color:var(--rust);}
+#practiceTA{width:100%;min-height:145px;border:1.5px solid var(--border);border-radius:10px;
+  padding:.9rem 1rem;font-family:'DM Sans',sans-serif;font-size:.93rem;line-height:1.75;
+  color:var(--ink);resize:vertical;background:#fffef9;transition:border-color .2s;outline:none;}
+#practiceTA:focus{border-color:var(--math);box-shadow:0 0 0 3px rgba(30,58,95,.1);}
+.wc{text-align:right;font-size:.76rem;color:#bbb;margin-top:.4rem;}
+
+.btn-check{background:linear-gradient(135deg,var(--sage),var(--sage-light));border:none;
+  border-radius:10px;color:#fff;font-weight:700;font-size:.92rem;padding:.75rem 1.6rem;
+  cursor:pointer;transition:all .2s;font-family:'DM Sans',sans-serif;
+  display:inline-flex;align-items:center;gap:.45rem;
+  box-shadow:0 4px 14px rgba(74,103,65,.32);}
+.btn-check:hover{transform:translateY(-2px);box-shadow:0 7px 20px rgba(74,103,65,.4);}
+.btn-check:disabled{opacity:.55;cursor:not-allowed;transform:none;}
+
+.btn-next{background:linear-gradient(135deg,var(--math),var(--math-orange));border:none;
+  border-radius:10px;color:#fff;font-weight:700;font-size:.92rem;padding:.75rem 1.6rem;
+  cursor:pointer;transition:all .2s;font-family:'DM Sans',sans-serif;
+  display:inline-flex;align-items:center;gap:.45rem;box-shadow:0 4px 14px rgba(30,58,95,.3);}
+.btn-next:hover{transform:translateY(-2px);}
+
+.fb-area{background:#fff;border:1.5px solid var(--border);border-radius:16px;
+  overflow:hidden;box-shadow:0 2px 10px var(--shadow);display:none;}
+.fb-area.show{display:block;animation:rise .35s ease;}
+.fb-head{padding:.95rem 1.4rem;display:flex;align-items:center;gap:.7rem;border-bottom:1px solid var(--border);}
+.fb-head.excellent{background:linear-gradient(90deg,#d4edda,#f0faf4);}
+.fb-head.good{background:linear-gradient(90deg,#fff3cd,#fffbf0);}
+.fb-head.low{background:linear-gradient(90deg,#f8d7da,#fdf5f5);}
+.fb-emoji{font-size:1.8rem;}
+.fb-htitle{font-weight:800;font-size:1rem;margin:0;}
+.fb-hsub{font-size:.78rem;color:#888;margin:0;}
+.fb-body{padding:1.4rem;}
+.score-circle{width:66px;height:66px;border-radius:50%;display:flex;align-items:center;
+  justify-content:center;font-family:'Playfair Display',serif;font-weight:900;font-size:1.25rem;flex-shrink:0;}
+.sc-high{background:#d4edda;color:#2d6a4f;}
+.sc-med{background:#fff3cd;color:#7a5c00;}
+.sc-low{background:#f8d7da;color:#8b1a1a;}
+.fb-section{margin-bottom:1.1rem;}
+.fb-section-title{font-weight:700;font-size:.76rem;text-transform:uppercase;letter-spacing:.07em;
+  color:#aaa;margin-bottom:.5rem;display:flex;align-items:center;gap:.35rem;}
+.fb-item{padding:.62rem .85rem;border-radius:8px;font-size:.84rem;line-height:1.52;
+  margin-bottom:.35rem;display:flex;gap:.55rem;align-items:flex-start;}
+.fb-item.ok{background:#f0f9f4;color:#2d6a4f;border-left:3px solid var(--sage);}
+.fb-item.err{background:#fdf5f5;color:#8b1a1a;border-left:3px solid #dc3545;}
+.fb-item.tip{background:#fffbf0;color:#7a5c00;border-left:3px solid var(--math);}
+.fb-item.info{background:var(--parchment);color:var(--ink);border-left:3px solid #aaa;}
+.fb-ico{flex-shrink:0;margin-top:1px;}
+
+.spin{width:34px;height:34px;border:3px solid var(--border);border-top-color:var(--math);
+  border-radius:50%;animation:rot .65s linear infinite;margin:0 auto 1rem;}
+@keyframes rot{to{transform:rotate(360deg)}}
+
+.profile-cover{height:96px;background:linear-gradient(135deg,var(--ink) 0%,#3d2a10 50%,var(--math) 100%);position:relative;}
+.profile-av-lg{width:78px;height:78px;border-radius:50%;border:4px solid #fff;
+  background:linear-gradient(135deg,var(--math),var(--math-orange));display:flex;align-items:center;
+  justify-content:center;font-family:'Playfair Display',serif;font-weight:900;font-size:1.9rem;
+  color:#fff;position:absolute;bottom:-38px;left:1.4rem;box-shadow:0 4px 18px var(--shadow);}
+.profile-body{padding:3.2rem 1.4rem 1.4rem;}
+.profile-name{font-size:1.4rem;font-weight:900;margin-bottom:.15rem;}
+.profile-meta{color:#999;font-size:.83rem;}
+.ach-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:.65rem;}
+.ach{background:#fff;border:1.5px solid var(--border);border-radius:12px;padding:.9rem .7rem;
+  text-align:center;transition:all .2s;}
+.ach.unlocked{border-color:var(--math);background:var(--math-pale);}
+.ach.unlocked:hover{transform:translateY(-3px);box-shadow:0 5px 14px rgba(30,58,95,.22);}
+.ach-icon{font-size:1.6rem;display:block;margin-bottom:.35rem;}
+.ach-name{font-size:.7rem;font-weight:700;color:var(--ink);}
+.ach.locked .ach-icon{filter:grayscale(1);opacity:.35;}
+.ach.locked .ach-name{color:#ccc;}
+
+.hist-row{background:#fff;border:1.5px solid var(--border);border-radius:11px;
+  padding:.8rem 1rem;margin-bottom:.5rem;display:flex;align-items:center;gap:.8rem;cursor:pointer;transition:border-color .2s;}
+.hist-row:hover{border-color:var(--math);}
+
+.toast-box{position:fixed;bottom:1.4rem;right:1.4rem;z-index:9999;}
+.toast-item{background:var(--ink);color:#fff;border-radius:12px;padding:.8rem 1.1rem;
+  margin-top:.45rem;display:flex;align-items:center;gap:.65rem;font-size:.84rem;font-weight:500;
+  box-shadow:0 8px 26px rgba(0,0,0,.28);animation:rise .28s ease;max-width:300px;}
+.toast-item.s{border-left:4px solid var(--sage-light);}
+.toast-item.e{border-left:4px solid #dc3545;}
+.toast-item.i{border-left:4px solid var(--math-light);}
+
+.modal-backdrop-custom{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:1040;
+  display:flex;align-items:center;justify-content:center;padding:1rem;}
+.modal-box{background:#fff;border-radius:20px;max-width:480px;width:100%;
+  box-shadow:0 24px 64px rgba(0,0,0,.28);animation:rise .3s ease;overflow:hidden;}
+.modal-head{background:var(--ink);padding:1.1rem 1.4rem;color:#fff;display:flex;align-items:center;gap:.7rem;}
+.modal-head .modal-title-txt{font-weight:800;font-size:1rem;flex:1;}
+.modal-close{background:rgba(255,255,255,.12);border:none;color:#fff;border-radius:8px;
+  width:32px;height:32px;cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center;}
+.modal-close:hover{background:rgba(255,255,255,.25);}
+.modal-body-custom{padding:1.4rem;}
+.modal-foot{padding:1rem 1.4rem;border-top:1px solid var(--border);display:flex;gap:.7rem;justify-content:flex-end;}
+
+@keyframes rise{from{opacity:0;transform:translateY(28px)}to{opacity:1;transform:translateY(0)}}
+::-webkit-scrollbar{width:6px;height:6px;}
+::-webkit-scrollbar-track{background:transparent;}
+::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px;}
+@media(max-width:576px){
+  .app-body{padding:1rem;}
+  .stats-grid{grid-template-columns:1fr 1fr;}
+  .ach-grid{grid-template-columns:repeat(3,1fr);}
+  .app-nav{padding:.6rem 1rem;}
+  .nav-username{display:none;}
+}
+</style>
+</head>
+<body>
+
+<div id="appScreen">
+  <nav class="app-nav">
+    <div class="nav-brand">Redacción<span>Matemática</span></div>
+    <div class="nav-avatar" id="navAv" onclick="switchPage('perfil')" title="Ver perfil">M</div>
+    <span class="nav-username" id="navName">Estudiante</span>
+    <button class="btn-reset" onclick="confirmReset()"><i class="bi bi-arrow-counterclockwise"></i> Reiniciar</button>
+  </nav>
+  <div class="app-tabs">
+    <button class="app-tab active" id="tab-dashboard" onclick="switchPage('dashboard')"><i class="bi bi-grid-3x3-gap-fill"></i> Inicio</button>
+    <button class="app-tab" id="tab-ejercicios" onclick="switchPage('ejercicios')"><i class="bi bi-journal-bookmark-fill"></i> Técnicas</button>
+    <button class="app-tab" id="tab-practica" onclick="switchPage('practica')"><i class="bi bi-pencil-square"></i> Practicar</button>
+    <button class="app-tab" id="tab-perfil" onclick="switchPage('perfil')"><i class="bi bi-person-circle"></i> Perfil</button>
+  </div>
+  <div class="app-body">
+    <!-- DASHBOARD -->
+    <div class="page active" id="page-dashboard">
+      <div class="d-flex align-items-center gap-2 mb-4"><div><h2 class="serif fw-black mb-0">¡Hola, <span id="dashName">futuro matemático/a</span>! 📐</h2><p class="text-muted mb-0">Mejora tu redacción matemática en el contexto colombiano</p></div></div>
+      <div class="stats-grid mb-4">
+        <div class="stat-box"><div class="stat-num" id="sCompleted">0</div><div class="stat-lbl">Técnicas dominadas</div></div>
+        <div class="stat-box"><div class="stat-num" id="sPracticed">0</div><div class="stat-lbl">Prácticas realizadas</div></div>
+        <div class="stat-box"><div class="stat-num" id="sScore">—</div><div class="stat-lbl">Puntuación media</div></div>
+        <div class="stat-box"><div class="stat-num" id="sStreak">1🔥</div><div class="stat-lbl">Racha</div></div>
+      </div>
+      <div class="card-app mb-4"><div class="card-app-header"><i class="bi bi-map-fill text-warning"></i><div><div style="font-weight:800">Mapa de progreso</div><div style="font-size:.74rem;color:#aaa">100 técnicas · Verde = completado</div></div></div><div class="card-app-body"><div class="dot-grid" id="dotGrid"></div></div></div>
+      <div class="mb-2" style="font-weight:800">Siguiente técnica</div>
+      <div class="ex-card" id="nextCard"><div class="ex-num-box" id="nextNum">01</div><div class="ex-body"><div class="ex-cat-tag" id="nextCat">Demostraciones</div><div class="ex-name" id="nextName">Cargando...</div><div class="ex-short" id="nextDesc"></div></div><span style="color:var(--math);font-size:1.4rem"><i class="bi bi-play-circle-fill"></i></span></div>
+      <div class="card-app mt-4"><div class="card-app-header"><i class="bi bi-bar-chart-fill text-warning"></i><div>Progreso por categoría</div></div><div class="card-app-body" id="catProgress"></div></div>
+    </div>
+    <!-- TÉCNICAS -->
+    <div class="page" id="page-ejercicios">
+      <div class="d-flex align-items-center justify-content-between flex-wrap gap-2 mb-3"><h2 class="serif fw-black mb-0">100 Técnicas de Redacción Matemática</h2><input class="search-field" id="searchQ" type="text" placeholder="Buscar..." oninput="renderList()"></div>
+      <div class="d-flex flex-wrap gap-2 mb-3" id="pills">
+        <button class="pill on" onclick="setFilter('all',this)">Todas</button>
+        <button class="pill" onclick="setFilter('demostraciones',this)">Demostraciones</button>
+        <button class="pill" onclick="setFilter('articulos',this)">Artículos científicos</button>
+        <button class="pill" onclick="setFilter('informes',this)">Informes y proyectos</button>
+        <button class="pill" onclick="setFilter('divulgacion',this)">Divulgación y enseñanza</button>
+        <button class="pill" onclick="setFilter('etica',this)">Ética y comunicación</button>
+      </div>
+      <div id="exList"></div>
+    </div>
+    <!-- PRACTICAR -->
+    <div class="page" id="page-practica">
+      <div id="practiceEmpty" style="text-align:center;padding:4rem 1rem;"><div style="font-size:4rem">∑</div><h3 class="serif fw-black mb-2">Selecciona una técnica</h3><button class="btn-main" style="display:inline-flex;width:auto" onclick="switchPage('ejercicios')"><i class="bi bi-journal-bookmark-fill"></i> Ver técnicas</button></div>
+      <div id="practiceContent" style="display:none">
+        <div class="prac-header"><div class="d-flex align-items-start justify-content-between gap-2 flex-wrap"><div><div class="prac-badge"><i class="bi bi-mortarboard-fill"></i> <span id="pracCat">Demostraciones</span> · Técnica <span id="pracNum">01</span></div><h2 class="prac-title serif" id="pracName">Título</h2><p class="prac-explanation" id="pracExpl">Explicación</p><div class="prac-example" id="pracEx"></div></div><div class="d-flex gap-2"><button class="btn-outline-app" onclick="prevExercise()"><i class="bi bi-chevron-left"></i></button><button class="btn-outline-app" onclick="nextExercise()"><i class="bi bi-chevron-right"></i></button></div></div></div>
+        <div class="writing-zone"><div class="writing-prompt" id="pracPrompt">Escribe tu respuesta.</div><textarea id="practiceTA" placeholder="Escribe tu respuesta aquí…"></textarea><div class="wc"><span id="wc">0</span> palabras · mínimo 10</div></div>
+        <div class="d-flex align-items-center gap-2 flex-wrap mb-3"><button class="btn-check" id="btnCheck" onclick="doCheck()"><i class="bi bi-magic"></i> Analizar respuesta</button><button class="btn-next" id="btnNext" onclick="nextExercise()" style="display:none">Siguiente <i class="bi bi-arrow-right"></i></button><span style="font-size:.76rem;color:#bbb">Aplica conceptos de redacción matemática.</span></div>
+        <div class="fb-area" id="fbArea"><div id="fbLoading" style="text-align:center;padding:2.5rem"><div class="spin"></div><div>Evaluando tu respuesta matemática...</div></div><div id="fbContent" style="display:none"></div></div>
+      </div>
+    </div>
+    <!-- PERFIL -->
+    <div class="page" id="page-perfil">
+      <div class="card-app mb-4"><div class="profile-cover"><div class="profile-av-lg" id="profAv">M</div></div><div class="profile-body"><h3 class="profile-name" id="profName">—</h3><p class="profile-meta" id="profMeta">—</p><div class="d-flex gap-4 mt-3"><div><strong id="pComp">0</strong><span class="text-muted ms-1">técnicas</span></div><div><strong id="pPrac">0</strong><span class="text-muted ms-1">prácticas</span></div><div><strong id="pScr">—</strong><span class="text-muted ms-1">media</span></div></div><div class="d-flex gap-2 mt-3"><button class="btn-outline-app" onclick="openEditModal()"><i class="bi bi-pencil"></i> Editar perfil</button></div></div></div>
+      <div class="mb-2" style="font-weight:800">Logros destacados</div><div class="ach-grid mb-4" id="achGrid"></div>
+      <div class="mb-2" style="font-weight:800">Historial de prácticas</div><div id="histList"></div>
+    </div>
+  </div>
+</div>
+
+<div id="editModal" class="modal-backdrop-custom" style="display:none"><div class="modal-box"><div class="modal-head"><i class="bi bi-person-gear"></i><span class="modal-title-txt">Editar perfil</span><button class="modal-close" onclick="closeModal('editModal')"><i class="bi bi-x-lg"></i></button></div><div class="modal-body-custom"><div class="mb-3"><label class="field-label">Nombre</label><input id="editName" class="field" type="text"></div><div class="mb-3"><label class="field-label">Nivel</label><select id="editLevel" class="field"><option value="principiante">🌱 Principiante</option><option value="intermedio">📖 Intermedio</option><option value="avanzado">🎓 Avanzado</option></select></div></div><div class="modal-foot"><button class="btn-outline-app" onclick="closeModal('editModal')">Cancelar</button><button class="btn-main" style="width:auto" onclick="saveEdit()">Guardar</button></div></div></div>
+<div class="toast-box" id="toastBox"></div>
+
+<script>
+// ============================================================
+// 100 TÉCNICAS DE REDACCIÓN PARA MATEMÁTICAS (CONTEXTO COLOMBIANO)
+// ============================================================
+const CATS = {
+  demostraciones: 'Demostraciones matemáticas',
+  articulos: 'Artículos científicos',
+  informes: 'Informes y proyectos',
+  divulgacion: 'Divulgación y enseñanza',
+  etica: 'Ética y comunicación'
+};
+
+// Plantillas base (20 por categoría, repetimos cíclicamente hasta 100)
+const templates = [
+  // Demostraciones matemáticas (1-20)
+  { cat: 'demostraciones', name: 'Estructura de una demostración', short: 'Hipótesis, tesis, desarrollo, conclusión', expl: 'Toda demostración debe partir de las hipótesis y llegar a la tesis mediante pasos lógicos válidos.', prompt: 'Escribe la estructura (enunciado) de una demostración por contraposición para la implicación "Si P entonces Q".' },
+  { cat: 'demostraciones', name: 'Demostración directa', short: 'Encadenamiento lógico', expl: 'Partir de las hipótesis y aplicar definiciones y teoremas hasta alcanzar la conclusión.', prompt: 'Redacta el primer párrafo de una demostración directa de que la suma de dos números pares es par.' },
+  { cat: 'demostraciones', name: 'Demostración por contraposición', short: 'Probar ¬Q ⇒ ¬P', expl: 'Útil cuando la contrapositiva es más fácil de demostrar.', prompt: 'Formula la contrapositiva de "Si n² es par, entonces n es par".' },
+  { cat: 'demostraciones', name: 'Demostración por contradicción (reducción al absurdo)', short: 'Suponer la negación y llegar a contradicción', expl: 'Suponer que la tesis es falsa y derivar una contradicción con las hipótesis o un hecho conocido.', prompt: 'Escribe el comienzo de una demostración por contradicción de que √2 es irracional.' },
+  { cat: 'demostraciones', name: 'Inducción matemática', short: 'Base y paso inductivo', expl: 'Demostrar P(1) y que P(k) ⇒ P(k+1).', prompt: 'Redacta el paso inductivo para demostrar que 1+2+...+n = n(n+1)/2.' },
+  { cat: 'demostraciones', name: 'Uso de cuantificadores', short: '∀ (para todo) y ∃ (existe)', expl: 'Ser preciso: "Para todo ε > 0, existe δ > 0 tal que..."', prompt: 'Escribe la definición formal de límite de una función usando cuantificadores.' },
+  { cat: 'demostraciones', name: 'Notación matemática clara', short: 'Variables en cursiva, operadores romanos', expl: 'Usar "$\\lim$", "$\\sup$", "$\\max$".', prompt: 'Escribe en LaTeX la expresión del límite cuando x tiende a 0 de (sen x)/x.' },
+  { cat: 'demostraciones', name: 'Numeración de ecuaciones', short: 'Referenciar ecuaciones con números', expl: 'Ejemplo: "Por la ecuación (3) tenemos que..."', prompt: 'Escribe una oración que remita a la ecuación (5) en un texto matemático.' },
+  { cat: 'demostraciones', name: 'Uso de lemas y proposiciones', short: 'Resultados auxiliares', expl: 'Dividir una demostración larga en lemas más pequeños.', prompt: 'Propón un lema que podría usarse para demostrar el teorema de Pitágoras.' },
+  { cat: 'demostraciones', name: 'Cuidado con los casos', short: 'Demostración por casos', expl: 'Cubrir todas las posibilidades (ej. n par o impar).', prompt: 'Escribe la introducción de una demostración por casos para probar que n² ≡ 0 o 1 (mod 4).' },
+  { cat: 'demostraciones', name: 'Demostración por construcción', short: 'Para existencia', expl: 'Construir explícitamente el objeto que cumple la propiedad.', prompt: 'Demuestra que existe un número real entre 2 y 3 (por construcción).' },
+  { cat: 'demostraciones', name: 'Uso de ejemplos y contraejemplos', short: 'Para refutar', expl: 'Un solo contraejemplo basta para refutar una afirmación universal.', prompt: 'Da un contraejemplo a la afirmación "Todos los números primos son impares".' },
+  { cat: 'demostraciones', name: 'Redacción de la conclusión', short: 'Reiterar lo demostrado', expl: 'Ejemplo: "Por lo tanto, se verifica que..."', prompt: 'Escribe una frase de conclusión para una demostración de que la suma de los ángulos internos de un triángulo es 180°.' },
+  { cat: 'demostraciones', name: 'Evitar saltos lógicos', short: 'Explicar cada paso', expl: 'No dar por obvio un paso sin justificar.', prompt: 'Completa la secuencia lógica: "Como x = y, entonces x² = y², y por lo tanto..."' },
+  { cat: 'demostraciones', name: 'Uso de conectores lógicos', short: '⇒, ⇔, ∧, ∨, ¬', expl: 'Ser preciso en la dirección de la implicación.', prompt: 'Escribe en palabras la afirmación "P ⇔ Q".' },
+  { cat: 'demostraciones', name: 'Demostraciones con conjuntos', short: 'Inclusión y pertenencia', expl: 'Para probar A ⊆ B, mostrar que si x ∈ A entonces x ∈ B.', prompt: 'Redacta la primera línea de una demostración de que A ∩ (B ∪ C) ⊆ (A ∩ B) ∪ (A ∩ C).' },
+  { cat: 'demostraciones', name: 'Demostraciones en análisis real', short: 'Épsilon-delta', expl: 'Elegir δ en función de ε.', prompt: 'Escribe el comienzo de una demostración de que f(x)=x es continua en x=0 (definición ε-δ).' },
+  { cat: 'demostraciones', name: 'Demostraciones en álgebra lineal', short: 'Linealidad, dependencia, transformaciones', expl: 'Verificar axiomas de espacio vectorial, mostrar que un conjunto es base.', prompt: 'Redacta la verificación de que el vector nulo pertenece a un subespacio vectorial.' },
+  { cat: 'demostraciones', name: 'Demostraciones en teoría de números', short: 'Divisibilidad, congruencias', expl: 'Usar propiedades de divisibilidad.', prompt: 'Escribe una demostración corta de que si a|b y a|c, entonces a|(b+c).' },
+  { cat: 'demostraciones', name: 'Demostraciones por recursión', short: 'Para definiciones recursivas', expl: 'Usar inducción estructural.', prompt: 'Describe el paso inductivo para demostrar una propiedad de los números naturales definidos recursivamente.' },
+  // Artículos científicos (21-40)
+  { cat: 'articulos', name: 'Título de artículo matemático', short: 'Informativo, conciso', expl: 'Ejemplo: "Una nueva demostración del teorema de Pitágoras".', prompt: 'Escribe un título para un artículo sobre la conjetura de Goldbach.' },
+  { cat: 'articulos', name: 'Resumen estructurado', short: 'Contexto, problema, resultados, conclusiones', expl: 'Máximo 250 palabras.', prompt: 'Redacta el resumen de un artículo sobre la existencia de infinitos números primos.' },
+  { cat: 'articulos', name: 'Introducción: motivación', short: 'Por qué es importante el problema', expl: 'Contexto histórico, aplicaciones.', prompt: 'Escribe la primera oración de una introducción sobre la hipótesis de Riemann.' },
+  { cat: 'articulos', name: 'Sección de preliminares', short: 'Definiciones y notación', expl: 'Establecer el marco matemático.', prompt: 'Enumera tres definiciones que darías en los preliminares de un artículo sobre espacios vectoriales.' },
+  { cat: 'articulos', name: 'Enunciado de teoremas', short: 'Claridad en las hipótesis', expl: 'Ejemplo: "Teorema 1. Sea f una función continua en [a,b]..."', prompt: 'Enuncia el teorema del valor intermedio de forma precisa.' },
+  { cat: 'articulos', name: 'Demostración en artículos', short: 'Paso a paso, referenciando lemas', expl: 'No omitir detalles importantes.', prompt: 'Redacta el primer párrafo de la demostración del teorema de Rolle.' },
+  { cat: 'articulos', name: 'Corolarios', short: 'Consecuencias directas de teoremas', expl: 'Ejemplo: "Corolario 1. Por el teorema anterior, ..."', prompt: 'Formula un corolario del teorema de Pitágoras.' },
+  { cat: 'articulos', name: 'Figuras y diagramas', short: 'Geometría, gráficas, diagramas de Venn', expl: 'Incluir leyenda y referenciar en el texto.', prompt: 'Describe qué diagrama incluirías para ilustrar la regla de L'Hôpital.' },
+  { cat: 'articulos', name: 'Notación matemática consistente', short: 'Usar los mismos símbolos en todo el artículo', expl: 'Ejemplo: ℝ para los reales, ℕ para naturales.', prompt: 'Define la notación que usarías para el conjunto de los números complejos.' },
+  { cat: 'articulos', name: 'Referencias bibliográficas', short: 'Estilo AMS o equivalente', expl: 'Ejemplo: [1] J. Doe, "Title", Journal, vol, año.', prompt: 'Escribe una referencia AMS de un libro de Serge Lang, "Álgebra", editorial Addison-Wesley, 1965.' },
+  { cat: 'articulos', name: 'Citas en el texto', short: 'Ej. [1] o (Autor, año)', expl: 'En matemáticas se usa más el formato numérico.', prompt: 'Escribe una oración que cite el artículo [3] sobre curvas elípticas.' },
+  { cat: 'articulos', name: 'Uso de "se" impersonal', short: 'En lugar de "nosotros"', expl: 'Ejemplo: "Se demuestra que..."', prompt: 'Reescribe "Demostramos el teorema" en forma impersonal.' },
+  { cat: 'articulos', name: 'Evitar la primera persona excesiva', short: 'Moderar el uso de "yo"', expl: 'En matemáticas se prefiere "se" o "nosotros" en colaboraciones.', prompt: 'Reescribe "Yo probé el lema" de manera aceptable en un artículo.' },
+  { cat: 'articulos', name: 'Sección de discusión', short: 'Interpretación de los resultados', expl: 'No es común en matemáticas puras, pero sí en aplicada.', prompt: 'Escribe una frase discutiendo la importancia de un nuevo teorema en teoría de números.' },
+  { cat: 'articulos', name: 'Conclusiones y trabajo futuro', short: 'Resumen y líneas abiertas', expl: 'Sugerir problemas no resueltos.', prompt: 'Redacta la conclusión de un artículo que demuestra la irracionalidad de π.' },
+  { cat: 'articulos', name: 'Agradecimientos', short: 'Financiamiento, revisores', expl: 'Ejemplo: "El autor agradece a COLCIENCIAS por su apoyo".', prompt: 'Escribe un agradecimiento a la Universidad Nacional de Colombia.' },
+  { cat: 'articulos', name: 'Preprints y repositorios', short: 'arXiv, ResearchGate', expl: 'Incluir el ID del preprint.', prompt: 'Escribe una nota indicando que el artículo está disponible en arXiv con ID 2301.0001.' },
+  { cat: 'articulos', name: 'Software matemático', short: 'Mencionar herramientas (Mathematica, Maple, SageMath)', expl: 'Si se usaron cálculos simbólicos.', prompt: 'Redacta una frase indicando que verificaste un resultado con SageMath.' },
+  { cat: 'articulos', name: 'Revisión por pares', short: 'Responder a comentarios', expl: 'Agradecer y justificar cambios.', prompt: 'Responde a un revisor que pide aclarar un paso en una demostración.' },
+  { cat: 'articulos', name: 'Cartas al editor', short: 'Comunicaciones breves', expl: 'Para resultados rápidos.', prompt: 'Escribe el primer párrafo de una carta al editor anunciando una nueva demostración del último teorema de Fermat.' },
+  // Informes y proyectos (41-60)
+  { cat: 'informes', name: 'Estructura de informe de proyecto', short: 'Introducción, objetivos, metodología, resultados, conclusiones', expl: 'Similar a artículo pero más flexible.', prompt: 'Enumera las secciones de un informe de modelación matemática.' },
+  { cat: 'informes', name: 'Definición del problema', short: 'Contexto y necesidad', expl: 'Explicar qué se quiere resolver.', prompt: 'Redacta la definición del problema para un proyecto de optimización de rutas de transporte en Bogotá.' },
+  { cat: 'informes', name: 'Modelo matemático', short: 'Ecuaciones, variables, parámetros', expl: 'Describir el modelo con claridad.', prompt: 'Escribe la ecuación logística de crecimiento poblacional y define cada variable.' },
+  { cat: 'informes', name: 'Métodos numéricos', short: 'Algoritmos usados', expl: 'Newton-Raphson, Euler, Runge-Kutta.', prompt: 'Describe brevemente el método de bisección para encontrar raíces.' },
+  { cat: 'informes', name: 'Resultados numéricos', short: 'Tablas y gráficas', expl: 'Mostrar convergencia, errores.', prompt: 'Redacta una frase que describa una tabla de iteraciones del método de Newton.' },
+  { cat: 'informes', name: 'Análisis de sensibilidad', short: 'Cómo cambian los resultados con parámetros', expl: 'Importante en modelación.', prompt: 'Explica qué es un análisis de sensibilidad en un modelo matemático.' },
+  { cat: 'informes', name: 'Validación del modelo', short: 'Comparar con datos reales', expl: 'Calcular error relativo.', prompt: 'Escribe una oración comparando la salida del modelo con datos observados.' },
+  { cat: 'informes', name: 'Software y código', short: 'Python, R, MATLAB, Julia', expl: 'Incluir enlace al repositorio.', prompt: 'Menciona qué librerías de Python usarías para resolver sistemas de ecuaciones diferenciales.' },
+  { cat: 'informes', name: 'Interpretación de resultados', short: 'Significado matemático y práctico', expl: 'No solo números, sino qué implican.', prompt: 'Interpreta un resultado de que la solución del modelo tiende a un punto de equilibrio estable.' },
+  { cat: 'informes', name: 'Limitaciones del modelo', short: 'Suposiciones simplificadoras', expl: 'Linealidad, estacionariedad, etc.', prompt: 'Enumera dos limitaciones de un modelo de crecimiento exponencial de población.' },
+  { cat: 'informes', name: 'Recomendaciones', short: 'Basadas en los resultados', expl: 'Para futuros proyectos o aplicaciones.', prompt: 'Redacta una recomendación para mejorar un modelo de predicción del clima.' },
+  { cat: 'informes', name: 'Anexos', short: 'Código, datos, demostraciones extensas', expl: 'Material complementario.', prompt: 'Explica qué pondrías en un anexo de un informe de matemáticas aplicadas.' },
+  { cat: 'informes', name: 'Portada del informe', short: 'Título, autores, fecha, institución', expl: 'Seguir formato institucional.', prompt: 'Diseña el contenido de la portada para un informe de semillero de matemáticas.' },
+  { cat: 'informes', name: 'Resumen ejecutivo', short: 'Para gerentes no matemáticos', expl: 'Lenguaje claro, sin tecnicismos.', prompt: 'Redacta un resumen ejecutivo de un informe sobre análisis de datos de matrícula universitaria.' },
+  { cat: 'informes', name: 'Uso de gráficos estadísticos', short: 'Histogramas, diagramas de caja', expl: 'Para mostrar distribuciones.', prompt: 'Describe qué gráfico usarías para comparar dos conjuntos de datos.' },
+  { cat: 'informes', name: 'Citas de software', short: 'Mencionar versiones', expl: 'Ejemplo: "Se utilizó Python 3.10 con las bibliotecas NumPy y Matplotlib".', prompt: 'Escribe una frase citando el software usado para generar gráficos.' },
+  { cat: 'informes', name: 'Control de versiones', short: 'Git para documentos', expl: 'Útil en proyectos colaborativos.', prompt: 'Explica por qué es importante usar Git en un proyecto matemático.' },
+  { cat: 'informes', name: 'Cronograma', short: 'Plan de trabajo', expl: 'Diagrama de Gantt.', prompt: 'Escribe tres hitos de un proyecto de modelación matemática de 6 meses.' },
+  { cat: 'informes', name: 'Presupuesto', short: 'Costos de software, equipos', expl: 'Para proyectos de investigación.', prompt: 'Enumera dos posibles costos en un proyecto de matemáticas computacionales.' },
+  { cat: 'informes', name: 'Evaluación del proyecto', short: 'Métricas de éxito', expl: 'Precisión del modelo, cumplimiento de hitos.', prompt: 'Define una métrica para evaluar un modelo de clasificación.' },
+  // Divulgación y enseñanza (61-80)
+  { cat: 'divulgacion', name: 'Explicación de conceptos a público general', short: 'Analogías, ejemplos cotidianos', expl: 'Ejemplo: "Los números primos son como los átomos de la multiplicación".', prompt: 'Explica qué es una función a un estudiante de secundaria usando una máquina de entrada-salida.' },
+  { cat: 'divulgacion', name: 'Artículos de divulgación', short: 'Título atractivo, ejemplos', expl: 'Para revistas como "Revista de la Academia Colombiana de Ciencias".', prompt: 'Escribe el primer párrafo de un artículo sobre el número π para niños.' },
+  { cat: 'divulgacion', name: 'Uso de la historia de las matemáticas', short: 'Contexto humano', expl: 'Contar anécdotas de matemáticos.', prompt: 'Redacta una anécdota sobre el origen del teorema de Pitágoras.' },
+  { cat: 'divulgacion', name: 'Juegos matemáticos', short: 'Rompecabezas, acertijos', expl: 'Atraen la atención.', prompt: 'Escribe un acertijo matemático sobre el problema de las edades.' },
+  { cat: 'divulgacion', name: 'Videos educativos', short: 'Guion, storyboard', expl: 'Plataformas como YouTube.', prompt: 'Redacta el guion de 30 segundos para explicar la derivada como pendiente de la tangente.' },
+  { cat: 'divulgacion', name: 'Infografías', short: 'Visualización de conceptos', expl: 'Ejemplo: el triángulo de Pascal.', prompt: 'Describe los elementos de una infografía sobre el teorema de Bayes.' },
+  { cat: 'divulgacion', name: 'Podcasts matemáticos', short: 'Formato conversacional', expl: 'Invitados, problemas interesantes.', prompt: 'Escribe la introducción de un podcast sobre el problema del viajante.' },
+  { cat: 'divulgacion', name: 'Matemáticas en la vida cotidiana', short: 'Aplicaciones reales', expl: 'Criptografía, algoritmos de búsqueda, pronósticos.', prompt: 'Explica cómo se usan los números primos en la seguridad informática.' },
+  { cat: 'divulgacion', name: 'Resolución de problemas famosos', short: 'Último teorema de Fermat, conjetura de Poincaré', expl: 'Explicar el enunciado y la historia.', prompt: 'Escribe el enunciado del último teorema de Fermat en palabras sencillas.' },
+  { cat: 'divulgacion', name: 'Errores comunes en matemáticas', short: 'Confundir (a+b)² con a²+b²', expl: 'Corregir con ejemplos.', prompt: 'Explica por qué (a+b)² ≠ a²+b² usando un ejemplo numérico.' },
+  { cat: 'divulgacion', name: 'Matemáticas en el arte', short: 'Proporción áurea, teselaciones, perspectiva', expl: 'Escher, Dalí, Leonardo.', prompt: 'Describe la presencia de la proporción áurea en el arte renacentista.' },
+  { cat: 'divulgacion', name: 'Matemáticas en la naturaleza', short: 'Números de Fibonacci, fractales, simetrías', expl: 'Caracoles, flores, copos de nieve.', prompt: 'Explica la sucesión de Fibonacci en la disposición de las semillas de girasol.' },
+  { cat: 'divulgacion', name: 'Olimpiadas matemáticas', short: 'Problemas de concurso', expl: 'Entrenamiento, estrategias.', prompt: 'Redacta un problema de olimpiadas sobre teoría de números para estudiantes de secundaria.' },
+  { cat: 'divulgacion', name: 'Clubes de matemáticas', short: 'Actividades extracurriculares', expl: 'Para promover el interés.', prompt: 'Propón una actividad para un club de matemáticas sobre el cálculo de π.' },
+  { cat: 'divulgacion', name: 'Matemáticas para todos', short: 'Inclusión de personas con discapacidad visual', expl: 'Uso de maquetas, lenguaje táctil.', prompt: 'Sugiere una adaptación para enseñar geometría a un estudiante ciego.' },
+  { cat: 'divulgacion', name: 'Gamificación', short: 'Aprendizaje basado en juegos', expl: 'Kahoot, Mathletics.', prompt: 'Diseña una pregunta de opción múltiple sobre fracciones para un juego.' },
+  { cat: 'divulgacion', name: 'Blogs de matemáticas', short: 'Artículos cortos, frecuentes', expl: 'Ejemplo: "Gaussianos", "Microsiervos".', prompt: 'Escribe el título de un post para un blog titulado "El infinito en 5 ejemplos".' },
+  { cat: 'divulgacion', name: 'Concursos de divulgación', short: 'Three Minute Thesis, Famelab', expl: 'Explicar un concepto en 3 minutos.', prompt: 'Escribe el discurso de 3 minutos sobre la importancia de las matemáticas en la inteligencia artificial.' },
+  { cat: 'divulgacion', name: 'Carteles en ferias de ciencia', short: 'Estructura: título, problema, métodos, resultados, conclusiones', expl: 'Atractivo visual.', prompt: 'Enumera los apartados de un cartel sobre el problema de Basilea.' },
+  { cat: 'divulgacion', name: 'Evaluación de la divulgación', short: 'Encuestas de comprensión', expl: 'Preguntas simples.', prompt: 'Escribe una pregunta para evaluar si el público entendió la conjetura de Goldbach.' },
+  // Ética y comunicación (81-100)
+  { cat: 'etica', name: 'Integridad en investigación', short: 'No falsificar resultados', expl: 'Las consecuencias son graves.', prompt: 'Redacta una declaración de integridad para un artículo de matemáticas.' },
+  { cat: 'etica', name: 'Plagio en matemáticas', short: 'Copiar demostraciones sin citar', expl: 'Incluso las ideas deben ser atribuidas.', prompt: 'Explica cómo citar correctamente una demostración de un libro.' },
+  { cat: 'etica', name: 'Autoría y contribuciones', short: 'Solo quienes contribuyeron intelectualmente', expl: 'No incluir "autores honorarios".', prompt: 'Escribe una política de autoría para un artículo con dos colaboradores.' },
+  { cat: 'etica', name: 'Conflictos de interés', short: 'Financiamiento, vínculos', expl: 'Declarar en la sección correspondiente.', prompt: 'Redacta una declaración de conflicto de interés para un estudio financiado por una empresa de software.' },
+  { cat: 'etica', name: 'Revisión por pares ética', short: 'Confidencialidad, objetividad', expl: 'No usar información privilegiada.', prompt: '¿Qué debes hacer si descubres un error en un manuscrito que estás revisando?' },
+  { cat: 'etica', name: 'Errores y correcciones', short: 'Publicar una fe de erratas', expl: 'Si el error es menor.', prompt: 'Redacta una fe de erratas para un error tipográfico en una ecuación.' },
+  { cat: 'etica', name: 'Retractación de artículos', short: 'Por error grave o mala conducta', expl: 'La revista publica una nota de retractación.', prompt: 'Escribe el primer párrafo de una nota de retractación por un error en una demostración.' },
+  { cat: 'etica', name: 'Depredadores académicos', short: 'Editoriales falsas', expl: 'Cobran sin revisión real.', prompt: 'Enumera tres señales de alerta de una revista matemática depredadora.' },
+  { cat: 'etica', name: 'Preprints y prioridad', short: 'Ventajas y desventajas', expl: 'Establecer prioridad rápidamente.', prompt: 'Argumenta a favor de depositar un preprint en arXiv antes de enviar a una revista.' },
+  { cat: 'etica', name: 'Colaboración internacional', short: 'Respeto a las diferencias culturales', expl: 'Acordar autorías y tareas claramente.', prompt: 'Redacta un correo a un colaborador en otro país para definir tareas en un proyecto.' },
+  { cat: 'etica', name: 'Mentoría de estudiantes', short: 'Enseñar a escribir demostraciones', expl: 'Revisar borradores, dar retroalimentación.', prompt: 'Describe cómo enseñarías a un estudiante a estructurar una demostración por inducción.' },
+  { cat: 'etica', name: 'Uso de IA generativa', short: 'ChatGPT, Copilot', expl: 'Declarar su uso, no como autor.', prompt: 'Redacta una declaración de uso de IA para corrección de estilo en un artículo.' },
+  { cat: 'etica', name: 'Comunicación con medios', short: 'Preparar un comunicado de prensa', expl: 'Destacar la relevancia del resultado.', prompt: 'Escribe el titular de un comunicado de prensa sobre una nueva demostración de la conjetura de los números primos gemelos.' },
+  { cat: 'etica', name: 'Derechos de autor', short: 'Permisos para usar figuras, ecuaciones', expl: 'Pedir autorización si se reproduce material.', prompt: 'Explica cómo pedir permiso para usar una figura de un libro de texto.' },
+  { cat: 'etica', name: 'Ciencia abierta', short: 'Compartir código y datos', expl: 'En matemáticas computacionales.', prompt: 'Escribe una frase indicando que el código está disponible en un repositorio abierto.' },
+  { cat: 'etica', name: 'Reproducibilidad', short: 'Incluir semillas aleatorias', expl: 'Para simulaciones.', prompt: 'Redacta una nota sobre la fijación de la semilla aleatoria en una simulación Monte Carlo.' },
+  { cat: 'etica', name: 'Responsabilidad social', short: 'Aplicaciones éticas', expl: 'Evitar usos bélicos, discriminación en algoritmos.', prompt: 'Propón una aplicación ética de la teoría de grafos en redes sociales.' },
+  { cat: 'etica', name: 'Código de conducta en congresos', short: 'Respeto, inclusión', expl: 'Acatar políticas de la sociedad.', prompt: 'Escribe una norma de conducta para un congreso de matemáticas.' },
+  { cat: 'etica', name: 'Acceso abierto', short: 'Publicar en revistas OA', expl: 'Costos de APC o vía verde.', prompt: 'Explica la diferencia entre acceso abierto dorado y verde.' },
+  { cat: 'etica', name: 'Formación en integridad', short: 'Cursos obligatorios para estudiantes', expl: 'Prevenir malas prácticas.', prompt: 'Sugiere un tema para un taller de ética para estudiantes de matemáticas.' }
+];
+
+// Generar exactamente 100 ejercicios
+let ejercicios = [];
+for (let i = 0; i < 100; i++) {
+  const t = templates[i % templates.length];
+  const sufijo = i < templates.length ? '' : ` (${Math.floor(i / templates.length) + 1})`;
+  ejercicios.push({
+    id: i + 1,
+    cat: t.cat,
+    name: t.name + sufijo,
+    short: t.short,
+    expl: t.expl,
+    prompt: t.prompt
+  });
+}
+for (let i = 0; i < ejercicios.length; i++) ejercicios[i].id = i + 1;
+
+// ========== ESTADO DE USUARIO ==========
+let userData = { name:"Estudiante", level:"intermedio", completed:[], practiced:0, scores:[], history:[], joinDate:new Date().toLocaleDateString('es-ES') };
+function loadUserData(){ const saved=localStorage.getItem('redaccionMatematicaUser'); if(saved){ try{ const p=JSON.parse(saved); userData={...userData,...p}; }catch(e){} } updateUI(); }
+function saveUserData(){ localStorage.setItem('redaccionMatematicaUser',JSON.stringify(userData)); updateUI(); }
+function updateUI(){ document.getElementById('navName').textContent=userData.name.split(' ')[0]; document.getElementById('dashName').textContent=userData.name.split(' ')[0]; document.getElementById('navAv').textContent=userData.name[0].toUpperCase(); }
+loadUserData();
+
+let currentEx = null;
+let filterCatEx = 'all';
+function switchPage(p){
+  document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));
+  document.querySelectorAll('.app-tab').forEach(x=>x.classList.remove('active'));
+  document.getElementById('page-'+p)?.classList.add('active');
+  document.getElementById('tab-'+p)?.classList.add('active');
+  if(p==='dashboard') refreshDash();
+  if(p==='perfil') renderProfile();
+  if(p==='ejercicios') renderList();
+}
+function refreshDash(){
+  document.getElementById('sCompleted').textContent=userData.completed.length;
+  document.getElementById('sPracticed').textContent=userData.practiced;
+  const avg=userData.scores.length?Math.round(userData.scores.reduce((a,b)=>a+b,0)/userData.scores.length):null;
+  document.getElementById('sScore').textContent=avg?avg+'%':'—';
+  document.getElementById('sStreak').textContent=(userData.streak||1)+'🔥';
+  const grid=document.getElementById('dotGrid');
+  grid.innerHTML='';
+  ejercicios.forEach(ex=>{
+    const done=userData.completed.includes(ex.id);
+    const div=document.createElement('div');
+    div.className='dot'+(done?' done':'');
+    div.innerHTML=`<span class="dot-num">${ex.id}</span><div class="dot-tip">#${ex.id} ${ex.name}</div>`;
+    div.onclick=()=>startPractice(ex.id);
+    grid.appendChild(div);
+  });
+  const nid=nextId();
+  const next=ejercicios.find(e=>e.id===nid);
+  if(next){
+    document.getElementById('nextNum').textContent=String(next.id).padStart(2,'0');
+    document.getElementById('nextCat').textContent=CATS[next.cat]||next.cat;
+    document.getElementById('nextName').textContent=next.name;
+    document.getElementById('nextDesc').textContent=next.short;
+    document.getElementById('nextCard').onclick=()=>startPractice(next.id);
+  }
+  const cats=Object.keys(CATS);
+  const cp=document.getElementById('catProgress');
+  cp.innerHTML=cats.map(c=>{
+    const total=ejercicios.filter(e=>e.cat===c).length;
+    const done=ejercicios.filter(e=>e.cat===c && userData.completed.includes(e.id)).length;
+    const pct=Math.round(done/total*100);
+    return `<div class="mb-2"><div class="d-flex justify-content-between mb-1" style="font-size:.8rem;font-weight:700"><span>${CATS[c]}</span><span style="color:var(--amber)">${done}/${total}</span></div><div style="height:7px;border-radius:4px;background:var(--border)"><div style="height:100%;border-radius:4px;width:${pct}%;background:${pct===100?'var(--sage)':'var(--math)'}"></div></div></div>`;
+  }).join('');
+}
+function nextId(){ for(let i=1;i<=100;i++) if(!userData.completed.includes(i)) return i; return 1; }
+function setFilter(cat,btn){ filterCatEx=cat; document.querySelectorAll('#pills .pill').forEach(p=>p.classList.remove('on')); btn.classList.add('on'); renderList(); }
+function renderList(){
+  const q=(document.getElementById('searchQ')?.value||'').toLowerCase();
+  const filtered=ejercicios.filter(e=>(filterCatEx==='all'||e.cat===filterCatEx) && (!q||e.name.toLowerCase().includes(q)||e.short.toLowerCase().includes(q)));
+  const list=document.getElementById('exList');
+  list.innerHTML=filtered.map(e=>{
+    const done=userData.completed.includes(e.id);
+    return `<div class="ex-card${done?' done':''}" onclick="startPractice(${e.id})"><div class="ex-num-box">${String(e.id).padStart(2,'0')}</div><div class="ex-body"><div class="ex-cat-tag">${CATS[e.cat]||e.cat}</div><div class="ex-name">${e.name}</div><div class="ex-short">${e.short}</div></div><div>${done?'<span class="badge-done"><i class="bi bi-check-lg"></i> Hecho</span>':'<span class="badge-new">Practicar</span>'}</div></div>`;
+  }).join('');
+  if(!filtered.length) list.innerHTML='<div class="text-muted text-center py-4">No se encontraron técnicas.</div>';
+}
+function startPractice(id){
+  const ex=ejercicios.find(x=>x.id===id);
+  if(!ex) return;
+  currentEx=ex;
+  document.getElementById('pracCat').textContent=CATS[ex.cat]||ex.cat;
+  document.getElementById('pracNum').textContent=String(ex.id).padStart(2,'0');
+  document.getElementById('pracName').textContent=ex.name;
+  document.getElementById('pracExpl').textContent=ex.expl;
+  document.getElementById('pracEx').textContent='📝 '+ex.expl;
+  document.getElementById('pracPrompt').innerHTML='<strong>✍️ Ejercicio:</strong> '+ex.prompt;
+  document.getElementById('practiceTA').value='';
+  document.getElementById('wc').textContent='0';
+  document.getElementById('fbArea').classList.remove('show');
+  document.getElementById('btnNext').style.display='none';
+  document.getElementById('btnCheck').disabled=false;
+  document.getElementById('btnCheck').innerHTML='<i class="bi bi-magic"></i> Analizar';
+  document.getElementById('practiceEmpty').style.display='none';
+  document.getElementById('practiceContent').style.display='';
+  switchPage('practica');
+  document.getElementById('practiceTA').focus();
+}
+function prevExercise(){
+  if(!currentEx) return;
+  const idx=ejercicios.findIndex(e=>e.id===currentEx.id);
+  startPractice(ejercicios[(idx-1+ejercicios.length)%ejercicios.length].id);
+}
+function nextExercise(){
+  if(!currentEx) return;
+  const idx=ejercicios.findIndex(e=>e.id===currentEx.id);
+  startPractice(ejercicios[(idx+1)%ejercicios.length].id);
+}
+function doCheck(){
+  const text=document.getElementById('practiceTA').value.trim();
+  if(!text || text.split(/\s+/).length<5){ toast('Escribe al menos 5 palabras','e'); return; }
+  if(!currentEx) return;
+  const btn=document.getElementById('btnCheck');
+  btn.disabled=true;
+  btn.innerHTML='<span class="spinner-border spinner-border-sm me-1"></span>Evaluando...';
+  const fb=document.getElementById('fbArea');
+  fb.classList.add('show');
+  document.getElementById('fbLoading').style.display='block';
+  document.getElementById('fbContent').style.display='none';
+  setTimeout(()=>{
+    let score=70;
+    if(text.length>100) score+=10;
+    if(text.toLowerCase().includes(currentEx.name.toLowerCase())) score+=10;
+    score=Math.min(100,score);
+    const nivel=score>=85?'excelente':score>=65?'bien':'necesita_mejorar';
+    const titulo=nivel==='excelente'?'¡Excelente redacción matemática!':nivel==='bien'?'Buen trabajo':'Puedes mejorar';
+    const resumen=`Tu respuesta tiene ${text.split(/\s+/).length} palabras. ${score>=70?'Aplicas bien los conceptos de redacción en matemáticas.':'Revisa la técnica y vuelve a intentarlo.'}`;
+    const aciertos=['La respuesta es relevante al ejercicio.'];
+    const consejos=['Consulta guías como "Cómo escribir matemáticas" de Norman Steenrod o "Mathematical Writing" de Knuth.'];
+    const aplicacion=`Has aplicado conocimientos sobre ${currentEx.name}.`;
+    const r={score,nivel,titulo,resumen,aciertos,errores:[],consejos,aplicacion};
+    renderFeedback(r);
+    userData.practiced++;
+    userData.scores.push(r.score);
+    if(r.score>=65 && !userData.completed.includes(currentEx.id)){
+      userData.completed.push(currentEx.id);
+      toast(`✅ ¡Técnica #${currentEx.id} completada!`,'s');
+    }
+    userData.history=[{id:currentEx.id, name:currentEx.name, score:r.score, date:new Date().toLocaleDateString('es-ES')}, ...(userData.history||[])].slice(0,30);
+    saveUserData();
+    document.getElementById('fbLoading').style.display='none';
+    document.getElementById('fbContent').style.display='block';
+    btn.disabled=false;
+    btn.innerHTML='<i class="bi bi-magic"></i> Analizar de nuevo';
+    document.getElementById('btnNext').style.display='';
+    fb.scrollIntoView({behavior:'smooth',block:'start'});
+  },800);
+}
+function renderFeedback(r){
+  const sc=r.score>=80?'high':r.score>=60?'med':'low';
+  const hc=r.nivel==='excelente'?'excellent':r.nivel==='bien'?'good':'low';
+  const em=r.nivel==='excelente'?'🏆':r.nivel==='bien'?'👍':'💪';
+  const aciertos=(r.aciertos||[]).map(a=>`<div class="fb-item ok"><span class="fb-ico">✓</span><span>${a}</span></div>`).join('');
+  const errores=(r.errores||[]).map(a=>`<div class="fb-item err"><span class="fb-ico">✗</span><span>${a}</span></div>`).join('');
+  const consejos=(r.consejos||[]).map(a=>`<div class="fb-item tip"><span class="fb-ico">💡</span><span>${a}</span></div>`).join('');
+  document.getElementById('fbContent').innerHTML=`<div class="fb-head ${hc}"><span class="fb-emoji">${em}</span><div><p class="fb-htitle">${r.titulo}</p><p class="fb-hsub">Técnica #${currentEx?.id} · ${currentEx?.name}</p></div></div><div class="fb-body"><div style="display:flex;align-items:center;gap:1rem;margin-bottom:1.1rem"><div class="score-circle sc-${sc}">${r.score}%</div><div style="flex:1"><div style="font-weight:700;margin-bottom:.4rem">Dominio de la técnica</div><div style="height:8px;border-radius:4px;background:var(--border)"><div style="height:100%;width:${r.score}%;background:${r.score>=80?'#198754':r.score>=60?'#ffc107':'#dc3545'}"></div></div><div style="font-size:.77rem;margin-top:.4rem">${r.resumen}</div></div></div>${r.aplicacion?`<div class="fb-section"><div class="fb-section-title">🎯 Aplicación</div><div class="fb-item info"><span class="fb-ico">📖</span><span>${r.aplicacion}</span></div></div>`:''}${aciertos?`<div class="fb-section"><div class="fb-section-title">✅ Aciertos</div>${aciertos}</div>`:''}${errores?`<div class="fb-section"><div class="fb-section-title">❌ Errores</div>${errores}</div>`:''}${consejos?`<div class="fb-section"><div class="fb-section-title">💡 Consejos</div>${consejos}</div>`:''}</div>`;
+}
+function renderProfile(){
+  document.getElementById('profAv').textContent=userData.name[0].toUpperCase();
+  document.getElementById('profName').textContent=userData.name;
+  document.getElementById('profMeta').textContent=(userData.level==='principiante'?'Principiante':userData.level==='intermedio'?'Intermedio':'Avanzado')+' · Desde '+userData.joinDate;
+  document.getElementById('pComp').textContent=userData.completed.length;
+  document.getElementById('pPrac').textContent=userData.practiced;
+  const avg=userData.scores.length?Math.round(userData.scores.reduce((a,b)=>a+b,0)/userData.scores.length):null;
+  document.getElementById('pScr').textContent=avg?avg+'%':'—';
+  const ACHS=[{icon:'🎓',name:'Primera técnica',check:d=>d.practiced>=1},{icon:'∑',name:'10 prácticas',check:d=>d.practiced>=10},{icon:'🏅',name:'25 técnicas',check:d=>d.completed.length>=25},{icon:'🏆',name:'50 técnicas',check:d=>d.completed.length>=50},{icon:'∫',name:'Maestro redactor matemático',check:d=>d.completed.length>=100}];
+  document.getElementById('achGrid').innerHTML=ACHS.map(a=>{const u=a.check(userData); return `<div class="ach${u?' unlocked':' locked'}"><span class="ach-icon">${a.icon}</span><div class="ach-name">${a.name}</div></div>`;}).join('');
+  const hl=document.getElementById('histList');
+  if(userData.history?.length){ hl.innerHTML=userData.history.slice(0,15).map(h=>`<div class="hist-row" onclick="startPractice(${h.id})"><div class="ex-num-box" style="background:${h.score>=80?'var(--sage)':h.score>=60?'var(--amber-light)':'#f8d7da'};color:#fff">${String(h.id).padStart(2,'0')}</div><div><div style="font-weight:700">${h.name}</div><div style="font-size:.74rem;color:#aaa">${h.date}</div></div><span style="background:${h.score>=80?'var(--sage)':h.score>=60?'var(--amber)':'#dc3545'};color:#fff;padding:.18rem .55rem;border-radius:9px">${h.score}%</span></div>`).join('');}
+  else hl.innerHTML='<div class="text-muted">Aún sin prácticas.</div>';
+}
+function openEditModal(){ document.getElementById('editName').value=userData.name; document.getElementById('editLevel').value=userData.level; document.getElementById('editModal').style.display='flex'; }
+function saveEdit(){ const name=document.getElementById('editName').value.trim(); if(!name){ toast('Escribe un nombre','e'); return; } userData.name=name; userData.level=document.getElementById('editLevel').value; saveUserData(); updateUI(); closeModal('editModal'); renderProfile(); toast('Perfil actualizado','s'); }
+function confirmReset(){ if(confirm('¿Reiniciar todo el progreso?')){ userData.completed=[]; userData.practiced=0; userData.scores=[]; userData.history=[]; saveUserData(); refreshDash(); renderProfile(); toast('Progreso reiniciado','i'); } }
+function closeModal(id){ document.getElementById(id).style.display='none'; }
+function toast(msg,type='i'){ const box=document.getElementById('toastBox'); const t=document.createElement('div'); const icons={s:'✅',e:'❌',i:'ℹ️'}; t.className=`toast-item ${type}`; t.innerHTML=`<span>${icons[type]||'ℹ️'}</span><span>${msg}</span>`; box.appendChild(t); setTimeout(()=>{ t.style.opacity='0'; t.style.transform='translateY(16px)'; setTimeout(()=>t.remove(),350); },3200); }
+document.addEventListener('DOMContentLoaded',()=>{ const ta=document.getElementById('practiceTA'); if(ta) ta.addEventListener('input',()=>{ const w=ta.value.trim()?ta.value.trim().split(/\s+/).length:0; document.getElementById('wc').textContent=w; }); refreshDash(); renderList(); renderProfile(); });
+</script>
+</body>
+</html>

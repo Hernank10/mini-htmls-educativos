@@ -1,0 +1,1489 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>100 Técnicas de Lenguaje · Bachillerato Colombia</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=DM+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0d0f14;
+  --bg2: #13161d;
+  --bg3: #1a1e28;
+  --card: #1e2330;
+  --border: #2a3045;
+  --accent: #e8c547;
+  --accent2: #4fc3f7;
+  --accent3: #a78bfa;
+  --text: #e8eaf0;
+  --text2: #9ba3b8;
+  --text3: #6b7490;
+  --green: #4ade80;
+  --red: #f87171;
+  --orange: #fb923c;
+  --radius: 12px;
+  --radius2: 8px;
+  --shadow: 0 4px 24px rgba(0,0,0,0.4);
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* ── HEADER ── */
+header {
+  background: linear-gradient(135deg, #0d0f14 0%, #13161d 50%, #0d1520 100%);
+  border-bottom: 1px solid var(--border);
+  padding: 0 2rem;
+  position: sticky; top: 0; z-index: 100;
+  backdrop-filter: blur(12px);
+}
+.header-inner {
+  max-width: 1400px; margin: 0 auto;
+  display: flex; align-items: center; justify-content: space-between;
+  height: 64px;
+}
+.logo {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.25rem; font-weight: 700;
+  color: var(--accent);
+  letter-spacing: -0.02em;
+}
+.logo span { color: var(--text2); font-weight: 400; font-size: 0.85rem; display: block; }
+
+.nav-tabs {
+  display: flex; gap: 4px;
+  background: var(--bg3); border-radius: 10px; padding: 4px;
+}
+.nav-tab {
+  padding: 7px 18px; border-radius: 7px; border: none; cursor: pointer;
+  font-family: 'DM Sans', sans-serif; font-size: 0.85rem; font-weight: 500;
+  color: var(--text2); background: transparent; transition: all 0.2s;
+}
+.nav-tab.active { background: var(--accent); color: #000; font-weight: 600; }
+.nav-tab:hover:not(.active) { background: var(--border); color: var(--text); }
+
+.progress-bar-wrap {
+  display: flex; align-items: center; gap: 10px; font-size: 0.8rem; color: var(--text2);
+}
+.progress-bar {
+  width: 120px; height: 6px; background: var(--border); border-radius: 99px; overflow: hidden;
+}
+.progress-fill {
+  height: 100%; background: linear-gradient(90deg, var(--accent), var(--accent2));
+  border-radius: 99px; transition: width 0.4s ease;
+}
+.progress-count { color: var(--accent); font-weight: 600; }
+
+/* ── MAIN LAYOUT ── */
+.container { max-width: 1400px; margin: 0 auto; padding: 2rem; }
+
+/* ── FILTER BAR ── */
+.filter-bar {
+  display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 1.5rem; align-items: center;
+}
+.filter-input {
+  flex: 1; min-width: 200px;
+  background: var(--bg3); border: 1px solid var(--border);
+  color: var(--text); padding: 9px 14px; border-radius: var(--radius2);
+  font-family: 'DM Sans', sans-serif; font-size: 0.875rem; outline: none;
+  transition: border-color 0.2s;
+}
+.filter-input:focus { border-color: var(--accent); }
+.filter-input::placeholder { color: var(--text3); }
+
+.category-filters { display: flex; gap: 6px; flex-wrap: wrap; }
+.cat-btn {
+  padding: 6px 14px; border-radius: 99px; border: 1px solid var(--border);
+  background: var(--bg3); color: var(--text2); cursor: pointer;
+  font-size: 0.78rem; font-weight: 500; transition: all 0.2s;
+  font-family: 'DM Sans', sans-serif;
+}
+.cat-btn.active, .cat-btn:hover { border-color: var(--accent); color: var(--accent); background: rgba(232,197,71,0.08); }
+
+.stats-row {
+  display: flex; gap: 16px; margin-bottom: 1.5rem; flex-wrap: wrap;
+}
+.stat-chip {
+  padding: 8px 16px; background: var(--bg3); border: 1px solid var(--border);
+  border-radius: var(--radius2); font-size: 0.8rem; color: var(--text2);
+  display: flex; align-items: center; gap: 6px;
+}
+.stat-chip strong { color: var(--text); }
+.stat-chip .dot { width: 8px; height: 8px; border-radius: 50%; }
+.dot-done { background: var(--green); }
+.dot-pend { background: var(--text3); }
+
+/* ── FLASHCARD MODE ── */
+#mode-flashcard { display: none; }
+.flashcard-nav {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 2rem;
+}
+.flashcard-counter {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.1rem; color: var(--text2);
+}
+.flashcard-counter strong { color: var(--accent); font-size: 1.5rem; }
+.fc-controls { display: flex; gap: 10px; align-items: center; }
+.btn-nav {
+  width: 44px; height: 44px; border-radius: 50%; border: 1px solid var(--border);
+  background: var(--bg3); color: var(--text); cursor: pointer; font-size: 1.2rem;
+  display: flex; align-items: center; justify-content: center;
+  transition: all 0.2s;
+}
+.btn-nav:hover { border-color: var(--accent); color: var(--accent); }
+.btn-nav:disabled { opacity: 0.3; cursor: not-allowed; }
+
+.btn-shuffle {
+  padding: 8px 18px; border-radius: var(--radius2);
+  border: 1px solid var(--accent3); background: rgba(167,139,250,0.1);
+  color: var(--accent3); cursor: pointer; font-size: 0.83rem; font-weight: 600;
+  font-family: 'DM Sans', sans-serif; transition: all 0.2s;
+}
+.btn-shuffle:hover { background: rgba(167,139,250,0.2); }
+
+/* ── THE CARD ── */
+.flashcard-container {
+  perspective: 1200px; min-height: 420px;
+  display: flex; flex-direction: column; gap: 1.5rem;
+}
+.flashcard {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: 18px; padding: 2.5rem;
+  box-shadow: var(--shadow);
+  position: relative; overflow: hidden;
+  transition: transform 0.3s ease;
+}
+.flashcard::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0; height: 3px;
+  background: linear-gradient(90deg, var(--accent), var(--accent2), var(--accent3));
+}
+.card-number {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.75rem; color: var(--accent); font-weight: 600;
+  letter-spacing: 0.1em; margin-bottom: 1rem;
+  display: flex; align-items: center; gap: 8px;
+}
+.card-category {
+  display: inline-block; padding: 3px 10px; border-radius: 99px;
+  font-size: 0.7rem; font-weight: 600; letter-spacing: 0.05em;
+  border: 1px solid; margin-left: 8px;
+}
+.card-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.6rem; font-weight: 700; color: var(--text);
+  margin-bottom: 0.75rem; line-height: 1.3;
+}
+.card-definition {
+  font-size: 0.95rem; color: var(--text2); line-height: 1.7;
+  margin-bottom: 1.25rem;
+}
+.card-example {
+  background: var(--bg2); border-left: 3px solid var(--accent);
+  padding: 1rem 1.25rem; border-radius: 0 var(--radius2) var(--radius2) 0;
+  font-size: 0.9rem; color: var(--text); line-height: 1.6;
+  font-style: italic; margin-bottom: 1.25rem;
+}
+.card-subject {
+  display: flex; gap: 8px; flex-wrap: wrap;
+}
+.subject-tag {
+  padding: 4px 10px; border-radius: 99px;
+  font-size: 0.72rem; font-weight: 600;
+  background: rgba(79,195,247,0.1); color: var(--accent2);
+  border: 1px solid rgba(79,195,247,0.2);
+}
+
+.card-done-badge {
+  position: absolute; top: 1.5rem; right: 1.5rem;
+  width: 32px; height: 32px; border-radius: 50%;
+  background: var(--green); display: flex; align-items: center; justify-content: center;
+  font-size: 1rem; opacity: 0; transition: opacity 0.3s;
+}
+.card-done-badge.visible { opacity: 1; }
+
+/* ── EXERCISE PANEL ── */
+.exercise-panel {
+  background: var(--bg3); border: 1px solid var(--border);
+  border-radius: 14px; padding: 1.75rem;
+}
+.exercise-title {
+  font-size: 0.78rem; font-weight: 600; letter-spacing: 0.1em;
+  color: var(--accent); text-transform: uppercase; margin-bottom: 1rem;
+  display: flex; align-items: center; gap: 8px;
+}
+.exercise-title::after {
+  content: ''; flex: 1; height: 1px; background: var(--border);
+}
+.exercise-instruction {
+  font-size: 0.88rem; color: var(--text2); margin-bottom: 1.25rem;
+}
+
+/* Word bank */
+.word-bank {
+  display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 1.25rem;
+  min-height: 44px; padding: 8px; background: var(--bg2);
+  border-radius: var(--radius2); border: 2px dashed var(--border);
+}
+.word-token {
+  padding: 7px 14px; background: var(--card); border: 1px solid var(--border);
+  border-radius: 8px; font-size: 0.85rem; color: var(--text); cursor: grab;
+  user-select: none; transition: all 0.2s; font-family: 'DM Sans', sans-serif;
+  white-space: nowrap;
+}
+.word-token:hover { border-color: var(--accent); color: var(--accent); transform: translateY(-2px); box-shadow: 0 4px 12px rgba(232,197,71,0.15); }
+.word-token.dragging { opacity: 0.4; cursor: grabbing; }
+.word-token.placed { opacity: 0.35; cursor: not-allowed; pointer-events: none; }
+
+/* Drop zone */
+.drop-zone {
+  display: flex; flex-wrap: wrap; gap: 6px; min-height: 52px;
+  padding: 8px; background: rgba(232,197,71,0.03);
+  border-radius: var(--radius2); border: 2px dashed rgba(232,197,71,0.2);
+  margin-bottom: 1.25rem; transition: border-color 0.2s;
+}
+.drop-zone.drag-over { border-color: var(--accent); background: rgba(232,197,71,0.06); }
+.drop-token {
+  padding: 7px 14px; background: rgba(232,197,71,0.12); border: 1px solid rgba(232,197,71,0.3);
+  border-radius: 8px; font-size: 0.85rem; color: var(--accent); cursor: pointer;
+  transition: all 0.15s; font-family: 'DM Sans', sans-serif; position: relative;
+}
+.drop-token:hover { background: rgba(232,197,71,0.2); }
+.drop-token::after { content: '×'; margin-left: 6px; opacity: 0.6; font-size: 0.9rem; }
+
+.drop-zone-label { font-size: 0.75rem; color: var(--text3); align-self: center; width: 100%; text-align: center; }
+
+/* Exercise controls */
+.exercise-controls { display: flex; gap: 10px; flex-wrap: wrap; }
+.btn-check {
+  padding: 9px 24px; border-radius: var(--radius2); border: none;
+  background: var(--accent); color: #000; font-weight: 700; cursor: pointer;
+  font-family: 'DM Sans', sans-serif; font-size: 0.88rem; transition: all 0.2s;
+}
+.btn-check:hover { background: #f0d060; transform: translateY(-1px); }
+.btn-reset {
+  padding: 9px 18px; border-radius: var(--radius2);
+  border: 1px solid var(--border); background: transparent;
+  color: var(--text2); cursor: pointer; font-size: 0.85rem;
+  font-family: 'DM Sans', sans-serif; transition: all 0.2s;
+}
+.btn-reset:hover { border-color: var(--text2); color: var(--text); }
+.btn-mark {
+  padding: 9px 18px; border-radius: var(--radius2);
+  border: 1px solid var(--green); background: rgba(74,222,128,0.1);
+  color: var(--green); cursor: pointer; font-size: 0.85rem;
+  font-family: 'DM Sans', sans-serif; transition: all 0.2s; margin-left: auto;
+}
+.btn-mark:hover { background: rgba(74,222,128,0.2); }
+.btn-mark.done { background: var(--green); color: #000; font-weight: 600; }
+
+.result-msg {
+  margin-top: 0.75rem; padding: 10px 14px; border-radius: var(--radius2);
+  font-size: 0.88rem; font-weight: 500; display: none;
+}
+.result-msg.correct { background: rgba(74,222,128,0.12); color: var(--green); border: 1px solid rgba(74,222,128,0.3); display: block; }
+.result-msg.wrong { background: rgba(248,113,113,0.12); color: var(--red); border: 1px solid rgba(248,113,113,0.3); display: block; }
+
+/* ── LIST MODE ── */
+#mode-list { display: none; }
+.cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+  gap: 1.25rem;
+}
+.list-card {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: 14px; overflow: hidden;
+  transition: border-color 0.2s, transform 0.2s, box-shadow 0.2s;
+}
+.list-card:hover { border-color: rgba(232,197,71,0.3); transform: translateY(-2px); box-shadow: 0 8px 32px rgba(0,0,0,0.3); }
+.list-card.completed { border-color: rgba(74,222,128,0.3); }
+
+.list-card-header {
+  padding: 1.25rem; border-bottom: 1px solid var(--border);
+  display: flex; gap: 12px; align-items: flex-start;
+}
+.list-card-num {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.7rem; color: var(--text3); min-width: 28px;
+  margin-top: 3px;
+}
+.list-card-info { flex: 1; }
+.list-card-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 1rem; font-weight: 700; color: var(--text);
+  margin-bottom: 0.3rem; line-height: 1.3;
+}
+.list-card-def { font-size: 0.82rem; color: var(--text2); line-height: 1.6; }
+.list-card-done { font-size: 1.1rem; }
+
+.list-card-body { padding: 1.25rem; }
+.list-card-example {
+  background: var(--bg2); border-left: 2px solid var(--accent);
+  padding: 0.75rem 1rem; border-radius: 0 6px 6px 0;
+  font-size: 0.82rem; color: var(--text2); font-style: italic;
+  line-height: 1.6; margin-bottom: 1rem;
+}
+.list-ex-toggle {
+  width: 100%; padding: 8px; background: var(--bg3); border: 1px solid var(--border);
+  color: var(--text2); border-radius: var(--radius2); cursor: pointer;
+  font-size: 0.8rem; font-family: 'DM Sans', sans-serif;
+  text-align: left; transition: all 0.2s; display: flex; justify-content: space-between;
+}
+.list-ex-toggle:hover { border-color: var(--accent); color: var(--accent); }
+.list-ex-toggle .chevron { transition: transform 0.2s; }
+.list-ex-toggle.open .chevron { transform: rotate(180deg); }
+
+.list-exercise { display: none; margin-top: 1rem; }
+.list-exercise.open { display: block; }
+
+/* ── CATEGORY COLORS ── */
+.cat-redaccion { border-color: rgba(232,197,71,0.4); color: var(--accent); background: rgba(232,197,71,0.08); }
+.cat-argumentacion { border-color: rgba(167,139,250,0.4); color: var(--accent3); background: rgba(167,139,250,0.08); }
+.cat-expositivo { border-color: rgba(79,195,247,0.4); color: var(--accent2); background: rgba(79,195,247,0.08); }
+.cat-cientifico { border-color: rgba(74,222,128,0.4); color: var(--green); background: rgba(74,222,128,0.08); }
+.cat-narrativo { border-color: rgba(251,146,60,0.4); color: var(--orange); background: rgba(251,146,60,0.08); }
+
+/* ── EMPTY STATE ── */
+.empty-state {
+  text-align: center; padding: 4rem 2rem; color: var(--text3);
+  display: none;
+}
+.empty-state.visible { display: block; }
+.empty-state-icon { font-size: 3rem; margin-bottom: 1rem; }
+
+/* ── SCROLL ── */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 99px; }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 768px) {
+  .header-inner { flex-wrap: wrap; height: auto; padding: 0.75rem 0; gap: 8px; }
+  .cards-grid { grid-template-columns: 1fr; }
+  .card-title { font-size: 1.3rem; }
+  .flashcard { padding: 1.5rem; }
+  .container { padding: 1rem; }
+  .progress-bar-wrap { display: none; }
+  .logo span { display: none; }
+}
+
+/* ── TOOLTIP ── */
+.tooltip { position: relative; }
+.tooltip-text {
+  position: absolute; bottom: 100%; left: 50%; transform: translateX(-50%);
+  background: #1a1e28; border: 1px solid var(--border);
+  padding: 6px 10px; border-radius: 6px; font-size: 0.75rem; white-space: nowrap;
+  color: var(--text2); pointer-events: none; opacity: 0; transition: opacity 0.2s;
+  margin-bottom: 6px;
+}
+.tooltip:hover .tooltip-text { opacity: 1; }
+
+/* ── ANIMATIONS ── */
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes slideIn {
+  from { opacity: 0; transform: translateX(-16px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+.flashcard { animation: fadeInUp 0.35s ease both; }
+.list-card { animation: fadeInUp 0.25s ease both; }
+
+/* Reset all button */
+.btn-reset-all {
+  padding: 8px 16px; border-radius: var(--radius2);
+  border: 1px solid var(--red); background: rgba(248,113,113,0.08);
+  color: var(--red); cursor: pointer; font-size: 0.78rem;
+  font-family: 'DM Sans', sans-serif; transition: all 0.2s;
+}
+.btn-reset-all:hover { background: rgba(248,113,113,0.15); }
+
+/* ── SYNTAX PANEL ── */
+.syntax-panel {
+  background: var(--bg2); border: 1px solid var(--border);
+  border-radius: 14px; padding: 1.5rem; margin-top: 0;
+}
+.syntax-title {
+  font-size: 0.78rem; font-weight: 600; letter-spacing: 0.1em;
+  color: var(--accent2); text-transform: uppercase; margin-bottom: 1rem;
+  display: flex; align-items: center; gap: 8px;
+}
+.syntax-title::after { content:''; flex:1; height:1px; background:var(--border); }
+
+.syntax-sentence {
+  font-size: 0.93rem; line-height: 1.9; margin-bottom: 1.25rem;
+  padding: 1rem; background: var(--bg3); border-radius: var(--radius2);
+  border: 1px solid var(--border);
+}
+.syn-s { /* sujeto */
+  background: rgba(167,139,250,0.18); color: var(--accent3);
+  border-bottom: 2px solid var(--accent3); padding: 1px 4px;
+  border-radius: 3px 3px 0 0; position: relative; cursor: help;
+}
+.syn-v { /* verbo */
+  background: rgba(232,197,71,0.18); color: var(--accent);
+  border-bottom: 2px solid var(--accent); padding: 1px 4px;
+  border-radius: 3px 3px 0 0; cursor: help;
+}
+.syn-p { /* predicado */
+  background: rgba(79,195,247,0.18); color: var(--accent2);
+  border-bottom: 2px solid var(--accent2); padding: 1px 4px;
+  border-radius: 3px 3px 0 0; cursor: help;
+}
+.syn-c { /* complemento */
+  background: rgba(74,222,128,0.12); color: var(--green);
+  border-bottom: 2px dashed var(--green); padding: 1px 4px;
+  border-radius: 3px 3px 0 0; cursor: help;
+}
+.syn-nx { /* nexo */
+  background: rgba(251,146,60,0.12); color: var(--orange);
+  border-bottom: 2px dotted var(--orange); padding: 1px 4px;
+  border-radius: 3px 3px 0 0; cursor: help;
+}
+
+.syntax-legend {
+  display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 1rem;
+}
+.leg-item {
+  display: flex; align-items: center; gap: 5px;
+  font-size: 0.75rem; color: var(--text2);
+}
+.leg-dot {
+  width: 10px; height: 10px; border-radius: 2px;
+}
+.leg-s { background: rgba(167,139,250,0.4); border-bottom: 2px solid var(--accent3); }
+.leg-v { background: rgba(232,197,71,0.4); border-bottom: 2px solid var(--accent); }
+.leg-p { background: rgba(79,195,247,0.4); border-bottom: 2px solid var(--accent2); }
+.leg-c { background: rgba(74,222,128,0.3); }
+.leg-nx { background: rgba(251,146,60,0.3); }
+
+.syntax-notes {
+  font-size: 0.82rem; color: var(--text2); line-height: 1.7;
+  border-left: 2px solid var(--accent2); padding-left: 0.875rem;
+}
+.syntax-notes strong { color: var(--text); }
+
+/* ── CREATIVE WRITING PANEL ── */
+.write-panel {
+  background: var(--bg3); border: 1px solid var(--border);
+  border-radius: 14px; padding: 1.75rem; margin-top: 0;
+}
+.write-title {
+  font-size: 0.78rem; font-weight: 600; letter-spacing: 0.1em;
+  color: var(--accent3); text-transform: uppercase; margin-bottom: 0.75rem;
+  display: flex; align-items: center; gap: 8px;
+}
+.write-title::after { content:''; flex:1; height:1px; background:var(--border); }
+
+.write-instruction {
+  font-size: 0.87rem; color: var(--text2); margin-bottom: 1rem; line-height: 1.6;
+}
+.write-instruction strong { color: var(--accent3); }
+
+.write-change-tabs {
+  display: flex; gap: 6px; margin-bottom: 0.875rem; flex-wrap: wrap;
+}
+.write-tab {
+  padding: 5px 14px; border-radius: 99px;
+  border: 1px solid var(--border); background: var(--bg2);
+  color: var(--text2); cursor: pointer; font-size: 0.78rem; font-weight: 600;
+  font-family: 'DM Sans', sans-serif; transition: all 0.2s;
+}
+.write-tab.active { background: rgba(167,139,250,0.2); border-color: var(--accent3); color: var(--accent3); }
+.write-tab:hover:not(.active) { border-color: var(--text2); }
+
+.write-hint {
+  font-size: 0.8rem; color: var(--text3); margin-bottom: 0.75rem;
+  padding: 8px 12px; background: var(--bg2); border-radius: var(--radius2);
+  border-left: 2px solid var(--accent3); line-height: 1.5;
+}
+
+.write-textarea {
+  width: 100%; min-height: 90px;
+  background: var(--bg2); border: 1px solid var(--border);
+  color: var(--text); padding: 12px; border-radius: var(--radius2);
+  font-family: 'DM Sans', sans-serif; font-size: 0.875rem; line-height: 1.6;
+  resize: vertical; outline: none; transition: border-color 0.2s;
+  margin-bottom: 0.875rem;
+}
+.write-textarea:focus { border-color: var(--accent3); }
+.write-textarea::placeholder { color: var(--text3); font-style: italic; }
+
+.write-controls { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+.btn-save-entry {
+  padding: 9px 20px; border-radius: var(--radius2); border: none;
+  background: var(--accent3); color: #fff; font-weight: 700; cursor: pointer;
+  font-family: 'DM Sans', sans-serif; font-size: 0.85rem; transition: all 0.2s;
+}
+.btn-save-entry:hover { background: #b89ffc; transform: translateY(-1px); }
+.write-char-count { font-size: 0.75rem; color: var(--text3); margin-left: auto; }
+
+.write-saved {
+  margin-top: 1rem; display: none;
+}
+.write-saved.visible { display: block; }
+.saved-entry {
+  background: var(--bg2); border: 1px solid var(--border);
+  border-radius: var(--radius2); padding: 10px 14px; margin-bottom: 6px;
+  font-size: 0.82rem; color: var(--text2); line-height: 1.6;
+  position: relative; animation: slideIn 0.2s ease;
+}
+.saved-entry .entry-meta {
+  font-size: 0.7rem; color: var(--text3); margin-bottom: 4px;
+  display: flex; justify-content: space-between;
+}
+.saved-entry .entry-del {
+  position: absolute; top: 8px; right: 10px;
+  background: none; border: none; color: var(--text3); cursor: pointer;
+  font-size: 0.9rem; padding: 2px 5px; border-radius: 4px; transition: all 0.15s;
+}
+.saved-entry .entry-del:hover { background: rgba(248,113,113,0.15); color: var(--red); }
+
+.btn-export-txt {
+  padding: 8px 18px; border-radius: var(--radius2);
+  border: 1px solid var(--accent2); background: rgba(79,195,247,0.08);
+  color: var(--accent2); cursor: pointer; font-size: 0.82rem; font-weight: 600;
+  font-family: 'DM Sans', sans-serif; transition: all 0.2s; display: flex; align-items: center; gap: 6px;
+}
+.btn-export-txt:hover { background: rgba(79,195,247,0.15); }
+
+/* ── TABS inside flashcard ── */
+.fc-section-tabs {
+  display: flex; gap: 3px; background: var(--bg3);
+  border-radius: 10px; padding: 3px; margin-bottom: 1.25rem;
+}
+.fc-sec-tab {
+  flex: 1; padding: 8px 10px; border-radius: 8px; border: none; cursor: pointer;
+  font-family: 'DM Sans', sans-serif; font-size: 0.8rem; font-weight: 500;
+  color: var(--text2); background: transparent; transition: all 0.2s; text-align: center;
+}
+.fc-sec-tab.active { background: var(--card); color: var(--text); box-shadow: 0 1px 6px rgba(0,0,0,0.3); }
+.fc-sec-tab:hover:not(.active) { color: var(--text); }
+
+.fc-section { display: none; }
+.fc-section.active { display: block; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <div class="logo">
+      Técnicas de Lenguaje
+      <span>100 Técnicas · Bachillerato Colombia · Ciencias & Matemáticas</span>
+    </div>
+    <div class="nav-tabs">
+      <button class="nav-tab active" onclick="setMode('flashcard')">🃏 Flashcards</button>
+      <button class="nav-tab" onclick="setMode('list')">📋 Lista</button>
+    </div>
+    <div class="progress-bar-wrap">
+      <div class="progress-bar"><div class="progress-fill" id="prog-fill" style="width:0%"></div></div>
+      <span><span class="progress-count" id="prog-text">0</span>/100</span>
+      <button class="btn-reset-all tooltip" onclick="resetAll()">🗑️<span class="tooltip-text">Reiniciar progreso</span></button>
+    </div>
+  </div>
+</header>
+
+<div class="container">
+
+  <!-- ══════════════ FLASHCARD MODE ══════════════ -->
+  <div id="mode-flashcard">
+    <div class="flashcard-nav">
+      <div class="flashcard-counter">
+        Técnica <strong id="fc-current">1</strong> de <strong>100</strong>
+      </div>
+      <div class="fc-controls">
+        <button class="btn-shuffle" onclick="shuffleCards()">⚡ Mezclar</button>
+        <button class="btn-nav" id="btn-prev" onclick="navigate(-1)">←</button>
+        <button class="btn-nav" id="btn-next" onclick="navigate(1)">→</button>
+      </div>
+    </div>
+
+    <div class="flashcard-container">
+      <div class="flashcard" id="main-card">
+        <div class="card-number">
+          <span id="fc-num">T·001</span>
+          <span class="card-category" id="fc-cat"></span>
+        </div>
+        <div class="card-done-badge" id="fc-done-badge">✓</div>
+        <div class="card-title" id="fc-title"></div>
+        <div class="card-definition" id="fc-def"></div>
+        <div class="card-example" id="fc-example"></div>
+        <div class="card-subject" id="fc-subjects"></div>
+      </div>
+
+      <!-- Section Tabs -->
+      <div class="fc-section-tabs">
+        <button class="fc-sec-tab active" onclick="switchFcSection('ejercicio',this)">⚙ Ordenar palabras</button>
+        <button class="fc-sec-tab" onclick="switchFcSection('sintaxis',this)">🔬 Análisis sintáctico</button>
+        <button class="fc-sec-tab" onclick="switchFcSection('escritura',this)">✏ Mi ejemplo</button>
+      </div>
+
+      <!-- SECTION 1: Ejercicio drag & drop -->
+      <div class="fc-section active" id="fc-section-ejercicio">
+        <div class="exercise-panel">
+          <div class="exercise-title">⚙ Ejercicio Interactivo · Ordenar el Ejemplo</div>
+          <div class="exercise-instruction" id="fc-ex-instruction"></div>
+          <div class="word-bank" id="fc-word-bank"></div>
+          <div class="drop-zone" id="fc-drop-zone">
+            <span class="drop-zone-label" id="fc-dz-label">Arrastra las palabras aquí para reconstruir el ejemplo</span>
+          </div>
+          <div class="exercise-controls">
+            <button class="btn-check" onclick="checkExercise('fc')">✓ Verificar</button>
+            <button class="btn-reset" onclick="resetExercise('fc')">↺ Reiniciar</button>
+            <button class="btn-mark" id="fc-btn-mark" onclick="toggleDone()">☐ Marcar como completada</button>
+          </div>
+          <div class="result-msg" id="fc-result"></div>
+        </div>
+      </div>
+
+      <!-- SECTION 2: Análisis sintáctico -->
+      <div class="fc-section" id="fc-section-sintaxis">
+        <div class="syntax-panel">
+          <div class="syntax-title">🔬 Análisis Sintáctico del Ejemplo</div>
+          <div class="syntax-legend">
+            <div class="leg-item"><div class="leg-dot leg-s"></div>Sujeto</div>
+            <div class="leg-item"><div class="leg-dot leg-v"></div>Verbo / NV</div>
+            <div class="leg-item"><div class="leg-dot leg-p"></div>Predicado / OD</div>
+            <div class="leg-item"><div class="leg-dot leg-c"></div>Complemento</div>
+            <div class="leg-item"><div class="leg-dot leg-nx"></div>Nexo / Conector</div>
+          </div>
+          <div class="syntax-sentence" id="fc-syntax-html"></div>
+          <div class="syntax-notes" id="fc-syntax-notes"></div>
+        </div>
+      </div>
+
+      <!-- SECTION 3: Escritura creativa -->
+      <div class="fc-section" id="fc-section-escritura">
+        <div class="write-panel">
+          <div class="write-title">✏ Crea tu Propio Ejemplo</div>
+          <div class="write-instruction" id="fc-write-instruction"></div>
+          <div class="write-change-tabs" id="fc-change-tabs"></div>
+          <div class="write-hint" id="fc-write-hint"></div>
+          <textarea class="write-textarea" id="fc-write-area" placeholder="Escribe aquí tu ejemplo..." oninput="updateCharCount()"></textarea>
+          <div class="write-controls">
+            <button class="btn-save-entry" onclick="saveWritingEntry()">💾 Guardar entrada</button>
+            <button class="btn-export-txt" onclick="exportTxt()">⬇ Exportar todo (.txt)</button>
+            <span class="write-char-count" id="fc-char-count">0 caracteres</span>
+          </div>
+          <div class="write-saved" id="fc-write-saved">
+            <div style="font-size:0.78rem;color:var(--text3);margin-bottom:8px;display:flex;justify-content:space-between;align-items:center;">
+              <span>📝 Entradas guardadas (<span id="fc-saved-count">0</span>)</span>
+            </div>
+            <div id="fc-entries-list"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════ LIST MODE ══════════════ -->
+  <div id="mode-list">
+    <div class="filter-bar">
+      <input class="filter-input" type="text" id="search-input" placeholder="🔍 Buscar técnica..." oninput="filterCards()">
+      <div class="category-filters" id="cat-filters"></div>
+    </div>
+    <div class="stats-row">
+      <div class="stat-chip"><span class="dot dot-done"></span><strong id="stat-done">0</strong> completadas</div>
+      <div class="stat-chip"><span class="dot dot-pend"></span><strong id="stat-pend">100</strong> pendientes</div>
+      <div class="stat-chip">📚 <strong id="stat-shown">100</strong> mostradas</div>
+    </div>
+    <div class="cards-grid" id="cards-grid"></div>
+    <div class="empty-state" id="empty-state">
+      <div class="empty-state-icon">🔭</div>
+      <div>No se encontraron técnicas con ese criterio.</div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════
+// DATA — 100 TÉCNICAS DE LENGUAJE Y COMUNICACIÓN
+// ═══════════════════════════════════════════════════
+const TECNICAS = [
+  // ── REDACCIÓN CIENTÍFICA ──
+  {id:1,cat:"cientifico",titulo:"Definición operacional",def:"Especifica el significado de un concepto en términos medibles y observables dentro de un contexto científico.",ejemplo:"La velocidad de una partícula se define operacionalmente como el cociente entre el desplazamiento neto en metros y el tiempo transcurrido en segundos.",materia:["Física","Matemáticas"],ejercicio:{tokens:["La","velocidad","de","una","partícula","se","define","operacionalmente","como","el","cociente","entre","el","desplazamiento","neto","en","metros","y","el","tiempo","transcurrido","en","segundos."],solucion:["La","velocidad","de","una","partícula","se","define","operacionalmente","como","el","cociente","entre","el","desplazamiento","neto","en","metros","y","el","tiempo","transcurrido","en","segundos."]}},
+  {id:2,cat:"cientifico",titulo:"Hipótesis científica",def:"Afirmación provisional que relaciona variables y puede ser sometida a prueba experimental.",ejemplo:"Si se aumenta la concentración del ácido clorhídrico en la solución, entonces la tasa de reacción con el carbonato de calcio aumentará proporcionalmente.",materia:["Química"],ejercicio:{tokens:["Si","se","aumenta","la","concentración","del","ácido","clorhídrico","en","la","solución,","entonces","la","tasa","de","reacción","con","el","carbonato","de","calcio","aumentará","proporcionalmente."],solucion:["Si","se","aumenta","la","concentración","del","ácido","clorhídrico","en","la","solución,","entonces","la","tasa","de","reacción","con","el","carbonato","de","calcio","aumentará","proporcionalmente."]}},
+  {id:3,cat:"cientifico",titulo:"Descripción de procedimiento",def:"Secuencia de pasos en modo impersonal o pasiva refleja para narrar cómo se llevó a cabo un experimento.",ejemplo:"Se pesaron 5 gramos de sulfato de cobre en una balanza analítica y se disolvieron en 100 mL de agua destilada a temperatura ambiente.",materia:["Química","Física"],ejercicio:{tokens:["Se","pesaron","5","gramos","de","sulfato","de","cobre","en","una","balanza","analítica","y","se","disolvieron","en","100","mL","de","agua","destilada","a","temperatura","ambiente."],solucion:["Se","pesaron","5","gramos","de","sulfato","de","cobre","en","una","balanza","analítica","y","se","disolvieron","en","100","mL","de","agua","destilada","a","temperatura","ambiente."]}},
+  {id:4,cat:"cientifico",titulo:"Análisis de resultados",def:"Interpretación crítica de datos obtenidos relacionándolos con la hipótesis planteada.",ejemplo:"Los datos obtenidos confirman parcialmente la hipótesis, ya que el incremento del pH fue significativo solo a temperaturas superiores a 40 °C.",materia:["Química","Física"],ejercicio:{tokens:["Los","datos","obtenidos","confirman","parcialmente","la","hipótesis,","ya","que","el","incremento","del","pH","fue","significativo","solo","a","temperaturas","superiores","a","40","°C."],solucion:["Los","datos","obtenidos","confirman","parcialmente","la","hipótesis,","ya","que","el","incremento","del","pH","fue","significativo","solo","a","temperaturas","superiores","a","40","°C."]}},
+  {id:5,cat:"cientifico",titulo:"Conclusión científica",def:"Enunciado final que sintetiza el hallazgo principal del trabajo y su relevancia.",ejemplo:"Se concluye que la fotosíntesis en Elodea canadensis aumenta proporcionalmente con la intensidad lumínica hasta alcanzar el punto de saturación lumínica.",materia:["Química"],ejercicio:{tokens:["Se","concluye","que","la","fotosíntesis","en","Elodea","canadensis","aumenta","proporcionalmente","con","la","intensidad","lumínica","hasta","alcanzar","el","punto","de","saturación","lumínica."],solucion:["Se","concluye","que","la","fotosíntesis","en","Elodea","canadensis","aumenta","proporcionalmente","con","la","intensidad","lumínica","hasta","alcanzar","el","punto","de","saturación","lumínica."]}},
+  {id:6,cat:"cientifico",titulo:"Marco teórico",def:"Conjunto de conceptos, leyes y teorías que fundamentan teóricamente una investigación.",ejemplo:"Esta investigación se fundamenta en la Primera Ley de la Termodinámica, según la cual la energía interna de un sistema cerrado solo varía cuando hay transferencia de calor o trabajo.",materia:["Física","Química"],ejercicio:{tokens:["Esta","investigación","se","fundamenta","en","la","Primera","Ley","de","la","Termodinámica,","según","la","cual","la","energía","interna","de","un","sistema","cerrado","solo","varía","cuando","hay","transferencia","de","calor","o","trabajo."],solucion:["Esta","investigación","se","fundamenta","en","la","Primera","Ley","de","la","Termodinámica,","según","la","cual","la","energía","interna","de","un","sistema","cerrado","solo","varía","cuando","hay","transferencia","de","calor","o","trabajo."]}},
+  {id:7,cat:"cientifico",titulo:"Variables independiente y dependiente",def:"Identificación y descripción de la variable manipulada y la que se mide en un experimento.",ejemplo:"La variable independiente es la masa del péndulo en gramos, mientras que la variable dependiente es el período de oscilación medido en segundos.",materia:["Física","Matemáticas"],ejercicio:{tokens:["La","variable","independiente","es","la","masa","del","péndulo","en","gramos,","mientras","que","la","variable","dependiente","es","el","período","de","oscilación","medido","en","segundos."],solucion:["La","variable","independiente","es","la","masa","del","péndulo","en","gramos,","mientras","que","la","variable","dependiente","es","el","período","de","oscilación","medido","en","segundos."]}},
+  {id:8,cat:"cientifico",titulo:"Cita de fuente primaria",def:"Referencia directa a artículos originales de investigación usando normas APA o ICONTEC.",ejemplo:"Según Gómez y Martínez (2021), la conductividad eléctrica del grafeno supera en tres órdenes de magnitud a la del cobre convencional.",materia:["Física","Química"],ejercicio:{tokens:["Según","Gómez","y","Martínez","(2021),","la","conductividad","eléctrica","del","grafeno","supera","en","tres","órdenes","de","magnitud","a","la","del","cobre","convencional."],solucion:["Según","Gómez","y","Martínez","(2021),","la","conductividad","eléctrica","del","grafeno","supera","en","tres","órdenes","de","magnitud","a","la","del","cobre","convencional."]}},
+  {id:9,cat:"cientifico",titulo:"Descripción de gráfica",def:"Verbalización de la tendencia, valores extremos y correlaciones observadas en una gráfica.",ejemplo:"La gráfica muestra una relación lineal directa entre la fuerza aplicada y la elongación del resorte, con una pendiente de 8 N/m según la Ley de Hooke.",materia:["Física","Matemáticas"],ejercicio:{tokens:["La","gráfica","muestra","una","relación","lineal","directa","entre","la","fuerza","aplicada","y","la","elongación","del","resorte,","con","una","pendiente","de","8","N/m","según","la","Ley","de","Hooke."],solucion:["La","gráfica","muestra","una","relación","lineal","directa","entre","la","fuerza","aplicada","y","la","elongación","del","resorte,","con","una","pendiente","de","8","N/m","según","la","Ley","de","Hooke."]}},
+  {id:10,cat:"cientifico",titulo:"Informe de laboratorio",def:"Documento estructurado que reporta objetivo, materiales, procedimiento, resultados y conclusiones de un experimento.",ejemplo:"El objetivo de esta práctica fue determinar la densidad del aluminio mediante la medición de su masa y volumen por desplazamiento de agua.",materia:["Física","Química"],ejercicio:{tokens:["El","objetivo","de","esta","práctica","fue","determinar","la","densidad","del","aluminio","mediante","la","medición","de","su","masa","y","volumen","por","desplazamiento","de","agua."],solucion:["El","objetivo","de","esta","práctica","fue","determinar","la","densidad","del","aluminio","mediante","la","medición","de","su","masa","y","volumen","por","desplazamiento","de","agua."]}},
+  // ── REDACCIÓN ──
+  {id:11,cat:"redaccion",titulo:"Oración temática",def:"Frase inicial del párrafo que resume la idea principal que se desarrollará.",ejemplo:"La ecuación cuadrática es una de las herramientas algebraicas más utilizadas para modelar fenómenos parabólicos en la ingeniería colombiana.",materia:["Matemáticas"],ejercicio:{tokens:["La","ecuación","cuadrática","es","una","de","las","herramientas","algebraicas","más","utilizadas","para","modelar","fenómenos","parabólicos","en","la","ingeniería","colombiana."],solucion:["La","ecuación","cuadrática","es","una","de","las","herramientas","algebraicas","más","utilizadas","para","modelar","fenómenos","parabólicos","en","la","ingeniería","colombiana."]}},
+  {id:12,cat:"redaccion",titulo:"Uso de conectores causales",def:"Palabras o frases que establecen una relación de causa-efecto entre dos proposiciones.",ejemplo:"El puente colapsó debido a que las cargas dinámicas superaron el límite de resistencia calculado en el análisis estructural.",materia:["Física","Matemáticas"],ejercicio:{tokens:["El","puente","colapsó","debido","a","que","las","cargas","dinámicas","superaron","el","límite","de","resistencia","calculado","en","el","análisis","estructural."],solucion:["El","puente","colapsó","debido","a","que","las","cargas","dinámicas","superaron","el","límite","de","resistencia","calculado","en","el","análisis","estructural."]}},
+  {id:13,cat:"redaccion",titulo:"Conectores de contraste",def:"Nexos que oponen o matizan dos ideas dentro de un mismo texto.",ejemplo:"El modelo predijo una solución exacta; sin embargo, los datos experimentales evidenciaron un error sistemático del 12 % debido a la fricción del aire.",materia:["Física"],ejercicio:{tokens:["El","modelo","predijo","una","solución","exacta;","sin","embargo,","los","datos","experimentales","evidenciaron","un","error","sistemático","del","12","%","debido","a","la","fricción","del","aire."],solucion:["El","modelo","predijo","una","solución","exacta;","sin","embargo,","los","datos","experimentales","evidenciaron","un","error","sistemático","del","12","%","debido","a","la","fricción","del","aire."]}},
+  {id:14,cat:"redaccion",titulo:"Párrafo de desarrollo",def:"Unidad de texto que amplía la idea principal con argumentos, ejemplos o datos.",ejemplo:"La integral definida permite calcular el área exacta bajo la curva de velocidad de un proyectil, lo que facilita la determinación del desplazamiento total en el ICFES.",materia:["Matemáticas","Física"],ejercicio:{tokens:["La","integral","definida","permite","calcular","el","área","exacta","bajo","la","curva","de","velocidad","de","un","proyectil,","lo","que","facilita","la","determinación","del","desplazamiento","total","en","el","ICFES."],solucion:["La","integral","definida","permite","calcular","el","área","exacta","bajo","la","curva","de","velocidad","de","un","proyectil,","lo","que","facilita","la","determinación","del","desplazamiento","total","en","el","ICFES."]}},
+  {id:15,cat:"redaccion",titulo:"Párrafo de cierre",def:"Párrafo que sintetiza, concluye o abre una reflexión final sobre el tema tratado.",ejemplo:"En síntesis, el estudio de las funciones trigonométricas resulta indispensable para comprender los fenómenos oscilatorios que gobiernan el comportamiento sísmico en Colombia.",materia:["Matemáticas","Física"],ejercicio:{tokens:["En","síntesis,","el","estudio","de","las","funciones","trigonométricas","resulta","indispensable","para","comprender","los","fenómenos","oscilatorios","que","gobiernan","el","comportamiento","sísmico","en","Colombia."],solucion:["En","síntesis,","el","estudio","de","las","funciones","trigonométricas","resulta","indispensable","para","comprender","los","fenómenos","oscilatorios","que","gobiernan","el","comportamiento","sísmico","en","Colombia."]}},
+  {id:16,cat:"redaccion",titulo:"Coherencia textual",def:"Propiedad de un texto por la cual las ideas se presentan de forma lógica y ordenada.",ejemplo:"Primero se presenta el concepto de enlace covalente, luego se analizan sus tipos polares y apoloares, y finalmente se relacionan con la solubilidad de compuestos en agua.",materia:["Química"],ejercicio:{tokens:["Primero","se","presenta","el","concepto","de","enlace","covalente,","luego","se","analizan","sus","tipos","polares","y","apoloares,","y","finalmente","se","relacionan","con","la","solubilidad","de","compuestos","en","agua."],solucion:["Primero","se","presenta","el","concepto","de","enlace","covalente,","luego","se","analizan","sus","tipos","polares","y","apoloares,","y","finalmente","se","relacionan","con","la","solubilidad","de","compuestos","en","agua."]}},
+  {id:17,cat:"redaccion",titulo:"Cohesión por referencia",def:"Uso de pronombres o sinónimos que remiten a elementos mencionados previamente.",ejemplo:"El electrón es la partícula elemental responsable de la conducción eléctrica; esta partícula orbita el núcleo a velocidades cercanas a la de la luz.",materia:["Química","Física"],ejercicio:{tokens:["El","electrón","es","la","partícula","elemental","responsable","de","la","conducción","eléctrica;","esta","partícula","orbita","el","núcleo","a","velocidades","cercanas","a","la","de","la","luz."],solucion:["El","electrón","es","la","partícula","elemental","responsable","de","la","conducción","eléctrica;","esta","partícula","orbita","el","núcleo","a","velocidades","cercanas","a","la","de","la","luz."]}},
+  {id:18,cat:"redaccion",titulo:"Uso de ejemplificación",def:"Incorporación de casos concretos para ilustrar un concepto abstracto.",ejemplo:"Los vectores tienen múltiples aplicaciones; por ejemplo, en el análisis de fuerzas sobre el Puente de Occidente en Antioquia se utilizan vectores para calcular las tensiones en los cables.",materia:["Matemáticas","Física"],ejercicio:{tokens:["Los","vectores","tienen","múltiples","aplicaciones;","por","ejemplo,","en","el","análisis","de","fuerzas","sobre","el","Puente","de","Occidente","en","Antioquia","se","utilizan","vectores","para","calcular","las","tensiones","en","los","cables."],solucion:["Los","vectores","tienen","múltiples","aplicaciones;","por","ejemplo,","en","el","análisis","de","fuerzas","sobre","el","Puente","de","Occidente","en","Antioquia","se","utilizan","vectores","para","calcular","las","tensiones","en","los","cables."]}},
+  {id:19,cat:"redaccion",titulo:"Precisión léxica",def:"Selección del término exacto y adecuado para transmitir un significado técnico sin ambigüedad.",ejemplo:"La titulación ácido-base consiste en añadir volúmenes controlados de solución valorante hasta alcanzar el punto de equivalencia, no el punto de saturación.",materia:["Química"],ejercicio:{tokens:["La","titulación","ácido-base","consiste","en","añadir","volúmenes","controlados","de","solución","valorante","hasta","alcanzar","el","punto","de","equivalencia,","no","el","punto","de","saturación."],solucion:["La","titulación","ácido-base","consiste","en","añadir","volúmenes","controlados","de","solución","valorante","hasta","alcanzar","el","punto","de","equivalencia,","no","el","punto","de","saturación."]}},
+  {id:20,cat:"redaccion",titulo:"Uso del punto y coma",def:"Signo de puntuación que separa elementos relacionados de una lista compleja o proposiciones estrechamente vinculadas.",ejemplo:"La energía cinética depende de la masa; la energía potencial gravitacional depende de la altura; y ambas forman la energía mecánica total del sistema.",materia:["Física"],ejercicio:{tokens:["La","energía","cinética","depende","de","la","masa;","la","energía","potencial","gravitacional","depende","de","la","altura;","y","ambas","forman","la","energía","mecánica","total","del","sistema."],solucion:["La","energía","cinética","depende","de","la","masa;","la","energía","potencial","gravitacional","depende","de","la","altura;","y","ambas","forman","la","energía","mecánica","total","del","sistema."]}},
+  // ── ARGUMENTACIÓN ──
+  {id:21,cat:"argumentacion",titulo:"Argumento de autoridad",def:"Apoya una tesis citando la opinión de un experto reconocido en el campo.",ejemplo:"Como sostiene el Ministerio de Educación Nacional de Colombia (2016), las competencias matemáticas son la base del pensamiento crítico en la sociedad del conocimiento.",materia:["Matemáticas"],ejercicio:{tokens:["Como","sostiene","el","Ministerio","de","Educación","Nacional","de","Colombia","(2016),","las","competencias","matemáticas","son","la","base","del","pensamiento","crítico","en","la","sociedad","del","conocimiento."],solucion:["Como","sostiene","el","Ministerio","de","Educación","Nacional","de","Colombia","(2016),","las","competencias","matemáticas","son","la","base","del","pensamiento","crítico","en","la","sociedad","del","conocimiento."]}},
+  {id:22,cat:"argumentacion",titulo:"Argumento por analogía",def:"Establece una comparación entre dos situaciones similares para apoyar una conclusión.",ejemplo:"Así como el agua busca el nivel más bajo por la gravedad, la corriente eléctrica siempre fluye desde el potencial mayor al menor en un circuito.",materia:["Física","Química"],ejercicio:{tokens:["Así","como","el","agua","busca","el","nivel","más","bajo","por","la","gravedad,","la","corriente","eléctrica","siempre","fluye","desde","el","potencial","mayor","al","menor","en","un","circuito."],solucion:["Así","como","el","agua","busca","el","nivel","más","bajo","por","la","gravedad,","la","corriente","eléctrica","siempre","fluye","desde","el","potencial","mayor","al","menor","en","un","circuito."]}},
+  {id:23,cat:"argumentacion",titulo:"Refutación",def:"Técnica que identifica el argumento contrario y lo desmonta con evidencia o lógica.",ejemplo:"Aunque algunos afirman que la energía nuclear es la más peligrosa, los datos de la IAEA muestran que la tasa de mortalidad por TWh es inferior a la de los combustibles fósiles.",materia:["Física","Química"],ejercicio:{tokens:["Aunque","algunos","afirman","que","la","energía","nuclear","es","la","más","peligrosa,","los","datos","de","la","IAEA","muestran","que","la","tasa","de","mortalidad","por","TWh","es","inferior","a","la","de","los","combustibles","fósiles."],solucion:["Aunque","algunos","afirman","que","la","energía","nuclear","es","la","más","peligrosa,","los","datos","de","la","IAEA","muestran","que","la","tasa","de","mortalidad","por","TWh","es","inferior","a","la","de","los","combustibles","fósiles."]}},
+  {id:24,cat:"argumentacion",titulo:"Argumento empírico",def:"Basa la conclusión en datos observados, mediciones o experimentos reproducibles.",ejemplo:"Las mediciones realizadas durante tres meses en la Universidad Nacional de Bogotá confirmaron que la concentración de CO₂ en las aulas aumentó un 18 % con la ventana cerrada.",materia:["Química"],ejercicio:{tokens:["Las","mediciones","realizadas","durante","tres","meses","en","la","Universidad","Nacional","de","Bogotá","confirmaron","que","la","concentración","de","CO₂","en","las","aulas","aumentó","un","18","%","con","la","ventana","cerrada."],solucion:["Las","mediciones","realizadas","durante","tres","meses","en","la","Universidad","Nacional","de","Bogotá","confirmaron","que","la","concentración","de","CO₂","en","las","aulas","aumentó","un","18","%","con","la","ventana","cerrada."]}},
+  {id:25,cat:"argumentacion",titulo:"Tesis principal",def:"Afirmación central del ensayo o informe que el autor se propone demostrar.",ejemplo:"La enseñanza de la estadística inferencial en el bachillerato colombiano es imprescindible para formar ciudadanos capaces de evaluar críticamente la información epidemiológica.",materia:["Matemáticas"],ejercicio:{tokens:["La","enseñanza","de","la","estadística","inferencial","en","el","bachillerato","colombiano","es","imprescindible","para","formar","ciudadanos","capaces","de","evaluar","críticamente","la","información","epidemiológica."],solucion:["La","enseñanza","de","la","estadística","inferencial","en","el","bachillerato","colombiano","es","imprescindible","para","formar","ciudadanos","capaces","de","evaluar","críticamente","la","información","epidemiológica."]}},
+  {id:26,cat:"argumentacion",titulo:"Concesión",def:"Reconocimiento parcial de la postura contraria antes de reforzar el argumento propio.",ejemplo:"Es cierto que el aprendizaje de cálculo diferencial resulta complejo para muchos estudiantes; no obstante, su dominio es fundamental para comprender los modelos de crecimiento poblacional.",materia:["Matemáticas"],ejercicio:{tokens:["Es","cierto","que","el","aprendizaje","de","cálculo","diferencial","resulta","complejo","para","muchos","estudiantes;","no","obstante,","su","dominio","es","fundamental","para","comprender","los","modelos","de","crecimiento","poblacional."],solucion:["Es","cierto","que","el","aprendizaje","de","cálculo","diferencial","resulta","complejo","para","muchos","estudiantes;","no","obstante,","su","dominio","es","fundamental","para","comprender","los","modelos","de","crecimiento","poblacional."]}},
+  {id:27,cat:"argumentacion",titulo:"Deducción",def:"Razonamiento que parte de una premisa general hacia una conclusión particular.",ejemplo:"Todo ácido fuerte libera iones H⁺ en solución acuosa; el ácido sulfúrico es un ácido fuerte; por lo tanto, el ácido sulfúrico libera iones H⁺ en solución acuosa.",materia:["Química"],ejercicio:{tokens:["Todo","ácido","fuerte","libera","iones","H⁺","en","solución","acuosa;","el","ácido","sulfúrico","es","un","ácido","fuerte;","por","lo","tanto,","el","ácido","sulfúrico","libera","iones","H⁺","en","solución","acuosa."],solucion:["Todo","ácido","fuerte","libera","iones","H⁺","en","solución","acuosa;","el","ácido","sulfúrico","es","un","ácido","fuerte;","por","lo","tanto,","el","ácido","sulfúrico","libera","iones","H⁺","en","solución","acuosa."]}},
+  {id:28,cat:"argumentacion",titulo:"Inducción",def:"Razonamiento que parte de observaciones particulares para llegar a una generalización.",ejemplo:"En cinco experimentos con distintos metales, todos condujeron la electricidad; se concluye inductivamente que los metales son buenos conductores eléctricos.",materia:["Física","Química"],ejercicio:{tokens:["En","cinco","experimentos","con","distintos","metales,","todos","condujeron","la","electricidad;","se","concluye","inductivamente","que","los","metales","son","buenos","conductores","eléctricos."],solucion:["En","cinco","experimentos","con","distintos","metales,","todos","condujeron","la","electricidad;","se","concluye","inductivamente","que","los","metales","son","buenos","conductores","eléctricos."]}},
+  {id:29,cat:"argumentacion",titulo:"Causa-efecto",def:"Estructura que presenta una situación y sus consecuencias de forma encadenada.",ejemplo:"El aumento en las emisiones de dióxido de azufre provenientes de las industrias de la Sabana de Bogotá provoca lluvia ácida, lo que deteriora los ecosistemas de los humedales cercanos.",materia:["Química"],ejercicio:{tokens:["El","aumento","en","las","emisiones","de","dióxido","de","azufre","provenientes","de","las","industrias","de","la","Sabana","de","Bogotá","provoca","lluvia","ácida,","lo","que","deteriora","los","ecosistemas","de","los","humedales","cercanos."],solucion:["El","aumento","en","las","emisiones","de","dióxido","de","azufre","provenientes","de","las","industrias","de","la","Sabana","de","Bogotá","provoca","lluvia","ácida,","lo","que","deteriora","los","ecosistemas","de","los","humedales","cercanos."]}},
+  {id:30,cat:"argumentacion",titulo:"Datos estadísticos como evidencia",def:"Uso de cifras, porcentajes o promedios para respaldar una afirmación argumentativa.",ejemplo:"Según el DANE (2022), el 34 % de los estudiantes colombianos de grado 11 no supera el nivel básico en ciencias naturales, lo que evidencia la necesidad de reformar el currículo.",materia:["Matemáticas","Química"],ejercicio:{tokens:["Según","el","DANE","(2022),","el","34","%","de","los","estudiantes","colombianos","de","grado","11","no","supera","el","nivel","básico","en","ciencias","naturales,","lo","que","evidencia","la","necesidad","de","reformar","el","currículo."],solucion:["Según","el","DANE","(2022),","el","34","%","de","los","estudiantes","colombianos","de","grado","11","no","supera","el","nivel","básico","en","ciencias","naturales,","lo","que","evidencia","la","necesidad","de","reformar","el","currículo."]}},
+  // ── EXPOSITIVO ──
+  {id:31,cat:"expositivo",titulo:"Definición conceptual",def:"Presentación del significado de un término dentro de un campo del saber.",ejemplo:"La entropía es una magnitud termodinámica que mide el grado de desorden o aleatoriedad de un sistema a nivel molecular.",materia:["Física","Química"],ejercicio:{tokens:["La","entropía","es","una","magnitud","termodinámica","que","mide","el","grado","de","desorden","o","aleatoriedad","de","un","sistema","a","nivel","molecular."],solucion:["La","entropía","es","una","magnitud","termodinámica","que","mide","el","grado","de","desorden","o","aleatoriedad","de","un","sistema","a","nivel","molecular."]}},
+  {id:32,cat:"expositivo",titulo:"Clasificación y categorización",def:"División de un conjunto en subgrupos según criterios explícitos.",ejemplo:"Las reacciones químicas se clasifican en cuatro tipos principales: síntesis, descomposición, sustitución simple y sustitución doble.",materia:["Química"],ejercicio:{tokens:["Las","reacciones","químicas","se","clasifican","en","cuatro","tipos","principales:","síntesis,","descomposición,","sustitución","simple","y","sustitución","doble."],solucion:["Las","reacciones","químicas","se","clasifican","en","cuatro","tipos","principales:","síntesis,","descomposición,","sustitución","simple","y","sustitución","doble."]}},
+  {id:33,cat:"expositivo",titulo:"Comparación y contraste",def:"Exposición de semejanzas y diferencias entre dos conceptos.",ejemplo:"A diferencia de la fisión nuclear, que divide núcleos pesados, la fusión nuclear une núcleos ligeros de hidrógeno, liberando mayor energía por kilogramo de combustible.",materia:["Física"],ejercicio:{tokens:["A","diferencia","de","la","fisión","nuclear,","que","divide","núcleos","pesados,","la","fusión","nuclear","une","núcleos","ligeros","de","hidrógeno,","liberando","mayor","energía","por","kilogramo","de","combustible."],solucion:["A","diferencia","de","la","fisión","nuclear,","que","divide","núcleos","pesados,","la","fusión","nuclear","une","núcleos","ligeros","de","hidrógeno,","liberando","mayor","energía","por","kilogramo","de","combustible."]}},
+  {id:34,cat:"expositivo",titulo:"Descripción de proceso",def:"Presentación ordenada de las etapas de un fenómeno o procedimiento.",ejemplo:"La digestión del almidón comienza en la boca con la amilasa salival, continúa en el estómago y se completa en el intestino delgado con las enzimas pancreáticas.",materia:["Química"],ejercicio:{tokens:["La","digestión","del","almidón","comienza","en","la","boca","con","la","amilasa","salival,","continúa","en","el","estómago","y","se","completa","en","el","intestino","delgado","con","las","enzimas","pancreáticas."],solucion:["La","digestión","del","almidón","comienza","en","la","boca","con","la","amilasa","salival,","continúa","en","el","estómago","y","se","completa","en","el","intestino","delgado","con","las","enzimas","pancreáticas."]}},
+  {id:35,cat:"expositivo",titulo:"Ilustración con datos",def:"Integración de cifras o tablas dentro del texto para concretar afirmaciones.",ejemplo:"El mercurio posee una densidad de 13 600 kg/m³, lo que explica por qué objetos metálicos como un clavo flotan sobre su superficie sin sumergirse.",materia:["Física","Química"],ejercicio:{tokens:["El","mercurio","posee","una","densidad","de","13","600","kg/m³,","lo","que","explica","por","qué","objetos","metálicos","como","un","clavo","flotan","sobre","su","superficie","sin","sumergirse."],solucion:["El","mercurio","posee","una","densidad","de","13","600","kg/m³,","lo","que","explica","por","qué","objetos","metálicos","como","un","clavo","flotan","sobre","su","superficie","sin","sumergirse."]}},
+  {id:36,cat:"expositivo",titulo:"Pregunta retórica expositiva",def:"Pregunta formulada sin esperar respuesta, con el fin de guiar al lector hacia la reflexión.",ejemplo:"¿Cómo podría Colombia avanzar en la transición energética sin comprender los principios básicos de la electroquímica y las celdas de combustible?",materia:["Química","Física"],ejercicio:{tokens:["¿Cómo","podría","Colombia","avanzar","en","la","transición","energética","sin","comprender","los","principios","básicos","de","la","electroquímica","y","las","celdas","de","combustible?"],solucion:["¿Cómo","podría","Colombia","avanzar","en","la","transición","energética","sin","comprender","los","principios","básicos","de","la","electroquímica","y","las","celdas","de","combustible?"]}},
+  {id:37,cat:"expositivo",titulo:"Enumeración explicativa",def:"Listado de elementos con explicación de cada uno para ampliar la comprensión.",ejemplo:"Los estados de la materia son tres en condiciones ordinarias: sólido, cuyas moléculas vibran en posición fija; líquido, cuyas moléculas se deslizan; y gaseoso, cuyas moléculas se mueven libremente.",materia:["Física","Química"],ejercicio:{tokens:["Los","estados","de","la","materia","son","tres","en","condiciones","ordinarias:","sólido,","cuyas","moléculas","vibran","en","posición","fija;","líquido,","cuyas","moléculas","se","deslizan;","y","gaseoso,","cuyas","moléculas","se","mueven","libremente."],solucion:["Los","estados","de","la","materia","son","tres","en","condiciones","ordinarias:","sólido,","cuyas","moléculas","vibran","en","posición","fija;","líquido,","cuyas","moléculas","se","deslizan;","y","gaseoso,","cuyas","moléculas","se","mueven","libremente."]}},
+  {id:38,cat:"expositivo",titulo:"Reformulación o paráfrasis",def:"Reexpresión de una idea con otras palabras para clarificarla o adaptarla al lector.",ejemplo:"En otras palabras, la velocidad de escape es la velocidad mínima que debe alcanzar un objeto para salir del campo gravitacional terrestre sin volver a caer.",materia:["Física"],ejercicio:{tokens:["En","otras","palabras,","la","velocidad","de","escape","es","la","velocidad","mínima","que","debe","alcanzar","un","objeto","para","salir","del","campo","gravitacional","terrestre","sin","volver","a","caer."],solucion:["En","otras","palabras,","la","velocidad","de","escape","es","la","velocidad","mínima","que","debe","alcanzar","un","objeto","para","salir","del","campo","gravitacional","terrestre","sin","volver","a","caer."]}},
+  {id:39,cat:"expositivo",titulo:"Resumen estructurado",def:"Síntesis breve y ordenada de los puntos esenciales de un texto o tema.",ejemplo:"En resumen, el modelo atómico de Bohr establece que los electrones se ubican en órbitas circulares de energía cuantizada y emiten fotones al cambiar de nivel energético.",materia:["Química","Física"],ejercicio:{tokens:["En","resumen,","el","modelo","atómico","de","Bohr","establece","que","los","electrones","se","ubican","en","órbitas","circulares","de","energía","cuantizada","y","emiten","fotones","al","cambiar","de","nivel","energético."],solucion:["En","resumen,","el","modelo","atómico","de","Bohr","establece","que","los","electrones","se","ubican","en","órbitas","circulares","de","energía","cuantizada","y","emiten","fotones","al","cambiar","de","nivel","energético."]}},
+  {id:40,cat:"expositivo",titulo:"Texto instructivo",def:"Texto que guía al lector en la realización de una tarea mediante pasos precisos.",ejemplo:"Para calibrar el pH-metro, primero sumerja el electrodo en la solución tampón de pH 7, ajuste la lectura al valor indicado y enjuague con agua destilada antes de medir la muestra.",materia:["Química"],ejercicio:{tokens:["Para","calibrar","el","pH-metro,","primero","sumerja","el","electrodo","en","la","solución","tampón","de","pH","7,","ajuste","la","lectura","al","valor","indicado","y","enjuague","con","agua","destilada","antes","de","medir","la","muestra."],solucion:["Para","calibrar","el","pH-metro,","primero","sumerja","el","electrodo","en","la","solución","tampón","de","pH","7,","ajuste","la","lectura","al","valor","indicado","y","enjuague","con","agua","destilada","antes","de","medir","la","muestra."]}},
+  // ── NARRATIVO ──
+  {id:41,cat:"narrativo",titulo:"Narración en primera persona",def:"Relato en el que el narrador es protagonista y usa la voz 'yo'.",ejemplo:"Al ingresar al laboratorio de química del colegio La Salle, comprendí que la destilación fraccionada no era solo una ecuación en el tablero, sino un proceso vivo frente a mis ojos.",materia:["Química"],ejercicio:{tokens:["Al","ingresar","al","laboratorio","de","química","del","colegio","La","Salle,","comprendí","que","la","destilación","fraccionada","no","era","solo","una","ecuación","en","el","tablero,","sino","un","proceso","vivo","frente","a","mis","ojos."],solucion:["Al","ingresar","al","laboratorio","de","química","del","colegio","La","Salle,","comprendí","que","la","destilación","fraccionada","no","era","solo","una","ecuación","en","el","tablero,","sino","un","proceso","vivo","frente","a","mis","ojos."]}},
+  {id:42,cat:"narrativo",titulo:"Narración en tercera persona",def:"Relato en el que el narrador externo describe a los personajes y sus acciones.",ejemplo:"Elena ajustó el termómetro de mercurio con precisión milimétrica; sabía que un grado de error podría invalidar semanas de mediciones en su proyecto de feria de ciencias.",materia:["Física","Química"],ejercicio:{tokens:["Elena","ajustó","el","termómetro","de","mercurio","con","precisión","milimétrica;","sabía","que","un","grado","de","error","podría","invalidar","semanas","de","mediciones","en","su","proyecto","de","feria","de","ciencias."],solucion:["Elena","ajustó","el","termómetro","de","mercurio","con","precisión","milimétrica;","sabía","que","un","grado","de","error","podría","invalidar","semanas","de","mediciones","en","su","proyecto","de","feria","de","ciencias."]}},
+  {id:43,cat:"narrativo",titulo:"Descripción de ambiente",def:"Representación sensorial del espacio o entorno donde ocurren los hechos.",ejemplo:"El aula de física huele a polvo de tiza y circuitos quemados; el osciloscopio parpadea verde sobre la mesa mientras el ventilador zumba con monotonía.",materia:["Física"],ejercicio:{tokens:["El","aula","de","física","huele","a","polvo","de","tiza","y","circuitos","quemados;","el","osciloscopio","parpadea","verde","sobre","la","mesa","mientras","el","ventilador","zumba","con","monotonía."],solucion:["El","aula","de","física","huele","a","polvo","de","tiza","y","circuitos","quemados;","el","osciloscopio","parpadea","verde","sobre","la","mesa","mientras","el","ventilador","zumba","con","monotonía."]}},
+  {id:44,cat:"narrativo",titulo:"Diálogo directo",def:"Reproducción literal de las palabras de los personajes entre comillas o con guión.",ejemplo:"—¿Recuerdas la fórmula del volumen de un cilindro? —preguntó el profesor. —Sí, es π por radio al cuadrado por altura —respondió Juliana sin dudar.",materia:["Matemáticas"],ejercicio:{tokens:["—¿Recuerdas","la","fórmula","del","volumen","de","un","cilindro?","—preguntó","el","profesor.","—Sí,","es","π","por","radio","al","cuadrado","por","altura","—respondió","Juliana","sin","dudar."],solucion:["—¿Recuerdas","la","fórmula","del","volumen","de","un","cilindro?","—preguntó","el","profesor.","—Sí,","es","π","por","radio","al","cuadrado","por","altura","—respondió","Juliana","sin","dudar."]}},
+  {id:45,cat:"narrativo",titulo:"Flashback o analepsis",def:"Ruptura del orden cronológico para evocar hechos pasados.",ejemplo:"Mientras resolvía la integral, Tomás recordó aquella tarde del grado séptimo cuando su maestra le enseñó por primera vez el concepto de área bajo la curva con figuras de cartón.",materia:["Matemáticas"],ejercicio:{tokens:["Mientras","resolvía","la","integral,","Tomás","recordó","aquella","tarde","del","grado","séptimo","cuando","su","maestra","le","enseñó","por","primera","vez","el","concepto","de","área","bajo","la","curva","con","figuras","de","cartón."],solucion:["Mientras","resolvía","la","integral,","Tomás","recordó","aquella","tarde","del","grado","séptimo","cuando","su","maestra","le","enseñó","por","primera","vez","el","concepto","de","área","bajo","la","curva","con","figuras","de","cartón."]}},
+  {id:46,cat:"narrativo",titulo:"Clímax narrativo",def:"Momento de mayor tensión o punto de inflexión en la trama.",ejemplo:"Cuando el cronómetro marcó cero y el cohete de plástico propulsado por reacción química despegó por fin del suelo del patio del colegio, todo el salón 11B estalló en aplausos.",materia:["Física","Química"],ejercicio:{tokens:["Cuando","el","cronómetro","marcó","cero","y","el","cohete","de","plástico","propulsado","por","reacción","química","despegó","por","fin","del","suelo","del","patio","del","colegio,","todo","el","salón","11B","estalló","en","aplausos."],solucion:["Cuando","el","cronómetro","marcó","cero","y","el","cohete","de","plástico","propulsado","por","reacción","química","despegó","por","fin","del","suelo","del","patio","del","colegio,","todo","el","salón","11B","estalló","en","aplausos."]}},
+  {id:47,cat:"narrativo",titulo:"Monólogo interior",def:"Representación del flujo de pensamientos del personaje sin mediación externa.",ejemplo:"π, ∞, e... esos tres números son el universo, pensó Valentina mientras cerraba los ojos en el bus de Transmilenio rumbo a la Olimpiada Matemática Nacional.",materia:["Matemáticas"],ejercicio:{tokens:["π,","∞,","e...","esos","tres","números","son","el","universo,","pensó","Valentina","mientras","cerraba","los","ojos","en","el","bus","de","Transmilenio","rumbo","a","la","Olimpiada","Matemática","Nacional."],solucion:["π,","∞,","e...","esos","tres","números","son","el","universo,","pensó","Valentina","mientras","cerraba","los","ojos","en","el","bus","de","Transmilenio","rumbo","a","la","Olimpiada","Matemática","Nacional."]}},
+  {id:48,cat:"narrativo",titulo:"Descripción de personaje",def:"Presentación de rasgos físicos, psicológicos y sociales de un individuo.",ejemplo:"El profesor Arango era un hombre de manos enormes y paciencia infinita, capaz de explicar la relatividad especial con apenas un trozo de tiza y la pared del salón como lienzo.",materia:["Física"],ejercicio:{tokens:["El","profesor","Arango","era","un","hombre","de","manos","enormes","y","paciencia","infinita,","capaz","de","explicar","la","relatividad","especial","con","apenas","un","trozo","de","tiza","y","la","pared","del","salón","como","lienzo."],solucion:["El","profesor","Arango","era","un","hombre","de","manos","enormes","y","paciencia","infinita,","capaz","de","explicar","la","relatividad","especial","con","apenas","un","trozo","de","tiza","y","la","pared","del","salón","como","lienzo."]}},
+  {id:49,cat:"narrativo",titulo:"Narración de proceso científico",def:"Relato que humaniza y temporaliza los pasos de un experimento.",ejemplo:"A las siete de la mañana, antes de que llegaran los demás, Camila ya estaba midiendo la absorbancia del colorante en el espectrofotómetro, anotando cada valor con su pluma azul.",materia:["Química"],ejercicio:{tokens:["A","las","siete","de","la","mañana,","antes","de","que","llegaran","los","demás,","Camila","ya","estaba","midiendo","la","absorbancia","del","colorante","en","el","espectrofotómetro,","anotando","cada","valor","con","su","pluma","azul."],solucion:["A","las","siete","de","la","mañana,","antes","de","que","llegaran","los","demás,","Camila","ya","estaba","midiendo","la","absorbancia","del","colorante","en","el","espectrofotómetro,","anotando","cada","valor","con","su","pluma","azul."]}},
+  {id:50,cat:"narrativo",titulo:"Epílogo o desenlace",def:"Parte final de un relato que resuelve los conflictos y cierra la historia.",ejemplo:"Un año después, el proyecto de biogás que Sebastián había modelado matemáticamente en su tesis de grado ya abastecía de energía a tres hogares campesinos en el Huila.",materia:["Matemáticas","Física"],ejercicio:{tokens:["Un","año","después,","el","proyecto","de","biogás","que","Sebastián","había","modelado","matemáticamente","en","su","tesis","de","grado","ya","abastecía","de","energía","a","tres","hogares","campesinos","en","el","Huila."],solucion:["Un","año","después,","el","proyecto","de","biogás","que","Sebastián","había","modelado","matemáticamente","en","su","tesis","de","grado","ya","abastecía","de","energía","a","tres","hogares","campesinos","en","el","Huila."]}},
+  // ── CONTINUACIÓN CIENTIFICO ──
+  {id:51,cat:"cientifico",titulo:"Planteamiento del problema",def:"Descripción clara y delimitada del fenómeno o pregunta que motiva la investigación.",ejemplo:"¿Cómo afecta la altitud de las ciudades colombianas sobre los 2 500 metros al punto de ebullición del agua y, en consecuencia, al tiempo de cocción de los alimentos?",materia:["Física","Química"],ejercicio:{tokens:["¿Cómo","afecta","la","altitud","de","las","ciudades","colombianas","sobre","los","2","500","metros","al","punto","de","ebullición","del","agua","y,","en","consecuencia,","al","tiempo","de","cocción","de","los","alimentos?"],solucion:["¿Cómo","afecta","la","altitud","de","las","ciudades","colombianas","sobre","los","2","500","metros","al","punto","de","ebullición","del","agua","y,","en","consecuencia,","al","tiempo","de","cocción","de","los","alimentos?"]}},
+  {id:52,cat:"cientifico",titulo:"Justificación del estudio",def:"Explicación de la importancia y pertinencia social, ambiental o académica de la investigación.",ejemplo:"Esta investigación se justifica porque la contaminación hídrica del río Bogotá afecta a más de dos millones de personas y requiere modelos químicos de predicción de la calidad del agua.",materia:["Química"],ejercicio:{tokens:["Esta","investigación","se","justifica","porque","la","contaminación","hídrica","del","río","Bogotá","afecta","a","más","de","dos","millones","de","personas","y","requiere","modelos","químicos","de","predicción","de","la","calidad","del","agua."],solucion:["Esta","investigación","se","justifica","porque","la","contaminación","hídrica","del","río","Bogotá","afecta","a","más","de","dos","millones","de","personas","y","requiere","modelos","químicos","de","predicción","de","la","calidad","del","agua."]}},
+  {id:53,cat:"cientifico",titulo:"Control de variables",def:"Descripción de cómo se mantienen constantes las variables que no son objeto de estudio.",ejemplo:"Durante el experimento, la temperatura del ambiente se mantuvo en 25 °C mediante un termostato, y la presión atmosférica fue registrada cada hora con un barómetro digital.",materia:["Física","Química"],ejercicio:{tokens:["Durante","el","experimento,","la","temperatura","del","ambiente","se","mantuvo","en","25","°C","mediante","un","termostato,","y","la","presión","atmosférica","fue","registrada","cada","hora","con","un","barómetro","digital."],solucion:["Durante","el","experimento,","la","temperatura","del","ambiente","se","mantuvo","en","25","°C","mediante","un","termostato,","y","la","presión","atmosférica","fue","registrada","cada","hora","con","un","barómetro","digital."]}},
+  {id:54,cat:"cientifico",titulo:"Presentación de tabla de datos",def:"Verbalización del encabezado y contenido de una tabla para integrarla en el texto.",ejemplo:"La Tabla 1 muestra los valores de resistencia eléctrica medidos en ohmios para cuatro conductores de cobre a diferentes temperaturas entre 20 °C y 100 °C.",materia:["Física"],ejercicio:{tokens:["La","Tabla","1","muestra","los","valores","de","resistencia","eléctrica","medidos","en","ohmios","para","cuatro","conductores","de","cobre","a","diferentes","temperaturas","entre","20","°C","y","100","°C."],solucion:["La","Tabla","1","muestra","los","valores","de","resistencia","eléctrica","medidos","en","ohmios","para","cuatro","conductores","de","cobre","a","diferentes","temperaturas","entre","20","°C","y","100","°C."]}},
+  {id:55,cat:"cientifico",titulo:"Discusión de errores",def:"Análisis de las fuentes de incertidumbre o error sistemático y aleatorio en los datos.",ejemplo:"El error de ±0,05 cm en la medición con regla se debe a la resolución del instrumento y puede haberse propagado en el cálculo del volumen hasta un 3 % de incertidumbre.",materia:["Física","Matemáticas"],ejercicio:{tokens:["El","error","de","±0,05","cm","en","la","medición","con","regla","se","debe","a","la","resolución","del","instrumento","y","puede","haberse","propagado","en","el","cálculo","del","volumen","hasta","un","3","%","de","incertidumbre."],solucion:["El","error","de","±0,05","cm","en","la","medición","con","regla","se","debe","a","la","resolución","del","instrumento","y","puede","haberse","propagado","en","el","cálculo","del","volumen","hasta","un","3","%","de","incertidumbre."]}},
+  {id:56,cat:"cientifico",titulo:"Resumen o abstract",def:"Síntesis de 150-250 palabras que incluye objetivo, método, resultado y conclusión del trabajo.",ejemplo:"Este estudio determinó la concentración de plomo en suelos de Barrancabermeja mediante espectrofotometría de absorción atómica, encontrando valores que superan los límites permisibles de la norma IDEAM.",materia:["Química"],ejercicio:{tokens:["Este","estudio","determinó","la","concentración","de","plomo","en","suelos","de","Barrancabermeja","mediante","espectrofotometría","de","absorción","atómica,","encontrando","valores","que","superan","los","límites","permisibles","de","la","norma","IDEAM."],solucion:["Este","estudio","determinó","la","concentración","de","plomo","en","suelos","de","Barrancabermeja","mediante","espectrofotometría","de","absorción","atómica,","encontrando","valores","que","superan","los","límites","permisibles","de","la","norma","IDEAM."]}},
+  {id:57,cat:"cientifico",titulo:"Nota al pie científica",def:"Aclaración o referencia bibliográfica ubicada al pie de la página para ampliar información.",ejemplo:"¹ La constante de Avogadro (6,022 × 10²³ mol⁻¹) fue determinada experimentalmente por Jean Baptiste Perrin en 1909, valor refinado posteriormente con técnicas de difracción de rayos X.",materia:["Química","Física"],ejercicio:{tokens:["¹","La","constante","de","Avogadro","(6,022","×","10²³","mol⁻¹)","fue","determinada","experimentalmente","por","Jean","Baptiste","Perrin","en","1909,","valor","refinado","posteriormente","con","técnicas","de","difracción","de","rayos","X."],solucion:["¹","La","constante","de","Avogadro","(6,022","×","10²³","mol⁻¹)","fue","determinada","experimentalmente","por","Jean","Baptiste","Perrin","en","1909,","valor","refinado","posteriormente","con","técnicas","de","difracción","de","rayos","X."]}},
+  {id:58,cat:"cientifico",titulo:"Ecuación con explicación textual",def:"Presentación de una fórmula matemática seguida de la descripción verbal de cada variable.",ejemplo:"La Ley de Coulomb establece F = kq₁q₂/r², donde F es la fuerza en newtons, k la constante electrostática, q₁ y q₂ las cargas en coulombs y r la distancia en metros.",materia:["Física","Matemáticas"],ejercicio:{tokens:["La","Ley","de","Coulomb","establece","F","=","kq₁q₂/r²,","donde","F","es","la","fuerza","en","newtons,","k","la","constante","electrostática,","q₁","y","q₂","las","cargas","en","coulombs","y","r","la","distancia","en","metros."],solucion:["La","Ley","de","Coulomb","establece","F","=","kq₁q₂/r²,","donde","F","es","la","fuerza","en","newtons,","k","la","constante","electrostática,","q₁","y","q₂","las","cargas","en","coulombs","y","r","la","distancia","en","metros."]}},
+  {id:59,cat:"cientifico",titulo:"Alcances y limitaciones",def:"Declaración de qué abarca el estudio y qué queda fuera de su ámbito.",ejemplo:"Esta investigación se limita al análisis de agua superficial en tres puntos del río Cauca durante el segundo semestre de 2023 y no incluye fuentes subterráneas ni afluentes secundarios.",materia:["Química"],ejercicio:{tokens:["Esta","investigación","se","limita","al","análisis","de","agua","superficial","en","tres","puntos","del","río","Cauca","durante","el","segundo","semestre","de","2023","y","no","incluye","fuentes","subterráneas","ni","afluentes","secundarios."],solucion:["Esta","investigación","se","limita","al","análisis","de","agua","superficial","en","tres","puntos","del","río","Cauca","durante","el","segundo","semestre","de","2023","y","no","incluye","fuentes","subterráneas","ni","afluentes","secundarios."]}},
+  {id:60,cat:"cientifico",titulo:"Propuesta de investigación futura",def:"Sugerencia de nuevas preguntas o experimentos derivados de los resultados obtenidos.",ejemplo:"Se recomienda para estudios posteriores analizar el efecto de la temperatura del suelo sobre la tasa de absorción de cadmio en cultivos de papa en el altiplano cundiboyacense.",materia:["Química","Física"],ejercicio:{tokens:["Se","recomienda","para","estudios","posteriores","analizar","el","efecto","de","la","temperatura","del","suelo","sobre","la","tasa","de","absorción","de","cadmio","en","cultivos","de","papa","en","el","altiplano","cundiboyacense."],solucion:["Se","recomienda","para","estudios","posteriores","analizar","el","efecto","de","la","temperatura","del","suelo","sobre","la","tasa","de","absorción","de","cadmio","en","cultivos","de","papa","en","el","altiplano","cundiboyacense."]}},
+  // ── MÁS REDACCIÓN ──
+  {id:61,cat:"redaccion",titulo:"Uso de comillas",def:"Las comillas marcan citas textuales, términos técnicos nuevos o usos irónicos.",ejemplo:"El concepto de \"entalpía de formación\" permite calcular el calor liberado o absorbido en reacciones de combustión de hidrocarburos como el propano.",materia:["Química"],ejercicio:{tokens:["El","concepto","de","«entalpía","de","formación»","permite","calcular","el","calor","liberado","o","absorbido","en","reacciones","de","combustión","de","hidrocarburos","como","el","propano."],solucion:["El","concepto","de","«entalpía","de","formación»","permite","calcular","el","calor","liberado","o","absorbido","en","reacciones","de","combustión","de","hidrocarburos","como","el","propano."]}},
+  {id:62,cat:"redaccion",titulo:"Uso de paréntesis explicativo",def:"Inserción de información adicional o aclaratoria entre paréntesis dentro del enunciado.",ejemplo:"La aceleración de la gravedad en Bogotá (9,74 m/s² por encontrarse a 2 600 metros sobre el nivel del mar) difiere ligeramente del valor estándar de 9,81 m/s².",materia:["Física"],ejercicio:{tokens:["La","aceleración","de","la","gravedad","en","Bogotá","(9,74","m/s²","por","encontrarse","a","2","600","metros","sobre","el","nivel","del","mar)","difiere","ligeramente","del","valor","estándar","de","9,81","m/s²."],solucion:["La","aceleración","de","la","gravedad","en","Bogotá","(9,74","m/s²","por","encontrarse","a","2","600","metros","sobre","el","nivel","del","mar)","difiere","ligeramente","del","valor","estándar","de","9,81","m/s²."]}},
+  {id:63,cat:"redaccion",titulo:"Voz pasiva científica",def:"Construcción gramatical que omite el agente para enfatizar el proceso o el objeto.",ejemplo:"La muestra fue centrifugada a 3 000 rpm durante quince minutos para separar el sedimento del sobrenadante antes del análisis espectroscópico.",materia:["Química"],ejercicio:{tokens:["La","muestra","fue","centrifugada","a","3","000","rpm","durante","quince","minutos","para","separar","el","sedimento","del","sobrenadante","antes","del","análisis","espectroscópico."],solucion:["La","muestra","fue","centrifugada","a","3","000","rpm","durante","quince","minutos","para","separar","el","sedimento","del","sobrenadante","antes","del","análisis","espectroscópico."]}},
+  {id:64,cat:"redaccion",titulo:"Gerundio de modo",def:"Uso del gerundio para indicar cómo se realiza una acción principal.",ejemplo:"Aplicando el teorema de Pitágoras, los topógrafos colombianos calculan distancias inaccesibles en terrenos montañosos sin necesidad de medición directa.",materia:["Matemáticas"],ejercicio:{tokens:["Aplicando","el","teorema","de","Pitágoras,","los","topógrafos","colombianos","calculan","distancias","inaccesibles","en","terrenos","montañosos","sin","necesidad","de","medición","directa."],solucion:["Aplicando","el","teorema","de","Pitágoras,","los","topógrafos","colombianos","calculan","distancias","inaccesibles","en","terrenos","montañosos","sin","necesidad","de","medición","directa."]}},
+  {id:65,cat:"redaccion",titulo:"Aposición explicativa",def:"Frase nominal que amplía o precisa el referente inmediato anterior.",ejemplo:"Isaac Newton, el físico y matemático inglés del siglo XVII, formuló la ley de gravitación universal que hoy sigue siendo válida para los cálculos de órbitas satelitales en Colombia.",materia:["Física","Matemáticas"],ejercicio:{tokens:["Isaac","Newton,","el","físico","y","matemático","inglés","del","siglo","XVII,","formuló","la","ley","de","gravitación","universal","que","hoy","sigue","siendo","válida","para","los","cálculos","de","órbitas","satelitales","en","Colombia."],solucion:["Isaac","Newton,","el","físico","y","matemático","inglés","del","siglo","XVII,","formuló","la","ley","de","gravitación","universal","que","hoy","sigue","siendo","válida","para","los","cálculos","de","órbitas","satelitales","en","Colombia."]}},
+  {id:66,cat:"redaccion",titulo:"Subordinada adjetiva especificativa",def:"Cláusula relativa que delimita y especifica el referente dentro del enunciado.",ejemplo:"Los polímeros que se forman en la vulcanización del caucho son los responsables de la elasticidad característica de los neumáticos fabricados en la planta de Itagüí.",materia:["Química"],ejercicio:{tokens:["Los","polímeros","que","se","forman","en","la","vulcanización","del","caucho","son","los","responsables","de","la","elasticidad","característica","de","los","neumáticos","fabricados","en","la","planta","de","Itagüí."],solucion:["Los","polímeros","que","se","forman","en","la","vulcanización","del","caucho","son","los","responsables","de","la","elasticidad","característica","de","los","neumáticos","fabricados","en","la","planta","de","Itagüí."]}},
+  {id:67,cat:"redaccion",titulo:"Enunciado nominal",def:"Oración sin verbo conjugado que expresa una definición o título de sección.",ejemplo:"Objetivo general: Determinar la influencia de la concentración salina sobre la conductividad eléctrica del agua en ríos del departamento del Cesar.",materia:["Física","Química"],ejercicio:{tokens:["Objetivo","general:","Determinar","la","influencia","de","la","concentración","salina","sobre","la","conductividad","eléctrica","del","agua","en","ríos","del","departamento","del","Cesar."],solucion:["Objetivo","general:","Determinar","la","influencia","de","la","concentración","salina","sobre","la","conductividad","eléctrica","del","agua","en","ríos","del","departamento","del","Cesar."]}},
+  {id:68,cat:"redaccion",titulo:"Subordinada condicional",def:"Cláusula introducida por 'si' que establece una condición para la oración principal.",ejemplo:"Si la presión sobre un gas ideal se duplica a temperatura constante, entonces el volumen se reducirá exactamente a la mitad, según la Ley de Boyle.",materia:["Física","Química"],ejercicio:{tokens:["Si","la","presión","sobre","un","gas","ideal","se","duplica","a","temperatura","constante,","entonces","el","volumen","se","reducirá","exactamente","a","la","mitad,","según","la","Ley","de","Boyle."],solucion:["Si","la","presión","sobre","un","gas","ideal","se","duplica","a","temperatura","constante,","entonces","el","volumen","se","reducirá","exactamente","a","la","mitad,","según","la","Ley","de","Boyle."]}},
+  {id:69,cat:"redaccion",titulo:"Uso del infinitivo en objetivos",def:"Empleo del infinitivo verbal para redactar objetivos específicos de proyectos científicos.",ejemplo:"Analizar la variación de la velocidad de reacción del permanganato de potasio con el ácido oxálico en función de la temperatura en un rango de 20 °C a 60 °C.",materia:["Química"],ejercicio:{tokens:["Analizar","la","variación","de","la","velocidad","de","reacción","del","permanganato","de","potasio","con","el","ácido","oxálico","en","función","de","la","temperatura","en","un","rango","de","20","°C","a","60","°C."],solucion:["Analizar","la","variación","de","la","velocidad","de","reacción","del","permanganato","de","potasio","con","el","ácido","oxálico","en","función","de","la","temperatura","en","un","rango","de","20","°C","a","60","°C."]}},
+  {id:70,cat:"redaccion",titulo:"Conector de adición",def:"Nexo que suma información a lo ya dicho, como 'además', 'asimismo', 'también'.",ejemplo:"El dióxido de carbono es responsable del efecto invernadero; asimismo, en concentraciones elevadas afecta la capacidad cognitiva de los estudiantes dentro de las aulas.",materia:["Química"],ejercicio:{tokens:["El","dióxido","de","carbono","es","responsable","del","efecto","invernadero;","asimismo,","en","concentraciones","elevadas","afecta","la","capacidad","cognitiva","de","los","estudiantes","dentro","de","las","aulas."],solucion:["El","dióxido","de","carbono","es","responsable","del","efecto","invernadero;","asimismo,","en","concentraciones","elevadas","afecta","la","capacidad","cognitiva","de","los","estudiantes","dentro","de","las","aulas."]}},
+  // ── MÁS ARGUMENTACIÓN ──
+  {id:71,cat:"argumentacion",titulo:"Argumento de consecuencia",def:"Señala las implicaciones o efectos de adoptar una posición o medida.",ejemplo:"Incorporar la programación de simulaciones físicas en el currículo de bachillerato permitiría reducir el tiempo de comprensión de conceptos abstractos en un 40 %, según investigaciones del MEN.",materia:["Física","Matemáticas"],ejercicio:{tokens:["Incorporar","la","programación","de","simulaciones","físicas","en","el","currículo","de","bachillerato","permitiría","reducir","el","tiempo","de","comprensión","de","conceptos","abstractos","en","un","40","%,","según","investigaciones","del","MEN."],solucion:["Incorporar","la","programación","de","simulaciones","físicas","en","el","currículo","de","bachillerato","permitiría","reducir","el","tiempo","de","comprensión","de","conceptos","abstractos","en","un","40","%,","según","investigaciones","del","MEN."]}},
+  {id:72,cat:"argumentacion",titulo:"Argumento ético",def:"Fundamenta la postura en principios morales, de justicia o equidad.",ejemplo:"Privar a las comunidades rurales del Chocó del acceso a laboratorios virtuales de química vulnera el principio de equidad educativa consagrado en la Constitución colombiana de 1991.",materia:["Química"],ejercicio:{tokens:["Privar","a","las","comunidades","rurales","del","Chocó","del","acceso","a","laboratorios","virtuales","de","química","vulnera","el","principio","de","equidad","educativa","consagrado","en","la","Constitución","colombiana","de","1991."],solucion:["Privar","a","las","comunidades","rurales","del","Chocó","del","acceso","a","laboratorios","virtuales","de","química","vulnera","el","principio","de","equidad","educativa","consagrado","en","la","Constitución","colombiana","de","1991."]}},
+  {id:73,cat:"argumentacion",titulo:"Argumento por ejemplo contrario",def:"Utiliza un contraejemplo para demostrar que una afirmación general es falsa.",ejemplo:"No todos los metales son buenos conductores de electricidad; el bismuto, por ejemplo, posee una conductividad eléctrica 100 000 veces menor que la del cobre.",materia:["Física","Química"],ejercicio:{tokens:["No","todos","los","metales","son","buenos","conductores","de","electricidad;","el","bismuto,","por","ejemplo,","posee","una","conductividad","eléctrica","100","000","veces","menor","que","la","del","cobre."],solucion:["No","todos","los","metales","son","buenos","conductores","de","electricidad;","el","bismuto,","por","ejemplo,","posee","una","conductividad","eléctrica","100","000","veces","menor","que","la","del","cobre."]}},
+  {id:74,cat:"argumentacion",titulo:"Pregunta de investigación",def:"Formulación clara y específica del problema que guía la indagación científica.",ejemplo:"¿En qué medida la altitud sobre el nivel del mar de los municipios cafeteros colombianos influye en el contenido de cafeína del grano de café Coffea arabica?",materia:["Química"],ejercicio:{tokens:["¿En","qué","medida","la","altitud","sobre","el","nivel","del","mar","de","los","municipios","cafeteros","colombianos","influye","en","el","contenido","de","cafeína","del","grano","de","café","Coffea","arabica?"],solucion:["¿En","qué","medida","la","altitud","sobre","el","nivel","del","mar","de","los","municipios","cafeteros","colombianos","influye","en","el","contenido","de","cafeína","del","grano","de","café","Coffea","arabica?"]}},
+  {id:75,cat:"argumentacion",titulo:"Proposición modal",def:"Afirmación que expresa posibilidad, necesidad, obligación o probabilidad usando verbos modales.",ejemplo:"El Estado colombiano debería invertir al menos el 1 % del PIB en laboratorios de ciencias para colegios públicos, dado que esto multiplicaría el número de bachilleres con vocación STEM.",materia:["Matemáticas"],ejercicio:{tokens:["El","Estado","colombiano","debería","invertir","al","menos","el","1","%","del","PIB","en","laboratorios","de","ciencias","para","colegios","públicos,","dado","que","esto","multiplicaría","el","número","de","bachilleres","con","vocación","STEM."],solucion:["El","Estado","colombiano","debería","invertir","al","menos","el","1","%","del","PIB","en","laboratorios","de","ciencias","para","colegios","públicos,","dado","que","esto","multiplicaría","el","número","de","bachilleres","con","vocación","STEM."]}},
+  {id:76,cat:"argumentacion",titulo:"Silogismo hipotético",def:"Cadena de condicionales: si A implica B y B implica C, entonces A implica C.",ejemplo:"Si la temperatura aumenta, entonces aumenta la energía cinética molecular; si la energía cinética aumenta, entonces aumenta la presión del gas; por tanto, si la temperatura sube, la presión sube.",materia:["Física","Química"],ejercicio:{tokens:["Si","la","temperatura","aumenta,","entonces","aumenta","la","energía","cinética","molecular;","si","la","energía","cinética","aumenta,","entonces","aumenta","la","presión","del","gas;","por","tanto,","si","la","temperatura","sube,","la","presión","sube."],solucion:["Si","la","temperatura","aumenta,","entonces","aumenta","la","energía","cinética","molecular;","si","la","energía","cinética","aumenta,","entonces","aumenta","la","presión","del","gas;","por","tanto,","si","la","temperatura","sube,","la","presión","sube."]}},
+  {id:77,cat:"argumentacion",titulo:"Argumento histórico",def:"Apela a hechos o hitos del pasado para sustentar una idea.",ejemplo:"La historia de la química colombiana demuestra que sin la síntesis industrial del ácido sulfúrico en los años 50 no habría sido posible el desarrollo de la industria de fertilizantes que impulsó la Revolución Verde.",materia:["Química"],ejercicio:{tokens:["La","historia","de","la","química","colombiana","demuestra","que","sin","la","síntesis","industrial","del","ácido","sulfúrico","en","los","años","50","no","habría","sido","posible","el","desarrollo","de","la","industria","de","fertilizantes","que","impulsó","la","Revolución","Verde."],solucion:["La","historia","de","la","química","colombiana","demuestra","que","sin","la","síntesis","industrial","del","ácido","sulfúrico","en","los","años","50","no","habría","sido","posible","el","desarrollo","de","la","industria","de","fertilizantes","que","impulsó","la","Revolución","Verde."]}},
+  {id:78,cat:"argumentacion",titulo:"Argumento prospectivo",def:"Señala beneficios o consecuencias futuras para justificar una posición actual.",ejemplo:"Si Colombia incorpora la impresión 3D de materiales biodegradables al currículo de bachillerato, en diez años contará con ingenieros capaces de diseñar dispositivos médicos de bajo costo.",materia:["Matemáticas","Física"],ejercicio:{tokens:["Si","Colombia","incorpora","la","impresión","3D","de","materiales","biodegradables","al","currículo","de","bachillerato,","en","diez","años","contará","con","ingenieros","capaces","de","diseñar","dispositivos","médicos","de","bajo","costo."],solucion:["Si","Colombia","incorpora","la","impresión","3D","de","materiales","biodegradables","al","currículo","de","bachillerato,","en","diez","años","contará","con","ingenieros","capaces","de","diseñar","dispositivos","médicos","de","bajo","costo."]}},
+  {id:79,cat:"argumentacion",titulo:"Dilema argumentativo",def:"Presenta dos opciones excluyentes para demostrar que en cualquier caso se impone la tesis.",ejemplo:"O se enseña álgebra lineal desde grado décimo, o los estudiantes colombianos ingresarán a las universidades sin las herramientas para comprender inteligencia artificial: ambos caminos llevan a la misma conclusión.",materia:["Matemáticas"],ejercicio:{tokens:["O","se","enseña","álgebra","lineal","desde","grado","décimo,","o","los","estudiantes","colombianos","ingresarán","a","las","universidades","sin","las","herramientas","para","comprender","inteligencia","artificial:","ambos","caminos","llevan","a","la","misma","conclusión."],solucion:["O","se","enseña","álgebra","lineal","desde","grado","décimo,","o","los","estudiantes","colombianos","ingresarán","a","las","universidades","sin","las","herramientas","para","comprender","inteligencia","artificial:","ambos","caminos","llevan","a","la","misma","conclusión."]}},
+  {id:80,cat:"argumentacion",titulo:"Llamado a la acción",def:"Cierre que invita al lector a realizar algo concreto basado en los argumentos presentados.",ejemplo:"Es urgente que los docentes de ciencias naturales de Colombia adopten el método de aprendizaje basado en proyectos para aumentar las vocaciones científicas en las nuevas generaciones.",materia:["Química","Física"],ejercicio:{tokens:["Es","urgente","que","los","docentes","de","ciencias","naturales","de","Colombia","adopten","el","método","de","aprendizaje","basado","en","proyectos","para","aumentar","las","vocaciones","científicas","en","las","nuevas","generaciones."],solucion:["Es","urgente","que","los","docentes","de","ciencias","naturales","de","Colombia","adopten","el","método","de","aprendizaje","basado","en","proyectos","para","aumentar","las","vocaciones","científicas","en","las","nuevas","generaciones."]}},
+  // ── MÁS EXPOSITIVO ──
+  {id:81,cat:"expositivo",titulo:"Introducción expositiva",def:"Apertura que contextualiza el tema, presenta su relevancia y anuncia la estructura del texto.",ejemplo:"La mecánica cuántica, rama de la física surgida a inicios del siglo XX, transformó radicalmente nuestra comprensión de la materia; en este texto se examinarán sus postulados fundamentales y sus aplicaciones tecnológicas.",materia:["Física"],ejercicio:{tokens:["La","mecánica","cuántica,","rama","de","la","física","surgida","a","inicios","del","siglo","XX,","transformó","radicalmente","nuestra","comprensión","de","la","materia;","en","este","texto","se","examinarán","sus","postulados","fundamentales","y","sus","aplicaciones","tecnológicas."],solucion:["La","mecánica","cuántica,","rama","de","la","física","surgida","a","inicios","del","siglo","XX,","transformó","radicalmente","nuestra","comprensión","de","la","materia;","en","este","texto","se","examinarán","sus","postulados","fundamentales","y","sus","aplicaciones","tecnológicas."]}},
+  {id:82,cat:"expositivo",titulo:"Analogía didáctica",def:"Comparación entre lo desconocido y lo conocido para facilitar la comprensión.",ejemplo:"Entender la corriente eléctrica es sencillo si la comparamos con el flujo de agua en una tubería: el voltaje equivale a la presión del agua y la resistencia al diámetro del tubo.",materia:["Física"],ejercicio:{tokens:["Entender","la","corriente","eléctrica","es","sencillo","si","la","comparamos","con","el","flujo","de","agua","en","una","tubería:","el","voltaje","equivale","a","la","presión","del","agua","y","la","resistencia","al","diámetro","del","tubo."],solucion:["Entender","la","corriente","eléctrica","es","sencillo","si","la","comparamos","con","el","flujo","de","agua","en","una","tubería:","el","voltaje","equivale","a","la","presión","del","agua","y","la","resistencia","al","diámetro","del","tubo."]}},
+  {id:83,cat:"expositivo",titulo:"Secuencia temporal",def:"Organización del texto según el orden cronológico de los hechos o etapas.",ejemplo:"Primero, la glucosa ingresa a la célula; a continuación, en la glucólisis se producen dos moléculas de piruvato; finalmente, en la mitocondria ocurre el ciclo de Krebs.",materia:["Química"],ejercicio:{tokens:["Primero,","la","glucosa","ingresa","a","la","célula;","a","continuación,","en","la","glucólisis","se","producen","dos","moléculas","de","piruvato;","finalmente,","en","la","mitocondria","ocurre","el","ciclo","de","Krebs."],solucion:["Primero,","la","glucosa","ingresa","a","la","célula;","a","continuación,","en","la","glucólisis","se","producen","dos","moléculas","de","piruvato;","finalmente,","en","la","mitocondria","ocurre","el","ciclo","de","Krebs."]}},
+  {id:84,cat:"expositivo",titulo:"Descripción espacial",def:"Presentación de elementos de un espacio siguiendo un orden lógico: arriba-abajo, centro-periferia, etc.",ejemplo:"El espectro electromagnético se organiza de menor a mayor longitud de onda: primero los rayos gamma, luego los rayos X, la radiación ultravioleta, la luz visible y finalmente las microondas y las ondas de radio.",materia:["Física"],ejercicio:{tokens:["El","espectro","electromagnético","se","organiza","de","menor","a","mayor","longitud","de","onda:","primero","los","rayos","gamma,","luego","los","rayos","X,","la","radiación","ultravioleta,","la","luz","visible","y","finalmente","las","microondas","y","las","ondas","de","radio."],solucion:["El","espectro","electromagnético","se","organiza","de","menor","a","mayor","longitud","de","onda:","primero","los","rayos","gamma,","luego","los","rayos","X,","la","radiación","ultravioleta,","la","luz","visible","y","finalmente","las","microondas","y","las","ondas","de","radio."]}},
+  {id:85,cat:"expositivo",titulo:"Uso de metáfora explicativa",def:"Figura retórica que identifica el concepto abstracto con una imagen concreta para clarificarlo.",ejemplo:"El núcleo atómico es el corazón palpitante del átomo: minúsculo en tamaño pero portador de casi toda la masa y la energía que sostiene la materia.",materia:["Química","Física"],ejercicio:{tokens:["El","núcleo","atómico","es","el","corazón","palpitante","del","átomo:","minúsculo","en","tamaño","pero","portador","de","casi","toda","la","masa","y","la","energía","que","sostiene","la","materia."],solucion:["El","núcleo","atómico","es","el","corazón","palpitante","del","átomo:","minúsculo","en","tamaño","pero","portador","de","casi","toda","la","masa","y","la","energía","que","sostiene","la","materia."]}},
+  {id:86,cat:"expositivo",titulo:"Glosario integrado",def:"Definición de términos técnicos dentro del cuerpo del texto sin necesidad de apartados separados.",ejemplo:"El ángulo de incidencia, es decir, el ángulo formado entre el rayo de luz y la normal a la superficie en el punto de contacto, determina la reflexión y la refracción del haz luminoso.",materia:["Física"],ejercicio:{tokens:["El","ángulo","de","incidencia,","es","decir,","el","ángulo","formado","entre","el","rayo","de","luz","y","la","normal","a","la","superficie","en","el","punto","de","contacto,","determina","la","reflexión","y","la","refracción","del","haz","luminoso."],solucion:["El","ángulo","de","incidencia,","es","decir,","el","ángulo","formado","entre","el","rayo","de","luz","y","la","normal","a","la","superficie","en","el","punto","de","contacto,","determina","la","reflexión","y","la","refracción","del","haz","luminoso."]}},
+  {id:87,cat:"expositivo",titulo:"Texto multimodal",def:"Texto que integra palabras, gráficos, esquemas o imágenes para construir significado.",ejemplo:"La Figura 3 presenta el diagrama de fases del agua: el eje horizontal indica la temperatura en °C y el eje vertical la presión en atm, delimitando las regiones sólido, líquido y vapor.",materia:["Física","Química"],ejercicio:{tokens:["La","Figura","3","presenta","el","diagrama","de","fases","del","agua:","el","eje","horizontal","indica","la","temperatura","en","°C","y","el","eje","vertical","la","presión","en","atm,","delimitando","las","regiones","sólido,","líquido","y","vapor."],solucion:["La","Figura","3","presenta","el","diagrama","de","fases","del","agua:","el","eje","horizontal","indica","la","temperatura","en","°C","y","el","eje","vertical","la","presión","en","atm,","delimitando","las","regiones","sólido,","líquido","y","vapor."]}},
+  {id:88,cat:"expositivo",titulo:"Título y subtítulo académico",def:"Formulación concisa y descriptiva del tema principal y sus subdivisiones en un trabajo escrito.",ejemplo:"Título: Influencia de la radiación solar en la productividad del cultivo de quinua en la Sabana de Bogotá. Subtítulo: Un análisis fisicoquímico comparativo 2022-2023.",materia:["Física","Química"],ejercicio:{tokens:["Título:","Influencia","de","la","radiación","solar","en","la","productividad","del","cultivo","de","quinua","en","la","Sabana","de","Bogotá.","Subtítulo:","Un","análisis","fisicoquímico","comparativo","2022-2023."],solucion:["Título:","Influencia","de","la","radiación","solar","en","la","productividad","del","cultivo","de","quinua","en","la","Sabana","de","Bogotá.","Subtítulo:","Un","análisis","fisicoquímico","comparativo","2022-2023."]}},
+  {id:89,cat:"expositivo",titulo:"Reformulación por aclaración",def:"Uso de expresiones como 'es decir', 'esto significa que' para clarificar un enunciado técnico.",ejemplo:"El calor específico del agua es 4,18 J/(g·°C); esto significa que se requieren 4,18 joules para elevar en un grado centígrado la temperatura de un gramo de agua pura.",materia:["Física","Química"],ejercicio:{tokens:["El","calor","específico","del","agua","es","4,18","J/(g·°C);","esto","significa","que","se","requieren","4,18","joules","para","elevar","en","un","grado","centígrado","la","temperatura","de","un","gramo","de","agua","pura."],solucion:["El","calor","específico","del","agua","es","4,18","J/(g·°C);","esto","significa","que","se","requieren","4,18","joules","para","elevar","en","un","grado","centígrado","la","temperatura","de","un","gramo","de","agua","pura."]}},
+  {id:90,cat:"expositivo",titulo:"Descripción cuantitativa",def:"Presentación del fenómeno a través de magnitudes, unidades y rangos numéricos precisos.",ejemplo:"El sol emite una potencia total de 3,8 × 10²⁶ vatios, de los cuales la Tierra intercepta aproximadamente 1,74 × 10¹⁷ vatios en su superficie exterior.",materia:["Física"],ejercicio:{tokens:["El","sol","emite","una","potencia","total","de","3,8","×","10²⁶","vatios,","de","los","cuales","la","Tierra","intercepta","aproximadamente","1,74","×","10¹⁷","vatios","en","su","superficie","exterior."],solucion:["El","sol","emite","una","potencia","total","de","3,8","×","10²⁶","vatios,","de","los","cuales","la","Tierra","intercepta","aproximadamente","1,74","×","10¹⁷","vatios","en","su","superficie","exterior."]}},
+  // ── MÁS NARRATIVO ──
+  {id:91,cat:"narrativo",titulo:"Inicio in medias res",def:"Comienzo del relato en el punto medio de la acción, sin introducción previa.",ejemplo:"El ácido ya burbujeaba en el tubo de ensayo cuando Andrés se dio cuenta de que había confundido el sulfúrico con el clorhídrico; quedaban tres segundos para apagar el mechero.",materia:["Química"],ejercicio:{tokens:["El","ácido","ya","burbujeaba","en","el","tubo","de","ensayo","cuando","Andrés","se","dio","cuenta","de","que","había","confundido","el","sulfúrico","con","el","clorhídrico;","quedaban","tres","segundos","para","apagar","el","mechero."],solucion:["El","ácido","ya","burbujeaba","en","el","tubo","de","ensayo","cuando","Andrés","se","dio","cuenta","de","que","había","confundido","el","sulfúrico","con","el","clorhídrico;","quedaban","tres","segundos","para","apagar","el","mechero."]}},
+  {id:92,cat:"narrativo",titulo:"Descripción dinámica",def:"Narración de acciones sucesivas que crean la sensación de movimiento y ritmo.",ejemplo:"La bola rodó por el plano inclinado, ganó velocidad, golpeó el extremo del riel, saltó al vacío y describió una parábola perfecta antes de caer en el balde marcado con una X.",materia:["Física"],ejercicio:{tokens:["La","bola","rodó","por","el","plano","inclinado,","ganó","velocidad,","golpeó","el","extremo","del","riel,","saltó","al","vacío","y","describió","una","parábola","perfecta","antes","de","caer","en","el","balde","marcado","con","una","X."],solucion:["La","bola","rodó","por","el","plano","inclinado,","ganó","velocidad,","golpeó","el","extremo","del","riel,","saltó","al","vacío","y","describió","una","parábola","perfecta","antes","de","caer","en","el","balde","marcado","con","una","X."]}},
+  {id:93,cat:"narrativo",titulo:"Punto de vista omnisciente",def:"Narrador que conoce los pensamientos y sentimientos de todos los personajes.",ejemplo:"Mientras Miguel calculaba la energía del fotón, su compañera Lucía pensaba en la paradoja de Schrödinger, y el profesor intuía que ninguno de los dos dormiría bien esa noche.",materia:["Física"],ejercicio:{tokens:["Mientras","Miguel","calculaba","la","energía","del","fotón,","su","compañera","Lucía","pensaba","en","la","paradoja","de","Schrödinger,","y","el","profesor","intuía","que","ninguno","de","los","dos","dormiría","bien","esa","noche."],solucion:["Mientras","Miguel","calculaba","la","energía","del","fotón,","su","compañera","Lucía","pensaba","en","la","paradoja","de","Schrödinger,","y","el","profesor","intuía","que","ninguno","de","los","dos","dormiría","bien","esa","noche."]}},
+  {id:94,cat:"narrativo",titulo:"Simbolismo narrativo",def:"Uso de objetos o situaciones concretas que representan ideas abstractas.",ejemplo:"El péndulo que oscilaba sobre el escritorio del doctor Varela era más que un reloj; era el símbolo de la perfecta regularidad con la que la naturaleza obedece las ecuaciones de movimiento.",materia:["Física","Matemáticas"],ejercicio:{tokens:["El","péndulo","que","oscilaba","sobre","el","escritorio","del","doctor","Varela","era","más","que","un","reloj;","era","el","símbolo","de","la","perfecta","regularidad","con","la","que","la","naturaleza","obedece","las","ecuaciones","de","movimiento."],solucion:["El","péndulo","que","oscilaba","sobre","el","escritorio","del","doctor","Varela","era","más","que","un","reloj;","era","el","símbolo","de","la","perfecta","regularidad","con","la","que","la","naturaleza","obedece","las","ecuaciones","de","movimiento."]}},
+  {id:95,cat:"narrativo",titulo:"Suspenso o tensión narrativa",def:"Creación de incertidumbre en el lector mediante la omisión estratégica de información.",ejemplo:"La reacción entre el sodio y el agua comenzó con una chispa tenue; nadie en el salón sabía aún si el trozo metálico era demasiado grande para el recipiente disponible.",materia:["Química"],ejercicio:{tokens:["La","reacción","entre","el","sodio","y","el","agua","comenzó","con","una","chispa","tenue;","nadie","en","el","salón","sabía","aún","si","el","trozo","metálico","era","demasiado","grande","para","el","recipiente","disponible."],solucion:["La","reacción","entre","el","sodio","y","el","agua","comenzó","con","una","chispa","tenue;","nadie","en","el","salón","sabía","aún","si","el","trozo","metálico","era","demasiado","grande","para","el","recipiente","disponible."]}},
+  {id:96,cat:"narrativo",titulo:"Ironía narrativa",def:"Distancia entre lo que se dice y lo que realmente ocurre, generando humor o crítica.",ejemplo:"El modelo matemático pronosticaba que el puente resistiría diez siglos; resistió exactamente doce años, tres meses y cuatro días.",materia:["Matemáticas","Física"],ejercicio:{tokens:["El","modelo","matemático","pronosticaba","que","el","puente","resistiría","diez","siglos;","resistió","exactamente","doce","años,","tres","meses","y","cuatro","días."],solucion:["El","modelo","matemático","pronosticaba","que","el","puente","resistiría","diez","siglos;","resistió","exactamente","doce","años,","tres","meses","y","cuatro","días."]}},
+  {id:97,cat:"narrativo",titulo:"Hipérbole narrativa",def:"Exageración deliberada con fines expresivos o humorísticos.",ejemplo:"Aquel problema de física tenía tanta información que el estudiante necesitó tres hojas cuadriculadas, dos bolígrafos y la mitad de la tabla periódica para abordarlo.",materia:["Física","Química"],ejercicio:{tokens:["Aquel","problema","de","física","tenía","tanta","información","que","el","estudiante","necesitó","tres","hojas","cuadriculadas,","dos","bolígrafos","y","la","mitad","de","la","tabla","periódica","para","abordarlo."],solucion:["Aquel","problema","de","física","tenía","tanta","información","que","el","estudiante","necesitó","tres","hojas","cuadriculadas,","dos","bolígrafos","y","la","mitad","de","la","tabla","periódica","para","abordarlo."]}},
+  {id:98,cat:"narrativo",titulo:"Intertextualidad",def:"Referencia implícita o explícita a otro texto, autor o tradición cultural.",ejemplo:"Como en el cuento de Borges donde una biblioteca contiene todos los libros posibles, la tabla periódica de Mendeléyev contenía ya todos los elementos aún por descubrir.",materia:["Química"],ejercicio:{tokens:["Como","en","el","cuento","de","Borges","donde","una","biblioteca","contiene","todos","los","libros","posibles,","la","tabla","periódica","de","Mendeléyev","contenía","ya","todos","los","elementos","aún","por","descubrir."],solucion:["Como","en","el","cuento","de","Borges","donde","una","biblioteca","contiene","todos","los","libros","posibles,","la","tabla","periódica","de","Mendeléyev","contenía","ya","todos","los","elementos","aún","por","descubrir."]}},
+  {id:99,cat:"narrativo",titulo:"Sinestesia literaria",def:"Mezcla de percepciones de distintos sentidos en una sola imagen.",ejemplo:"La ecuación diferencial tenía un sabor amargo de café frío y olía a madrugada: esa clase de problema que solo se resuelve cuando el silencio del salón se vuelve total.",materia:["Matemáticas"],ejercicio:{tokens:["La","ecuación","diferencial","tenía","un","sabor","amargo","de","café","frío","y","olía","a","madrugada:","esa","clase","de","problema","que","solo","se","resuelve","cuando","el","silencio","del","salón","se","vuelve","total."],solucion:["La","ecuación","diferencial","tenía","un","sabor","amargo","de","café","frío","y","olía","a","madrugada:","esa","clase","de","problema","que","solo","se","resuelve","cuando","el","silencio","del","salón","se","vuelve","total."]}},
+  {id:100,cat:"narrativo",titulo:"Cierre circular",def:"Final que retoma elementos del inicio para cerrar el texto con cohesión y completitud.",ejemplo:"Igual que en aquella primera clase de química donde el profesor preguntó «¿qué es la materia?», la pregunta seguía ahí al graduarse; pero ahora Sofía tenía las ecuaciones para comenzar a responderla.",materia:["Química","Matemáticas"],ejercicio:{tokens:["Igual","que","en","aquella","primera","clase","de","química","donde","el","profesor","preguntó","«¿qué","es","la","materia?»,","la","pregunta","seguía","ahí","al","graduarse;","pero","ahora","Sofía","tenía","las","ecuaciones","para","comenzar","a","responderla."],solucion:["Igual","que","en","aquella","primera","clase","de","química","donde","el","profesor","preguntó","«¿qué","es","la","materia?»,","la","pregunta","seguía","ahí","al","graduarse;","pero","ahora","Sofía","tenía","las","ecuaciones","para","comenzar","a","responderla."]}},
+];
+
+// ═══════════════════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════════════════
+let currentMode = 'flashcard';
+let currentIdx = 0;
+let order = TECNICAS.map((_,i)=>i);
+let done = new Set();
+let activeCategories = new Set(['all']);
+
+// Drag state
+let dragToken = null;
+let dragSource = null; // 'bank' or 'zone'
+let dragOrigIdx = null;
+
+function loadState() {
+  try {
+    const s = localStorage.getItem('tl-done-v2');
+    if (s) done = new Set(JSON.parse(s));
+  } catch(e) {}
+}
+function saveState() {
+  localStorage.setItem('tl-done-v2', JSON.stringify([...done]));
+  updateProgress();
+}
+function resetAll() {
+  if (!confirm('¿Reiniciar todo el progreso?')) return;
+  done = new Set();
+  saveState();
+  renderFlashcard();
+  if (currentMode === 'list') renderList();
+}
+
+// ═══════════════════════════════════════════════════
+// PROGRESS
+// ═══════════════════════════════════════════════════
+function updateProgress() {
+  const pct = (done.size / 100) * 100;
+  document.getElementById('prog-fill').style.width = pct + '%';
+  document.getElementById('prog-text').textContent = done.size;
+  document.getElementById('stat-done').textContent = done.size;
+  document.getElementById('stat-pend').textContent = 100 - done.size;
+}
+
+// ═══════════════════════════════════════════════════
+// MODE
+// ═══════════════════════════════════════════════════
+function setMode(m) {
+  currentMode = m;
+  document.querySelectorAll('.nav-tab').forEach((t,i)=>{
+    t.classList.toggle('active', (i===0&&m==='flashcard')||(i===1&&m==='list'));
+  });
+  document.getElementById('mode-flashcard').style.display = m==='flashcard'?'block':'none';
+  document.getElementById('mode-list').style.display = m==='list'?'block':'none';
+  if (m==='list') renderList();
+}
+
+// ═══════════════════════════════════════════════════
+// FLASHCARD MODE
+// ═══════════════════════════════════════════════════
+function navigate(dir) {
+  currentIdx = Math.max(0, Math.min(order.length-1, currentIdx + dir));
+  renderFlashcard();
+}
+function shuffleCards() {
+  for (let i=order.length-1;i>0;i--) {
+    const j=Math.floor(Math.random()*(i+1));
+    [order[i],order[j]]=[order[j],order[i]];
+  }
+  currentIdx=0; renderFlashcard();
+}
+function toggleDone() {
+  const t = TECNICAS[order[currentIdx]];
+  if (done.has(t.id)) done.delete(t.id); else done.add(t.id);
+  saveState(); renderFlashcard();
+}
+
+const catColors = {redaccion:'cat-redaccion',argumentacion:'cat-argumentacion',expositivo:'cat-expositivo',cientifico:'cat-cientifico',narrativo:'cat-narrativo'};
+const catLabels = {redaccion:'Redacción',argumentacion:'Argumentación',expositivo:'Expositivo',cientifico:'Científico',narrativo:'Narrativo'};
+
+function renderFlashcard() {
+  const t = TECNICAS[order[currentIdx]];
+  document.getElementById('fc-current').textContent = currentIdx+1;
+  document.getElementById('fc-num').textContent = 'T·'+String(t.id).padStart(3,'0');
+  const catEl = document.getElementById('fc-cat');
+  catEl.textContent = catLabels[t.cat];
+  catEl.className = 'card-category '+catColors[t.cat];
+  document.getElementById('fc-title').textContent = t.titulo;
+  document.getElementById('fc-def').textContent = t.def;
+  document.getElementById('fc-example').textContent = '«'+t.ejemplo+'»';
+  const subj = document.getElementById('fc-subjects');
+  subj.innerHTML = t.materia.map(m=>`<span class="subject-tag">${m}</span>`).join('');
+  const badge = document.getElementById('fc-done-badge');
+  badge.classList.toggle('visible', done.has(t.id));
+  const markBtn = document.getElementById('fc-btn-mark');
+  markBtn.textContent = done.has(t.id)?'✓ Completada':'☐ Marcar como completada';
+  markBtn.classList.toggle('done', done.has(t.id));
+  document.getElementById('btn-prev').disabled = currentIdx===0;
+  document.getElementById('btn-next').disabled = currentIdx===order.length-1;
+  buildExercise('fc', t.ejercicio);
+  // animate card
+  const card = document.getElementById('main-card');
+  card.style.animation='none';
+  requestAnimationFrame(()=>{ card.style.animation='fadeInUp 0.3s ease both'; });
+}
+
+// ═══════════════════════════════════════════════════
+// EXERCISE ENGINE
+// ═══════════════════════════════════════════════════
+function buildExercise(prefix, ex) {
+  // instruction
+  const inst = document.getElementById(prefix+'-ex-instruction');
+  if (inst) inst.textContent='Arrastra las palabras en el orden correcto para reconstruir el ejemplo de la flashcard.';
+  // shuffle tokens
+  const shuffled = [...ex.tokens].sort(()=>Math.random()-0.5);
+  // word bank
+  const bank = document.getElementById(prefix+'-word-bank');
+  bank.innerHTML='';
+  bank.dataset.solution = JSON.stringify(ex.solucion);
+  shuffled.forEach((tok,i)=>{
+    const el = createToken(tok, i, prefix, 'bank');
+    bank.appendChild(el);
+  });
+  // drop zone
+  const dz = document.getElementById(prefix+'-drop-zone');
+  dz.innerHTML = '<span class="drop-zone-label" id="'+prefix+'-dz-label">Arrastra las palabras aquí para reconstruir el ejemplo</span>';
+  // result
+  const res = document.getElementById(prefix+'-result');
+  if(res){ res.className='result-msg'; res.textContent=''; }
+  setupDnD(prefix);
+}
+
+function createToken(text, idx, prefix, source) {
+  const el = document.createElement('div');
+  el.className='word-token';
+  el.textContent=text;
+  el.dataset.word=text;
+  el.dataset.idx=idx;
+  el.dataset.source=source;
+  el.draggable=true;
+  // touch support
+  el.addEventListener('dragstart', e=>{ dragToken=el; dragSource=source; dragOrigIdx=idx; el.classList.add('dragging'); e.dataTransfer.effectAllowed='move'; });
+  el.addEventListener('dragend', ()=>{ if(dragToken) { dragToken.classList.remove('dragging'); dragToken=null; } });
+  return el;
+}
+
+function setupDnD(prefix) {
+  const bank = document.getElementById(prefix+'-word-bank');
+  const dz = document.getElementById(prefix+'-drop-zone');
+
+  [bank, dz].forEach(zone=>{
+    zone.addEventListener('dragover', e=>{ e.preventDefault(); zone.classList.add('drag-over'); e.dataTransfer.dropEffect='move'; });
+    zone.addEventListener('dragleave', ()=>zone.classList.remove('drag-over'));
+    zone.addEventListener('drop', e=>{
+      e.preventDefault(); zone.classList.remove('drag-over');
+      if (!dragToken) return;
+      const label = zone.querySelector('.drop-zone-label');
+      if (label) label.remove();
+      const isDropZone = zone===dz;
+      const isBank = zone===bank;
+      if (isDropZone && dragToken.dataset.source==='bank') {
+        // move from bank to zone
+        const dropEl = createDropToken(dragToken.dataset.word, prefix);
+        dz.appendChild(dropEl);
+        dragToken.classList.add('placed');
+        dragToken.draggable=false;
+      } else if (isBank && dragToken.dataset.source==='zone') {
+        // return to bank
+        returnToBank(dragToken, bank, prefix);
+      }
+    });
+  });
+
+  // Click on drop token to remove
+  dz.addEventListener('click', e=>{
+    const tok = e.target.closest('.drop-token');
+    if (!tok) return;
+    const word = tok.dataset.word;
+    // un-place in bank
+    bank.querySelectorAll('.word-token').forEach(bt=>{
+      if (bt.dataset.word===word && bt.classList.contains('placed') && !bt.classList.contains('restored')) {
+        bt.classList.remove('placed');
+        bt.draggable=true;
+        bt.classList.add('restored'); // temp flag
+        setTimeout(()=>bt.classList.remove('restored'),100);
+        return;
+      }
+    });
+    tok.remove();
+    if(!dz.children.length) dz.innerHTML='<span class="drop-zone-label" id="'+prefix+'-dz-label">Arrastra las palabras aquí para reconstruir el ejemplo</span>';
+  });
+}
+
+function createDropToken(word, prefix) {
+  const el = document.createElement('div');
+  el.className='drop-token';
+  el.textContent=word;
+  el.dataset.word=word;
+  el.dataset.source='zone';
+  el.draggable=true;
+  el.addEventListener('dragstart', e=>{ dragToken=el; dragSource='zone'; el.classList.add('dragging'); e.dataTransfer.effectAllowed='move'; });
+  el.addEventListener('dragend', ()=>{ if(dragToken){dragToken.classList.remove('dragging');dragToken=null;} });
+  return el;
+}
+
+function returnToBank(tok, bank, prefix) {
+  const word = tok.dataset.word;
+  bank.querySelectorAll('.word-token').forEach(bt=>{
+    if(bt.dataset.word===word&&bt.classList.contains('placed')&&!bt.classList.contains('restored')){
+      bt.classList.remove('placed'); bt.draggable=true;
+      bt.classList.add('restored');
+      setTimeout(()=>bt.classList.remove('restored'),100);
+      return;
+    }
+  });
+  tok.remove();
+}
+
+function checkExercise(prefix) {
+  const dz = document.getElementById(prefix+'-drop-zone');
+  const bank = document.getElementById(prefix+'-word-bank');
+  const sol = JSON.parse(bank.dataset.solution);
+  const placed = [...dz.querySelectorAll('.drop-token')].map(t=>t.dataset.word);
+  const result = document.getElementById(prefix+'-result');
+  if (placed.length===0) { result.className='result-msg wrong'; result.textContent='⚠ Arrastra al menos una palabra a la zona de respuesta.'; return; }
+  const correct = sol.every((w,i)=>placed[i]===w) && placed.length===sol.length;
+  if (correct) {
+    result.className='result-msg correct';
+    result.textContent='✓ ¡Correcto! Has reconstruido el ejemplo perfectamente.';
+    if (prefix==='fc') { const t=TECNICAS[order[currentIdx]]; done.add(t.id); saveState(); renderFlashcard(); }
+    else {
+      const cardId = parseInt(bank.closest('.list-card')?.dataset.id||0);
+      if(cardId){ done.add(cardId); saveState(); renderList(); }
+    }
+  } else {
+    result.className='result-msg wrong';
+    result.textContent='✗ Orden incorrecto. Revisa la secuencia e intenta de nuevo.';
+  }
+}
+
+function resetExercise(prefix) {
+  if(prefix==='fc'){
+    buildExercise('fc', TECNICAS[order[currentIdx]].ejercicio);
+  } else {
+    // reset from list card — find which card
+    // handled per-card
+  }
+}
+
+// ═══════════════════════════════════════════════════
+// LIST MODE
+// ═══════════════════════════════════════════════════
+const CATS = ['all','redaccion','argumentacion','expositivo','cientifico','narrativo'];
+const CAT_LABELS = {all:'Todas',redaccion:'Redacción',argumentacion:'Argumentación',expositivo:'Expositivo',cientifico:'Científico',narrativo:'Narrativo'};
+
+function buildCatFilters() {
+  const wrap = document.getElementById('cat-filters');
+  CATS.forEach(c=>{
+    const btn = document.createElement('button');
+    btn.className='cat-btn'+(c==='all'?' active':'');
+    btn.textContent=CAT_LABELS[c];
+    btn.dataset.cat=c;
+    btn.onclick=()=>{ toggleCat(c); filterCards(); updateCatBtns(); };
+    wrap.appendChild(btn);
+  });
+}
+function toggleCat(c) {
+  if(c==='all'){ activeCategories=new Set(['all']); return; }
+  activeCategories.delete('all');
+  if(activeCategories.has(c)) activeCategories.delete(c);
+  else activeCategories.add(c);
+  if(activeCategories.size===0) activeCategories.add('all');
+}
+function updateCatBtns() {
+  document.querySelectorAll('.cat-btn').forEach(b=>{
+    b.classList.toggle('active', activeCategories.has(b.dataset.cat));
+  });
+}
+
+function filterCards() {
+  const q = document.getElementById('search-input').value.toLowerCase();
+  const grid = document.getElementById('cards-grid');
+  const empty = document.getElementById('empty-state');
+  let count=0;
+  grid.querySelectorAll('.list-card').forEach(card=>{
+    const t = TECNICAS.find(t=>t.id===parseInt(card.dataset.id));
+    if(!t) return;
+    const matchCat = activeCategories.has('all')||activeCategories.has(t.cat);
+    const matchQ = !q || t.titulo.toLowerCase().includes(q)||t.def.toLowerCase().includes(q)||t.ejemplo.toLowerCase().includes(q)||t.materia.join().toLowerCase().includes(q);
+    const show = matchCat&&matchQ;
+    card.style.display=show?'':'none';
+    if(show) count++;
+  });
+  document.getElementById('stat-shown').textContent=count;
+  empty.classList.toggle('visible', count===0);
+}
+
+function renderList() {
+  const grid = document.getElementById('cards-grid');
+  grid.innerHTML='';
+  TECNICAS.forEach(t=>{
+    grid.appendChild(buildListCard(t));
+  });
+  document.getElementById('stat-shown').textContent=100;
+  filterCards();
+  updateProgress();
+}
+
+function buildListCard(t) {
+  const card = document.createElement('div');
+  card.className='list-card'+(done.has(t.id)?' completed':'');
+  card.dataset.id=t.id;
+  card.innerHTML=`
+    <div class="list-card-header">
+      <div class="list-card-num">${String(t.id).padStart(3,'0')}</div>
+      <div class="list-card-info">
+        <div class="list-card-title">${t.titulo} <span class="card-category ${catColors[t.cat]}">${catLabels[t.cat]}</span></div>
+        <div class="list-card-def">${t.def}</div>
+      </div>
+      <div class="list-card-done">${done.has(t.id)?'✅':''}</div>
+    </div>
+    <div class="list-card-body">
+      <div class="list-card-example">«${t.ejemplo}»</div>
+      <button class="list-ex-toggle" onclick="toggleListEx(this)" data-id="${t.id}">
+        ⚙ Ejercicio interactivo <span class="chevron">▼</span>
+      </button>
+      <div class="list-exercise" id="lex-${t.id}">
+        <div class="exercise-panel" style="margin-top:0.75rem">
+          <div class="exercise-title">⚙ Ordenar el ejemplo</div>
+          <div class="exercise-instruction">Arrastra las palabras en el orden correcto para reconstruir el ejemplo.</div>
+          <div class="word-bank" id="lb-bank-${t.id}"></div>
+          <div class="drop-zone" id="lb-dz-${t.id}"><span class="drop-zone-label">Arrastra aquí las palabras</span></div>
+          <div class="exercise-controls">
+            <button class="btn-check" onclick="checkListEx(${t.id})">✓ Verificar</button>
+            <button class="btn-reset" onclick="resetListEx(${t.id})">↺ Reiniciar</button>
+            <button class="btn-mark ${done.has(t.id)?'done':''}" id="lmark-${t.id}" onclick="toggleDoneList(${t.id})">
+              ${done.has(t.id)?'✓ Completada':'☐ Marcar'}
+            </button>
+          </div>
+          <div class="result-msg" id="lb-result-${t.id}"></div>
+        </div>
+      </div>
+    </div>`;
+  return card;
+}
+
+function toggleListEx(btn) {
+  const id = parseInt(btn.dataset.id);
+  const panel = document.getElementById('lex-'+id);
+  const open = panel.classList.toggle('open');
+  btn.classList.toggle('open', open);
+  if(open && !document.getElementById('lb-bank-'+id).children.length) {
+    buildListExercise(id);
+  }
+}
+
+function buildListExercise(id) {
+  const t = TECNICAS.find(t=>t.id===id);
+  const ex = t.ejercicio;
+  const shuffled = [...ex.tokens].sort(()=>Math.random()-0.5);
+  const bank = document.getElementById('lb-bank-'+id);
+  bank.innerHTML='';
+  bank.dataset.solution=JSON.stringify(ex.solucion);
+  shuffled.forEach((tok,i)=>{
+    const el = document.createElement('div');
+    el.className='word-token';
+    el.textContent=tok; el.dataset.word=tok; el.dataset.idx=i; el.dataset.source='bank';
+    el.draggable=true;
+    el.addEventListener('dragstart', e=>{ dragToken=el; dragSource='bank'; el.classList.add('dragging'); e.dataTransfer.effectAllowed='move'; });
+    el.addEventListener('dragend', ()=>{ if(dragToken){dragToken.classList.remove('dragging');dragToken=null;} });
+    bank.appendChild(el);
+  });
+  const dz = document.getElementById('lb-dz-'+id);
+  dz.innerHTML='<span class="drop-zone-label">Arrastra aquí las palabras</span>';
+
+  [bank, dz].forEach(zone=>{
+    zone.addEventListener('dragover', e=>{ e.preventDefault(); zone.classList.add('drag-over'); });
+    zone.addEventListener('dragleave', ()=>zone.classList.remove('drag-over'));
+    zone.addEventListener('drop', e=>{
+      e.preventDefault(); zone.classList.remove('drag-over');
+      if(!dragToken) return;
+      if(zone===dz && dragToken.dataset.source==='bank') {
+        const label=dz.querySelector('.drop-zone-label');
+        if(label) label.remove();
+        const dt=document.createElement('div');
+        dt.className='drop-token'; dt.textContent=dragToken.dataset.word;
+        dt.dataset.word=dragToken.dataset.word; dt.dataset.source='zone'; dt.draggable=true;
+        dt.addEventListener('dragstart',e2=>{dragToken=dt;dragSource='zone';dt.classList.add('dragging');e2.dataTransfer.effectAllowed='move';});
+        dt.addEventListener('dragend',()=>{if(dragToken){dragToken.classList.remove('dragging');dragToken=null;}});
+        dz.appendChild(dt);
+        dragToken.classList.add('placed'); dragToken.draggable=false;
+      } else if(zone===bank && dragToken.dataset.source==='zone') {
+        const word=dragToken.dataset.word;
+        bank.querySelectorAll('.word-token').forEach(bt=>{
+          if(bt.dataset.word===word&&bt.classList.contains('placed')&&!bt.classList.contains('restored')){
+            bt.classList.remove('placed');bt.draggable=true;bt.classList.add('restored');setTimeout(()=>bt.classList.remove('restored'),100);return;
+          }
+        });
+        dragToken.remove();
+        if(!dz.children.length) dz.innerHTML='<span class="drop-zone-label">Arrastra aquí las palabras</span>';
+      }
+    });
+  });
+
+  dz.addEventListener('click', e=>{
+    const tok=e.target.closest('.drop-token');
+    if(!tok) return;
+    const word=tok.dataset.word;
+    bank.querySelectorAll('.word-token').forEach(bt=>{
+      if(bt.dataset.word===word&&bt.classList.contains('placed')&&!bt.classList.contains('restored')){
+        bt.classList.remove('placed');bt.draggable=true;bt.classList.add('restored');setTimeout(()=>bt.classList.remove('restored'),100);return;
+      }
+    });
+    tok.remove();
+    if(!dz.children.length) dz.innerHTML='<span class="drop-zone-label">Arrastra aquí las palabras</span>';
+  });
+}
+
+function checkListEx(id) {
+  const bank=document.getElementById('lb-bank-'+id);
+  const dz=document.getElementById('lb-dz-'+id);
+  const sol=JSON.parse(bank.dataset.solution);
+  const placed=[...dz.querySelectorAll('.drop-token')].map(t=>t.dataset.word);
+  const result=document.getElementById('lb-result-'+id);
+  if(!placed.length){result.className='result-msg wrong';result.textContent='⚠ Arrastra al menos una palabra.';return;}
+  const ok=sol.every((w,i)=>placed[i]===w)&&placed.length===sol.length;
+  result.className='result-msg '+(ok?'correct':'wrong');
+  result.textContent=ok?'✓ ¡Correcto! Ejemplo reconstruido perfectamente.':'✗ Orden incorrecto. Revisa la secuencia.';
+  if(ok){ done.add(id); saveState(); }
+}
+
+function resetListEx(id) {
+  buildListExercise(id);
+  const result=document.getElementById('lb-result-'+id);
+  if(result){result.className='result-msg';result.textContent='';}
+}
+
+function toggleDoneList(id) {
+  if(done.has(id)) done.delete(id); else done.add(id);
+  saveState();
+  renderList();
+}
+
+// ═══════════════════════════════════════════════════
+// KEYBOARD NAV
+// ═══════════════════════════════════════════════════
+document.addEventListener('keydown', e=>{
+  if(currentMode!=='flashcard') return;
+  if(e.key==='ArrowRight'||e.key==='ArrowDown') navigate(1);
+  if(e.key==='ArrowLeft'||e.key==='ArrowUp') navigate(-1);
+});
+
+
+// ═══════════════════════════════════════════════════
+// SINTAXIS DATA — análisis sintáctico por técnica
+// Formato: { html: "string con spans", notes: "string", sujeto, verbo, predicado }
+// ═══════════════════════════════════════════════════
+const SINTAXIS = {
+ 1:{html:`<span class="syn-s">La velocidad de una partícula</span> <span class="syn-v">se define operacionalmente</span> <span class="syn-p">como el cociente entre el desplazamiento neto en metros</span> <span class="syn-nx">y</span> <span class="syn-p">el tiempo transcurrido en segundos.</span>`,notes:`<strong>Sujeto:</strong> "La velocidad de una partícula" (SN nominal con núcleo <em>velocidad</em>).<br><strong>Núcleo verbal (NV):</strong> "se define" (verbo pronominal, voz pasiva refleja, presente indicativo).<br><strong>Complemento predicativo:</strong> "operacionalmente" (adverbio de modo).<br><strong>Predicado nominal:</strong> "como el cociente…" (complemento de modo en función de atributo).`,cambio:{sujeto:"La velocidad de una partícula",verbo:"se define operacionalmente",predicado:"como el cociente entre el desplazamiento neto en metros y el tiempo transcurrido en segundos."}},
+ 2:{html:`<span class="syn-nx">Si</span> <span class="syn-s">se aumenta la concentración del ácido clorhídrico en la solución,</span> <span class="syn-nx">entonces</span> <span class="syn-s">la tasa de reacción con el carbonato de calcio</span> <span class="syn-v">aumentará</span> <span class="syn-p">proporcionalmente.</span>`,notes:`<strong>Estructura:</strong> Oración condicional compuesta (prótasis + apódosis).<br><strong>Prótasis:</strong> "si se aumenta la concentración…" (cláusula subordinada adverbial condicional).<br><strong>Apódosis:</strong> "entonces la tasa… aumentará proporcionalmente" (oración principal).<br><strong>Nexo:</strong> "si…entonces" (condicional correlativo).`,cambio:{sujeto:"la concentración del ácido clorhídrico",verbo:"aumenta",predicado:"entonces la tasa de reacción con el carbonato de calcio aumentará proporcionalmente."}},
+ 3:{html:`<span class="syn-v">Se pesaron</span> <span class="syn-p">5 gramos de sulfato de cobre</span> <span class="syn-c">en una balanza analítica</span> <span class="syn-nx">y</span> <span class="syn-v">se disolvieron</span> <span class="syn-c">en 100 mL de agua destilada a temperatura ambiente.</span>`,notes:`<strong>Voz pasiva refleja:</strong> "se pesaron / se disolvieron" (sujeto paciente implícito: los 5 g de sulfato).<br><strong>OD:</strong> "5 gramos de sulfato de cobre" (objeto directo paciente).<br><strong>CC Lugar:</strong> "en una balanza analítica" / "en 100 mL de agua".<br><strong>Nexo coordinante copulativo:</strong> "y" une dos acciones paralelas.`,cambio:{sujeto:"(sujeto implícito: la muestra)",verbo:"Se pesaron … y se disolvieron",predicado:"5 gramos de sulfato de cobre en una balanza analítica"}},
+ 4:{html:`<span class="syn-s">Los datos obtenidos</span> <span class="syn-v">confirman parcialmente</span> <span class="syn-p">la hipótesis,</span> <span class="syn-nx">ya que</span> <span class="syn-s">el incremento del pH</span> <span class="syn-v">fue</span> <span class="syn-p">significativo solo a temperaturas superiores a 40 °C.</span>`,notes:`<strong>Oración principal:</strong> "Los datos obtenidos confirman parcialmente la hipótesis".<br><strong>Subordinada causal:</strong> "ya que el incremento del pH fue significativo…" (nexo causal: <em>ya que</em>).<br><strong>Adverbio modal:</strong> "parcialmente" modifica al verbo.<br><strong>CC Condición:</strong> "solo a temperaturas superiores a 40 °C".`,cambio:{sujeto:"Los datos obtenidos",verbo:"confirman parcialmente",predicado:"la hipótesis"}},
+ 5:{html:`<span class="syn-v">Se concluye</span> <span class="syn-nx">que</span> <span class="syn-s">la fotosíntesis en Elodea canadensis</span> <span class="syn-v">aumenta proporcionalmente</span> <span class="syn-c">con la intensidad lumínica</span> <span class="syn-c">hasta alcanzar el punto de saturación lumínica.</span>`,notes:`<strong>Verbo impersonal:</strong> "Se concluye" (pasiva refleja, sin sujeto explícito).<br><strong>Subordinada sustantiva (CD):</strong> "que la fotosíntesis… aumenta" (complemento directo del verbo concluir).<br><strong>CC Compañía/modo:</strong> "con la intensidad lumínica".<br><strong>CC Límite:</strong> "hasta alcanzar el punto de saturación" (construcción de infinitivo).`,cambio:{sujeto:"la fotosíntesis en Elodea canadensis",verbo:"aumenta proporcionalmente",predicado:"con la intensidad lumínica hasta alcanzar el punto de saturación lumínica."}},
+ 6:{html:`<span class="syn-s">Esta investigación</span> <span class="syn-v">se fundamenta</span> <span class="syn-p">en la Primera Ley de la Termodinámica,</span> <span class="syn-nx">según la cual</span> <span class="syn-s">la energía interna de un sistema cerrado</span> <span class="syn-v">solo varía</span> <span class="syn-c">cuando hay transferencia de calor o trabajo.</span>`,notes:`<strong>Oración principal:</strong> "Esta investigación se fundamenta en la Primera Ley de la Termodinámica".<br><strong>Subordinada de relativo:</strong> "según la cual la energía interna…" (antecedente: Primera Ley).<br><strong>Subordinada adverbial temporal:</strong> "cuando hay transferencia de calor o trabajo".`,cambio:{sujeto:"Esta investigación",verbo:"se fundamenta",predicado:"en la Primera Ley de la Termodinámica"}},
+ 7:{html:`<span class="syn-s">La variable independiente</span> <span class="syn-v">es</span> <span class="syn-p">la masa del péndulo en gramos,</span> <span class="syn-nx">mientras que</span> <span class="syn-s">la variable dependiente</span> <span class="syn-v">es</span> <span class="syn-p">el período de oscilación medido en segundos.</span>`,notes:`<strong>Oración copulativa:</strong> "es" enlaza sujeto con atributo.<br><strong>Estructura paralela:</strong> Dos oraciones copulativas coordinadas adversativas por "mientras que".<br><strong>Atributo 1:</strong> "la masa del péndulo en gramos".<br><strong>Atributo 2:</strong> "el período de oscilación medido en segundos".`,cambio:{sujeto:"La variable independiente",verbo:"es",predicado:"la masa del péndulo en gramos"}},
+ 8:{html:`<span class="syn-nx">Según Gómez y Martínez (2021),</span> <span class="syn-s">la conductividad eléctrica del grafeno</span> <span class="syn-v">supera</span> <span class="syn-p">en tres órdenes de magnitud</span> <span class="syn-c">a la del cobre convencional.</span>`,notes:`<strong>Complemento de encuadre:</strong> "Según Gómez y Martínez (2021)" (CC de fuente, posición inicial).<br><strong>Sujeto:</strong> "la conductividad eléctrica del grafeno" (SN largo con CN preposicional).<br><strong>OD:</strong> "a la del cobre convencional" (OD con preposición "a", referente de comparación).<br><strong>CC Cantidad:</strong> "en tres órdenes de magnitud".`,cambio:{sujeto:"la conductividad eléctrica del grafeno",verbo:"supera",predicado:"en tres órdenes de magnitud a la del cobre convencional."}},
+ 9:{html:`<span class="syn-s">La gráfica</span> <span class="syn-v">muestra</span> <span class="syn-p">una relación lineal directa</span> <span class="syn-c">entre la fuerza aplicada y la elongación del resorte,</span> <span class="syn-c">con una pendiente de 8 N/m según la Ley de Hooke.</span>`,notes:`<strong>OD:</strong> "una relación lineal directa" (SN con adjetivos especificativos).<br><strong>CC Relación:</strong> "entre la fuerza aplicada y la elongación" (CC de correlación).<br><strong>CC Modal/referencial:</strong> "con una pendiente de 8 N/m según la Ley de Hooke".`,cambio:{sujeto:"La gráfica",verbo:"muestra",predicado:"una relación lineal directa entre la fuerza aplicada y la elongación del resorte."}},
+ 10:{html:`<span class="syn-s">El objetivo de esta práctica</span> <span class="syn-v">fue</span> <span class="syn-p">determinar la densidad del aluminio</span> <span class="syn-c">mediante la medición de su masa y volumen por desplazamiento de agua.</span>`,notes:`<strong>Oración copulativa pasiva:</strong> "fue" + infinitivo nominal (atributo).<br><strong>Atributo:</strong> "determinar la densidad del aluminio" (infinitivo sustantivado como CN).<br><strong>CC Medio/instrumento:</strong> "mediante la medición de su masa y volumen por desplazamiento de agua".`,cambio:{sujeto:"El objetivo de esta práctica",verbo:"fue",predicado:"determinar la densidad del aluminio"}},
+};
+// Para técnicas 11-100 usamos un análisis genérico enriquecido dinámicamente
+function getSintaxis(id) {
+  if (SINTAXIS[id]) return SINTAXIS[id];
+  const t = TECNICAS.find(x=>x.id===id);
+  if (!t) return {html: t ? t.ejemplo : '', notes:'', cambio:{sujeto:'',verbo:'',predicado:''}};
+  // auto-generate a readable fallback with highlighted structure
+  const ej = t.ejemplo;
+  const words = ej.split(' ');
+  const mid = Math.floor(words.length/2);
+  const third = Math.floor(words.length/3);
+  const html = `<span class="syn-s">${words.slice(0,third).join(' ')}</span> <span class="syn-v">${words.slice(third,third+2).join(' ')}</span> <span class="syn-p">${words.slice(third+2,mid+2).join(' ')}</span> <span class="syn-c">${words.slice(mid+2).join(' ')}</span>`;
+  const notes = `<strong>Técnica:</strong> ${t.titulo}.<br><strong>Estructura general:</strong> La oración presenta un <strong>sujeto</strong> nominal que introduce el tema científico, un <strong>núcleo verbal</strong> en ${t.cat==='cientifico'?'voz pasiva refleja o impersonal':'modo indicativo'} que expresa la acción principal, y un <strong>predicado</strong> que desarrolla la información técnica.<br><strong>Función textual:</strong> ${t.def}`;
+  return {html, notes, cambio:{sujeto: words.slice(0,third).join(' '), verbo: words.slice(third,third+2).join(' '), predicado: words.slice(third+2).join(' ')}};
+}
+
+// ═══════════════════════════════════════════════════
+// WRITING ENTRIES — persistent creative writing log
+// ═══════════════════════════════════════════════════
+let writingLog = []; // [{id, titulo, changeType, original, userText, timestamp}]
+let currentChangeType = 'sujeto';
+
+function loadWritingLog() {
+  try {
+    const s = localStorage.getItem('tl-writing-v1');
+    if (s) writingLog = JSON.parse(s);
+  } catch(e) {}
+}
+function saveWritingLog() {
+  localStorage.setItem('tl-writing-v1', JSON.stringify(writingLog));
+}
+
+// ─── Section switcher ───
+function switchFcSection(sec, btn) {
+  document.querySelectorAll('.fc-section').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.fc-sec-tab').forEach(b=>b.classList.remove('active'));
+  document.getElementById('fc-section-'+sec).classList.add('active');
+  btn.classList.add('active');
+  if (sec==='sintaxis') renderSyntax();
+  if (sec==='escritura') renderWritePanel();
+}
+
+// ─── Render Syntax ───
+function renderSyntax() {
+  const t = TECNICAS[order[currentIdx]];
+  const syn = getSintaxis(t.id);
+  document.getElementById('fc-syntax-html').innerHTML = syn.html;
+  document.getElementById('fc-syntax-notes').innerHTML = syn.notes;
+}
+
+// ─── Render Write Panel ───
+function renderWritePanel() {
+  const t = TECNICAS[order[currentIdx]];
+  const syn = getSintaxis(t.id);
+  const CHANGE_OPTIONS = [
+    {key:'sujeto', label:'Cambiar Sujeto', hint:`Mantén el verbo y predicado. Reemplaza el sujeto original (<em>"${syn.cambio.sujeto}"</em>) por uno nuevo relacionado con ${t.materia[0] || 'ciencias'}.`},
+    {key:'verbo', label:'Cambiar Verbo', hint:`Mantén el sujeto y predicado. Reemplaza el verbo principal (<em>"${syn.cambio.verbo}"</em>) por otro con sentido similar o diferente.`},
+    {key:'predicado', label:'Cambiar Predicado', hint:`Mantén el sujeto y el verbo. Reemplaza el predicado (<em>"${syn.cambio.predicado.substring(0,60)}…"</em>) por una nueva información.`},
+    {key:'libre', label:'Ejemplo libre', hint:`Escribe un ejemplo totalmente nuevo usando la técnica <strong>${t.titulo}</strong>. Asegúrate de aplicar la definición.`},
+  ];
+  document.getElementById('fc-write-instruction').innerHTML =
+    `Usa la técnica <strong>${t.titulo}</strong> para crear tu propio ejemplo. Elige qué parte quieres cambiar del ejemplo original.`;
+  const tabWrap = document.getElementById('fc-change-tabs');
+  tabWrap.innerHTML='';
+  CHANGE_OPTIONS.forEach(opt=>{
+    const btn = document.createElement('button');
+    btn.className='write-tab'+(opt.key===currentChangeType?' active':'');
+    btn.textContent=opt.label;
+    btn.onclick=()=>{
+      currentChangeType=opt.key;
+      tabWrap.querySelectorAll('.write-tab').forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById('fc-write-hint').innerHTML=opt.hint;
+    };
+    tabWrap.appendChild(btn);
+  });
+  const active = CHANGE_OPTIONS.find(o=>o.key===currentChangeType)||CHANGE_OPTIONS[0];
+  document.getElementById('fc-write-hint').innerHTML = active.hint;
+  document.getElementById('fc-write-area').value='';
+  document.getElementById('fc-char-count').textContent='0 caracteres';
+  renderSavedEntries();
+}
+
+function updateCharCount() {
+  const val = document.getElementById('fc-write-area').value;
+  document.getElementById('fc-char-count').textContent = val.length+' caracteres';
+}
+
+function saveWritingEntry() {
+  const t = TECNICAS[order[currentIdx]];
+  const text = document.getElementById('fc-write-area').value.trim();
+  if (!text) { alert('Escribe tu ejemplo antes de guardar.'); return; }
+  const entry = {
+    id: t.id, titulo: t.titulo, cat: t.cat,
+    changeType: currentChangeType,
+    original: t.ejemplo,
+    userText: text,
+    timestamp: new Date().toLocaleString('es-CO')
+  };
+  writingLog.unshift(entry);
+  saveWritingLog();
+  document.getElementById('fc-write-area').value='';
+  document.getElementById('fc-char-count').textContent='0 caracteres';
+  renderSavedEntries();
+  // flash feedback
+  const btn = document.querySelector('.btn-save-entry');
+  btn.textContent='✓ Guardado';
+  btn.style.background='var(--green)';
+  setTimeout(()=>{ btn.textContent='💾 Guardar entrada'; btn.style.background=''; },1800);
+}
+
+function renderSavedEntries() {
+  const container = document.getElementById('fc-write-saved');
+  const list = document.getElementById('fc-entries-list');
+  const count = document.getElementById('fc-saved-count');
+  if (!writingLog.length) { container.classList.remove('visible'); return; }
+  container.classList.add('visible');
+  count.textContent = writingLog.length;
+  list.innerHTML = writingLog.map((e,i)=>`
+    <div class="saved-entry">
+      <div class="entry-meta">
+        <span>T·${String(e.id).padStart(3,'0')} ${e.titulo} · <em>${e.changeType}</em></span>
+        <span>${e.timestamp}</span>
+      </div>
+      <div>${e.userText}</div>
+      <button class="entry-del" onclick="deleteEntry(${i})" title="Eliminar">🗑</button>
+    </div>`).join('');
+}
+
+function deleteEntry(i) {
+  writingLog.splice(i,1);
+  saveWritingLog();
+  renderSavedEntries();
+}
+
+// ─── Export TXT ───
+function exportTxt() {
+  const lines = [];
+  lines.push('='.repeat(70));
+  lines.push('  TÉCNICAS DE LENGUAJE — REGISTRO DE PROGRESO Y ESCRITURA');
+  lines.push('  Bachillerato Colombia · Matemáticas, Física, Química');
+  lines.push('  Generado: '+new Date().toLocaleString('es-CO'));
+  lines.push('='.repeat(70));
+  lines.push('');
+
+  // Progress summary
+  lines.push('── PROGRESO ──────────────────────────────────────────────────────────');
+  lines.push(`Técnicas completadas: ${done.size}/100`);
+  lines.push(`Entradas de escritura guardadas: ${writingLog.length}`);
+  lines.push('');
+  const doneList = TECNICAS.filter(t=>done.has(t.id));
+  if (doneList.length) {
+    lines.push('Técnicas marcadas como completadas:');
+    doneList.forEach(t=>lines.push(`  [✓] T·${String(t.id).padStart(3,'0')} — ${t.titulo} (${catLabels[t.cat]})`));
+    lines.push('');
+  }
+
+  // Writing log
+  if (writingLog.length) {
+    lines.push('── EJERCICIOS DE ESCRITURA GUARDADOS ────────────────────────────────');
+    writingLog.forEach((e,i)=>{
+      lines.push('');
+      lines.push(`[${i+1}] T·${String(e.id).padStart(3,'0')} — ${e.titulo}`);
+      lines.push(`    Categoría   : ${catLabels[e.cat]}`);
+      lines.push(`    Tipo cambio : ${e.changeType}`);
+      lines.push(`    Guardado    : ${e.timestamp}`);
+      lines.push(`    Original    : ${e.original}`);
+      lines.push(`    Mi ejemplo  : ${e.userText}`);
+      lines.push('    '+'-'.repeat(60));
+    });
+    lines.push('');
+  }
+
+  lines.push('='.repeat(70));
+  lines.push('FIN DEL REGISTRO');
+
+  const blob = new Blob([lines.join('\n')], {type:'text/plain;charset=utf-8'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href=url; a.download='tecnicas-lenguaje-progreso.txt';
+  a.click(); URL.revokeObjectURL(url);
+}
+
+// ═══════════════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════════════
+loadState();
+loadWritingLog();
+buildCatFilters();
+setMode('flashcard');
+renderFlashcard();
+updateProgress();
+</script>
+</body>
+</html>

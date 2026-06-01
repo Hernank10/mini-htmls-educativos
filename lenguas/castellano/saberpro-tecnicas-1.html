@@ -1,0 +1,951 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>100 Técnicas de Redacción · SaberPro Colombia</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,600;1,8..60,300&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+
+  <style>
+    :root {
+      --ink: #1a1208;
+      --paper: #f5f0e8;
+      --cream: #ede7d5;
+      --rust: #b5451b;
+      --gold: #c8982a;
+      --teal: #1e6b6b;
+      --muted: #6b6255;
+      --rule: #c8b89a;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background-color: var(--paper);
+      color: var(--ink);
+      font-family: 'Source Serif 4', Georgia, serif;
+      font-size: 1.05rem;
+      line-height: 1.85;
+      overflow-x: hidden;
+    }
+
+    /* ── NOISE TEXTURE OVERLAY ── */
+    body::before {
+      content: '';
+      position: fixed; inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 9999;
+    }
+
+    /* ── MASTHEAD ── */
+    header {
+      background: var(--ink);
+      color: var(--paper);
+      padding: 3.5rem 2rem 2.5rem;
+      position: relative;
+      overflow: hidden;
+    }
+    header::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 4px;
+      background: repeating-linear-gradient(90deg, var(--rust) 0 40px, var(--gold) 40px 80px, var(--teal) 80px 120px);
+    }
+    .kicker {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.7rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 1rem;
+    }
+    header h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2.4rem, 7vw, 5rem);
+      font-weight: 900;
+      line-height: 1.05;
+      letter-spacing: -0.02em;
+      max-width: 820px;
+    }
+    header h1 em {
+      font-style: italic;
+      color: var(--gold);
+    }
+    .subtitle {
+      font-family: 'Source Serif 4', serif;
+      font-style: italic;
+      font-size: 1.15rem;
+      color: #c8b89a;
+      margin-top: 1.2rem;
+      max-width: 580px;
+    }
+    .meta-bar {
+      margin-top: 2rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.5rem;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.72rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: #8a7e6e;
+      border-top: 1px solid #3a3028;
+      padding-top: 1.2rem;
+    }
+    .meta-bar span strong { color: var(--paper); }
+
+    /* ── PROGRESS BAR ── */
+    #progress-bar {
+      position: fixed;
+      top: 0; left: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--rust), var(--gold));
+      width: 0%;
+      z-index: 10000;
+      transition: width 0.1s linear;
+    }
+
+    /* ── TOC SIDEBAR ── */
+    #toc-sidebar {
+      position: fixed;
+      top: 50%;
+      right: 1.2rem;
+      transform: translateY(-50%);
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      z-index: 100;
+    }
+    .toc-dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: var(--rule);
+      cursor: pointer;
+      transition: background 0.2s, transform 0.2s;
+      border: none;
+    }
+    .toc-dot:hover, .toc-dot.active { background: var(--rust); transform: scale(1.5); }
+    @media (max-width: 991px) { #toc-sidebar { display: none; } }
+
+    /* ── MAIN LAYOUT ── */
+    main { max-width: 860px; margin: 0 auto; padding: 3rem 1.5rem 5rem; }
+
+    /* ── INTRO ESSAY ── */
+    .lead-paragraph {
+      font-size: 1.22rem;
+      font-weight: 300;
+      color: #2e261a;
+      line-height: 1.9;
+      border-left: 3px solid var(--rust);
+      padding-left: 1.5rem;
+      margin-bottom: 2.5rem;
+    }
+    .drop-cap::first-letter {
+      font-family: 'Playfair Display', serif;
+      font-size: 5.5rem;
+      font-weight: 900;
+      line-height: 0.75;
+      float: left;
+      margin-right: 0.12em;
+      margin-top: 0.1em;
+      color: var(--rust);
+    }
+
+    /* ── SECTION HEADERS ── */
+    .section-label {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.68rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--teal);
+      margin-bottom: 0.5rem;
+    }
+    h2.chapter {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1.6rem, 4vw, 2.3rem);
+      font-weight: 700;
+      color: var(--ink);
+      margin-bottom: 1.5rem;
+      line-height: 1.2;
+    }
+    h2.chapter::after {
+      content: '';
+      display: block;
+      width: 60px;
+      height: 3px;
+      background: var(--gold);
+      margin-top: 0.6rem;
+    }
+
+    /* ── TECHNIQUE CARDS ── */
+    .technique-section { margin-bottom: 3.5rem; }
+
+    .technique-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(min(100%, 360px), 1fr));
+      gap: 1rem;
+    }
+
+    .tc {
+      background: white;
+      border: 1px solid var(--rule);
+      border-radius: 0;
+      padding: 1.2rem 1.4rem;
+      position: relative;
+      transition: box-shadow 0.2s, transform 0.2s;
+      cursor: default;
+    }
+    .tc::before {
+      content: attr(data-num);
+      position: absolute;
+      top: -1px; left: -1px;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.65rem;
+      font-weight: 500;
+      color: white;
+      background: var(--teal);
+      padding: 2px 7px;
+      letter-spacing: 0.05em;
+    }
+    .tc.rust::before { background: var(--rust); }
+    .tc.gold::before { background: var(--gold); color: var(--ink); }
+    .tc:hover { box-shadow: 4px 4px 0 var(--rule); transform: translate(-2px, -2px); }
+    .tc h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1rem;
+      font-weight: 700;
+      margin-bottom: 0.4rem;
+      color: var(--ink);
+      margin-top: 0.8rem;
+    }
+    .tc p {
+      font-size: 0.88rem;
+      color: var(--muted);
+      line-height: 1.6;
+      margin: 0;
+    }
+
+    /* ── PULL QUOTES ── */
+    blockquote.pull {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1.3rem, 3vw, 1.7rem);
+      font-style: italic;
+      font-weight: 400;
+      line-height: 1.4;
+      color: var(--teal);
+      border: none;
+      padding: 2rem 0;
+      margin: 2.5rem 0;
+      text-align: center;
+      position: relative;
+    }
+    blockquote.pull::before, blockquote.pull::after {
+      content: '';
+      display: block;
+      height: 2px;
+      background: var(--rule);
+      margin: 1rem auto;
+      width: 80px;
+    }
+
+    /* ── INFO BOX ── */
+    .info-box {
+      background: var(--cream);
+      border-left: 4px solid var(--teal);
+      padding: 1.2rem 1.5rem;
+      margin: 2rem 0;
+      font-size: 0.93rem;
+    }
+    .info-box strong { color: var(--teal); font-family: 'DM Mono', monospace; font-size: 0.8rem; letter-spacing: 0.1em; text-transform: uppercase; display: block; margin-bottom: 0.5rem; }
+
+    /* ── BADGE PILLS ── */
+    .badge-area { margin: 1rem 0 2rem; display: flex; flex-wrap: wrap; gap: 0.5rem; }
+    .pill {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.7rem;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      padding: 0.3rem 0.8rem;
+      border: 1px solid;
+      border-radius: 2px;
+    }
+    .pill-r { color: var(--rust); border-color: var(--rust); }
+    .pill-t { color: var(--teal); border-color: var(--teal); }
+    .pill-g { color: var(--gold); border-color: var(--gold); }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--ink);
+      color: #8a7e6e;
+      text-align: center;
+      padding: 2.5rem 1rem;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.72rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+    footer strong { color: var(--gold); }
+
+    /* ── ANIMATIONS ── */
+    .fade-in { opacity: 0; transform: translateY(18px); transition: opacity 0.55s ease, transform 0.55s ease; }
+    .fade-in.visible { opacity: 1; transform: none; }
+
+    /* ── BACK TO TOP ── */
+    #back-top {
+      position: fixed;
+      bottom: 1.5rem; right: 1.5rem;
+      width: 42px; height: 42px;
+      background: var(--ink);
+      color: var(--gold);
+      border: none;
+      cursor: pointer;
+      font-size: 1.2rem;
+      display: flex; align-items: center; justify-content: center;
+      opacity: 0; transition: opacity 0.3s;
+      z-index: 200;
+    }
+    #back-top.show { opacity: 1; }
+
+    /* ── SEARCH ── */
+    #search-input {
+      width: 100%;
+      font-family: 'Source Serif 4', serif;
+      font-size: 0.95rem;
+      padding: 0.7rem 1rem;
+      border: 1px solid var(--rule);
+      background: white;
+      color: var(--ink);
+      outline: none;
+      margin-bottom: 2rem;
+      border-radius: 0;
+    }
+    #search-input:focus { border-color: var(--teal); }
+    .tc.hidden { display: none; }
+  </style>
+</head>
+
+<body>
+
+<div id="progress-bar"></div>
+
+<!-- TOC dots -->
+<nav id="toc-sidebar" aria-label="Secciones">
+  <button class="toc-dot" data-target="sec-intro" title="Introducción"></button>
+  <button class="toc-dot" data-target="sec-comprension" title="Comprensión"></button>
+  <button class="toc-dot" data-target="sec-argumentacion" title="Argumentación"></button>
+  <button class="toc-dot" data-target="sec-lectura" title="Lectura Crítica"></button>
+  <button class="toc-dot" data-target="sec-escritura" title="Escritura"></button>
+  <button class="toc-dot" data-target="sec-comunicacion" title="Comunicación"></button>
+  <button class="toc-dot" data-target="sec-estrategias" title="Estrategias"></button>
+</nav>
+
+<!-- MASTHEAD -->
+<header>
+  <div class="container-xl">
+    <p class="kicker">Guía académica · SaberPro Colombia · Lenguaje</p>
+    <h1>100 Técnicas de <em>Redacción</em> para las Pruebas SaberPro</h1>
+    <p class="subtitle">Lectura crítica, comunicación escrita y competencias de lenguaje para la educación superior en Colombia</p>
+    <div class="meta-bar">
+      <span><strong>100</strong> técnicas</span>
+      <span><strong>7</strong> categorías</span>
+      <span><strong>ICFES</strong> · SaberPro</span>
+      <span>Colombia · 2025</span>
+    </div>
+  </div>
+</header>
+
+<!-- MAIN CONTENT -->
+<main id="sec-intro">
+  <!-- INTRODUCCIÓN -->
+  <section class="mb-5 fade-in">
+    <div class="badge-area">
+      <span class="pill pill-r">Lectura Crítica</span>
+      <span class="pill pill-t">Comunicación Escrita</span>
+      <span class="pill pill-g">Lenguaje</span>
+    </div>
+
+    <p class="lead-paragraph drop-cap">
+      Las Pruebas SaberPro —administradas por el ICFES— evalúan las competencias genéricas de los estudiantes universitarios colombianos, entre las que ocupan un lugar central la <strong>lectura crítica</strong>, el <strong>dominio del lenguaje</strong> y la <strong>comunicación escrita</strong>. Dominar estas habilidades no solo garantiza un puntaje sobresaliente, sino que transforma al estudiante en un lector y escritor más agudo, capaz de construir argumentos sólidos, interpretar textos complejos y comunicar ideas con precisión y elegancia.
+    </p>
+
+    <p>Este ensayo compila <strong>100 técnicas probadas</strong>, organizadas en siete grandes categorías, que abarcan desde el análisis textual y la estructuración de argumentos hasta las estrategias de gestión del tiempo en el examen. Cada técnica es un instrumento preciso: úsalas conscientemente, practícalas con textos reales y, sobre todo, conviértelas en hábitos cognitivos duraderos.</p>
+
+    <div class="info-box">
+      <strong>¿Qué evalúa SaberPro en lenguaje?</strong>
+      La prueba de <em>Lectura Crítica</em> evalúa tres competencias: (1) identificar y entender los contenidos explícitos, (2) comprender cómo se articulan las partes de un texto y (3) reflexionar críticamente sobre su contenido. La prueba de <em>Comunicación Escrita</em> evalúa la capacidad de producir textos coherentes, cohesivos y adecuados a contextos comunicativos concretos.
+    </div>
+  </section>
+
+  <!-- ═══════════ SECCIÓN 1 ═══════════ -->
+  <section id="sec-comprension" class="technique-section fade-in">
+    <p class="section-label">Categoría 01</p>
+    <h2 class="chapter">Comprensión Lectora Profunda</h2>
+    <p class="mb-4">Antes de redactar o argumentar es necesario leer con precisión quirúrgica. Estas técnicas fortalecen la comprensión literal, inferencial y crítica del texto.</p>
+
+    <div class="technique-grid">
+      <div class="tc" data-num="01">
+        <h3>Lectura activa con anotaciones</h3>
+        <p>Subraya ideas principales, encierra palabras clave y escribe comentarios al margen. El texto pasa de ser pasivo a interactivo.</p>
+      </div>
+      <div class="tc rust" data-num="02">
+        <h3>Identificación de la macroestructura</h3>
+        <p>Determina el tema global (de qué trata), la tesis central y la estructura general antes de leer en detalle.</p>
+      </div>
+      <div class="tc gold" data-num="03">
+        <h3>Técnica del resumen progresivo</h3>
+        <p>Resume cada párrafo en una frase y luego integra todas las frases en un párrafo único. Revela la arquitectura del texto.</p>
+      </div>
+      <div class="tc" data-num="04">
+        <h3>Lectura de ida y vuelta</h3>
+        <p>Lee la pregunta primero, localiza la sección relevante y regresa a la pregunta con el texto fresco en mente.</p>
+      </div>
+      <div class="tc rust" data-num="05">
+        <h3>Inferencia por contexto léxico</h3>
+        <p>Deduce el significado de palabras desconocidas a partir de las palabras circundantes y la lógica del párrafo.</p>
+      </div>
+      <div class="tc gold" data-num="06">
+        <h3>Identificación de relaciones lógicas</h3>
+        <p>Distingue cuándo un párrafo contrasta, ejemplifica, amplía o refuta la idea del párrafo anterior.</p>
+      </div>
+      <div class="tc" data-num="07">
+        <h3>Mapa conceptual mental</h3>
+        <p>Visualiza mentalmente los nodos de información y sus conexiones. Convierte el texto lineal en red de conceptos.</p>
+      </div>
+      <div class="tc rust" data-num="08">
+        <h3>Técnica de los cinco porqués</h3>
+        <p>Pregúntate "¿por qué?" cinco veces sobre la afirmación central para llegar a las premisas más profundas del autor.</p>
+      </div>
+      <div class="tc gold" data-num="09">
+        <h3>Reconocimiento del propósito comunicativo</h3>
+        <p>Define si el texto busca informar, persuadir, entretener, instruir o criticar. Esto filtra la interpretación correcta.</p>
+      </div>
+      <div class="tc" data-num="10">
+        <h3>Lectura parafrásica</h3>
+        <p>Reformula cada idea central con tus propias palabras para verificar que la has comprendido con precisión.</p>
+      </div>
+      <div class="tc rust" data-num="11">
+        <h3>Detección de la voz narrativa</h3>
+        <p>Identifica quién habla (narrador, autor implícito, personaje) para calibrar el grado de objetividad del texto.</p>
+      </div>
+      <div class="tc gold" data-num="12">
+        <h3>Análisis de la progresión temática</h3>
+        <p>Rastrea cómo el tema evoluciona de párrafo en párrafo: ¿se amplía, se especifica, se contradice?</p>
+      </div>
+      <div class="tc" data-num="13">
+        <h3>Contraste figura-fondo</h3>
+        <p>Diferencia la tesis principal (figura) de los ejemplos y datos de apoyo (fondo) para no confundir argumento con evidencia.</p>
+      </div>
+      <div class="tc rust" data-num="14">
+        <h3>Lectura de títulos y subtítulos</h3>
+        <p>Antes de leer el cuerpo, analiza los títulos como hipótesis sobre el contenido. Comprueba o refuta esa hipótesis al leer.</p>
+      </div>
+      <div class="tc gold" data-num="15">
+        <h3>Identificación de marcadores discursivos</h3>
+        <p>Palabras como <em>sin embargo, por tanto, aunque, dado que</em> revelan la relación lógica entre ideas. Subráyalas siempre.</p>
+      </div>
+    </div>
+  </section>
+
+  <blockquote class="pull fade-in">"Leer críticamente es negarse a ser un receptor pasivo: es dialogar, cuestionar y construir sentido junto al texto."</blockquote>
+
+  <!-- ═══════════ SECCIÓN 2 ═══════════ -->
+  <section id="sec-argumentacion" class="technique-section fade-in">
+    <p class="section-label">Categoría 02</p>
+    <h2 class="chapter">Construcción y Análisis de Argumentos</h2>
+    <p class="mb-4">La competencia argumentativa es el núcleo de SaberPro. Estas técnicas te permitirán tanto construir tus propios argumentos como evaluar los ajenos.</p>
+
+    <div class="technique-grid">
+      <div class="tc" data-num="16">
+        <h3>Estructura toulminiana</h3>
+        <p>Identifica la afirmación (claim), los datos (grounds), la garantía (warrant) y el respaldo (backing) en todo argumento.</p>
+      </div>
+      <div class="tc rust" data-num="17">
+        <h3>Distinción premisa-conclusión</h3>
+        <p>Señala con precisión cuál es la conclusión que el autor defiende y cuáles son las premisas que la sustentan.</p>
+      </div>
+      <div class="tc gold" data-num="18">
+        <h3>Detección de falacias lógicas</h3>
+        <p>Reconoce <em>ad hominem</em>, hombre de paja, pendiente resbaladiza, falsa dicotomía y generalización apresurada.</p>
+      </div>
+      <div class="tc" data-num="19">
+        <h3>Contraargumentación anticipada</h3>
+        <p>Al redactar, presenta la objeción más fuerte a tu tesis y refútala dentro del mismo texto. Fortalece la credibilidad.</p>
+      </div>
+      <div class="tc rust" data-num="20">
+        <h3>Argumento por analogía</h3>
+        <p>Compara situaciones estructuralmente similares para transferir una conclusión válida de un caso al otro.</p>
+      </div>
+      <div class="tc gold" data-num="21">
+        <h3>Argumento de autoridad bien fundado</h3>
+        <p>Cita fuentes expertas y verifica que la cita sea pertinente, exacta y no esté descontextualizada.</p>
+      </div>
+      <div class="tc" data-num="22">
+        <h3>Jerarquía de evidencias</h3>
+        <p>Ordena las evidencias de menor a mayor peso argumentativo, reservando la más fuerte para el cierre del argumento.</p>
+      </div>
+      <div class="tc rust" data-num="23">
+        <h3>Validez vs. solidez</h3>
+        <p>Distingue si un argumento es <em>válido</em> (lógicamente correcto) de si es <em>sólido</em> (premisas verdaderas y lógica correcta).</p>
+      </div>
+      <div class="tc gold" data-num="24">
+        <h3>Argumento causal bien construido</h3>
+        <p>Para establecer causalidad, descarta correlación espuria, controla variables y considera causas alternativas.</p>
+      </div>
+      <div class="tc" data-num="25">
+        <h3>Razonamiento hipotético-deductivo</h3>
+        <p>Plantea una hipótesis, deduce sus consecuencias observables y evalúa si el texto o la realidad las confirman.</p>
+      </div>
+      <div class="tc rust" data-num="26">
+        <h3>Identificación de supuestos implícitos</h3>
+        <p>Todo argumento descansa sobre premisas no declaradas. Hacerlas explícitas revela la fortaleza o debilidad del razonamiento.</p>
+      </div>
+      <div class="tc gold" data-num="27">
+        <h3>Principio de caridad interpretativa</h3>
+        <p>Interpreta el argumento del autor en su versión más sólida antes de criticarlo. Evita atacar versiones débiles.</p>
+      </div>
+      <div class="tc" data-num="28">
+        <h3>Argumento por reducción al absurdo</h3>
+        <p>Acepta temporalmente la tesis contraria y muestra que conduce a consecuencias inaceptables o contradictorias.</p>
+      </div>
+      <div class="tc rust" data-num="29">
+        <h3>Evaluación de la pertinencia de evidencias</h3>
+        <p>Pregúntate si cada dato realmente apoya la tesis o si solo es decorativo, tangencial o estadísticamente engañoso.</p>
+      </div>
+      <div class="tc gold" data-num="30">
+        <h3>Distinción entre opinión y hecho</h3>
+        <p>Clasifica cada afirmación como verificable (hecho) o dependiente de valores y perspectivas (opinión). En SaberPro, esto define la respuesta correcta.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════ SECCIÓN 3 ═══════════ -->
+  <section id="sec-lectura" class="technique-section fade-in">
+    <p class="section-label">Categoría 03</p>
+    <h2 class="chapter">Lectura Crítica e Interpretación Textual</h2>
+    <p class="mb-4">Ir más allá del significado superficial: estas técnicas agudizarán tu capacidad de interpretar, inferir e interrogar cualquier tipo de texto.</p>
+
+    <div class="technique-grid">
+      <div class="tc" data-num="31">
+        <h3>Análisis del contexto de producción</h3>
+        <p>Considera cuándo, dónde y por qué fue escrito el texto. El contexto histórico y social modifica radicalmente el sentido.</p>
+      </div>
+      <div class="tc rust" data-num="32">
+        <h3>Identificación del lector implícito</h3>
+        <p>¿A quién se dirige el texto? El léxico, el tono y los supuestos compartidos revelan al destinatario ideal.</p>
+      </div>
+      <div class="tc gold" data-num="33">
+        <h3>Detección de la intención ilocutiva</h3>
+        <p>Más allá de lo que dice el texto, identifica qué acto realiza: acusar, prometer, exhortar, ironizar, advertir.</p>
+      </div>
+      <div class="tc" data-num="34">
+        <h3>Análisis de la connotación léxica</h3>
+        <p>Las palabras tienen significados emocionales y culturales más allá del diccionario. La elección léxica revela la ideología del autor.</p>
+      </div>
+      <div class="tc rust" data-num="35">
+        <h3>Reconocimiento de recursos retóricos</h3>
+        <p>Metáfora, metonimia, ironía, hipérbole, eufemismo y antítesis son instrumentos argumentativos, no solo adornos.</p>
+      </div>
+      <div class="tc gold" data-num="36">
+        <h3>Inferencia de información implícita</h3>
+        <p>Lo no dicho es tan importante como lo dicho. Infiere qué presupone el texto sin afirmarlo explícitamente.</p>
+      </div>
+      <div class="tc" data-num="37">
+        <h3>Análisis del género discursivo</h3>
+        <p>Un editorial, un artículo científico, un texto literario y una noticia tienen convenciones distintas que condicionan su interpretación.</p>
+      </div>
+      <div class="tc rust" data-num="38">
+        <h3>Lectura entre líneas</h3>
+        <p>Interroga qué se omite deliberadamente y por qué. El silencio estratégico es una forma de argumentar.</p>
+      </div>
+      <div class="tc gold" data-num="39">
+        <h3>Evaluación de la coherencia interna</h3>
+        <p>Verifica si las afirmaciones del texto no se contradicen entre sí. La inconsistencia interna invalida el argumento.</p>
+      </div>
+      <div class="tc" data-num="40">
+        <h3>Identificación de sesgos cognitivos</h3>
+        <p>Detecta confirmación de creencias previas, sesgo de disponibilidad y pensamiento dicotómico en los textos y en tus propias lecturas.</p>
+      </div>
+      <div class="tc rust" data-num="41">
+        <h3>Comparación intertextual</h3>
+        <p>Relaciona el texto con otros que conozcas sobre el mismo tema. Las diferencias y similitudes enriquecen la interpretación crítica.</p>
+      </div>
+      <div class="tc gold" data-num="42">
+        <h3>Análisis de la modalización</h3>
+        <p>Palabras como <em>posiblemente, definitivamente, se estima, es evidente</em> revelan el grado de certeza del autor.</p>
+      </div>
+      <div class="tc" data-num="43">
+        <h3>Evaluación de la consistencia ética</h3>
+        <p>¿El texto aplica los mismos estándares éticos a todos los casos que compara? La inconsistencia ética es un argumento débil.</p>
+      </div>
+      <div class="tc rust" data-num="44">
+        <h3>Distinción entre descripción y prescripción</h3>
+        <p>Identifica si el texto describe cómo son las cosas o prescribe cómo deberían ser. Esta distinción define el tipo de crítica aplicable.</p>
+      </div>
+      <div class="tc gold" data-num="45">
+        <h3>Técnica del texto como conversación</h3>
+        <p>Imagina que el texto responde a un debate previo. ¿Qué posición rebate? ¿Con qué tradición dialoga?</p>
+      </div>
+    </div>
+  </section>
+
+  <blockquote class="pull fade-in">"Escribir bien no es un don; es una disciplina construida sobre la lectura atenta, la revisión sistemática y el coraje de decir algo con precisión."</blockquote>
+
+  <!-- ═══════════ SECCIÓN 4 ═══════════ -->
+  <section id="sec-escritura" class="technique-section fade-in">
+    <p class="section-label">Categoría 04</p>
+    <h2 class="chapter">Redacción y Producción Textual</h2>
+    <p class="mb-4">La prueba de Comunicación Escrita exige textos bien estructurados, coherentes y pertinentes. Estas técnicas guían todo el proceso de escritura.</p>
+
+    <div class="technique-grid">
+      <div class="tc" data-num="46">
+        <h3>Mapa de escritura previo</h3>
+        <p>Antes de escribir, traza un esquema con tesis, tres argumentos principales y una conclusión. La estructura primero, las palabras después.</p>
+      </div>
+      <div class="tc rust" data-num="47">
+        <h3>Párrafo PEEL</h3>
+        <p><strong>P</strong>unto (idea central), <strong>E</strong>xplicación, <strong>E</strong>videncia o ejemplo, <strong>L</strong>ink (enlace con la tesis). Aplícalo a cada párrafo del cuerpo.</p>
+      </div>
+      <div class="tc gold" data-num="48">
+        <h3>Oración tópica potente</h3>
+        <p>El primer enunciado de cada párrafo debe condensar su idea central con claridad y fuerza. Es el contrato con el lector.</p>
+      </div>
+      <div class="tc" data-num="49">
+        <h3>Precisión léxica</h3>
+        <p>Prefiere la palabra exacta a la aproximada. Usa sinónimos con consciencia de sus matices; evita el vocabulario vago (<em>cosa, aspecto, ámbito</em>).</p>
+      </div>
+      <div class="tc rust" data-num="50">
+        <h3>Variación sintáctica</h3>
+        <p>Alterna oraciones cortas y largas. La monotonía sintáctica adormece al lector; la variación mantiene la atención activa.</p>
+      </div>
+      <div class="tc gold" data-num="51">
+        <h3>Principio de economía verbal</h3>
+        <p>Elimina redundancias, muletillas y perífrasis innecesarias. Si una palabra puede eliminarse sin pérdida de sentido, elimínala.</p>
+      </div>
+      <div class="tc" data-num="52">
+        <h3>Coherencia temática interna</h3>
+        <p>Cada oración debe conectarse con la anterior y anticipar la siguiente. El lector nunca debe preguntarse "¿de dónde salió esto?"</p>
+      </div>
+      <div class="tc rust" data-num="53">
+        <h3>Cohesión por referencia</h3>
+        <p>Usa pronombres, demostrativos y artículos para referirte a elementos ya mencionados. Evita la repetición torpe del mismo sustantivo.</p>
+      </div>
+      <div class="tc gold" data-num="54">
+        <h3>Cohesión léxica</h3>
+        <p>Usa sinónimos, hiperónimos y perífrasis para mantener la unidad temática sin repetir mecánicamente la misma palabra.</p>
+      </div>
+      <div class="tc" data-num="55">
+        <h3>Conectores lógicos estratégicos</h3>
+        <p>Escoge el conector adecuado a la relación lógica: <em>además</em> (adición), <em>sin embargo</em> (contraste), <em>por lo tanto</em> (consecuencia).</p>
+      </div>
+      <div class="tc rust" data-num="56">
+        <h3>Tesis clara y delimitada</h3>
+        <p>Una buena tesis es específica, argumentable y verificable. Evita tesis obvias ("la educación es importante") o demasiado amplias.</p>
+      </div>
+      <div class="tc gold" data-num="57">
+        <h3>Introducción en embudo</h3>
+        <p>Comienza con una idea general, estrecha el enfoque progresivamente y cierra la introducción con la tesis puntual.</p>
+      </div>
+      <div class="tc" data-num="58">
+        <h3>Conclusión en pirámide invertida</h3>
+        <p>Retoma la tesis, sintetiza los argumentos y abre hacia una implicación más amplia. No introduzcas ideas nuevas al cerrar.</p>
+      </div>
+      <div class="tc rust" data-num="59">
+        <h3>Adecuación al registro</h3>
+        <p>Ajusta el léxico, la sintaxis y el tono al contexto comunicativo: formal-académico, divulgativo o argumentativo según la consigna.</p>
+      </div>
+      <div class="tc gold" data-num="60">
+        <h3>Técnica del "lector hostil"</h3>
+        <p>Relee tu texto imaginando que quien lo lee busca debilitarlo. ¿Qué ambigüedades, contradicciones o vacíos encontraría?</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════ SECCIÓN 5 ═══════════ -->
+  <section id="sec-comunicacion" class="technique-section fade-in">
+    <p class="section-label">Categoría 05</p>
+    <h2 class="chapter">Comunicación Escrita y Géneros Discursivos</h2>
+    <p class="mb-4">La adecuación al género es fundamental en SaberPro. Estas técnicas te preparan para producir textos apropiados a cada situación comunicativa.</p>
+
+    <div class="technique-grid">
+      <div class="tc" data-num="61">
+        <h3>Reconocimiento del contrato genérico</h3>
+        <p>Cada género (ensayo, reseña, informe, carta) tiene convenciones implícitas que el lector espera. Identifícalas y respétalas.</p>
+      </div>
+      <div class="tc rust" data-num="62">
+        <h3>Escritura orientada al propósito</h3>
+        <p>Define antes de escribir: ¿qué quiero que el lector piense, sienta o haga al terminar de leer?</p>
+      </div>
+      <div class="tc gold" data-num="63">
+        <h3>Adecuación pragmática</h3>
+        <p>Considera quién escribe, a quién, desde qué posición y con qué intención. El texto debe ser coherente con esta situación pragmática.</p>
+      </div>
+      <div class="tc" data-num="64">
+        <h3>Gestión de la distancia comunicativa</h3>
+        <p>Ajusta el uso del tuteo, el usted, la primera persona o la impersonalización según el grado de formalidad exigido.</p>
+      </div>
+      <div class="tc rust" data-num="65">
+        <h3>Uso estratégico de la polifonía</h3>
+        <p>Introduce otras voces (citas, paráfrasis, referencias) para enriquecer el argumento sin perder tu propia voz.</p>
+      </div>
+      <div class="tc gold" data-num="66">
+        <h3>Construcción del ethos del escritor</h3>
+        <p>Transmite credibilidad mediante el léxico preciso, el uso pertinente de fuentes y la ausencia de errores ortográficos o gramaticales.</p>
+      </div>
+      <div class="tc" data-num="67">
+        <h3>Apelación al pathos con mesura</h3>
+        <p>Los argumentos emocionales son válidos cuando están bien fundados. Úsalos para reforzar, no para reemplazar, la lógica.</p>
+      </div>
+      <div class="tc rust" data-num="68">
+        <h3>Análisis de la situación retórica</h3>
+        <p>Identifica el exigence (problema que motiva el texto), la audiencia y las restricciones (normas, convenciones, valores compartidos).</p>
+      </div>
+      <div class="tc gold" data-num="69">
+        <h3>Manejo del tono argumentativo</h3>
+        <p>Evita el tono agresivo y el condescendiente. El tono ideal es firme, razonado y respetuoso de la inteligencia del lector.</p>
+      </div>
+      <div class="tc" data-num="70">
+        <h3>Estructura problema-solución</h3>
+        <p>Presenta un problema con claridad y sustenta tu propuesta de solución con evidencias. Es una de las estructuras más valoradas en SaberPro.</p>
+      </div>
+      <div class="tc rust" data-num="71">
+        <h3>Cadena causa-efecto desarrollada</h3>
+        <p>Traza explícitamente la cadena causal: si A causa B y B causa C, explicita cada eslabón en lugar de dar el salto directamente.</p>
+      </div>
+      <div class="tc gold" data-num="72">
+        <h3>Uso de la comparación contrastiva</h3>
+        <p>Contrastar dos fenómenos similares pero diferentes ilumina los rasgos específicos de cada uno mejor que describirlos por separado.</p>
+      </div>
+      <div class="tc" data-num="73">
+        <h3>Cierre con apertura</h3>
+        <p>La conclusión más efectiva sintetiza y abre simultáneamente: resume lo dicho y sugiere una implicación, pregunta o desafío futuro.</p>
+      </div>
+      <div class="tc rust" data-num="74">
+        <h3>Revisión de la adecuación pragmática</h3>
+        <p>Al releer, pregúntate si el texto cumple su propósito comunicativo en el contexto dado, no solo si está bien escrito en abstracto.</p>
+      </div>
+      <div class="tc gold" data-num="75">
+        <h3>Escritura como proceso iterativo</h3>
+        <p>El primer borrador es solo la materia prima. Plan → borrador → revisión de contenido → revisión de estilo → corrección ortográfica.</p>
+      </div>
+    </div>
+  </section>
+
+  <blockquote class="pull fade-in">"La claridad no es simpleza: es el resultado de un trabajo arduo por domesticar la complejidad y ponerla al servicio del lector."</blockquote>
+
+  <!-- ═══════════ SECCIÓN 6 ═══════════ -->
+  <section id="sec-estrategias" class="technique-section fade-in">
+    <p class="section-label">Categoría 06</p>
+    <h2 class="chapter">Gramática, Ortografía y Norma Lingüística</h2>
+    <p class="mb-4">El dominio de la norma culta del español es evaluado de forma directa en SaberPro. Estas técnicas te ayudarán a fortalecer la base gramatical y ortográfica.</p>
+
+    <div class="technique-grid">
+      <div class="tc" data-num="76">
+        <h3>Concordancia nominal y verbal</h3>
+        <p>Verifica que cada sujeto concuerde en número y persona con su verbo, y que adjetivos concuerden con sus sustantivos.</p>
+      </div>
+      <div class="tc rust" data-num="77">
+        <h3>Puntuación como herramienta semántica</h3>
+        <p>La coma, el punto y coma y los dos puntos no son ornamentos: estructuran el sentido. Un error de coma puede cambiar radicalmente el significado.</p>
+      </div>
+      <div class="tc gold" data-num="78">
+        <h3>Uso correcto del gerundio</h3>
+        <p>El gerundio expresa simultaneidad o anterioridad inmediata. Evita el gerundio de posterioridad ("Llegó a casa, encontrando…") y el gerundio especificativo con sustantivos.</p>
+      </div>
+      <div class="tc" data-num="79">
+        <h3>Tildación diacrítica y ortográfica</h3>
+        <p>Repasa los casos de tilde diacrítica (él/el, tú/tu, más/mas) y las reglas de acentuación prosódica aguda, grave y esdrújula.</p>
+      </div>
+      <div class="tc rust" data-num="80">
+        <h3>Uso de la voz pasiva con criterio</h3>
+        <p>La voz pasiva es útil para enfocarse en el objeto de la acción, pero el abuso genera textos impersonales y poco dinámicos.</p>
+      </div>
+      <div class="tc gold" data-num="81">
+        <h3>Dequeísmo y queísmo</h3>
+        <p>Aprende cuándo la preposición <em>de</em> precede a <em>que</em> y cuándo no. Estos errores son frecuentes y muy penalizados en evaluaciones.</p>
+      </div>
+      <div class="tc" data-num="82">
+        <h3>Uso correcto de <em>haber</em> impersonal</h3>
+        <p>"Habían muchos errores" es incorrecto: <em>haber</em> impersonal no tiene plural. "Había muchos errores" es la forma normativa.</p>
+      </div>
+      <div class="tc rust" data-num="83">
+        <h3>Separación correcta de los pronombres clíticos</h3>
+        <p>Evita el laísmo ("la dije"), leísmo incorrecto y loísmo. Revisa el uso normativo de <em>le, la, lo</em> como complementos directos e indirectos.</p>
+      </div>
+      <div class="tc gold" data-num="84">
+        <h3>Ortografía de palabras homófonas</h3>
+        <p>Haz, has, hay / echo, hecho / vaya, baya, valla: memoriza los casos más frecuentes mediante asociación semántica.</p>
+      </div>
+      <div class="tc" data-num="85">
+        <h3>Párrafo sin coma entre sujeto y predicado</h3>
+        <p>Jamás se pone coma entre sujeto y verbo: "Los estudiantes, aprobaron el examen" es un error grave. Revisa siempre este punto.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════ SECCIÓN 7 ═══════════ -->
+  <section class="technique-section fade-in">
+    <p class="section-label">Categoría 07</p>
+    <h2 class="chapter">Estrategias de Examen y Gestión Cognitiva</h2>
+    <p class="mb-4">El dominio técnico no basta si la ansiedad o la gestión del tiempo fallan el día del examen. Estas últimas técnicas optimizan tu desempeño integral.</p>
+
+    <div class="technique-grid">
+      <div class="tc" data-num="86">
+        <h3>Lectura escalonada del texto</h3>
+        <p>Lee primero las preguntas, luego haz una lectura rápida del texto y finalmente una lectura detallada focalizada en lo relevante.</p>
+      </div>
+      <div class="tc rust" data-num="87">
+        <h3>Eliminación de distractores</h3>
+        <p>En preguntas de opción múltiple, elimina primero las respuestas claramente incorrectas. Trabaja siempre desde lo seguro hacia lo incierto.</p>
+      </div>
+      <div class="tc gold" data-num="88">
+        <h3>Gestión del tiempo por secciones</h3>
+        <p>Asigna un tiempo máximo a cada texto o bloque de preguntas. Si te atascas, marca y sigue adelante; regresa al final.</p>
+      </div>
+      <div class="tc" data-num="89">
+        <h3>Segunda lectura de las preguntas</h3>
+        <p>Lee cada pregunta dos veces: la primera para entenderla y la segunda para verificar que la respuesta que elegiste responde exactamente lo que se pregunta.</p>
+      </div>
+      <div class="tc rust" data-num="90">
+        <h3>Atención a los absolutos</h3>
+        <p>Palabras como <em>siempre, nunca, todos, ninguno</em> en las opciones de respuesta suelen indicar enunciados incorrectos. Los absolutos rara vez se sostienen.</p>
+      </div>
+      <div class="tc gold" data-num="91">
+        <h3>Diferenciación entre "lo mejor" y "lo correcto"</h3>
+        <p>En SaberPro no se busca la respuesta "verdadera" en abstracto, sino la más pertinente al texto dado. Ancla siempre la respuesta al texto.</p>
+      </div>
+      <div class="tc" data-num="92">
+        <h3>Práctica con textos académicos diversos</h3>
+        <p>Lee textos de filosofía, ciencias sociales, ciencias naturales y humanidades. SaberPro usa géneros académicos variados.</p>
+      </div>
+      <div class="tc rust" data-num="93">
+        <h3>Simulacros cronometrados</h3>
+        <p>Resuelve pruebas anteriores en condiciones reales de tiempo. La familiaridad con el formato reduce la ansiedad y mejora la eficiencia.</p>
+      </div>
+      <div class="tc gold" data-num="94">
+        <h3>Análisis de errores post-simulacro</h3>
+        <p>Después de cada simulacro, clasifica tus errores: ¿comprensión, argumentación, vocabulario, tiempo? Esto define el estudio prioritario.</p>
+      </div>
+      <div class="tc" data-num="95">
+        <h3>Escritura diaria de micro-textos</h3>
+        <p>Escribe 150-200 palabras diarias sobre cualquier tema con tesis y argumento. La fluidez escritora se construye con práctica sistemática.</p>
+      </div>
+      <div class="tc rust" data-num="96">
+        <h3>Lectura en voz alta para detectar errores</h3>
+        <p>El oído detecta incongruencias que el ojo pasa por alto. Leer en voz alta revela oraciones mal construidas y puntuación incorrecta.</p>
+      </div>
+      <div class="tc gold" data-num="97">
+        <h3>Revisión en tres pasadas</h3>
+        <p>Primera pasada: ideas y estructura. Segunda: cohesión y coherencia. Tercera: ortografía y puntuación. Nunca revises todo a la vez.</p>
+      </div>
+      <div class="tc" data-num="98">
+        <h3>Técnica del "punto de vista ajeno"</h3>
+        <p>Pide a otra persona que lea tu texto y te diga con sus palabras qué entendió. La brecha entre lo que escribiste y lo que entendieron señala los problemas reales.</p>
+      </div>
+      <div class="tc rust" data-num="99">
+        <h3>Dominio del léxico académico básico</h3>
+        <p>Palabras como <em>inferir, colegir, denotar, connotar, enunciar, postular, subyacer, explicitar</em> aparecen frecuentemente en SaberPro. Domínalas.</p>
+      </div>
+      <div class="tc gold" data-num="100">
+        <h3>Mentalidad de crecimiento lingüístico</h3>
+        <p>La competencia lingüística no es fija. Cada lectura, cada texto revisado y cada error analizado te convierte en un comunicador más poderoso y preciso.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- CIERRE DEL ENSAYO -->
+  <section class="fade-in mt-5">
+    <p class="section-label">Conclusión</p>
+    <h2 class="chapter">El Lenguaje como Poder</h2>
+
+    <p>Las 100 técnicas reunidas en este ensayo no son trucos para engañar al examen: son el mapa de las competencias que la educación superior colombiana —y cualquier sociedad que aspire a la deliberación democrática— necesita de sus ciudadanos. SaberPro, en su evaluación de lectura crítica y comunicación escrita, mide algo profundamente importante: la capacidad de pensar con rigor y comunicarse con eficacia.</p>
+
+    <p style="margin-top: 1.2rem">Dominar estas técnicas implica leer más y mejor, escribir con mayor conciencia y revisar con mirada crítica. Implica, en última instancia, desarrollar una relación más honesta e inteligente con el lenguaje: reconocer que las palabras no son neutras, que los argumentos pueden fortalecerse o desmoronarse con una sola premisa, y que la claridad es, siempre, una conquista.</p>
+
+    <p style="margin-top: 1.2rem">El estudiante que se prepara para SaberPro con estas herramientas no solo mejora su puntaje: se convierte en un pensador más agudo y en un ciudadano más capaz de navegar la complejidad de su tiempo.</p>
+
+    <div class="info-box mt-4">
+      <strong>Recursos de práctica recomendados</strong>
+      Accede a los simulacros oficiales del ICFES en <em>icfes.gov.co</em>, estudia con el Cuadernillo de Prueba de Lectura Crítica disponible en el portal oficial y practica escritura con las guías de Comunicación Escrita del ICFES.
+    </div>
+  </section>
+
+  <!-- SEARCH -->
+  <section class="fade-in mt-5 pt-4" style="border-top: 2px solid var(--rule)">
+    <p class="section-label">Buscar técnica</p>
+    <input type="text" id="search-input" placeholder="Escribe para filtrar las 100 técnicas…" autocomplete="off"/>
+    <p id="search-count" style="font-family:'DM Mono',monospace; font-size:0.75rem; color:var(--muted); margin-top:-1.5rem; margin-bottom:1rem;"></p>
+  </section>
+
+</main>
+
+<footer>
+  <p><strong>100 Técnicas SaberPro · Lenguaje</strong></p>
+  <p style="margin-top:0.5rem">Lectura Crítica · Comunicación Escrita · Colombia</p>
+</footer>
+
+<button id="back-top" title="Volver arriba">↑</button>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+  // ── PROGRESS BAR ──
+  const bar = document.getElementById('progress-bar');
+  window.addEventListener('scroll', () => {
+    const h = document.documentElement;
+    const pct = (window.scrollY / (h.scrollHeight - h.clientHeight)) * 100;
+    bar.style.width = pct + '%';
+  });
+
+  // ── BACK TO TOP ──
+  const btn = document.getElementById('back-top');
+  window.addEventListener('scroll', () => {
+    btn.classList.toggle('show', window.scrollY > 400);
+  });
+  btn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+
+  // ── FADE IN ON SCROLL ──
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+  }, { threshold: 0.07 });
+  document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+  // ── TOC DOTS ──
+  const dots = document.querySelectorAll('.toc-dot');
+  dots.forEach(dot => {
+    dot.addEventListener('click', () => {
+      const target = document.getElementById(dot.dataset.target);
+      if (target) target.scrollIntoView({ behavior: 'smooth' });
+    });
+  });
+  const sections = ['sec-intro','sec-comprension','sec-argumentacion','sec-lectura','sec-escritura','sec-comunicacion','sec-estrategias'];
+  window.addEventListener('scroll', () => {
+    let current = '';
+    sections.forEach(id => {
+      const el = document.getElementById(id);
+      if (el && window.scrollY >= el.offsetTop - 200) current = id;
+    });
+    dots.forEach(dot => dot.classList.toggle('active', dot.dataset.target === current));
+  });
+
+  // ── SEARCH ──
+  const searchInput = document.getElementById('search-input');
+  const countEl = document.getElementById('search-count');
+  const cards = document.querySelectorAll('.tc');
+  searchInput.addEventListener('input', () => {
+    const q = searchInput.value.toLowerCase().trim();
+    let visible = 0;
+    cards.forEach(card => {
+      const text = card.textContent.toLowerCase();
+      const match = !q || text.includes(q);
+      card.classList.toggle('hidden', !match);
+      if (match) visible++;
+    });
+    countEl.textContent = q ? `${visible} técnica(s) encontrada(s)` : '';
+  });
+</script>
+</body>
+</html>

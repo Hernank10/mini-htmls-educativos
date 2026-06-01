@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>Humanitas · 100 técnicas de redacción para Ciencias Humanas</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700;800&family=Merriweather:ital,wght@0,300;0,400;0,700;1,400&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #6B3E1C;
+      --primary-dark: #4A2A12;
+      --secondary: #D4A373;
+      --bg-dark: #1a1a1a;
+      --bg-light: #FDF8F0;
+      --card-dark: #2A2A2A;
+      --card-light: #FFFFFF;
+    }
+    body {
+      font-family: 'Inter', 'Merriweather', serif;
+      background: var(--bg-dark);
+      color: #E5E5E5;
+      transition: all 0.3s;
+    }
+    body.light-mode {
+      background: var(--bg-light);
+      color: #1E1E1E;
+    }
+    .sidebar {
+      background: #1E1E1E;
+      border-radius: 1.5rem;
+      padding: 1rem;
+      height: fit-content;
+      position: sticky;
+      top: 20px;
+    }
+    body.light-mode .sidebar { background: #FFF; }
+    .nav-item-custom {
+      padding: 0.8rem 1rem;
+      border-radius: 1rem;
+      cursor: pointer;
+      margin-bottom: 0.5rem;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: #AAA;
+    }
+    .nav-item-custom i { width: 24px; }
+    .nav-item-custom.active { background: var(--primary); color: white; }
+    .cat-filter {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+    }
+    .filter-btn {
+      background: transparent;
+      border: 1px solid #3A3A3A;
+      border-radius: 30px;
+      padding: 0.2rem 0.8rem;
+      font-size: 0.7rem;
+      cursor: pointer;
+    }
+    .filter-btn.active { background: var(--primary); border-color: var(--primary); color: white; }
+    body.light-mode .filter-btn { border-color: #D0D0D0; }
+    .tecnica-card {
+      background: var(--card-dark);
+      border-radius: 1rem;
+      padding: 1rem;
+      margin-bottom: 0.8rem;
+      border: 1px solid #3A3A3A;
+      cursor: pointer;
+      transition: 0.2s;
+      font-family: 'Inter', sans-serif;
+    }
+    body.light-mode .tecnica-card { background: var(--card-light); border-color: #E0E0E0; }
+    .tecnica-card.completed { border-left: 4px solid var(--primary); background: rgba(107,62,28,0.15); }
+    .flashcard-container { perspective: 1000px; min-height: 520px; cursor: pointer; }
+    .flashcard { width: 100%; height: 560px; position: relative; transform-style: preserve-3d; transition: transform 0.6s; border-radius: 1.5rem; }
+    .flashcard.flipped { transform: rotateY(180deg); }
+    .flashcard-front, .flashcard-back {
+      position: absolute; width: 100%; height: 100%; backface-visibility: hidden;
+      border-radius: 1.5rem; padding: 1.5rem; display: flex; flex-direction: column;
+      background: var(--card-dark); border: 1px solid #3A3A3A; overflow-y: auto;
+    }
+    body.light-mode .flashcard-front, body.light-mode .flashcard-back { background: var(--card-light); }
+    .flashcard-back { transform: rotateY(180deg); background: var(--primary); color: white; }
+    .option-btn { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); padding: 0.5rem 1rem; border-radius: 2rem; margin: 0.3rem; cursor: pointer; }
+    .option-btn:hover { background: rgba(255,255,255,0.2); }
+    .option-btn.correct { background: #27ae60; }
+    .option-btn.incorrect { background: #e74c3c; }
+    .progress-custom { height: 4px; background: #3A3A3A; border-radius: 2px; }
+    .progress-fill-custom { height: 100%; background: var(--primary); width: 0%; transition: width 0.3s; }
+    footer { background: #141414; padding: 1rem 0; margin-top: 2rem; text-align: center; }
+    .badge-cat { background: var(--secondary); color: #2C2A29; padding: 0.2rem 0.6rem; border-radius: 20px; font-size: 0.7rem; }
+    .search-box { width: 100%; padding: 0.5rem; border-radius: 2rem; border: 1px solid #3A3A3A; background: var(--card-dark); color: #E5E5E5; }
+    body.light-mode .search-box { background: var(--card-light); color: #1E1E1E; border-color: #D0D0D0; }
+  </style>
+</head>
+<body>
+
+<div class="container-fluid px-4 py-3">
+  <div class="row g-4">
+    
+    <!-- SIDEBAR -->
+    <div class="col-lg-3 col-md-4">
+      <div class="sidebar">
+        <div class="text-center py-3">
+          <i class="bi bi-book-half" style="font-size: 2rem; color: var(--primary);"></i>
+          <h5 class="mt-2">Humanitas</h5>
+          <small class="text-muted">100 técnicas · Ciencias Humanas</small>
+        </div>
+        <hr>
+        <div class="nav-item-custom active" data-view="lista">
+          <i class="bi bi-list-ul"></i> <span>📋 Técnicas</span>
+        </div>
+        <div class="nav-item-custom" data-view="flashcards">
+          <i class="bi bi-stack"></i> <span>🃏 Flashcards</span>
+        </div>
+        <hr>
+        <div class="mt-3">
+          <div class="d-flex justify-content-between small"><span>Técnicas completadas</span><span id="completedCount">0</span><span>/100</span></div>
+          <div class="progress-custom mt-1"><div class="progress-fill-custom" id="progressFill"></div></div>
+        </div>
+        <hr>
+        <button id="themeToggleBtn" class="btn btn-sm w-100 mt-2"><i class="bi bi-moon-stars-fill"></i> Modo oscuro</button>
+      </div>
+    </div>
+    
+    <!-- CONTENIDO PRINCIPAL -->
+    <div class="col-lg-9 col-md-8">
+      
+      <!-- VISTA LISTA DE TÉCNICAS -->
+      <div id="listaView">
+        <h3><i class="bi bi-book-half me-2"></i>100 técnicas de redacción para Ciencias Humanas</h3>
+        <p class="text-muted small">Ensayo · Reseña · Argumentación · Escritura creativa · Corrección de estilo</p>
+        <div class="d-flex gap-2 my-3 flex-wrap">
+          <input type="text" id="searchInput" class="search-box" placeholder="🔍 Buscar técnica..." style="width: 200px;">
+          <select id="catFilter" class="form-select form-select-sm" style="width: 180px;">
+            <option value="all">Todas las categorías</option>
+            <option value="Ensayo académico">📝 Ensayo académico</option>
+            <option value="Reseña y comentario">📖 Reseña y comentario</option>
+            <option value="Texto argumentativo">⚖️ Argumentación</option>
+            <option value="Escritura creativa">🎨 Escritura creativa</option>
+            <option value="Corrección y estilo">✍️ Corrección y estilo</option>
+          </select>
+        </div>
+        <div id="tecnicasList" style="max-height: 70vh; overflow-y: auto;"></div>
+        <div class="d-flex justify-content-center mt-4"><ul class="pagination" id="pagination"></ul></div>
+      </div>
+      
+      <!-- VISTA FLASHCARDS -->
+      <div id="flashcardsView" style="display: none;">
+        <div class="d-flex justify-content-between mb-3">
+          <h3><i class="bi bi-stack me-2"></i>Flashcards · Aprende redacción humanística</h3>
+        </div>
+        <div class="flashcard-container"><div class="flashcard" id="flashcard">
+          <div class="flashcard-front">
+            <div class="d-flex justify-content-between"><span class="badge-cat" id="frontCat">Categoría</span><span id="frontNum">#1</span></div>
+            <h5 id="frontTitle" class="mt-2">Técnica</h5>
+            <p id="frontConcept" class="mt-3" style="flex:1;">Concepto</p>
+            <small>🖱️ Haz clic para ver el ejemplo humanístico</small>
+          </div>
+          <div class="flashcard-back">
+            <div class="d-flex justify-content-between"><span class="badge-cat">📖 Ejemplo en humanidades</span><span id="backNum">#1</span></div>
+            <h5 id="backTitle" class="mt-2">Ejemplo práctico</h5>
+            <p id="backExample" class="mt-2" style="flex:1;"></p>
+            <div id="exerciseArea" class="mt-3"></div>
+          </div>
+        </div></div>
+        <div class="d-flex justify-content-between mt-4">
+          <button id="prevCardBtn" class="btn btn-outline-light">◀ Anterior</button>
+          <div><span id="cardCounter">1 / 100</span><button id="markCompleteBtn" class="btn btn-sm btn-success ms-2">✅ Aprendida</button></div>
+          <button id="nextCardBtn" class="btn btn-outline-light">Siguiente ▶</button>
+        </div>
+        <div class="text-center mt-3"><button id="randomCardBtn" class="btn btn-sm btn-secondary me-2">🎲 Aleatorio</button><button id="flipCardBtn" class="btn btn-sm btn-secondary">🔄 Voltear</button></div>
+      </div>
+    </div>
+  </div>
+</div>
+<footer><div class="container"><small>📚 Humanitas · 100 técnicas de redacción para Ciencias Humanas · Colombia</small></div></footer>
+
+<script>
+  // ============================================================
+  // 100 TÉCNICAS DE REDACCIÓN PARA CIENCIAS HUMANAS (Colombia)
+  // ============================================================
+  
+  const tecnicas = [];
+  
+  const tecnicasPorCategoria = {
+    "Ensayo académico": [
+      [1, "Define la tesis desde el primer párrafo", "La tesis es la columna vertebral del ensayo.", "Ejemplo: 'En este ensayo sostendré que la literatura de García Márquez trasciende el realismo mágico para construir una ontología de la memoria'."],
+      [2, "Estructura en introducción, desarrollo y conclusión", "Cada parte tiene una función específica.", "Ejemplo: 'Introducción: presentación del problema; Desarrollo: argumentos; Conclusión: síntesis y apertura'."],
+      [3, "Usa epígrafes pertinentes", "Citas que orientan el sentido del ensayo.", "Ejemplo: '«Macondo es un lugar de la memoria» - Germán Espinosa'."],
+      [4, "Incorpora citas de autoridad", "Apoya tu argumento con autores reconocidos.", "Ejemplo: 'Como señala Umberto Eco, «la interpretación es un acto creativo» (Eco, 1992, p. 45)'."],
+      [5, "Dialoga con otros autores", "No cites por citar; discute sus ideas.", "Ejemplo: 'A diferencia de lo que sostiene Vargas Llosa, creo que la violencia en la novela no es estética sino política'."],
+      [6, "Usa ejemplos literarios o históricos", "Ilustra conceptos abstractos.", "Ejemplo: 'La soledad de Florentino Ariza en El amor en los tiempos del cólera ejemplifica la espera existencial'."],
+      [7, "Redacta párrafos con oración temática", "Primera oración anuncia el contenido.", "Ejemplo: 'El espacio en Cien años de soledad no es geográfico, sino mítico.' Después, argumenta."],
+      [8, "Conecta párrafos con transiciones lógicas", "Usa 'sin embargo', 'por consiguiente', 'en consecuencia'.", "Ejemplo: 'Hemos visto el problema; ahora examinaremos sus soluciones'."],
+      [9, "Evita la mera opinión sin fundamento", "Sustenta cada afirmación.", "Ejemplo: 'No basta decir 'el autor es genial'; hay que mostrar por qué'."],
+      [10, "Incluye preguntas retóricas", "Invita a la reflexión.", "Ejemplo: '¿Acaso la literatura no es también una forma de conocimiento?'."],
+      [11, "Redacta conclusiones abiertas", "No cierres definitivamente; deja interrogantes.", "Ejemplo: 'La pregunta por el sentido sigue abierta; cada lector deberá responderla'."],
+      [12, "Usa un título sugerente", "Atrapa la atención y anticipa el tema.", "Ejemplo: 'El laberinto de la soledad: memoria y olvido en la narrativa de García Márquez'."],
+      [13, "Evita el uso excesivo de comillas", "Parafrasea cuando sea posible.", "Ejemplo: 'En lugar de copiar un párrafo entero, resume la idea central del autor'."],
+      [14, "Incorpora notas al pie mínimas", "No satures; lo esencial va en el texto.", "Ejemplo: 'Usa nota solo para aclaraciones puntuales o referencias muy largas'."],
+      [15, "Cuida la extensión de los párrafos", "Entre 5 y 10 líneas.", "Ejemplo: 'Un párrafo demasiado largo fatiga; uno demasiado corto fragmenta'."],
+      [16, "Revisa la coherencia global", "Cada párrafo debe aportar a la tesis.", "Ejemplo: 'Al terminar, verifica que todos los argumentos apunten a la misma dirección'."],
+      [17, "Usa recursos retóricos con mesura", "Anáforas, metáforas, paralelismos.", "Ejemplo: 'Repite una palabra al inicio de frases seguidas para dar ritmo: 'Memoria, memoria y más memoria'."],
+      [18, "Diferencia ensayo de artículo científico", "El ensayo permite más libertad subjetiva.", "Ejemplo: 'Puedes usar 'yo creo', pero siempre con argumentos; no es una opinión sin respaldo'."],
+      [19, "Incluye un estado de la cuestión", "Contextualiza el debate académico.", "Ejemplo: 'Para abordar el realismo mágico, es preciso recordar que la crítica ha diferenciado entre lo maravilloso y lo real maravilloso'."],
+      [20, "Redacta títulos de secciones", "Organiza visualmente el ensayo.", "Ejemplo: '1. El problema de la memoria; 2. Memoria en Márquez; 3. Hacia una conclusión'."]
+    ],
+    "Reseña y comentario": [
+      [21, "Identifica obra y autor al inicio", "Datos básicos.", "Ejemplo: 'Gabriel García Márquez, Cien años de soledad (1967), publicada por Sudamericana'."],
+      [22, "Resume sin spoilers innecesarios", "Cuidado con revelar el final.", "Ejemplo: 'Describe la trama general sin desvelar el desenlace, a menos que sea necesario para el análisis'."],
+      [23, "Evalúa con criterios explícitos", "Define con qué vas a juzgar.", "Ejemplo: 'Evaluaré la novela por su originalidad, profundidad psicológica y relevancia histórica'."],
+      [24, "Diferencia opinión de juicio fundado", "Argumenta, no solo gusta/no gusta.", "Ejemplo: 'No basta decir 'me aburrió'; explica por qué el ritmo narrativo es lento'."],
+      [25, "Compara con obras análogas", "Contextualiza en un género o corriente.", "Ejemplo: 'A diferencia de Pedro Páramo, que usa la fragmentación, Márquez opta por la linealidad mítica'."],
+      [26, "Destaca aspectos originales", "Aportación novedosa de la obra.", "Ejemplo: 'La originalidad de la novela está en su tratamiento del tiempo cíclico'."],
+      [27, "Señala debilidades con respeto", "Crítica constructiva.", "Ejemplo: 'El tercer capítulo se extiende innecesariamente, lo que rompe el ritmo narrativo'."],
+      [28, "Redacta un comentario personal al final", "Conecta la obra con tu experiencia.", "Ejemplo: 'Esta novela me hizo repensar mi relación con la historia familiar'."],
+      [29, "Usa citas breves de la obra", "Ejemplifica sin abusar.", "Ejemplo: 'Como dice el narrador: «Muchos años después, frente al pelotón de fusilamiento...»'."],
+      [30, "Incluye recomendación de público", "A quién puede interesar.", "Ejemplo: 'Recomendado para lectores interesados en la literatura latinoamericana y el realismo mágico'."],
+      [31, "Menciona edición y traducción", "Datos técnicos relevantes.", "Ejemplo: 'La edición conmemorativa de 2007 incluye un prólogo de Vargas Llosa'."],
+      [32, "Compara adaptaciones", "Cine, teatro, otras versiones.", "Ejemplo: 'La adaptación cinematográfica de 1984 omitió varios personajes clave'."],
+      [33, "Contextualiza históricamente", "Ubica la obra en su época.", "Ejemplo: 'Publicada en 1967, la novela refleja la efervescencia del boom latinoamericano'."],
+      [34, "Señala influencias", "Autores o corrientes que inspiraron la obra.", "Ejemplo: 'Se nota la influencia de Faulkner en la estructura temporal y de Rulfo en la atmósfera'."],
+      [35, "Evita el elogio vacío", 'No uses "maravilloso", "genial" sin explicación.', "Ejemplo: 'Es una obra maestra debido a su complejidad estructural y profundidad temática'."],
+      [36, "Evalúa la edición (físico/digital)", "Calidad de impresión, traducción, notas.", "Ejemplo: 'La edición de bolsillo tiene letra pequeña, pero las notas son útiles'."],
+      [37, "Redacta un resumen ejecutivo al inicio", "Para lectores con prisa.", "Ejemplo: 'Resumen: una novela fundamental del realismo mágico que explora la memoria y el olvido'."],
+      [38, "Cita otras reseñas", "Dialoga con la crítica.", "Ejemplo: 'A diferencia de lo que opina Mendoza, considero que el final es esperanzador'."],
+      [39, "Incluye calificación orientativa", "Estrellas, nota numérica, etc.", "Ejemplo: 'Calificación: 9/10'."],
+      [40, "Revisa la ortografía del autor", "No escribas mal el nombre.", "Ejemplo: 'García Márquez (con tilde en la z) y sin h intercalada'."]
+    ],
+    "Texto argumentativo": [
+      [41, "Declara la tesis al inicio", "El lector debe saber desde el principio tu postura.", "Ejemplo: 'En este texto defiendo que la educación debe priorizar el pensamiento crítico sobre la memorización'."],
+      [42, "Anticipa la estructura", "Anuncia los argumentos.", "Ejemplo: 'Primero demostraré la relevancia del problema, luego analizaré las causas y, finalmente, propondré soluciones'."],
+      [43, "Usa datos y evidencias", "Estadísticas, hechos, citas.", "Ejemplo: 'Según el DANE, el 45% de los jóvenes no lee un libro al año, lo que evidencia una crisis lectora'."],
+      [44, "Incorpora contraargumentos", "Muestra que conoces otras posturas.", "Ejemplo: 'Algunos creen que la tecnología fomenta la lectura, pero los datos muestran lo contrario'."],
+      [45, "Refuta con razones", "No te limites a decir 'eso es falso'.", "Ejemplo: 'La objeción es válida, pero no considera que...'."],
+      [46, "Usa ejemplos cotidianos", "Haz tangible el argumento.", "Ejemplo: 'Como cuando en clase discutimos un tema y solo repetimos lo que dijo el profesor, sin aportar ideas propias'."],
+      [47, "Estructura con conectores", "En primer lugar, además, por consiguiente.", "Ejemplo: 'En primer lugar, la lectura desarrolla la empatía; además, mejora la expresión escrita; por consiguiente, debería fomentarse'."],
+      [48, "Evita falacias ad hominem", "Ataca el argumento, no a la persona.", "Ejemplo: 'No importa quién lo dice, importa si la razón es válida'."],
+      [49, "Usa analogías pertinentes", "Comparaciones esclarecedoras.", "Ejemplo: 'La mente que no lee es como un cuerpo que no hace ejercicio: se atrofia'."],
+      [50, "Redacta una conclusión contundente", "Resume y refuerza la tesis.", "Ejemplo: 'Por todo lo anterior, la lectura crítica y constante es irremplazable en la formación humanística'."],
+      [51, "Apela a valores compartidos", "Solidaridad, justicia, verdad.", "Ejemplo: 'Si valoramos la democracia, debemos valorar la formación de ciudadanos críticos'."],
+      [52, "Usa preguntas para involucrar", "¿No le ha pasado que...?'", "Ejemplo: '¿Acaso no hemos sentido que un libro nos cambió la vida?'."],
+      [53, "Diferencia hecho de opinión", "Los hechos se demuestran; las opiniones se argumentan.", "Ejemplo: 'Hecho: la lectura disminuye; opinión: esto se debe a la falta de bibliotecas públicas'."],
+      [54, "Cita expertos en el tema", "Autoridad académica.", "Ejemplo: 'El premio Nobel Mario Vargas Llosa ha insistido en que la lectura es esencial para la libertad'."],
+      [55, "Incluye datos históricos", "Muestra evolución del problema.", "Ejemplo: 'En 1950 los colombianos leían en promedio 2 libros al año; hoy apenas 1.5'."],
+      [56, "Define términos polémicos", "Qué entiendes por...", "Ejemplo: 'Por 'cultura' entenderé el conjunto de prácticas simbólicas que dan sentido a la vida'."],
+      [57, "Usa lenguaje moderado", 'Evita "todos", "siempre", "nunca".', "Ejemplo: 'En muchos casos' en lugar de 'siempre'."],
+      [58, "Reconoce límites del argumento", "Ningún argumento es perfecto.", "Ejemplo: 'Mi propuesta no resuelve el problema del acceso digital, pero es un paso'."],
+      [59, "Invita a la acción", "Convoca al lector a hacer algo.", "Ejemplo: 'Comienza hoy mismo leyendo 20 minutos al día; únete a un club de lectura'."],
+      [60, "Revisa la coherencia entre tesis y argumentos", "Ningún argumento debe contradecir la tesis.", "Ejemplo: 'Si defiendes la lectura crítica, no puedes luego decir que cualquier lectura sirve'."]
+    ],
+    "Escritura creativa": [
+      [61, "Muestra, no digas", "Describe acciones, no emociones.", "Ejemplo: 'En lugar de 'estaba triste', escribe 'Dejó caer la carta y miró el techo con los ojos húmedos'."],
+      [62, "Crea personajes redondos", "Con virtudes, defectos y contradicciones.", "Ejemplo: 'Un villano que ama a su madre es más creíble que uno puramente malvado'."],
+      [63, "Usa el diálogo para revelar carácter", "Lo que dicen y cómo lo dicen.", "Ejemplo: '—No me importa —dijo con la voz quebrada—. (La contradicción muestra su dolor)'."],
+      [64, "Inicia en media res", "Empieza en medio de la acción.", "Ejemplo: 'La primera vez que vi el rostro de la muerte fue un martes a las 8 de la mañana'."],
+      [65, "Varía la longitud de las oraciones", "Ritmo y énfasis.", "Ejemplo: 'Corrió. El viento azotaba su rostro. Los árboles pasaban como borrones verdes. No miró atrás.'"],
+      [66, "Usa metáforas originales", "Evita clichés.", "Ejemplo: No 'ojos como luceros' sino 'ojos como dos pozos sin fondo'."],
+      [67, "Apela a los sentidos", "Describe lo que se ve, oye, huele, toca, saborea.", "Ejemplo: 'El olor a café recién hecho mezclado con tierra mojada'; 'el crujir de las hojas secas'."],
+      [68, "Construye un final que resuene", "No cierres todo; deja algo abierto.", "Ejemplo: 'Y entonces, sin saber por qué, sonrió'."],
+      [69, "Usa el narrador adecuado", "Primera persona, tercera omnisciente, testigo.", "Ejemplo: 'Un misterio puede beneficiarse de un narrador testigo que no sabe todo'."],
+      [70, "Crea atmósferas", "El ambiente condiciona la historia.", "Ejemplo: 'La noche era cerrada, la luna oculta y el viento aullaba entre las grietas'."],
+      [71, "Dosifica la información", "No reveles todo de golpe.", "Ejemplo: 'Ve soltando pistas poco a poco; el lector debe querer seguir leyendo'."],
+      [72, "Usa el subtexto", "Lo importante es lo que no se dice.", "Ejemplo: 'Te quiero —dijo. (Pero su tono revelaba otra cosa)'."],
+      [73, "Revisa la verosimilitud", "Aunque sea fantástico, debe tener coherencia interna.", "Ejemplo: 'En un mundo mágico, las reglas deben ser consistentes'."],
+      [74, "Corta escenas en momentos clave", "Cliffhanger.", "Ejemplo: 'La puerta se abrió lentamente... y ahí termina el capítulo'."],
+      [75, "Usa un lenguaje evocador", "Palabras con carga sensorial y emocional.", "Ejemplo: 'El lamento de las sirenas', 'el susurro de las hojas'."],
+      [76, "Evita los adjetivos innecesarios", "Dos adjetivos por sustantivo son suficientes.", "Ejemplo: 'La vieja y polvorienta biblioteca' no necesita más.'."],
+      [77, "Lee en voz alta", "Para detectar cacofonías y ritmo.", "Ejemplo: 'Si al leer tropiezas, reescribe la frase'."],
+      [78, "Crea un título que intrigue", "No reveles todo.", "Ejemplo: 'La noche que el tiempo se detuvo' en lugar de 'El cuento de Juan y su reloj'."],
+      [79, "Usa el humor con cuidado", "No fuerces chistes.", "Ejemplo: 'El humor sutil, basado en situaciones, es más efectivo que los chistes explícitos'."],
+      [80, "Termina con una imagen potente", "La última frase debe quedar en la mente.", "Ejemplo: 'Y el espejo devolvió solo el reflejo de la habitación vacía'."]
+    ],
+    "Corrección y estilo": [
+      [81, "Lee en voz alta", "Detecta repeticiones o frases extrañas.", "Ejemplo: 'El texto puede sonar bien en la mente, pero al leerlo en voz alta notas cacofonías'."],
+      [82, "Elimina palabras vacías", 'Suprime "muy", "bastante", "realmente".', "Ejemplo: 'Es un excelente libro' en lugar de 'es un libro muy bueno'."],
+      [83, "Revisa la concordancia", "Sujeto y verbo; adjetivo y sustantivo.", "Ejemplo: 'Las ideas presentada' → 'Las ideas presentadas'."],
+      [84, "Cuida el uso de comas", "No abuses.", "Ejemplo: 'La coma vocativa: 'Estimado lector, le escribo'."],
+      [85, "Evita dequeísmo", "No añadas 'de' antes de 'que' innecesariamente.", "Ejemplo: 'Pienso que...' no 'Pienso de que...'."],
+      [86, "Diferencia 'sino' de 'si no'", "'Sino' adversativo; 'si no' condicional.", "Ejemplo: 'No vino, sino que llamó'; 'Si no estudias, no pasarás'."],
+      [87, "Revisa tildes en monosílabos", "Tú/tu, él/el, mí/mi, sí/si.", "Ejemplo: 'Tú tienes tu libro'; 'él es el mejor'."],
+      [88, "Evita extranjerismos innecesarios", "Usa palabras en español cuando existan.", "Ejemplo: 'Clic' no es incorrecto, pero preferir 'clic' o 'hacer clic'."],
+      [89, "Prefiere voz activa", "Activa más directa.", "Ejemplo: 'El autor escribió' mejor que 'fue escrito por el autor'."],
+      [90, "Cuidado con las cacofonías", "Repetición de sonidos molestos.", "Ejemplo: 'La bella vela vela' mejor evitarlo."],
+      [91, "Reemplaza gerundios por oraciones subordinadas", "Evita el gerundio de posterioridad.", "Ejemplo: 'Se sentó y miró' mejor que 'Se sentó, mirando'."],
+      [92, "Revisa mayúsculas", "Solo nombres propios e inicio de oración.", "Ejemplo: 'El Presidente de la República' no es un cargo con mayúscula, pero 'el presidente Juan Pérez' sí."],
+      [93, "Usa sinónimos variados", "No repitas la misma palabra en un párrafo.", "Ejemplo: 'Libro, obra, texto, volumen' según el contexto."],
+      [94, "Elimina redundancias", 'No "subir arriba", "bajar abajo".', "Ejemplo: 'Entrar' en lugar de 'entrar adentro'."],
+      [95, "Revisa el uso de los dos puntos", "Introducen enumeraciones, citas o explicaciones.", "Ejemplo: 'Tres cosas: memoria, olvido, tiempo'."],
+      [96, "Cuidado con el punto y coma", "Separa oraciones relacionadas o elementos largos.", "Ejemplo: 'Unos leían; otros dormían; todos esperaban'."],
+      [97, "Evita el abuso de comillas", "No las uses para inflar términos.", "Ejemplo: 'El 'análisis' fue superficial' (no necesitas comillas en análisis)."],
+      [98, "Revisa el orden de las palabras", "En español es flexible, pero no abuses.", "Ejemplo: 'Vino Juan' frente a 'Juan vino' son opciones según énfasis."],
+      [99, "Lee al día siguiente", "La distancia ayuda a detectar errores.", "Ejemplo: 'Deja reposar el texto 24 horas y vuelve a leerlo con ojos frescos'."],
+      [100, "Pide a otro que lea", "Un lector externo detecta lo que tú no ves.", "Ejemplo: 'Un amigo o profesor puede señalar ambigüedades o errores'."]
+    ]
+  };
+  
+  // Construir array de técnicas
+  for(let categoria in tecnicasPorCategoria) {
+    for(let tec of tecnicasPorCategoria[categoria]) {
+      tecnicas.push({
+        id: tec[0],
+        categoria: categoria,
+        titulo: tec[1],
+        concepto: tec[2],
+        ejemplo: tec[3]
+      });
+    }
+  }
+  
+  tecnicas.sort((a,b) => a.id - b.id);
+  
+  let progress = {};
+  let currentCatFilter = "all";
+  let currentSearch = "";
+  let currentPage = 1;
+  let itemsPerPage = 12;
+  let filteredTecnicas = [...tecnicas];
+  let currentCardIndex = 0;
+  let filteredFlashcards = [...tecnicas];
+  const STORAGE_KEY = "humanitas_100_tecnicas";
+  
+  function loadProgress() {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if(saved) progress = JSON.parse(saved);
+    for(let i=0; i<tecnicas.length; i++) if(progress[tecnicas[i].id]===undefined) progress[tecnicas[i].id] = false;
+    updateStats();
+  }
+  function saveProgress() { localStorage.setItem(STORAGE_KEY, JSON.stringify(progress)); updateStats(); }
+  function updateStats() {
+    let c = Object.values(progress).filter(v=>v===true).length;
+    document.getElementById("completedCount").innerText = c;
+    document.getElementById("progressFill").style.width = `${(c/100)*100}%`;
+  }
+  function markComplete(id, isComplete) {
+    if(isComplete && !progress[id]) { progress[id] = true; saveProgress(); renderLista(); }
+  }
+  
+  function renderLista() {
+    let filtered = tecnicas.filter(t => {
+      if(currentCatFilter !== "all" && t.categoria !== currentCatFilter) return false;
+      if(currentSearch && !t.titulo.toLowerCase().includes(currentSearch) && !t.concepto.toLowerCase().includes(currentSearch)) return false;
+      return true;
+    });
+    filteredTecnicas = filtered;
+    const totalPages = Math.ceil(filtered.length / itemsPerPage);
+    const start = (currentPage-1) * itemsPerPage;
+    const paginated = filtered.slice(start, start+itemsPerPage);
+    
+    const container = document.getElementById("tecnicasList");
+    container.innerHTML = paginated.map(t => `
+      <div class="tecnica-card ${progress[t.id] ? 'completed' : ''}" data-id="${t.id}">
+        <div class="d-flex justify-content-between">
+          <div><span class="badge-cat">${t.categoria}</span><span class="ms-2">#${t.id}</span></div>
+          <input class="form-check-input" type="checkbox" ${progress[t.id] ? 'checked' : ''} onchange="event.stopPropagation(); markComplete(${t.id}, this.checked)">
+        </div>
+        <h6 class="mt-2">${t.titulo}</h6>
+        <p class="small text-muted">${t.concepto.substring(0, 100)}...</p>
+      </div>
+    `).join('');
+    
+    document.querySelectorAll(".tecnica-card").forEach(card => {
+      card.addEventListener("click", (e) => {
+        if(!e.target.classList.contains("form-check-input")) {
+          let id = parseInt(card.dataset.id);
+          let idx = filteredTecnicas.findIndex(t => t.id === id);
+          if(idx !== -1) { currentCardIndex = idx; switchToFlashcards(); updateFlashcard(); }
+        }
+      });
+    });
+    
+    let pagHtml = ''; for(let i=1;i<=totalPages;i++) pagHtml += `<li class="page-item ${i===currentPage?'active':''}"><a class="page-link" href="#" data-page="${i}">${i}</a></li>`;
+    document.getElementById("pagination").innerHTML = pagHtml;
+    document.querySelectorAll("#pagination .page-link").forEach(l=>l.addEventListener("click", e=>{ e.preventDefault(); currentPage=parseInt(l.dataset.page); renderLista(); }));
+  }
+  
+  function filterFlashcards() {
+    if(currentCatFilter === "all") filteredFlashcards = [...tecnicas];
+    else filteredFlashcards = tecnicas.filter(t => t.categoria === currentCatFilter);
+    currentCardIndex = Math.min(currentCardIndex, filteredFlashcards.length-1);
+    if(currentCardIndex < 0) currentCardIndex = 0;
+    updateFlashcard();
+  }
+  
+  function updateFlashcard() {
+    let t = filteredFlashcards[currentCardIndex];
+    if(!t) return;
+    document.getElementById("frontCat").innerHTML = t.categoria;
+    document.getElementById("frontNum").innerHTML = `#${t.id}`;
+    document.getElementById("frontTitle").innerHTML = t.titulo;
+    document.getElementById("frontConcept").innerHTML = t.concepto;
+    document.getElementById("backNum").innerHTML = `#${t.id}`;
+    document.getElementById("backTitle").innerHTML = t.titulo;
+    document.getElementById("backExample").innerHTML = t.ejemplo;
+    document.getElementById("cardCounter").innerHTML = `${currentCardIndex+1}/${filteredFlashcards.length}`;
+    document.getElementById("flashcard").classList.remove("flipped");
+    
+    let qText = t.concepto.split('.')[0] || t.concepto;
+    let ejercicioHtml = `<div class="small fw-bold mb-2">📝 Ejercicio: ¿Cuál es el objetivo de esta técnica?</div>
+      <div class="d-flex flex-wrap gap-2">
+        <button class="option-btn ejercicio-opt" data-value="${qText}">${qText}</button>
+        <button class="option-btn ejercicio-opt" data-value="Escribir sin estructura">Escribir sin estructura</button>
+        <button class="option-btn ejercicio-opt" data-value="Usar clichés">Usar clichés</button>
+      </div>
+      <div id="ejercicioFeedback" class="mt-2 small"></div>`;
+    document.getElementById("exerciseArea").innerHTML = ejercicioHtml;
+    
+    document.querySelectorAll(".ejercicio-opt").forEach(btn => {
+      btn.onclick = () => {
+        let isCorrect = btn.getAttribute("data-value") === qText;
+        let fb = document.getElementById("ejercicioFeedback");
+        if(isCorrect) { fb.innerHTML = "<span class='text-success'>✅ Correcto!</span>"; markComplete(t.id, true); renderLista(); }
+        else { fb.innerHTML = "<span class='text-danger'>❌ Incorrecto. Vuelve a leer la técnica.</span>"; }
+        document.querySelectorAll(".ejercicio-opt").forEach(b=>b.disabled=true);
+      };
+    });
+  }
+  
+  function nextCard(){ if(currentCardIndex<filteredFlashcards.length-1){currentCardIndex++; updateFlashcard();} }
+  function prevCard(){ if(currentCardIndex>0){currentCardIndex--; updateFlashcard();} }
+  function randomCard(){ currentCardIndex=Math.floor(Math.random()*filteredFlashcards.length); updateFlashcard(); }
+  function flipCard(){ document.getElementById("flashcard").classList.toggle("flipped"); }
+  function markCurrentComplete(){
+    let t = filteredFlashcards[currentCardIndex];
+    if(t && !progress[t.id]) { progress[t.id]=true; saveProgress(); renderLista(); updateFlashcard(); }
+  }
+  
+  function switchToLista() {
+    document.getElementById("listaView").style.display = "block";
+    document.getElementById("flashcardsView").style.display = "none";
+    document.querySelectorAll(".nav-item-custom").forEach(i=>i.classList.remove("active"));
+    document.querySelector(".nav-item-custom[data-view='lista']").classList.add("active");
+    renderLista();
+  }
+  function switchToFlashcards() {
+    document.getElementById("listaView").style.display = "none";
+    document.getElementById("flashcardsView").style.display = "block";
+    document.querySelectorAll(".nav-item-custom").forEach(i=>i.classList.remove("active"));
+    document.querySelector(".nav-item-custom[data-view='flashcards']").classList.add("active");
+    filterFlashcards();
+  }
+  
+  document.getElementById("prevCardBtn")?.addEventListener("click", prevCard);
+  document.getElementById("nextCardBtn")?.addEventListener("click", nextCard);
+  document.getElementById("randomCardBtn")?.addEventListener("click", randomCard);
+  document.getElementById("flipCardBtn")?.addEventListener("click", flipCard);
+  document.getElementById("markCompleteBtn")?.addEventListener("click", markCurrentComplete);
+  document.getElementById("themeToggleBtn")?.addEventListener("click", () => document.body.classList.toggle("light-mode"));
+  document.querySelector(".nav-item-custom[data-view='lista']")?.addEventListener("click", switchToLista);
+  document.querySelector(".nav-item-custom[data-view='flashcards']")?.addEventListener("click", switchToFlashcards);
+  
+  document.getElementById("searchInput")?.addEventListener("input", e => { currentSearch = e.target.value.toLowerCase(); currentPage = 1; renderLista(); });
+  document.getElementById("catFilter")?.addEventListener("change", e => { currentCatFilter = e.target.value; currentPage = 1; renderLista(); filterFlashcards(); });
+  
+  loadProgress();
+  renderLista();
+  switchToLista();
+</script>
+</body>
+</html>

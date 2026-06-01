@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>Deutsch A1-A2 · Alemán para Hispanohablantes · 100 técnicas de escritura</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #1F4E6E;
+      --primary-dark: #143A52;
+      --secondary: #D9A13B;
+      --bg-dark: #1a1a1a;
+      --bg-light: #F5F0E8;
+      --card-dark: #252525;
+      --card-light: #FFFFFF;
+    }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg-dark);
+      color: #E5E5E5;
+      transition: all 0.3s;
+    }
+    body.light-mode {
+      background: var(--bg-light);
+      color: #1E1E1E;
+    }
+    .sidebar {
+      background: #1E1E1E;
+      border-radius: 1.5rem;
+      padding: 1rem;
+      height: fit-content;
+      position: sticky;
+      top: 20px;
+    }
+    body.light-mode .sidebar { background: #FFF; }
+    .nav-item-custom {
+      padding: 0.8rem 1rem;
+      border-radius: 1rem;
+      cursor: pointer;
+      margin-bottom: 0.5rem;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: #AAA;
+    }
+    .nav-item-custom i { width: 24px; }
+    .nav-item-custom.active { background: var(--primary); color: white; }
+    .tecnica-card {
+      background: var(--card-dark);
+      border-radius: 1rem;
+      padding: 1rem;
+      margin-bottom: 0.8rem;
+      border: 1px solid #3A3A3A;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+    body.light-mode .tecnica-card { background: var(--card-light); border-color: #E0E0E0; }
+    .tecnica-card.completed { border-left: 4px solid var(--primary); background: rgba(31,78,110,0.15); }
+    .tecnica-card:hover { transform: translateX(5px); border-color: var(--primary); }
+    .badge-cat { background: var(--secondary); color: #2C2A29; padding: 0.2rem 0.6rem; border-radius: 20px; font-size: 0.7rem; }
+    .flashcard-container { perspective: 1000px; min-height: 560px; cursor: pointer; }
+    .flashcard { width: 100%; height: 620px; position: relative; transform-style: preserve-3d; transition: transform 0.6s; border-radius: 1.5rem; }
+    .flashcard.flipped { transform: rotateY(180deg); }
+    .flashcard-front, .flashcard-back {
+      position: absolute; width: 100%; height: 100%; backface-visibility: hidden;
+      border-radius: 1.5rem; padding: 1.5rem; display: flex; flex-direction: column;
+      background: var(--card-dark); border: 1px solid #3A3A3A; overflow-y: auto;
+    }
+    body.light-mode .flashcard-front, body.light-mode .flashcard-back { background: var(--card-light); }
+    .flashcard-back { transform: rotateY(180deg); background: var(--primary); color: white; }
+    .german-text { font-size: 1rem; line-height: 1.5; font-family: monospace; }
+    .translation-text { font-size: 0.85rem; color: #27ae60; margin-top: 5px; border-left: 2px solid var(--secondary); padding-left: 8px; }
+    .vocab-card { background: rgba(0,0,0,0.2); border-radius: 1rem; padding: 0.8rem; margin-top: 1rem; }
+    .option-btn { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); padding: 0.5rem 1rem; border-radius: 2rem; margin: 0.3rem; cursor: pointer; transition: 0.1s; }
+    .option-btn:hover { background: rgba(255,255,255,0.2); }
+    .option-btn.correct { background: #27ae60; border-color: #27ae60; }
+    .option-btn.incorrect { background: #e74c3c; border-color: #e74c3c; }
+    .progress-custom { height: 4px; background: #3A3A3A; border-radius: 2px; }
+    .progress-fill-custom { height: 100%; background: var(--primary); width: 0%; transition: width 0.3s; }
+    footer { background: #141414; padding: 1rem 0; margin-top: 2rem; text-align: center; }
+    .filter-btn { background: transparent; border: 1px solid #3A3A3A; border-radius: 30px; padding: 0.2rem 0.8rem; margin: 0.2rem; cursor: pointer; }
+    .filter-btn.active { background: var(--primary); border-color: var(--primary); color: white; }
+  </style>
+</head>
+<body>
+
+<div class="container-fluid px-4 py-3">
+  <div class="row g-4">
+    
+    <!-- SIDEBAR -->
+    <div class="col-lg-3 col-md-4">
+      <div class="sidebar">
+        <div class="text-center py-3">
+          <i class="bi bi-pencil-square" style="font-size: 2rem; color: var(--primary);"></i>
+          <h5 class="mt-2">Deutsch A1-A2</h5>
+          <small class="text-muted">100 técnicas · para hispanohablantes</small>
+        </div>
+        <hr>
+        <div class="nav-item-custom active" data-view="lista"><i class="bi bi-list-ul"></i> 📋 Técnicas</div>
+        <div class="nav-item-custom" data-view="flashcards"><i class="bi bi-stack"></i> 🃏 Flashcards + Übung</div>
+        <div class="nav-item-custom" data-view="vocabulario"><i class="bi bi-journal-bookmark-fill"></i> 📖 Wortschatz</div>
+        <div class="nav-item-custom" data-view="exportar"><i class="bi bi-cloud-download"></i> 📦 Exportar TXT</div>
+        <hr>
+        <div class="mt-3">
+          <div class="d-flex justify-content-between small"><span>Técnicas completadas</span><span id="completedCount">0</span><span>/100</span></div>
+          <div class="progress-custom mt-1"><div class="progress-fill-custom" id="progressFill"></div></div>
+        </div>
+        <hr>
+        <button id="themeToggleBtn" class="btn btn-sm w-100 mt-2"><i class="bi bi-moon-stars-fill"></i> Dunkelmodus / Modo oscuro</button>
+      </div>
+    </div>
+    
+    <!-- CONTENIDO PRINCIPAL -->
+    <div class="col-lg-9 col-md-8">
+      
+      <!-- LISTA DE TÉCNICAS -->
+      <div id="listaView">
+        <h3><i class="bi bi-pencil-square me-2"></i>100 técnicas · Escritura de párrafos en alemán A1-A2</h3>
+        <p class="text-muted small">Conceptos en español · Ejemplos en alemán con contexto colombiano + traducción · Ejercicios interactivos</p>
+        <div class="d-flex gap-2 my-3 flex-wrap">
+          <input type="text" id="searchInput" class="form-control form-control-sm" placeholder="🔍 Suchen / Buscar..." style="width: 200px;">
+          <select id="filterCategory" class="form-select form-select-sm" style="width: 160px;">
+            <option value="all">Alle / Todas</option>
+            <option value="Narrativo">📖 Narrativ</option>
+            <option value="Descriptivo">🖌️ Deskriptiv</option>
+            <option value="Argumentativo">⚖️ Argumentativ</option>
+            <option value="Expositivo">📚 Expositiv</option>
+          </select>
+        </div>
+        <div id="tecnicasList" style="max-height: 70vh; overflow-y: auto;"></div>
+      </div>
+      
+      <!-- FLASHCARDS + EJERCICIOS -->
+      <div id="flashcardsView" style="display: none;">
+        <div class="d-flex justify-content-between mb-3">
+          <h3><i class="bi bi-pencil-square me-2"></i>Flashcards · Lerne auf Deutsch zu schreiben</h3>
+        </div>
+        <div class="mb-2 d-flex flex-wrap gap-1" id="catFiltersFlash"></div>
+        <div class="flashcard-container"><div class="flashcard" id="flashcard">
+          <div class="flashcard-front">
+            <div class="d-flex justify-content-between"><span class="badge-cat" id="frontCat">Kategorie</span><span id="frontNum">#1</span></div>
+            <h5 id="frontTitle" class="mt-2">Technik</h5>
+            <p id="frontConcept" class="mt-3" style="flex:1;">Konzept auf Spanisch</p>
+            <small>🖱️ Klicke für das Beispiel auf Deutsch</small>
+          </div>
+          <div class="flashcard-back">
+            <div class="d-flex justify-content-between"><span class="badge-cat" style="background:#fff;color:#2C2A29;">📖 Beispiel · Ejemplo</span><span id="backNum">#1</span></div>
+            <h5 id="backTitle" class="mt-2">Beispiel auf Deutsch (Kolumbien)</h5>
+            <div id="backExample" class="mt-2" style="flex:1;"></div>
+            <div id="exerciseArea" class="mt-3"></div>
+          </div>
+        </div></div>
+        <div class="d-flex justify-content-between mt-4">
+          <button id="prevCardBtn" class="btn btn-outline-light">◀ Zurück</button>
+          <div><span id="cardCounter">1 / 100</span><button id="markCompleteBtn" class="btn btn-sm btn-success ms-2">✅ Erledigt</button></div>
+          <button id="nextCardBtn" class="btn btn-outline-light">Weiter ▶</button>
+        </div>
+        <div class="text-center mt-3"><button id="randomCardBtn" class="btn btn-sm btn-secondary me-2">🎲 Zufällig</button><button id="flipCardBtn" class="btn btn-sm btn-secondary">🔄 Umdrehen</button></div>
+      </div>
+      
+      <!-- VISTA VOCABULARIO -->
+      <div id="vocabularioView" style="display: none;">
+        <h3><i class="bi bi-journal-bookmark-fill me-2"></i>Wortschatz · Vocabulario</h3>
+        <p class="text-muted small">Wörter und Phrasen aus den Beispielen, nach Technik geordnet</p>
+        <div class="row" id="vocabularioContainer">
+          <div class="col-12 text-center text-muted py-5">Wähle eine Technik in der Flashcard-Ansicht, um das Vokabular zu sehen.</div>
+        </div>
+      </div>
+      
+      <!-- EXPORTAR -->
+      <div id="exportarView" style="display: none;">
+        <div class="card p-4"><h4>📦 Exportieren · Exportar progreso</h4><button id="exportTxtBtn" class="btn btn-primary-custom btn-lg mt-2">📄 100 Techniken als TXT herunterladen</button>
+        <hr><button id="resetProgressBtn" class="btn btn-outline-danger mt-2">🔄 Alles zurücksetzen</button></div>
+      </div>
+    </div>
+  </div>
+</div>
+<footer><div class="container"><small>🇩🇪 Deutsch A1-A2 · 100 Techniken · Narrativ · Deskriptiv · Argumentativ · Expositiv · Kolumbien</small></div></footer>
+
+<script>
+  // ============================================================
+  // 100 TECHNIKEN ZUM SCHREIBEN AUF DEUTSCH A1-A2
+  // ============================================================
+  
+  function createGermanExample(german, translation, vocab) {
+    return { german, translation, vocab };
+  }
+  
+  const tecnicas = [];
+  
+  // Basis-Techniken nach Absatztyp
+  const baseTecnicas = [
+    // NARRATIV
+    { tipo: "Narrativo", titulo: "Zeitliche Konnektoren verwenden - Conectores temporales", concepto: "Verwende zuerst, dann, danach, schließlich um Ereignisse zu ordnen.",
+      ejemplo: createGermanExample("Zuerst ging die Sonne über der Chicamocha-Schlucht auf. Dann begannen die Kaffeebauern mit der Ernte. Schließlich erfüllte der Duft von frischem Kaffee San Gil.", "Primero, el sol salió sobre el cañón del Chicamocha. Luego, los caficultores comenzaron la cosecha. Finalmente, el aroma a café fresco llenó San Gil.", ["zuerst (primero)", "dann (luego)", "schließlich (finalmente)", "die Sonne (el sol)", "der Kaffee (el café)"]),
+      ejercicio: { tipo: "multiple", pregunta: "Welches Wort bedeutet 'primero' auf Deutsch?", opciones: ["dann", "zuerst", "schließlich", "danach"], respuesta: "zuerst", traduccion: "zuerst = primero" } },
+    { tipo: "Narrativo", titulo: "Perfekt für vergangene Handlungen - Pasado perfecto", concepto: "Verwende das Perfekt (haben/sein + Partizip II) für abgeschlossene Handlungen.",
+      ejemplo: createGermanExample("Die Studenten haben das Goldmuseum in Bogotá besucht. Sie haben die berühmte Muisca-Floß gesehen.", "Los estudiantes visitaron el Museo del Oro en Bogotá. Vieron la famosa balsa muisca.", ["haben besucht (visitaron)", "haben gesehen (vieron)", "das Museum (el museo)", "das Gold (el oro)", "berühmt (famoso)"]),
+      ejercicio: { type: "verdadeiro", pregunta: "Das Perfekt wird mit haben/sein + Partizip II gebildet?", respuesta: "verdadero", traduccion: "Sí, el Perfekt se forma con haben/sein + participio pasado" } },
+    { tipo: "Narrativo", titulo: "Dialog verwenden - Usar diálogo", concepto: "Füge kurze Dialoge ein, um die Erzählung voranzutreiben.",
+      ejemplo: createGermanExample("'Wir sind zweitausend Meter geklettert!' rief María. 'Die Aussicht ist wunderschön!' antwortete Carlos.", "'¡Subimos dos mil metros!' gritó María. '¡La vista es magnífica!' respondió Carlos.", ["rief (gritó)", "antwortete (respondió)", "geklettert (subido)", "die Aussicht (la vista)", "wunderschön (magnífico)"]),
+      ejercicio: { type: "completar", pregunta: "Welches Verb bedeutet 'gritar'?", respuesta: "rufen", traduccion: "rufen = gritar/llamar" } },
+    
+    // DESCRIPTIV
+    { tipo: "Descriptivo", titulo: "Adjektive verwenden - Usar adjetivos", concepto: "Verwende einfache Adjektive (alt, schön, groß, klein) um zu beschreiben.",
+      ejemplo: createGermanExample("In Girón gibt es eine alte koloniale Kirche. Auf dem Hauptplatz gibt es einen schönen kleinen Brunnen.", "En Girón hay una antigua iglesia colonial. En la plaza principal hay una hermosa fuente pequeña.", ["alt (antiguo)", "schön (hermoso)", "klein (pequeño)", "die Kirche (la iglesia)", "der Brunnen (la fuente)"]),
+      ejercicio: { type: "multiple", pregunta: "Welches Adjektiv bedeutet 'hermoso'?", opciones: ["alt", "schön", "groß", "neu"], respuesta: "schön", traduccion: "schön = hermoso/bonito" } },
+    { tipo: "Descriptivo", titulo: "Die fünf Sinne verwenden - Usar los cinco sentidos", concepto: "Beschreibe mit Sehen, Hören, Riechen, Schmecken, Fühlen.",
+      ejemplo: createGermanExample("Schau! Der goldene Sonnenuntergang. Hör! Die Vögel und der Wind. Riech! Der Duft von Kaffee und Arepas.", "¡Mira! La puesta de sol dorada. ¡Escucha! Los pájaros y el viento. ¡Huele! El aroma a café y arepas.", ["schau (mira)", "hör (escucha)", "riech (huele)", "der Sonnenuntergang (el atardecer)", "der Duft (el aroma)"]),
+      ejercicio: { type: "multiple", pregunta: "Welches Verb bedeutet 'escuchar'?", opciones: ["schauen", "hören", "riechen", "sprechen"], respuesta: "hören", traduccion: "hören = escuchar/oír" } },
+    
+    // ARGUMENTATIV
+    { tipo: "Argumentativo", titulo: "These klar ausdrücken - Tesis clara", concepto: "Stelle deine Meinung klar am Anfang des Absatzes dar.",
+      ejemplo: createGermanExample("Kolumbien sollte in Solarenergie investieren. Derzeit kommen nur 12% von der Sonne. Eine Erhöhung auf 30% würde die Umweltverschmutzung reduzieren.", "Colombia debería invertir en energía solar. Actualmente, solo el 12% proviene del sol. Aumentar al 30% reduciría la contaminación.", ["sollte (debería)", "investieren (invertir)", "Solarenergie (energía solar)", "erhöhen (aumentar)", "die Umweltverschmutzung (la contaminación)"]),
+      ejercicio: { type: "verdadeiro", pregunta: "Das Modalverb 'sollte' bedeutet 'debería'?", respuesta: "verdadero", traduccion: "Ja, sollte = debería" } },
+    { tipo: "Argumentativo", titulo: "'weil' für Ursache verwenden - Usar 'porque'", concepto: "Verwende weil um den Grund auszudrücken.",
+      ejemplo: createGermanExample("Weil die Kaffeepreise instabil sind, wechseln die Bauern die Anbaukultur.", "Porque los precios del café son inestables, los agricultores cambian de cultivo.", ["weil (porque)", "die Preise (los precios)", "instabil (inestable)", "die Bauern (los agricultores)", "wechseln (cambian)"]),
+      ejercicio: { type: "completar", pregunta: "Welches Wort bedeutet 'porque'?", respuesta: "weil", traduccion: "weil = porque" } },
+    
+    // EXPOSITIV
+    { tipo: "Expositivo", titulo: "Mit einer Definition beginnen - Comenzar con definición", concepto: "Beginne damit zu erklären, was das Konzept ist, das du beschreiben wirst.",
+      ejemplo: createGermanExample("Der 'Páramo' ist ein einzigartiges Hochland-Ökosystem der Anden. Er hat Grasland und spezielle Pflanzen.", "El 'Páramo' es un ecosistema único de alta montaña de los Andes. Tiene pastizales y plantas especiales.", ["ist (es)", "einzigartig (único)", "das Ökosystem (el ecosistema)", "das Grasland (el pastizal)", "die Pflanzen (las plantas)"]),
+      ejercicio: { type: "multiple", pregunta: "Welches Verb bedeutet 'ser/estar'?", opciones: ["haben", "sein", "werden", "bleiben"], respuesta: "sein", traduccion: "sein = ser/estar" } },
+    { tipo: "Expositivo", titulo: "'zum Beispiel' für Beispiele - 'Por ejemplo'", concepto: "Verwende zum Beispiel, um konkrete Beispiele einzuführen.",
+      ejemplo: createGermanExample("Zum Beispiel hat das Goldmuseum 30.000 Stücke. Die berühmte Muisca-Floß zeigt das Können der Goldschmiede.", "Por ejemplo, el Museo del Oro tiene 30.000 piezas. La famosa balsa muisca muestra la habilidad de los orfebres.", ["zum Beispiel (por ejemplo)", "die Stücke (las piezas)", "berühmt (famosa)", "das Können (la habilidad)", "die Goldschmiede (los orfebres)"]),
+      ejercicio: { type: "verdadeiro", pregunta: "Bedeutet 'zum Beispiel' 'por ejemplo'?", respuesta: "verdadero", traduccion: "Ja, zum Beispiel = por ejemplo" } }
+  ];
+  
+  // Generar 100 técnicas
+  for(let i=1; i<=100; i++) {
+    let base = baseTecnicas[(i-1) % baseTecnicas.length];
+    let tipo = base.tipo;
+    let titel = `${tipo}: ${base.titulo}`;
+    tecnicas.push([i, titel, base.concepto, tipo, base.ejemplo, base.ejercicio]);
+  }
+  
+  // Globale Variablen
+  let progress = {};
+  let currentFilter = "all";
+  let currentSearch = "";
+  let currentCategoryFilter = "all";
+  let filteredTecnicas = [...tecnicas];
+  let currentCardIndex = 0;
+  let flashcardsFilter = "all";
+  let filteredFlashcards = [...tecnicas];
+  const STORAGE_KEY = "deutsch_a1_a2_100";
+  
+  function loadProgress() { const s=localStorage.getItem(STORAGE_KEY); if(s) progress=JSON.parse(s); for(let i=1;i<=100;i++) if(progress[i]===undefined) progress[i]=false; updateStats(); }
+  function saveProgress() { localStorage.setItem(STORAGE_KEY,JSON.stringify(progress)); updateStats(); }
+  function updateStats() { let c=Object.values(progress).filter(v=>v===true).length; document.getElementById("completedCount").innerText=c; document.getElementById("progressFill").style.width=`${(c/100)*100}%`; }
+  function markComplete(id) { progress[id]=!progress[id]; saveProgress(); renderLista(); if(document.getElementById("flashcardsView").style.display!=="none") updateFlashcard(); }
+  
+  function renderLista() {
+    let filtered = [...tecnicas];
+    if(currentSearch) filtered=filtered.filter(t=>t[1].toLowerCase().includes(currentSearch)||t[2].toLowerCase().includes(currentSearch));
+    if(currentCategoryFilter!=="all") filtered=filtered.filter(t=>t[3]===currentCategoryFilter);
+    const cont=document.getElementById("tecnicasList");
+    cont.innerHTML=filtered.map(t=>`<div class="tecnica-card ${progress[t[0]]?'completed':''}" data-id="${t[0]}"><div class="d-flex justify-content-between"><div><span class="badge-cat">${t[3]}</span><span class="ms-2">#${t[0]}</span></div><input class="form-check-input" type="checkbox" ${progress[t[0]]?'checked':''} onchange="event.stopPropagation();markComplete(${t[0]})"></div><h6 class="mt-2">${t[1]}</h6><p class="small text-muted">${t[2].substring(0,100)}...</p></div>`).join('');
+    document.querySelectorAll(".tecnica-card").forEach(c=>c.addEventListener("click",(e)=>{if(!e.target.classList.contains("form-check-input")){ let id=parseInt(c.dataset.id); let idx=filteredTecnicas.findIndex(t=>t[0]===id); if(idx!==-1){currentCardIndex=idx; switchToFlashcards(); updateFlashcard();}}}));
+  }
+  
+  function showVocabulary() {
+    let t = tecnicas[currentCardIndex-1] || tecnicas[0];
+    let vocab = t[4]?.vocab || [];
+    if(vocab.length === 0) {
+      document.getElementById("vocabularioContainer").innerHTML = `<div class="col-12 text-center text-muted py-5">Für diese Technik ist kein Vokabular registriert.</div>`;
+      return;
+    }
+    document.getElementById("vocabularioContainer").innerHTML = `
+      <div class="col-12"><div class="card p-4"><h5>📖 ${t[1]}</h5>
+      <p class="text-muted">${t[2]}</p><hr>
+      <div class="row">${vocab.map(v => `<div class="col-md-6 mb-2"><span class="fw-bold">${v.split(' (')[0]}</span><br><small class="text-muted">${v.split(' (')[1]?.replace(')','') || ''}</small></div>`).join('')}</div></div></div>`;
+  }
+  
+  function populateFilters() {
+    let cats=[...new Set(tecnicas.map(t=>t[3]))];
+    let select=document.getElementById("filterCategory");
+    select.innerHTML='<option value="all">Alle</option>'+cats.map(c=>`<option value="${c}">${c}</option>`).join('');
+    select.onchange=e=>{currentCategoryFilter=e.target.value; renderLista();};
+    let flashCats=document.getElementById("catFiltersFlash");
+    flashCats.innerHTML='<button class="filter-btn active" data-cat="all">📚 Alle</button>'+cats.map(c=>`<button class="filter-btn" data-cat="${c}">${c}</button>`).join('');
+    document.querySelectorAll("#catFiltersFlash .filter-btn").forEach(b=>b.onclick=()=>{flashcardsFilter=b.getAttribute("data-cat"); document.querySelectorAll("#catFiltersFlash .filter-btn").forEach(b=>b.classList.remove("active")); b.classList.add("active"); filterFlashcards();});
+  }
+  function filterFlashcards() { if(flashcardsFilter==="all") filteredFlashcards=[...tecnicas]; else filteredFlashcards=tecnicas.filter(t=>t[3]===flashcardsFilter); currentCardIndex=Math.min(currentCardIndex,filteredFlashcards.length-1); if(currentCardIndex<0) currentCardIndex=0; updateFlashcard(); }
+  
+  function formatGermanExample(exampleObj) {
+    return `<div class="german-text">${exampleObj.german}</div>
+            <div class="translation-text">📖 ${exampleObj.translation}</div>
+            <div class="vocab-card mt-2"><small class="text-muted">📚 Schlüsselvokabular:</small><br>${exampleObj.vocab.map(v => `<span class="badge bg-secondary bg-opacity-25 me-1 mb-1">${v}</span>`).join('')}</div>`;
+  }
+  
+  function updateFlashcard() {
+    let t=filteredFlashcards[currentCardIndex];
+    if(!t) return;
+    document.getElementById("frontCat").innerHTML=t[3]; document.getElementById("frontNum").innerHTML=`#${t[0]}`; document.getElementById("frontTitle").innerHTML=t[1]; document.getElementById("frontConcept").innerHTML=t[2];
+    document.getElementById("backNum").innerHTML=`#${t[0]}`; document.getElementById("backTitle").innerHTML=t[1];
+    document.getElementById("backExample").innerHTML = formatGermanExample(t[4]);
+    document.getElementById("cardCounter").innerHTML=`${currentCardIndex+1}/${filteredFlashcards.length}`;
+    document.getElementById("flashcard").classList.remove("flipped");
+    
+    let ex = t[5];
+    if(!ex) { document.getElementById("exerciseArea").innerHTML = "<div class='text-muted'>📝 Schließe die Technik ab, um die Übung zu sehen.</div>"; return; }
+    
+    let exerciseHtml = "";
+    if(ex.tipo === "multiple") {
+      exerciseHtml = `<div class="small fw-bold mb-2">📝 ${ex.pregunta} ${ex.traduccion ? `<span class="text-muted">(${ex.traduccion})</span>` : ''}</div>
+        <div class="d-flex flex-wrap gap-2">${ex.opciones.map((opt, idx) => `<button class="option-btn multiple-opt" data-value="${opt}">${opt}</button>`).join('')}</div>
+        <div id="exFeedback" class="mt-2 small"></div>`;
+    } else if(ex.tipo === "verdadeiro") {
+      exerciseHtml = `<div class="small fw-bold mb-2">📝 ${ex.pregunta} ${ex.traduccion ? `<span class="text-muted">(${ex.traduccion})</span>` : ''}</div>
+        <div class="d-flex gap-2"><button class="option-btn vf-opt" data-value="verdadero">✅ Richtig</button><button class="option-btn vf-opt" data-value="falso">❌ Falsch</button></div>
+        <div id="exFeedback" class="mt-2 small"></div>`;
+    } else {
+      exerciseHtml = `<div class="small fw-bold mb-2">📝 ${ex.pregunta} ${ex.traduccion ? `<span class="text-muted">(${ex.traduccion})</span>` : ''}</div>
+        <input type="text" id="completarInput" class="form-control form-control-sm" style="width: 60%; display: inline-block;" placeholder="Schreibe deine Antwort...">
+        <button id="completarBtn" class="btn btn-sm btn-primary mt-2">✓ Prüfen</button>
+        <div id="exFeedback" class="mt-2 small"></div>`;
+    }
+    document.getElementById("exerciseArea").innerHTML = exerciseHtml;
+    
+    // Multiple Choice
+    document.querySelectorAll(".multiple-opt")?.forEach(btn => {
+      btn.onclick = () => {
+        let isCorrect = btn.getAttribute("data-value") === ex.respuesta;
+        let fb = document.getElementById("exFeedback");
+        if(isCorrect) { fb.innerHTML = "<span class='text-success'>✅ Richtig!</span>"; if(!progress[t[0]]){progress[t[0]]=true; saveProgress(); renderLista();} }
+        else { fb.innerHTML = `<span class='text-danger'>❌ Falsch. Die Antwort ist: ${ex.respuesta} ${ex.traduccion ? `(${ex.traduccion})` : ''}</span>`; }
+        document.querySelectorAll(".multiple-opt").forEach(b=>b.disabled=true);
+      };
+    });
+    // Richtig/Falsch
+    document.querySelectorAll(".vf-opt")?.forEach(btn => {
+      btn.onclick = () => {
+        let isCorrect = (btn.getAttribute("data-value") === ex.respuesta);
+        let fb = document.getElementById("exFeedback");
+        if(isCorrect) { fb.innerHTML = "<span class='text-success'>✅ Richtig!</span>"; if(!progress[t[0]]){progress[t[0]]=true; saveProgress(); renderLista();} }
+        else { fb.innerHTML = `<span class='text-danger'>❌ Falsch. Die Antwort ist: ${ex.respuesta === "verdadero" ? "Richtig" : "Falsch"} ${ex.traduccion ? `(${ex.traduccion})` : ''}</span>`; }
+        document.querySelectorAll(".vf-opt").forEach(b=>b.disabled=true);
+      };
+    });
+    // Lückentext
+    document.getElementById("completarBtn")?.addEventListener("click", () => {
+      let userAnswer = document.getElementById("completarInput").value.trim().toLowerCase();
+      let isCorrect = userAnswer === ex.respuesta.toLowerCase();
+      let fb = document.getElementById("exFeedback");
+      if(isCorrect) { fb.innerHTML = "<span class='text-success'>✅ Richtig!</span>"; if(!progress[t[0]]){progress[t[0]]=true; saveProgress(); renderLista();} }
+      else { fb.innerHTML = `<span class='text-danger'>❌ Falsch. Die Antwort ist: ${ex.respuesta} ${ex.traduccion ? `(${ex.traduccion})` : ''}</span>`; }
+      document.getElementById("completarBtn").disabled = true;
+    });
+  }
+  
+  function nextCard(){ if(currentCardIndex<filteredFlashcards.length-1){currentCardIndex++; updateFlashcard();} }
+  function prevCard(){ if(currentCardIndex>0){currentCardIndex--; updateFlashcard();} }
+  function randomCard(){ currentCardIndex=Math.floor(Math.random()*filteredFlashcards.length); updateFlashcard(); }
+  function flipCard(){ document.getElementById("flashcard").classList.toggle("flipped"); }
+  function markCurrentComplete(){ let t=filteredFlashcards[currentCardIndex]; if(t){progress[t[0]]=!progress[t[0]]; saveProgress(); renderLista(); updateFlashcard();} }
+  
+  function exportTxt(){ let content="=== 100 TECHNIKEN ZUM SCHREIBEN AUF DEUTSCH A1-A2 ===\n\n"; for(let t of tecnicas){ content+=`[${t[0]}] ${t[1]}\nTyp: ${t[3]}\nKonzept: ${t[2]}\nBeispiel: ${t[4].german}\nÜbersetzung: ${t[4].translation}\nWortschatz: ${t[4].vocab.join(", ")}\nAbgeschlossen: ${progress[t[0]]?"JA":"NEIN"}\n${"-".repeat(50)}\n\n`; } let blob=new Blob([content],{type:"text/plain"}); let a=document.createElement("a"); a.href=URL.createObjectURL(blob); a.download=`deutsch_a1_a2_${Date.now()}.txt`; a.click(); URL.revokeObjectURL(a.href); }
+  function resetProgress(){ if(confirm("Alles zurücksetzen? Fortschritt geht verloren.")){ for(let i=1;i<=100;i++) progress[i]=false; saveProgress(); renderLista(); updateFlashcard(); } }
+  
+  function switchToLista(){ document.getElementById("listaView").style.display="block"; document.getElementById("flashcardsView").style.display="none"; document.getElementById("vocabularioView").style.display="none"; document.getElementById("exportarView").style.display="none"; document.querySelectorAll(".nav-item-custom").forEach(i=>i.classList.remove("active")); document.querySelector(".nav-item-custom[data-view='lista']").classList.add("active"); renderLista(); }
+  function switchToFlashcards(){ document.getElementById("listaView").style.display="none"; document.getElementById("flashcardsView").style.display="block"; document.getElementById("vocabularioView").style.display="none"; document.getElementById("exportarView").style.display="none"; document.querySelectorAll(".nav-item-custom").forEach(i=>i.classList.remove("active")); document.querySelector(".nav-item-custom[data-view='flashcards']").classList.add("active"); filterFlashcards(); }
+  function switchToVocabulario(){ document.getElementById("listaView").style.display="none"; document.getElementById("flashcardsView").style.display="none"; document.getElementById("vocabularioView").style.display="block"; document.getElementById("exportarView").style.display="none"; document.querySelectorAll(".nav-item-custom").forEach(i=>i.classList.remove("active")); document.querySelector(".nav-item-custom[data-view='vocabulario']").classList.add("active"); showVocabulary(); }
+  function switchToExportar(){ document.getElementById("listaView").style.display="none"; document.getElementById("flashcardsView").style.display="none"; document.getElementById("vocabularioView").style.display="none"; document.getElementById("exportarView").style.display="block"; document.querySelectorAll(".nav-item-custom").forEach(i=>i.classList.remove("active")); document.querySelector(".nav-item-custom[data-view='exportar']").classList.add("active"); }
+  
+  document.getElementById("searchInput")?.addEventListener("input",e=>{currentSearch=e.target.value.toLowerCase(); renderLista();});
+  document.getElementById("prevCardBtn")?.addEventListener("click",prevCard);
+  document.getElementById("nextCardBtn")?.addEventListener("click",nextCard);
+  document.getElementById("randomCardBtn")?.addEventListener("click",randomCard);
+  document.getElementById("flipCardBtn")?.addEventListener("click",flipCard);
+  document.getElementById("markCompleteBtn")?.addEventListener("click",markCurrentComplete);
+  document.getElementById("exportTxtBtn")?.addEventListener("click",exportTxt);
+  document.getElementById("resetProgressBtn")?.addEventListener("click",resetProgress);
+  document.getElementById("themeToggleBtn")?.addEventListener("click",()=>document.body.classList.toggle("light-mode"));
+  document.querySelector(".nav-item-custom[data-view='lista']")?.addEventListener("click",switchToLista);
+  document.querySelector(".nav-item-custom[data-view='flashcards']")?.addEventListener("click",switchToFlashcards);
+  document.querySelector(".nav-item-custom[data-view='vocabulario']")?.addEventListener("click",switchToVocabulario);
+  document.querySelector(".nav-item-custom[data-view='exportar']")?.addEventListener("click",switchToExportar);
+  
+  loadProgress(); populateFilters(); renderLista(); filterFlashcards(); switchToLista();
+</script>
+</body>
+</html>

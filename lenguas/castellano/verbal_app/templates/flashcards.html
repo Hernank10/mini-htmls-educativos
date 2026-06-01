@@ -1,0 +1,166 @@
+{% extends 'base.html' %}
+{% block title %}Flashcards · VerbalMaster{% endblock %}
+{% block head %}
+<style>
+.lang-filter{display:flex;gap:0.5rem;flex-wrap:wrap;margin-bottom:1.5rem}
+.lang-chip{padding:0.35rem 0.9rem;border-radius:999px;font-size:0.68rem;cursor:pointer;
+  background:var(--s2);border:1px solid var(--border);color:var(--muted);transition:all 0.15s}
+.lang-chip:hover{color:var(--text);border-color:var(--faint)}
+.lang-chip.active{color:var(--text)}
+.lang-chip.all.active{background:rgba(251,191,36,0.15);border-color:var(--gold);color:var(--gold)}
+.lang-chip.es.active{background:rgba(249,115,22,0.15);border-color:var(--es);color:var(--es)}
+.lang-chip.en.active{background:rgba(59,130,246,0.15);border-color:var(--en);color:var(--en)}
+.lang-chip.zh.active{background:rgba(239,68,68,0.15);border-color:var(--zh);color:var(--zh)}
+.lang-chip.hi.active{background:rgba(168,85,247,0.15);border-color:var(--hi);color:var(--hi)}
+.lang-chip.ru.active{background:rgba(34,197,94,0.15);border-color:var(--ru);color:var(--ru)}
+
+/* FLASHCARD 3D */
+.flash-scene{perspective:1000px;max-width:580px;margin:0 auto}
+.flash-card{position:relative;height:340px;transform-style:preserve-3d;transition:transform 0.6s cubic-bezier(.4,0,.2,1);cursor:pointer}
+.flash-card.flipped{transform:rotateY(180deg)}
+.flash-face{position:absolute;inset:0;backface-visibility:hidden;border-radius:14px;
+  display:flex;flex-direction:column;justify-content:center;align-items:center;
+  padding:2rem;text-align:center;border:1px solid var(--border)}
+.flash-front{background:var(--s1)}
+.flash-back{background:var(--s2);transform:rotateY(180deg)}
+.flash-accent{position:absolute;top:0;left:0;right:0;height:4px;border-radius:14px 14px 0 0}
+.flash-num{font-size:0.6rem;color:var(--muted);letter-spacing:0.12em;margin-bottom:1rem}
+.flash-title{font-family:var(--font-display);font-size:1.6rem;font-weight:700;line-height:1.2;margin-bottom:0.7rem}
+.flash-hint{font-size:0.7rem;color:var(--muted);margin-top:1.5rem}
+.flash-desc{font-size:0.82rem;color:var(--text);line-height:1.7;margin-bottom:0.8rem}
+.flash-example{font-size:0.72rem;color:var(--muted);font-style:italic;
+  background:var(--s3);padding:0.5rem 0.8rem;border-radius:6px;width:100%}
+
+.flash-controls{display:flex;justify-content:center;gap:0.8rem;margin-top:1.2rem}
+.counter{text-align:center;font-size:0.68rem;color:var(--muted);margin-bottom:0.8rem}
+</style>
+{% endblock %}
+{% block body %}
+<div class="page">
+<div class="container animate">
+  <div class="flex-between mb-3">
+    <div>
+      <div class="page-title">⚡ Flashcards</div>
+      <div class="page-sub">{{ total }} tarjetas · Toca la tarjeta para revelar</div>
+    </div>
+    <div style="text-align:right">
+      <div id="cardCounter" style="font-family:var(--font-display);font-size:1.4rem;font-weight:900;color:var(--gold)">1/50</div>
+      <div class="text-xs text-muted">PROGRESO</div>
+    </div>
+  </div>
+
+  <!-- PROGRESS -->
+  <div class="prog-bar mb-2" style="height:5px">
+    <div class="prog-fill" id="flashProg" style="width:2%;background:linear-gradient(90deg,var(--gold),var(--es))"></div>
+  </div>
+
+  <!-- LANG FILTERS -->
+  <div class="lang-filter">
+    <div class="lang-chip all active" onclick="setLang('all',this)">✦ Todos</div>
+    <div class="lang-chip es" onclick="setLang('es',this)">🇪🇸 Español</div>
+    <div class="lang-chip en" onclick="setLang('en',this)">🇬🇧 Inglés</div>
+    <div class="lang-chip zh" onclick="setLang('zh',this)">🇨🇳 Chino</div>
+    <div class="lang-chip hi" onclick="setLang('hi',this)">🇮🇳 Hindi</div>
+    <div class="lang-chip ru" onclick="setLang('ru',this)">🇷🇺 Ruso</div>
+  </div>
+
+  <!-- CARD -->
+  <div class="flash-scene">
+    <div class="flash-card" id="flashCard" onclick="flipCard()">
+      <div class="flash-face flash-front">
+        <div class="flash-accent" id="fa1"></div>
+        <div class="flash-num" id="fNum">#001 · 🇪🇸 Español</div>
+        <div class="flash-title" id="fTitle">Cargando...</div>
+        <span class="badge badge-es" id="fBadge">es</span>
+        <div class="flash-hint">Toca para ver la descripción ↓</div>
+      </div>
+      <div class="flash-face flash-back">
+        <div class="flash-accent" id="fa2"></div>
+        <div class="flash-num" id="fNum2"></div>
+        <div class="flash-desc" id="fDesc"></div>
+        <div class="flash-example" id="fEx"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="flash-controls mt-2">
+    <button class="btn btn-outline" onclick="prevCard()">← Anterior</button>
+    <button class="btn btn-outline btn-sm" onclick="shuffleCards()">🔀 Mezclar</button>
+    <button class="btn btn-primary" onclick="nextCard()">Siguiente →</button>
+  </div>
+
+  <!-- MINI GRID -->
+  <div class="mt-4">
+    <div class="text-xs text-muted mb-2" style="letter-spacing:.1em">TODAS LAS TARJETAS</div>
+    <div class="grid-2" id="miniGrid"></div>
+  </div>
+</div>
+</div>
+{% endblock %}
+{% block scripts %}
+<script>
+const LANG_COLORS = {es:'var(--es)',en:'var(--en)',zh:'var(--zh)',hi:'var(--hi)',ru:'var(--ru)'};
+const LANG_FLAGS = {es:'🇪🇸 Español',en:'🇬🇧 Inglés',zh:'🇨🇳 Chino',hi:'🇮🇳 Hindi',ru:'🇷🇺 Ruso'};
+let cards=[],idx=0,flipped=false;
+
+function setLang(lang,el){
+  document.querySelectorAll('.lang-chip').forEach(c=>c.classList.remove('active'));
+  el.classList.add('active');
+  fetch('/api/flashcards?lang='+lang).then(r=>r.json()).then(data=>{
+    cards=data; idx=0; flipped=false;
+    document.getElementById('flashCard').classList.remove('flipped');
+    renderCard(); renderMini();
+  });
+}
+
+function renderCard(){
+  if(!cards.length) return;
+  const c=cards[idx];
+  const col=LANG_COLORS[c.lang];
+  document.getElementById('fNum').textContent=c.num+' · '+LANG_FLAGS[c.lang];
+  document.getElementById('fNum2').textContent=c.num+' · '+LANG_FLAGS[c.lang];
+  document.getElementById('fTitle').textContent=c.title;
+  document.getElementById('fDesc').textContent=c.desc;
+  document.getElementById('fEx').textContent='Ejemplo: '+c.example;
+  document.getElementById('fBadge').textContent=c.lang.toUpperCase();
+  document.getElementById('fBadge').className='badge badge-'+c.lang;
+  document.getElementById('fa1').style.background=col;
+  document.getElementById('fa2').style.background=col;
+  const total=cards.length;
+  document.getElementById('cardCounter').textContent=(idx+1)+'/'+total;
+  document.getElementById('flashProg').style.width=Math.max(2,((idx+1)/total*100))+'%';
+}
+
+function flipCard(){
+  const card=document.getElementById('flashCard');
+  flipped=!flipped;
+  card.classList.toggle('flipped',flipped);
+}
+
+function nextCard(){
+  if(idx<cards.length-1){idx++;flipped=false;document.getElementById('flashCard').classList.remove('flipped');renderCard();}
+  else toast('¡Has visto todas las tarjetas! 🎉');
+}
+function prevCard(){
+  if(idx>0){idx--;flipped=false;document.getElementById('flashCard').classList.remove('flipped');renderCard();}
+}
+function shuffleCards(){
+  cards=cards.sort(()=>Math.random()-0.5);idx=0;flipped=false;
+  document.getElementById('flashCard').classList.remove('flipped');
+  renderCard();toast('Tarjetas mezcladas 🔀');
+}
+
+function renderMini(){
+  const g=document.getElementById('miniGrid');
+  g.innerHTML=cards.map((c,i)=>`
+    <div onclick="jumpTo(${i})" class="card card-sm" style="cursor:pointer;border-left:3px solid ${LANG_COLORS[c.lang]};transition:transform 0.15s" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform=''">
+      <div class="text-xs text-muted mb-1">${c.num} · ${LANG_FLAGS[c.lang]}</div>
+      <div style="font-size:0.8rem;font-weight:600">${c.title}</div>
+    </div>`).join('');
+}
+function jumpTo(i){idx=i;flipped=false;document.getElementById('flashCard').classList.remove('flipped');renderCard();window.scrollTo({top:0,behavior:'smooth'});}
+
+// INIT
+setLang('all',document.querySelector('.lang-chip.all'));
+</script>
+{% endblock %}

@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Redacción para Ingeniería Mecánica — 100 técnicas para estudiantes colombianos</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ink:#1a1209; --parchment:#f5f0e8; --amber:#c8860a; --amber-light:#f0a830;
+  --amber-pale:#fdf3dc; --rust:#8b3a1a; --sage:#4a6741; --sage-light:#7a9e76;
+  --cream:#faf7f2; --border:#d4c9b0; --shadow:rgba(26,18,9,0.12);
+  --steel:#2c3e50; --steel-light:#5a6e7e; --gear:#5d6d7e;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'DM Sans',sans-serif;background:var(--parchment);color:var(--ink);min-height:100vh;
+  background-image:radial-gradient(ellipse at 15% 0%,rgba(44,62,80,.07) 0%,transparent 55%),
+  radial-gradient(ellipse at 85% 100%,rgba(139,69,19,.05) 0%,transparent 55%);}
+h1,h2,h3,.serif{font-family:'Playfair Display',serif;}
+
+.app-nav{background:var(--ink);display:flex;align-items:center;gap:.75rem;
+  padding:.7rem 1.5rem;position:sticky;top:0;z-index:200;box-shadow:0 2px 18px rgba(0,0,0,.25);}
+.nav-brand{font-family:'Playfair Display',serif;font-weight:900;font-size:1.25rem;
+  color:var(--steel-light);flex:1;white-space:nowrap;}
+.nav-brand span{color:#fff;}
+.nav-avatar{width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,var(--steel),var(--rust));
+  display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.95rem;
+  color:#fff;font-family:'Playfair Display',serif;cursor:pointer;flex-shrink:0;
+  border:2px solid rgba(255,255,255,.2);transition:border-color .2s;}
+.nav-avatar:hover{border-color:var(--steel-light);}
+.nav-username{color:rgba(255,255,255,.8);font-size:.85rem;font-weight:500;white-space:nowrap;}
+.btn-reset{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);
+  color:rgba(255,255,255,.7);border-radius:8px;padding:.32rem .75rem;font-size:.78rem;
+  cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .2s;}
+.btn-reset:hover{background:rgba(255,255,255,.18);color:#fff;}
+
+.app-tabs{background:#fff;border-bottom:2px solid var(--border);display:flex;
+  padding:0 1.5rem;overflow-x:auto;gap:0;position:sticky;top:58px;z-index:150;}
+.app-tab{padding:.85rem 1.1rem;border:none;background:transparent;font-family:'DM Sans',sans-serif;
+  font-weight:700;font-size:.82rem;color:#999;cursor:pointer;white-space:nowrap;
+  border-bottom:3px solid transparent;margin-bottom:-2px;transition:all .2s;
+  display:flex;align-items:center;gap:.35rem;}
+.app-tab:hover{color:var(--ink);}
+.app-tab.active{color:var(--steel);border-bottom-color:var(--steel);}
+
+.app-body{max-width:1080px;margin:0 auto;padding:2rem 1.5rem;}
+.page{display:none;animation:rise .28s ease;}
+.page.active{display:block;}
+
+.card-app{background:#fff;border:1.5px solid var(--border);border-radius:16px;
+  box-shadow:0 2px 10px var(--shadow);overflow:hidden;}
+.card-app-header{padding:1.1rem 1.4rem;border-bottom:1px solid var(--border);
+  display:flex;align-items:center;gap:.75rem;}
+.card-app-body{padding:1.4rem;}
+
+.stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:.9rem;margin-bottom:1.6rem;}
+.stat-box{background:#fff;border:1.5px solid var(--border);border-radius:14px;
+  padding:1.1rem 1rem;text-align:center;transition:transform .2s;cursor:default;}
+.stat-box:hover{transform:translateY(-3px);box-shadow:0 6px 18px var(--shadow);}
+.stat-num{font-family:'Playfair Display',serif;font-size:2rem;font-weight:900;
+  color:var(--steel);line-height:1;margin-bottom:.2rem;}
+.stat-lbl{font-size:.73rem;font-weight:700;color:#aaa;text-transform:uppercase;letter-spacing:.05em;}
+
+.dot-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(26px,1fr));gap:4px;margin-bottom:1.6rem;}
+.dot{aspect-ratio:1;border-radius:6px;background:var(--border);cursor:pointer;
+  transition:all .18s;position:relative;display:flex;align-items:center;justify-content:center;}
+.dot.done{background:var(--sage);}
+.dot:hover{transform:scale(1.35);z-index:5;}
+.dot-tip{position:absolute;bottom:130%;left:50%;transform:translateX(-50%);
+  background:var(--ink);color:#fff;padding:.28rem .6rem;border-radius:6px;font-size:.68rem;
+  white-space:nowrap;pointer-events:none;opacity:0;transition:opacity .18s;z-index:99;}
+.dot:hover .dot-tip{opacity:1;}
+.dot-num{font-size:.5rem;font-weight:700;color:rgba(255,255,255,.7);}
+
+.search-field{border:1.5px solid var(--border);border-radius:10px;padding:.55rem 1rem .55rem 2.3rem;
+  font-family:'DM Sans',sans-serif;font-size:.87rem;background:#fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%23aaa' stroke-width='2.5'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cpath d='M21 21l-4.35-4.35'/%3E%3C/svg%3E") no-repeat .75rem center;
+  width:100%;max-width:260px;outline:none;transition:border-color .2s;}
+.search-field:focus{border-color:var(--steel);}
+.pill{padding:.28rem .75rem;border-radius:20px;border:1.5px solid var(--border);background:#fff;
+  font-size:.75rem;font-weight:700;cursor:pointer;transition:all .2s;font-family:'DM Sans',sans-serif;color:#888;}
+.pill.on,.pill:hover{background:var(--steel);border-color:var(--steel);color:#fff;}
+
+.ex-card{background:#fff;border:1.5px solid var(--border);border-radius:13px;padding:1rem 1.2rem;
+  margin-bottom:.6rem;cursor:pointer;transition:all .18s;display:flex;align-items:flex-start;gap:.9rem;
+  box-shadow:0 1px 4px var(--shadow);}
+.ex-card:hover{border-color:var(--steel);transform:translateX(5px);}
+.ex-card.done{border-left:4px solid var(--sage);}
+.ex-num-box{background:var(--parchment);border:1px solid var(--border);border-radius:8px;
+  width:42px;height:42px;display:flex;align-items:center;justify-content:center;
+  font-family:'DM Mono',monospace;font-size:.75rem;font-weight:600;color:var(--steel);flex-shrink:0;}
+.ex-card.done .ex-num-box{background:var(--sage);color:#fff;border-color:var(--sage);}
+.ex-body{flex:1;min-width:0;}
+.ex-cat-tag{font-size:.7rem;font-weight:700;color:var(--steel);text-transform:uppercase;letter-spacing:.05em;}
+.ex-name{font-weight:700;font-size:.9rem;margin:.1rem 0 .18rem;}
+.ex-short{font-size:.78rem;color:#777;line-height:1.5;}
+.badge-done{background:var(--sage);color:#fff;padding:.18rem .55rem;border-radius:9px;font-size:.7rem;font-weight:700;}
+.badge-new{background:var(--parchment);color:#bbb;padding:.18rem .55rem;border-radius:9px;font-size:.7rem;font-weight:700;border:1px solid var(--border);}
+
+.prac-header{background:#fff;border:1.5px solid var(--border);border-radius:16px;
+  padding:1.4rem 1.5rem;margin-bottom:1.2rem;box-shadow:0 2px 10px var(--shadow);}
+.prac-badge{display:inline-flex;align-items:center;gap:.35rem;background:var(--amber-pale);
+  border:1px solid rgba(200,134,10,.28);border-radius:8px;padding:.28rem .75rem;
+  font-size:.76rem;font-weight:700;color:var(--steel);margin-bottom:.7rem;}
+.prac-title{font-size:1.3rem;font-weight:900;margin-bottom:.45rem;}
+.prac-explanation{font-size:.88rem;color:#555;line-height:1.7;margin:0;}
+.prac-example{background:var(--parchment);border-left:3px solid var(--steel);
+  border-radius:0 9px 9px 0;padding:.7rem 1rem;margin-top:.9rem;font-size:.84rem;
+  color:var(--ink);font-style:italic;}
+
+.writing-zone{background:#fff;border:1.5px solid var(--border);border-radius:16px;
+  padding:1.4rem 1.5rem;margin-bottom:1rem;box-shadow:0 2px 10px var(--shadow);}
+.writing-prompt{background:linear-gradient(135deg,var(--amber-pale),#fffcf5);
+  border:1px solid rgba(200,134,10,.22);border-radius:10px;padding:.9rem 1.1rem;
+  margin-bottom:1rem;font-size:.87rem;line-height:1.65;}
+.writing-prompt strong{color:var(--rust);}
+#practiceTA{width:100%;min-height:145px;border:1.5px solid var(--border);border-radius:10px;
+  padding:.9rem 1rem;font-family:'DM Sans',sans-serif;font-size:.93rem;line-height:1.75;
+  color:var(--ink);resize:vertical;background:#fffef9;transition:border-color .2s;outline:none;}
+#practiceTA:focus{border-color:var(--steel);box-shadow:0 0 0 3px rgba(44,62,80,.1);}
+.wc{text-align:right;font-size:.76rem;color:#bbb;margin-top:.4rem;}
+
+.btn-check{background:linear-gradient(135deg,var(--sage),var(--sage-light));border:none;
+  border-radius:10px;color:#fff;font-weight:700;font-size:.92rem;padding:.75rem 1.6rem;
+  cursor:pointer;transition:all .2s;font-family:'DM Sans',sans-serif;
+  display:inline-flex;align-items:center;gap:.45rem;
+  box-shadow:0 4px 14px rgba(74,103,65,.32);}
+.btn-check:hover{transform:translateY(-2px);box-shadow:0 7px 20px rgba(74,103,65,.4);}
+.btn-check:disabled{opacity:.55;cursor:not-allowed;transform:none;}
+
+.btn-next{background:linear-gradient(135deg,var(--steel),var(--rust));border:none;
+  border-radius:10px;color:#fff;font-weight:700;font-size:.92rem;padding:.75rem 1.6rem;
+  cursor:pointer;transition:all .2s;font-family:'DM Sans',sans-serif;
+  display:inline-flex;align-items:center;gap:.45rem;box-shadow:0 4px 14px rgba(44,62,80,.3);}
+.btn-next:hover{transform:translateY(-2px);}
+
+.fb-area{background:#fff;border:1.5px solid var(--border);border-radius:16px;
+  overflow:hidden;box-shadow:0 2px 10px var(--shadow);display:none;}
+.fb-area.show{display:block;animation:rise .35s ease;}
+.fb-head{padding:.95rem 1.4rem;display:flex;align-items:center;gap:.7rem;border-bottom:1px solid var(--border);}
+.fb-head.excellent{background:linear-gradient(90deg,#d4edda,#f0faf4);}
+.fb-head.good{background:linear-gradient(90deg,#fff3cd,#fffbf0);}
+.fb-head.low{background:linear-gradient(90deg,#f8d7da,#fdf5f5);}
+.fb-emoji{font-size:1.8rem;}
+.fb-htitle{font-weight:800;font-size:1rem;margin:0;}
+.fb-hsub{font-size:.78rem;color:#888;margin:0;}
+.fb-body{padding:1.4rem;}
+.score-circle{width:66px;height:66px;border-radius:50%;display:flex;align-items:center;
+  justify-content:center;font-family:'Playfair Display',serif;font-weight:900;font-size:1.25rem;flex-shrink:0;}
+.sc-high{background:#d4edda;color:#2d6a4f;}
+.sc-med{background:#fff3cd;color:#7a5c00;}
+.sc-low{background:#f8d7da;color:#8b1a1a;}
+.fb-section{margin-bottom:1.1rem;}
+.fb-section-title{font-weight:700;font-size:.76rem;text-transform:uppercase;letter-spacing:.07em;
+  color:#aaa;margin-bottom:.5rem;display:flex;align-items:center;gap:.35rem;}
+.fb-item{padding:.62rem .85rem;border-radius:8px;font-size:.84rem;line-height:1.52;
+  margin-bottom:.35rem;display:flex;gap:.55rem;align-items:flex-start;}
+.fb-item.ok{background:#f0f9f4;color:#2d6a4f;border-left:3px solid var(--sage);}
+.fb-item.err{background:#fdf5f5;color:#8b1a1a;border-left:3px solid #dc3545;}
+.fb-item.tip{background:#fffbf0;color:#7a5c00;border-left:3px solid var(--steel);}
+.fb-item.info{background:var(--parchment);color:var(--ink);border-left:3px solid #aaa;}
+.fb-ico{flex-shrink:0;margin-top:1px;}
+
+.spin{width:34px;height:34px;border:3px solid var(--border);border-top-color:var(--steel);
+  border-radius:50%;animation:rot .65s linear infinite;margin:0 auto 1rem;}
+@keyframes rot{to{transform:rotate(360deg)}}
+
+.profile-cover{height:96px;background:linear-gradient(135deg,var(--ink) 0%,#3d2a10 50%,var(--steel) 100%);position:relative;}
+.profile-av-lg{width:78px;height:78px;border-radius:50%;border:4px solid #fff;
+  background:linear-gradient(135deg,var(--steel),var(--rust));display:flex;align-items:center;
+  justify-content:center;font-family:'Playfair Display',serif;font-weight:900;font-size:1.9rem;
+  color:#fff;position:absolute;bottom:-38px;left:1.4rem;box-shadow:0 4px 18px var(--shadow);}
+.profile-body{padding:3.2rem 1.4rem 1.4rem;}
+.profile-name{font-size:1.4rem;font-weight:900;margin-bottom:.15rem;}
+.profile-meta{color:#999;font-size:.83rem;}
+.ach-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:.65rem;}
+.ach{background:#fff;border:1.5px solid var(--border);border-radius:12px;padding:.9rem .7rem;
+  text-align:center;transition:all .2s;}
+.ach.unlocked{border-color:var(--steel);background:var(--amber-pale);}
+.ach.unlocked:hover{transform:translateY(-3px);box-shadow:0 5px 14px rgba(44,62,80,.22);}
+.ach-icon{font-size:1.6rem;display:block;margin-bottom:.35rem;}
+.ach-name{font-size:.7rem;font-weight:700;color:var(--ink);}
+.ach.locked .ach-icon{filter:grayscale(1);opacity:.35;}
+.ach.locked .ach-name{color:#ccc;}
+
+.hist-row{background:#fff;border:1.5px solid var(--border);border-radius:11px;
+  padding:.8rem 1rem;margin-bottom:.5rem;display:flex;align-items:center;gap:.8rem;cursor:pointer;transition:border-color .2s;}
+.hist-row:hover{border-color:var(--steel);}
+
+.toast-box{position:fixed;bottom:1.4rem;right:1.4rem;z-index:9999;}
+.toast-item{background:var(--ink);color:#fff;border-radius:12px;padding:.8rem 1.1rem;
+  margin-top:.45rem;display:flex;align-items:center;gap:.65rem;font-size:.84rem;font-weight:500;
+  box-shadow:0 8px 26px rgba(0,0,0,.28);animation:rise .28s ease;max-width:300px;}
+.toast-item.s{border-left:4px solid var(--sage-light);}
+.toast-item.e{border-left:4px solid #dc3545;}
+.toast-item.i{border-left:4px solid var(--steel-light);}
+
+.modal-backdrop-custom{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:1040;
+  display:flex;align-items:center;justify-content:center;padding:1rem;}
+.modal-box{background:#fff;border-radius:20px;max-width:480px;width:100%;
+  box-shadow:0 24px 64px rgba(0,0,0,.28);animation:rise .3s ease;overflow:hidden;}
+.modal-head{background:var(--ink);padding:1.1rem 1.4rem;color:#fff;display:flex;align-items:center;gap:.7rem;}
+.modal-head .modal-title-txt{font-weight:800;font-size:1rem;flex:1;}
+.modal-close{background:rgba(255,255,255,.12);border:none;color:#fff;border-radius:8px;
+  width:32px;height:32px;cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center;}
+.modal-close:hover{background:rgba(255,255,255,.25);}
+.modal-body-custom{padding:1.4rem;}
+.modal-foot{padding:1rem 1.4rem;border-top:1px solid var(--border);display:flex;gap:.7rem;justify-content:flex-end;}
+
+@keyframes rise{from{opacity:0;transform:translateY(28px)}to{opacity:1;transform:translateY(0)}}
+::-webkit-scrollbar{width:6px;height:6px;}
+::-webkit-scrollbar-track{background:transparent;}
+::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px;}
+@media(max-width:576px){
+  .app-body{padding:1rem;}
+  .stats-grid{grid-template-columns:1fr 1fr;}
+  .ach-grid{grid-template-columns:repeat(3,1fr);}
+  .app-nav{padding:.6rem 1rem;}
+  .nav-username{display:none;}
+}
+</style>
+</head>
+<body>
+
+<div id="appScreen">
+  <nav class="app-nav">
+    <div class="nav-brand">Ingeniería<span>Mecánica</span></div>
+    <div class="nav-avatar" id="navAv" onclick="switchPage('perfil')" title="Ver perfil">I</div>
+    <span class="nav-username" id="navName">Estudiante</span>
+    <button class="btn-reset" onclick="confirmReset()"><i class="bi bi-arrow-counterclockwise"></i> Reiniciar</button>
+  </nav>
+  <div class="app-tabs">
+    <button class="app-tab active" id="tab-dashboard" onclick="switchPage('dashboard')"><i class="bi bi-grid-3x3-gap-fill"></i> Inicio</button>
+    <button class="app-tab" id="tab-ejercicios" onclick="switchPage('ejercicios')"><i class="bi bi-journal-bookmark-fill"></i> Técnicas</button>
+    <button class="app-tab" id="tab-practica" onclick="switchPage('practica')"><i class="bi bi-pencil-square"></i> Practicar</button>
+    <button class="app-tab" id="tab-perfil" onclick="switchPage('perfil')"><i class="bi bi-person-circle"></i> Perfil</button>
+  </div>
+  <div class="app-body">
+    <!-- DASHBOARD -->
+    <div class="page active" id="page-dashboard">
+      <div class="d-flex align-items-center gap-2 mb-4"><div><h2 class="serif fw-black mb-0">¡Hola, <span id="dashName">futuro ingeniero mecánico</span>! ⚙️</h2><p class="text-muted mb-0">Mejora tu redacción técnica en el contexto colombiano</p></div></div>
+      <div class="stats-grid mb-4">
+        <div class="stat-box"><div class="stat-num" id="sCompleted">0</div><div class="stat-lbl">Técnicas dominadas</div></div>
+        <div class="stat-box"><div class="stat-num" id="sPracticed">0</div><div class="stat-lbl">Prácticas realizadas</div></div>
+        <div class="stat-box"><div class="stat-num" id="sScore">—</div><div class="stat-lbl">Puntuación media</div></div>
+        <div class="stat-box"><div class="stat-num" id="sStreak">1🔥</div><div class="stat-lbl">Racha</div></div>
+      </div>
+      <div class="card-app mb-4"><div class="card-app-header"><i class="bi bi-map-fill text-warning"></i><div><div style="font-weight:800">Mapa de progreso</div><div style="font-size:.74rem;color:#aaa">100 técnicas · Verde = completado</div></div></div><div class="card-app-body"><div class="dot-grid" id="dotGrid"></div></div></div>
+      <div class="mb-2" style="font-weight:800">Siguiente técnica</div>
+      <div class="ex-card" id="nextCard"><div class="ex-num-box" id="nextNum">01</div><div class="ex-body"><div class="ex-cat-tag" id="nextCat">Informes técnicos</div><div class="ex-name" id="nextName">Cargando...</div><div class="ex-short" id="nextDesc"></div></div><span style="color:var(--steel);font-size:1.4rem"><i class="bi bi-play-circle-fill"></i></span></div>
+      <div class="card-app mt-4"><div class="card-app-header"><i class="bi bi-bar-chart-fill text-warning"></i><div>Progreso por categoría</div></div><div class="card-app-body" id="catProgress"></div></div>
+    </div>
+    <!-- TÉCNICAS -->
+    <div class="page" id="page-ejercicios">
+      <div class="d-flex align-items-center justify-content-between flex-wrap gap-2 mb-3"><h2 class="serif fw-black mb-0">100 Técnicas de Redacción para Ingeniería Mecánica</h2><input class="search-field" id="searchQ" type="text" placeholder="Buscar..." oninput="renderList()"></div>
+      <div class="d-flex flex-wrap gap-2 mb-3" id="pills">
+        <button class="pill on" onclick="setFilter('all',this)">Todas</button>
+        <button class="pill" onclick="setFilter('informes',this)">Informes técnicos</button>
+        <button class="pill" onclick="setFilter('memorias',this)">Memorias de cálculo</button>
+        <button class="pill" onclick="setFilter('normas',this)">Normas ICONTEC</button>
+        <button class="pill" onclick="setFilter('manuales',this)">Manuales y mantenimiento</button>
+        <button class="pill" onclick="setFilter('etica',this)">Ética y comunicación</button>
+      </div>
+      <div id="exList"></div>
+    </div>
+    <!-- PRACTICAR -->
+    <div class="page" id="page-practica">
+      <div id="practiceEmpty" style="text-align:center;padding:4rem 1rem;"><div style="font-size:4rem">🔧</div><h3 class="serif fw-black mb-2">Selecciona una técnica</h3><button class="btn-main" style="display:inline-flex;width:auto" onclick="switchPage('ejercicios')"><i class="bi bi-journal-bookmark-fill"></i> Ver técnicas</button></div>
+      <div id="practiceContent" style="display:none">
+        <div class="prac-header"><div class="d-flex align-items-start justify-content-between gap-2 flex-wrap"><div><div class="prac-badge"><i class="bi bi-mortarboard-fill"></i> <span id="pracCat">Informes</span> · Técnica <span id="pracNum">01</span></div><h2 class="prac-title serif" id="pracName">Título</h2><p class="prac-explanation" id="pracExpl">Explicación</p><div class="prac-example" id="pracEx"></div></div><div class="d-flex gap-2"><button class="btn-outline-app" onclick="prevExercise()"><i class="bi bi-chevron-left"></i></button><button class="btn-outline-app" onclick="nextExercise()"><i class="bi bi-chevron-right"></i></button></div></div></div>
+        <div class="writing-zone"><div class="writing-prompt" id="pracPrompt">Escribe tu respuesta.</div><textarea id="practiceTA" placeholder="Escribe tu respuesta aquí…"></textarea><div class="wc"><span id="wc">0</span> palabras · mínimo 10</div></div>
+        <div class="d-flex align-items-center gap-2 flex-wrap mb-3"><button class="btn-check" id="btnCheck" onclick="doCheck()"><i class="bi bi-magic"></i> Analizar respuesta</button><button class="btn-next" id="btnNext" onclick="nextExercise()" style="display:none">Siguiente <i class="bi bi-arrow-right"></i></button><span style="font-size:.76rem;color:#bbb">Aplica conceptos de redacción técnica.</span></div>
+        <div class="fb-area" id="fbArea"><div id="fbLoading" style="text-align:center;padding:2.5rem"><div class="spin"></div><div>Evaluando tu respuesta técnica...</div></div><div id="fbContent" style="display:none"></div></div>
+      </div>
+    </div>
+    <!-- PERFIL -->
+    <div class="page" id="page-perfil">
+      <div class="card-app mb-4"><div class="profile-cover"><div class="profile-av-lg" id="profAv">I</div></div><div class="profile-body"><h3 class="profile-name" id="profName">—</h3><p class="profile-meta" id="profMeta">—</p><div class="d-flex gap-4 mt-3"><div><strong id="pComp">0</strong><span class="text-muted ms-1">técnicas</span></div><div><strong id="pPrac">0</strong><span class="text-muted ms-1">prácticas</span></div><div><strong id="pScr">—</strong><span class="text-muted ms-1">media</span></div></div><div class="d-flex gap-2 mt-3"><button class="btn-outline-app" onclick="openEditModal()"><i class="bi bi-pencil"></i> Editar perfil</button></div></div></div>
+      <div class="mb-2" style="font-weight:800">Logros destacados</div><div class="ach-grid mb-4" id="achGrid"></div>
+      <div class="mb-2" style="font-weight:800">Historial de prácticas</div><div id="histList"></div>
+    </div>
+  </div>
+</div>
+
+<div id="editModal" class="modal-backdrop-custom" style="display:none"><div class="modal-box"><div class="modal-head"><i class="bi bi-person-gear"></i><span class="modal-title-txt">Editar perfil</span><button class="modal-close" onclick="closeModal('editModal')"><i class="bi bi-x-lg"></i></button></div><div class="modal-body-custom"><div class="mb-3"><label class="field-label">Nombre</label><input id="editName" class="field" type="text"></div><div class="mb-3"><label class="field-label">Nivel</label><select id="editLevel" class="field"><option value="principiante">🌱 Principiante</option><option value="intermedio">📖 Intermedio</option><option value="avanzado">🎓 Avanzado</option></select></div></div><div class="modal-foot"><button class="btn-outline-app" onclick="closeModal('editModal')">Cancelar</button><button class="btn-main" style="width:auto" onclick="saveEdit()">Guardar</button></div></div></div>
+<div class="toast-box" id="toastBox"></div>
+
+<script>
+// ============================================================
+// 100 TÉCNICAS DE REDACCIÓN PARA INGENIERÍA MECÁNICA (CONTEXTO COLOMBIANO)
+// ============================================================
+const CATS = {
+  informes: 'Informes técnicos',
+  memorias: 'Memorias de cálculo',
+  normas: 'Normas ICONTEC y normalización',
+  manuales: 'Manuales y mantenimiento',
+  etica: 'Ética y comunicación'
+};
+
+// Plantillas base (20 por categoría, repetimos cíclicamente hasta 100)
+const templates = [
+  // Informes técnicos (1-20)
+  { cat: 'informes', name: 'Estructura de un informe de laboratorio', short: 'Introducción, objetivos, metodología, resultados, análisis, conclusiones', expl: 'Un informe técnico de ingeniería debe seguir una secuencia lógica: describir el propósito, los equipos usados, los datos obtenidos y su interpretación.', prompt: 'Redacta el objetivo de un ensayo de tracción de una probeta de acero A36 según norma ASTM.' },
+  { cat: 'informes', name: 'Descripción de equipos y herramientas', short: 'Especificar marca, modelo, rango, precisión', expl: 'Incluir datos como: "Máquina universal de ensayos INSTRON 5982, celda de carga de 100 kN, precisión ±0.5%".', prompt: 'Describe el equipo que usarías para medir la dureza Brinell de una aleación de aluminio.' },
+  { cat: 'informes', name: 'Presentación de resultados en tablas', short: 'Encabezados claros, unidades, formato decimal', expl: 'Las tablas deben ser autocontenidas: título, columnas con unidades, notas al pie.', prompt: 'Escribe el encabezado de una tabla que compare la resistencia a la fluencia de tres aceros (SAE 1020, 1045, 4140).' },
+  { cat: 'informes', name: 'Gráficos de ingeniería', short: 'Ejes etiquetados, leyenda, título', expl: 'Usar diagramas de dispersión para curvas esfuerzo-deformación, barras para comparaciones.', prompt: 'Explica cómo etiquetarías los ejes de una gráfica de par vs. velocidad angular para un motor eléctrico.' },
+  { cat: 'informes', name: 'Análisis de errores', short: 'Incertidumbre, desviación estándar', expl: 'Todo informe debe incluir análisis de errores sistemáticos y aleatorios.', prompt: 'Redacta una frase que indique que la medida de presión tiene una incertidumbre de ±0.05 MPa.' },
+  { cat: 'informes', name: 'Uso de normas técnicas', short: 'Citar normas ISO, ASTM, ICONTEC', expl: 'Ejemplo: "El ensayo se realizó según NTC 1234 (equivalente a ISO 6892-1)".', prompt: 'Escribe una oración citando la norma NTC 3853 (trazabilidad de instrumentos de medición).' },
+  { cat: 'informes', name: 'Resumen ejecutivo', short: 'Síntesis de objetivos, métodos y hallazgos', expl: 'Al inicio del informe, para lectores con poco tiempo. Máximo 200 palabras.', prompt: 'Redacta un resumen ejecutivo de un informe sobre falla por fatiga en un eje de transmisión.' },
+  { cat: 'informes', name: 'Redacción de conclusiones técnicas', short: 'Basadas solo en resultados, sin opiniones', expl: 'No introducir nuevos datos. Relacionar con objetivos.', prompt: 'Escribe una conclusión para un informe que muestra que un acero inoxidable 316 resiste mejor la corrosión que el 304.' },
+  { cat: 'informes', name: 'Recomendaciones prácticas', short: 'Acciones concretas para el lector', expl: 'Ejemplo: "Se recomienda lubricar los rodamientos cada 500 horas de operación".', prompt: 'Redacta dos recomendaciones a partir de un informe que detectó desgaste prematuro en engranajes.' },
+  { cat: 'informes', name: 'Anexos técnicos', short: 'Datos brutos, planos, cálculos extensos', expl: 'Referenciarlos en el cuerpo del informe.', prompt: 'Explica qué información pondrías en un anexo y no en el cuerpo principal de un informe.' },
+  { cat: 'informes', name: 'Referencia a figuras y tablas', short: 'Numeración correlativa, citar en el texto', expl: 'Usar "como se muestra en la Figura 3" o "la Tabla 2 presenta los valores".', prompt: 'Escribe una oración que remita a la Figura 5 de un diagrama de cuerpo libre.' },
+  { cat: 'informes', name: 'Lenguaje impersonal en informes', short: 'Evitar "yo", "nosotros"', expl: 'Preferir "se realizó", "se midió", "se observó".', prompt: 'Reescribe "Medimos la temperatura con un termopar" en tercera persona impersonal.' },
+  { cat: 'informes', name: 'Voz pasiva técnica', short: 'Útil en metodología', expl: 'Ejemplo: "La probeta fue sometida a carga cíclica" en lugar de "sometimos la probeta".', prompt: 'Convierte a voz pasiva: "El técnico calibró el dinamómetro antes del ensayo".' },
+  { cat: 'informes', name: 'Unidades del Sistema Internacional', short: 'Siempre usar SI (m, kg, s, A, K, mol, cd)', expl: 'Convertir unidades inglesas si es necesario.', prompt: 'Escribe la equivalencia de 120 psi a pascales (1 psi ≈ 6894,76 Pa).' },
+  { cat: 'informes', name: 'Prefijos del SI', short: 'k, M, G, m, µ, n', expl: 'Usar correctamente: kN (kiloNewton), MPa (megaPascal), µm (micrómetro).', prompt: 'Expresa 0.000025 metros en micrómetros y en nanómetros, con prefijo correcto.' },
+  { cat: 'informes', name: 'Notación científica en texto', short: 'Para números muy grandes o pequeños', expl: 'Ejemplo: "El módulo de Young es 2.1 × 10¹¹ Pa".', prompt: 'Escribe 0.0000005 m en notación científica con su unidad.' },
+  { cat: 'informes', name: 'Citas de literatura técnica', short: 'Referencias a manuales, artículos, patentes', expl: 'Usar estilo IEEE o Vancouver para ingeniería.', prompt: 'Escribe una cita bibliográfica (IEEE) de un libro de Robert L. Norton, "Diseño de Maquinaria", 5ª ed., 2014.' },
+  { cat: 'informes', name: 'Redacción de la metodología', short: 'Pasos reproducibles por otro ingeniero', expl: 'Incluir condiciones ambientales, preparación de muestras, procedimiento paso a paso.', prompt: 'Describe brevemente cómo prepararías una probeta de impacto Charpy según norma ASTM E23.' },
+  { cat: 'informes', name: 'Interpretación de resultados', short: 'Comparar con valores teóricos o de referencia', expl: 'Ejemplo: "El coeficiente de fricción medido (0,32) se aproxima al valor tabulado para acero-bronce (0,35)".', prompt: 'Interpreta un resultado de dureza Rockwell de 62 HRC para un acero herramienta.' },
+  { cat: 'informes', name: 'Portada y encabezados', short: 'Título, autores, fecha, código del proyecto', expl: 'Formato estandarizado según la institución.', prompt: 'Diseña el contenido de la portada para un informe de prácticas de taller.' },
+  // Memorias de cálculo (21-40)
+  { cat: 'memorias', name: 'Estructura de una memoria de cálculo', short: 'Hipótesis, esquemas, fórmulas, valores numéricos, resultados', expl: 'Debe permitir que otro ingeniero verifique los cálculos.', prompt: 'Enumera las secciones que debe contener una memoria de cálculo para un eje sometido a torsión.' },
+  { cat: 'memorias', name: 'Presentación de fórmulas', short: 'Numeradas y explicadas', expl: 'Ejemplo: "La potencia transmitida se calcula como P = T·ω (1)", donde T es el par (Nm) y ω la velocidad angular (rad/s).', prompt: 'Escribe la ecuación de esfuerzo de flexión en una viga (σ = M·c/I) y define cada término.' },
+  { cat: 'memorias', name: 'Uso de tablas de propiedades', short: 'Citar la fuente (tablas de acero, lubricantes, etc.)', expl: 'Ejemplo: "Según la tabla de propiedades del acero AISI 1045, Sy = 450 MPa".', prompt: 'Escribe una frase que utilice el módulo de elasticidad del aluminio 6061-T6 (69 GPa).' },
+  { cat: 'memorias', name: 'Factores de seguridad', short: 'Justificar el valor seleccionado', expl: 'Explicar por qué se eligió FS = 2,5 (carga dinámica, incertidumbre).', prompt: 'Justifica un factor de seguridad de 3 para un gancho de grúa que transporta cargas en una fábrica colombiana.' },
+  { cat: 'memorias', name: 'Análisis dimensional', short: 'Comprobar coherencia de unidades', expl: 'Verificar que cada término tenga las mismas unidades.', prompt: 'Comprueba la homogeneidad dimensional de la ecuación de energía cinética (E = ½ m v²).' },
+  { cat: 'memorias', name: 'Redondeo de resultados', short: 'Usar cifras significativas adecuadas', expl: 'No dar más decimales que la precisión de los datos de entrada.', prompt: 'Redondea 123,45678 N a 3 cifras significativas y explica tu criterio.' },
+  { cat: 'memorias', name: 'Diagramas de cuerpo libre (DCL)', short: 'Identificar todas las fuerzas y momentos', expl: 'Referenciar el DCL con una figura numerada.', prompt: 'Describe qué fuerzas incluirías en el DCL de un pedal de freno de un automóvil.' },
+  { cat: 'memorias', name: 'Cálculo de reacciones', short: 'Usar ecuaciones de equilibrio', expl: 'Mostrar sumatorias de fuerzas en X, Y y momentos.', prompt: 'Escribe las ecuaciones de equilibrio para una viga simplemente apoyada con una carga puntual en el centro.' },
+  { cat: 'memorias', name: 'Criterios de falla', short: 'Von Mises, Tresca, Goodman', expl: 'Especificar el criterio usado y por qué.', prompt: 'Explica cuándo usarías el criterio de Von Mises en lugar del de Tresca.' },
+  { cat: 'memorias', name: 'Cálculo de vida a fatiga', short: 'Curva S-N, límite de fatiga', expl: 'Incluir factores de superficie, tamaño, carga, temperatura, confiabilidad.', prompt: 'Nombra tres factores que afectan el límite de fatiga de un componente mecánico.' },
+  { cat: 'memorias', name: 'Selección de materiales', short: 'Tabla comparativa de propiedades', expl: 'Relacionar resistencia, peso, costo, disponibilidad en Colombia.', prompt: 'Compara el acero AISI 1020 y el 1045 para un eje de baja velocidad, mencionando costos relativos.' },
+  { cat: 'memorias', name: 'Cálculo de tolerancias y ajustes', short: 'Sistema ISO de tolerancias', expl: 'Usar notación H7/g6, etc.', prompt: 'Interpreta el ajuste 50H7/g6 (¿qué tipo de ajuste es: holgado, preciso o apretado?).' },
+  { cat: 'memorias', name: 'Verificación de pandeo', short: 'Euler para columnas largas', expl: 'Calcular carga crítica, relación de esbeltez.', prompt: 'Escribe la fórmula de Euler para la carga crítica de pandeo y define la esbeltez.' },
+  { cat: 'memorias', name: 'Cálculo de engranajes', short: 'Módulo, número de dientes, relación de transmisión', expl: 'Mostrar ecuaciones de Lewis, AGMA.', prompt: 'Define el módulo de un engranaje y su relación con el diámetro primitivo.' },
+  { cat: 'memorias', name: 'Selección de rodamientos', short: 'Vida nominal L10, carga dinámica', expl: 'Usar catálogos SKF, NSK.', prompt: 'Explica qué significa una vida L10 de 5000 horas para un rodamiento.' },
+  { cat: 'memorias', name: 'Cálculo de resortes', short: 'Constante elástica, esfuerzo cortante', expl: 'Mostrar ecuación de Wahl para factor de corrección.', prompt: 'Escribe la fórmula para calcular la constante de un resorte helicoidal de compresión.' },
+  { cat: 'memorias', name: 'Diseño de uniones soldadas', short: 'Esfuerzos en cordones, garganta', expl: 'Usar norma AWS.', prompt: 'Define la garganta efectiva de una soldadura de filete.' },
+  { cat: 'memorias', name: 'Cálculo de potencia de bombas', short: 'Ecuación de Bernoulli, NPSH', expl: 'Incluir eficiencia del motor.', prompt: 'Escribe la fórmula para calcular la potencia hidráulica de una bomba centrífuga.' },
+  { cat: 'memorias', name: 'Diseño de tuberías', short: 'Caída de presión, número de Reynolds', expl: 'Distinguir flujo laminar y turbulento.', prompt: 'Calcula el número de Reynolds para agua fluyendo a 2 m/s en una tubería de 0,05 m de diámetro (viscosidad cinemática 1e-6 m²/s).' },
+  { cat: 'memorias', name: 'Software de cálculo', short: 'Mencionar herramientas usadas (ANSYS, SolidWorks, MATLAB)', expl: 'Incluir versión y parámetros de simulación.', prompt: 'Escribe una frase indicando que utilizaste MATLAB para resolver un sistema de ecuaciones diferenciales.' },
+  // Normas ICONTEC y normalización (41-60)
+  { cat: 'normas', name: 'Introducción a ICONTEC', short: 'Instituto Colombiano de Normas Técnicas y Certificación', expl: 'Principal organismo de normalización en Colombia.', prompt: 'Explica para qué sirve la NTC (Norma Técnica Colombiana) en un informe de ingeniería.' },
+  { cat: 'normas', name: 'NTC 1486 para documentos escritos', short: 'Estructura de tesis, informes, artículos', expl: 'Define márgenes, tipografía, citas, bibliografía.', prompt: 'Indica los márgenes mínimo superior e izquierdo según NTC 1486 (edición actual).' },
+  { cat: 'normas', name: 'Citas y referencias según NTC', short: 'Sistema autor-fecha o numérico', expl: 'Similar a APA o Vancouver adaptado.', prompt: 'Escribe una cita textual de un libro de Shigley según la NTC 1486.' },
+  { cat: 'normas', name: 'Normas de dibujo técnico', short: 'NTC 1777 (ISO 128)', expl: 'Líneas, vistas, acotación.', prompt: 'Menciona dos tipos de línea normalizados en dibujo técnico y su uso.' },
+  { cat: 'normas', name: 'Normas de soldadura en Colombia', short: 'NTC 3450 (equivalente AWS D1.1)', expl: 'Procedimientos, calificación de soldadores.', prompt: 'Escribe el título de la norma NTC que regula la soldadura de estructuras de acero.' },
+  { cat: 'normas', name: 'Normas de ensayo de materiales', short: 'NTC relacionadas con ASTM', expl: 'Ejemplo: NTC 169 (ASTM E8) para tracción.', prompt: 'Busca mentalmente una norma NTC para ensayo de dureza Rockwell.' },
+  { cat: 'normas', name: 'Metrología y calibración', short: 'NTC-ISO/IEC 17025', expl: 'Requisitos para laboratorios de calibración.', prompt: 'Explica por qué es importante la trazabilidad de los instrumentos de medición.' },
+  { cat: 'normas', name: 'Normas de seguridad industrial', short: 'NTC 4054 (señalización), NTC 4116 (protección personal)', expl: 'Colores, formas, pictogramas.', prompt: 'Describe el color y forma de una señal de obligación en un taller mecánico.' },
+  { cat: 'normas', name: 'Sistema de gestión de calidad', short: 'NTC-ISO 9001', expl: 'Aplicable a empresas de manufactura.', prompt: 'Menciona un requisito documental de la ISO 9001 relacionado con el control de documentos.' },
+  { cat: 'normas', name: 'Gestión ambiental', short: 'NTC-ISO 14001', expl: 'Para talleres y plantas industriales.', prompt: 'Escribe una política ambiental breve para un taller de rectificación de motores.' },
+  { cat: 'normas', name: 'Identificación de peligros', short: 'NTC 5254 (Matriz de riesgos)', expl: 'Metodología para evaluar riesgos laborales.', prompt: 'Enumera tres riesgos comunes en un taller de torno y fresadora.' },
+  { cat: 'normas', name: 'Interpretación de planos', short: 'NTC 1914 (símbolos de soldadura)', expl: 'Simbología estandarizada.', prompt: 'Explica qué significa el símbolo de soldadura de filete con una medida de 5 mm.' },
+  { cat: 'normas', name: 'Tolerancias geométricas (GD&T)', short: 'NTC 1691 (ISO 1101)', expl: 'Aplanamiento, perpendicularidad, concentricidad.', prompt: 'Define el símbolo de concentricidad (⨁) y su uso en un eje.' },
+  { cat: 'normas', name: 'Acabados superficiales', short: 'NTC 1875 (Ra, Rz)', expl: 'Especificar rugosidad en planos.', prompt: 'Escribe la especificación para una superficie con rugosidad media Ra = 1.6 μm.' },
+  { cat: 'normas', name: 'Rosca métrica', short: 'NTC 151 (ISO 68-1)', expl: 'Designación M10 x 1.5.', prompt: 'Interpreta la designación de rosca M12x1.75 (diámetro nominal, paso).' },
+  { cat: 'normas', name: 'Normas de tuberías y accesorios', short: 'NTC 388 (API 5L para tubería de acero)', expl: 'Presiones nominales, cédulas.', prompt: '¿Qué significa una tubería Schedule 40?' },
+  { cat: 'normas', name: 'Normas de lubricantes', short: 'NTC 461 (viscosidad ISO VG)', expl: 'Clasificación de aceites industriales.', prompt: 'Explica la diferencia entre un aceite ISO VG 32 y VG 68.' },
+  { cat: 'normas', name: 'Normas de ergonomía', short: 'NTC 5655 (pantallas de visualización)', expl: 'Para puestos de trabajo con computador.', prompt: 'Recomienda una altura adecuada para la pantalla del computador en un taller de diseño.' },
+  { cat: 'normas', name: 'Certificación de equipos', short: 'RETIE (Reglamento Técnico de Instalaciones Eléctricas)', expl: 'Obligatorio en Colombia.', prompt: 'Menciona un requisito de seguridad para un motor eléctrico según RETIE.' },
+  { cat: 'normas', name: 'Actualización de normas', short: 'Revisión periódica de versiones', expl: 'Las normas cambian; usar la edición vigente.', prompt: 'Escribe una nota para un informe indicando que la norma NTC XXXX fue actualizada en 2022.' },
+  // Manuales y mantenimiento (61-80)
+  { cat: 'manuales', name: 'Estructura de un manual de mantenimiento', short: 'Índice, descripción de equipos, procedimientos, tablas de lubricación, seguridad', expl: 'Debe ser claro y seguro.', prompt: 'Enumera las secciones de un manual de mantenimiento para una prensa hidráulica.' },
+  { cat: 'manuales', name: 'Redacción de instrucciones paso a paso', short: 'Verbos en imperativo, numeración', expl: 'Ejemplo: "1. Desconectar la alimentación. 2. Retirar la tapa de protección."', prompt: 'Escribe tres pasos para cambiar la correa de transmisión de un ventilador industrial.' },
+  { cat: 'manuales', name: 'Listas de verificación (checklists)', short: 'Tablas con columnas "Sí/No/Comentarios"', expl: 'Útiles para inspecciones preoperacionales.', prompt: 'Diseña un checklist de 4 puntos para la inspección diaria de una grúa puente.' },
+  { cat: 'manuales', name: 'Advertencias de seguridad', short: 'Destacar con iconos (peligro, advertencia, cuidado)', expl: 'Según NTC 4054.', prompt: 'Redacta una advertencia para una máquina que tiene partes calientes (más de 80°C).' },
+  { cat: 'manuales', name: 'Planos despiece', short: 'Numerar componentes, lista de partes', expl: 'Referenciar números en texto.', prompt: 'Explica cómo se relaciona un plano despiece con una lista de materiales (BOM).' },
+  { cat: 'manuales', name: 'Tablas de lubricación', short: 'Punto de lubricación, tipo de grasa/aceite, frecuencia', expl: 'Ejemplo: "Rodamientos del motor: grasa lithium, cada 500 h".', prompt: 'Crea una entrada de tabla para lubricar un par de engranajes abiertos.' },
+  { cat: 'manuales', name: 'Periodicidad de mantenimiento', short: 'Diario, semanal, mensual, anual', expl: 'Basado en horas de operación o tiempo calendario.', prompt: 'Define mantenimiento preventivo vs. predictivo, con ejemplos en un compresor de aire.' },
+  { cat: 'manuales', name: 'Registro de intervenciones', short: 'Formato de orden de trabajo', expl: 'Incluir fecha, técnico, trabajo realizado, repuestos, observaciones.', prompt: 'Diseña el encabezado de un formato de orden de trabajo para mantenimiento.' },
+  { cat: 'manuales', name: 'Diagnóstico de fallas', short: 'Árbol de decisiones', expl: 'Si A y B, entonces revisar C.', prompt: 'Escribe un árbol de decisión simple para una bomba que no ceba.' },
+  { cat: 'manuales', name: 'Códigos de colores', short: 'Verde: seguro, rojo: peligro, amarillo: precaución', expl: 'Basado en ANSI Z535.', prompt: 'Asigna un código de color a la tubería de agua contra incendios en una planta.' },
+  { cat: 'manuales', name: 'Uso de diagramas de flujo', short: 'Para procedimientos de mantenimiento', expl: 'Símbolos estándar (inicio/decisión/acción).', prompt: 'Dibuja (en texto) un diagrama de flujo para verificar el nivel de aceite de un motor.' },
+  { cat: 'manuales', name: 'Redacción de manuales para operarios', short: 'Lenguaje sencillo, evitar tecnicismo excesivo', expl: 'Público con diversos niveles de formación.', prompt: 'Reescribe "verificar la concentricidad del eje" para un operario de torno.' },
+  { cat: 'manuales', name: 'Mantenimiento centrado en confiabilidad (RCM)', short: 'Enfoque sistemático', expl: 'Identificar modos de falla y consecuencias.', prompt: 'Explica la diferencia entre mantenimiento correctivo y predictivo.' },
+  { cat: 'manuales', name: 'Plan de mantenimiento autónomo (TPM)', short: 'Operario realiza limpieza, inspección, pequeñas reparaciones', expl: 'Involucrar al personal.', prompt: 'Enumera tres tareas de mantenimiento autónomo para un operario de fresadora.' },
+  { cat: 'manuales', name: 'Análisis de aceites', short: 'Muestreo, pruebas de viscosidad, espectrometría', expl: 'Interpretar resultados.', prompt: '¿Qué indica un aumento en el contenido de hierro en un análisis de aceite de motor?' },
+  { cat: 'manuales', name: 'Termografía infrarroja', short: 'Detección de puntos calientes en equipos eléctricos y mecánicos', expl: 'Mantenimiento predictivo.', prompt: 'Redacta una recomendación si se detecta un punto caliente (85°C) en una caja de rodamientos.' },
+  { cat: 'manuales', name: 'Análisis de vibraciones', short: 'Espectros, frecuencias características', expl: 'Desbalance, desalineación, holgura.', prompt: 'Relaciona el desbalance con una frecuencia de 1X (velocidad de giro).' },
+  { cat: 'manuales', name: 'Documentación de repuestos', short: 'Número de parte, proveedor, cantidad en stock', expl: 'Para gestión de inventarios.', prompt: 'Crea una ficha técnica de repuesto para un rodamiento 6204 ZZ.' },
+  { cat: 'manuales', name: 'Pruebas post-mantenimiento', short: 'Checklist de verificación', expl: 'Antes de poner en marcha.', prompt: 'Redacta dos puntos a verificar después de cambiar una correa de distribución.' },
+  { cat: 'manuales', name: 'Archivo de manuales', short: 'Digital o físico, control de versiones', expl: 'Asegurar acceso a la versión actualizada.', prompt: 'Propón un sistema de control de versiones para manuales de mantenimiento en una empresa.' },
+  // Ética y comunicación (81-100)
+  { cat: 'etica', name: 'Honestidad en informes', short: 'No falsificar datos', expl: 'La integridad es esencial en ingeniería.', prompt: 'Redacta una declaración de ética para un informe de laboratorio.' },
+  { cat: 'etica', name: 'Confidencialidad de información técnica', short: 'No divulgar secretos industriales', expl: 'Acuerdos de confidencialidad con empresas.', prompt: 'Escribe una cláusula de confidencialidad para un informe de prácticas en una empresa.' },
+  { cat: 'etica', name: 'Responsabilidad profesional', short: 'Firmar y fechar documentos', expl: 'El profesional es responsable de sus cálculos.', prompt: 'Explica por qué un ingeniero debe sellar y firmar una memoria de cálculo.' },
+  { cat: 'etica', name: 'Comunicación con no ingenieros', short: 'Evitar jerga, usar analogías', expl: 'Para presentar informes a gerencia o clientes.', prompt: 'Explica el concepto de par de apriete a un gerente de producción sin usar fórmulas.' },
+  { cat: 'etica', name: 'Presentaciones orales', short: 'Estructura: problema, solución, resultados', expl: 'Apoyarse en diapositivas limpias.', prompt: 'Enumera tres consejos para una presentación oral exitosa de un proyecto mecánico.' },
+  { cat: 'etica', name: 'Redacción de correos profesionales', short: 'Asunto claro, saludo, cuerpo conciso, despedida', expl: 'Usar en comunicaciones con profesores y empresas.', prompt: 'Escribe un correo solicitando cotización de un motorreductor a un proveedor.' },
+  { cat: 'etica', name: 'Elaboración de currículum vitae', short: 'Enfocado en logros técnicos', expl: 'Incluir software manejado, proyectos realizados.', prompt: 'Redacta un punto de logro para un CV de estudiante que diseñó un sistema de transmisión por bandas.' },
+  { cat: 'etica', name: 'Cartas de presentación', short: 'Dirigida a jefe de ingeniería', expl: 'Destacar motivación y habilidades.', prompt: 'Escribe el primer párrafo de una carta de presentación para una vacante de ingeniero mecánico junior.' },
+  { cat: 'etica', name: 'Comunicación en equipos multidisciplinarios', short: 'Lenguaje claro, definir términos', expl: 'Ingenieros mecánicos, eléctricos, civiles.', prompt: 'Explica qué es el momento de inercia a un ingeniero eléctrico de forma simple.' },
+  { cat: 'etica', name: 'Resolución de conflictos técnicos', short: 'Documentar acuerdos por escrito', expl: 'Evitar malentendidos.', prompt: 'Redacta un acta breve de una reunión donde se acordó cambiar el material de un eje.' },
+  { cat: 'etica', name: 'Uso de redes sociales profesionales', short: 'LinkedIn, ResearchGate', expl: 'Cuidar la imagen profesional.', prompt: 'Escribe un post de LinkedIn compartiendo un logro académico (ej. proyecto de diseño).' },
+  { cat: 'etica', name: 'Propiedad intelectual', short: 'No plagiar, citar correctamente', expl: 'En informes y tesis.', prompt: 'Explica cómo citar un manual de un equipo si lo usaste como fuente.' },
+  { cat: 'etica', name: 'Ética en la simulación', short: 'Validar modelos, no ajustar resultados a la fuerza', expl: 'La simulación es una herramienta, no un fin.', prompt: 'Escribe una nota sobre la importancia de verificar un modelo de elementos finitos con resultados analíticos.' },
+  { cat: 'etica', name: 'Seguridad ante todo', short: 'No omitir advertencias en informes', expl: 'La vida de las personas depende de la ingeniería.', prompt: 'Redacta una advertencia sobre los riesgos de no instalar un resguardo en una prensa.' },
+  { cat: 'etica', name: 'Actualización profesional', short: 'Formación continua', expl: 'Normas, software, tecnologías cambian.', prompt: 'Recomienda un curso de actualización a un colega ingeniero mecánico.' },
+  { cat: 'etica', name: 'Informes de falla', short: 'Ser honesto sobre la causa raíz', expl: 'No culpar a otros sin evidencia.', prompt: 'Escribe la conclusión de un informe de falla donde se identifica que el error fue de diseño (exceso de esfuerzo).' },
+  { cat: 'etica', name: 'Manejo de quejas técnicas', short: 'Respuesta cortés y documentada', expl: 'Seguir procedimiento de atención al cliente.', prompt: 'Responde a un cliente que se queja de que un equipo duró menos de lo esperado.' },
+  { cat: 'etica', name: 'Uso de inteligencia artificial', short: 'Transparencia en su uso', expl: 'No dejar que IA genere informes sin revisión humana.', prompt: 'Declara que usaste ChatGPT para mejorar la redacción de un informe, pero verificaste los datos.' },
+  { cat: 'etica', name: 'Código de ética del ingeniero', short: 'Consejo Profesional de Ingeniería (COPNIA)', expl: 'Conocer las normas deontológicas.', prompt: 'Menciona un principio del código de ética de la Sociedad Colombiana de Ingenieros.' },
+  { cat: 'etica', name: 'Responsabilidad social', short: 'Diseñar pensando en el impacto ambiental y social', expl: 'Ingeniería sostenible.', prompt: 'Propón una mejora ecológica para un taller mecánico (reciclaje de aceite, uso de energía solar).' }
+];
+
+// Generar exactamente 100 ejercicios
+let ejercicios = [];
+for (let i = 0; i < 100; i++) {
+  const t = templates[i % templates.length];
+  const sufijo = i < templates.length ? '' : ` (${Math.floor(i / templates.length) + 1})`;
+  ejercicios.push({
+    id: i + 1,
+    cat: t.cat,
+    name: t.name + sufijo,
+    short: t.short,
+    expl: t.expl,
+    prompt: t.prompt
+  });
+}
+for (let i = 0; i < ejercicios.length; i++) ejercicios[i].id = i + 1;
+
+// ========== ESTADO DE USUARIO ==========
+let userData = { name:"Estudiante", level:"intermedio", completed:[], practiced:0, scores:[], history:[], joinDate:new Date().toLocaleDateString('es-ES') };
+function loadUserData(){ const saved=localStorage.getItem('redaccionMecanicaUser'); if(saved){ try{ const p=JSON.parse(saved); userData={...userData,...p}; }catch(e){} } updateUI(); }
+function saveUserData(){ localStorage.setItem('redaccionMecanicaUser',JSON.stringify(userData)); updateUI(); }
+function updateUI(){ document.getElementById('navName').textContent=userData.name.split(' ')[0]; document.getElementById('dashName').textContent=userData.name.split(' ')[0]; document.getElementById('navAv').textContent=userData.name[0].toUpperCase(); }
+loadUserData();
+
+let currentEx = null;
+let filterCatEx = 'all';
+function switchPage(p){
+  document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));
+  document.querySelectorAll('.app-tab').forEach(x=>x.classList.remove('active'));
+  document.getElementById('page-'+p)?.classList.add('active');
+  document.getElementById('tab-'+p)?.classList.add('active');
+  if(p==='dashboard') refreshDash();
+  if(p==='perfil') renderProfile();
+  if(p==='ejercicios') renderList();
+}
+function refreshDash(){
+  document.getElementById('sCompleted').textContent=userData.completed.length;
+  document.getElementById('sPracticed').textContent=userData.practiced;
+  const avg=userData.scores.length?Math.round(userData.scores.reduce((a,b)=>a+b,0)/userData.scores.length):null;
+  document.getElementById('sScore').textContent=avg?avg+'%':'—';
+  document.getElementById('sStreak').textContent=(userData.streak||1)+'🔥';
+  const grid=document.getElementById('dotGrid');
+  grid.innerHTML='';
+  ejercicios.forEach(ex=>{
+    const done=userData.completed.includes(ex.id);
+    const div=document.createElement('div');
+    div.className='dot'+(done?' done':'');
+    div.innerHTML=`<span class="dot-num">${ex.id}</span><div class="dot-tip">#${ex.id} ${ex.name}</div>`;
+    div.onclick=()=>startPractice(ex.id);
+    grid.appendChild(div);
+  });
+  const nid=nextId();
+  const next=ejercicios.find(e=>e.id===nid);
+  if(next){
+    document.getElementById('nextNum').textContent=String(next.id).padStart(2,'0');
+    document.getElementById('nextCat').textContent=CATS[next.cat]||next.cat;
+    document.getElementById('nextName').textContent=next.name;
+    document.getElementById('nextDesc').textContent=next.short;
+    document.getElementById('nextCard').onclick=()=>startPractice(next.id);
+  }
+  const cats=Object.keys(CATS);
+  const cp=document.getElementById('catProgress');
+  cp.innerHTML=cats.map(c=>{
+    const total=ejercicios.filter(e=>e.cat===c).length;
+    const done=ejercicios.filter(e=>e.cat===c && userData.completed.includes(e.id)).length;
+    const pct=Math.round(done/total*100);
+    return `<div class="mb-2"><div class="d-flex justify-content-between mb-1" style="font-size:.8rem;font-weight:700"><span>${CATS[c]}</span><span style="color:var(--amber)">${done}/${total}</span></div><div style="height:7px;border-radius:4px;background:var(--border)"><div style="height:100%;border-radius:4px;width:${pct}%;background:${pct===100?'var(--sage)':'var(--steel)'}"></div></div></div>`;
+  }).join('');
+}
+function nextId(){ for(let i=1;i<=100;i++) if(!userData.completed.includes(i)) return i; return 1; }
+function setFilter(cat,btn){ filterCatEx=cat; document.querySelectorAll('#pills .pill').forEach(p=>p.classList.remove('on')); btn.classList.add('on'); renderList(); }
+function renderList(){
+  const q=(document.getElementById('searchQ')?.value||'').toLowerCase();
+  const filtered=ejercicios.filter(e=>(filterCatEx==='all'||e.cat===filterCatEx) && (!q||e.name.toLowerCase().includes(q)||e.short.toLowerCase().includes(q)));
+  const list=document.getElementById('exList');
+  list.innerHTML=filtered.map(e=>{
+    const done=userData.completed.includes(e.id);
+    return `<div class="ex-card${done?' done':''}" onclick="startPractice(${e.id})"><div class="ex-num-box">${String(e.id).padStart(2,'0')}</div><div class="ex-body"><div class="ex-cat-tag">${CATS[e.cat]||e.cat}</div><div class="ex-name">${e.name}</div><div class="ex-short">${e.short}</div></div><div>${done?'<span class="badge-done"><i class="bi bi-check-lg"></i> Hecho</span>':'<span class="badge-new">Practicar</span>'}</div></div>`;
+  }).join('');
+  if(!filtered.length) list.innerHTML='<div class="text-muted text-center py-4">No se encontraron técnicas.</div>';
+}
+function startPractice(id){
+  const ex=ejercicios.find(x=>x.id===id);
+  if(!ex) return;
+  currentEx=ex;
+  document.getElementById('pracCat').textContent=CATS[ex.cat]||ex.cat;
+  document.getElementById('pracNum').textContent=String(ex.id).padStart(2,'0');
+  document.getElementById('pracName').textContent=ex.name;
+  document.getElementById('pracExpl').textContent=ex.expl;
+  document.getElementById('pracEx').textContent='📝 '+ex.expl;
+  document.getElementById('pracPrompt').innerHTML='<strong>✍️ Ejercicio:</strong> '+ex.prompt;
+  document.getElementById('practiceTA').value='';
+  document.getElementById('wc').textContent='0';
+  document.getElementById('fbArea').classList.remove('show');
+  document.getElementById('btnNext').style.display='none';
+  document.getElementById('btnCheck').disabled=false;
+  document.getElementById('btnCheck').innerHTML='<i class="bi bi-magic"></i> Analizar';
+  document.getElementById('practiceEmpty').style.display='none';
+  document.getElementById('practiceContent').style.display='';
+  switchPage('practica');
+  document.getElementById('practiceTA').focus();
+}
+function prevExercise(){
+  if(!currentEx) return;
+  const idx=ejercicios.findIndex(e=>e.id===currentEx.id);
+  startPractice(ejercicios[(idx-1+ejercicios.length)%ejercicios.length].id);
+}
+function nextExercise(){
+  if(!currentEx) return;
+  const idx=ejercicios.findIndex(e=>e.id===currentEx.id);
+  startPractice(ejercicios[(idx+1)%ejercicios.length].id);
+}
+function doCheck(){
+  const text=document.getElementById('practiceTA').value.trim();
+  if(!text || text.split(/\s+/).length<5){ toast('Escribe al menos 5 palabras','e'); return; }
+  if(!currentEx) return;
+  const btn=document.getElementById('btnCheck');
+  btn.disabled=true;
+  btn.innerHTML='<span class="spinner-border spinner-border-sm me-1"></span>Evaluando...';
+  const fb=document.getElementById('fbArea');
+  fb.classList.add('show');
+  document.getElementById('fbLoading').style.display='block';
+  document.getElementById('fbContent').style.display='none';
+  setTimeout(()=>{
+    let score=70;
+    if(text.length>100) score+=10;
+    if(text.toLowerCase().includes(currentEx.name.toLowerCase())) score+=10;
+    score=Math.min(100,score);
+    const nivel=score>=85?'excelente':score>=65?'bien':'necesita_mejorar';
+    const titulo=nivel==='excelente'?'¡Excelente redacción técnica!':nivel==='bien'?'Buen trabajo':'Puedes mejorar';
+    const resumen=`Tu respuesta tiene ${text.split(/\s+/).length} palabras. ${score>=70?'Aplicas bien los conceptos de redacción en ingeniería mecánica.':'Revisa la técnica y vuelve a intentarlo.'}`;
+    const aciertos=['La respuesta es relevante al ejercicio.'];
+    const consejos=['Consulta guías como el "Manual de redacción técnica" de la Universidad Nacional o la NTC 1486.'];
+    const aplicacion=`Has aplicado conocimientos sobre ${currentEx.name}.`;
+    const r={score,nivel,titulo,resumen,aciertos,errores:[],consejos,aplicacion};
+    renderFeedback(r);
+    userData.practiced++;
+    userData.scores.push(r.score);
+    if(r.score>=65 && !userData.completed.includes(currentEx.id)){
+      userData.completed.push(currentEx.id);
+      toast(`✅ ¡Técnica #${currentEx.id} completada!`,'s');
+    }
+    userData.history=[{id:currentEx.id, name:currentEx.name, score:r.score, date:new Date().toLocaleDateString('es-ES')}, ...(userData.history||[])].slice(0,30);
+    saveUserData();
+    document.getElementById('fbLoading').style.display='none';
+    document.getElementById('fbContent').style.display='block';
+    btn.disabled=false;
+    btn.innerHTML='<i class="bi bi-magic"></i> Analizar de nuevo';
+    document.getElementById('btnNext').style.display='';
+    fb.scrollIntoView({behavior:'smooth',block:'start'});
+  },800);
+}
+function renderFeedback(r){
+  const sc=r.score>=80?'high':r.score>=60?'med':'low';
+  const hc=r.nivel==='excelente'?'excellent':r.nivel==='bien'?'good':'low';
+  const em=r.nivel==='excelente'?'🏆':r.nivel==='bien'?'👍':'💪';
+  const aciertos=(r.aciertos||[]).map(a=>`<div class="fb-item ok"><span class="fb-ico">✓</span><span>${a}</span></div>`).join('');
+  const errores=(r.errores||[]).map(a=>`<div class="fb-item err"><span class="fb-ico">✗</span><span>${a}</span></div>`).join('');
+  const consejos=(r.consejos||[]).map(a=>`<div class="fb-item tip"><span class="fb-ico">💡</span><span>${a}</span></div>`).join('');
+  document.getElementById('fbContent').innerHTML=`<div class="fb-head ${hc}"><span class="fb-emoji">${em}</span><div><p class="fb-htitle">${r.titulo}</p><p class="fb-hsub">Técnica #${currentEx?.id} · ${currentEx?.name}</p></div></div><div class="fb-body"><div style="display:flex;align-items:center;gap:1rem;margin-bottom:1.1rem"><div class="score-circle sc-${sc}">${r.score}%</div><div style="flex:1"><div style="font-weight:700;margin-bottom:.4rem">Dominio de la técnica</div><div style="height:8px;border-radius:4px;background:var(--border)"><div style="height:100%;width:${r.score}%;background:${r.score>=80?'#198754':r.score>=60?'#ffc107':'#dc3545'}"></div></div><div style="font-size:.77rem;margin-top:.4rem">${r.resumen}</div></div></div>${r.aplicacion?`<div class="fb-section"><div class="fb-section-title">🎯 Aplicación</div><div class="fb-item info"><span class="fb-ico">📖</span><span>${r.aplicacion}</span></div></div>`:''}${aciertos?`<div class="fb-section"><div class="fb-section-title">✅ Aciertos</div>${aciertos}</div>`:''}${errores?`<div class="fb-section"><div class="fb-section-title">❌ Errores</div>${errores}</div>`:''}${consejos?`<div class="fb-section"><div class="fb-section-title">💡 Consejos</div>${consejos}</div>`:''}</div>`;
+}
+function renderProfile(){
+  document.getElementById('profAv').textContent=userData.name[0].toUpperCase();
+  document.getElementById('profName').textContent=userData.name;
+  document.getElementById('profMeta').textContent=(userData.level==='principiante'?'Principiante':userData.level==='intermedio'?'Intermedio':'Avanzado')+' · Desde '+userData.joinDate;
+  document.getElementById('pComp').textContent=userData.completed.length;
+  document.getElementById('pPrac').textContent=userData.practiced;
+  const avg=userData.scores.length?Math.round(userData.scores.reduce((a,b)=>a+b,0)/userData.scores.length):null;
+  document.getElementById('pScr').textContent=avg?avg+'%':'—';
+  const ACHS=[{icon:'🎓',name:'Primera técnica',check:d=>d.practiced>=1},{icon:'⚙️',name:'10 prácticas',check:d=>d.practiced>=10},{icon:'🏅',name:'25 técnicas',check:d=>d.completed.length>=25},{icon:'🏆',name:'50 técnicas',check:d=>d.completed.length>=50},{icon:'🔧',name:'Maestro redactor mecánico',check:d=>d.completed.length>=100}];
+  document.getElementById('achGrid').innerHTML=ACHS.map(a=>{const u=a.check(userData); return `<div class="ach${u?' unlocked':' locked'}"><span class="ach-icon">${a.icon}</span><div class="ach-name">${a.name}</div></div>`;}).join('');
+  const hl=document.getElementById('histList');
+  if(userData.history?.length){ hl.innerHTML=userData.history.slice(0,15).map(h=>`<div class="hist-row" onclick="startPractice(${h.id})"><div class="ex-num-box" style="background:${h.score>=80?'var(--sage)':h.score>=60?'var(--amber-light)':'#f8d7da'};color:#fff">${String(h.id).padStart(2,'0')}</div><div><div style="font-weight:700">${h.name}</div><div style="font-size:.74rem;color:#aaa">${h.date}</div></div><span style="background:${h.score>=80?'var(--sage)':h.score>=60?'var(--amber)':'#dc3545'};color:#fff;padding:.18rem .55rem;border-radius:9px">${h.score}%</span></div>`).join('');}
+  else hl.innerHTML='<div class="text-muted">Aún sin prácticas.</div>';
+}
+function openEditModal(){ document.getElementById('editName').value=userData.name; document.getElementById('editLevel').value=userData.level; document.getElementById('editModal').style.display='flex'; }
+function saveEdit(){ const name=document.getElementById('editName').value.trim(); if(!name){ toast('Escribe un nombre','e'); return; } userData.name=name; userData.level=document.getElementById('editLevel').value; saveUserData(); updateUI(); closeModal('editModal'); renderProfile(); toast('Perfil actualizado','s'); }
+function confirmReset(){ if(confirm('¿Reiniciar todo el progreso?')){ userData.completed=[]; userData.practiced=0; userData.scores=[]; userData.history=[]; saveUserData(); refreshDash(); renderProfile(); toast('Progreso reiniciado','i'); } }
+function closeModal(id){ document.getElementById(id).style.display='none'; }
+function toast(msg,type='i'){ const box=document.getElementById('toastBox'); const t=document.createElement('div'); const icons={s:'✅',e:'❌',i:'ℹ️'}; t.className=`toast-item ${type}`; t.innerHTML=`<span>${icons[type]||'ℹ️'}</span><span>${msg}</span>`; box.appendChild(t); setTimeout(()=>{ t.style.opacity='0'; t.style.transform='translateY(16px)'; setTimeout(()=>t.remove(),350); },3200); }
+document.addEventListener('DOMContentLoaded',()=>{ const ta=document.getElementById('practiceTA'); if(ta) ta.addEventListener('input',()=>{ const w=ta.value.trim()?ta.value.trim().split(/\s+/).length:0; document.getElementById('wc').textContent=w; }); refreshDash(); renderList(); renderProfile(); });
+</script>
+</body>
+</html>

@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>中文段落 · Chino para Hispanohablantes · 100 técnicas de escritura</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700;800&family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #C0392B;
+      --primary-dark: #A93226;
+      --secondary: #F1C40F;
+      --bg-dark: #1a1a1a;
+      --bg-light: #F5F0E8;
+      --card-dark: #252525;
+      --card-light: #FFFFFF;
+    }
+    body {
+      font-family: 'Inter', 'Noto Sans SC', sans-serif;
+      background: var(--bg-dark);
+      color: #E5E5E5;
+      transition: all 0.3s;
+    }
+    body.light-mode {
+      background: var(--bg-light);
+      color: #1E1E1E;
+    }
+    .sidebar {
+      background: #1E1E1E;
+      border-radius: 1.5rem;
+      padding: 1rem;
+      height: fit-content;
+      position: sticky;
+      top: 20px;
+    }
+    body.light-mode .sidebar { background: #FFF; }
+    .nav-item-custom {
+      padding: 0.8rem 1rem;
+      border-radius: 1rem;
+      cursor: pointer;
+      margin-bottom: 0.5rem;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: #AAA;
+    }
+    .nav-item-custom i { width: 24px; }
+    .nav-item-custom.active { background: var(--primary); color: white; }
+    .tecnica-card {
+      background: var(--card-dark);
+      border-radius: 1rem;
+      padding: 1rem;
+      margin-bottom: 0.8rem;
+      border: 1px solid #3A3A3A;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+    body.light-mode .tecnica-card { background: var(--card-light); border-color: #E0E0E0; }
+    .tecnica-card.completed { border-left: 4px solid var(--primary); background: rgba(192,57,43,0.15); }
+    .tecnica-card:hover { transform: translateX(5px); border-color: var(--primary); }
+    .badge-cat { background: var(--secondary); color: #2C2A29; padding: 0.2rem 0.6rem; border-radius: 20px; font-size: 0.7rem; }
+    .flashcard-container { perspective: 1000px; min-height: 520px; cursor: pointer; }
+    .flashcard { width: 100%; height: 540px; position: relative; transform-style: preserve-3d; transition: transform 0.6s; border-radius: 1.5rem; }
+    .flashcard.flipped { transform: rotateY(180deg); }
+    .flashcard-front, .flashcard-back {
+      position: absolute; width: 100%; height: 100%; backface-visibility: hidden;
+      border-radius: 1.5rem; padding: 1.5rem; display: flex; flex-direction: column;
+      background: var(--card-dark); border: 1px solid #3A3A3A; overflow-y: auto;
+    }
+    body.light-mode .flashcard-front, body.light-mode .flashcard-back { background: var(--card-light); }
+    .flashcard-back { transform: rotateY(180deg); background: var(--primary); color: white; }
+    .chinese-text { font-size: 1.1rem; line-height: 1.6; font-family: 'Noto Sans SC', monospace; }
+    .pinyin-text { font-size: 0.8rem; color: #aaa; font-style: italic; }
+    .word-bubble {
+      display: inline-block; background: var(--primary); color: white; padding: 0.5rem 1rem;
+      border-radius: 30px; margin: 0.3rem; cursor: pointer; font-size: 0.9rem;
+    }
+    .word-bubble.selected { background: var(--secondary); color: #2C2A29; }
+    .order-sentence { background: rgba(0,0,0,0.2); border-radius: 1rem; padding: 1rem; min-height: 80px; margin-top: 1rem; }
+    .progress-custom { height: 4px; background: #3A3A3A; border-radius: 2px; }
+    .progress-fill-custom { height: 100%; background: var(--primary); width: 0%; transition: width 0.3s; }
+    footer { background: #141414; padding: 1rem 0; margin-top: 2rem; text-align: center; }
+    .filter-btn { background: transparent; border: 1px solid #3A3A3A; border-radius: 30px; padding: 0.2rem 0.8rem; margin: 0.2rem; cursor: pointer; }
+    .filter-btn.active { background: var(--primary); border-color: var(--primary); color: white; }
+  </style>
+</head>
+<body>
+
+<div class="container-fluid px-4 py-3">
+  <div class="row g-4">
+    
+    <!-- SIDEBAR -->
+    <div class="col-lg-3 col-md-4">
+      <div class="sidebar">
+        <div class="text-center py-3">
+          <i class="bi bi-pencil-square" style="font-size: 2rem; color: var(--primary);"></i>
+          <h5 class="mt-2">中文段落</h5>
+          <small class="text-muted">Chino para hispanohablantes · 100 técnicas</small>
+        </div>
+        <hr>
+        <div class="nav-item-custom active" data-view="lista"><i class="bi bi-list-ul"></i> 📋 Técnicas</div>
+        <div class="nav-item-custom" data-view="flashcards"><i class="bi bi-stack"></i> 🃏 Flashcards + Ejercicio</div>
+        <div class="nav-item-custom" data-view="exportar"><i class="bi bi-cloud-download"></i> 📦 Exportar TXT</div>
+        <hr>
+        <div class="mt-3">
+          <div class="d-flex justify-content-between small"><span>Técnicas completadas</span><span id="completedCount">0</span><span>/100</span></div>
+          <div class="progress-custom mt-1"><div class="progress-fill-custom" id="progressFill"></div></div>
+        </div>
+        <hr>
+        <button id="themeToggleBtn" class="btn btn-sm w-100 mt-2"><i class="bi bi-moon-stars-fill"></i> Modo oscuro</button>
+      </div>
+    </div>
+    
+    <!-- CONTENIDO PRINCIPAL -->
+    <div class="col-lg-9 col-md-8">
+      
+      <!-- LISTA DE TÉCNICAS -->
+      <div id="listaView">
+        <h3><i class="bi bi-pencil-square me-2"></i>100 técnicas · Escritura de párrafos en chino</h3>
+        <p class="text-muted small">Conceptos en español · Ejemplos en chino (汉字 + pinyin) con contexto colombiano</p>
+        <div class="d-flex gap-2 my-3 flex-wrap">
+          <input type="text" id="searchInput" class="form-control form-control-sm" placeholder="🔍 Buscar técnica..." style="width: 200px;">
+          <select id="filterCategory" class="form-select form-select-sm" style="width: 160px;">
+            <option value="all">Todas</option>
+            <option value="Narrativo">📖 Narrativo</option>
+            <option value="Descriptivo">🖌️ Descriptivo</option>
+            <option value="Argumentativo">⚖️ Argumentativo</option>
+            <option value="Expositivo">📚 Expositivo</option>
+          </select>
+        </div>
+        <div id="tecnicasList" style="max-height: 70vh; overflow-y: auto;"></div>
+      </div>
+      
+      <!-- FLASHCARDS + EJERCICIO ORDENAR -->
+      <div id="flashcardsView" style="display: none;">
+        <div class="d-flex justify-content-between mb-3">
+          <h3><i class="bi bi-pencil-square me-2"></i>Flashcards · 中文段落</h3>
+        </div>
+        <div class="mb-2 d-flex flex-wrap gap-1" id="catFiltersFlash"></div>
+        <div class="flashcard-container"><div class="flashcard" id="flashcard">
+          <div class="flashcard-front">
+            <div class="d-flex justify-content-between"><span class="badge-cat" id="frontCat">Categoría</span><span id="frontNum">#1</span></div>
+            <h5 id="frontTitle" class="mt-2">Técnica</h5>
+            <p id="frontConcept" class="mt-3" style="flex:1;">Concepto en español</p>
+            <small>🖱️ Haz clic para ver el ejemplo en chino</small>
+          </div>
+          <div class="flashcard-back">
+            <div class="d-flex justify-content-between"><span class="badge-cat" style="background:#fff;color:#2C2A29;">📖 例子 · Ejemplo</span><span id="backNum">#1</span></div>
+            <h5 id="backTitle" class="mt-2">Ejemplo en chino (Colombia)</h5>
+            <p id="backExample" class="mt-2" style="flex:1; font-family: 'Noto Sans SC', monospace;"></p>
+            <div id="exerciseArea" class="mt-3"></div>
+          </div>
+        </div></div>
+        <div class="d-flex justify-content-between mt-4">
+          <button id="prevCardBtn" class="btn btn-outline-light">◀ Anterior</button>
+          <div><span id="cardCounter">1 / 100</span><button id="markCompleteBtn" class="btn btn-sm btn-success ms-2">✅ Completada</button></div>
+          <button id="nextCardBtn" class="btn btn-outline-light">Siguiente ▶</button>
+        </div>
+        <div class="text-center mt-3"><button id="randomCardBtn" class="btn btn-sm btn-secondary me-2">🎲 Aleatorio</button><button id="flipCardBtn" class="btn btn-sm btn-secondary">🔄 Voltear</button></div>
+      </div>
+      
+      <!-- EXPORTAR -->
+      <div id="exportarView" style="display: none;">
+        <div class="card p-4"><h4>📦 Exportar progreso</h4><button id="exportTxtBtn" class="btn btn-primary-custom btn-lg mt-2">📄 Descargar 100 técnicas en TXT</button>
+        <hr><button id="resetProgressBtn" class="btn btn-outline-danger mt-2">🔄 Reiniciar progreso</button></div>
+      </div>
+    </div>
+  </div>
+</div>
+<footer><div class="container"><small>🇨🇳 中文段落 · 100 técnicas de escritura en chino · Narrativo · Descriptivo · Argumentativo · Expositivo · Colombia</small></div></footer>
+
+<script>
+  // ============================================================
+  // 100 TÉCNICAS DE ESCRITURA EN CHINO (para hispanohablantes)
+  // ============================================================
+  const tecnicas = [];
+  
+  // Técnicas base por cada tipo de párrafo
+  const baseTecnicas = [
+    // NARRATIVE (叙事段落)
+    { tipo: "Narrativo", titulo: "使用时间顺序连接词", concepto: "Usa conectores de secuencia temporal en chino (先, 然后, 之后, 最后) para ordenar eventos.", ejemplo: ["先 (xiān), 太阳从奇卡莫查峡谷升起", "然后 (ránhòu), 咖啡农开始收割", "之后 (zhīhòu), 他们把咖啡豆送到加工厂", "最后 (zuìhòu), 圣吉尔的空气中充满了咖啡香"] },
+    { tipo: "Narrativo", titulo: "用过去时标记叙述", concepto: "Usa marcadores de tiempo pasado como 了 (le) para acciones completadas.", ejemplo: ["波哥大的学生们参观了黄金博物馆", "他们看到了著名的穆伊斯卡金筏", "参观后他们用中文写了报告"] },
+    { tipo: "Narrativo", titulo: "使用对话推动情节", concepto: "Incorpora diálogos en chino para hacer avanzar la narración.", ejemplo: ["'¡我们爬了两千米！' 玛丽亚喊道", "'奇卡莫查峡谷的景色太值得了' 卡洛斯回答", "他们笑着自拍留念"] },
+    { tipo: "Narrativo", titulo: "故事要有开头-发展-结尾", concepto: "Estructura la narración con inicio (开始), desarrollo (经过) y final (结果).", ejemplo: ["昨天我去了麦德林的波特罗广场", "在那里看到了著名的胖胖雕塑", "最后我品尝了当地的热巧克力"] },
+    
+    // DESCRIPTIVE (描写段落)
+    { tipo: "Descriptivo", titulo: "使用形容词描述外观", concepto: "Usa adjetivos en chino (漂亮, 古老, 巨大) para describir lugares colombianos.", ejemplo: ["吉隆的殖民教堂非常古老", "主广场有一个美丽的石喷泉", "还有卖玉米饼的友好小贩"] },
+    { tipo: "Descriptivo", titulo: "调动五感描写", concepto: "Apela a los cinco sentidos (看, 听, 闻, 摸, 尝) para describir.", ejemplo: ["金色的日落洒在奇卡莫查峡谷", "能听到鸟儿和风的声音", "空气中充满了炸玉米饼和新鲜咖啡的香味"] },
+    { tipo: "Descriptivo", titulo: "使用比喻和拟人", concepto: "Usa símiles (像) y personificaciones para hacer descripciones vívidas.", ejemplo: ["托图莫火山像一个巨大的泥浴盆", "河流像银丝带穿过绿色山谷", "巴里查拉的殖民房屋像白鸽栖息在山坡上"] },
+    { tipo: "Descriptivo", titulo: "使用方位词描述空间", concepto: "Usa palabras de ubicación (上面, 下面, 旁边, 对面) para describir disposición espacial.", ejemplo: ["教堂上面有钟楼", "广场旁边有一家咖啡店", "对面是市政厅", "喷泉下面有鸽子"] },
+    
+    // ARGUMENTATIVE (议论段落)
+    { tipo: "Argumentativo", titulo: "明确陈述论点", concepto: "Plantea la tesis claramente al inicio del párrafo argumentativo.", ejemplo: ["哥伦比亚应该投资可再生能源", "目前只有12%的电力来自太阳能和风能", "提高到30%将减少污染并创造就业"] },
+    { tipo: "Argumentativo", titulo: "使用数据和证据", concepto: "Respaldar argumentos con datos y evidencia en chino.", ejemplo: ["据IDEAM数据, 波哥大空气污染超标40%", "改用电动公交车5年内可减少25%排放", "麦德林已经开始成功转型"] },
+    { tipo: "Argumentativo", titulo: "承认并反驳反方观点", concepto: "Reconoce contraargumentos con 有人说, 但是 para fortalecer la posición.", ejemplo: ["有人说文化旅游对当地社区太贵", "但咖啡区的可持续项目创造了三倍于传统农业的就业", "因此投资生态旅游在经济上是有利的"] },
+    { tipo: "Argumentativo", titulo: "使用因果连词", concepto: "Usa conectores causales (因为...所以, 因此, 由于) para estructurar argumentos.", ejemplo: ["因为咖啡价格波动很大", "所以许多农民开始种植其他作物", "因此他们需要技术培训和支持"] },
+    
+    // EXPOSITORY (说明段落)
+    { tipo: "Expositivo", titulo: "以定义开头", concepto: "Comienza con una definición clara del concepto que se va a explicar.", ejemplo: ["'帕拉莫'是哥伦比亚安第斯山脉的高原生态系统", "它由草地、灌木和frailejones植物组成", "这个生态系统储存了全国70%以上的饮用水"] },
+    { tipo: "Expositivo", titulo: "使用比较对比结构", concepto: "Usa estructuras de comparación (和...不同, 而, 但是) para explicar diferencias.", ejemplo: ["与加勒比海岸的巴耶纳托不同,  bambuco来自哥伦比亚安第斯地区", "巴耶纳托使用手风琴, 而bambuco使用tiples和吉他", "然而两种流派都是国家文化遗产"] },
+    { tipo: "Expositivo", titulo: "解释因果关系", concepto: "Explica relaciones de causa y efecto con conectores apropiados.", ejemplo: ["亚马逊雨林的砍伐导致了水土流失", "结果, 当地社区的土地变小了", "因此许多年轻人移居到莱蒂西亚或波哥大"] },
+    { tipo: "Expositivo", titulo: "使用例子说明", concepto: "Usa ejemplos concretos (例如) para ilustrar conceptos abstractos.", ejemplo: ["例如, 波哥大黄金博物馆有三万多件前哥伦布时期的作品", "其中最著名的是穆伊斯卡金筏, 展示了埃尔多拉多传说", "这个例子展示了土著金工的精湛技艺"] }
+  ];
+  
+  // Generar 100 técnicas
+  for(let i=1; i<=100; i++) {
+    let base = baseTecnicas[(i-1) % baseTecnicas.length];
+    let tipo = base.tipo;
+    let titulo = `${tipo}: ${base.titulo}`;
+    tecnicas.push([i, titulo, base.concepto, tipo, [...base.ejemplo]]);
+  }
+  
+  // Añadir pinyin para los primeros ejemplos
+  const pinyinMap = {
+    "先 (xiān)": "xiān", "太阳从奇卡莫查峡谷升起": "tàiyáng cóng Qíkǎmòchá xiágǔ shēngqǐ",
+    "然后 (ránhòu)": "ránhòu", "咖啡农开始收割": "kāfēi nóng kāishǐ shōugē",
+    "之后 (zhīhòu)": "zhīhòu", "他们把咖啡豆送到加工厂": "tāmen bǎ kāfēidòu sòng dào jiāgōngchǎng",
+    "最后 (zuìhòu)": "zuìhòu", "圣吉尔的空气中充满了咖啡香": "Shèngjí'ěr de kōngqì zhōng chōngmǎnle kāfēi xiāng"
+  };
+  
+  let progress = {};
+  let currentFilter = "all";
+  let currentSearch = "";
+  let currentCategoryFilter = "all";
+  let filteredTecnicas = [...tecnicas];
+  let currentCardIndex = 0;
+  let flashcardsFilter = "all";
+  let filteredFlashcards = [...tecnicas];
+  const STORAGE_KEY = "chinese_paragraph_pro_100";
+  
+  function loadProgress() { const s=localStorage.getItem(STORAGE_KEY); if(s) progress=JSON.parse(s); for(let i=1;i<=100;i++) if(progress[i]===undefined) progress[i]=false; updateStats(); }
+  function saveProgress() { localStorage.setItem(STORAGE_KEY,JSON.stringify(progress)); updateStats(); }
+  function updateStats() { let c=Object.values(progress).filter(v=>v===true).length; document.getElementById("completedCount").innerText=c; document.getElementById("progressFill").style.width=`${(c/100)*100}%`; }
+  function markComplete(id) { progress[id]=!progress[id]; saveProgress(); renderLista(); if(document.getElementById("flashcardsView").style.display!=="none") updateFlashcard(); }
+  
+  function renderLista() {
+    let filtered = [...tecnicas];
+    if(currentSearch) filtered=filtered.filter(t=>t[1].toLowerCase().includes(currentSearch)||t[2].toLowerCase().includes(currentSearch));
+    if(currentCategoryFilter!=="all") filtered=filtered.filter(t=>t[3]===currentCategoryFilter);
+    const cont=document.getElementById("tecnicasList");
+    cont.innerHTML=filtered.map(t=>`<div class="tecnica-card ${progress[t[0]]?'completed':''}" data-id="${t[0]}"><div class="d-flex justify-content-between"><div><span class="badge-cat">${t[3]}</span><span class="ms-2">#${t[0]}</span></div><input class="form-check-input" type="checkbox" ${progress[t[0]]?'checked':''} onchange="event.stopPropagation();markComplete(${t[0]})"></div><h6 class="mt-2">${t[1]}</h6><p class="small text-muted">${t[2].substring(0,100)}...</p></div>`).join('');
+    document.querySelectorAll(".tecnica-card").forEach(c=>c.addEventListener("click",(e)=>{if(!e.target.classList.contains("form-check-input")){ let id=parseInt(c.dataset.id); let idx=filteredTecnicas.findIndex(t=>t[0]===id); if(idx!==-1){currentCardIndex=idx; switchToFlashcards(); updateFlashcard();}}}));
+  }
+  
+  function populateFilters() {
+    let cats=[...new Set(tecnicas.map(t=>t[3]))];
+    let select=document.getElementById("filterCategory");
+    select.innerHTML='<option value="all">Todas</option>'+cats.map(c=>`<option value="${c}">${c}</option>`).join('');
+    select.onchange=e=>{currentCategoryFilter=e.target.value; renderLista();};
+    let flashCats=document.getElementById("catFiltersFlash");
+    flashCats.innerHTML='<button class="filter-btn active" data-cat="all">📚 Todas</button>'+cats.map(c=>`<button class="filter-btn" data-cat="${c}">${c}</button>`).join('');
+    document.querySelectorAll("#catFiltersFlash .filter-btn").forEach(b=>b.onclick=()=>{flashcardsFilter=b.getAttribute("data-cat"); document.querySelectorAll("#catFiltersFlash .filter-btn").forEach(b=>b.classList.remove("active")); b.classList.add("active"); filterFlashcards();});
+  }
+  function filterFlashcards() { if(flashcardsFilter==="all") filteredFlashcards=[...tecnicas]; else filteredFlashcards=tecnicas.filter(t=>t[3]===flashcardsFilter); currentCardIndex=Math.min(currentCardIndex,filteredFlashcards.length-1); if(currentCardIndex<0) currentCardIndex=0; updateFlashcard(); }
+  
+  function updateFlashcard() {
+    let t=filteredFlashcards[currentCardIndex];
+    if(!t) return;
+    document.getElementById("frontCat").innerHTML=t[3]; document.getElementById("frontNum").innerHTML=`#${t[0]}`; document.getElementById("frontTitle").innerHTML=t[1]; document.getElementById("frontConcept").innerHTML=t[2];
+    document.getElementById("backNum").innerHTML=`#${t[0]}`; document.getElementById("backTitle").innerHTML=t[1];
+    let ejemploArray=t[4];
+    let ejemploHTML = ejemploArray.map(line => `<div class="chinese-text">${line}</div>`).join('');
+    document.getElementById("backExample").innerHTML = ejemploHTML;
+    document.getElementById("cardCounter").innerHTML=`${currentCardIndex+1}/${filteredFlashcards.length}`;
+    document.getElementById("flashcard").classList.remove("flipped");
+    let originalFrases=[...ejemploArray];
+    let shuffled=[...originalFrases].sort(()=>Math.random()-0.5);
+    let selected=[];
+    const ejercicioHtml=`<div class="small fw-bold mb-2">✍️ 练习: 排列句子顺序 · Ordena las frases en chino</div>
+      <div class="d-flex flex-wrap justify-content-center" id="orderWordsContainer">${shuffled.map(f=>`<span class="word-bubble" data-text="${f.replace(/"/g, '&quot;')}">${f}</span>`).join('')}</div>
+      <div class="order-sentence" id="orderDisplay"><em>Tu orden aparecerá aquí...</em></div>
+      <button id="checkOrderBtn" class="btn btn-sm btn-primary mt-2">✓ 检查 · Verificar orden</button>
+      <div id="orderFeedback" class="mt-2 small"></div>`;
+    document.getElementById("exerciseArea").innerHTML=ejercicioHtml;
+    let wordsContainer=document.getElementById("orderWordsContainer");
+    let orderDisplay=document.getElementById("orderDisplay");
+    let checkBtn=document.getElementById("checkOrderBtn");
+    let selectedOrder=[];
+    function renderBubbles() {
+      wordsContainer.innerHTML=shuffled.map(f=>`<span class="word-bubble" data-text="${f.replace(/"/g, '&quot;')}">${f}</span>`).join('');
+      document.querySelectorAll(".word-bubble").forEach(b=>b.onclick=()=>{let txt=b.getAttribute("data-text"); let idx=shuffled.indexOf(txt); if(idx!==-1){shuffled.splice(idx,1); selectedOrder.push(txt); orderDisplay.innerHTML=selectedOrder.join(" → "); renderBubbles();}});
+    }
+    renderBubbles();
+    checkBtn.onclick=()=>{
+      let userOrder=selectedOrder.join(" ");
+      let correctOrder=originalFrases.join(" ");
+      let feedback=document.getElementById("orderFeedback");
+      if(userOrder===correctOrder){ feedback.innerHTML="<span class='text-success'>✅ 完美! Has ordenado correctamente el párrafo en chino.</span>"; if(!progress[t[0]]){progress[t[0]]=true; saveProgress(); renderLista();} }
+      else{ feedback.innerHTML=`<span class='text-danger'>❌ 顺序不正确 · El orden correcto es:<br><strong>${correctOrder}</strong></span>`; }
+    };
+  }
+  
+  function nextCard(){ if(currentCardIndex<filteredFlashcards.length-1){currentCardIndex++; updateFlashcard();} }
+  function prevCard(){ if(currentCardIndex>0){currentCardIndex--; updateFlashcard();} }
+  function randomCard(){ currentCardIndex=Math.floor(Math.random()*filteredFlashcards.length); updateFlashcard(); }
+  function flipCard(){ document.getElementById("flashcard").classList.toggle("flipped"); }
+  function markCurrentComplete(){ let t=filteredFlashcards[currentCardIndex]; if(t){progress[t[0]]=!progress[t[0]]; saveProgress(); renderLista(); updateFlashcard();} }
+  
+  function exportTxt(){ let content="=== 100 TÉCNICAS DE ESCRITURA EN CHINO (中文段落) ===\n\n"; for(let t of tecnicas){ content+=`[${t[0]}] ${t[1]}\nTipo: ${t[3]}\nConcepto (Español): ${t[2]}\nEjemplo (Chino): ${t[4].join(" ")}\nCompletada: ${progress[t[0]]?"SÍ":"NO"}\n${"-".repeat(50)}\n\n`; } let blob=new Blob([content],{type:"text/plain"}); let a=document.createElement("a"); a.href=URL.createObjectURL(blob); a.download=`chino_tecnicas_${Date.now()}.txt`; a.click(); URL.revokeObjectURL(a.href); }
+  function resetProgress(){ if(confirm("¿Reiniciar todo el progreso?")){ for(let i=1;i<=100;i++) progress[i]=false; saveProgress(); renderLista(); updateFlashcard(); } }
+  
+  function switchToLista(){ document.getElementById("listaView").style.display="block"; document.getElementById("flashcardsView").style.display="none"; document.getElementById("exportarView").style.display="none"; document.querySelectorAll(".nav-item-custom").forEach(i=>i.classList.remove("active")); document.querySelector(".nav-item-custom[data-view='lista']").classList.add("active"); renderLista(); }
+  function switchToFlashcards(){ document.getElementById("listaView").style.display="none"; document.getElementById("flashcardsView").style.display="block"; document.getElementById("exportarView").style.display="none"; document.querySelectorAll(".nav-item-custom").forEach(i=>i.classList.remove("active")); document.querySelector(".nav-item-custom[data-view='flashcards']").classList.add("active"); filterFlashcards(); }
+  function switchToExportar(){ document.getElementById("listaView").style.display="none"; document.getElementById("flashcardsView").style.display="none"; document.getElementById("exportarView").style.display="block"; document.querySelectorAll(".nav-item-custom").forEach(i=>i.classList.remove("active")); document.querySelector(".nav-item-custom[data-view='exportar']").classList.add("active"); }
+  
+  document.getElementById("searchInput")?.addEventListener("input",e=>{currentSearch=e.target.value.toLowerCase(); renderLista();});
+  document.getElementById("prevCardBtn")?.addEventListener("click",prevCard);
+  document.getElementById("nextCardBtn")?.addEventListener("click",nextCard);
+  document.getElementById("randomCardBtn")?.addEventListener("click",randomCard);
+  document.getElementById("flipCardBtn")?.addEventListener("click",flipCard);
+  document.getElementById("markCompleteBtn")?.addEventListener("click",markCurrentComplete);
+  document.getElementById("exportTxtBtn")?.addEventListener("click",exportTxt);
+  document.getElementById("resetProgressBtn")?.addEventListener("click",resetProgress);
+  document.getElementById("themeToggleBtn")?.addEventListener("click",()=>document.body.classList.toggle("light-mode"));
+  document.querySelector(".nav-item-custom[data-view='lista']")?.addEventListener("click",switchToLista);
+  document.querySelector(".nav-item-custom[data-view='flashcards']")?.addEventListener("click",switchToFlashcards);
+  document.querySelector(".nav-item-custom[data-view='exportar']")?.addEventListener("click",switchToExportar);
+  
+  loadProgress(); populateFilters(); renderLista(); filterFlashcards(); switchToLista();
+</script>
+</body>
+</html>

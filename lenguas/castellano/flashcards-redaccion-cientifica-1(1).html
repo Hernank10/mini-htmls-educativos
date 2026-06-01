@@ -1,0 +1,1523 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Flashcards · Redacción Científica | Arq & Ciencias Colombia</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Space+Mono:wght@400;700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+<style>
+  :root {
+    --ink: #0f0e0c;
+    --cream: #f5f0e8;
+    --accent: #c8392b;
+    --gold: #d4a843;
+    --steel: #2c3e50;
+    --mist: #e8e2d8;
+    --green-done: #27ae60;
+    --card-w: 720px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--cream);
+    font-family: 'Lato', sans-serif;
+    color: var(--ink);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ── GRAIN OVERLAY ── */
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none; z-index: 9999;
+  }
+
+  /* ── HEADER ── */
+  .site-header {
+    background: var(--ink);
+    color: var(--cream);
+    padding: 0;
+    border-bottom: 4px solid var(--accent);
+  }
+  .site-header .inner {
+    max-width: 1200px; margin: 0 auto;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 16px 24px;
+    gap: 16px; flex-wrap: wrap;
+  }
+  .site-logo {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.1rem, 3vw, 1.6rem);
+    font-weight: 900; letter-spacing: -0.5px;
+    line-height: 1.1;
+  }
+  .site-logo span { color: var(--gold); }
+
+  .progress-bar-wrap { flex: 1; min-width: 180px; max-width: 300px; }
+  .progress-label { font-family: 'Space Mono', monospace; font-size: 11px; color: var(--mist); margin-bottom: 4px; }
+  .prog-bar { height: 6px; background: #333; border-radius: 3px; overflow: hidden; }
+  .prog-fill { height: 100%; background: var(--gold); border-radius: 3px; transition: width .5s ease; }
+
+  /* ── NAV TABS ── */
+  .mode-tabs { background: var(--steel); }
+  .mode-tabs .inner { max-width: 1200px; margin: 0 auto; display: flex; gap: 0; }
+  .mode-tab {
+    padding: 12px 28px; cursor: pointer; font-family: 'Space Mono', monospace;
+    font-size: 12px; letter-spacing: 1px; text-transform: uppercase;
+    color: #aaa; border: none; background: transparent;
+    border-bottom: 3px solid transparent; transition: all .2s;
+  }
+  .mode-tab:hover { color: var(--cream); }
+  .mode-tab.active { color: var(--gold); border-bottom-color: var(--gold); }
+
+  /* ── MAIN LAYOUT ── */
+  .main { max-width: 1200px; margin: 0 auto; padding: 32px 16px; }
+
+  /* ── FILTER BAR ── */
+  .filter-bar {
+    display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 24px;
+    align-items: center;
+  }
+  .filter-btn {
+    padding: 6px 16px; border-radius: 20px; border: 1.5px solid var(--ink);
+    background: transparent; font-family: 'Space Mono', monospace; font-size: 11px;
+    cursor: pointer; transition: all .2s; letter-spacing: .5px;
+  }
+  .filter-btn:hover, .filter-btn.active {
+    background: var(--ink); color: var(--cream);
+  }
+  .filter-btn.mat { border-color: #2980b9; }
+  .filter-btn.mat.active, .filter-btn.mat:hover { background: #2980b9; color: #fff; }
+  .filter-btn.fis { border-color: #8e44ad; }
+  .filter-btn.fis.active, .filter-btn.fis:hover { background: #8e44ad; color: #fff; }
+  .filter-btn.qui { border-color: #16a085; }
+  .filter-btn.qui.active, .filter-btn.qui:hover { background: #16a085; color: #fff; }
+  .filter-btn.arq { border-color: var(--accent); }
+  .filter-btn.arq.active, .filter-btn.arq:hover { background: var(--accent); color: #fff; }
+
+  .search-input {
+    padding: 7px 16px; border: 1.5px solid var(--ink); border-radius: 20px;
+    font-family: 'Lato', sans-serif; font-size: 13px; background: transparent;
+    outline: none; width: 200px;
+  }
+  .search-input:focus { border-color: var(--gold); }
+
+  /* ── FLASHCARD MODE ── */
+  #mode-flash { display: block; }
+  #mode-list  { display: none; }
+
+  .flash-stage {
+    display: flex; flex-direction: column; align-items: center;
+    gap: 20px;
+  }
+
+  .flash-counter {
+    font-family: 'Space Mono', monospace; font-size: 13px; color: #666;
+    letter-spacing: 2px;
+  }
+
+  .flashcard {
+    width: 100%; max-width: var(--card-w);
+    perspective: 1200px;
+    cursor: pointer;
+  }
+  .card-inner {
+    position: relative; width: 100%; min-height: 340px;
+    transform-style: preserve-3d; transition: transform .55s cubic-bezier(.4,0,.2,1);
+    border-radius: 4px;
+  }
+  .flashcard.flipped .card-inner { transform: rotateY(180deg); }
+
+  .card-face {
+    position: absolute; inset: 0;
+    backface-visibility: hidden; -webkit-backface-visibility: hidden;
+    border-radius: 4px; padding: 36px 40px;
+    display: flex; flex-direction: column; justify-content: center;
+    box-shadow: 6px 6px 0 var(--ink);
+  }
+  .card-front {
+    background: var(--cream);
+    border: 2px solid var(--ink);
+  }
+  .card-back {
+    background: var(--ink);
+    color: var(--cream);
+    transform: rotateY(180deg);
+    border: 2px solid var(--ink);
+  }
+
+  .card-discipline {
+    font-family: 'Space Mono', monospace; font-size: 10px;
+    letter-spacing: 2px; text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+  .disc-mat { color: #2980b9; }
+  .disc-fis { color: #8e44ad; }
+  .disc-qui { color: #16a085; }
+  .disc-arq { color: var(--accent); }
+
+  .card-back .card-discipline { opacity: .6; }
+
+  .card-num {
+    position: absolute; top: 16px; right: 20px;
+    font-family: 'Space Mono', monospace; font-size: 11px; opacity: .4;
+  }
+
+  .card-technique {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1rem, 3vw, 1.35rem);
+    font-weight: 700; margin-bottom: 10px;
+    line-height: 1.25;
+  }
+
+  .card-def {
+    font-size: 14px; line-height: 1.65; color: #444;
+  }
+  .card-back .card-def { color: #ccc; font-size: 13px; }
+
+  .flip-hint {
+    font-family: 'Space Mono', monospace; font-size: 10px;
+    color: #999; text-align: center; letter-spacing: 1px;
+    margin-top: 18px;
+  }
+
+  .card-example-label {
+    font-family: 'Space Mono', monospace; font-size: 10px;
+    letter-spacing: 2px; text-transform: uppercase;
+    color: var(--gold); margin-bottom: 8px;
+  }
+  .card-example-text {
+    font-family: 'Lato', sans-serif; font-size: 14px;
+    font-style: italic; line-height: 1.6;
+    border-left: 3px solid var(--gold); padding-left: 14px;
+    color: #e8e0d0;
+  }
+
+  /* ── DRAG EXERCISE IN CARD ── */
+  .exercise-area {
+    margin-top: 20px; padding-top: 18px;
+    border-top: 1px solid rgba(255,255,255,.15);
+  }
+  .ex-label {
+    font-family: 'Space Mono', monospace; font-size: 10px;
+    letter-spacing: 2px; text-transform: uppercase;
+    color: var(--accent); margin-bottom: 10px;
+    display: flex; align-items: center; gap: 6px;
+  }
+
+  .drop-zone {
+    display: flex; flex-wrap: wrap; gap: 6px; min-height: 44px;
+    border: 2px dashed rgba(255,255,255,.2); border-radius: 4px;
+    padding: 8px; margin-bottom: 10px;
+    transition: border-color .2s;
+  }
+  .drop-zone.drag-over { border-color: var(--gold); }
+
+  .word-bank {
+    display: flex; flex-wrap: wrap; gap: 6px; min-height: 36px;
+    margin-bottom: 10px;
+  }
+
+  .word-chip {
+    padding: 5px 12px; border-radius: 3px; cursor: grab;
+    font-size: 13px; line-height: 1.3;
+    user-select: none; transition: all .15s;
+    border: 1.5px solid rgba(255,255,255,.25);
+    background: rgba(255,255,255,.08); color: #e8e0d0;
+  }
+  .word-chip:active { cursor: grabbing; opacity: .7; }
+  .word-chip.placed { opacity: .4; cursor: default; }
+  .word-chip.in-drop {
+    background: rgba(212,168,67,.15); border-color: var(--gold);
+    cursor: grab;
+  }
+
+  .ex-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+  .ex-btn {
+    padding: 5px 14px; border-radius: 3px; border: 1.5px solid;
+    font-family: 'Space Mono', monospace; font-size: 11px;
+    cursor: pointer; transition: all .2s; letter-spacing: .5px;
+  }
+  .ex-btn.check { border-color: var(--gold); color: var(--gold); background: transparent; }
+  .ex-btn.check:hover { background: var(--gold); color: var(--ink); }
+  .ex-btn.reset { border-color: #666; color: #999; background: transparent; }
+  .ex-btn.reset:hover { border-color: #aaa; color: #ccc; }
+
+  .ex-feedback {
+    font-family: 'Space Mono', monospace; font-size: 11px;
+    margin-top: 6px; min-height: 18px;
+    letter-spacing: .5px;
+  }
+  .ex-feedback.correct { color: #2ecc71; }
+  .ex-feedback.wrong   { color: var(--accent); }
+
+  /* ── FLASH NAV ── */
+  .flash-nav {
+    display: flex; gap: 12px; align-items: center; flex-wrap: wrap;
+    justify-content: center;
+  }
+  .nav-btn {
+    padding: 10px 24px; border: 2px solid var(--ink);
+    background: transparent; font-family: 'Space Mono', monospace;
+    font-size: 12px; cursor: pointer; border-radius: 3px;
+    transition: all .2s; letter-spacing: .5px;
+    display: flex; align-items: center; gap: 6px;
+  }
+  .nav-btn:hover { background: var(--ink); color: var(--cream); }
+  .nav-btn.done-btn { border-color: var(--green-done); color: var(--green-done); }
+  .nav-btn.done-btn:hover { background: var(--green-done); color: #fff; }
+  .nav-btn.done-btn.marked { background: var(--green-done); color: #fff; }
+  .nav-btn:disabled { opacity: .3; cursor: not-allowed; }
+
+  /* ── LIST MODE ── */
+  .list-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 20px;
+  }
+
+  .list-card {
+    background: #fff; border: 2px solid var(--ink);
+    border-radius: 4px; overflow: hidden;
+    box-shadow: 4px 4px 0 var(--mist);
+    transition: box-shadow .2s, transform .2s;
+  }
+  .list-card:hover { transform: translate(-2px,-2px); box-shadow: 6px 6px 0 var(--mist); }
+  .list-card.completed { border-color: var(--green-done); }
+  .list-card.completed .lc-header { background: var(--green-done); }
+
+  .lc-header {
+    background: var(--ink); color: var(--cream);
+    padding: 12px 16px; display: flex; justify-content: space-between; align-items: center;
+  }
+  .lc-num { font-family: 'Space Mono', monospace; font-size: 10px; opacity: .5; }
+  .lc-disc {
+    font-family: 'Space Mono', monospace; font-size: 9px; letter-spacing: 2px;
+    text-transform: uppercase; padding: 2px 8px; border-radius: 10px;
+  }
+  .lc-disc.mat { background: #2980b9; }
+  .lc-disc.fis { background: #8e44ad; }
+  .lc-disc.qui { background: #16a085; }
+  .lc-disc.arq { background: var(--accent); }
+
+  .lc-body { padding: 16px; }
+  .lc-technique {
+    font-family: 'Playfair Display', serif; font-size: 1rem;
+    font-weight: 700; margin-bottom: 6px;
+  }
+  .lc-def { font-size: 12px; color: #555; line-height: 1.55; margin-bottom: 10px; }
+  .lc-example { font-size: 12px; font-style: italic; color: #333;
+    border-left: 3px solid var(--gold); padding-left: 10px; margin-bottom: 12px; }
+
+  .lc-exercise { background: #f9f6f0; border-radius: 4px; padding: 12px; }
+  .lc-ex-label {
+    font-family: 'Space Mono', monospace; font-size: 9px;
+    letter-spacing: 2px; text-transform: uppercase; color: var(--accent); margin-bottom: 8px;
+  }
+
+  .lc-drop-zone {
+    display: flex; flex-wrap: wrap; gap: 5px; min-height: 36px;
+    border: 2px dashed #ccc; border-radius: 3px; padding: 6px; margin-bottom: 8px;
+    transition: border-color .2s;
+  }
+  .lc-drop-zone.drag-over { border-color: var(--gold); }
+
+  .lc-word-bank { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 8px; }
+
+  .lc-chip {
+    padding: 4px 10px; border-radius: 3px; cursor: grab; font-size: 12px;
+    user-select: none; border: 1.5px solid #bbb; background: #fff;
+    transition: all .15s; color: var(--ink);
+  }
+  .lc-chip:active { cursor: grabbing; opacity: .7; }
+  .lc-chip.placed { opacity: .35; cursor: default; }
+  .lc-chip.in-drop { background: #fef9e7; border-color: var(--gold); cursor: grab; }
+
+  .lc-actions { display: flex; gap: 6px; }
+  .lc-btn {
+    padding: 4px 12px; border-radius: 3px; border: 1.5px solid;
+    font-family: 'Space Mono', monospace; font-size: 10px; cursor: pointer; transition: all .2s;
+  }
+  .lc-btn.check { border-color: var(--steel); color: var(--steel); background: transparent; }
+  .lc-btn.check:hover { background: var(--steel); color: #fff; }
+  .lc-btn.reset { border-color: #ccc; color: #999; background: transparent; }
+  .lc-btn.reset:hover { border-color: #999; color: #555; }
+  .lc-feedback { font-family: 'Space Mono', monospace; font-size: 10px; margin-top: 5px; min-height: 16px; }
+  .lc-feedback.correct { color: var(--green-done); }
+  .lc-feedback.wrong { color: var(--accent); }
+
+  /* ── DONE BADGE ── */
+  .done-badge {
+    display: inline-flex; align-items: center; gap: 4px;
+    font-family: 'Space Mono', monospace; font-size: 9px;
+    background: var(--green-done); color: #fff; border-radius: 10px;
+    padding: 2px 8px; letter-spacing: 1px;
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 600px) {
+    .card-face { padding: 24px 20px; }
+    .card-technique { font-size: 1rem; }
+    .mode-tab { padding: 10px 14px; font-size: 10px; }
+  }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .flash-stage, .list-card { animation: fadeUp .35s ease both; }
+  .list-card:nth-child(2) { animation-delay: .04s; }
+  .list-card:nth-child(3) { animation-delay: .08s; }
+  .list-card:nth-child(4) { animation-delay: .12s; }
+  .list-card:nth-child(5) { animation-delay: .16s; }
+
+  .stats-bar {
+    display: flex; gap: 16px; flex-wrap: wrap;
+    margin-bottom: 20px; font-family: 'Space Mono', monospace; font-size: 12px;
+  }
+  .stat { display: flex; align-items: center; gap: 6px; }
+  .stat-dot { width: 10px; height: 10px; border-radius: 50%; }
+  .stat-dot.done { background: var(--green-done); }
+  .stat-dot.pending { background: #ccc; }
+
+  .empty-msg { text-align: center; padding: 60px 20px; opacity: .4;
+    font-family: 'Space Mono', monospace; font-size: 13px; }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="site-header">
+  <div class="inner">
+    <div class="site-logo">
+      Redacción<br><span>Científica</span><br>
+      <small style="font-size:.55em;font-weight:400;opacity:.6;font-family:'Space Mono',monospace">MAT · FÍS · QUI · ARQ · Colombia</small>
+    </div>
+    <div class="progress-bar-wrap">
+      <div class="progress-label"><span id="prog-count">0</span> / 100 completadas</div>
+      <div class="prog-bar"><div class="prog-fill" id="prog-fill" style="width:0%"></div></div>
+    </div>
+  </div>
+</header>
+
+<!-- MODE TABS -->
+<nav class="mode-tabs">
+  <div class="inner">
+    <button class="mode-tab active" onclick="setMode('flash')" id="tab-flash">
+      <i class="bi bi-card-heading"></i> Flashcards
+    </button>
+    <button class="mode-tab" onclick="setMode('list')" id="tab-list">
+      <i class="bi bi-grid-3x3-gap"></i> Lista / Técnicas
+    </button>
+  </div>
+</nav>
+
+<!-- MAIN -->
+<div class="main">
+
+  <!-- FILTER BAR -->
+  <div class="filter-bar">
+    <button class="filter-btn active" onclick="setFilter('all',this)">Todas</button>
+    <button class="filter-btn mat" onclick="setFilter('Matemáticas',this)">Matemáticas</button>
+    <button class="filter-btn fis" onclick="setFilter('Física',this)">Física</button>
+    <button class="filter-btn qui" onclick="setFilter('Química',this)">Química</button>
+    <button class="filter-btn arq" onclick="setFilter('Arquitectura',this)">Arquitectura</button>
+    <input class="search-input" id="search-input" type="text" placeholder="🔍 Buscar técnica…" oninput="doSearch(this.value)">
+    <button class="filter-btn" onclick="resetAll()" style="margin-left:auto;border-color:var(--accent);color:var(--accent)">
+      <i class="bi bi-arrow-counterclockwise"></i> Reiniciar
+    </button>
+  </div>
+
+  <!-- STATS BAR -->
+  <div class="stats-bar">
+    <div class="stat"><div class="stat-dot done"></div><span id="stat-done">0 completadas</span></div>
+    <div class="stat"><div class="stat-dot pending"></div><span id="stat-pending">100 pendientes</span></div>
+    <div class="stat"><span id="stat-filter">Mostrando: todas</span></div>
+  </div>
+
+  <!-- FLASHCARD MODE -->
+  <div id="mode-flash">
+    <div class="flash-stage">
+      <div class="flash-counter" id="flash-counter">1 / 100</div>
+
+      <div class="flashcard" id="flashcard" onclick="flipCard(event)">
+        <div class="card-inner" id="card-inner">
+          <!-- FRONT -->
+          <div class="card-face card-front" id="cf">
+            <div class="card-num" id="cf-num">01</div>
+            <div class="card-discipline" id="cf-disc"></div>
+            <div class="card-technique" id="cf-tech"></div>
+            <div class="card-def" id="cf-def"></div>
+            <div class="flip-hint">↩ Toca para ver ejemplo y ejercicio</div>
+          </div>
+          <!-- BACK -->
+          <div class="card-face card-back" id="cb">
+            <div class="card-num" id="cb-num">01</div>
+            <div class="card-discipline" id="cb-disc"></div>
+            <div class="card-example-label">Ejemplo</div>
+            <div class="card-example-text" id="cb-ex"></div>
+            <div class="exercise-area">
+              <div class="ex-label"><i class="bi bi-puzzle"></i> Ordenar palabras</div>
+              <div class="drop-zone" id="card-drop" ondragover="onDragOver(event)" ondrop="onDrop(event,'card-drop')" ondragleave="onDragLeave(event)"></div>
+              <div class="word-bank" id="card-bank"></div>
+              <div class="ex-actions">
+                <button class="ex-btn check" onclick="checkCard(event)">Verificar</button>
+                <button class="ex-btn reset" onclick="resetCardExercise(event)">Reiniciar</button>
+              </div>
+              <div class="ex-feedback" id="card-feedback"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="flash-nav">
+        <button class="nav-btn" id="btn-prev" onclick="navigate(-1)"><i class="bi bi-arrow-left"></i> Anterior</button>
+        <button class="nav-btn done-btn" id="btn-mark" onclick="markDone()"><i class="bi bi-check2"></i> Marcar</button>
+        <button class="nav-btn" id="btn-next" onclick="navigate(1)">Siguiente <i class="bi bi-arrow-right"></i></button>
+      </div>
+    </div>
+  </div>
+
+  <!-- LIST MODE -->
+  <div id="mode-list">
+    <div class="list-grid" id="list-grid"></div>
+    <div class="empty-msg" id="empty-msg" style="display:none">No hay tarjetas con ese filtro.</div>
+  </div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+// ═══════════════════════════════════════════════
+// DATA — 100 FLASHCARDS
+// ═══════════════════════════════════════════════
+const CARDS = [
+// ── MATEMÁTICAS (25) ──
+{id:1,disc:"Matemáticas",tech:"Definición Formal",
+def:"Enunciado preciso que establece las condiciones necesarias y suficientes de un concepto matemático.",
+example:"Un número primo es aquel entero mayor que uno que únicamente admite como divisores a la unidad y a sí mismo.",
+words:["Un","número","primo","es","aquel","entero","mayor","que","uno","que","únicamente","admite","como","divisores","a","la","unidad","y","a","sí","mismo."]},
+
+{id:2,disc:"Matemáticas",tech:"Demostración por Contraejemplo",
+def:"Estrategia que refuta una afirmación universal presentando un caso específico que la viola.",
+example:"La conjetura de que todo número impar es primo queda refutada al considerar el número nueve, producto de tres por tres.",
+words:["La","conjetura","de","que","todo","número","impar","es","primo","queda","refutada","al","considerar","el","número","nueve,","producto","de","tres","por","tres."]},
+
+{id:3,disc:"Matemáticas",tech:"Inducción Matemática",
+def:"Método de prueba que valida una propiedad para todos los naturales verificando el caso base y el paso inductivo.",
+example:"Se demuestra que la suma de los primeros n números naturales es igual a n multiplicado por n más uno sobre dos.",
+words:["Se","demuestra","que","la","suma","de","los","primeros","n","números","naturales","es","igual","a","n","multiplicado","por","n","más","uno","sobre","dos."]},
+
+{id:4,disc:"Matemáticas",tech:"Notación Científica",
+def:"Expresión de cantidades muy grandes o muy pequeñas como producto de un número entre 1 y 10 por una potencia de diez.",
+example:"La distancia entre Bogotá y Medellín, aproximadamente cuatrocientos kilómetros, equivale a cuatro por diez elevado a la quinta en metros.",
+words:["La","distancia","entre","Bogotá","y","Medellín,","aproximadamente","cuatrocientos","kilómetros,","equivale","a","cuatro","por","diez","elevado","a","la","quinta","en","metros."]},
+
+{id:5,disc:"Matemáticas",tech:"Formulación de Hipótesis",
+def:"Proposición tentativa que relaciona variables y orienta la investigación matemática hacia una demostración o refutación.",
+example:"Se hipotetiza que la función de distribución de los premios de la lotería colombiana exhibe una asimetría positiva significativa.",
+words:["Se","hipotetiza","que","la","función","de","distribución","de","los","premios","de","la","lotería","colombiana","exhibe","una","asimetría","positiva","significativa."]},
+
+{id:6,disc:"Matemáticas",tech:"Descripción de Resultados",
+def:"Presentación objetiva de los valores, tendencias o patrones obtenidos tras el análisis matemático.",
+example:"Los resultados revelan que el ochenta y tres por ciento de los datos se concentra dentro de dos desviaciones estándar respecto a la media.",
+words:["Los","resultados","revelan","que","el","ochenta","y","tres","por","ciento","de","los","datos","se","concentra","dentro","de","dos","desviaciones","estándar","respecto","a","la","media."]},
+
+{id:7,disc:"Matemáticas",tech:"Justificación de Procedimiento",
+def:"Explicación del por qué se aplica cada paso de un proceso matemático, vinculando método con objetivo.",
+example:"Se aplica la regla de L'Hôpital dado que el límite presenta la forma indeterminada cero sobre cero al sustituir directamente.",
+words:["Se","aplica","la","regla","de","L'Hôpital","dado","que","el","límite","presenta","la","forma","indeterminada","cero","sobre","cero","al","sustituir","directamente."]},
+
+{id:8,disc:"Matemáticas",tech:"Comparación Cuantitativa",
+def:"Análisis que pone en relación dos o más magnitudes para establecer diferencias, similitudes o proporciones.",
+example:"El área del polígono regular inscrito en la circunferencia unitaria resulta un doce por ciento menor que la del polígono circunscrito.",
+words:["El","área","del","polígono","regular","inscrito","en","la","circunferencia","unitaria","resulta","un","doce","por","ciento","menor","que","la","del","polígono","circunscrito."]},
+
+{id:9,disc:"Matemáticas",tech:"Definición por Extensión",
+def:"Enumeración explícita de todos los elementos que conforman un conjunto o categoría matemática.",
+example:"El conjunto de los números primos menores que veinte es el siguiente: dos, tres, cinco, siete, once, trece, diecisiete y diecinueve.",
+words:["El","conjunto","de","los","números","primos","menores","que","veinte","es","el","siguiente:","dos,","tres,","cinco,","siete,","once,","trece,","diecisiete","y","diecinueve."]},
+
+{id:10,disc:"Matemáticas",tech:"Análisis de Error",
+def:"Evaluación sistemática de la magnitud, origen y efecto de las discrepancias entre valores teóricos y experimentales.",
+example:"El error relativo del método trapezoidal aplicado al cálculo de la integral definida no supera el cero coma tres por ciento.",
+words:["El","error","relativo","del","método","trapezoidal","aplicado","al","cálculo","de","la","integral","definida","no","supera","el","cero","coma","tres","por","ciento."]},
+
+{id:11,disc:"Matemáticas",tech:"Modelado Matemático",
+def:"Traducción de un fenómeno real a expresiones matemáticas que permiten su análisis y predicción.",
+example:"El crecimiento poblacional del municipio de Soacha se modela mediante una función exponencial con tasa de variación del dos coma uno por ciento anual.",
+words:["El","crecimiento","poblacional","del","municipio","de","Soacha","se","modela","mediante","una","función","exponencial","con","tasa","de","variación","del","dos","coma","uno","por","ciento","anual."]},
+
+{id:12,disc:"Matemáticas",tech:"Interpretación Geométrica",
+def:"Traducción de un resultado algebraico o analítico a términos de figuras, regiones o transformaciones en el plano o el espacio.",
+example:"La solución del sistema de dos ecuaciones lineales corresponde geométricamente a la intersección de dos rectas en el plano cartesiano.",
+words:["La","solución","del","sistema","de","dos","ecuaciones","lineales","corresponde","geométricamente","a","la","intersección","de","dos","rectas","en","el","plano","cartesiano."]},
+
+{id:13,disc:"Matemáticas",tech:"Enunciado de Teorema",
+def:"Proposición matemática demostrada que expresa una verdad general bajo condiciones especificadas.",
+example:"El teorema de Pitágoras establece que en todo triángulo rectángulo el cuadrado de la hipotenusa iguala la suma de los cuadrados de los catetos.",
+words:["El","teorema","de","Pitágoras","establece","que","en","todo","triángulo","rectángulo","el","cuadrado","de","la","hipotenusa","iguala","la","suma","de","los","cuadrados","de","los","catetos."]},
+
+{id:14,disc:"Matemáticas",tech:"Conclusión Analítica",
+def:"Síntesis final que extrae el significado de los resultados obtenidos en términos del problema planteado.",
+example:"Se concluye que la función propuesta no es derivable en el origen, lo cual invalida su aplicación como modelo de velocidad continua.",
+words:["Se","concluye","que","la","función","propuesta","no","es","derivable","en","el","origen,","lo","cual","invalida","su","aplicación","como","modelo","de","velocidad","continua."]},
+
+{id:15,disc:"Matemáticas",tech:"Planteamiento de Problema",
+def:"Formulación clara y acotada de la incógnita o situación que la investigación matemática busca resolver.",
+example:"Se busca determinar el número mínimo de plantas solares que Colombia necesitaría instalar para cubrir el veinte por ciento de su demanda energética.",
+words:["Se","busca","determinar","el","número","mínimo","de","plantas","solares","que","Colombia","necesitaría","instalar","para","cubrir","el","veinte","por","ciento","de","su","demanda","energética."]},
+
+{id:16,disc:"Matemáticas",tech:"Uso de Conectores Lógicos",
+def:"Empleo de nexos ('si y solo si', 'por tanto', 'luego') para articular el razonamiento deductivo con precisión.",
+example:"Si la matriz es cuadrada y su determinante es distinto de cero, entonces el sistema de ecuaciones admite solución única.",
+words:["Si","la","matriz","es","cuadrada","y","su","determinante","es","distinto","de","cero,","entonces","el","sistema","de","ecuaciones","admite","solución","única."]},
+
+{id:17,disc:"Matemáticas",tech:"Descripción de Gráfica",
+def:"Explicación verbal de los elementos visuales de una representación gráfica, como ejes, tendencias y puntos notables.",
+example:"La gráfica muestra una parábola con vértice en el punto dos, menos cuatro, que corta al eje horizontal en cero y en cuatro.",
+words:["La","gráfica","muestra","una","parábola","con","vértice","en","el","punto","dos,","menos","cuatro,","que","corta","al","eje","horizontal","en","cero","y","en","cuatro."]},
+
+{id:18,disc:"Matemáticas",tech:"Argumentación Deductiva",
+def:"Razonamiento que deriva conclusiones necesarias a partir de premisas matemáticas válidas.",
+example:"Dado que todos los ángulos de un triángulo equilátero son iguales y su suma es ciento ochenta grados, cada ángulo mide exactamente sesenta grados.",
+words:["Dado","que","todos","los","ángulos","de","un","triángulo","equilátero","son","iguales","y","su","suma","es","ciento","ochenta","grados,","cada","ángulo","mide","exactamente","sesenta","grados."]},
+
+{id:19,disc:"Matemáticas",tech:"Redacción de Lema",
+def:"Formulación de un resultado auxiliar que sirve de apoyo para demostrar un teorema más complejo.",
+example:"Como lema previo se establece que todo subconjunto no vacío de números naturales posee un elemento mínimo.",
+words:["Como","lema","previo","se","establece","que","todo","subconjunto","no","vacío","de","números","naturales","posee","un","elemento","mínimo."]},
+
+{id:20,disc:"Matemáticas",tech:"Interpretación Probabilística",
+def:"Lectura de un resultado numérico en términos de la frecuencia relativa o posibilidad de ocurrencia de un evento.",
+example:"La probabilidad de que un estudiante de la Universidad Nacional apruebe el primer examen de cálculo es de cero coma sesenta y dos.",
+words:["La","probabilidad","de","que","un","estudiante","de","la","Universidad","Nacional","apruebe","el","primer","examen","de","cálculo","es","de","cero","coma","sesenta","y","dos."]},
+
+{id:21,disc:"Matemáticas",tech:"Definición Recursiva",
+def:"Descripción de una secuencia o estructura en términos de sus propios elementos anteriores más un caso base.",
+example:"La sucesión de Fibonacci se define de manera recursiva: cada término es la suma de los dos términos que lo preceden, partiendo de uno y uno.",
+words:["La","sucesión","de","Fibonacci","se","define","de","manera","recursiva:","cada","término","es","la","suma","de","los","dos","términos","que","lo","preceden,","partiendo","de","uno","y","uno."]},
+
+{id:22,disc:"Matemáticas",tech:"Acotamiento de Variables",
+def:"Especificación del rango de valores que puede adoptar una variable dentro del contexto del problema.",
+example:"En el modelo propuesto, la variable de tiempo t está acotada entre cero y veinticuatro horas, con incrementos de media hora.",
+words:["En","el","modelo","propuesto,","la","variable","de","tiempo","t","está","acotada","entre","cero","y","veinticuatro","horas,","con","incrementos","de","media","hora."]},
+
+{id:23,disc:"Matemáticas",tech:"Discusión de Limitaciones",
+def:"Análisis crítico de los supuestos, condiciones o restricciones que limitan la validez de un resultado matemático.",
+example:"El modelo lineal presentado pierde validez fuera del intervalo de datos observados, por lo que no debe usarse para extrapolaciones.",
+words:["El","modelo","lineal","presentado","pierde","validez","fuera","del","intervalo","de","datos","observados,","por","lo","que","no","debe","usarse","para","extrapolaciones."]},
+
+{id:24,disc:"Matemáticas",tech:"Reformulación de Enunciado",
+def:"Reexpresión de una proposición matemática en términos equivalentes para facilitar su comprensión o prueba.",
+example:"Afirmar que n es divisible por seis equivale a decir que n es simultáneamente múltiplo de dos y múltiplo de tres.",
+words:["Afirmar","que","n","es","divisible","por","seis","equivale","a","decir","que","n","es","simultáneamente","múltiplo","de","dos","y","múltiplo","de","tres."]},
+
+{id:25,disc:"Matemáticas",tech:"Descripción de Algoritmo",
+def:"Exposición ordenada de los pasos de un procedimiento matemático con instrucciones sin ambigüedad.",
+example:"El algoritmo de Euclides determina el máximo común divisor dividiendo el mayor número entre el menor y repitiendo el proceso con el residuo hasta que este sea cero.",
+words:["El","algoritmo","de","Euclides","determina","el","máximo","común","divisor","dividiendo","el","mayor","número","entre","el","menor","y","repitiendo","el","proceso","con","el","residuo","hasta","que","este","sea","cero."]},
+
+// ── FÍSICA (25) ──
+{id:26,disc:"Física",tech:"Descripción de Fenómeno",
+def:"Narración objetiva de un proceso físico observable, indicando variables involucradas y condiciones de ocurrencia.",
+example:"Durante el eclipse solar total observado en Colombia en julio de mil novecientos noventa y uno, la luna ocultó completamente el disco solar durante siete minutos.",
+words:["Durante","el","eclipse","solar","total","observado","en","Colombia","en","julio","de","mil","novecientos","noventa","y","uno,","la","luna","ocultó","completamente","el","disco","solar","durante","siete","minutos."]},
+
+{id:27,disc:"Física",tech:"Enunciado de Ley",
+def:"Formulación general y verificada de una relación constante entre magnitudes físicas.",
+example:"La segunda ley de Newton establece que la fuerza neta sobre un cuerpo es proporcional a su masa y directamente igual a su aceleración.",
+words:["La","segunda","ley","de","Newton","establece","que","la","fuerza","neta","sobre","un","cuerpo","es","proporcional","a","su","masa","y","directamente","igual","a","su","aceleración."]},
+
+{id:28,disc:"Física",tech:"Análisis Dimensional",
+def:"Verificación de la coherencia de una ecuación física comprobando que ambos miembros tienen las mismas unidades.",
+example:"Al comprobar las unidades de la energía cinética, medio m v cuadrado, se obtiene kilogramo por metro cuadrado sobre segundo cuadrado, equivalente al julio.",
+words:["Al","comprobar","las","unidades","de","la","energía","cinética,","medio","m","v","cuadrado,","se","obtiene","kilogramo","por","metro","cuadrado","sobre","segundo","cuadrado,","equivalente","al","julio."]},
+
+{id:29,disc:"Física",tech:"Descripción de Experimento",
+def:"Relato preciso del procedimiento experimental: materiales, variables controladas, mediciones y condiciones.",
+example:"Se midió la aceleración de caída libre en el laboratorio de la Universidad de los Andes soltando una esfera metálica desde una altura de dos metros.",
+words:["Se","midió","la","aceleración","de","caída","libre","en","el","laboratorio","de","la","Universidad","de","los","Andes","soltando","una","esfera","metálica","desde","una","altura","de","dos","metros."]},
+
+{id:30,disc:"Física",tech:"Interpretación de Datos",
+def:"Lectura crítica de resultados experimentales para extraer conclusiones sobre el comportamiento del sistema físico.",
+example:"Los datos evidencian que la temperatura del gas aumenta linealmente con la presión mientras el volumen permanece constante, en concordancia con la ley de Gay-Lussac.",
+words:["Los","datos","evidencian","que","la","temperatura","del","gas","aumenta","linealmente","con","la","presión","mientras","el","volumen","permanece","constante,","en","concordancia","con","la","ley","de","Gay-Lussac."]},
+
+{id:31,disc:"Física",tech:"Planteamiento de Hipótesis",
+def:"Proposición provisional que predice cómo responderá un sistema físico ante una variación de sus condiciones.",
+example:"Se hipotetiza que al duplicar la distancia entre dos cargas eléctricas, la fuerza coulombiana entre ellas se reducirá a la cuarta parte.",
+words:["Se","hipotetiza","que","al","duplicar","la","distancia","entre","dos","cargas","eléctricas,","la","fuerza","coulombiana","entre","ellas","se","reducirá","a","la","cuarta","parte."]},
+
+{id:32,disc:"Física",tech:"Cuantificación de Incertidumbre",
+def:"Expresión de la confiabilidad de una medición indicando el intervalo dentro del cual se encuentra el valor verdadero.",
+example:"La velocidad del sonido en el aire a veinte grados Celsius se midió como trescientos cuarenta y dos metros por segundo con una incertidumbre de más o menos uno.",
+words:["La","velocidad","del","sonido","en","el","aire","a","veinte","grados","Celsius","se","midió","como","trescientos","cuarenta","y","dos","metros","por","segundo","con","una","incertidumbre","de","más","o","menos","uno."]},
+
+{id:33,disc:"Física",tech:"Comparación de Modelos",
+def:"Evaluación crítica de dos o más marcos teóricos con base en su capacidad predictiva y consistencia con los datos.",
+example:"El modelo newtoniano predice con exactitud el movimiento de satélites colombianos en órbita baja, pero requiere correcciones relativistas en órbitas geoestacionarias.",
+words:["El","modelo","newtoniano","predice","con","exactitud","el","movimiento","de","satélites","colombianos","en","órbita","baja,","pero","requiere","correcciones","relativistas","en","órbitas","geoestacionarias."]},
+
+{id:34,disc:"Física",tech:"Descripción de Sistema",
+def:"Delimitación clara de los componentes, límites e interacciones de un conjunto físico en estudio.",
+example:"El sistema bajo análisis comprende el embalse de Betania, las turbinas de doscientos megavatios y la red de transmisión hacia el nodo de Ibagué.",
+words:["El","sistema","bajo","análisis","comprende","el","embalse","de","Betania,","las","turbinas","de","doscientos","megavatios","y","la","red","de","transmisión","hacia","el","nodo","de","Ibagué."]},
+
+{id:35,disc:"Física",tech:"Definición Operacional",
+def:"Descripción de cómo medir o determinar empíricamente una magnitud física en el contexto específico del estudio.",
+example:"La temperatura operacional del horno solar se define como la lectura promedio de tres termopares ubicados en la cámara central durante un intervalo de diez minutos.",
+words:["La","temperatura","operacional","del","horno","solar","se","define","como","la","lectura","promedio","de","tres","termopares","ubicados","en","la","cámara","central","durante","un","intervalo","de","diez","minutos."]},
+
+{id:36,disc:"Física",tech:"Justificación Teórica",
+def:"Sustentación de una elección metodológica o resultado a partir de principios o leyes físicas establecidas.",
+example:"Se descarta la fricción del aire en el modelo dado que la velocidad terminal de la partícula es inferior a un metro por segundo.",
+words:["Se","descarta","la","fricción","del","aire","en","el","modelo","dado","que","la","velocidad","terminal","de","la","partícula","es","inferior","a","un","metro","por","segundo."]},
+
+{id:37,disc:"Física",tech:"Presentación de Unidades",
+def:"Especificación explícita y correcta de las unidades del Sistema Internacional para cada magnitud reportada.",
+example:"La intensidad del campo magnético medida en el altiplano cundiboyacense fue de veinticuatro microteslas, equivalentes a cero coma veinticuatro gaussios.",
+words:["La","intensidad","del","campo","magnético","medida","en","el","altiplano","cundiboyacense","fue","de","veinticuatro","microteslas,","equivalentes","a","cero","coma","veinticuatro","gaussios."]},
+
+{id:38,disc:"Física",tech:"Enunciado de Principio",
+def:"Formulación de una verdad fundamental que sirve de base para el desarrollo de la teoría física.",
+example:"El principio de conservación de la energía afirma que la energía total de un sistema aislado permanece constante en el tiempo.",
+words:["El","principio","de","conservación","de","la","energía","afirma","que","la","energía","total","de","un","sistema","aislado","permanece","constante","en","el","tiempo."]},
+
+{id:39,disc:"Física",tech:"Descripción de Curva Característica",
+def:"Explicación de la forma, pendiente y puntos notables de la representación gráfica de una relación física.",
+example:"La curva voltaje-corriente del diodo semiconductor muestra una exponencial creciente en la región directa y una corriente despreciable en la región inversa.",
+words:["La","curva","voltaje-corriente","del","diodo","semiconductor","muestra","una","exponencial","creciente","en","la","región","directa","y","una","corriente","despreciable","en","la","región","inversa."]},
+
+{id:40,disc:"Física",tech:"Conclusión Experimental",
+def:"Declaración final que sintetiza lo aprendido del experimento y evalúa si se confirmó o refutó la hipótesis.",
+example:"Los resultados confirman la hipótesis propuesta: la frecuencia de resonancia del tubo de órgano disminuye al aumentar su longitud efectiva.",
+words:["Los","resultados","confirman","la","hipótesis","propuesta:","la","frecuencia","de","resonancia","del","tubo","de","órgano","disminuye","al","aumentar","su","longitud","efectiva."]},
+
+{id:41,disc:"Física",tech:"Descripción de Diagrama de Cuerpo Libre",
+def:"Verbalización de las fuerzas que actúan sobre un objeto, indicando dirección, sentido y magnitud estimada.",
+example:"Sobre el bloque apoyado en el plano inclinado actúan el peso hacia abajo, la normal perpendicular al plano y la fricción estática opuesta al movimiento inminente.",
+words:["Sobre","el","bloque","apoyado","en","el","plano","inclinado","actúan","el","peso","hacia","abajo,","la","normal","perpendicular","al","plano","y","la","fricción","estática","opuesta","al","movimiento","inminente."]},
+
+{id:42,disc:"Física",tech:"Enumeración de Supuestos",
+def:"Listado explícito de las condiciones ideales que se asumen para simplificar el análisis de un sistema físico.",
+example:"El análisis supone que el fluido es incompresible, la temperatura permanece constante y las pérdidas por viscosidad son despreciables.",
+words:["El","análisis","supone","que","el","fluido","es","incompresible,","la","temperatura","permanece","constante","y","las","pérdidas","por","viscosidad","son","despreciables."]},
+
+{id:43,disc:"Física",tech:"Relación Causa-Efecto",
+def:"Enunciado que vincula una variable independiente con su impacto medible sobre una variable dependiente.",
+example:"El aumento de la presión atmosférica en Bogotá durante el fenómeno de La Niña provoca una disminución en la evaporación del embalse de San Rafael.",
+words:["El","aumento","de","la","presión","atmosférica","en","Bogotá","durante","el","fenómeno","de","La","Niña","provoca","una","disminución","en","la","evaporación","del","embalse","de","San","Rafael."]},
+
+{id:44,disc:"Física",tech:"Redacción de Objetivo",
+def:"Formulación clara del propósito medible que se persigue en la práctica o investigación física.",
+example:"El objetivo de este experimento es determinar el coeficiente de rozamiento cinético entre dos superficies de madera mediante el método del plano inclinado.",
+words:["El","objetivo","de","este","experimento","es","determinar","el","coeficiente","de","rozamiento","cinético","entre","dos","superficies","de","madera","mediante","el","método","del","plano","inclinado."]},
+
+{id:45,disc:"Física",tech:"Descripción de Onda",
+def:"Caracterización de un fenómeno ondulatorio indicando su tipo, amplitud, frecuencia, longitud de onda y velocidad de propagación.",
+example:"La onda sísmica P registrada en la estación de Manizales presenta una frecuencia de cinco hercios y una amplitud de tres micrómetros.",
+words:["La","onda","sísmica","P","registrada","en","la","estación","de","Manizales","presenta","una","frecuencia","de","cinco","hercios","y","una","amplitud","de","tres","micrómetros."]},
+
+{id:46,disc:"Física",tech:"Descripción de Campo",
+def:"Caracterización espacial de una magnitud vectorial o escalar que varía de punto a punto en una región del espacio.",
+example:"El campo gravitacional terrestre en la superficie de Bogotá apunta radialmente hacia el centro de la Tierra con una magnitud aproximada de nueve coma setenta y cuatro metros por segundo cuadrado.",
+words:["El","campo","gravitacional","terrestre","en","la","superficie","de","Bogotá","apunta","radialmente","hacia","el","centro","de","la","Tierra","con","una","magnitud","aproximada","de","nueve","coma","setenta","y","cuatro","metros","por","segundo","cuadrado."]},
+
+{id:47,disc:"Física",tech:"Redacción de Procedimiento",
+def:"Descripción secuencial e impersonal de las acciones realizadas durante una práctica experimental.",
+example:"Se colocó la muestra en el calorímetro, se registró la temperatura inicial y se agitó la mezcla durante dos minutos antes de leer la temperatura final.",
+words:["Se","colocó","la","muestra","en","el","calorímetro,","se","registró","la","temperatura","inicial","y","se","agitó","la","mezcla","durante","dos","minutos","antes","de","leer","la","temperatura","final."]},
+
+{id:48,disc:"Física",tech:"Interpretación de Espectro",
+def:"Lectura de las líneas o bandas de un espectro electromagnético para identificar composición o estado del sistema.",
+example:"El espectro de emisión del gas procedente del volcán Galeras muestra líneas características del dióxido de azufre entre trescientos y trescientos cincuenta nanómetros.",
+words:["El","espectro","de","emisión","del","gas","procedente","del","volcán","Galeras","muestra","líneas","características","del","dióxido","de","azufre","entre","trescientos","y","trescientos","cincuenta","nanómetros."]},
+
+{id:49,disc:"Física",tech:"Discusión de Resultados",
+def:"Análisis crítico que contrasta los hallazgos con la teoría y con investigaciones previas, señalando convergencias y divergencias.",
+example:"El valor de la constante de Planck obtenido difiere en un uno coma dos por ciento del valor aceptado, diferencia atribuible a la resolución del espectrómetro empleado.",
+words:["El","valor","de","la","constante","de","Planck","obtenido","difiere","en","un","uno","coma","dos","por","ciento","del","valor","aceptado,","diferencia","atribuible","a","la","resolución","del","espectrómetro","empleado."]},
+
+{id:50,disc:"Física",tech:"Predicción Cuantitativa",
+def:"Estimación numérica de un resultado futuro o no medido, derivada de un modelo físico con condiciones conocidas.",
+example:"Con base en el modelo de Bohr, se predice que el fotón emitido en la transición del nivel tres al nivel dos del hidrógeno tendrá una longitud de onda de seiscientos cincuenta y seis nanómetros.",
+words:["Con","base","en","el","modelo","de","Bohr,","se","predice","que","el","fotón","emitido","en","la","transición","del","nivel","tres","al","nivel","dos","del","hidrógeno","tendrá","una","longitud","de","onda","de","seiscientos","cincuenta","y","seis","nanómetros."]},
+
+// ── QUÍMICA (25) ──
+{id:51,disc:"Química",tech:"Nomenclatura Sistemática",
+def:"Denominación de compuestos químicos siguiendo las reglas internacionales de la IUPAC.",
+example:"El compuesto de fórmula Fe₂O₃, abundante en las arcillas de la cordillera central colombiana, se denomina sistemáticamente óxido de hierro tres.",
+words:["El","compuesto","de","fórmula","Fe₂O₃,","abundante","en","las","arcillas","de","la","cordillera","central","colombiana,","se","denomina","sistemáticamente","óxido","de","hierro","tres."]},
+
+{id:52,disc:"Química",tech:"Descripción de Reacción",
+def:"Presentación verbal de los reactivos, productos, condiciones y tipo de una reacción química.",
+example:"En presencia de calor, el carbonato de calcio presente en la roca caliza colombiana se descompone en óxido de calcio y dióxido de carbono gaseoso.",
+words:["En","presencia","de","calor,","el","carbonato","de","calcio","presente","en","la","roca","caliza","colombiana","se","descompone","en","óxido","de","calcio","y","dióxido","de","carbono","gaseoso."]},
+
+{id:53,disc:"Química",tech:"Balanceo de Ecuación",
+def:"Proceso de ajustar los coeficientes estequiométricos para que la ecuación química respete la conservación de la masa.",
+example:"Para balancear la combustión del propano se colocan coeficientes que garantizan igual número de átomos de carbono, hidrógeno y oxígeno en reactivos y productos.",
+words:["Para","balancear","la","combustión","del","propano","se","colocan","coeficientes","que","garantizan","igual","número","de","átomos","de","carbono,","hidrógeno","y","oxígeno","en","reactivos","y","productos."]},
+
+{id:54,disc:"Química",tech:"Descripción de Propiedad",
+def:"Caracterización cuantitativa o cualitativa de un atributo fisicoquímico de una sustancia.",
+example:"El etanol obtenido de la caña de azúcar cultivada en el Valle del Cauca presenta un punto de ebullición de setenta y ocho grados Celsius a presión estándar.",
+words:["El","etanol","obtenido","de","la","caña","de","azúcar","cultivada","en","el","Valle","del","Cauca","presenta","un","punto","de","ebullición","de","setenta","y","ocho","grados","Celsius","a","presión","estándar."]},
+
+{id:55,disc:"Química",tech:"Descripción de Técnica Analítica",
+def:"Explicación del fundamento, procedimiento e instrumentos de un método de análisis químico.",
+example:"La cromatografía de gases se empleó para separar e identificar los compuestos volátiles presentes en las esencias florales de la Sabana de Bogotá.",
+words:["La","cromatografía","de","gases","se","empleó","para","separar","e","identificar","los","compuestos","volátiles","presentes","en","las","esencias","florales","de","la","Sabana","de","Bogotá."]},
+
+{id:56,disc:"Química",tech:"Presentación de Resultado Analítico",
+def:"Informe cuantitativo de la concentración, pureza o composición de una muestra analizada.",
+example:"El análisis por absorción atómica reveló una concentración de plomo de doce microgramos por litro en el agua del río Bogotá a la altura de Girardot.",
+words:["El","análisis","por","absorción","atómica","reveló","una","concentración","de","plomo","de","doce","microgramos","por","litro","en","el","agua","del","río","Bogotá","a","la","altura","de","Girardot."]},
+
+{id:57,disc:"Química",tech:"Interpretación de Espectro IR",
+def:"Asignación de bandas de absorción infrarroja a grupos funcionales presentes en una molécula.",
+example:"La banda de absorción intensa a tres mil trescientos centímetros inversos confirma la presencia de un grupo hidroxilo en la molécula de cafeína extraída.",
+words:["La","banda","de","absorción","intensa","a","tres","mil","trescientos","centímetros","inversos","confirma","la","presencia","de","un","grupo","hidroxilo","en","la","molécula","de","cafeína","extraída."]},
+
+{id:58,disc:"Química",tech:"Descripción de Mecanismo de Reacción",
+def:"Explicación paso a paso de la secuencia de etapas elementales y la formación de intermedios en una reacción.",
+example:"La saponificación del aceite de palma transcurre en dos etapas: primero el hidróxido ataca el éster carbonílico y luego se forma el carboxilato y el glicerol.",
+words:["La","saponificación","del","aceite","de","palma","transcurre","en","dos","etapas:","primero","el","hidróxido","ataca","el","éster","carbonílico","y","luego","se","forma","el","carboxilato","y","el","glicerol."]},
+
+{id:59,disc:"Química",tech:"Hipótesis Química",
+def:"Proposición que anticipa el comportamiento de una reacción o la composición de un sistema con base en principios teóricos.",
+example:"Se propone la hipótesis de que el aumento del pH de la solución desplazará el equilibrio de la disolución del fosfato cálcico hacia la precipitación.",
+words:["Se","propone","la","hipótesis","de","que","el","aumento","del","pH","de","la","solución","desplazará","el","equilibrio","de","la","disolución","del","fosfato","cálcico","hacia","la","precipitación."]},
+
+{id:60,disc:"Química",tech:"Descripción de Estructura Molecular",
+def:"Caracterización de la geometría, enlaces y grupos funcionales de una molécula en términos textuales.",
+example:"La molécula de capsaicina, responsable del picor del ají colombiano, contiene un anillo aromático, un grupo amida y una cadena alquílica de nueve carbonos.",
+words:["La","molécula","de","capsaicina,","responsable","del","picor","del","ají","colombiano,","contiene","un","anillo","aromático,","un","grupo","amida","y","una","cadena","alquílica","de","nueve","carbonos."]},
+
+{id:61,disc:"Química",tech:"Cálculo Estequiométrico Escrito",
+def:"Exposición textual del razonamiento y los pasos de un cálculo basado en las relaciones molares de una reacción.",
+example:"A partir de cien gramos de azufre se calculan los moles producidos de dióxido de azufre usando la relación uno a uno de la ecuación ajustada.",
+words:["A","partir","de","cien","gramos","de","azufre","se","calculan","los","moles","producidos","de","dióxido","de","azufre","usando","la","relación","uno","a","uno","de","la","ecuación","ajustada."]},
+
+{id:62,disc:"Química",tech:"Comparación de Solubilidades",
+def:"Análisis contrastivo de la facilidad con que diferentes sustancias se disuelven en un solvente bajo condiciones específicas.",
+example:"El cloruro de sodio presenta una solubilidad en agua de trescientos cincuenta y nueve gramos por litro a veinticinco grados, mientras que el sulfato de bario apenas supera los dos miligramos.",
+words:["El","cloruro","de","sodio","presenta","una","solubilidad","en","agua","de","trescientos","cincuenta","y","nueve","gramos","por","litro","a","veinticinco","grados,","mientras","que","el","sulfato","de","bario","apenas","supera","los","dos","miligramos."]},
+
+{id:63,disc:"Química",tech:"Descripción de Síntesis",
+def:"Relato del proceso de obtención de un compuesto a partir de reactivos de partida, indicando condiciones y rendimiento.",
+example:"El ácido acetilsalicílico se sintetizó a partir del ácido salicílico colombiano y anhídrido acético, con un rendimiento del ochenta y siete por ciento tras recristalización.",
+words:["El","ácido","acetilsalicílico","se","sintetizó","a","partir","del","ácido","salicílico","colombiano","y","anhídrido","acético,","con","un","rendimiento","del","ochenta","y","siete","por","ciento","tras","recristalización."]},
+
+{id:64,disc:"Química",tech:"Descripción de Curva de Titulación",
+def:"Interpretación del perfil pH vs. volumen de una valoración ácido-base indicando el punto equivalente y la zona tampón.",
+example:"La curva de titulación del vinagre colombiano con hidróxido de sodio muestra un punto de equivalencia a pH ocho coma cuatro y un salto brusco de cuatro a diez unidades.",
+words:["La","curva","de","titulación","del","vinagre","colombiano","con","hidróxido","de","sodio","muestra","un","punto","de","equivalencia","a","pH","ocho","coma","cuatro","y","un","salto","brusco","de","cuatro","a","diez","unidades."]},
+
+{id:65,disc:"Química",tech:"Interpretación de Cinética",
+def:"Descripción del efecto de la concentración, temperatura y catalizadores sobre la velocidad de reacción.",
+example:"Al elevar la temperatura de la reacción de hidrólisis en diez grados Celsius, la constante de velocidad se duplica, en concordancia con la regla de van't Hoff.",
+words:["Al","elevar","la","temperatura","de","la","reacción","de","hidrólisis","en","diez","grados","Celsius,","la","constante","de","velocidad","se","duplica,","en","concordancia","con","la","regla","de","van't","Hoff."]},
+
+{id:66,disc:"Química",tech:"Discusión de Contaminación",
+def:"Análisis crítico de la presencia, concentración e impacto de sustancias contaminantes en un entorno específico.",
+example:"Los niveles de mercurio en sedimentos del río Atrato superan en tres veces el límite permisible, lo que afecta directamente la cadena trófica de las comunidades afrocolombianas.",
+words:["Los","niveles","de","mercurio","en","sedimentos","del","río","Atrato","superan","en","tres","veces","el","límite","permisible,","lo","que","afecta","directamente","la","cadena","trófica","de","las","comunidades","afrocolombianas."]},
+
+{id:67,disc:"Química",tech:"Descripción de Equilibrio Químico",
+def:"Caracterización del estado en que las velocidades de reacción directa e inversa se igualan y las concentraciones permanecen constantes.",
+example:"En el equilibrio de síntesis del amoníaco, la concentración de los reactivos y productos se mantiene estable siempre que no se altere la presión ni la temperatura.",
+words:["En","el","equilibrio","de","síntesis","del","amoníaco,","la","concentración","de","los","reactivos","y","productos","se","mantiene","estable","siempre","que","no","se","altere","la","presión","ni","la","temperatura."]},
+
+{id:68,disc:"Química",tech:"Justificación de Método",
+def:"Argumentación del por qué se seleccionó una técnica química específica frente a otras alternativas posibles.",
+example:"Se optó por la espectroscopía UV-Vis en lugar de la volumetría debido a su mayor sensibilidad para detectar concentraciones inferiores a diez partes por millón.",
+words:["Se","optó","por","la","espectroscopía","UV-Vis","en","lugar","de","la","volumetría","debido","a","su","mayor","sensibilidad","para","detectar","concentraciones","inferiores","a","diez","partes","por","millón."]},
+
+{id:69,disc:"Química",tech:"Descripción de Diagrama de Fases",
+def:"Interpretación de las regiones, fronteras y puntos especiales de un diagrama de equilibrio de fases.",
+example:"El diagrama de fases del agua muestra que a la presión de Bogotá, mil ciento kilómetros de altitud, el punto de ebullición desciende a aproximadamente noventa y un grados Celsius.",
+words:["El","diagrama","de","fases","del","agua","muestra","que","a","la","presión","de","Bogotá,","a","dos","mil","seiscientos","metros","de","altitud,","el","punto","de","ebullición","desciende","a","aproximadamente","noventa","y","un","grados","Celsius."]},
+
+{id:70,disc:"Química",tech:"Descripción de Enlace Químico",
+def:"Caracterización del tipo de unión entre átomos, incluyendo polaridad, longitud y energía de enlace.",
+example:"El enlace carbono-nitrógeno de la cafeína del café colombiano es de tipo covalente polar, con una energía de enlace de trescientos cinco kilojulios por mol.",
+words:["El","enlace","carbono-nitrógeno","de","la","cafeína","del","café","colombiano","es","de","tipo","covalente","polar,","con","una","energía","de","enlace","de","trescientos","cinco","kilojulios","por","mol."]},
+
+{id:71,disc:"Química",tech:"Redacción de Marco Teórico",
+def:"Síntesis de la base conceptual que fundamenta la investigación, citando las teorías y modelos pertinentes.",
+example:"El presente estudio se sustenta en la teoría de Arrhenius sobre ácidos y bases, complementada con el modelo de Lewis para explicar las interacciones en solventes no acuosos.",
+words:["El","presente","estudio","se","sustenta","en","la","teoría","de","Arrhenius","sobre","ácidos","y","bases,","complementada","con","el","modelo","de","Lewis","para","explicar","las","interacciones","en","solventes","no","acuosos."]},
+
+{id:72,disc:"Química",tech:"Descripción de Espectro de Masas",
+def:"Interpretación de los picos del espectro de masas para deducir la estructura y masa molecular de un compuesto.",
+example:"El pico base a m/z de setenta y siete en el espectro de masas de la muestra indica la presencia del catión fenilo, fragmento típico de compuestos aromáticos.",
+words:["El","pico","base","a","m/z","de","setenta","y","siete","en","el","espectro","de","masas","de","la","muestra","indica","la","presencia","del","catión","fenilo,","fragmento","típico","de","compuestos","aromáticos."]},
+
+{id:73,disc:"Química",tech:"Presentación de Rendimiento",
+def:"Reporte del porcentaje de producto obtenido respecto al esperado teóricamente, con análisis de causas de pérdida.",
+example:"El rendimiento experimental del ochenta y dos por ciento se explica por la solubilidad parcial del producto en el solvente de recristalización durante el filtrado.",
+words:["El","rendimiento","experimental","del","ochenta","y","dos","por","ciento","se","explica","por","la","solubilidad","parcial","del","producto","en","el","solvente","de","recristalización","durante","el","filtrado."]},
+
+{id:74,disc:"Química",tech:"Descripción de Riesgo Químico",
+def:"Comunicación clara de la peligrosidad de una sustancia según su toxicidad, inflamabilidad o reactividad.",
+example:"El dicromato de potasio empleado en el laboratorio es corrosivo y carcinogénico; requiere el uso de guantes de nitrilo y campana de extracción en todo momento.",
+words:["El","dicromato","de","potasio","empleado","en","el","laboratorio","es","corrosivo","y","carcinogénico;","requiere","el","uso","de","guantes","de","nitrilo","y","campana","de","extracción","en","todo","momento."]},
+
+{id:75,disc:"Química",tech:"Conclusión de Investigación Química",
+def:"Declaración final que integra los hallazgos experimentales con los objetivos y la hipótesis de la investigación.",
+example:"Se concluye que la presencia de antocianinas en el extracto de achiote colombiano correlaciona positivamente con su actividad antioxidante medida por el método DPPH.",
+words:["Se","concluye","que","la","presencia","de","antocianinas","en","el","extracto","de","achiote","colombiano","correlaciona","positivamente","con","su","actividad","antioxidante","medida","por","el","método","DPPH."]},
+
+// ── ARQUITECTURA (25) ──
+{id:76,disc:"Arquitectura",tech:"Descripción Espacial",
+def:"Caracterización verbal del espacio arquitectónico mediante sus dimensiones, proporciones, materialidad y cualidades perceptivas.",
+example:"La sala de espera del Hospital Universitario de Medellín configura un espacio de doble altura con muros de ladrillo a la vista que filtran la luz natural cenital.",
+words:["La","sala","de","espera","del","Hospital","Universitario","de","Medellín","configura","un","espacio","de","doble","altura","con","muros","de","ladrillo","a","la","vista","que","filtran","la","luz","natural","cenital."]},
+
+{id:77,disc:"Arquitectura",tech:"Argumentación de Partido Arquitectónico",
+def:"Justificación racional de las decisiones de diseño que sustentan la propuesta en función del contexto y el programa.",
+example:"El partido arquitectónico de la biblioteca pública de Buenaventura propone una cubierta ondulada que evoca el Pacífico y dirige las vistas hacia el mar.",
+words:["El","partido","arquitectónico","de","la","biblioteca","pública","de","Buenaventura","propone","una","cubierta","ondulada","que","evoca","el","Pacífico","y","dirige","las","vistas","hacia","el","mar."]},
+
+{id:78,disc:"Arquitectura",tech:"Análisis de Sitio",
+def:"Evaluación sistemática de las condiciones físicas, ambientales, normativas y socioculturales del lugar de implantación.",
+example:"El análisis de sitio revela que el lote ubicado en el barrio La Candelaria de Bogotá limita al norte con un bien de interés cultural y presenta vientos predominantes del sur.",
+words:["El","análisis","de","sitio","revela","que","el","lote","ubicado","en","el","barrio","La","Candelaria","de","Bogotá","limita","al","norte","con","un","bien","de","interés","cultural","y","presenta","vientos","predominantes","del","sur."]},
+
+{id:79,disc:"Arquitectura",tech:"Descripción de Sistema Estructural",
+def:"Explicación del esquema portante de un edificio, sus elementos, materiales y lógica de transferencia de cargas.",
+example:"El sistema estructural del Centro Cultural de Barranquilla consiste en una retícula de concreto a la vista con módulos de seis por seis metros y voladizos de tres metros.",
+words:["El","sistema","estructural","del","Centro","Cultural","de","Barranquilla","consiste","en","una","retícula","de","concreto","a","la","vista","con","módulos","de","seis","por","seis","metros","y","voladizos","de","tres","metros."]},
+
+{id:80,disc:"Arquitectura",tech:"Justificación de Materiales",
+def:"Argumentación sobre la elección de los materiales en función de sus propiedades técnicas, estéticas y de pertinencia cultural.",
+example:"Se propone la guadua como material estructural principal dado su comportamiento sismoresistente, su abundancia en el Eje Cafetero y su bajo costo de producción.",
+words:["Se","propone","la","guadua","como","material","estructural","principal","dado","su","comportamiento","sismoresistente,","su","abundancia","en","el","Eje","Cafetero","y","su","bajo","costo","de","producción."]},
+
+{id:81,disc:"Arquitectura",tech:"Descripción de Circulación",
+def:"Caracterización del recorrido, jerarquía, flujos y lógica de acceso de los sistemas de movilidad interior y exterior.",
+example:"La circulación vertical de la sede de la Gobernación de Antioquia se articula mediante una rampa helicoidal que conecta los cuatro niveles sin interrumpir la planta libre.",
+words:["La","circulación","vertical","de","la","sede","de","la","Gobernación","de","Antioquia","se","articula","mediante","una","rampa","helicoidal","que","conecta","los","cuatro","niveles","sin","interrumpir","la","planta","libre."]},
+
+{id:82,disc:"Arquitectura",tech:"Redacción de Memoria Descriptiva",
+def:"Documento técnico que expone de manera ordenada y justificada los criterios y componentes del proyecto arquitectónico.",
+example:"La presente memoria describe los criterios de diseño bioclimático del conjunto residencial de interés prioritario propuesto para el municipio de Soacha.",
+words:["La","presente","memoria","describe","los","criterios","de","diseño","bioclimático","del","conjunto","residencial","de","interés","prioritario","propuesto","para","el","municipio","de","Soacha."]},
+
+{id:83,disc:"Arquitectura",tech:"Descripción de Paisajismo",
+def:"Caracterización de los elementos naturales y artificiales del espacio exterior: vegetación, agua, topografía y mobiliario.",
+example:"El parque lineal propuesto sobre la antigua línea férrea de Cali integra especies nativas de guayacán, sombrilla y yarumo que generan corredores de sombra de ocho metros.",
+words:["El","parque","lineal","propuesto","sobre","la","antigua","línea","férrea","de","Cali","integra","especies","nativas","de","guayacán,","sombrilla","y","yarumo","que","generan","corredores","de","sombra","de","ocho","metros."]},
+
+{id:84,disc:"Arquitectura",tech:"Análisis de Referentes",
+def:"Estudio comparativo de obras análogas que orienta y fundamenta las decisiones del proyecto propio.",
+example:"Como referente tipológico se analiza la Biblioteca España de Giancarlo Mazzanti, cuya disposición en bloques independientes resuelve la topografía irregular de la ladera.",
+words:["Como","referente","tipológico","se","analiza","la","Biblioteca","España","de","Giancarlo","Mazzanti,","cuya","disposición","en","bloques","independientes","resuelve","la","topografía","irregular","de","la","ladera."]},
+
+{id:85,disc:"Arquitectura",tech:"Redacción de Programa Arquitectónico",
+def:"Descripción cuantitativa y cualitativa de los espacios requeridos, sus áreas y relaciones funcionales.",
+example:"El programa del centro comunitario incluye un salón comunal de ciento veinte metros cuadrados, dos aulas taller de sesenta metros cada una y servicios sanitarios diferenciados.",
+words:["El","programa","del","centro","comunitario","incluye","un","salón","comunal","de","ciento","veinte","metros","cuadrados,","dos","aulas","taller","de","sesenta","metros","cada","una","y","servicios","sanitarios","diferenciados."]},
+
+{id:86,disc:"Arquitectura",tech:"Análisis Bioclimático",
+def:"Evaluación de las estrategias pasivas de diseño que optimizan el confort térmico y lumínico según el clima del lugar.",
+example:"En el clima cálido húmedo de Leticia se privilegian la ventilación cruzada, los aleros profundos y la cubierta verde para reducir la ganancia de calor solar.",
+words:["En","el","clima","cálido","húmedo","de","Leticia","se","privilegian","la","ventilación","cruzada,","los","aleros","profundos","y","la","cubierta","verde","para","reducir","la","ganancia","de","calor","solar."]},
+
+{id:87,disc:"Arquitectura",tech:"Descripción de Fachada",
+def:"Caracterización de la composición, materialidad, ritmo y perforaciones del plano exterior de un edificio.",
+example:"La fachada occidental del edificio de posgrados de la Universidad del Valle combina paneles de terracota perforada con carpintería de aluminio anodizado en tono bronze.",
+words:["La","fachada","occidental","del","edificio","de","posgrados","de","la","Universidad","del","Valle","combina","paneles","de","terracota","perforada","con","carpintería","de","aluminio","anodizado","en","tono","bronze."]},
+
+{id:88,disc:"Arquitectura",tech:"Argumentación de Tesis",
+def:"Exposición estructurada de la postura central del trabajo de grado, sustentada con evidencias y razonamientos.",
+example:"Este trabajo de grado sostiene que la arquitectura de patio en el centro histórico de Mompox constituye un dispositivo térmico que reduce la temperatura interior en cuatro grados Celsius.",
+words:["Este","trabajo","de","grado","sostiene","que","la","arquitectura","de","patio","en","el","centro","histórico","de","Mompox","constituye","un","dispositivo","térmico","que","reduce","la","temperatura","interior","en","cuatro","grados","Celsius."]},
+
+{id:89,disc:"Arquitectura",tech:"Descripción de Contexto Urbano",
+def:"Análisis de la trama urbana, usos del suelo, morfología y dinámica social del entorno inmediato al proyecto.",
+example:"El área de intervención en el barrio Getsemaní de Cartagena presenta una trama irregular del siglo XVII, con predios estrechos y fachadas continuas de colores tropicales.",
+words:["El","área","de","intervención","en","el","barrio","Getsemaní","de","Cartagena","presenta","una","trama","irregular","del","siglo","XVII,","con","predios","estrechos","y","fachadas","continuas","de","colores","tropicales."]},
+
+{id:90,disc:"Arquitectura",tech:"Descripción de Planta Arquitectónica",
+def:"Interpretación verbal de la organización espacial, las relaciones entre recintos y la lógica distributiva de una planta.",
+example:"La planta tipo del edificio residencial en el Poblado organiza cuatro apartamentos alrededor de un núcleo de circulación central que minimiza los pasillos y maximiza las vistas.",
+words:["La","planta","tipo","del","edificio","residencial","en","el","Poblado","organiza","cuatro","apartamentos","alrededor","de","un","núcleo","de","circulación","central","que","minimiza","los","pasillos","y","maximiza","las","vistas."]},
+
+{id:91,disc:"Arquitectura",tech:"Descripción de Sección Constructiva",
+def:"Explicación de los estratos, materiales y soluciones técnicas visibles en un corte vertical del edificio.",
+example:"La sección de la cubierta invertida revela: impermeabilizante de poliuretano, aislante de poliestireno expandido, capa de grava de drenaje y tierra vegetal de quince centímetros.",
+words:["La","sección","de","la","cubierta","invertida","revela:","impermeabilizante","de","poliuretano,","aislante","de","poliestireno","expandido,","capa","de","grava","de","drenaje","y","tierra","vegetal","de","quince","centímetros."]},
+
+{id:92,disc:"Arquitectura",tech:"Redacción de Justificación Normativa",
+def:"Verificación y exposición escrita del cumplimiento del proyecto con la normativa urbana y constructiva vigente.",
+example:"El proyecto cumple la norma POT de Bogotá al respetar el aislamiento lateral de tres metros, el índice de ocupación del sesenta por ciento y la altura máxima de cinco pisos.",
+words:["El","proyecto","cumple","la","norma","POT","de","Bogotá","al","respetar","el","aislamiento","lateral","de","tres","metros,","el","índice","de","ocupación","del","sesenta","por","ciento","y","la","altura","máxima","de","cinco","pisos."]},
+
+{id:93,disc:"Arquitectura",tech:"Análisis de Precedentes Históricos",
+def:"Estudio de obras o tipologías del pasado para extraer lecciones aplicables al diseño contemporáneo.",
+example:"El análisis de las haciendas jesuitas de la Sabana de Bogotá revela que el claustro central es el dispositivo organizador que articula lo doméstico con lo productivo.",
+words:["El","análisis","de","las","haciendas","jesuitas","de","la","Sabana","de","Bogotá","revela","que","el","claustro","central","es","el","dispositivo","organizador","que","articula","lo","doméstico","con","lo","productivo."]},
+
+{id:94,disc:"Arquitectura",tech:"Redacción de Objetivo de Diseño",
+def:"Formulación de la meta principal que el proyecto pretende alcanzar en términos espaciales, sociales o técnicos.",
+example:"El objetivo del proyecto es generar un espacio público de permanencia en el Parque Simón Bolívar que integre a los usuarios de distinta procedencia socioeconómica.",
+words:["El","objetivo","del","proyecto","es","generar","un","espacio","público","de","permanencia","en","el","Parque","Simón","Bolívar","que","integre","a","los","usuarios","de","distinta","procedencia","socioeconómica."]},
+
+{id:95,disc:"Arquitectura",tech:"Descripción de Imagen Objetivo",
+def:"Caracterización de la experiencia sensorial y conceptual que se pretende transmitir con la obra arquitectónica.",
+example:"La imagen objetivo del museo del oro de Armenia es la de un cofre tallado en piedra que emerge de la montaña y revela al visitante la riqueza prehispánica quimbaya.",
+words:["La","imagen","objetivo","del","museo","del","oro","de","Armenia","es","la","de","un","cofre","tallado","en","piedra","que","emerge","de","la","montaña","y","revela","al","visitante","la","riqueza","prehispánica","quimbaya."]},
+
+{id:96,disc:"Arquitectura",tech:"Descripción de Estrategia de Sostenibilidad",
+def:"Exposición de las medidas adoptadas para reducir el impacto ambiental y optimizar el comportamiento energético del edificio.",
+example:"La estrategia de sostenibilidad incorpora paneles fotovoltaicos en la cubierta sur, sistema de recolección de aguas lluvias y ventilación natural asistida por chimeneas solares.",
+words:["La","estrategia","de","sostenibilidad","incorpora","paneles","fotovoltaicos","en","la","cubierta","sur,","sistema","de","recolección","de","aguas","lluvias","y","ventilación","natural","asistida","por","chimeneas","solares."]},
+
+{id:97,disc:"Arquitectura",tech:"Descripción de Relaciones Espaciales",
+def:"Explicación de cómo se vinculan los diferentes recintos a través de transiciones, jerarquías y conexiones visuales.",
+example:"El comedor se relaciona directamente con la terraza exterior mediante un pliegue del piso que elimina el umbral y genera una continuidad entre interior y exterior.",
+words:["El","comedor","se","relaciona","directamente","con","la","terraza","exterior","mediante","un","pliegue","del","piso","que","elimina","el","umbral","y","genera","una","continuidad","entre","interior","y","exterior."]},
+
+{id:98,disc:"Arquitectura",tech:"Análisis de Proporción",
+def:"Estudio de las relaciones dimensionales entre los elementos del proyecto para evaluar su armonía y escala.",
+example:"La proporción áurea empleada en el módulo de fachada del archivo histórico genera una serie de aperturas que escalan armónicamente desde el nivel cero hasta la cubierta.",
+words:["La","proporción","áurea","empleada","en","el","módulo","de","fachada","del","archivo","histórico","genera","una","serie","de","aperturas","que","escalan","armónicamente","desde","el","nivel","cero","hasta","la","cubierta."]},
+
+{id:99,disc:"Arquitectura",tech:"Redacción de Conclusión de Tesis",
+def:"Cierre argumentativo del trabajo de grado que retoma la hipótesis, los hallazgos y su proyección disciplinar.",
+example:"Se concluye que la revitalización del espacio público en los bordes de quebrada de Medellín es viable mediante la arquitectura participativa, tal como demuestra el caso del barrio Moravia.",
+words:["Se","concluye","que","la","revitalización","del","espacio","público","en","los","bordes","de","quebrada","de","Medellín","es","viable","mediante","la","arquitectura","participativa,","tal","como","demuestra","el","caso","del","barrio","Moravia."]},
+
+{id:100,disc:"Arquitectura",tech:"Descripción de Impacto Social",
+def:"Evaluación de los efectos que el proyecto produce sobre la comunidad en términos de calidad de vida, identidad y equidad.",
+example:"El equipamiento comunitario diseñado para el corregimiento de San Cristóbal reduce el desplazamiento de los habitantes en cuarenta minutos diarios al centralizar los servicios de salud y educación.",
+words:["El","equipamiento","comunitario","diseñado","para","el","corregimiento","de","San","Cristóbal","reduce","el","desplazamiento","de","los","habitantes","en","cuarenta","minutos","diarios","al","centralizar","los","servicios","de","salud","y","educación."]}
+];
+
+// ═══════════════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════════════
+let currentMode = 'flash';
+let currentFilter = 'all';
+let currentSearch = '';
+let currentIndex = 0;
+let isFlipped = false;
+
+// Load completed from localStorage
+let completed = JSON.parse(localStorage.getItem('rc_completed') || '[]');
+// Exercise state per card: { dropped: [], bankState: [] }
+let exerciseStates = JSON.parse(localStorage.getItem('rc_exercises') || '{}');
+
+// dragging state
+let draggedChip = null;
+let draggedFrom = null; // 'bank' or 'drop'
+let dragContext = null; // { dropId, bankId }
+
+function saveCompleted() {
+  localStorage.setItem('rc_completed', JSON.stringify(completed));
+}
+function saveExercises() {
+  localStorage.setItem('rc_exercises', JSON.stringify(exerciseStates));
+}
+
+// ── FILTER ──
+function getFiltered() {
+  let cards = CARDS;
+  if (currentFilter !== 'all') cards = cards.filter(c => c.disc === currentFilter);
+  if (currentSearch) {
+    const q = currentSearch.toLowerCase();
+    cards = cards.filter(c =>
+      c.tech.toLowerCase().includes(q) ||
+      c.disc.toLowerCase().includes(q) ||
+      c.def.toLowerCase().includes(q)
+    );
+  }
+  return cards;
+}
+
+function discClass(disc) {
+  const m = { 'Matemáticas':'mat','Física':'fis','Química':'qui','Arquitectura':'arq' };
+  return m[disc] || 'mat';
+}
+
+// ═══════════════════════════════════════════════
+// PROGRESS
+// ═══════════════════════════════════════════════
+function updateProgress() {
+  const done = completed.length;
+  const pct = Math.round(done / 100 * 100);
+  document.getElementById('prog-count').textContent = done;
+  document.getElementById('prog-fill').style.width = pct + '%';
+  document.getElementById('stat-done').textContent = done + ' completadas';
+  document.getElementById('stat-pending').textContent = (100 - done) + ' pendientes';
+}
+
+function updateStatFilter() {
+  const f = getFiltered();
+  const label = currentFilter === 'all' ? 'todas' : currentFilter;
+  document.getElementById('stat-filter').textContent =
+    'Mostrando: ' + label + ' (' + f.length + ')';
+}
+
+// ═══════════════════════════════════════════════
+// MODE
+// ═══════════════════════════════════════════════
+function setMode(mode) {
+  currentMode = mode;
+  document.getElementById('mode-flash').style.display = mode === 'flash' ? 'block' : 'none';
+  document.getElementById('mode-list').style.display  = mode === 'list'  ? 'block' : 'none';
+  document.getElementById('tab-flash').classList.toggle('active', mode === 'flash');
+  document.getElementById('tab-list').classList.toggle('active', mode === 'list');
+  if (mode === 'flash') renderCard();
+  else renderList();
+}
+
+// ═══════════════════════════════════════════════
+// FILTER & SEARCH
+// ═══════════════════════════════════════════════
+function setFilter(f, btn) {
+  currentFilter = f;
+  currentIndex = 0;
+  document.querySelectorAll('.filter-btn').forEach(b => {
+    b.classList.remove('active');
+    ['mat','fis','qui','arq'].forEach(c => b.classList.remove(c));
+  });
+  btn.classList.add('active');
+  const dc = discClass(f);
+  if (f !== 'all') btn.classList.add(dc);
+  updateStatFilter();
+  if (currentMode === 'flash') { resetFlip(); renderCard(); }
+  else renderList();
+}
+
+function doSearch(val) {
+  currentSearch = val;
+  currentIndex = 0;
+  updateStatFilter();
+  if (currentMode === 'flash') { resetFlip(); renderCard(); }
+  else renderList();
+}
+
+// ═══════════════════════════════════════════════
+// FLASHCARD MODE
+// ═══════════════════════════════════════════════
+function resetFlip() {
+  isFlipped = false;
+  const fc = document.getElementById('flashcard');
+  fc.classList.remove('flipped');
+}
+
+function flipCard(e) {
+  if (e.target.closest('.exercise-area') || e.target.closest('.ex-btn') || e.target.closest('.word-chip')) return;
+  isFlipped = !isFlipped;
+  document.getElementById('flashcard').classList.toggle('flipped', isFlipped);
+}
+
+function renderCard() {
+  const filtered = getFiltered();
+  if (!filtered.length) {
+    document.getElementById('flash-counter').textContent = '0 / 0';
+    document.getElementById('cf-tech').textContent = 'Sin resultados';
+    document.getElementById('cf-def').textContent = '';
+    document.getElementById('cf-disc').textContent = '';
+    return;
+  }
+  if (currentIndex >= filtered.length) currentIndex = filtered.length - 1;
+
+  const card = filtered[currentIndex];
+  const total = filtered.length;
+  const isDone = completed.includes(card.id);
+
+  document.getElementById('flash-counter').textContent = (currentIndex + 1) + ' / ' + total;
+
+  const cfNum = document.getElementById('cf-num');
+  const cbNum = document.getElementById('cb-num');
+  const num = String(card.id).padStart(2, '0');
+  cfNum.textContent = num; cbNum.textContent = num;
+
+  const dc = discClass(card.disc);
+  document.getElementById('cf-disc').textContent = card.disc;
+  document.getElementById('cf-disc').className = 'card-discipline disc-' + dc;
+  document.getElementById('cb-disc').textContent = card.disc;
+  document.getElementById('cb-disc').className = 'card-discipline disc-' + dc;
+
+  document.getElementById('cf-tech').textContent = card.tech;
+  document.getElementById('cf-def').textContent = card.def;
+  document.getElementById('cb-ex').textContent = card.example;
+
+  // Mark btn
+  const markBtn = document.getElementById('btn-mark');
+  markBtn.classList.toggle('marked', isDone);
+  markBtn.innerHTML = isDone
+    ? '<i class="bi bi-check2-circle"></i> Completada'
+    : '<i class="bi bi-check2"></i> Marcar';
+
+  // Nav buttons
+  document.getElementById('btn-prev').disabled = currentIndex === 0;
+  document.getElementById('btn-next').disabled = currentIndex === total - 1;
+
+  // Render exercise
+  renderCardExercise(card);
+  updateProgress();
+}
+
+function renderCardExercise(card) {
+  const key = String(card.id);
+  const saved = exerciseStates[key];
+
+  const dropEl = document.getElementById('card-drop');
+  const bankEl = document.getElementById('card-bank');
+  const fb = document.getElementById('card-feedback');
+  dropEl.innerHTML = '';
+  bankEl.innerHTML = '';
+  fb.textContent = '';
+  fb.className = 'ex-feedback';
+
+  // Shuffle for bank
+  let shuffled = [...card.words];
+  if (!saved) {
+    shuffled = shuffle(shuffled);
+  }
+
+  const dropped = saved ? saved.dropped : [];
+  const bankWords = saved ? saved.bank : shuffled;
+
+  // Render bank
+  bankWords.forEach((w, i) => {
+    const chip = makeChip(w, i, 'card-bank', 'card-drop', false, 'chip');
+    bankEl.appendChild(chip);
+  });
+
+  // Render drop
+  dropped.forEach((w, i) => {
+    const chip = makeChip(w, i, 'card-drop', 'card-bank', true, 'chip');
+    dropEl.appendChild(chip);
+  });
+
+  if (saved && saved.feedback) {
+    fb.textContent = saved.feedback;
+    fb.className = 'ex-feedback ' + saved.feedbackClass;
+  }
+}
+
+function makeChip(word, idx, homeZone, otherZone, inDrop, style) {
+  const chip = document.createElement('div');
+  chip.className = style === 'chip' ? 'word-chip' + (inDrop ? ' in-drop' : '') : 'lc-chip' + (inDrop ? ' in-drop' : '');
+  chip.textContent = word;
+  chip.draggable = true;
+  chip.dataset.word = word;
+  chip.dataset.home = homeZone;
+  chip.dataset.other = otherZone;
+
+  chip.addEventListener('dragstart', e => {
+    draggedChip = chip;
+    draggedFrom = homeZone;
+    e.dataTransfer.effectAllowed = 'move';
+  });
+  chip.addEventListener('dragend', () => { draggedChip = null; });
+
+  // Mobile: tap to move
+  chip.addEventListener('click', () => {
+    const src = document.getElementById(homeZone);
+    const dst = document.getElementById(otherZone);
+    if (src && dst) {
+      dst.appendChild(chip);
+      chip.dataset.home = otherZone;
+      chip.dataset.other = homeZone;
+      const wasInDrop = inDrop;
+      inDrop = !wasInDrop;
+      if (style === 'chip') {
+        chip.className = 'word-chip' + (inDrop ? ' in-drop' : '');
+      } else {
+        chip.className = 'lc-chip' + (inDrop ? ' in-drop' : '');
+      }
+      saveCurrentExerciseState();
+    }
+  });
+
+  return chip;
+}
+
+function onDragOver(e) {
+  e.preventDefault();
+  e.currentTarget.classList.add('drag-over');
+}
+function onDragLeave(e) {
+  e.currentTarget.classList.remove('drag-over');
+}
+function onDrop(e, zoneId) {
+  e.preventDefault();
+  e.currentTarget.classList.remove('drag-over');
+  if (!draggedChip) return;
+  const zone = document.getElementById(zoneId);
+  if (!zone) return;
+  zone.appendChild(draggedChip);
+  // Update chip style
+  const inDrop = zoneId.includes('drop');
+  if (draggedChip.className.includes('lc-chip')) {
+    draggedChip.className = 'lc-chip' + (inDrop ? ' in-drop' : '');
+  } else {
+    draggedChip.className = 'word-chip' + (inDrop ? ' in-drop' : '');
+  }
+  draggedChip.dataset.home = zoneId;
+  draggedChip.dataset.other = draggedFrom;
+  saveCurrentExerciseState();
+}
+
+function saveCurrentExerciseState(feedback, feedbackClass) {
+  const filtered = getFiltered();
+  if (!filtered.length) return;
+  const card = filtered[currentIndex];
+  const key = String(card.id);
+  const dropEl = document.getElementById('card-drop');
+  const bankEl = document.getElementById('card-bank');
+  if (!dropEl || !bankEl) return;
+  const dropped = [...dropEl.children].map(c => c.dataset.word);
+  const bank = [...bankEl.children].map(c => c.dataset.word);
+  exerciseStates[key] = { dropped, bank, feedback: feedback || '', feedbackClass: feedbackClass || '' };
+  saveExercises();
+}
+
+function checkCard(e) {
+  e.stopPropagation();
+  const filtered = getFiltered();
+  if (!filtered.length) return;
+  const card = filtered[currentIndex];
+  const dropEl = document.getElementById('card-drop');
+  const fb = document.getElementById('card-feedback');
+  const dropped = [...dropEl.children].map(c => c.dataset.word);
+  const correct = card.words;
+  const isCorrect = JSON.stringify(dropped) === JSON.stringify(correct);
+  fb.textContent = isCorrect ? '✓ ¡Correcto! El orden es perfecto.' : '✗ No es el orden correcto. Intenta de nuevo.';
+  fb.className = 'ex-feedback ' + (isCorrect ? 'correct' : 'wrong');
+  if (isCorrect && !completed.includes(card.id)) {
+    completed.push(card.id);
+    saveCompleted();
+    updateProgress();
+    renderCard();
+  }
+  saveCurrentExerciseState(fb.textContent, isCorrect ? 'correct' : 'wrong');
+}
+
+function resetCardExercise(e) {
+  e.stopPropagation();
+  const filtered = getFiltered();
+  if (!filtered.length) return;
+  const card = filtered[currentIndex];
+  delete exerciseStates[String(card.id)];
+  saveExercises();
+  renderCardExercise(card);
+}
+
+function navigate(dir) {
+  const filtered = getFiltered();
+  currentIndex = Math.max(0, Math.min(filtered.length - 1, currentIndex + dir));
+  resetFlip();
+  renderCard();
+}
+
+function markDone() {
+  const filtered = getFiltered();
+  if (!filtered.length) return;
+  const card = filtered[currentIndex];
+  if (completed.includes(card.id)) {
+    completed = completed.filter(id => id !== card.id);
+  } else {
+    completed.push(card.id);
+  }
+  saveCompleted();
+  updateProgress();
+  renderCard();
+  renderList();
+}
+
+// ═══════════════════════════════════════════════
+// LIST MODE
+// ═══════════════════════════════════════════════
+function renderList() {
+  const filtered = getFiltered();
+  const grid = document.getElementById('list-grid');
+  const empty = document.getElementById('empty-msg');
+  grid.innerHTML = '';
+
+  if (!filtered.length) {
+    empty.style.display = 'block';
+    return;
+  }
+  empty.style.display = 'none';
+
+  filtered.forEach(card => {
+    const isDone = completed.includes(card.id);
+    const dc = discClass(card.disc);
+    const key = String(card.id);
+    const saved = exerciseStates[key];
+
+    const el = document.createElement('div');
+    el.className = 'list-card' + (isDone ? ' completed' : '');
+    el.id = 'lc-' + card.id;
+
+    const shuffled = saved ? saved.bank : shuffle([...card.words]);
+    const dropped = saved ? saved.dropped : [];
+    const dropHTML = dropped.map(w =>
+      `<div class="lc-chip in-drop" draggable="true" data-word="${w}" data-home="ld-${card.id}" data-other="lb-${card.id}" ondragstart="lcDragStart(event)" ondragend="lcDragEnd(event)" onclick="lcChipClick(event,'ld-${card.id}','lb-${card.id}')">${w}</div>`
+    ).join('');
+    const bankHTML = shuffled.map(w =>
+      `<div class="lc-chip" draggable="true" data-word="${w}" data-home="lb-${card.id}" data-other="ld-${card.id}" ondragstart="lcDragStart(event)" ondragend="lcDragEnd(event)" onclick="lcChipClick(event,'lb-${card.id}','ld-${card.id}')">${w}</div>`
+    ).join('');
+
+    const feedbackHTML = saved && saved.feedback
+      ? `<div class="lc-feedback ${saved.feedbackClass}">${saved.feedback}</div>` : `<div class="lc-feedback"></div>`;
+
+    el.innerHTML = `
+      <div class="lc-header">
+        <span class="lc-num">#${String(card.id).padStart(2,'0')}</span>
+        <span class="lc-disc ${dc}">${card.disc}</span>
+        ${isDone ? '<span class="done-badge"><i class="bi bi-check2"></i> Hecho</span>' : ''}
+      </div>
+      <div class="lc-body">
+        <div class="lc-technique">${card.tech}</div>
+        <div class="lc-def">${card.def}</div>
+        <div class="lc-example">${card.example}</div>
+        <div class="lc-exercise">
+          <div class="lc-ex-label"><i class="bi bi-puzzle"></i> Ordenar palabras</div>
+          <div class="lc-drop-zone" id="ld-${card.id}"
+            ondragover="lcDragOver(event)"
+            ondrop="lcDrop(event,'ld-${card.id}','lb-${card.id}',${card.id})"
+            ondragleave="lcDragLeave(event)">${dropHTML}</div>
+          <div class="lc-word-bank" id="lb-${card.id}">${bankHTML}</div>
+          <div class="lc-actions">
+            <button class="lc-btn check" onclick="lcCheck(${card.id})">Verificar</button>
+            <button class="lc-btn reset" onclick="lcReset(${card.id})">Reiniciar</button>
+          </div>
+          ${feedbackHTML}
+        </div>
+      </div>`;
+    grid.appendChild(el);
+  });
+  updateProgress();
+}
+
+// LC drag handlers
+let lcDragChip = null;
+let lcDragSrc = null;
+
+function lcDragStart(e) {
+  lcDragChip = e.target;
+  lcDragSrc = e.target.dataset.home;
+  e.dataTransfer.effectAllowed = 'move';
+}
+function lcDragEnd() { lcDragChip = null; }
+function lcDragOver(e) { e.preventDefault(); e.currentTarget.classList.add('drag-over'); }
+function lcDragLeave(e) { e.currentTarget.classList.remove('drag-over'); }
+
+function lcDrop(e, dropId, bankId, cardId) {
+  e.preventDefault();
+  e.currentTarget.classList.remove('drag-over');
+  if (!lcDragChip) return;
+  const zone = document.getElementById(dropId);
+  zone.appendChild(lcDragChip);
+  lcDragChip.className = 'lc-chip in-drop';
+  lcDragChip.dataset.home = dropId;
+  lcDragChip.dataset.other = bankId;
+  lcSaveState(cardId, dropId, bankId);
+}
+
+function lcChipClick(e, srcId, dstId) {
+  const chip = e.currentTarget;
+  const dst = document.getElementById(dstId);
+  if (!dst) return;
+  dst.appendChild(chip);
+  const inDrop = dstId.startsWith('ld-');
+  chip.className = 'lc-chip' + (inDrop ? ' in-drop' : '');
+  chip.dataset.home = dstId;
+  chip.dataset.other = srcId;
+  // Extract cardId
+  const cardId = parseInt(dstId.replace('ld-','').replace('lb-',''));
+  const dropId = 'ld-' + cardId;
+  const bankId = 'lb-' + cardId;
+  lcSaveState(cardId, dropId, bankId);
+}
+
+function lcSaveState(cardId, dropId, bankId, feedback, feedbackClass) {
+  const dropEl = document.getElementById(dropId);
+  const bankEl = document.getElementById(bankId);
+  if (!dropEl || !bankEl) return;
+  const dropped = [...dropEl.children].map(c => c.dataset.word);
+  const bank = [...bankEl.children].map(c => c.dataset.word);
+  exerciseStates[String(cardId)] = { dropped, bank, feedback: feedback||'', feedbackClass: feedbackClass||'' };
+  saveExercises();
+}
+
+function lcCheck(cardId) {
+  const card = CARDS.find(c => c.id === cardId);
+  const dropEl = document.getElementById('ld-' + cardId);
+  const fbEl = dropEl.closest('.lc-exercise').querySelector('.lc-feedback');
+  const dropped = [...dropEl.children].map(c => c.dataset.word);
+  const isCorrect = JSON.stringify(dropped) === JSON.stringify(card.words);
+  fbEl.textContent = isCorrect ? '✓ ¡Orden correcto!' : '✗ No es el orden correcto.';
+  fbEl.className = 'lc-feedback ' + (isCorrect ? 'correct' : 'wrong');
+  if (isCorrect && !completed.includes(cardId)) {
+    completed.push(cardId);
+    saveCompleted();
+    updateProgress();
+    renderList();
+    return;
+  }
+  lcSaveState(cardId, 'ld-'+cardId, 'lb-'+cardId, fbEl.textContent, isCorrect ? 'correct':'wrong');
+}
+
+function lcReset(cardId) {
+  delete exerciseStates[String(cardId)];
+  saveExercises();
+  renderList();
+}
+
+// ═══════════════════════════════════════════════
+// UTILS
+// ═══════════════════════════════════════════════
+function shuffle(arr) {
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+
+function resetAll() {
+  if (!confirm('¿Seguro que deseas reiniciar todo el progreso?')) return;
+  completed = [];
+  exerciseStates = {};
+  localStorage.removeItem('rc_completed');
+  localStorage.removeItem('rc_exercises');
+  currentIndex = 0;
+  resetFlip();
+  updateProgress();
+  if (currentMode === 'flash') renderCard();
+  else renderList();
+}
+
+// ── Global drop zones for flashcard ──
+document.addEventListener('DOMContentLoaded', () => {
+  const cdrop = document.getElementById('card-drop');
+  if (cdrop) {
+    cdrop.addEventListener('dragover', e => onDragOver(e));
+    cdrop.addEventListener('drop', e => onDrop(e, 'card-drop'));
+    cdrop.addEventListener('dragleave', e => onDragLeave(e));
+  }
+
+  updateProgress();
+  updateStatFilter();
+  renderCard();
+});
+</script>
+</body>
+</html>

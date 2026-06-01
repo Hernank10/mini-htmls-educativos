@@ -1,0 +1,799 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>B1 Bilingual · Español · English · Intermediate Essentials</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --fondo: #f0f7f0;
+      --texto: #1e3a2f;
+      --verde-b1: #2a7a4b;
+      --naranja-ejercicio: #e67e22;
+      --gris-ayuda: #7f8c8d;
+      --acierto: #27ae60;
+      --fallo: #e74c3c;
+      --sombra: rgba(0, 0, 0, 0.08);
+      --card-bg: #ffffff;
+    }
+
+    body {
+      background: var(--fondo);
+      color: var(--texto);
+      font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
+      line-height: 1.5;
+      padding: 1rem;
+    }
+
+    .app-container {
+      max-width: 1300px;
+      margin: 0 auto;
+      background: var(--card-bg);
+      border-radius: 2rem;
+      box-shadow: 0 12px 28px var(--sombra);
+      overflow: hidden;
+      border: 1px solid #cde0ce;
+    }
+
+    header {
+      background: #eef5ea;
+      padding: 1rem 2rem;
+      border-bottom: 3px solid var(--verde-b1);
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+    }
+    h1 {
+      font-size: 1.7rem;
+      font-weight: 600;
+      color: #2a7a4b;
+      letter-spacing: -0.2px;
+    }
+    h1 small {
+      font-size: 0.7rem;
+      font-weight: normal;
+      color: #6c9e7a;
+    }
+
+    .lang-selector {
+      display: flex;
+      gap: 0.5rem;
+      background: white;
+      padding: 0.3rem;
+      border-radius: 40px;
+      border: 1px solid #cde0ce;
+    }
+    .lang-btn {
+      background: transparent;
+      border: none;
+      padding: 0.4rem 1rem;
+      border-radius: 30px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.2s;
+      font-size: 0.85rem;
+    }
+    .lang-btn.active {
+      background: var(--verde-b1);
+      color: white;
+    }
+
+    nav {
+      display: flex;
+      gap: 0.5rem;
+      background: #e2ece1;
+      padding: 0.6rem 2rem;
+      border-bottom: 1px solid #cde0ce;
+      flex-wrap: wrap;
+    }
+    .nav-btn {
+      background: transparent;
+      border: none;
+      font-size: 0.95rem;
+      padding: 0.5rem 1.2rem;
+      border-radius: 40px;
+      cursor: pointer;
+      font-weight: 500;
+      transition: all 0.2s;
+      color: #2a7a4b;
+    }
+    .nav-btn.active {
+      background-color: var(--verde-b1);
+      color: white;
+    }
+    .nav-btn:hover:not(.active) {
+      background-color: #cfdec9;
+    }
+
+    .view {
+      display: none;
+      padding: 2rem;
+      animation: fade 0.2s ease;
+    }
+    .active-view { display: block; }
+    @keyframes fade { from { opacity: 0; transform: translateY(5px);} to { opacity: 1; transform: translateY(0);} }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+    .stat-card {
+      background: var(--fondo);
+      border-radius: 1.5rem;
+      padding: 1rem;
+      text-align: center;
+      border-left: 6px solid var(--naranja-ejercicio);
+      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    }
+    .stat-number {
+      font-size: 2.2rem;
+      font-weight: 700;
+      color: var(--verde-b1);
+    }
+
+    .progress-bar-bg {
+      background: #e2e8f0;
+      border-radius: 40px;
+      height: 12px;
+      overflow: hidden;
+      margin: 0.8rem 0;
+    }
+    .progress-fill {
+      background: var(--verde-b1);
+      width: 0%;
+      height: 100%;
+      transition: width 0.2s;
+    }
+
+    .conceptos-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 1rem;
+      max-height: 65vh;
+      overflow-y: auto;
+      padding-right: 0.3rem;
+    }
+    .concepto-item {
+      background: white;
+      border-radius: 1.2rem;
+      padding: 0.8rem 1rem;
+      border-left: 5px solid var(--gris-ayuda);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+    .concepto-titulo {
+      font-weight: 700;
+      color: #2a7a4b;
+    }
+    .concepto-desc {
+      font-size: 0.85rem;
+      color: #5a6e55;
+      margin-top: 6px;
+      border-top: 1px solid #e2ecd9;
+      padding-top: 6px;
+    }
+    .badge-progreso {
+      font-size: 0.7rem;
+      background: #eaf3e5;
+      border-radius: 20px;
+      padding: 2px 10px;
+      display: inline-block;
+      margin-top: 8px;
+    }
+
+    .flashcard {
+      background: #ffffff;
+      border-radius: 2rem;
+      padding: 1.8rem;
+      text-align: center;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+      border: 1px solid #cde0ce;
+      max-width: 750px;
+      margin: 0 auto;
+    }
+    .pregunta {
+      font-size: 1.4rem;
+      font-weight: 500;
+      margin-bottom: 1.8rem;
+      background: #eef5ea;
+      padding: 1.2rem;
+      border-radius: 1.5rem;
+    }
+    .respuesta-oculta {
+      background: #f8fbf4;
+      border-radius: 1.2rem;
+      padding: 1rem;
+      margin: 1rem 0;
+      display: none;
+    }
+    .orden-palabras {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 0.6rem;
+      margin: 1.5rem 0;
+    }
+    .palabra-btn {
+      background: var(--verde-b1);
+      color: white;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 2rem;
+      font-size: 0.9rem;
+      cursor: pointer;
+    }
+    .orden-actual {
+      background: #fefef9;
+      border-radius: 1rem;
+      padding: 1rem;
+      min-height: 80px;
+      margin: 1rem 0;
+      text-align: left;
+      border: 1px dashed #cde0ce;
+      font-size: 1rem;
+    }
+    .btn {
+      background: #e2e8f0;
+      border: none;
+      padding: 0.6rem 1.5rem;
+      border-radius: 3rem;
+      font-weight: 600;
+      margin: 0.3rem;
+      cursor: pointer;
+      font-family: inherit;
+    }
+    .btn-primary { background: var(--verde-b1); color: white; }
+    .btn-acierto { background: var(--acierto); color: white; }
+    .btn-fallo { background: var(--fallo); color: white; }
+    .modo-selector {
+      display: flex;
+      justify-content: center;
+      gap: 0.8rem;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+    }
+    .modo-btn {
+      background: #e2e8f0;
+      border: none;
+      padding: 0.5rem 1.2rem;
+      border-radius: 40px;
+      cursor: pointer;
+      font-weight: 500;
+      transition: all 0.2s;
+    }
+    .modo-btn.active {
+      background: var(--verde-b1);
+      color: white;
+    }
+    footer {
+      text-align: center;
+      padding: 1rem;
+      font-size: 0.75rem;
+      border-top: 1px solid #cde0ce;
+      background: #fafdf7;
+    }
+    .translation-direction {
+      margin: 0.5rem 0;
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: var(--naranja-ejercicio);
+    }
+    input {
+      padding: 0.8rem;
+      border-radius: 2rem;
+      border: 1px solid #cbd5e1;
+      font-size: 1rem;
+      width: 80%;
+      margin: 1rem auto;
+      display: block;
+      text-align: center;
+      font-family: inherit;
+    }
+    @media (max-width: 680px) {
+      .view { padding: 1rem; }
+      .pregunta { font-size: 1rem; }
+      .lang-selector { order: 2; width: 100%; justify-content: center; }
+      header { flex-direction: column; align-items: stretch; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+<div class="app-container">
+  <header>
+    <div>
+      <h1>📘 B1 Bilingual <small>Español · English · Nivel Intermedio</small></h1>
+    </div>
+    <div class="lang-selector">
+      <button id="langEsBtn" class="lang-btn active">🇪🇸 Español</button>
+      <button id="langEnBtn" class="lang-btn">🇬🇧 English</button>
+      <button id="langBothBtn" class="lang-btn">🌐 Bilingüe</button>
+    </div>
+  </header>
+  <nav>
+    <button class="nav-btn active" data-view="dashboard">📊 Panel</button>
+    <button class="nav-btn" data-view="listado">📚 Vocabulario B1</button>
+    <button class="nav-btn" data-view="practica">🃏 Práctica</button>
+  </nav>
+
+  <section id="dashboard" class="view active-view">
+    <div class="stats-grid" id="statsContainer"></div>
+    <div class="card" style="background:white; border-radius:1.6rem; padding:1.2rem;">
+      <h3 id="progressTitle">📈 Progreso en vocabulario B1</h3>
+      <div class="progress-bar-bg"><div class="progress-fill" id="globalProgressFill"></div></div>
+      <p id="globalProgressText"></p>
+      <button id="resetProgresoBtn" class="btn" style="background:#cfdec9;">🔄 Reiniciar progreso</button>
+    </div>
+  </section>
+
+  <section id="listado" class="view">
+    <input type="text" id="filtroListado" placeholder="🔍 Buscar palabra / definición / Search..." style="width:100%; padding:10px; margin-bottom:15px; border-radius:40px; border:1px solid #cde0ce;">
+    <div id="conceptosListadoContainer" class="conceptos-grid"></div>
+  </section>
+
+  <section id="practica" class="view">
+    <div class="modo-selector" id="modoSelector">
+      <button id="modoTraduccionDirecta" class="modo-btn active">📖 Palabra → Traducción</button>
+      <button id="modoTraduccionInversa" class="modo-btn">🔄 Traducción → Palabra</button>
+      <button id="modoOrdenar" class="modo-btn">🧩 Ordenar frase</button>
+      <button id="modoEspEng" class="modo-btn">🌐 ESP ↔ ENG</button>
+    </div>
+    <div id="practicaContainer"></div>
+  </section>
+  <footer>Progreso guardado localmente · Ejercicios interactivos B1 · Conectores, verbos modales, tiempos, expresiones</footer>
+</div>
+
+<script>
+  // --------------------------------------------------------------
+  // 100 PALABRAS Y EXPRESIONES B1 (Español - Inglés)
+  // Incluye: conectores, verbos modales, presente perfecto, futuro, condicional, vocabulario temático
+  // --------------------------------------------------------------
+  const vocabularioData = [
+    [1, "Sin embargo", "However", "Conector de contraste", "Contrast connector"],
+    [2, "Por lo tanto", "Therefore", "Conector de consecuencia", "Consequence connector"],
+    [3, "Además", "Moreover / Furthermore", "Conector de adición", "Addition connector"],
+    [4, "Mientras que", "Whereas", "Conector de comparación", "Comparison connector"],
+    [5, "A pesar de", "Despite / Although", "Conector de concesión", "Concession connector"],
+    [6, "De hecho", "In fact", "Conector de énfasis", "Emphasis connector"],
+    [7, "Puedo", "I can", "Verbo modal habilidad", "Modal verb ability"],
+    [8, "Debo", "I must", "Verbo modal obligación", "Modal verb obligation"],
+    [9, "Debería", "I should", "Verbo modal consejo", "Modal verb advice"],
+    [10, "Podría", "I could", "Verbo modal posibilidad", "Modal verb possibility"],
+    [11, "Tengo que", "I have to", "Obligación externa", "External obligation"],
+    [12, "He comido", "I have eaten", "Presente perfecto", "Present perfect"],
+    [13, "Nunca he visto", "I have never seen", "Presente perfecto negativo", "Negative present perfect"],
+    [14, "Ya he terminado", "I have already finished", "Presente perfecto con 'ya'", "Present perfect with 'already'"],
+    [15, "¿Has estado alguna vez?", "Have you ever been?", "Experiencia (ever)", "Ever experience"],
+    [16, "Todavía no he llegado", "I haven't arrived yet", "Presente perfecto con 'yet'", "Yet in present perfect"],
+    [17, "Iré mañana", "I will go tomorrow", "Futuro simple", "Simple future"],
+    [18, "Voy a viajar", "I am going to travel", "Futuro próximo", "Near future"],
+    [19, "¿Ayudarás?", "Will you help?", "Futuro pregunta", "Future question"],
+    [20, "Me gustaría", "I would like", "Condicional cortesía", "Conditional politeness"],
+    [21, "Si pudiera, lo haría", "If I could, I would do it", "Condicional con si", "Conditional with if"],
+    [22, "Sería mejor", "It would be better", "Condicional recomendación", "Conditional recommendation"],
+    [23, "Solicitud", "Request", "Vocabulario de oficina", "Office vocabulary"],
+    [24, "Entrevista de trabajo", "Job interview", "Búsqueda de empleo", "Job search"],
+    [25, "Currículum (CV)", "Resume / CV", "Documento profesional", "Professional document"],
+    [26, "Experiencia laboral", "Work experience", "Trayectoria profesional", "Career path"],
+    [27, "Habilidades", "Skills", "Competencias", "Competences"],
+    [28, "Negocios", "Business", "Ámbito comercial", "Commercial field"],
+    [29, "Pasaporte", "Passport", "Documento de viaje", "Travel document"],
+    [30, "Equipaje", "Luggage", "Maletas y pertenencias", "Suitcases and belongings"],
+    [31, "Reservar un hotel", "Book a hotel", "Acción de viaje", "Travel action"],
+    [32, "Estación de tren", "Train station", "Lugar de transporte", "Transport place"],
+    [33, "Aeropuerto", "Airport", "Lugar de vuelos", "Flight place"],
+    [34, "Mapa", "Map", "Herramienta de navegación", "Navigation tool"],
+    [35, "Itinerario", "Itinerary", "Plan de viaje", "Travel plan"],
+    [36, "Alojamiento", "Accommodation", "Lugar donde hospedarse", "Place to stay"],
+    [37, "Síntoma", "Symptom", "Señal de enfermedad", "Illness sign"],
+    [38, "Fiebre", "Fever", "Temperatura alta", "High temperature"],
+    [39, "Tos", "Cough", "Reflejo respiratorio", "Respiratory reflex"],
+    [40, "Dolor de cabeza", "Headache", "Molestia en la cabeza", "Head discomfort"],
+    [41, "Cita médica", "Medical appointment", "Consulta con doctor", "Doctor consultation"],
+    [42, "Receta médica", "Prescription", "Orden para medicamentos", "Medication order"],
+    [43, "Seguro médico", "Health insurance", "Cobertura sanitaria", "Health coverage"],
+    [44, "Teléfono inteligente", "Smartphone", "Dispositivo móvil", "Mobile device"],
+    [45, "Aplicación", "App", "Software móvil", "Mobile software"],
+    [46, "Descargar", "Download", "Transferir archivos", "Transfer files"],
+    [47, "Red social", "Social network", "Plataforma social", "Social platform"],
+    [48, "Contraseña", "Password", "Clave de acceso", "Access key"],
+    [49, "Pantalla", "Screen", "Superficie de visualización", "Display surface"],
+    [50, "Batería", "Battery", "Fuente de energía portátil", "Portable power source"],
+    [51, "Hábito", "Habit", "Comportamiento repetido", "Repeated behavior"],
+    [52, "Costumbre", "Custom", "Tradición cultural", "Cultural tradition"],
+    [53, "Objetivo", "Goal", "Meta a alcanzar", "Target to achieve"],
+    [54, "Éxito", "Success", "Logro positivo", "Positive achievement"],
+    [55, "Fracaso", "Failure", "Resultado negativo", "Negative result"],
+    [56, "Esfuerzo", "Effort", "Energía dedicada", "Dedicated energy"],
+    [57, "Animado", "Lively / Cheerful", "Estado de ánimo positivo", "Positive mood"],
+    [58, "Aburrido", "Bored", "Falta de interés", "Lack of interest"],
+    [59, "Enojado", "Angry", "Ira o enfado", "Anger"],
+    [60, "Preocupado", "Worried", "Ansiedad por futuro", "Anxiety about future"],
+    [61, "Calle", "Street", "Vía urbana", "Urban road"],
+    [62, "Esquina", "Corner", "Intersección de calles", "Street intersection"],
+    [63, "Edificio", "Building", "Construcción", "Construction"],
+    [64, "Parque", "Park", "Área verde pública", "Public green area"],
+    [65, "Puente", "Bridge", "Estructura sobre agua/vías", "Structure over water/roads"],
+    [66, "Museo", "Museum", "Lugar de exposiciones", "Exhibition place"],
+    [67, "Restaurante", "Restaurant", "Establecimiento de comidas", "Eating establishment"],
+    [68, "Tienda", "Shop / Store", "Lugar de ventas", "Sales place"],
+    [69, "Advertir", "To warn", "Prevenir de un peligro", "Prevent danger"],
+    [70, "Quejarse", "To complain", "Expresar disconformidad", "Express dissatisfaction"],
+    [71, "Negociar", "To negotiate", "Llegar a un acuerdo", "Reach an agreement"],
+    [72, "Comprometerse", "To commit", "Prometer hacer algo", "Promise to do something"],
+    [73, "Celebrar", "To celebrate", "Festejar un evento", "Party an event"],
+    [74, "Dejar", "To leave / Let", "Abandonar o permitir", "Abandon or allow"],
+    [75, "Mantener", "To keep / Maintain", "Conservar en estado", "Preserve in state"],
+    [76, "Sugerir", "To suggest", "Proponer una idea", "Propose an idea"],
+    [77, "Dudar", "To doubt", "No estar seguro", "Not be sure"],
+    [78, "Incluir", "To include", "Contener como parte", "Contain as part"],
+    [79, "Consumir", "To consume", "Usar o comer", "Use or eat"],
+    [80, "Medio ambiente", "Environment", "Entorno natural", "Natural surroundings"],
+    [81, "Contaminación", "Pollution", "Degradación ambiental", "Environmental degradation"],
+    [82, "Reciclar", "Recycle", "Reutilizar materiales", "Reuse materials"],
+    [83, "Sostenible", "Sustainable", "Respetuoso con el planeta", "Planet-friendly"],
+    [84, "Cambio climático", "Climate change", "Alteración del clima global", "Global climate alteration"],
+    [85, "Energía renovable", "Renewable energy", "Energía limpia", "Clean energy"],
+    [86, "Avance", "Advance / Progress", "Mejora o adelanto", "Improvement"],
+    [87, "Investigación", "Research", "Estudio sistemático", "Systematic study"],
+    [88, "Descubrimiento", "Discovery", "Hallazgo importante", "Important finding"],
+    [89, "Invento", "Invention", "Creación nueva", "New creation"],
+    [90, "Científico", "Scientist", "Profesional de la ciencia", "Science professional"],
+    [91, "Emprender", "To undertake", "Iniciar un proyecto", "Start a project"],
+    [92, "Innovar", "To innovate", "Introducir novedades", "Introduce novelties"],
+    [93, "Líder", "Leader", "Persona que guía", "Person who guides"],
+    [94, "Equipo", "Team", "Grupo de trabajo", "Work group"],
+    [95, "Estrategia", "Strategy", "Plan de acción", "Action plan"],
+    [96, "Resultado", "Result", "Consecuencia o producto", "Consequence or product"],
+    [97, "Calidad", "Quality", "Nivel de excelencia", "Excellence level"],
+    [98, "Eficiencia", "Efficiency", "Optimización de recursos", "Resource optimization"],
+    [99, "Flexibilidad", "Flexibility", "Capacidad de adaptación", "Adaptability"],
+    [100, "Responsabilidad", "Responsibility", "Obligación de cumplir", "Duty to fulfill"]
+  ];
+
+  // --------------------- LOCALSTORAGE Y PROGRESO -------------------------
+  let progreso = {};
+  let currentLang = "es"; // 'es', 'en', 'both'
+  let currentPracticeMode = "traduccion_directa"; 
+  let currentCardId = null;
+  let currentOrdenarPalabras = [];
+  let shuffledPalabras = [];
+  let selectedOrder = [];
+  let ordenarRespuestaCorrecta = "";
+
+  const STORAGE_KEY = "b1BilingualProgreso";
+
+  function cargarProgreso() {
+    const guardado = localStorage.getItem(STORAGE_KEY);
+    if (guardado) progreso = JSON.parse(guardado);
+    else {
+      progreso = {};
+      for (let i = 1; i <= 100; i++) progreso[i] = { aciertos: 0, fallos: 0 };
+    }
+  }
+  function guardarProgreso() { localStorage.setItem(STORAGE_KEY, JSON.stringify(progreso)); }
+  function registrarResultado(id, acierto) {
+    if (!progreso[id]) progreso[id] = { aciertos: 0, fallos: 0 };
+    if (acierto) progreso[id].aciertos += 1;
+    else progreso[id].fallos += 1;
+    guardarProgreso();
+    renderDashboard();
+    renderListado(document.getElementById("filtroListado")?.value || "");
+  }
+
+  function obtenerTexto(item, tipo) {
+    if (currentLang === 'es') return tipo === 'palabra' ? item[1] : item[3];
+    if (currentLang === 'en') return tipo === 'palabra' ? item[2] : item[4];
+    return tipo === 'palabra' ? `${item[1]} / ${item[2]}` : `${item[3]} / ${item[4]}`;
+  }
+
+  function renderDashboard() {
+    let totalAciertos = 0, totalFallos = 0, conceptosConAcierto = 0;
+    for (let i = 1; i <= 100; i++) {
+      const p = progreso[i] || { aciertos: 0, fallos: 0 };
+      totalAciertos += p.aciertos;
+      totalFallos += p.fallos;
+      if (p.aciertos > 0) conceptosConAcierto++;
+    }
+    const porcentaje = (conceptosConAcierto / 100) * 100;
+    document.getElementById("globalProgressFill").style.width = `${porcentaje}%`;
+    document.getElementById("globalProgressText").innerHTML = `${conceptosConAcierto} de 100 conceptos con al menos 1 acierto (${Math.round(porcentaje)}%).`;
+    document.getElementById("statsContainer").innerHTML = `
+      <div class="stat-card"><div class="stat-number">${totalAciertos}</div>✅ Aciertos totales</div>
+      <div class="stat-card"><div class="stat-number">${totalFallos}</div>❌ Fallos</div>
+      <div class="stat-card"><div class="stat-number">${conceptosConAcierto}</div>📘 Conceptos dominados</div>
+      <div class="stat-card"><div class="stat-number">${Math.round((totalAciertos/(totalAciertos+totalFallos+0.001))*100)}%</div>📊 Tasa éxito</div>
+    `;
+  }
+
+  function renderListado(filtro = "") {
+    const container = document.getElementById("conceptosListadoContainer");
+    container.innerHTML = "";
+    const filtroLower = filtro.toLowerCase();
+    for (let c of vocabularioData) {
+      const id = c[0];
+      const palabra = obtenerTexto(c, 'palabra');
+      const definicion = obtenerTexto(c, 'definicion');
+      const prog = progreso[id] || { aciertos: 0, fallos: 0 };
+      if (filtro && !palabra.toLowerCase().includes(filtroLower) && !definicion.toLowerCase().includes(filtroLower)) continue;
+      const div = document.createElement("div");
+      div.className = "concepto-item";
+      div.innerHTML = `<div class="concepto-titulo">${id}. ${palabra}</div>
+                       <div class="concepto-desc">📖 ${definicion}</div>
+                       <span class="badge-progreso">✅ ${prog.aciertos} aciertos · ❌ ${prog.fallos} fallos</span>`;
+      container.appendChild(div);
+    }
+  }
+
+  const practicaDiv = document.getElementById("practicaContainer");
+
+  // Modo 1: Palabra → Traducción
+  function modoTraduccionDirecta() {
+    const randomIndex = Math.floor(Math.random() * vocabularioData.length);
+    const item = vocabularioData[randomIndex];
+    currentCardId = item[0];
+    const pregunta = obtenerTexto(item, 'palabra');
+    const respuestaCorrecta = obtenerTexto(item, 'palabra') === item[1] ? item[2] : item[1];
+    
+    practicaDiv.innerHTML = `
+      <div class="flashcard">
+        <div class="pregunta">📖 <strong>${pregunta}</strong></div>
+        <input type="text" id="respuestaInput" placeholder="Escribe la traducción / Type the translation...">
+        <button id="comprobarBtn" class="btn btn-primary">✓ Comprobar</button>
+        <div id="feedbackMsg" style="margin:1rem 0; font-weight:bold;"></div>
+        <button id="siguienteBtn" class="btn">⏩ Siguiente</button>
+        <p id="infoProgresoCard" style="margin-top:0.8rem;">📊 Concepto ${currentCardId} · ✅ ${progreso[currentCardId]?.aciertos||0} aciertos · ❌ ${progreso[currentCardId]?.fallos||0} fallos</p>
+      </div>
+    `;
+    
+    document.getElementById("comprobarBtn").onclick = () => {
+      const userAnswer = document.getElementById("respuestaInput").value.trim().toLowerCase();
+      const correct = respuestaCorrecta.toLowerCase();
+      const isCorrect = userAnswer === correct;
+      const feedback = document.getElementById("feedbackMsg");
+      if (isCorrect) {
+        feedback.innerHTML = `<span style='color:#27ae60'>✅ ¡Correcto! La traducción es "${respuestaCorrecta}"</span>`;
+        registrarResultado(currentCardId, true);
+      } else {
+        feedback.innerHTML = `<span style='color:#e67e22'>❌ Incorrecto. La respuesta correcta es: "${respuestaCorrecta}"</span>`;
+        registrarResultado(currentCardId, false);
+      }
+      document.getElementById("comprobarBtn").disabled = true;
+      setTimeout(() => { document.getElementById("comprobarBtn").disabled = false; }, 1500);
+    };
+    document.getElementById("siguienteBtn").onclick = () => modoTraduccionDirecta();
+  }
+
+  // Modo 2: Traducción → Palabra
+  function modoTraduccionInversa() {
+    const randomIndex = Math.floor(Math.random() * vocabularioData.length);
+    const item = vocabularioData[randomIndex];
+    currentCardId = item[0];
+    const traduccion = obtenerTexto(item, 'palabra') === item[1] ? item[2] : item[1];
+    const respuestaCorrecta = obtenerTexto(item, 'palabra');
+    
+    practicaDiv.innerHTML = `
+      <div class="flashcard">
+        <div class="pregunta">🔄 <strong>${traduccion}</strong></div>
+        <input type="text" id="respuestaInput" placeholder="Escribe la palabra original / Type the original word...">
+        <button id="comprobarBtn" class="btn btn-primary">✓ Comprobar</button>
+        <div id="feedbackMsg" style="margin:1rem 0; font-weight:bold;"></div>
+        <button id="siguienteBtn" class="btn">⏩ Siguiente</button>
+        <p id="infoProgresoCard" style="margin-top:0.8rem;">📊 Concepto ${currentCardId} · ✅ ${progreso[currentCardId]?.aciertos||0} aciertos · ❌ ${progreso[currentCardId]?.fallos||0} fallos</p>
+      </div>
+    `;
+    
+    document.getElementById("comprobarBtn").onclick = () => {
+      const userAnswer = document.getElementById("respuestaInput").value.trim().toLowerCase();
+      const correct = respuestaCorrecta.toLowerCase();
+      const isCorrect = userAnswer === correct;
+      const feedback = document.getElementById("feedbackMsg");
+      if (isCorrect) {
+        feedback.innerHTML = `<span style='color:#27ae60'>✅ ¡Correcto! La palabra es "${respuestaCorrecta}"</span>`;
+        registrarResultado(currentCardId, true);
+      } else {
+        feedback.innerHTML = `<span style='color:#e67e22'>❌ Incorrecto. La respuesta correcta es: "${respuestaCorrecta}"</span>`;
+        registrarResultado(currentCardId, false);
+      }
+      document.getElementById("comprobarBtn").disabled = true;
+      setTimeout(() => { document.getElementById("comprobarBtn").disabled = false; }, 1500);
+    };
+    document.getElementById("siguienteBtn").onclick = () => modoTraduccionInversa();
+  }
+
+  // Modo 3: Ordenar palabras de la frase
+  function modoOrdenarPalabras() {
+    const randomIndex = Math.floor(Math.random() * vocabularioData.length);
+    const item = vocabularioData[randomIndex];
+    currentCardId = item[0];
+    const fraseOriginal = obtenerTexto(item, 'palabra');
+    ordenarRespuestaCorrecta = fraseOriginal;
+    let palabras = fraseOriginal.split(/\s+/).filter(p => p.length > 0);
+    currentOrdenarPalabras = [...palabras];
+    shuffledPalabras = [...palabras];
+    for (let i = shuffledPalabras.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [shuffledPalabras[i], shuffledPalabras[j]] = [shuffledPalabras[j], shuffledPalabras[i]];
+    }
+    selectedOrder = [];
+    
+    const renderUI = () => {
+      let palabrasHTML = shuffledPalabras.map(p => `<button class="palabra-btn" data-palabra="${p.replace(/"/g, '&quot;')}">${p}</button>`).join('');
+      let ordenHTML = selectedOrder.map(p => `<span style="background:#eef5ea; padding:0.2rem 0.6rem; margin:0.2rem; border-radius:1rem;">${p}</span>`).join(' ');
+      if (ordenHTML === "") ordenHTML = "<em>Haz clic en las palabras en el orden correcto...</em>";
+      practicaDiv.innerHTML = `
+        <div class="flashcard">
+          <h3>🧩 Ordena la frase:</h3>
+          <div class="pregunta" style="background:#eef5ea;">📌 ${obtenerTexto(item, 'definicion')}</div>
+          <div class="orden-actual"><strong>Tu orden:</strong><br> ${ordenHTML}</div>
+          <div class="orden-palabras" id="palabrasContainer">${palabrasHTML}</div>
+          <div>
+            <button id="resetBtn" class="btn" style="background:#cfdec9;">🔁 Reiniciar</button>
+            <button id="comprobarBtn" class="btn btn-primary">✓ Comprobar</button>
+          </div>
+          <button id="siguienteBtn" class="btn" style="margin-top:1rem;">⏩ Siguiente</button>
+          <p id="infoProgresoCard">📊 Concepto ${currentCardId} · ✅ ${progreso[currentCardId]?.aciertos||0} aciertos · ❌ ${progreso[currentCardId]?.fallos||0} fallos</p>
+          <div id="feedbackMsg" style="margin-top:0.8rem; font-weight:bold;"></div>
+        </div>
+      `;
+      document.querySelectorAll(".palabra-btn").forEach(btn => {
+        btn.addEventListener("click", () => {
+          const palabra = btn.getAttribute("data-palabra");
+          const idx = shuffledPalabras.indexOf(palabra);
+          if (idx !== -1) {
+            shuffledPalabras.splice(idx, 1);
+            selectedOrder.push(palabra);
+            renderUI();
+          }
+        });
+      });
+      document.getElementById("resetBtn").onclick = () => {
+        shuffledPalabras = [...currentOrdenarPalabras];
+        for (let i = shuffledPalabras.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [shuffledPalabras[i], shuffledPalabras[j]] = [shuffledPalabras[j], shuffledPalabras[i]];
+        }
+        selectedOrder = [];
+        renderUI();
+      };
+      document.getElementById("comprobarBtn").onclick = () => {
+        const ordenUsuario = selectedOrder.join(" ");
+        if (ordenUsuario === ordenarRespuestaCorrecta) {
+          document.getElementById("feedbackMsg").innerHTML = "<span style='color:#27ae60'>✅ ¡Correcto! Frase ordenada correctamente.</span>";
+          registrarResultado(currentCardId, true);
+          setTimeout(() => modoOrdenarPalabras(), 1500);
+        } else {
+          document.getElementById("feedbackMsg").innerHTML = `<span style='color:#e67e22'>❌ Incorrecto. La frase correcta es: "${ordenarRespuestaCorrecta}"</span>`;
+          registrarResultado(currentCardId, false);
+          setTimeout(() => modoOrdenarPalabras(), 2000);
+        }
+        document.getElementById("comprobarBtn").disabled = true;
+        setTimeout(() => { if(document.getElementById("comprobarBtn")) document.getElementById("comprobarBtn").disabled = false; }, 2000);
+      };
+      document.getElementById("siguienteBtn").onclick = () => modoOrdenarPalabras();
+    };
+    renderUI();
+  }
+
+  // Modo 4: ESP ↔ ENG (traducción bilateral)
+  function modoEspEng() {
+    const randomIndex = Math.floor(Math.random() * vocabularioData.length);
+    const item = vocabularioData[randomIndex];
+    currentCardId = item[0];
+    const direction = Math.random() < 0.5 ? "esp2eng" : "eng2esp";
+    const [pregunta, respuestaCorrecta] = direction === "esp2eng" ? [item[1], item[2]] : [item[2], item[1]];
+    const directionText = direction === "esp2eng" ? "🇪🇸 → 🇬🇧 Español a Inglés" : "🇬🇧 → 🇪🇸 English to Spanish";
+    
+    practicaDiv.innerHTML = `
+      <div class="flashcard">
+        <div class="translation-direction">${directionText}</div>
+        <div class="pregunta">📝 <strong>${pregunta}</strong></div>
+        <input type="text" id="respuestaInput" placeholder="Escribe la traducción / Type the translation...">
+        <button id="comprobarBtn" class="btn btn-primary">✓ Comprobar</button>
+        <div id="feedbackMsg" style="margin:1rem 0; font-weight:bold;"></div>
+        <button id="siguienteBtn" class="btn">⏩ Siguiente</button>
+        <p id="infoProgresoCard" style="margin-top:0.8rem;">📊 Concepto ${currentCardId} · ✅ ${progreso[currentCardId]?.aciertos||0} aciertos · ❌ ${progreso[currentCardId]?.fallos||0} fallos</p>
+      </div>
+    `;
+    
+    document.getElementById("comprobarBtn").onclick = () => {
+      const userAnswer = document.getElementById("respuestaInput").value.trim().toLowerCase();
+      const correct = respuestaCorrecta.toLowerCase();
+      const isCorrect = userAnswer === correct;
+      const feedback = document.getElementById("feedbackMsg");
+      if (isCorrect) {
+        feedback.innerHTML = `<span style='color:#27ae60'>✅ ¡Correcto! "${respuestaCorrecta}"</span>`;
+        registrarResultado(currentCardId, true);
+      } else {
+        feedback.innerHTML = `<span style='color:#e67e22'>❌ Incorrecto. La respuesta correcta es: "${respuestaCorrecta}"</span>`;
+        registrarResultado(currentCardId, false);
+      }
+      document.getElementById("comprobarBtn").disabled = true;
+      setTimeout(() => { document.getElementById("comprobarBtn").disabled = false; }, 1500);
+    };
+    document.getElementById("siguienteBtn").onclick = () => modoEspEng();
+  }
+
+  function setPracticeMode(mode) {
+    currentPracticeMode = mode;
+    document.querySelectorAll(".modo-btn").forEach(btn => btn.classList.remove("active"));
+    if (mode === "traduccion_directa") document.getElementById("modoTraduccionDirecta").classList.add("active");
+    if (mode === "traduccion_inversa") document.getElementById("modoTraduccionInversa").classList.add("active");
+    if (mode === "ordenar") document.getElementById("modoOrdenar").classList.add("active");
+    if (mode === "esp_eng") document.getElementById("modoEspEng").classList.add("active");
+    
+    if (mode === "traduccion_directa") modoTraduccionDirecta();
+    else if (mode === "traduccion_inversa") modoTraduccionInversa();
+    else if (mode === "ordenar") modoOrdenarPalabras();
+    else if (mode === "esp_eng") modoEspEng();
+  }
+
+  function setLanguage(lang) {
+    currentLang = lang;
+    document.getElementById("langEsBtn").classList.toggle("active", lang === 'es');
+    document.getElementById("langEnBtn").classList.toggle("active", lang === 'en');
+    document.getElementById("langBothBtn").classList.toggle("active", lang === 'both');
+    document.getElementById("progressTitle").innerText = lang === 'es' ? "📈 Progreso en vocabulario B1" : 
+                                                         (lang === 'en' ? "📈 B1 Vocabulary Progress" : "📈 Progreso / Progress");
+    const placeholder = document.querySelector("#listado input");
+    if (placeholder) {
+      placeholder.placeholder = lang === 'es' ? "🔍 Buscar palabra / definición..." :
+                                (lang === 'en' ? "🔍 Search word / definition..." : "🔍 Buscar / Search...");
+    }
+    renderListado(document.getElementById("filtroListado")?.value || "");
+    setPracticeMode(currentPracticeMode);
+  }
+
+  function initUI() {
+    document.querySelectorAll(".nav-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const viewId = btn.getAttribute("data-view");
+        document.querySelectorAll(".view").forEach(v => v.classList.remove("active-view"));
+        document.getElementById(viewId).classList.add("active-view");
+        document.querySelectorAll(".nav-btn").forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+        if (viewId === "listado") renderListado(document.getElementById("filtroListado").value);
+        if (viewId === "dashboard") renderDashboard();
+        if (viewId === "practica") setPracticeMode(currentPracticeMode);
+      });
+    });
+    
+    document.getElementById("modoTraduccionDirecta").addEventListener("click", () => setPracticeMode("traduccion_directa"));
+    document.getElementById("modoTraduccionInversa").addEventListener("click", () => setPracticeMode("traduccion_inversa"));
+    document.getElementById("modoOrdenar").addEventListener("click", () => setPracticeMode("ordenar"));
+    document.getElementById("modoEspEng").addEventListener("click", () => setPracticeMode("esp_eng"));
+    
+    document.getElementById("resetProgresoBtn").addEventListener("click", () => {
+      if (confirm("¿Reiniciar todo el progreso? Se perderán aciertos y fallos. / Reset all progress?")) {
+        for (let i = 1; i <= 100; i++) progreso[i] = { aciertos: 0, fallos: 0 };
+        guardarProgreso();
+        renderDashboard();
+        renderListado(document.getElementById("filtroListado")?.value || "");
+        setPracticeMode(currentPracticeMode);
+      }
+    });
+    document.getElementById("filtroListado").addEventListener("input", (e) => renderListado(e.target.value));
+    
+    document.getElementById("langEsBtn").addEventListener("click", () => setLanguage('es'));
+    document.getElementById("langEnBtn").addEventListener("click", () => setLanguage('en'));
+    document.getElementById("langBothBtn").addEventListener("click", () => setLanguage('both'));
+  }
+
+  window.addEventListener("DOMContentLoaded", () => {
+    cargarProgreso();
+    renderDashboard();
+    renderListado();
+    initUI();
+    setPracticeMode("traduccion_directa");
+  });
+</script>
+</body>
+</html>

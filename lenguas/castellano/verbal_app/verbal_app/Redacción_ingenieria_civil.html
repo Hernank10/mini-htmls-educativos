@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Redacción para Ingeniería Civil — 100 técnicas para estudiantes colombianos</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ink:#1a1209; --parchment:#f5f0e8; --amber:#c8860a; --amber-light:#f0a830;
+  --amber-pale:#fdf3dc; --rust:#8b3a1a; --sage:#4a6741; --sage-light:#7a9e76;
+  --cream:#faf7f2; --border:#d4c9b0; --shadow:rgba(26,18,9,0.12);
+  --civil:#5d6d7e; --civil-light:#85929e; --civil-pale:#ebf0f5;
+  --civil-earth:#b9770e;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'DM Sans',sans-serif;background:var(--parchment);color:var(--ink);min-height:100vh;
+  background-image:radial-gradient(ellipse at 15% 0%,rgba(93,109,126,.07) 0%,transparent 55%),
+  radial-gradient(ellipse at 85% 100%,rgba(185,119,14,.05) 0%,transparent 55%);}
+h1,h2,h3,.serif{font-family:'Playfair Display',serif;}
+
+.app-nav{background:var(--ink);display:flex;align-items:center;gap:.75rem;
+  padding:.7rem 1.5rem;position:sticky;top:0;z-index:200;box-shadow:0 2px 18px rgba(0,0,0,.25);}
+.nav-brand{font-family:'Playfair Display',serif;font-weight:900;font-size:1.25rem;
+  color:var(--civil-light);flex:1;white-space:nowrap;}
+.nav-brand span{color:#fff;}
+.nav-avatar{width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,var(--civil),var(--civil-earth));
+  display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.95rem;
+  color:#fff;font-family:'Playfair Display',serif;cursor:pointer;flex-shrink:0;
+  border:2px solid rgba(255,255,255,.2);transition:border-color .2s;}
+.nav-avatar:hover{border-color:var(--civil-light);}
+.nav-username{color:rgba(255,255,255,.8);font-size:.85rem;font-weight:500;white-space:nowrap;}
+.btn-reset{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);
+  color:rgba(255,255,255,.7);border-radius:8px;padding:.32rem .75rem;font-size:.78rem;
+  cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .2s;}
+.btn-reset:hover{background:rgba(255,255,255,.18);color:#fff;}
+
+.app-tabs{background:#fff;border-bottom:2px solid var(--border);display:flex;
+  padding:0 1.5rem;overflow-x:auto;gap:0;position:sticky;top:58px;z-index:150;}
+.app-tab{padding:.85rem 1.1rem;border:none;background:transparent;font-family:'DM Sans',sans-serif;
+  font-weight:700;font-size:.82rem;color:#999;cursor:pointer;white-space:nowrap;
+  border-bottom:3px solid transparent;margin-bottom:-2px;transition:all .2s;
+  display:flex;align-items:center;gap:.35rem;}
+.app-tab:hover{color:var(--ink);}
+.app-tab.active{color:var(--civil);border-bottom-color:var(--civil);}
+
+.app-body{max-width:1080px;margin:0 auto;padding:2rem 1.5rem;}
+.page{display:none;animation:rise .28s ease;}
+.page.active{display:block;}
+
+.card-app{background:#fff;border:1.5px solid var(--border);border-radius:16px;
+  box-shadow:0 2px 10px var(--shadow);overflow:hidden;}
+.card-app-header{padding:1.1rem 1.4rem;border-bottom:1px solid var(--border);
+  display:flex;align-items:center;gap:.75rem;}
+.card-app-body{padding:1.4rem;}
+
+.stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:.9rem;margin-bottom:1.6rem;}
+.stat-box{background:#fff;border:1.5px solid var(--border);border-radius:14px;
+  padding:1.1rem 1rem;text-align:center;transition:transform .2s;cursor:default;}
+.stat-box:hover{transform:translateY(-3px);box-shadow:0 6px 18px var(--shadow);}
+.stat-num{font-family:'Playfair Display',serif;font-size:2rem;font-weight:900;
+  color:var(--civil);line-height:1;margin-bottom:.2rem;}
+.stat-lbl{font-size:.73rem;font-weight:700;color:#aaa;text-transform:uppercase;letter-spacing:.05em;}
+
+.dot-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(26px,1fr));gap:4px;margin-bottom:1.6rem;}
+.dot{aspect-ratio:1;border-radius:6px;background:var(--border);cursor:pointer;
+  transition:all .18s;position:relative;display:flex;align-items:center;justify-content:center;}
+.dot.done{background:var(--sage);}
+.dot:hover{transform:scale(1.35);z-index:5;}
+.dot-tip{position:absolute;bottom:130%;left:50%;transform:translateX(-50%);
+  background:var(--ink);color:#fff;padding:.28rem .6rem;border-radius:6px;font-size:.68rem;
+  white-space:nowrap;pointer-events:none;opacity:0;transition:opacity .18s;z-index:99;}
+.dot:hover .dot-tip{opacity:1;}
+.dot-num{font-size:.5rem;font-weight:700;color:rgba(255,255,255,.7);}
+
+.search-field{border:1.5px solid var(--border);border-radius:10px;padding:.55rem 1rem .55rem 2.3rem;
+  font-family:'DM Sans',sans-serif;font-size:.87rem;background:#fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%23aaa' stroke-width='2.5'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cpath d='M21 21l-4.35-4.35'/%3E%3C/svg%3E") no-repeat .75rem center;
+  width:100%;max-width:260px;outline:none;transition:border-color .2s;}
+.search-field:focus{border-color:var(--civil);}
+.pill{padding:.28rem .75rem;border-radius:20px;border:1.5px solid var(--border);background:#fff;
+  font-size:.75rem;font-weight:700;cursor:pointer;transition:all .2s;font-family:'DM Sans',sans-serif;color:#888;}
+.pill.on,.pill:hover{background:var(--civil);border-color:var(--civil);color:#fff;}
+
+.ex-card{background:#fff;border:1.5px solid var(--border);border-radius:13px;padding:1rem 1.2rem;
+  margin-bottom:.6rem;cursor:pointer;transition:all .18s;display:flex;align-items:flex-start;gap:.9rem;
+  box-shadow:0 1px 4px var(--shadow);}
+.ex-card:hover{border-color:var(--civil);transform:translateX(5px);}
+.ex-card.done{border-left:4px solid var(--sage);}
+.ex-num-box{background:var(--parchment);border:1px solid var(--border);border-radius:8px;
+  width:42px;height:42px;display:flex;align-items:center;justify-content:center;
+  font-family:'DM Mono',monospace;font-size:.75rem;font-weight:600;color:var(--civil);flex-shrink:0;}
+.ex-card.done .ex-num-box{background:var(--sage);color:#fff;border-color:var(--sage);}
+.ex-body{flex:1;min-width:0;}
+.ex-cat-tag{font-size:.7rem;font-weight:700;color:var(--civil);text-transform:uppercase;letter-spacing:.05em;}
+.ex-name{font-weight:700;font-size:.9rem;margin:.1rem 0 .18rem;}
+.ex-short{font-size:.78rem;color:#777;line-height:1.5;}
+.badge-done{background:var(--sage);color:#fff;padding:.18rem .55rem;border-radius:9px;font-size:.7rem;font-weight:700;}
+.badge-new{background:var(--parchment);color:#bbb;padding:.18rem .55rem;border-radius:9px;font-size:.7rem;font-weight:700;border:1px solid var(--border);}
+
+.prac-header{background:#fff;border:1.5px solid var(--border);border-radius:16px;
+  padding:1.4rem 1.5rem;margin-bottom:1.2rem;box-shadow:0 2px 10px var(--shadow);}
+.prac-badge{display:inline-flex;align-items:center;gap:.35rem;background:var(--amber-pale);
+  border:1px solid rgba(200,134,10,.28);border-radius:8px;padding:.28rem .75rem;
+  font-size:.76rem;font-weight:700;color:var(--civil);margin-bottom:.7rem;}
+.prac-title{font-size:1.3rem;font-weight:900;margin-bottom:.45rem;}
+.prac-explanation{font-size:.88rem;color:#555;line-height:1.7;margin:0;}
+.prac-example{background:var(--parchment);border-left:3px solid var(--civil);
+  border-radius:0 9px 9px 0;padding:.7rem 1rem;margin-top:.9rem;font-size:.84rem;
+  color:var(--ink);font-style:italic;}
+
+.writing-zone{background:#fff;border:1.5px solid var(--border);border-radius:16px;
+  padding:1.4rem 1.5rem;margin-bottom:1rem;box-shadow:0 2px 10px var(--shadow);}
+.writing-prompt{background:linear-gradient(135deg,var(--civil-pale),#fffcf5);
+  border:1px solid rgba(93,109,126,.22);border-radius:10px;padding:.9rem 1.1rem;
+  margin-bottom:1rem;font-size:.87rem;line-height:1.65;}
+.writing-prompt strong{color:var(--rust);}
+#practiceTA{width:100%;min-height:145px;border:1.5px solid var(--border);border-radius:10px;
+  padding:.9rem 1rem;font-family:'DM Sans',sans-serif;font-size:.93rem;line-height:1.75;
+  color:var(--ink);resize:vertical;background:#fffef9;transition:border-color .2s;outline:none;}
+#practiceTA:focus{border-color:var(--civil);box-shadow:0 0 0 3px rgba(93,109,126,.1);}
+.wc{text-align:right;font-size:.76rem;color:#bbb;margin-top:.4rem;}
+
+.btn-check{background:linear-gradient(135deg,var(--sage),var(--sage-light));border:none;
+  border-radius:10px;color:#fff;font-weight:700;font-size:.92rem;padding:.75rem 1.6rem;
+  cursor:pointer;transition:all .2s;font-family:'DM Sans',sans-serif;
+  display:inline-flex;align-items:center;gap:.45rem;
+  box-shadow:0 4px 14px rgba(74,103,65,.32);}
+.btn-check:hover{transform:translateY(-2px);box-shadow:0 7px 20px rgba(74,103,65,.4);}
+.btn-check:disabled{opacity:.55;cursor:not-allowed;transform:none;}
+
+.btn-next{background:linear-gradient(135deg,var(--civil),var(--civil-earth));border:none;
+  border-radius:10px;color:#fff;font-weight:700;font-size:.92rem;padding:.75rem 1.6rem;
+  cursor:pointer;transition:all .2s;font-family:'DM Sans',sans-serif;
+  display:inline-flex;align-items:center;gap:.45rem;box-shadow:0 4px 14px rgba(93,109,126,.3);}
+.btn-next:hover{transform:translateY(-2px);}
+
+.fb-area{background:#fff;border:1.5px solid var(--border);border-radius:16px;
+  overflow:hidden;box-shadow:0 2px 10px var(--shadow);display:none;}
+.fb-area.show{display:block;animation:rise .35s ease;}
+.fb-head{padding:.95rem 1.4rem;display:flex;align-items:center;gap:.7rem;border-bottom:1px solid var(--border);}
+.fb-head.excellent{background:linear-gradient(90deg,#d4edda,#f0faf4);}
+.fb-head.good{background:linear-gradient(90deg,#fff3cd,#fffbf0);}
+.fb-head.low{background:linear-gradient(90deg,#f8d7da,#fdf5f5);}
+.fb-emoji{font-size:1.8rem;}
+.fb-htitle{font-weight:800;font-size:1rem;margin:0;}
+.fb-hsub{font-size:.78rem;color:#888;margin:0;}
+.fb-body{padding:1.4rem;}
+.score-circle{width:66px;height:66px;border-radius:50%;display:flex;align-items:center;
+  justify-content:center;font-family:'Playfair Display',serif;font-weight:900;font-size:1.25rem;flex-shrink:0;}
+.sc-high{background:#d4edda;color:#2d6a4f;}
+.sc-med{background:#fff3cd;color:#7a5c00;}
+.sc-low{background:#f8d7da;color:#8b1a1a;}
+.fb-section{margin-bottom:1.1rem;}
+.fb-section-title{font-weight:700;font-size:.76rem;text-transform:uppercase;letter-spacing:.07em;
+  color:#aaa;margin-bottom:.5rem;display:flex;align-items:center;gap:.35rem;}
+.fb-item{padding:.62rem .85rem;border-radius:8px;font-size:.84rem;line-height:1.52;
+  margin-bottom:.35rem;display:flex;gap:.55rem;align-items:flex-start;}
+.fb-item.ok{background:#f0f9f4;color:#2d6a4f;border-left:3px solid var(--sage);}
+.fb-item.err{background:#fdf5f5;color:#8b1a1a;border-left:3px solid #dc3545;}
+.fb-item.tip{background:#fffbf0;color:#7a5c00;border-left:3px solid var(--civil);}
+.fb-item.info{background:var(--parchment);color:var(--ink);border-left:3px solid #aaa;}
+.fb-ico{flex-shrink:0;margin-top:1px;}
+
+.spin{width:34px;height:34px;border:3px solid var(--border);border-top-color:var(--civil);
+  border-radius:50%;animation:rot .65s linear infinite;margin:0 auto 1rem;}
+@keyframes rot{to{transform:rotate(360deg)}}
+
+.profile-cover{height:96px;background:linear-gradient(135deg,var(--ink) 0%,#3d2a10 50%,var(--civil) 100%);position:relative;}
+.profile-av-lg{width:78px;height:78px;border-radius:50%;border:4px solid #fff;
+  background:linear-gradient(135deg,var(--civil),var(--civil-earth));display:flex;align-items:center;
+  justify-content:center;font-family:'Playfair Display',serif;font-weight:900;font-size:1.9rem;
+  color:#fff;position:absolute;bottom:-38px;left:1.4rem;box-shadow:0 4px 18px var(--shadow);}
+.profile-body{padding:3.2rem 1.4rem 1.4rem;}
+.profile-name{font-size:1.4rem;font-weight:900;margin-bottom:.15rem;}
+.profile-meta{color:#999;font-size:.83rem;}
+.ach-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:.65rem;}
+.ach{background:#fff;border:1.5px solid var(--border);border-radius:12px;padding:.9rem .7rem;
+  text-align:center;transition:all .2s;}
+.ach.unlocked{border-color:var(--civil);background:var(--civil-pale);}
+.ach.unlocked:hover{transform:translateY(-3px);box-shadow:0 5px 14px rgba(93,109,126,.22);}
+.ach-icon{font-size:1.6rem;display:block;margin-bottom:.35rem;}
+.ach-name{font-size:.7rem;font-weight:700;color:var(--ink);}
+.ach.locked .ach-icon{filter:grayscale(1);opacity:.35;}
+.ach.locked .ach-name{color:#ccc;}
+
+.hist-row{background:#fff;border:1.5px solid var(--border);border-radius:11px;
+  padding:.8rem 1rem;margin-bottom:.5rem;display:flex;align-items:center;gap:.8rem;cursor:pointer;transition:border-color .2s;}
+.hist-row:hover{border-color:var(--civil);}
+
+.toast-box{position:fixed;bottom:1.4rem;right:1.4rem;z-index:9999;}
+.toast-item{background:var(--ink);color:#fff;border-radius:12px;padding:.8rem 1.1rem;
+  margin-top:.45rem;display:flex;align-items:center;gap:.65rem;font-size:.84rem;font-weight:500;
+  box-shadow:0 8px 26px rgba(0,0,0,.28);animation:rise .28s ease;max-width:300px;}
+.toast-item.s{border-left:4px solid var(--sage-light);}
+.toast-item.e{border-left:4px solid #dc3545;}
+.toast-item.i{border-left:4px solid var(--civil-light);}
+
+.modal-backdrop-custom{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:1040;
+  display:flex;align-items:center;justify-content:center;padding:1rem;}
+.modal-box{background:#fff;border-radius:20px;max-width:480px;width:100%;
+  box-shadow:0 24px 64px rgba(0,0,0,.28);animation:rise .3s ease;overflow:hidden;}
+.modal-head{background:var(--ink);padding:1.1rem 1.4rem;color:#fff;display:flex;align-items:center;gap:.7rem;}
+.modal-head .modal-title-txt{font-weight:800;font-size:1rem;flex:1;}
+.modal-close{background:rgba(255,255,255,.12);border:none;color:#fff;border-radius:8px;
+  width:32px;height:32px;cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center;}
+.modal-close:hover{background:rgba(255,255,255,.25);}
+.modal-body-custom{padding:1.4rem;}
+.modal-foot{padding:1rem 1.4rem;border-top:1px solid var(--border);display:flex;gap:.7rem;justify-content:flex-end;}
+
+@keyframes rise{from{opacity:0;transform:translateY(28px)}to{opacity:1;transform:translateY(0)}}
+::-webkit-scrollbar{width:6px;height:6px;}
+::-webkit-scrollbar-track{background:transparent;}
+::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px;}
+@media(max-width:576px){
+  .app-body{padding:1rem;}
+  .stats-grid{grid-template-columns:1fr 1fr;}
+  .ach-grid{grid-template-columns:repeat(3,1fr);}
+  .app-nav{padding:.6rem 1rem;}
+  .nav-username{display:none;}
+}
+</style>
+</head>
+<body>
+
+<div id="appScreen">
+  <nav class="app-nav">
+    <div class="nav-brand">Redacción<span>Civil</span></div>
+    <div class="nav-avatar" id="navAv" onclick="switchPage('perfil')" title="Ver perfil">C</div>
+    <span class="nav-username" id="navName">Estudiante</span>
+    <button class="btn-reset" onclick="confirmReset()"><i class="bi bi-arrow-counterclockwise"></i> Reiniciar</button>
+  </nav>
+  <div class="app-tabs">
+    <button class="app-tab active" id="tab-dashboard" onclick="switchPage('dashboard')"><i class="bi bi-grid-3x3-gap-fill"></i> Inicio</button>
+    <button class="app-tab" id="tab-ejercicios" onclick="switchPage('ejercicios')"><i class="bi bi-journal-bookmark-fill"></i> Técnicas</button>
+    <button class="app-tab" id="tab-practica" onclick="switchPage('practica')"><i class="bi bi-pencil-square"></i> Practicar</button>
+    <button class="app-tab" id="tab-perfil" onclick="switchPage('perfil')"><i class="bi bi-person-circle"></i> Perfil</button>
+  </div>
+  <div class="app-body">
+    <!-- DASHBOARD -->
+    <div class="page active" id="page-dashboard">
+      <div class="d-flex align-items-center gap-2 mb-4"><div><h2 class="serif fw-black mb-0">¡Hola, <span id="dashName">futuro ingeniero civil</span>! 🏗️</h2><p class="text-muted mb-0">Mejora tu redacción técnica en el contexto colombiano</p></div></div>
+      <div class="stats-grid mb-4">
+        <div class="stat-box"><div class="stat-num" id="sCompleted">0</div><div class="stat-lbl">Técnicas dominadas</div></div>
+        <div class="stat-box"><div class="stat-num" id="sPracticed">0</div><div class="stat-lbl">Prácticas realizadas</div></div>
+        <div class="stat-box"><div class="stat-num" id="sScore">—</div><div class="stat-lbl">Puntuación media</div></div>
+        <div class="stat-box"><div class="stat-num" id="sStreak">1🔥</div><div class="stat-lbl">Racha</div></div>
+      </div>
+      <div class="card-app mb-4"><div class="card-app-header"><i class="bi bi-map-fill text-warning"></i><div><div style="font-weight:800">Mapa de progreso</div><div style="font-size:.74rem;color:#aaa">100 técnicas · Verde = completado</div></div></div><div class="card-app-body"><div class="dot-grid" id="dotGrid"></div></div></div>
+      <div class="mb-2" style="font-weight:800">Siguiente técnica</div>
+      <div class="ex-card" id="nextCard"><div class="ex-num-box" id="nextNum">01</div><div class="ex-body"><div class="ex-cat-tag" id="nextCat">Informes</div><div class="ex-name" id="nextName">Cargando...</div><div class="ex-short" id="nextDesc"></div></div><span style="color:var(--civil);font-size:1.4rem"><i class="bi bi-play-circle-fill"></i></span></div>
+      <div class="card-app mt-4"><div class="card-app-header"><i class="bi bi-bar-chart-fill text-warning"></i><div>Progreso por categoría</div></div><div class="card-app-body" id="catProgress"></div></div>
+    </div>
+    <!-- TÉCNICAS -->
+    <div class="page" id="page-ejercicios">
+      <div class="d-flex align-items-center justify-content-between flex-wrap gap-2 mb-3"><h2 class="serif fw-black mb-0">100 Técnicas de Redacción para Ingeniería Civil</h2><input class="search-field" id="searchQ" type="text" placeholder="Buscar..." oninput="renderList()"></div>
+      <div class="d-flex flex-wrap gap-2 mb-3" id="pills">
+        <button class="pill on" onclick="setFilter('all',this)">Todas</button>
+        <button class="pill" onclick="setFilter('informes',this)">Informes técnicos</button>
+        <button class="pill" onclick="setFilter('memorias',this)">Memorias de cálculo</button>
+        <button class="pill" onclick="setFilter('planos',this)">Planos y dibujo</button>
+        <button class="pill" onclick="setFilter('normas',this)">Normativa (NSR-10, NTC)</button>
+        <button class="pill" onclick="setFilter('etica',this)">Ética y comunicación</button>
+      </div>
+      <div id="exList"></div>
+    </div>
+    <!-- PRACTICAR -->
+    <div class="page" id="page-practica">
+      <div id="practiceEmpty" style="text-align:center;padding:4rem 1rem;"><div style="font-size:4rem">📐</div><h3 class="serif fw-black mb-2">Selecciona una técnica</h3><button class="btn-main" style="display:inline-flex;width:auto" onclick="switchPage('ejercicios')"><i class="bi bi-journal-bookmark-fill"></i> Ver técnicas</button></div>
+      <div id="practiceContent" style="display:none">
+        <div class="prac-header"><div class="d-flex align-items-start justify-content-between gap-2 flex-wrap"><div><div class="prac-badge"><i class="bi bi-mortarboard-fill"></i> <span id="pracCat">Informes</span> · Técnica <span id="pracNum">01</span></div><h2 class="prac-title serif" id="pracName">Título</h2><p class="prac-explanation" id="pracExpl">Explicación</p><div class="prac-example" id="pracEx"></div></div><div class="d-flex gap-2"><button class="btn-outline-app" onclick="prevExercise()"><i class="bi bi-chevron-left"></i></button><button class="btn-outline-app" onclick="nextExercise()"><i class="bi bi-chevron-right"></i></button></div></div></div>
+        <div class="writing-zone"><div class="writing-prompt" id="pracPrompt">Escribe tu respuesta.</div><textarea id="practiceTA" placeholder="Escribe tu respuesta aquí…"></textarea><div class="wc"><span id="wc">0</span> palabras · mínimo 10</div></div>
+        <div class="d-flex align-items-center gap-2 flex-wrap mb-3"><button class="btn-check" id="btnCheck" onclick="doCheck()"><i class="bi bi-magic"></i> Analizar respuesta</button><button class="btn-next" id="btnNext" onclick="nextExercise()" style="display:none">Siguiente <i class="bi bi-arrow-right"></i></button><span style="font-size:.76rem;color:#bbb">Aplica conceptos de redacción técnica.</span></div>
+        <div class="fb-area" id="fbArea"><div id="fbLoading" style="text-align:center;padding:2.5rem"><div class="spin"></div><div>Evaluando tu respuesta de ingeniería civil...</div></div><div id="fbContent" style="display:none"></div></div>
+      </div>
+    </div>
+    <!-- PERFIL -->
+    <div class="page" id="page-perfil">
+      <div class="card-app mb-4"><div class="profile-cover"><div class="profile-av-lg" id="profAv">C</div></div><div class="profile-body"><h3 class="profile-name" id="profName">—</h3><p class="profile-meta" id="profMeta">—</p><div class="d-flex gap-4 mt-3"><div><strong id="pComp">0</strong><span class="text-muted ms-1">técnicas</span></div><div><strong id="pPrac">0</strong><span class="text-muted ms-1">prácticas</span></div><div><strong id="pScr">—</strong><span class="text-muted ms-1">media</span></div></div><div class="d-flex gap-2 mt-3"><button class="btn-outline-app" onclick="openEditModal()"><i class="bi bi-pencil"></i> Editar perfil</button></div></div></div>
+      <div class="mb-2" style="font-weight:800">Logros destacados</div><div class="ach-grid mb-4" id="achGrid"></div>
+      <div class="mb-2" style="font-weight:800">Historial de prácticas</div><div id="histList"></div>
+    </div>
+  </div>
+</div>
+
+<div id="editModal" class="modal-backdrop-custom" style="display:none"><div class="modal-box"><div class="modal-head"><i class="bi bi-person-gear"></i><span class="modal-title-txt">Editar perfil</span><button class="modal-close" onclick="closeModal('editModal')"><i class="bi bi-x-lg"></i></button></div><div class="modal-body-custom"><div class="mb-3"><label class="field-label">Nombre</label><input id="editName" class="field" type="text"></div><div class="mb-3"><label class="field-label">Nivel</label><select id="editLevel" class="field"><option value="principiante">🌱 Principiante</option><option value="intermedio">📖 Intermedio</option><option value="avanzado">🎓 Avanzado</option></select></div></div><div class="modal-foot"><button class="btn-outline-app" onclick="closeModal('editModal')">Cancelar</button><button class="btn-main" style="width:auto" onclick="saveEdit()">Guardar</button></div></div></div>
+<div class="toast-box" id="toastBox"></div>
+
+<script>
+// ============================================================
+// 100 TÉCNICAS DE REDACCIÓN PARA INGENIERÍA CIVIL (CONTEXTO COLOMBIANO)
+// ============================================================
+const CATS = {
+  informes: 'Informes técnicos',
+  memorias: 'Memorias de cálculo',
+  planos: 'Planos y dibujo',
+  normas: 'Normativa (NSR-10, NTC)',
+  etica: 'Ética y comunicación'
+};
+
+// Plantillas base (20 por categoría, repetimos cíclicamente hasta 100)
+const templates = [
+  // Informes técnicos (1-20)
+  { cat: 'informes', name: 'Estructura de informe técnico de suelos', short: 'Introducción, métodos, resultados, análisis, conclusiones', expl: 'Un informe de mecánica de suelos debe incluir perfil estratigráfico, propiedades índice, resistencia, capacidad de carga.', prompt: 'Redacta el objetivo de un estudio de suelos para un edificio de 5 pisos en Bogotá.' },
+  { cat: 'informes', name: 'Descripción de ensayos de laboratorio', short: 'Granulometría, límites de Atterberg, compactación', expl: 'Especificar norma (ASTM, NTC).', prompt: 'Describe cómo se realiza el ensayo de Proctor estándar según NTC 1187.' },
+  { cat: 'informes', name: 'Tablas de resultados geotécnicos', short: 'Humedad, densidad, ángulo de fricción, cohesión', expl: 'Incluir valores medios y desviación.', prompt: 'Crea una tabla ficticia con tres muestras de suelo y sus valores de cohesión.' },
+  { cat: 'informes', name: 'Perfil estratigráfico', short: 'Descripción de capas de suelo', expl: 'Incluir profundidad, tipo de material, color, consistencia.', prompt: 'Redacta la descripción de una capa de arcilla limosa de alta plasticidad encontrada entre 3 y 6 metros.' },
+  { cat: 'informes', name: 'Cálculo de capacidad de carga', short: 'Método de Terzaghi, Meyerhof, Hansen', expl: 'Incluir factores de seguridad.', prompt: 'Escribe la fórmula de Terzaghi para capacidad de carga en cimentación corrida y define los factores.' },
+  { cat: 'informes', name: 'Recomendaciones de cimentación', short: 'Tipo de cimentación, profundidad', expl: 'Basado en el estudio de suelos.', prompt: 'Recomienda una cimentación superficial para un suelo con capacidad admisible de 2 kg/cm².' },
+  { cat: 'informes', name: 'Informe de resistencia de materiales', short: 'Ensayo de compresión en cilindros de concreto', expl: 'Incluir edad del espécimen, carga máxima, resistencia.', prompt: 'Redacta un resultado de ruptura de un cilindro de concreto a 28 días: carga 25 toneladas, diámetro 15 cm.' },
+  { cat: 'informes', name: 'Registro de control de calidad', short: 'Pruebas de slump, temperatura, contenido de aire', expl: 'Para concreto en obra.', prompt: 'Escribe un registro de asentamiento (slump) de 10 cm para una muestra de concreto.' },
+  { cat: 'informes', name: 'Informe de topografía', short: 'Levantamiento planimétrico y altimétrico', expl: 'Incluir coordenadas, cotas, curvas de nivel.', prompt: 'Describe cómo se realiza un levantamiento con estación total.' },
+  { cat: 'informes', name: 'Resumen ejecutivo para clientes', short: 'Lenguaje no técnico', expl: 'Explicar hallazgos y recomendaciones.', prompt: 'Redacta un resumen ejecutivo de un informe de suelos para un constructor.' },
+  { cat: 'informes', name: 'Informe de inspección de puentes', short: 'Daños, patologías, recomendaciones', expl: 'Fisuras, corrosión, asentamientos.', prompt: 'Escribe una observación sobre fisuras en el apoyo de un puente.' },
+  { cat: 'informes', name: 'Informe de geotecnia vial', short: 'CBR, expansividad, módulo de resiliencia', expl: 'Para diseño de pavimentos.', prompt: 'Interpreta un valor de CBR de 5% para una subrasante.' },
+  { cat: 'informes', name: 'Informe de hidrología', short: 'Caudales, periodos de retorno, precipitaciones', expl: 'Para diseño de alcantarillado.', prompt: 'Define qué es el periodo de retorno en hidrología.' },
+  { cat: 'informes', name: 'Uso de normas en informes', short: 'Citar NTC, ASTM, AASHTO', expl: 'Ejemplo: "Ensayo según NTC 1548 (ASTM D 422)".', prompt: 'Escribe una frase citando la norma NTC 1020 (muestreo de suelos).' },
+  { cat: 'informes', name: 'Anexos fotográficos', short: 'Evidencia visual', expl: 'Incluir pie de foto.', prompt: 'Redacta el pie de foto para una imagen de una trinchera de exploración.' },
+  { cat: 'informes', name: 'Conclusión del informe', short: 'Resumen de hallazgos y viabilidad', expl: 'Responder a los objetivos.', prompt: 'Escribe la conclusión de un informe de suelos que recomienda pilotaje.' },
+  { cat: 'informes', name: 'Recomendaciones constructivas', short: 'Para el constructor', expl: 'Sistemas de drenaje, compactación, nivel freático.', prompt: 'Da una recomendación para manejar el nivel freático alto en una excavación.' },
+  { cat: 'informes', name: 'Informe de supervisión de obra', short: 'Avances, desviaciones, no conformidades', expl: 'Registro diario.', prompt: 'Redacta una nota de no conformidad por un acero de refuerzo mal colocado.' },
+  { cat: 'informes', name: 'Acta de reunión de obra', short: 'Asistentes, temas, acuerdos, compromisos', expl: 'Formato estándar.', prompt: 'Escribe un acuerdo de cambiar la dosificación del concreto.' },
+  { cat: 'informes', name: 'Informe de cierre de proyecto', short: 'Lecciones aprendidas, métricas', expl: 'Evaluación final.', prompt: 'Redacta una lección aprendida sobre la gestión de la calidad en un proyecto de pavimentación.' },
+  // Memorias de cálculo (21-40)
+  { cat: 'memorias', name: 'Estructura de memoria de cálculo', short: 'Hipótesis, cargas, modelos, resultados, planos', expl: 'Debe ser verificable por otro ingeniero.', prompt: 'Enumera las secciones de una memoria de cálculo de una viga de concreto reforzado.' },
+  { cat: 'memorias', name: 'Cargas y combinaciones', short: 'Carga muerta, viva, sismo, viento', expl: 'Según NSR-10.', prompt: 'Escribe las combinaciones de carga básicas para diseño por resistencia (LRFD) según NSR-10.' },
+  { cat: 'memorias', name: 'Predimensionamiento de elementos', short: 'Peralte de vigas, espesor de losas', expl: 'Usar relaciones empíricas.', prompt: 'Calcula el peralte mínimo para una viga simplemente apoyada de 6 m de luz.' },
+  { cat: 'memorias', name: 'Modelo estructural', short: 'Diagrama de cuerpo libre, condiciones de borde', expl: 'En SAP2000, ETABS, o manual.', prompt: 'Describe el modelo de una viga continua de dos tramos iguales con carga uniforme.' },
+  { cat: 'memorias', name: 'Análisis de esfuerzos', short: 'Momento flector, cortante, axial', expl: 'Usar métodos de resistencia de materiales.', prompt: 'Escribe la ecuación del momento flector máximo en una viga simplemente apoyada con carga puntual central.' },
+  { cat: 'memorias', name: 'Diseño de concreto reforzado', short: 'Cuantías de acero, recubrimiento', expl: 'Según NSR-10 título C.', prompt: 'Calcula el área de acero requerida para una viga con Mu = 15 t-m, f'c = 21 MPa, fy = 420 MPa (usar fórmula aproximada).' },
+  { cat: 'memorias', name: 'Diseño de acero estructural', short: 'Perfiles, conexiones, soldadura', expl: 'Según NSR-10 título F.', prompt: 'Selecciona un perfil IPE para una columna de 4 m de altura con carga de 20 t.' },
+  { cat: 'memorias', name: 'Diseño de cimentaciones', short: 'Zapatas aisladas, combinadas, pilotaje', expl: 'Revisar capacidad de carga y asentamientos.', prompt: 'Dimensiona una zapata cuadrada para una carga de 50 t sobre suelo con capacidad admisible de 2 kg/cm².' },
+  { cat: 'memorias', name: 'Diseño de pavimentos', short: 'Método AASHTO 93', expl: 'Determinar espesor de capas.', prompt: 'Enumera los parámetros de entrada para el diseño de pavimento flexible según AASHTO.' },
+  { cat: 'memorias', name: 'Cálculo de acero de refuerzo', short: 'Área de acero, espaciamiento', expl: 'Usar tabla de áreas de varillas.', prompt: 'Calcula el espaciamiento de varillas #4 para un área de acero de 5 cm² en una losa de 1 m de ancho.' },
+  { cat: 'memorias', name: 'Verificación de flechas', short: 'Deformaciones admisibles', expl: 'Según NSR-10.', prompt: 'Escribe la flecha máxima admisible para una viga de cubierta con acabados frágiles (L/240, L/360).' },
+  { cat: 'memorias', name: 'Diseño sísmico', short: 'Espectro de diseño, derivas', expl: 'NSR-10 título A.', prompt: 'Define qué es la deriva de piso y cuál es su límite máximo en edificaciones de concreto.' },
+  { cat: 'memorias', name: 'Diseño de muros de contención', short: 'Empuje de tierras, estabilidad al volcamiento, deslizamiento', expl: 'Incluir subpresión.', prompt: 'Redacta la verificación de estabilidad al volcamiento de un muro de gravedad.' },
+  { cat: 'memorias', name: 'Cálculo de acero para cortante', short: 'Estribos, espaciamiento', expl: 'Contribución del concreto Vc y acero Vs.', prompt: 'Escribe la fórmula de resistencia al cortante de un elemento de concreto reforzado con estribos.' },
+  { cat: 'memorias', name: 'Diseño de escaleras', short: 'Descanso, rampa, carga', expl: 'Como viga inclinada.', prompt: 'Describe cómo se calcula la armadura principal de una escalera.' },
+  { cat: 'memorias', name: 'Cálculo de presupuesto de obra', short: 'Cantidades de obra, análisis de precios unitarios', expl: 'Para licitaciones.', prompt: 'Redacta una partida de excavación manual en material común (unidad m³).' },
+  { cat: 'memorias', name: 'Software de cálculo estructural', short: 'ETABS, SAP2000, RAM, Robot', expl: 'Mencionar versión.', prompt: 'Indica qué software usarías para modelar una estructura de pórticos de concreto.' },
+  { cat: 'memorias', name: 'Verificación de resultados', short: 'Comparar con modelo manual', expl: 'Validar simulación.', prompt: 'Redacta una nota comparando el momento en apoyo de un modelo computacional con el valor analítico.' },
+  { cat: 'memorias', name: 'Cálculo de conexiones', short: 'Atornilladas, soldadas', expl: 'Resistencia al corte, aplastamiento, tracción.', prompt: 'Escribe la fórmula de resistencia al corte de un tornillo ASTM A325.' },
+  { cat: 'memorias', name: 'Memoria de cálculo de instalaciones hidrosanitarias', short: 'Dotación, diámetros de tubería, pendientes', expl: 'Según RAS.', prompt: 'Calcula la pendiente mínima para una tubería de alcantarillado de 6" según el Reglamento Técnico de Agua Potable.' },
+  // Planos y dibujo (41-60)
+  { cat: 'planos', name: 'Elementos de un plano arquitectónico', short: 'Planta, fachada, corte, cotas', expl: 'Normas de dibujo NTC.', prompt: 'Enumera las líneas de cota y sus usos.' },
+  { cat: 'planos', name: 'Plano estructural', short: 'Armaduras de vigas, columnas, zapatas', expl: 'Simbolismo de acero de refuerzo.', prompt: 'Describe cómo se representa una varilla #5 en un plano estructural (símbolo y diámetro).' },
+  { cat: 'planos', name: 'Plano topográfico', short: 'Curvas de nivel, puntos de control', expl: 'Equidistancia, escala.', prompt: 'Redacta la nota técnica de un plano topográfico con equidistancia de 1 m.' },
+  { cat: 'planos', name: 'Plano de cimentación', short: 'Ubicación de zapatas, vigas de cimentación', expl: 'Acotar ejes.', prompt: 'Escribe una nota de especificación para el concreto de limpieza (pobre) en una zapata.' },
+  { cat: 'planos', name: 'Plano de detalles', short: 'Detalle de viga, columna, escalera', expl: 'A mayor escala.', prompt: 'Describe el detalle de una unión viga-columna con cartelas.' },
+  { cat: 'planos', name: 'Lista de materiales (BOM)', short: 'Cantidades de acero, concreto, formaleta', expl: 'Para presupuesto.', prompt: 'Crea una línea de BOM para 100 m³ de concreto de 21 MPa.' },
+  { cat: 'planos', name: 'Escalas normalizadas', short: '1:100, 1:50, 1:20, 1:10', expl: 'Indicar en el plano.', prompt: 'Selecciona la escala adecuada para un plano de planta de un edificio de 30 m x 15 m (tamaño A1).' },
+  { cat: 'planos', name: 'Acotación', short: 'Cotas lineales, angulares, de nivel', expl: 'Evitar acotación redundante.', prompt: 'Escribe una regla para la acotación de planos estructurales.' },
+  { cat: 'planos', name: 'Simbología de materiales', short: 'Hormigón, acero, ladrillo, tierra', expl: 'Usar patrones de sombreado (hatch).', prompt: 'Describe el patrón de sombreado para el concreto en un plano.' },
+  { cat: 'planos', name: 'Referencias a normas de dibujo', short: 'NTC 1914, NTC 1777', expl: 'Simbología estandarizada.', prompt: 'Cita la norma que define los formatos de papel para planos (NTC 1001).' },
+  { cat: 'planos', name: 'Cuadro de especificaciones', short: 'Calidad de materiales, resistencias', expl: 'En plano general.', prompt: 'Redacta una especificación para el acero de refuerzo (fy = 420 MPa, grado 60).' },
+  { cat: 'planos', name: 'Plano de redes hidrosanitarias', short: 'Tuberías, pendientes, pozos de inspección', expl: 'Simbología según RAS.', prompt: 'Dibuja (describe) el símbolo de una tubería de aguas lluvias en un plano.' },
+  { cat: 'planos', name: 'Plano de instalaciones eléctricas', short: 'Tableros, circuitos, luminarias', expl: 'Simbología RETIE.', prompt: 'Describe el símbolo de un tomacorriente en un plano eléctrico.' },
+  { cat: 'planos', name: 'Plano de vías', short: 'Alineamiento horizontal, vertical, secciones transversales', expl: 'Curvas circulares, peralte.', prompt: 'Define el concepto de bombeo en una sección transversal de vía.' },
+  { cat: 'planos', name: 'Plano de drenaje', short: 'Cunetas, alcantarillas, sumideros', expl: 'Para carreteras.', prompt: 'Redacta una nota para una alcantarilla de 36" de diámetro.' },
+  { cat: 'planos', name: 'Digitalización de planos', short: 'Archivos DWG, PDF, BIM', expl: 'Uso de AutoCAD, Revit.', prompt: 'Recomienda el formato para enviar planos a imprenta (PDF/A).' },
+  { cat: 'planos', name: 'Numeración de planos', short: 'Sistema de índices', expl: 'C-01, E-02, A-03.', prompt: 'Asigna números a un plano de cimentación (C) y a uno de estructura (E).' },
+  { cat: 'planos', name: 'Uso de capas (layers)', short: 'Estructuración en CAD', expl: 'Evitar dibujar todo en capa 0.', prompt: 'Enumera tres capas estándar en AutoCAD para un plano estructural.' },
+  { cat: 'planos', name: 'Revisión de planos', short: 'Checklist de errores comunes', expl: 'Cotas, simbología, texto.', prompt: 'Escribe un punto de verificación para la correcta representación del acero de refuerzo.' },
+  { cat: 'planos', name: 'Entrega de planos', short: 'Memoria, planos, anexos', expl: 'Formato digital e impreso.', prompt: 'Redacta una nota de entrega de planos para revisión.' },
+  // Normativa NSR-10, NTC (61-80)
+  { cat: 'normas', name: 'Introducción a NSR-10', short: 'Reglamento Colombiano de Construcción Sismo Resistente', expl: 'De aplicación obligatoria.', prompt: '¿Qué título de la NSR-10 trata sobre los requisitos generales de diseño sismo resistente?' },
+  { cat: 'normas', name: 'Zonificación sísmica', short: 'Zonas de amenaza sísmica', expl: 'Mapa de Colombia.', prompt: '¿En qué zona sísmica se encuentra Bogotá? (alta, intermedia, baja).' },
+  { cat: 'normas', name: 'Espectro de diseño', short: 'Aceleración espectral', expl: 'Función del período.', prompt: 'Define Aa y Av en NSR-10.' },
+  { cat: 'normas', name: 'Cargas vivas mínimas', short: 'Para vivienda, oficinas, comercio', expl: 'Tabla B.4.2.1-1.', prompt: '¿Cuál es la carga viva mínima para un entrepiso de vivienda?' },
+  { cat: 'normas', name: 'Diseño de concreto (título C)', short: 'f'c, fy, recubrimientos', expl: 'Refuerzo longitudinal y transversal.', prompt: '¿Cuál es el recubrimiento mínimo para una viga colada en sitio sin exposición a la intemperie?' },
+  { cat: 'normas', name: 'Diseño de acero (título F)', short: 'Perfiles, conexiones', expl: 'Estabilidad local y global.', prompt: '¿Qué significa la relación de esbeltez KL/r?' },
+  { cat: 'normas', name: 'Diseño de mampostería (título D)', short: 'Bloques, pega, refuerzo', expl: 'Restricciones.', prompt: '¿Cuál es la altura máxima de un muro de mampostería no reforzada según NSR-10?' },
+  { cat: 'normas', name: 'Diseño de cimentaciones (título H)', short: 'Zapatas, pilotas, muros de sótano', expl: 'Revisión de capacidad de carga.', prompt: '¿Qué título de NSR-10 trata sobre la exploración de suelos?' },
+  { cat: 'normas', name: 'Reglamento Técnico de Agua Potable (RAS)', short: 'Normas para acueducto y alcantarillado', expl: 'Título A, B, C, D.', prompt: '¿Qué sección del RAS define las dotaciones de agua?' },
+  { cat: 'normas', name: 'NTC 1020 (ASTM D 422)', short: 'Análisis granulométrico de suelos', expl: 'Tamizado e hidrómetro.', prompt: 'Describe el procedimiento de lavado de la muestra para granulometría.' },
+  { cat: 'normas', name: 'NTC 1548 (ASTM C 39)', short: 'Ensayo de compresión de cilindros de concreto', expl: 'Edad, velocidad de carga.', prompt: '¿Cuál es la velocidad de carga recomendada en el ensayo de compresión?' },
+  { cat: 'normas', name: 'NTC 1832 (ASTM C 143)', short: 'Asentamiento del concreto (slump)', expl: 'Procedimiento con cono de Abrams.', prompt: 'Escribe el rango de slump para concreto colocado en columnas.' },
+  { cat: 'normas', name: 'Normas de ensayo de suelos', short: 'Límites de Atterberg (NTC 1499, NTC 1500)', expl: 'Límite líquido y plástico.', prompt: 'Define el límite líquido de un suelo.' },
+  { cat: 'normas', name: 'Normas de compactación (Proctor)', short: 'NTC 1187, NTC 1425', expl: 'Energía de compactación.', prompt: 'Explica la diferencia entre Proctor estándar y Proctor modificado.' },
+  { cat: 'normas', name: 'NTC 174 (ASTM D 2166)', short: 'Ensayo de compresión inconfinada', expl: 'Cohesión de suelos finos.', prompt: 'Describe brevemente el ensayo de compresión inconfinada.' },
+  { cat: 'normas', name: 'RETIE (Instalaciones eléctricas)', short: 'Reglamento Técnico de Instalaciones Eléctricas', expl: 'Aplica a edificaciones.', prompt: '¿Qué nivel de voltaje define la baja tensión en RETIE?' },
+  { cat: 'normas', name: 'RETILAP (Iluminación)', short: 'Eficiencia energética', expl: 'Niveles de iluminación.', prompt: '¿Cuál es el nivel de iluminancia recomendado para oficinas (lux) según RETILAP?' },
+  { cat: 'normas', name: 'NTC 1001 (formatos de papel)', short: 'Tamaños A0, A1, A2, A3, A4', expl: 'Series ISO.', prompt: '¿Cuáles son las dimensiones de un formato A1?' },
+  { cat: 'normas', name: 'NTC 1777 (líneas en dibujo técnico)', short: 'Grosor de líneas', expl: 'Líneas continuas, discontinuas, ejes.', prompt: 'Describe el uso de la línea discontinua en un plano.' },
+  { cat: 'normas', name: 'Actualización de normas', short: 'NSR-10 versión vigente', expl: 'Se espera NSR-20.', prompt: '¿Cada cuántos años se actualiza el reglamento sismo resistente?' },
+  // Ética y comunicación (81-100)
+  { cat: 'etica', name: 'Responsabilidad profesional del ingeniero civil', short: 'Firmar y sellar documentos', expl: 'Ley 1790 de 2016 (Colombia).', prompt: 'Explica por qué es necesario que un ingeniero civil selle un diseño estructural.' },
+  { cat: 'etica', name: 'Confidencialidad en proyectos', short: 'No divulgar información técnica', expl: 'Acuerdos de confidencialidad.', prompt: 'Escribe una cláusula de confidencialidad para un contrato de consultoría.' },
+  { cat: 'etica', name: 'Honestidad en informes de suelos', short: 'No falsificar resultados', expl: 'Puede poner en riesgo vidas.', prompt: 'Redacta una declaración de integridad para un informe geotécnico.' },
+  { cat: 'etica', name: 'Conflictos de interés', short: 'Declarar vínculos con contratistas', expl: 'Evitar sobornos.', prompt: 'Redacta una declaración de conflicto de interés para un ingeniero que también es socio de la constructora.' },
+  { cat: 'etica', name: 'Comunicación con el cliente no técnico', short: 'Explicar términos sin jerga', expl: 'Ejemplo: "la cimentación es la base que soporta la casa".', prompt: 'Explica qué es el factor de seguridad a un cliente sin conocimientos técnicos.' },
+  { cat: 'etica', name: 'Presentaciones orales de proyectos', short: 'Estructura: problema, solución, beneficios', expl: 'Usar diapositivas claras.', prompt: 'Enumera tres consejos para una presentación exitosa de un proyecto de construcción.' },
+  { cat: 'etica', name: 'Redacción de correos profesionales', short: 'Asunto claro, saludo, cuerpo conciso, despedida', expl: 'Para tratar con proveedores.', prompt: 'Escribe un correo solicitando cotización de acero de refuerzo para un proyecto.' },
+  { cat: 'etica', name: 'Currículum vitae para ingeniero civil', short: 'Destacar proyectos, software, normas manejadas', expl: 'Incluir registro profesional.', prompt: 'Redacta un punto de logro para un CV: "Diseño estructural de edificio de 10 pisos con ETABS".' },
+  { cat: 'etica', name: 'Cartas de presentación', short: 'Dirigida a jefe de proyectos', expl: 'Mostrar interés en la empresa.', prompt: 'Escribe el primer párrafo de una carta para una vacante de ingeniero civil residente.' },
+  { cat: 'etica', name: 'Trabajo en equipo multidisciplinario', short: 'Arquitectos, ingenieros eléctricos, mecánicos', expl: 'Coordinar interferencias.', prompt: 'Explica cómo comunicarías a un arquitecto que una columna afecta su diseño de fachada.' },
+  { cat: 'etica', name: 'Manejo de no conformidades', short: 'Registrar desviaciones', expl: 'Procedimiento de calidad.', prompt: 'Redacta un acta de no conformidad por uso de concreto con resistencia menor a la especificada.' },
+  { cat: 'etica', name: 'Supervisión de obra', short: 'Verificar planos y especificaciones', expl: 'Tomar decisiones.', prompt: 'Redacta una orden de cambio para modificar la ubicación de una columna.' },
+  { cat: 'etica', name: 'Seguridad en el trabajo', short: 'Obligación de reportar riesgos', expl: 'Ley 1562 de 2012 (SST).', prompt: 'Redacta una advertencia de seguridad para una excavación de 3 metros de profundidad.' },
+  { cat: 'etica', name: 'Uso de IA en ingeniería civil', short: 'ChatGPT, generación de informes', expl: 'No reemplaza el criterio.', prompt: 'Declara que usaste IA para corregir la redacción de un informe, pero verificaste los datos.' },
+  { cat: 'etica', name: 'Código de ética de la Sociedad Colombiana de Ingenieros', short: 'Principios de integridad', expl: 'Actuar con honestidad.', prompt: 'Menciona un principio del código de ética de la SCI.' },
+  { cat: 'etica', name: 'Sostenibilidad en la construcción', short: 'Reducir huella de carbono', expl: 'Uso de materiales reciclados.', prompt: 'Propón una práctica sostenible en una obra civil (ej. uso de concreto reciclado).' },
+  { cat: 'etica', name: 'Responsabilidad social', short: 'Impacto en comunidades', expl: 'Consultar a afectados.', prompt: 'Redacta una invitación a una reunión informativa para vecinos de un proyecto de construcción.' },
+  { cat: 'etica', name: 'Formación continua', short: 'Cursos, seminarios', expl: 'Actualización en NSR.', prompt: 'Recomienda un curso de actualización en diseño sísmico a un colega.' },
+  { cat: 'etica', name: 'Prevención de corrupción', short: 'No ofrecer coimas para agilizar trámites', expl: 'Denunciar prácticas ilegales.', prompt: 'Escribe una política de cero tolerancia a la corrupción para una empresa constructora.' },
+  { cat: 'etica', name: 'Cierre ético del proyecto', short: 'Entregar documentación completa', expl: 'Planos as built, manuales.', prompt: 'Redacta una nota de cierre de proyecto indicando que se entregaron todos los planos conforme a obra.' }
+];
+
+// Generar exactamente 100 ejercicios
+let ejercicios = [];
+for (let i = 0; i < 100; i++) {
+  const t = templates[i % templates.length];
+  const sufijo = i < templates.length ? '' : ` (${Math.floor(i / templates.length) + 1})`;
+  ejercicios.push({
+    id: i + 1,
+    cat: t.cat,
+    name: t.name + sufijo,
+    short: t.short,
+    expl: t.expl,
+    prompt: t.prompt
+  });
+}
+for (let i = 0; i < ejercicios.length; i++) ejercicios[i].id = i + 1;
+
+// ========== ESTADO DE USUARIO ==========
+let userData = { name:"Estudiante", level:"intermedio", completed:[], practiced:0, scores:[], history:[], joinDate:new Date().toLocaleDateString('es-ES') };
+function loadUserData(){ const saved=localStorage.getItem('redaccionCivilUser'); if(saved){ try{ const p=JSON.parse(saved); userData={...userData,...p}; }catch(e){} } updateUI(); }
+function saveUserData(){ localStorage.setItem('redaccionCivilUser',JSON.stringify(userData)); updateUI(); }
+function updateUI(){ document.getElementById('navName').textContent=userData.name.split(' ')[0]; document.getElementById('dashName').textContent=userData.name.split(' ')[0]; document.getElementById('navAv').textContent=userData.name[0].toUpperCase(); }
+loadUserData();
+
+let currentEx = null;
+let filterCatEx = 'all';
+function switchPage(p){
+  document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));
+  document.querySelectorAll('.app-tab').forEach(x=>x.classList.remove('active'));
+  document.getElementById('page-'+p)?.classList.add('active');
+  document.getElementById('tab-'+p)?.classList.add('active');
+  if(p==='dashboard') refreshDash();
+  if(p==='perfil') renderProfile();
+  if(p==='ejercicios') renderList();
+}
+function refreshDash(){
+  document.getElementById('sCompleted').textContent=userData.completed.length;
+  document.getElementById('sPracticed').textContent=userData.practiced;
+  const avg=userData.scores.length?Math.round(userData.scores.reduce((a,b)=>a+b,0)/userData.scores.length):null;
+  document.getElementById('sScore').textContent=avg?avg+'%':'—';
+  document.getElementById('sStreak').textContent=(userData.streak||1)+'🔥';
+  const grid=document.getElementById('dotGrid');
+  grid.innerHTML='';
+  ejercicios.forEach(ex=>{
+    const done=userData.completed.includes(ex.id);
+    const div=document.createElement('div');
+    div.className='dot'+(done?' done':'');
+    div.innerHTML=`<span class="dot-num">${ex.id}</span><div class="dot-tip">#${ex.id} ${ex.name}</div>`;
+    div.onclick=()=>startPractice(ex.id);
+    grid.appendChild(div);
+  });
+  const nid=nextId();
+  const next=ejercicios.find(e=>e.id===nid);
+  if(next){
+    document.getElementById('nextNum').textContent=String(next.id).padStart(2,'0');
+    document.getElementById('nextCat').textContent=CATS[next.cat]||next.cat;
+    document.getElementById('nextName').textContent=next.name;
+    document.getElementById('nextDesc').textContent=next.short;
+    document.getElementById('nextCard').onclick=()=>startPractice(next.id);
+  }
+  const cats=Object.keys(CATS);
+  const cp=document.getElementById('catProgress');
+  cp.innerHTML=cats.map(c=>{
+    const total=ejercicios.filter(e=>e.cat===c).length;
+    const done=ejercicios.filter(e=>e.cat===c && userData.completed.includes(e.id)).length;
+    const pct=Math.round(done/total*100);
+    return `<div class="mb-2"><div class="d-flex justify-content-between mb-1" style="font-size:.8rem;font-weight:700"><span>${CATS[c]}</span><span style="color:var(--amber)">${done}/${total}</span></div><div style="height:7px;border-radius:4px;background:var(--border)"><div style="height:100%;border-radius:4px;width:${pct}%;background:${pct===100?'var(--sage)':'var(--civil)'}"></div></div></div>`;
+  }).join('');
+}
+function nextId(){ for(let i=1;i<=100;i++) if(!userData.completed.includes(i)) return i; return 1; }
+function setFilter(cat,btn){ filterCatEx=cat; document.querySelectorAll('#pills .pill').forEach(p=>p.classList.remove('on')); btn.classList.add('on'); renderList(); }
+function renderList(){
+  const q=(document.getElementById('searchQ')?.value||'').toLowerCase();
+  const filtered=ejercicios.filter(e=>(filterCatEx==='all'||e.cat===filterCatEx) && (!q||e.name.toLowerCase().includes(q)||e.short.toLowerCase().includes(q)));
+  const list=document.getElementById('exList');
+  list.innerHTML=filtered.map(e=>{
+    const done=userData.completed.includes(e.id);
+    return `<div class="ex-card${done?' done':''}" onclick="startPractice(${e.id})"><div class="ex-num-box">${String(e.id).padStart(2,'0')}</div><div class="ex-body"><div class="ex-cat-tag">${CATS[e.cat]||e.cat}</div><div class="ex-name">${e.name}</div><div class="ex-short">${e.short}</div></div><div>${done?'<span class="badge-done"><i class="bi bi-check-lg"></i> Hecho</span>':'<span class="badge-new">Practicar</span>'}</div></div>`;
+  }).join('');
+  if(!filtered.length) list.innerHTML='<div class="text-muted text-center py-4">No se encontraron técnicas.</div>';
+}
+function startPractice(id){
+  const ex=ejercicios.find(x=>x.id===id);
+  if(!ex) return;
+  currentEx=ex;
+  document.getElementById('pracCat').textContent=CATS[ex.cat]||ex.cat;
+  document.getElementById('pracNum').textContent=String(ex.id).padStart(2,'0');
+  document.getElementById('pracName').textContent=ex.name;
+  document.getElementById('pracExpl').textContent=ex.expl;
+  document.getElementById('pracEx').textContent='📝 '+ex.expl;
+  document.getElementById('pracPrompt').innerHTML='<strong>✍️ Ejercicio:</strong> '+ex.prompt;
+  document.getElementById('practiceTA').value='';
+  document.getElementById('wc').textContent='0';
+  document.getElementById('fbArea').classList.remove('show');
+  document.getElementById('btnNext').style.display='none';
+  document.getElementById('btnCheck').disabled=false;
+  document.getElementById('btnCheck').innerHTML='<i class="bi bi-magic"></i> Analizar';
+  document.getElementById('practiceEmpty').style.display='none';
+  document.getElementById('practiceContent').style.display='';
+  switchPage('practica');
+  document.getElementById('practiceTA').focus();
+}
+function prevExercise(){
+  if(!currentEx) return;
+  const idx=ejercicios.findIndex(e=>e.id===currentEx.id);
+  startPractice(ejercicios[(idx-1+ejercicios.length)%ejercicios.length].id);
+}
+function nextExercise(){
+  if(!currentEx) return;
+  const idx=ejercicios.findIndex(e=>e.id===currentEx.id);
+  startPractice(ejercicios[(idx+1)%ejercicios.length].id);
+}
+function doCheck(){
+  const text=document.getElementById('practiceTA').value.trim();
+  if(!text || text.split(/\s+/).length<5){ toast('Escribe al menos 5 palabras','e'); return; }
+  if(!currentEx) return;
+  const btn=document.getElementById('btnCheck');
+  btn.disabled=true;
+  btn.innerHTML='<span class="spinner-border spinner-border-sm me-1"></span>Evaluando...';
+  const fb=document.getElementById('fbArea');
+  fb.classList.add('show');
+  document.getElementById('fbLoading').style.display='block';
+  document.getElementById('fbContent').style.display='none';
+  setTimeout(()=>{
+    let score=70;
+    if(text.length>100) score+=10;
+    if(text.toLowerCase().includes(currentEx.name.toLowerCase())) score+=10;
+    score=Math.min(100,score);
+    const nivel=score>=85?'excelente':score>=65?'bien':'necesita_mejorar';
+    const titulo=nivel==='excelente'?'¡Excelente redacción técnica!':nivel==='bien'?'Buen trabajo':'Puedes mejorar';
+    const resumen=`Tu respuesta tiene ${text.split(/\s+/).length} palabras. ${score>=70?'Aplicas bien los conceptos de redacción en ingeniería civil.':'Revisa la técnica y vuelve a intentarlo.'}`;
+    const aciertos=['La respuesta es relevante al ejercicio.'];
+    const consejos=['Consulta guías como el "Manual de redacción técnica para ingenieros" del Colegio Colombiano de Ingenieros o la NSR-10.'];
+    const aplicacion=`Has aplicado conocimientos sobre ${currentEx.name}.`;
+    const r={score,nivel,titulo,resumen,aciertos,errores:[],consejos,aplicacion};
+    renderFeedback(r);
+    userData.practiced++;
+    userData.scores.push(r.score);
+    if(r.score>=65 && !userData.completed.includes(currentEx.id)){
+      userData.completed.push(currentEx.id);
+      toast(`✅ ¡Técnica #${currentEx.id} completada!`,'s');
+    }
+    userData.history=[{id:currentEx.id, name:currentEx.name, score:r.score, date:new Date().toLocaleDateString('es-ES')}, ...(userData.history||[])].slice(0,30);
+    saveUserData();
+    document.getElementById('fbLoading').style.display='none';
+    document.getElementById('fbContent').style.display='block';
+    btn.disabled=false;
+    btn.innerHTML='<i class="bi bi-magic"></i> Analizar de nuevo';
+    document.getElementById('btnNext').style.display='';
+    fb.scrollIntoView({behavior:'smooth',block:'start'});
+  },800);
+}
+function renderFeedback(r){
+  const sc=r.score>=80?'high':r.score>=60?'med':'low';
+  const hc=r.nivel==='excelente'?'excellent':r.nivel==='bien'?'good':'low';
+  const em=r.nivel==='excelente'?'🏆':r.nivel==='bien'?'👍':'💪';
+  const aciertos=(r.aciertos||[]).map(a=>`<div class="fb-item ok"><span class="fb-ico">✓</span><span>${a}</span></div>`).join('');
+  const errores=(r.errores||[]).map(a=>`<div class="fb-item err"><span class="fb-ico">✗</span><span>${a}</span></div>`).join('');
+  const consejos=(r.consejos||[]).map(a=>`<div class="fb-item tip"><span class="fb-ico">💡</span><span>${a}</span></div>`).join('');
+  document.getElementById('fbContent').innerHTML=`<div class="fb-head ${hc}"><span class="fb-emoji">${em}</span><div><p class="fb-htitle">${r.titulo}</p><p class="fb-hsub">Técnica #${currentEx?.id} · ${currentEx?.name}</p></div></div><div class="fb-body"><div style="display:flex;align-items:center;gap:1rem;margin-bottom:1.1rem"><div class="score-circle sc-${sc}">${r.score}%</div><div style="flex:1"><div style="font-weight:700;margin-bottom:.4rem">Dominio de la técnica</div><div style="height:8px;border-radius:4px;background:var(--border)"><div style="height:100%;width:${r.score}%;background:${r.score>=80?'#198754':r.score>=60?'#ffc107':'#dc3545'}"></div></div><div style="font-size:.77rem;margin-top:.4rem">${r.resumen}</div></div></div>${r.aplicacion?`<div class="fb-section"><div class="fb-section-title">🎯 Aplicación</div><div class="fb-item info"><span class="fb-ico">📖</span><span>${r.aplicacion}</span></div></div>`:''}${aciertos?`<div class="fb-section"><div class="fb-section-title">✅ Aciertos</div>${aciertos}</div>`:''}${errores?`<div class="fb-section"><div class="fb-section-title">❌ Errores</div>${errores}</div>`:''}${consejos?`<div class="fb-section"><div class="fb-section-title">💡 Consejos</div>${consejos}</div>`:''}</div>`;
+}
+function renderProfile(){
+  document.getElementById('profAv').textContent=userData.name[0].toUpperCase();
+  document.getElementById('profName').textContent=userData.name;
+  document.getElementById('profMeta').textContent=(userData.level==='principiante'?'Principiante':userData.level==='intermedio'?'Intermedio':'Avanzado')+' · Desde '+userData.joinDate;
+  document.getElementById('pComp').textContent=userData.completed.length;
+  document.getElementById('pPrac').textContent=userData.practiced;
+  const avg=userData.scores.length?Math.round(userData.scores.reduce((a,b)=>a+b,0)/userData.scores.length):null;
+  document.getElementById('pScr').textContent=avg?avg+'%':'—';
+  const ACHS=[{icon:'🎓',name:'Primera técnica',check:d=>d.practiced>=1},{icon:'🏗️',name:'10 prácticas',check:d=>d.practiced>=10},{icon:'🏅',name:'25 técnicas',check:d=>d.completed.length>=25},{icon:'🏆',name:'50 técnicas',check:d=>d.completed.length>=50},{icon:'📐',name:'Maestro redactor civil',check:d=>d.completed.length>=100}];
+  document.getElementById('achGrid').innerHTML=ACHS.map(a=>{const u=a.check(userData); return `<div class="ach${u?' unlocked':' locked'}"><span class="ach-icon">${a.icon}</span><div class="ach-name">${a.name}</div></div>`;}).join('');
+  const hl=document.getElementById('histList');
+  if(userData.history?.length){ hl.innerHTML=userData.history.slice(0,15).map(h=>`<div class="hist-row" onclick="startPractice(${h.id})"><div class="ex-num-box" style="background:${h.score>=80?'var(--sage)':h.score>=60?'var(--amber-light)':'#f8d7da'};color:#fff">${String(h.id).padStart(2,'0')}</div><div><div style="font-weight:700">${h.name}</div><div style="font-size:.74rem;color:#aaa">${h.date}</div></div><span style="background:${h.score>=80?'var(--sage)':h.score>=60?'var(--amber)':'#dc3545'};color:#fff;padding:.18rem .55rem;border-radius:9px">${h.score}%</span></div>`).join('');}
+  else hl.innerHTML='<div class="text-muted">Aún sin prácticas.</div>';
+}
+function openEditModal(){ document.getElementById('editName').value=userData.name; document.getElementById('editLevel').value=userData.level; document.getElementById('editModal').style.display='flex'; }
+function saveEdit(){ const name=document.getElementById('editName').value.trim(); if(!name){ toast('Escribe un nombre','e'); return; } userData.name=name; userData.level=document.getElementById('editLevel').value; saveUserData(); updateUI(); closeModal('editModal'); renderProfile(); toast('Perfil actualizado','s'); }
+function confirmReset(){ if(confirm('¿Reiniciar todo el progreso?')){ userData.completed=[]; userData.practiced=0; userData.scores=[]; userData.history=[]; saveUserData(); refreshDash(); renderProfile(); toast('Progreso reiniciado','i'); } }
+function closeModal(id){ document.getElementById(id).style.display='none'; }
+function toast(msg,type='i'){ const box=document.getElementById('toastBox'); const t=document.createElement('div'); const icons={s:'✅',e:'❌',i:'ℹ️'}; t.className=`toast-item ${type}`; t.innerHTML=`<span>${icons[type]||'ℹ️'}</span><span>${msg}</span>`; box.appendChild(t); setTimeout(()=>{ t.style.opacity='0'; t.style.transform='translateY(16px)'; setTimeout(()=>t.remove(),350); },3200); }
+document.addEventListener('DOMContentLoaded',()=>{ const ta=document.getElementById('practiceTA'); if(ta) ta.addEventListener('input',()=>{ const w=ta.value.trim()?ta.value.trim().split(/\s+/).length:0; document.getElementById('wc').textContent=w; }); refreshDash(); renderList(); renderProfile(); });
+</script>
+</body>
+</html>

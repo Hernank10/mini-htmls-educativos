@@ -1,0 +1,969 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Editor Bilingüe con Lector de Voz</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d0d0f;
+    --surface: #141418;
+    --surface2: #1c1c22;
+    --surface3: #242430;
+    --border: rgba(255,255,255,0.07);
+    --border2: rgba(255,255,255,0.12);
+    --gold: #c9a227;
+    --gold-dim: rgba(201,162,39,0.15);
+    --gold-glow: rgba(201,162,39,0.3);
+    --cream: #f0e8d0;
+    --muted: #7a7a8a;
+    --text: #e8e0d0;
+    --accent-es: #c9a227;
+    --accent-en: #4a9eff;
+    --accent-en-dim: rgba(74,158,255,0.15);
+    --red: #e05a5a;
+    --green: #5ab88a;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Crimson Pro', Georgia, serif;
+    font-size: 17px;
+    min-height: 100vh;
+    background-image:
+      radial-gradient(ellipse at 10% 20%, rgba(201,162,39,0.04) 0%, transparent 50%),
+      radial-gradient(ellipse at 90% 80%, rgba(74,158,255,0.03) 0%, transparent 50%);
+  }
+
+  /* ── HEADER ── */
+  header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 18px 32px;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    backdrop-filter: blur(12px);
+  }
+
+  .logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--gold);
+    letter-spacing: 0.03em;
+  }
+
+  .logo span {
+    color: var(--muted);
+    font-weight: 400;
+    font-style: italic;
+    font-size: 1rem;
+    margin-left: 8px;
+  }
+
+  .header-actions {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+  }
+
+  /* ── LANGUAGE TOGGLE ── */
+  .lang-toggle {
+    display: flex;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 100px;
+    padding: 3px;
+    gap: 2px;
+  }
+
+  .lang-btn {
+    padding: 6px 18px;
+    border-radius: 100px;
+    border: none;
+    cursor: pointer;
+    font-family: 'Crimson Pro', serif;
+    font-size: 0.9rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    transition: all 0.25s;
+    background: transparent;
+    color: var(--muted);
+  }
+
+  .lang-btn.active-es {
+    background: var(--gold);
+    color: #0d0d0f;
+  }
+
+  .lang-btn.active-en {
+    background: var(--accent-en);
+    color: #0d0d0f;
+  }
+
+  /* ── MAIN LAYOUT ── */
+  .main {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+    height: calc(100vh - 65px);
+  }
+
+  /* ── PANEL ── */
+  .panel {
+    display: flex;
+    flex-direction: column;
+    border-right: 1px solid var(--border);
+    overflow: hidden;
+  }
+
+  .panel:last-child { border-right: none; }
+
+  .panel-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 24px;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    flex-shrink: 0;
+  }
+
+  .panel-label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .lang-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .dot-es { background: var(--gold); box-shadow: 0 0 8px var(--gold-glow); }
+  .dot-en { background: var(--accent-en); box-shadow: 0 0 8px rgba(74,158,255,0.4); }
+
+  .panel-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--text);
+    letter-spacing: 0.05em;
+  }
+
+  .panel-sub {
+    font-size: 0.75rem;
+    color: var(--muted);
+    font-style: italic;
+    margin-left: 4px;
+  }
+
+  /* ── TOOLBAR ── */
+  .toolbar {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+  }
+
+  .tb-btn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    background: var(--surface2);
+    color: var(--muted);
+    font-family: 'Crimson Pro', serif;
+    font-size: 0.82rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    white-space: nowrap;
+  }
+
+  .tb-btn:hover {
+    border-color: var(--border2);
+    color: var(--text);
+    background: var(--surface3);
+  }
+
+  .tb-btn.active {
+    border-color: var(--gold);
+    color: var(--gold);
+    background: var(--gold-dim);
+  }
+
+  .tb-btn.active-blue {
+    border-color: var(--accent-en);
+    color: var(--accent-en);
+    background: var(--accent-en-dim);
+  }
+
+  .tb-btn svg {
+    width: 14px; height: 14px;
+    flex-shrink: 0;
+  }
+
+  /* ── TEXTAREA ── */
+  .editor-area {
+    flex: 1;
+    overflow: hidden;
+    position: relative;
+  }
+
+  textarea {
+    width: 100%;
+    height: 100%;
+    padding: 28px 32px;
+    background: transparent;
+    border: none;
+    outline: none;
+    resize: none;
+    color: var(--text);
+    font-family: 'Crimson Pro', Georgia, serif;
+    font-size: 1.1rem;
+    line-height: 1.85;
+    font-weight: 300;
+    caret-color: var(--gold);
+  }
+
+  textarea::placeholder {
+    color: rgba(122,122,138,0.5);
+    font-style: italic;
+  }
+
+  textarea:focus {
+    background: rgba(255,255,255,0.01);
+  }
+
+  /* highlighted word during TTS */
+  .tts-display {
+    position: absolute;
+    inset: 0;
+    padding: 28px 32px;
+    font-family: 'Crimson Pro', Georgia, serif;
+    font-size: 1.1rem;
+    line-height: 1.85;
+    font-weight: 300;
+    pointer-events: none;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    overflow-y: auto;
+    color: transparent;
+  }
+
+  .tts-display .word-highlight {
+    background: var(--gold);
+    color: var(--bg);
+    border-radius: 2px;
+    padding: 0 2px;
+  }
+
+  .tts-display.en-mode .word-highlight {
+    background: var(--accent-en);
+  }
+
+  /* ── BOTTOM BAR ── */
+  .bottom-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 24px;
+    background: var(--surface);
+    border-top: 1px solid var(--border);
+    flex-shrink: 0;
+  }
+
+  .word-count {
+    font-size: 0.78rem;
+    color: var(--muted);
+    letter-spacing: 0.03em;
+  }
+
+  .word-count strong {
+    color: var(--text);
+    font-weight: 600;
+  }
+
+  /* ── TTS PLAYER ── */
+  .tts-bar {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .tts-play-btn {
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+    flex-shrink: 0;
+  }
+
+  .tts-play-btn.es-play {
+    background: var(--gold);
+    color: var(--bg);
+    box-shadow: 0 0 12px var(--gold-glow);
+  }
+
+  .tts-play-btn.en-play {
+    background: var(--accent-en);
+    color: var(--bg);
+    box-shadow: 0 0 12px rgba(74,158,255,0.3);
+  }
+
+  .tts-play-btn:hover { transform: scale(1.08); }
+  .tts-play-btn:active { transform: scale(0.96); }
+
+  .tts-play-btn svg { width: 16px; height: 16px; }
+
+  .tts-controls {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .tts-icon-btn {
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    border: 1px solid var(--border);
+    background: var(--surface2);
+    color: var(--muted);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+  }
+
+  .tts-icon-btn:hover { color: var(--text); border-color: var(--border2); }
+  .tts-icon-btn svg { width: 12px; height: 12px; }
+
+  .speed-select {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    color: var(--muted);
+    font-family: 'Crimson Pro', serif;
+    font-size: 0.8rem;
+    padding: 4px 8px;
+    border-radius: 6px;
+    cursor: pointer;
+    outline: none;
+  }
+
+  .speed-select:focus { border-color: var(--border2); }
+  .speed-select option { background: var(--surface2); }
+
+  /* ── PROGRESS BAR ── */
+  .progress-wrap {
+    flex: 1;
+    height: 3px;
+    background: var(--surface3);
+    border-radius: 10px;
+    overflow: hidden;
+    max-width: 120px;
+    cursor: pointer;
+  }
+
+  .progress-fill {
+    height: 100%;
+    border-radius: 10px;
+    width: 0%;
+    transition: width 0.1s;
+  }
+
+  .progress-es { background: var(--gold); }
+  .progress-en { background: var(--accent-en); }
+
+  /* ── STATUS BADGE ── */
+  .tts-status {
+    font-size: 0.72rem;
+    color: var(--muted);
+    font-style: italic;
+    white-space: nowrap;
+  }
+
+  /* ── TRANSLATE BRIDGE ── */
+  .bridge {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 0;
+    overflow: visible;
+    z-index: 10;
+  }
+
+  .translate-pill {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    z-index: 20;
+  }
+
+  .translate-btn {
+    width: 42px; height: 42px;
+    border-radius: 50%;
+    border: 1px solid var(--border2);
+    background: var(--surface2);
+    color: var(--gold);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.25s;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+  }
+
+  .translate-btn:hover {
+    background: var(--gold-dim);
+    border-color: var(--gold);
+    box-shadow: 0 4px 20px var(--gold-glow);
+    transform: scale(1.05);
+  }
+
+  .translate-btn svg { width: 18px; height: 18px; }
+
+  .translate-label {
+    font-size: 0.65rem;
+    color: var(--muted);
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+
+  /* ── NOTIFICATION ── */
+  .notif {
+    position: fixed;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%) translateY(20px);
+    background: var(--surface2);
+    border: 1px solid var(--border2);
+    color: var(--text);
+    padding: 10px 22px;
+    border-radius: 100px;
+    font-size: 0.85rem;
+    font-style: italic;
+    opacity: 0;
+    transition: all 0.3s;
+    pointer-events: none;
+    z-index: 999;
+    white-space: nowrap;
+  }
+
+  .notif.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+
+  /* ── LOADING SPINNER ── */
+  .spinner {
+    display: inline-block;
+    width: 12px; height: 12px;
+    border: 2px solid var(--border2);
+    border-top-color: var(--gold);
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+    margin-right: 6px;
+  }
+
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 700px) {
+    .main { grid-template-columns: 1fr; grid-template-rows: 1fr 1fr; }
+    .panel { border-right: none; border-bottom: 1px solid var(--border); }
+    .bridge { display: none; }
+    header { padding: 14px 18px; }
+    .logo span { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">
+    Pluma Bilingüe
+    <span>editor · lector · traductor</span>
+  </div>
+  <div class="header-actions">
+    <button class="tb-btn" id="clearAll" title="Borrar todo">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/><path d="M10 11v6M14 11v6"/></svg>
+      Limpiar todo
+    </button>
+  </div>
+</header>
+
+<div class="main">
+
+  <!-- ── PANEL ESPAÑOL ── -->
+  <div class="panel" id="panelEs">
+    <div class="panel-header">
+      <div class="panel-label">
+        <span class="lang-dot dot-es"></span>
+        <span class="panel-title">Español</span>
+        <span class="panel-sub">· castellano</span>
+      </div>
+      <div class="toolbar">
+        <button class="tb-btn" id="copyEs" title="Copiar texto">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+          Copiar
+        </button>
+        <button class="tb-btn" id="clearEs" title="Borrar español">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <div class="editor-area">
+      <textarea
+        id="textEs"
+        placeholder="Escribe aquí tu texto en español…&#10;&#10;Puedes escribir un cuento, un párrafo, o cualquier texto que desees escuchar o traducir al inglés."
+        spellcheck="true"
+        lang="es"
+      ></textarea>
+      <div class="tts-display" id="displayEs"></div>
+    </div>
+
+    <div class="bottom-bar">
+      <div class="word-count" id="countEs"><strong>0</strong> palabras</div>
+      <div class="tts-bar">
+        <div class="tts-controls">
+          <select class="speed-select" id="speedEs" title="Velocidad">
+            <option value="0.7">0.7×</option>
+            <option value="0.85">0.85×</option>
+            <option value="1" selected>1×</option>
+            <option value="1.2">1.2×</option>
+            <option value="1.5">1.5×</option>
+          </select>
+          <button class="tts-icon-btn" id="stopEs" title="Detener">
+            <svg viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="6" width="12" height="12" rx="1"/></svg>
+          </button>
+        </div>
+        <div class="progress-wrap" id="progressWrapEs">
+          <div class="progress-fill progress-es" id="progressEs"></div>
+        </div>
+        <span class="tts-status" id="statusEs">Listo</span>
+        <button class="tts-play-btn es-play" id="playEs" title="Leer en español">
+          <svg id="iconEs" viewBox="0 0 24 24" fill="currentColor">
+            <polygon points="5,3 19,12 5,21"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── BRIDGE BUTTON ── -->
+  <div class="bridge">
+    <div class="translate-pill">
+      <button class="translate-btn" id="translateBtn" title="Traducir ES → EN">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M5 8l6 6"/>
+          <path d="M4 14s-1-1 0-2 4 0 4 0"/>
+          <line x1="12" y1="4" x2="12" y2="20"/>
+          <path d="M14 7h7"/>
+          <path d="M17 4l3 3-3 3"/>
+        </svg>
+      </button>
+      <span class="translate-label">Traducir</span>
+    </div>
+  </div>
+
+  <!-- ── PANEL ENGLISH ── -->
+  <div class="panel" id="panelEn">
+    <div class="panel-header">
+      <div class="panel-label">
+        <span class="lang-dot dot-en"></span>
+        <span class="panel-title">English</span>
+        <span class="panel-sub">· translation</span>
+      </div>
+      <div class="toolbar">
+        <button class="tb-btn" id="copyEn" title="Copy text">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+          Copy
+        </button>
+        <button class="tb-btn" id="clearEn" title="Clear English">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <div class="editor-area">
+      <textarea
+        id="textEn"
+        placeholder="English text will appear here after translation…&#10;&#10;Or write directly in English to read it aloud."
+        spellcheck="true"
+        lang="en"
+      ></textarea>
+      <div class="tts-display en-mode" id="displayEn"></div>
+    </div>
+
+    <div class="bottom-bar">
+      <div class="word-count" id="countEn"><strong>0</strong> words</div>
+      <div class="tts-bar">
+        <div class="tts-controls">
+          <select class="speed-select" id="speedEn" title="Speed">
+            <option value="0.7">0.7×</option>
+            <option value="0.85">0.85×</option>
+            <option value="1" selected>1×</option>
+            <option value="1.2">1.2×</option>
+            <option value="1.5">1.5×</option>
+          </select>
+          <button class="tts-icon-btn" id="stopEn" title="Stop">
+            <svg viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="6" width="12" height="12" rx="1"/></svg>
+          </button>
+        </div>
+        <div class="progress-wrap" id="progressWrapEn">
+          <div class="progress-fill progress-en" id="progressEn"></div>
+        </div>
+        <span class="tts-status" id="statusEn">Ready</span>
+        <button class="tts-play-btn en-play" id="playEn" title="Read in English">
+          <svg id="iconEn" viewBox="0 0 24 24" fill="currentColor">
+            <polygon points="5,3 19,12 5,21"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- Notification -->
+<div class="notif" id="notif"></div>
+
+<script>
+// ── WORD COUNT ──
+function updateCount(textareaId, countId, lang) {
+  const text = document.getElementById(textareaId).value.trim();
+  const words = text ? text.split(/\s+/).length : 0;
+  const label = lang === 'es' ? 'palabras' : 'words';
+  document.getElementById(countId).innerHTML = `<strong>${words}</strong> ${label}`;
+}
+
+document.getElementById('textEs').addEventListener('input', () => updateCount('textEs','countEs','es'));
+document.getElementById('textEn').addEventListener('input', () => updateCount('textEn','countEn','en'));
+
+// ── NOTIFICATION ──
+function showNotif(msg, duration = 2400) {
+  const n = document.getElementById('notif');
+  n.textContent = msg;
+  n.classList.add('show');
+  setTimeout(() => n.classList.remove('show'), duration);
+}
+
+// ── COPY ──
+document.getElementById('copyEs').addEventListener('click', () => {
+  const t = document.getElementById('textEs').value;
+  if (!t.trim()) { showNotif('⚠ No hay texto que copiar'); return; }
+  navigator.clipboard.writeText(t).then(() => showNotif('✓ Texto copiado al portapapeles'));
+});
+
+document.getElementById('copyEn').addEventListener('click', () => {
+  const t = document.getElementById('textEn').value;
+  if (!t.trim()) { showNotif('⚠ No text to copy'); return; }
+  navigator.clipboard.writeText(t).then(() => showNotif('✓ Text copied to clipboard'));
+});
+
+// ── CLEAR ──
+document.getElementById('clearEs').addEventListener('click', () => {
+  document.getElementById('textEs').value = '';
+  document.getElementById('displayEs').innerHTML = '';
+  updateCount('textEs','countEs','es');
+  stopTTS('es');
+});
+
+document.getElementById('clearEn').addEventListener('click', () => {
+  document.getElementById('textEn').value = '';
+  document.getElementById('displayEn').innerHTML = '';
+  updateCount('textEn','countEn','en');
+  stopTTS('en');
+});
+
+document.getElementById('clearAll').addEventListener('click', () => {
+  ['textEs','textEn'].forEach(id => document.getElementById(id).value = '');
+  ['displayEs','displayEn'].forEach(id => document.getElementById(id).innerHTML = '');
+  updateCount('textEs','countEs','es');
+  updateCount('textEn','countEn','en');
+  stopTTS('es'); stopTTS('en');
+  showNotif('✓ Todo limpiado');
+});
+
+// ── TRANSLATION VIA CLAUDE API ──
+document.getElementById('translateBtn').addEventListener('click', async () => {
+  const text = document.getElementById('textEs').value.trim();
+  if (!text) { showNotif('⚠ Escribe algo en español primero'); return; }
+
+  const btn = document.getElementById('translateBtn');
+  btn.innerHTML = `<span class="spinner" style="display:inline-block;width:18px;height:18px;border:2px solid rgba(255,255,255,0.2);border-top-color:#c9a227;border-radius:50%;animation:spin 0.7s linear infinite;"></span>`;
+  btn.disabled = true;
+  showNotif('Traduciendo…', 8000);
+
+  try {
+    const response = await fetch("https://api.anthropic.com/v1/messages", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        model: "claude-sonnet-4-20250514",
+        max_tokens: 1000,
+        messages: [{
+          role: "user",
+          content: `Translate the following Spanish text to English. Return ONLY the translation, no explanations, no preamble, no quotes around it.\n\n${text}`
+        }]
+      })
+    });
+
+    const data = await response.json();
+    const translation = data.content?.find(b => b.type === 'text')?.text?.trim() || '';
+
+    if (translation) {
+      document.getElementById('textEn').value = translation;
+      updateCount('textEn','countEn','en');
+      showNotif('✓ Traducción completada');
+    } else {
+      showNotif('⚠ No se pudo obtener la traducción');
+    }
+  } catch (err) {
+    showNotif('⚠ Error de conexión');
+    console.error(err);
+  } finally {
+    btn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 8l6 6"/><path d="M4 14s-1-1 0-2 4 0 4 0"/><line x1="12" y1="4" x2="12" y2="20"/><path d="M14 7h7"/><path d="M17 4l3 3-3 3"/></svg>`;
+    btn.disabled = false;
+  }
+});
+
+// ── TTS ENGINE ──
+const ttsState = {
+  es: { utterance: null, words: [], wordIndex: 0, playing: false, paused: false },
+  en: { utterance: null, words: [], wordIndex: 0, playing: false, paused: false }
+};
+
+function getVoice(lang) {
+  const voices = window.speechSynthesis.getVoices();
+  const langCode = lang === 'es' ? 'es' : 'en';
+  // Try to find a good voice
+  const preferred = voices.find(v =>
+    v.lang.startsWith(langCode) && (v.name.includes('Google') || v.name.includes('Natural') || v.name.includes('Premium'))
+  );
+  return preferred || voices.find(v => v.lang.startsWith(langCode)) || null;
+}
+
+function stopTTS(lang) {
+  const state = ttsState[lang];
+  if (state.playing || state.paused) {
+    window.speechSynthesis.cancel();
+    state.playing = false;
+    state.paused = false;
+    state.wordIndex = 0;
+  }
+  updateTTSUI(lang, 'idle');
+  document.getElementById(`display${lang.charAt(0).toUpperCase() + lang.slice(1)}`).innerHTML = '';
+  document.getElementById(`progress${lang.charAt(0).toUpperCase() + lang.slice(1)}`).style.width = '0%';
+}
+
+function updateTTSUI(lang, mode) {
+  const L = lang.charAt(0).toUpperCase() + lang.slice(1);
+  const iconEl = document.getElementById(`icon${L}`);
+  const playBtn = document.getElementById(`play${L}`);
+  const statusEl = document.getElementById(`status${L}`);
+
+  const isEs = lang === 'es';
+
+  if (mode === 'playing') {
+    iconEl.innerHTML = `<rect x="6" y="4" width="4" height="16" rx="1"/><rect x="14" y="4" width="4" height="16" rx="1"/>`;
+    statusEl.textContent = isEs ? 'Leyendo…' : 'Reading…';
+  } else if (mode === 'paused') {
+    iconEl.innerHTML = `<polygon points="5,3 19,12 5,21"/>`;
+    statusEl.textContent = isEs ? 'Pausado' : 'Paused';
+  } else {
+    iconEl.innerHTML = `<polygon points="5,3 19,12 5,21"/>`;
+    statusEl.textContent = isEs ? 'Listo' : 'Ready';
+  }
+}
+
+function highlightWord(lang, wordIndex, words) {
+  const L = lang.charAt(0).toUpperCase() + lang.slice(1);
+  const displayEl = document.getElementById(`display${L}`);
+  const progressEl = document.getElementById(`progress${L}`);
+
+  const highlighted = words.map((w, i) => {
+    const escaped = w.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    return i === wordIndex ? `<span class="word-highlight">${escaped}</span>` : escaped;
+  }).join(' ');
+
+  displayEl.innerHTML = highlighted;
+
+  // Scroll to highlighted word
+  const span = displayEl.querySelector('.word-highlight');
+  if (span) {
+    span.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+  }
+
+  // Progress
+  const pct = words.length > 1 ? (wordIndex / (words.length - 1)) * 100 : 0;
+  progressEl.style.width = pct + '%';
+}
+
+function playTTS(lang) {
+  const L = lang.charAt(0).toUpperCase() + lang.slice(1);
+  const textarea = document.getElementById(`text${L}`);
+  const state = ttsState[lang];
+  const text = textarea.value.trim();
+
+  if (!text) {
+    showNotif(lang === 'es' ? '⚠ Escribe algo primero' : '⚠ Write something first');
+    return;
+  }
+
+  // If paused, resume
+  if (state.paused) {
+    window.speechSynthesis.resume();
+    state.paused = false;
+    state.playing = true;
+    updateTTSUI(lang, 'playing');
+    return;
+  }
+
+  // Stop the other panel if playing
+  const otherLang = lang === 'es' ? 'en' : 'es';
+  if (ttsState[otherLang].playing || ttsState[otherLang].paused) {
+    stopTTS(otherLang);
+  }
+
+  // Stop current if already playing
+  window.speechSynthesis.cancel();
+
+  const words = text.split(/(\s+)/).filter(w => w.trim() !== '');
+  state.words = words;
+  state.wordIndex = 0;
+
+  const utterance = new SpeechSynthesisUtterance(text);
+  utterance.lang = lang === 'es' ? 'es-ES' : 'en-US';
+  utterance.rate = parseFloat(document.getElementById(`speed${L}`).value);
+
+  const voice = getVoice(lang);
+  if (voice) utterance.voice = voice;
+
+  utterance.onboundary = (event) => {
+    if (event.name === 'word') {
+      const charIndex = event.charIndex;
+      // Find which word we're at by char position
+      let pos = 0;
+      for (let i = 0; i < words.length; i++) {
+        if (charIndex >= pos && charIndex < pos + words[i].length) {
+          state.wordIndex = i;
+          highlightWord(lang, i, words);
+          break;
+        }
+        pos += words[i].length + 1;
+      }
+    }
+  };
+
+  utterance.onend = () => {
+    state.playing = false;
+    state.paused = false;
+    state.wordIndex = 0;
+    updateTTSUI(lang, 'idle');
+    document.getElementById(`display${L}`).innerHTML = '';
+    document.getElementById(`progress${L}`).style.width = '0%';
+  };
+
+  utterance.onerror = (e) => {
+    if (e.error !== 'interrupted') {
+      showNotif('⚠ Error en el lector de voz');
+    }
+    state.playing = false;
+    state.paused = false;
+    updateTTSUI(lang, 'idle');
+  };
+
+  state.utterance = utterance;
+  state.playing = true;
+  state.paused = false;
+
+  // Show display overlay
+  highlightWord(lang, 0, words);
+  updateTTSUI(lang, 'playing');
+
+  window.speechSynthesis.speak(utterance);
+}
+
+function toggleTTS(lang) {
+  const state = ttsState[lang];
+  if (state.playing) {
+    // Pause
+    window.speechSynthesis.pause();
+    state.playing = false;
+    state.paused = true;
+    updateTTSUI(lang, 'paused');
+  } else {
+    playTTS(lang);
+  }
+}
+
+// Bind buttons
+document.getElementById('playEs').addEventListener('click', () => toggleTTS('es'));
+document.getElementById('playEn').addEventListener('click', () => toggleTTS('en'));
+document.getElementById('stopEs').addEventListener('click', () => stopTTS('es'));
+document.getElementById('stopEn').addEventListener('click', () => stopTTS('en'));
+
+// Speed change — restart if playing
+['Es','En'].forEach(L => {
+  document.getElementById(`speed${L}`).addEventListener('change', () => {
+    const lang = L.toLowerCase();
+    if (ttsState[lang].playing || ttsState[lang].paused) {
+      stopTTS(lang);
+      setTimeout(() => playTTS(lang), 100);
+    }
+  });
+});
+
+// Load voices when available
+if (window.speechSynthesis.onvoiceschanged !== undefined) {
+  window.speechSynthesis.onvoiceschanged = () => {};
+}
+
+// Ensure voices loaded
+window.speechSynthesis.getVoices();
+
+// Sync textarea scroll with overlay
+['Es','En'].forEach(L => {
+  const ta = document.getElementById(`text${L}`);
+  const disp = document.getElementById(`display${L}`);
+  ta.addEventListener('scroll', () => {
+    disp.scrollTop = ta.scrollTop;
+  });
+});
+
+// Tab key in textareas inserts spaces
+['textEs','textEn'].forEach(id => {
+  document.getElementById(id).addEventListener('keydown', e => {
+    if (e.key === 'Tab') {
+      e.preventDefault();
+      const start = e.target.selectionStart;
+      const end = e.target.selectionEnd;
+      e.target.value = e.target.value.substring(0, start) + '    ' + e.target.value.substring(end);
+      e.target.selectionStart = e.target.selectionEnd = start + 4;
+    }
+  });
+});
+</script>
+</body>
+</html>

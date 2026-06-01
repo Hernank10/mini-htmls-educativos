@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>Marketing Digital · Arquitectura Colombia · 100 conceptos</title>
+  <style>
+    /* ----- VARIABLES CSS: paleta arquitectura + marketing (terracota, azul, gris) ----- */
+    :root {
+      --fondo: #fdf8f2;
+      --texto: #2c2820;
+      --terracota: #bc6f4b;
+      --azul-arqui: #3a7ca5;
+      --gris-porfolio: #8f9aa5;
+      --acierto: #3a7a5c;
+      --fallo: #c4553a;
+      --sombra: rgba(60, 50, 35, 0.08);
+      --card-bg: #ffffff;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: var(--fondo);
+      color: var(--texto);
+      font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
+      line-height: 1.5;
+      padding: 1rem;
+    }
+
+    .app-container {
+      max-width: 1300px;
+      margin: 0 auto;
+      background: var(--card-bg);
+      border-radius: 2rem;
+      box-shadow: 0 12px 28px var(--sombra);
+      overflow: hidden;
+      border: 1px solid #e6dbc8;
+    }
+
+    header {
+      background: #fdf3ea;
+      padding: 1.2rem 2rem;
+      border-bottom: 3px solid var(--terracota);
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 1rem;
+    }
+    h1 {
+      font-size: 1.7rem;
+      font-weight: 600;
+      color: #a85c3a;
+      letter-spacing: -0.2px;
+    }
+    h1 small {
+      font-size: 0.7rem;
+      font-weight: normal;
+      color: #bf9276;
+    }
+
+    nav {
+      display: flex;
+      gap: 0.5rem;
+      background: #e9dfd1;
+      padding: 0.6rem 2rem;
+      border-bottom: 1px solid #d6cbb8;
+      flex-wrap: wrap;
+    }
+    .nav-btn {
+      background: transparent;
+      border: none;
+      font-size: 0.95rem;
+      padding: 0.5rem 1.2rem;
+      border-radius: 40px;
+      cursor: pointer;
+      font-weight: 500;
+      transition: all 0.2s;
+      color: #bc6f4b;
+    }
+    .nav-btn.active {
+      background-color: var(--terracota);
+      color: white;
+    }
+    .nav-btn:hover:not(.active) {
+      background-color: #d8cdbb;
+    }
+
+    .view {
+      display: none;
+      padding: 2rem;
+      animation: fade 0.2s ease;
+    }
+    .active-view { display: block; }
+    @keyframes fade { from { opacity: 0; transform: translateY(5px);} to { opacity: 1; transform: translateY(0);} }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+    .stat-card {
+      background: var(--fondo);
+      border-radius: 1.5rem;
+      padding: 1rem;
+      text-align: center;
+      border-left: 6px solid var(--azul-arqui);
+      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    }
+    .stat-number {
+      font-size: 2.2rem;
+      font-weight: 700;
+      color: var(--terracota);
+    }
+    .progress-bar-bg {
+      background: #e2e8f0;
+      border-radius: 40px;
+      height: 12px;
+      overflow: hidden;
+      margin: 0.8rem 0;
+    }
+    .progress-fill {
+      background: var(--terracota);
+      width: 0%;
+      height: 100%;
+      transition: width 0.2s;
+    }
+
+    .conceptos-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+      gap: 1rem;
+      max-height: 65vh;
+      overflow-y: auto;
+      padding-right: 0.3rem;
+    }
+    .concepto-item {
+      background: white;
+      border-radius: 1.2rem;
+      padding: 0.8rem 1rem;
+      border-left: 5px solid var(--gris-porfolio);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+    .concepto-titulo {
+      font-weight: 700;
+      color: #a85c3a;
+    }
+    .concepto-desc {
+      font-size: 0.85rem;
+      color: #6f5b47;
+      margin-top: 6px;
+      border-top: 1px solid #f0e4d6;
+      padding-top: 6px;
+    }
+    .badge-progreso {
+      font-size: 0.7rem;
+      background: #fdf3ea;
+      border-radius: 20px;
+      padding: 2px 10px;
+      display: inline-block;
+      margin-top: 8px;
+    }
+
+    /* práctica */
+    .flashcard {
+      background: #ffffff;
+      border-radius: 2rem;
+      padding: 1.8rem;
+      text-align: center;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+      border: 1px solid #e6dbc8;
+      max-width: 750px;
+      margin: 0 auto;
+    }
+    .pregunta {
+      font-size: 1.4rem;
+      font-weight: 500;
+      margin-bottom: 1.8rem;
+      background: #fdf3ea;
+      padding: 1.2rem;
+      border-radius: 1.5rem;
+    }
+    .respuesta-oculta {
+      background: #faf6f0;
+      border-radius: 1.2rem;
+      padding: 1rem;
+      margin: 1rem 0;
+      display: none;
+    }
+    .palabras-baraja {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 0.6rem;
+      margin: 1.5rem 0;
+    }
+    .palabra-btn {
+      background: var(--terracota);
+      color: white;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 2rem;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: 0.1s;
+    }
+    .orden-actual {
+      background: #fefbf7;
+      border-radius: 1rem;
+      padding: 1rem;
+      min-height: 80px;
+      margin: 1rem 0;
+      text-align: left;
+      border: 1px dashed #d6cbb8;
+    }
+    .btn {
+      background: #e2e8f0;
+      border: none;
+      padding: 0.6rem 1.5rem;
+      border-radius: 3rem;
+      font-weight: 600;
+      margin: 0.3rem;
+      cursor: pointer;
+      font-family: inherit;
+    }
+    .btn-primary { background: var(--terracota); color: white; }
+    .btn-acierto { background: var(--acierto); color: white; }
+    .btn-fallo { background: var(--fallo); color: white; }
+    .modo-selector { display: flex; justify-content: center; gap: 0.8rem; margin-bottom: 1.5rem; flex-wrap: wrap; }
+    footer {
+      text-align: center;
+      padding: 1rem;
+      font-size: 0.75rem;
+      border-top: 1px solid #e6dbc8;
+      background: #fefbf7;
+    }
+    @media (max-width: 680px) {
+      .view { padding: 1rem; }
+      .pregunta { font-size: 1rem; }
+    }
+  </style>
+</head>
+<body>
+<div class="app-container">
+  <header>
+    <h1>🏛️ Marketing Digital · Arquitectura Colombia <small>100 conceptos para páginas web de arquitectura</small></h1>
+    <div style="font-size:0.8rem;">📈 SEO · Portafolios · Clientes · Social media · Inbound marketing · Publicidad online</div>
+  </header>
+  <nav>
+    <button class="nav-btn active" data-view="dashboard">📊 Panel</button>
+    <button class="nav-btn" data-view="listado">📚 Compendio</button>
+    <button class="nav-btn" data-view="practica">🃏 Práctica</button>
+  </nav>
+
+  <section id="dashboard" class="view active-view">
+    <div class="stats-grid" id="statsContainer"></div>
+    <div class="card" style="background:white; border-radius:1.6rem; padding:1.2rem;">
+      <h3>📈 Progreso en marketing digital para arquitectura</h3>
+      <div class="progress-bar-bg"><div class="progress-fill" id="globalProgressFill"></div></div>
+      <p id="globalProgressText"></p>
+      <button id="resetProgresoBtn" class="btn" style="background:#d8cdbb;">🔄 Reiniciar progreso</button>
+    </div>
+  </section>
+
+  <section id="listado" class="view">
+    <input type="text" id="filtroListado" placeholder="🔍 Buscar concepto o definición..." style="width:100%; padding:10px; margin-bottom:15px; border-radius:40px; border:1px solid #d6cbb8;">
+    <div id="conceptosListadoContainer" class="conceptos-grid"></div>
+  </section>
+
+  <section id="practica" class="view">
+    <div class="modo-selector">
+      <button id="modoConceptoDef" class="btn btn-primary">📖 Concepto → Definición</button>
+      <button id="modoDefConcepto" class="btn">🔄 Definición → Concepto</button>
+      <button id="modoOrdenar" class="btn">🧩 Ordenar definición</button>
+    </div>
+    <div id="practicaContainer"></div>
+  </section>
+  <footer>Progreso guardado localmente · Ejercicio de ordenar definición · Enfoque en estrategias digitales para estudios de arquitectura colombianos</footer>
+</div>
+
+<script>
+  // --------------------------------------------------------------
+  // 100 CONCEPTOS DE MARKETING DIGITAL PARA ARQUITECTURA (Colombia)
+  // --------------------------------------------------------------
+  const conceptosData = [
+    [1, "Marketing arquitectónico", "Aplicación de estrategias digitales para promover servicios de diseño, construcción y portafolios de arquitectura."],
+    [2, "Portafolio web de arquitectura", "Sitio o sección que exhibe proyectos realizados con imágenes, planos, renders y descripciones técnicas."],
+    [3, "Lead de construcción", "Potencial cliente interesado en servicios de diseño arquitectónico o edificación."],
+    [4, "SEO para arquitectos", "Optimización de la web para posicionar palabras clave como 'arquitecto en Bogotá', 'diseño de viviendas'."],
+    [5, "Palabra clave local", "Término geográfico que ayuda a captar clientes en ciudades colombianas (ej. 'estudio de arquitectura Medellín')."],
+    [6, "Google My Business para arquitectos", "Perfil gratuito que muestra la dirección, horario y reseñas del estudio en mapas."],
+    [7, "Ficha de proyecto", "Página detallada de un proyecto arquitectónico con fotos, memoria descriptiva y ubicación."],
+    [8, "Render fotorrealista", "Imagen digital de alta calidad que simula el proyecto terminado; esencial para el marketing visual."],
+    [9, "Recorrido virtual 360°", "Tour interactivo que permite explorar espacios diseñados, muy valorado en portafolios web."],
+    [10, "Video walkthrough", "Animación que recorre el proyecto arquitectónico, mostrando volúmenes y materiales."],
+    [11, "Caso de éxito", "Artículo o publicación que detalla un proyecto, los retos y soluciones, generando confianza."],
+    [12, "Testimonio de cliente", "Opinión positiva de un cliente anterior, publicada en la web para generar credibilidad."],
+    [13, "Landing page de servicio", "Página diseñada para una oferta específica (ej. 'Diseño de casas campestres') con formulario de contacto."],
+    [14, "Call to action (CTA) para arquitectos", "Botón o frase que invita a pedir cotización, descargar portafolio o agendar cita."],
+    [15, "Formulario de contacto", "Herramienta en la web para que posibles clientes envíen sus datos y requerimientos."],
+    [16, "Chat en vivo en sitio web", "Ventana de conversación integrada para responder dudas al instante y captar leads."],
+    [17, "WhatsApp Business", "Canal de comunicación directo con clientes, muy usado en Colombia para cotizaciones."],
+    [18, "Inbound marketing para arquitectura", "Atraer clientes con contenido valioso (guías de diseño, tendencias, presupuestos)."],
+    [19, "Lead magnet arquitectónico", "Ofrecimiento gratuito a cambio del correo: ebook de estilos, lista de acabados, checklists."],
+    [20, "Email marketing para estudios", "Envío de newsletter con proyectos recientes, novedades y promociones."],
+    [21, "Automatización de seguimiento", "Secuencia de correos automáticos para nutrir leads que aún no contratan."],
+    [22, "Segmentación de clientes", "Clasificar leads por tipo de proyecto (vivienda unifamiliar, oficinas, restauración)."],
+    [23, "CRM para arquitectos", "Sistema que gestiona contactos, cotizaciones y seguimiento de clientes potenciales."],
+    [24, "Brochure digital", "Documento PDF con el portafolio resumido, descargable desde la web."],
+    [25, "Planimetría descargable", "Planos en PDF que se ofrecen como contenido premium para leads calificados."],
+    [26, "Presupuesto online", "Formulario que calcula un costo estimado según metros cuadrados y tipo de proyecto."],
+    [27, "Blog de arquitectura", "Sección con artículos sobre tendencias, materiales, eficiencia energética, atrayendo tráfico orgánico."],
+    [28, "Guía de diseño de interiores", "Contenido descargable que posiciona al arquitecto como experto."],
+    [29, "SEO en descripciones de proyectos", "Uso de palabras clave regionales en textos alternativos de imágenes y metadatos."],
+    [30, "Google Analytics para arquitectos", "Herramienta que muestra comportamiento de usuarios en el sitio, páginas más vistas."],
+    [31, "Tasa de conversión de contacto", "Porcentaje de visitantes que llenan el formulario o llaman."],
+    [32, "Remarketing para arquitectura", "Mostrar anuncios a quienes han visitado el portafolio pero no contactaron."],
+    [33, "Anuncios en Google Ads (búsqueda)", "Aparecer cuando alguien busca 'arquitecto en Cali' o 'diseñar mi casa'."],
+    [34, "Anuncios en Facebook e Instagram", "Segmentar por intereses de construcción, decoración y ubicación colombiana."],
+    [35, "Campaña de display en YouTube", "Videos cortos con renders para promocionar el estudio antes de videos de arquitectura."],
+    [36, "CPL (Costo por lead)", "Inversión necesaria para conseguir cada contacto calificado."],
+    [37, "Presupuesto mensual de marketing", "Inversión recomendada para arquitectura: 3-8% de ingresos proyectados."],
+    [38, "LinkedIn para arquitectos", "Red profesional para conectar con contratistas, ingenieros y clientes corporativos."],
+    [39, "Instagram para estudios", "Plataforma ideal para mostrar fotos de proyectos, reels de procesos y stories."],
+    [40, "Pinterest para arquitectura", "Directorio visual donde se descubre tendencias y se enlaza al sitio web."],
+    [41, "TikTok arquitectura", "Videos cortos de maquetas, renders time-lapse o datavisualización."],
+    [42, "Hashtags para arquitectos", "#ArquitecturaColombia, #DiseñoInteriorBogotá, #ConstrucciónSostenible."],
+    [43, "Colaboración con influencers de construcción", "Promover el estudio en cuentas especializadas de reformas o decoración."],
+    [44, "Google Search Console", "Informa de palabras clave que llevan tráfico, errores de rastreo en la web."],
+    [45, "Mapa del sitio (sitemap) para portafolio", "Archivo XML que ayuda a Google a indexar todos los proyectos."],
+    [46, "Enlaces internos entre proyectos", "Relacionar proyectos similares dentro del sitio para aumentar tiempo de navegación."],
+    [47, "Backlinks de directorios", "Conseguir enlaces desde directorios de arquitectura (ArchDaily, Plataforma Arquitectura)."],
+    [48, "Reseñas en Google Maps", "Opiniones de clientes que mejoran la reputación local."],
+    [49, "Estrellas en SERP", "Resultados de búsqueda con calificaciones visibles, aumentan el CTR."],
+    [50, "Velocidad de carga del portafolio", "Factor crítico: imágenes optimizadas para no perder visitantes."],
+    [51, "Diseño responsivo", "Web que se adapta a móviles y tablets, pues muchos clientes buscan desde celular."],
+    [52, "Lightbox para imágenes", "Galería emergente de alta resolución que mejora experiencia de visualización."],
+    [53, "Filtros de proyectos", "Menú para ordenar por tipo (residencial, comercial, educativo) o ubicación."],
+    [54, "Página de 'Quiénes somos'", "Presentación del equipo, filosofía y años de experiencia."],
+    [55, "Certificaciones y membresías", "Sello de LEED, SCA, Colegio de Arquitectos, que generan confianza."],
+    [56, "Sello 'Sitio seguro' (SSL)", "Certificado de seguridad que evita advertencias en navegadores."],
+    [57, "Optimización de imágenes", "Compresión de fotos sin perder calidad para mantener velocidad."],
+    [58, "Texto alternativo (alt) en imágenes", "Descripción para SEO y accesibilidad, con palabras clave geográficas."],
+    [59, "Galería de renders por etapas", "Comparativa 'antes y después' de proyectos de remodelación."],
+    [60, "Caso práctico en video", "Entrevista al cliente narrando su experiencia con el estudio."],
+    [61, "Cálculo de ROI de marketing", "Retorno de inversión: (ingresos por leads - inversión) / inversión × 100."],
+    [62, "Plan de contenidos para arquitectura", "Calendario con temas: tendencias, proyectos emblemáticos, tips de construcción."],
+    [63, "Webinar de diseño", "Seminario online gratuito sobre 'Cómo planificar tu casa' para captar leads."],
+    [64, "Tráfico orgánico cualificado", "Visitantes que llegan buscando servicios específicos y tienen alta probabilidad de conversión."],
+    [65, "Facebook Pixel", "Código para rastrear conversiones y crear audiencias similares."],
+    [66, "Instagram Shopping", "Etiquetar productos de mobiliario o acabados en las fotos de proyectos."],
+    [67, "Anuncio de retargeting dinámico", "Mostrar al usuario los proyectos que él mismo vio en la web."],
+    [68, "MVP (Mínimo producto viable) digital", "Web sencilla con portafolio básico y formulario, antes de invertir en funcionalidades complejas."],
+    [69, "Presupuesto de construcción online", "Simulador que pide metros, tipo de acabado y muestra rango de precio."],
+    [70, "Encuesta de satisfacción", "Email después de finalizar el proyecto para recoger testimonio y reseña."],
+    [71, "Net Promoter Score (NPS)", "Pregunta: '¿Recomendarías nuestro estudio?', mide lealtad."],
+    [72, "Programa de referidos", "Descuento a clientes que recomiendan nuevos proyectos."],
+    [73, "Código de seguimiento en WhatsApp", "Enlace wa.me con mensaje predefinido para agilizar contacto."],
+    [74, "Chatbot de calificación de leads", "Bot que pregunta tipo de proyecto y presupuesto, luego asigna a un arquitecto."],
+    [75, "Formulario con preguntas calificadoras", "Campos como 'Área del terreno', 'Ubicación', 'Presupuesto tentativo'."],
+    [76, "Calificación de prospectos (lead scoring)", "Puntos según interacción: descargó brocure, vio video, visitó proyectos."],
+    [77, "Página de agradecimiento", "Redirigir después del formulario, ofreciendo contenido adicional."],
+    [78, "A/B testing en CTA", "Probar colores y textos de botones para mejorar conversión."],
+    [79, "Mapa de calor (heatmap)", "Herramienta como Hotjar que muestra dónde hacen clic los usuarios."],
+    [80, "Grabación de sesiones", "Reproducir el recorrido de un visitante para detectar puntos de abandono."],
+    [81, "SEO para búsqueda por voz", "Optimizar para frases como 'dónde encontrar arquitecto en Cartagena'."],
+    [82, "Estrategia de contenido perenne", "Artículos que sigan siendo útiles años después, como 'Guía de permisos de construcción'."],
+    [83, "Noticias del sector", "Publicar sobre nuevas normativas colombianas (NSR-10, POT) para atraer profesionales."],
+    [84, "Colaboración con constructoras", "Artículo o sección dedicada a alianzas con empresas de construcción."],
+    [85, "Muestra de materiales físicos en web", "Solicitar muestrario gratis a cambio de lead."],
+    [86, "Calculadora de CO2 de proyecto", "Atributo sostenible que atrae clientes conscientes."],
+    [87, "Certificación WELL", "Sello de salud y bienestar en edificios; destacarlo en marketing."],
+    [88, "Campaña de lanzamiento de proyecto", "Teaser en redes sociales antes de publicar el portafolio oficial."],
+    [89, "Evento virtual de inauguración", "Presentación en vivo del proyecto con tour 360° y sesión de preguntas."],
+    [90, "Landing page de concurso", "Página para promocionar un diseño ganador de premio arquitectónico."],
+    [91, "Premio a la innovación", "Comunicar reconocimientos en la web y en Google My Business."],
+    [92, "Embudo de ventas para arquitectura", "Etapas: descubrimiento → consideración → cotización → cierre."],
+    [93, "Lead nurturing (cultivo de leads)", "Envío periódico de información útil hasta que el cliente decida contratar."],
+    [94, "Propuesta comercial digital", "Documento PDF interactivo con enlaces a proyectos específicos."],
+    [95, "Contrato online", "Firma electrónica para agilizar cierre de negocios."],
+    [96, "Upselling en servicios", "Ofrecer diseño de interiores o paisajismo adicional al proyecto principal."],
+    [97, "Retención de clientes", "Enviar recordatorios de mantenimiento de acabados o felicitaciones de aniversario."],
+    [98, "Medición de CAC (Customer Acquisition Cost)", "Gasto total en marketing dividido por número de nuevos clientes."],
+    [99, "Dashboard de marketing", "Tablero en Google Looker Studio que integra leads, tráfico y conversiones."],
+    [100, "Plan estratégico de marketing digital para arquitectura", "Documento anual que define objetivos, KPI, canales y presupuesto."]
+  ];
+
+  // --------------------- LOCALSTORAGE Y PROGRESO -------------------------
+  let progreso = {};
+  const STORAGE_KEY = "marketingArquitecturaProgreso";
+
+  function cargarProgreso() {
+    const guardado = localStorage.getItem(STORAGE_KEY);
+    if (guardado) progreso = JSON.parse(guardado);
+    else {
+      progreso = {};
+      for (let i = 1; i <= 100; i++) progreso[i] = { aciertos: 0, fallos: 0 };
+    }
+  }
+  function guardarProgreso() { localStorage.setItem(STORAGE_KEY, JSON.stringify(progreso)); }
+  function registrarResultado(id, acierto) {
+    if (!progreso[id]) progreso[id] = { aciertos: 0, fallos: 0 };
+    if (acierto) progreso[id].aciertos += 1;
+    else progreso[id].fallos += 1;
+    guardarProgreso();
+    renderDashboard();
+    renderListado(document.getElementById("filtroListado")?.value || "");
+    if (window.currentCardId === id && document.getElementById("infoProgresoCard")) {
+      document.getElementById("infoProgresoCard").innerHTML = `📊 Concepto ${id} · ✅ ${progreso[id].aciertos} aciertos · ❌ ${progreso[id].fallos} fallos`;
+    }
+  }
+
+  function renderDashboard() {
+    let totalAciertos = 0, totalFallos = 0, conceptosConAcierto = 0;
+    for (let i = 1; i <= 100; i++) {
+      const p = progreso[i] || { aciertos: 0, fallos: 0 };
+      totalAciertos += p.aciertos;
+      totalFallos += p.fallos;
+      if (p.aciertos > 0) conceptosConAcierto++;
+    }
+    const porcentaje = (conceptosConAcierto / 100) * 100;
+    document.getElementById("globalProgressFill").style.width = `${porcentaje}%`;
+    document.getElementById("globalProgressText").innerHTML = `${conceptosConAcierto} de 100 conceptos con al menos 1 acierto (${Math.round(porcentaje)}%).`;
+    document.getElementById("statsContainer").innerHTML = `
+      <div class="stat-card"><div class="stat-number">${totalAciertos}</div>✅ Aciertos totales</div>
+      <div class="stat-card"><div class="stat-number">${totalFallos}</div>❌ Fallos</div>
+      <div class="stat-card"><div class="stat-number">${conceptosConAcierto}</div>📘 Conceptos dominados</div>
+      <div class="stat-card"><div class="stat-number">${Math.round((totalAciertos/(totalAciertos+totalFallos+0.001))*100)}%</div>📊 Tasa éxito</div>
+    `;
+  }
+
+  function renderListado(filtro = "") {
+    const container = document.getElementById("conceptosListadoContainer");
+    container.innerHTML = "";
+    const filtroLower = filtro.toLowerCase();
+    for (let c of conceptosData) {
+      const [id, nombre, definicion] = c;
+      const prog = progreso[id] || { aciertos: 0, fallos: 0 };
+      if (filtro && !nombre.toLowerCase().includes(filtroLower) && !definicion.toLowerCase().includes(filtroLower)) continue;
+      const div = document.createElement("div");
+      div.className = "concepto-item";
+      div.innerHTML = `<div class="concepto-titulo">${id}. ${nombre}</div>
+                       <div class="concepto-desc">🏛️ ${definicion.substring(0, 150)}${definicion.length > 150 ? '…' : ''}</div>
+                       <span class="badge-progreso">✅ ${prog.aciertos} aciertos · ❌ ${prog.fallos} fallos</span>`;
+      container.appendChild(div);
+    }
+  }
+
+  // --------------------- PRÁCTICA: TRES MODOS -------------------------
+  let currentMode = "concepto_def";
+  let cardsArray = [];
+  let currentCardIndex = 0;
+  let currentCardId = null;
+  let currentOrdenarPalabras = [];
+  let shuffledPalabras = [];
+  let selectedOrder = [];
+  let ordenarRespuestaCorrecta = "";
+
+  const practicaDiv = document.getElementById("practicaContainer");
+
+  function construirCards() {
+    cardsArray = conceptosData.map(item => {
+      const [id, concepto, definicion] = item;
+      if (currentMode === "concepto_def") {
+        return { id, pregunta: `🏛️ Concepto: ${concepto}`, respuestaCorrecta: definicion };
+      } else if (currentMode === "def_concepto") {
+        let defCorta = definicion.length > 130 ? definicion.substring(0, 127) + "…" : definicion;
+        return { id, pregunta: `✍️ Definición: "${defCorta}"`, respuestaCorrecta: concepto };
+      } else {
+        return { id, concepto, definicion };
+      }
+    });
+  }
+
+  function renderFlashcardNormal() {
+    if (!cardsArray.length) return;
+    const card = cardsArray[currentCardIndex];
+    currentCardId = card.id;
+    practicaDiv.innerHTML = `
+      <div class="flashcard">
+        <div class="pregunta">${card.pregunta}</div>
+        <button id="mostrarRespuestaBtn" class="btn">📖 Mostrar respuesta</button>
+        <div id="respuestaDiv" class="respuesta-oculta"><strong>Respuesta:</strong><br>${card.respuestaCorrecta}</div>
+        <div style="margin-top:1rem;">
+          <button id="aciertoBtn" class="btn btn-acierto" disabled>✅ Acierto</button>
+          <button id="falloBtn" class="btn btn-fallo" disabled>❌ Fallo</button>
+        </div>
+        <button id="siguienteCardBtn" class="btn" style="margin-top:1rem;">⏩ Siguiente</button>
+        <p id="infoProgresoCard" style="margin-top:0.8rem;">📊 ${currentMode === "concepto_def" ? "Concepto" : "Definición"} ${card.id} · ✅ ${progreso[card.id]?.aciertos||0} aciertos · ❌ ${progreso[card.id]?.fallos||0} fallos</p>
+      </div>
+    `;
+    document.getElementById("mostrarRespuestaBtn").onclick = () => {
+      const respDiv = document.getElementById("respuestaDiv");
+      if (respDiv.style.display !== "block") {
+        respDiv.style.display = "block";
+        document.getElementById("aciertoBtn").disabled = false;
+        document.getElementById("falloBtn").disabled = false;
+      }
+    };
+    document.getElementById("aciertoBtn").onclick = () => { registrarResultado(currentCardId, true); siguienteNormal(); };
+    document.getElementById("falloBtn").onclick = () => { registrarResultado(currentCardId, false); siguienteNormal(); };
+    document.getElementById("siguienteCardBtn").onclick = () => siguienteNormal();
+  }
+
+  function siguienteNormal() {
+    currentCardIndex = (currentCardIndex + 1) % cardsArray.length;
+    renderFlashcardNormal();
+  }
+
+  function inicializarOrdenar() {
+    const card = cardsArray[currentCardIndex];
+    currentCardId = card.id;
+    const definicionOriginal = card.definicion;
+    ordenarRespuestaCorrecta = definicionOriginal;
+    let palabras = definicionOriginal.split(/\s+/).filter(p => p.length > 0);
+    currentOrdenarPalabras = [...palabras];
+    shuffledPalabras = [...palabras];
+    for (let i = shuffledPalabras.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [shuffledPalabras[i], shuffledPalabras[j]] = [shuffledPalabras[j], shuffledPalabras[i]];
+    }
+    selectedOrder = [];
+    renderOrdenarUI();
+  }
+
+  function renderOrdenarUI() {
+    const card = cardsArray[currentCardIndex];
+    const prog = progreso[currentCardId] || { aciertos:0, fallos:0 };
+    let palabrasHTML = shuffledPalabras.map(p => `<button class="palabra-btn" data-palabra="${p.replace(/"/g, '&quot;')}">${p}</button>`).join('');
+    let ordenHTML = selectedOrder.map(p => `<span style="background:#fdf3ea; padding:0.2rem 0.6rem; margin:0.2rem; border-radius:1rem;">${p}</span>`).join(' ');
+    if (ordenHTML === "") ordenHTML = "<em>Haz clic en las palabras en el orden correcto...</em>";
+    practicaDiv.innerHTML = `
+      <div class="flashcard">
+        <h3>🧩 Ordena la definición de:</h3>
+        <div class="pregunta" style="background:#fdf3ea;">📌 ${card.concepto}</div>
+        <div class="orden-actual"><strong>Tu orden actual:</strong><br> ${ordenHTML}</div>
+        <div class="palabras-baraja" id="palabrasBaraja">${palabrasHTML}</div>
+        <div>
+          <button id="resetOrdenBtn" class="btn" style="background:#d8cdbb;">🔁 Reiniciar orden</button>
+          <button id="comprobarOrdenBtn" class="btn btn-primary">✓ Comprobar</button>
+        </div>
+        <button id="siguienteOrdenBtn" class="btn" style="margin-top:1rem;">⏩ Siguiente concepto</button>
+        <p id="infoProgresoCard">✅ ${prog.aciertos} aciertos · ❌ ${prog.fallos} fallos</p>
+        <div id="feedbackOrden" style="margin-top:0.8rem; font-weight:bold;"></div>
+      </div>
+    `;
+    document.querySelectorAll(".palabra-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const palabra = btn.getAttribute("data-palabra");
+        const idx = shuffledPalabras.indexOf(palabra);
+        if (idx !== -1) {
+          shuffledPalabras.splice(idx, 1);
+          selectedOrder.push(palabra);
+          renderOrdenarUI();
+        }
+      });
+    });
+    document.getElementById("resetOrdenBtn").onclick = () => {
+      shuffledPalabras = [...currentOrdenarPalabras];
+      for (let i = shuffledPalabras.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [shuffledPalabras[i], shuffledPalabras[j]] = [shuffledPalabras[j], shuffledPalabras[i]];
+      }
+      selectedOrder = [];
+      renderOrdenarUI();
+    };
+    document.getElementById("comprobarOrdenBtn").onclick = () => {
+      const ordenUsuario = selectedOrder.join(" ");
+      if (ordenUsuario === ordenarRespuestaCorrecta) {
+        document.getElementById("feedbackOrden").innerHTML = "<span style='color:#3a7a5c'>✅ ¡Correcto! Definición ordenada correctamente.</span>";
+        registrarResultado(currentCardId, true);
+        setTimeout(() => siguienteOrdenar(), 1200);
+      } else {
+        document.getElementById("feedbackOrden").innerHTML = `<span style='color:#c4553a'>❌ Incorrecto. La definición correcta es: "${ordenarRespuestaCorrecta}"</span>`;
+        registrarResultado(currentCardId, false);
+        setTimeout(() => siguienteOrdenar(), 2000);
+      }
+      document.getElementById("comprobarOrdenBtn").disabled = true;
+      document.querySelectorAll(".palabra-btn").forEach(b => b.style.pointerEvents = "none");
+      setTimeout(() => {
+        if (document.getElementById("comprobarOrdenBtn")) document.getElementById("comprobarOrdenBtn").disabled = false;
+        document.querySelectorAll(".palabra-btn").forEach(b => b.style.pointerEvents = "auto");
+      }, 2000);
+    };
+    document.getElementById("siguienteOrdenBtn").onclick = () => siguienteOrdenar();
+  }
+
+  function siguienteOrdenar() {
+    currentCardIndex = (currentCardIndex + 1) % cardsArray.length;
+    inicializarOrdenar();
+  }
+
+  function setMode(mode) {
+    currentMode = mode;
+    construirCards();
+    currentCardIndex = 0;
+    if (mode === "ordenar") inicializarOrdenar();
+    else renderFlashcardNormal();
+  }
+
+  function initUI() {
+    document.querySelectorAll(".nav-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const viewId = btn.getAttribute("data-view");
+        document.querySelectorAll(".view").forEach(v => v.classList.remove("active-view"));
+        document.getElementById(viewId).classList.add("active-view");
+        document.querySelectorAll(".nav-btn").forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+        if (viewId === "listado") renderListado(document.getElementById("filtroListado").value);
+        if (viewId === "dashboard") renderDashboard();
+        if (viewId === "practica") setMode(currentMode);
+      });
+    });
+    document.getElementById("modoConceptoDef").addEventListener("click", () => {
+      currentMode = "concepto_def";
+      setMode("concepto_def");
+      document.getElementById("modoConceptoDef").classList.add("btn-primary");
+      document.getElementById("modoDefConcepto").classList.remove("btn-primary");
+      document.getElementById("modoOrdenar").classList.remove("btn-primary");
+    });
+    document.getElementById("modoDefConcepto").addEventListener("click", () => {
+      currentMode = "def_concepto";
+      setMode("def_concepto");
+      document.getElementById("modoDefConcepto").classList.add("btn-primary");
+      document.getElementById("modoConceptoDef").classList.remove("btn-primary");
+      document.getElementById("modoOrdenar").classList.remove("btn-primary");
+    });
+    document.getElementById("modoOrdenar").addEventListener("click", () => {
+      currentMode = "ordenar";
+      setMode("ordenar");
+      document.getElementById("modoOrdenar").classList.add("btn-primary");
+      document.getElementById("modoConceptoDef").classList.remove("btn-primary");
+      document.getElementById("modoDefConcepto").classList.remove("btn-primary");
+    });
+    document.getElementById("resetProgresoBtn").addEventListener("click", () => {
+      if (confirm("¿Reiniciar todo el progreso? Se perderán aciertos y fallos.")) {
+        for (let i = 1; i <= 100; i++) progreso[i] = { aciertos: 0, fallos: 0 };
+        guardarProgreso();
+        renderDashboard();
+        renderListado(document.getElementById("filtroListado")?.value || "");
+        if (currentMode === "ordenar") inicializarOrdenar();
+        else if (currentMode !== "ordenar") renderFlashcardNormal();
+      }
+    });
+    document.getElementById("filtroListado").addEventListener("input", (e) => renderListado(e.target.value));
+  }
+
+  window.addEventListener("DOMContentLoaded", () => {
+    cargarProgreso();
+    construirCards();
+    setMode("concepto_def");
+    renderDashboard();
+    renderListado();
+    initUI();
+  });
+</script>
+</body>
+</html>

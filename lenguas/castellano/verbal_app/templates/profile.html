@@ -1,0 +1,148 @@
+{% extends 'base.html' %}
+{% block title %}Perfil · VerbalMaster{% endblock %}
+{% block body %}
+<div class="page">
+<div class="container animate">
+
+  <!-- HEADER -->
+  <div class="flex-between mb-4">
+    <div class="flex" style="gap:1.2rem">
+      <div style="width:64px;height:64px;border-radius:50%;background:linear-gradient(135deg,var(--gold),var(--es));
+        display:flex;align-items:center;justify-content:center;font-family:var(--font-display);font-size:1.8rem;font-weight:900;color:#000;flex-shrink:0">
+        {{ user.avatar }}
+      </div>
+      <div>
+        <div style="font-family:var(--font-display);font-size:1.6rem;font-weight:900">{{ user.username }}</div>
+        <div class="text-sm text-muted">{{ user.email }}</div>
+        <div class="flex mt-1">
+          <span style="font-size:1.1rem">{{ medal.icon }}</span>
+          <span class="text-sm" style="color:{{ medal.color }}">{{ medal.name }}</span>
+          <span class="text-sm text-muted">· Nivel {{ level.level }} {{ level.name }}</span>
+        </div>
+      </div>
+    </div>
+    <div style="text-align:right">
+      <div style="font-family:var(--font-display);font-size:2.2rem;font-weight:900;color:var(--gold)">{{ sc.total }}</div>
+      <div class="text-xs text-muted">PUNTOS TOTALES</div>
+    </div>
+  </div>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.2rem;align-items:start">
+
+    <!-- LEFT -->
+    <div>
+      <!-- STATS -->
+      <div class="text-xs text-muted mb-2" style="letter-spacing:.1em">ESTADÍSTICAS</div>
+      <div class="grid-2 mb-3">
+        <div class="card" style="border-left:3px solid var(--gold)">
+          <div style="font-size:1.3rem;font-weight:700;color:var(--gold)">{{ sc.total }}</div>
+          <div class="text-xs text-muted">Puntos totales</div>
+        </div>
+        <div class="card" style="border-left:3px solid var(--ru)">
+          <div style="font-size:1.3rem;font-weight:700;color:var(--ru)">{{ sc.correct }}</div>
+          <div class="text-xs text-muted">Correctas</div>
+        </div>
+        <div class="card" style="border-left:3px solid var(--en)">
+          <div style="font-size:1.3rem;font-weight:700;color:var(--en)">{{ sc.attempted }}</div>
+          <div class="text-xs text-muted">Intentos</div>
+        </div>
+        <div class="card" style="border-left:3px solid var(--hi)">
+          <div style="font-size:1.3rem;font-weight:700;color:var(--hi)">
+            {% if sc.attempted %}{{ ((sc.correct/sc.attempted)*100)|int }}%{% else %}—{% endif %}
+          </div>
+          <div class="text-xs text-muted">Precisión</div>
+        </div>
+      </div>
+
+      <!-- ALL MEDALS -->
+      <div class="text-xs text-muted mb-2" style="letter-spacing:.1em">MEDALLAS</div>
+      <div class="card mb-3">
+        {% for m in all_medals %}
+        <div style="display:flex;align-items:center;gap:0.8rem;padding:0.6rem 0;{% if not loop.last %}border-bottom:1px solid var(--border){% endif %}">
+          <div style="font-size:1.4rem;{% if sc.total < m.min %}filter:grayscale(1);opacity:0.3{% endif %}">{{ m.icon }}</div>
+          <div style="flex:1">
+            <div style="font-size:0.8rem;font-weight:600;{% if sc.total >= m.min %}color:{{ m.color }}{% else %}color:var(--muted){% endif %}">{{ m.name }}</div>
+            <div class="text-xs text-muted">{{ m.min }} puntos</div>
+          </div>
+          {% if sc.total >= m.min %}
+          <span style="font-size:0.62rem;color:var(--ru);background:rgba(34,197,94,0.1);border:1px solid rgba(34,197,94,0.3);padding:0.1rem 0.5rem;border-radius:999px">OBTENIDA</span>
+          {% else %}
+          <span class="text-xs text-muted">{{ m.min - sc.total }} pts restantes</span>
+          {% endif %}
+        </div>
+        {% endfor %}
+      </div>
+
+      <!-- LEVELS -->
+      <div class="text-xs text-muted mb-2" style="letter-spacing:.1em">NIVELES</div>
+      <div class="card">
+        {% for lv in all_levels %}
+        <div style="display:flex;align-items:center;gap:0.8rem;padding:0.5rem 0;{% if not loop.last %}border-bottom:1px solid var(--border){% endif %}">
+          <div style="width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.7rem;font-weight:700;
+            {% if sc.total >= lv.min %}background:linear-gradient(135deg,var(--gold),var(--es));color:#000{% else %}background:var(--s3);color:var(--muted){% endif %}">
+            {{ lv.level }}
+          </div>
+          <div style="flex:1">
+            <div style="font-size:0.78rem;font-weight:600;{% if sc.total >= lv.min %}color:var(--text){% else %}color:var(--muted){% endif %}">{{ lv.name }}</div>
+            <div class="text-xs text-muted">{{ lv.min }} puntos mínimos</div>
+          </div>
+          {% if level.level == lv.level %}<span style="font-size:0.62rem;color:var(--gold)">◀ ACTUAL</span>{% endif %}
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+
+    <!-- RIGHT -->
+    <div>
+      <!-- EDIT PROFILE -->
+      <div class="text-xs text-muted mb-2" style="letter-spacing:.1em">EDITAR PERFIL</div>
+      <div class="card mb-3">
+        <div id="editErr" class="alert alert-err hidden mb-2"></div>
+        <div id="editOk" class="alert alert-ok hidden mb-2">✅ Actualizado correctamente</div>
+        <div class="form-group">
+          <label>Nuevo email</label>
+          <input type="email" id="newEmail" value="{{ user.email }}">
+        </div>
+        <div class="form-group">
+          <label>Nueva contraseña (dejar vacío para no cambiar)</label>
+          <input type="password" id="newPw" placeholder="••••••••">
+        </div>
+        <button class="btn btn-primary btn-sm" onclick="saveProfile()">Guardar cambios</button>
+      </div>
+
+      <!-- HISTORY -->
+      <div class="text-xs text-muted mb-2" style="letter-spacing:.1em">HISTORIAL RECIENTE</div>
+      <div class="card">
+        {% if history %}
+        {% for h in history %}
+        <div style="display:flex;align-items:center;gap:0.7rem;padding:0.45rem 0;{% if not loop.last %}border-bottom:1px solid var(--border){% endif %}">
+          <div style="font-size:0.8rem">{% if h.correct %}✅{% else %}❌{% endif %}</div>
+          <span class="badge badge-{{ h.lang }}">{{ h.lang.upper() }}</span>
+          <div style="flex:1;font-size:0.68rem;color:var(--muted)">{{ h.ts[:16].replace('T',' ') }}</div>
+          <div style="font-size:0.72rem;color:var(--gold);font-weight:600">+{{ h.pts }}pts</div>
+        </div>
+        {% endfor %}
+        {% else %}
+        <div class="text-muted text-sm" style="text-align:center;padding:1.5rem">Sin historial aún. ¡Empieza a practicar!</div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+{% endblock %}
+{% block scripts %}
+<script>
+function saveProfile(){
+  const email=document.getElementById('newEmail').value.trim();
+  const pw=document.getElementById('newPw').value;
+  const d={};
+  if(email) d.email=email;
+  if(pw){if(pw.length<6){document.getElementById('editErr').textContent='Min 6 chars';document.getElementById('editErr').classList.remove('hidden');return;}d.password=pw;}
+  post('/profile/update',d).then(r=>{
+    if(r.ok){document.getElementById('editOk').classList.remove('hidden');document.getElementById('editErr').classList.add('hidden');}
+    else{document.getElementById('editErr').textContent=r.msg;document.getElementById('editErr').classList.remove('hidden');}
+  });
+}
+</script>
+{% endblock %}

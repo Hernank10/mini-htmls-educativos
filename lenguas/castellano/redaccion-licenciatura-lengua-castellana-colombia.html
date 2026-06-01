@@ -1,0 +1,1752 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Redacción · Licenciatura en Lengua Castellana · Colombia</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;0,9..144,700;1,9..144,300;1,9..144,500;1,9..144,700&family=Nunito+Sans:ital,opsz,wght@0,6..12,300;0,6..12,400;0,6..12,600;1,6..12,300;1,6..12,400&family=Fira+Code:wght@300;400;500&display=swap" rel="stylesheet">
+
+<style>
+/* ══════════════════════════════════════════
+   TOKENS — Tricolor colombiana
+   Amarillo girasol · Azul índigo · Rojo bandera
+══════════════════════════════════════════ */
+:root {
+  --bg:           #faf8f2;
+  --bg-alt:       #f2eedf;
+  --bg-card:      #ffffff;
+  --bg-hover:     #fef9e8;
+  --bg-dark:      #0d1229;
+  --bg-navy:      #0e1a3a;
+  --border:       #d8d0b0;
+  --border-soft:  #ece8d4;
+  --ink:          #0d1229;
+  --ink-soft:     #1e2a4a;
+  --ink-muted:    #5a5840;
+
+  /* Tricolor */
+  --amarillo:     #fcd116;   /* amarillo Colombia */
+  --amarillo-dk:  #d4a500;
+  --amarillo-pale:#fffae0;
+  --azul:         #003087;   /* azul bandera Colombia */
+  --azul-lt:      #1a4ab0;
+  --azul-pale:    #dce6ff;
+  --rojo:         #ce1126;   /* rojo bandera Colombia */
+  --rojo-lt:      #e83046;
+  --rojo-pale:    #fce4e8;
+
+  --green-check:  #1a6b3a;
+  --tag-bg:       #fff3b0;
+  --code-bg:      #0d1229;
+  --code-fg:      #f8e68a;
+
+  --font-head:  'Fraunces', Georgia, serif;
+  --font-body:  'Nunito Sans', system-ui, sans-serif;
+  --font-mono:  'Fira Code', 'Courier New', monospace;
+
+  --r:    7px;
+  --r-lg: 12px;
+  --shadow:    0 1px 8px rgba(13,18,41,.08);
+  --shadow-md: 0 4px 20px rgba(13,18,41,.13);
+  --t: .18s ease;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: 16.5px; scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-weight: 300;
+  line-height: 1.75;
+  min-height: 100vh;
+  /* Textura de líneas de libro */
+  background-image: repeating-linear-gradient(
+    0deg, transparent, transparent 27px,
+    rgba(252,209,22,.08) 27px, rgba(252,209,22,.08) 28px
+  );
+}
+
+a { color: var(--azul); text-decoration: none; }
+button { cursor: pointer; font-family: var(--font-body); }
+input, select { font-family: var(--font-body); font-size: 1rem; }
+.app { display: flex; flex-direction: column; min-height: 100vh; }
+
+/* ══ NAV — franja tricolor ══ */
+nav {
+  background: var(--bg-dark);
+  padding: 0;
+  position: sticky; top: 0; z-index: 100;
+  box-shadow: 0 3px 20px rgba(0,0,0,.5);
+}
+.nav-tricolor {
+  display: flex; height: 5px;
+}
+.nav-tricolor span:nth-child(1) { flex: 2; background: var(--amarillo); }
+.nav-tricolor span:nth-child(2) { flex: 1; background: var(--azul); }
+.nav-tricolor span:nth-child(3) { flex: 1; background: var(--rojo); }
+
+.nav-inner {
+  display: flex; align-items: center; gap: .75rem;
+  padding: .62rem 1.8rem;
+}
+.nav-logo {
+  font-family: var(--font-head);
+  font-size: 1.12rem; font-style: italic;
+  color: var(--amarillo);
+  letter-spacing: .01em; margin-right: auto; white-space: nowrap;
+}
+.nav-logo span { color: #8a9cc8; font-family: var(--font-mono); font-style: normal; font-size: .78rem; letter-spacing: .06em; }
+.nav-btn {
+  padding: .34rem .78rem;
+  border: 1px solid #2a3460;
+  border-radius: var(--r);
+  background: transparent; color: #9aa8d0;
+  font-size: .82rem; letter-spacing: .04em; font-family: var(--font-mono);
+  transition: var(--t); white-space: nowrap;
+}
+.nav-btn:hover, .nav-btn.active { background: var(--azul); border-color: var(--azul); color: #fff; }
+.nav-burger { display: none; background: none; border: none; font-size: 1.5rem; color: var(--amarillo); }
+
+/* ══ PAGES ══ */
+.page { display: none; animation: fadein .28s ease both; }
+.page.active { display: block; }
+@keyframes fadein { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+.container { max-width: 1140px; margin: 0 auto; padding: 2rem 1.8rem; }
+
+/* ══ DASHBOARD ══ */
+.dash-hero {
+  background: var(--bg-navy);
+  padding: 2.8rem 2.8rem 2.4rem;
+  border-radius: var(--r-lg); margin-bottom: 1.8rem;
+  box-shadow: var(--shadow-md);
+  position: relative; overflow: hidden;
+  display: grid; grid-template-columns: 1fr 130px; gap: 2rem; align-items: center;
+}
+/* Franjas tricolor en hero */
+.dash-hero::before {
+  content: '';
+  position: absolute; left: 0; top: 0; bottom: 0; width: 8px;
+  background: linear-gradient(180deg, var(--amarillo) 50%, var(--azul) 50% 75%, var(--rojo) 75%);
+}
+.dash-hero::after {
+  content: '';
+  position: absolute; bottom: 0; left: 0; right: 0; height: 3px;
+  background: linear-gradient(90deg, var(--amarillo) 50%, var(--azul) 50% 75%, var(--rojo) 75%);
+}
+.dash-hero-text { position: relative; z-index: 1; padding-left: .5rem; }
+.dash-hero h1 {
+  font-family: var(--font-head);
+  font-size: clamp(1.65rem, 3.5vw, 2.6rem);
+  font-style: italic; color: #f0ecc8;
+  line-height: 1.12; margin-bottom: .4rem;
+}
+.dash-hero p { color: #5a6890; font-size: .9rem; font-family: var(--font-mono); letter-spacing: .04em; }
+.hero-badges { display: flex; gap: .5rem; flex-wrap: wrap; margin-top: .85rem; }
+.hero-badge {
+  display: inline-flex; align-items: center;
+  background: rgba(252,209,22,.12); border: 1px solid rgba(252,209,22,.3);
+  border-radius: 3px; padding: .15rem .7rem;
+  font-size: .71rem; color: #f8d840; font-family: var(--font-mono); letter-spacing: .05em;
+}
+.hero-badge.azul { background: rgba(0,48,135,.25); border-color: rgba(26,74,176,.4); color: #88aaee; }
+.hero-badge.rojo { background: rgba(206,17,38,.15); border-color: rgba(232,48,70,.35); color: #f08898; }
+.dash-hero-glyph {
+  position: relative; z-index: 1;
+  font-family: var(--font-head); font-size: 4.5rem; font-style: italic;
+  color: rgba(252,209,22,.12); user-select: none; text-align: center; line-height: 1;
+}
+
+/* Profile */
+.profile-bar {
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: var(--r-lg); padding: .95rem 1.4rem;
+  margin-bottom: 1.75rem; box-shadow: var(--shadow);
+  display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;
+  border-left: 4px solid var(--amarillo);
+}
+.profile-avatar {
+  width: 42px; height: 42px; border-radius: 50%;
+  background: var(--azul); color: #fff;
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-head); font-size: 1.2rem; font-style: italic; flex-shrink: 0;
+}
+.profile-info { flex: 1; min-width: 120px; }
+.profile-name { font-weight: 600; font-size: .94rem; color: var(--ink-soft); display: flex; align-items: center; gap: .5rem; }
+.profile-name input {
+  border: 1px solid var(--border); border-radius: var(--r);
+  padding: .18rem .48rem; font-size: .9rem; color: var(--ink);
+  background: var(--bg); width: 190px; font-family: var(--font-body);
+}
+.profile-name input:focus { outline: none; border-color: var(--azul); }
+.profile-meta { font-size: .77rem; color: var(--ink-muted); font-family: var(--font-mono); }
+.profile-semestre {
+  display: inline-flex; align-items: center; gap: .35rem;
+  background: var(--amarillo-pale); color: var(--azul);
+  border: 1px solid var(--border); border-radius: 99px;
+  padding: .14rem .7rem; font-size: .74rem; font-family: var(--font-mono);
+  letter-spacing: .05em; cursor: pointer; transition: var(--t);
+}
+.profile-semestre:hover { background: var(--amarillo); color: var(--bg-dark); }
+
+/* Stats */
+.stats-grid {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(155px, 1fr));
+  gap: .9rem; margin-bottom: 1.75rem;
+}
+.stat-card {
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: var(--r-lg); padding: 1.2rem 1rem;
+  text-align: center; box-shadow: var(--shadow); transition: var(--t);
+  position: relative; overflow: hidden;
+}
+.stat-card::after { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px; background: var(--amarillo); }
+.stat-card:nth-child(2)::after { background: var(--green-check); }
+.stat-card:nth-child(3)::after { background: var(--amarillo-dk); }
+.stat-card:nth-child(4)::after { background: var(--rojo); }
+.stat-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); }
+.stat-num { font-family: var(--font-head); font-size: 2.4rem; font-style: italic; color: var(--azul); line-height: 1; }
+.stat-label { font-size: .7rem; color: var(--ink-muted); letter-spacing: .08em; margin-top: .3rem; text-transform: uppercase; font-family: var(--font-mono); }
+
+/* Progress */
+.progress-wrap {
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: var(--r-lg); padding: 1.3rem 1.8rem;
+  margin-bottom: 1.75rem; box-shadow: var(--shadow);
+}
+.progress-label { font-family: var(--font-mono); font-size: .72rem; color: var(--ink-muted); letter-spacing: .1em; text-transform: uppercase; margin-bottom: .8rem; }
+.progress-bar-outer { height: 12px; background: var(--bg-alt); border-radius: 99px; overflow: hidden; border: 1px solid var(--border); }
+.progress-bar-inner {
+  height: 100%;
+  background: linear-gradient(90deg, var(--amarillo) 0%, var(--azul) 60%, var(--rojo) 100%);
+  border-radius: 99px; transition: width .6s ease;
+}
+.progress-pct { font-family: var(--font-head); font-style: italic; font-size: 1.6rem; color: var(--azul); margin-top: .4rem; }
+
+/* Epoch grid */
+.epoch-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(215px, 1fr)); gap: .85rem; margin-bottom: 2rem; }
+.epoch-card {
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: var(--r-lg); padding: 1rem 1.1rem;
+  cursor: pointer; transition: var(--t); box-shadow: var(--shadow);
+  border-left: 3px solid var(--border);
+}
+.epoch-card:hover { background: var(--bg-hover); transform: translateY(-2px); box-shadow: var(--shadow-md); border-left-color: var(--amarillo-dk); }
+.epoch-num { font-family: var(--font-mono); font-size: .7rem; color: var(--azul); letter-spacing: .12em; margin-bottom: .15rem; text-transform: uppercase; }
+.epoch-name { font-family: var(--font-body); font-size: .91rem; font-weight: 600; color: var(--ink-soft); margin-bottom: .4rem; line-height: 1.3; }
+.epoch-meta { font-size: .77rem; color: var(--ink-muted); margin-bottom: .45rem; font-family: var(--font-mono); }
+.mini-bar { height: 4px; background: var(--bg-alt); border-radius: 99px; overflow: hidden; }
+.mini-bar-fill { height: 100%; background: linear-gradient(90deg, var(--amarillo-dk), var(--azul)); border-radius: 99px; transition: width .5s ease; }
+
+/* Buttons */
+.dash-actions { display: flex; gap: .75rem; flex-wrap: wrap; margin-bottom: 2rem; }
+.btn {
+  display: inline-flex; align-items: center; gap: .4rem;
+  padding: .55rem 1.2rem; border-radius: var(--r);
+  border: 1px solid; font-size: .87rem;
+  letter-spacing: .03em; transition: var(--t); font-family: var(--font-mono);
+}
+.btn-amarillo { background: var(--amarillo); border-color: var(--amarillo); color: var(--bg-dark); }
+.btn-amarillo:hover { background: var(--amarillo-dk); border-color: var(--amarillo-dk); }
+.btn-azul { background: var(--azul); border-color: var(--azul); color: #fff; }
+.btn-azul:hover { background: #001e60; border-color: #001e60; }
+.btn-rojo { background: var(--rojo); border-color: var(--rojo); color: #fff; }
+.btn-rojo:hover { background: #8a0010; border-color: #8a0010; }
+.btn-secondary { background: transparent; border-color: var(--border); color: var(--ink-soft); }
+.btn-secondary:hover { background: var(--bg-hover); }
+.btn-ghost { background: transparent; border-color: var(--azul); color: var(--azul); }
+.btn-ghost:hover { background: var(--azul); color: #fff; }
+
+.section-label { font-family: var(--font-mono); font-size: .72rem; color: var(--azul); letter-spacing: .14em; text-transform: uppercase; margin-bottom: 1rem; display: flex; align-items: center; gap: .6rem; }
+.section-label::after { content: ''; flex: 1; height: 1px; background: var(--border-soft); }
+
+/* ══ LISTA ══ */
+.list-toolbar {
+  display: flex; gap: .65rem; flex-wrap: wrap; align-items: center;
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: var(--r-lg); padding: .85rem 1.2rem;
+  margin-bottom: 1.3rem; box-shadow: var(--shadow);
+}
+.search-wrap { position: relative; flex: 1; min-width: 200px; }
+.search-wrap input {
+  width: 100%; padding: .46rem 1rem .46rem 2rem;
+  border: 1px solid var(--border); border-radius: var(--r);
+  background: var(--bg); color: var(--ink); font-size: .9rem;
+  font-family: var(--font-mono); transition: var(--t);
+}
+.search-wrap input:focus { outline: none; border-color: var(--azul); box-shadow: 0 0 0 3px rgba(0,48,135,.1); }
+.search-icon { position: absolute; left: .6rem; top: 50%; transform: translateY(-50%); color: var(--ink-muted); pointer-events: none; font-size: .85rem; }
+.filter-select { padding: .46rem .8rem; border: 1px solid var(--border); border-radius: var(--r); background: var(--bg); color: var(--ink); font-size: .84rem; font-family: var(--font-mono); }
+.filter-select:focus { outline: none; border-color: var(--azul); }
+
+.techniques-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(295px, 1fr)); gap: .95rem; }
+.tech-card {
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: var(--r-lg); padding: 1.1rem 1.2rem;
+  cursor: pointer; transition: var(--t); box-shadow: var(--shadow);
+  display: flex; flex-direction: column; gap: .4rem;
+  border-top: 3px solid var(--border);
+}
+.tech-card:hover { background: var(--bg-hover); transform: translateY(-2px); box-shadow: var(--shadow-md); border-top-color: var(--amarillo-dk); }
+.tech-card.done { border-top-color: var(--green-check); }
+.tech-card.fav  { border-top-color: var(--rojo); }
+.tech-num { font-family: var(--font-mono); font-size: .68rem; color: var(--ink-muted); letter-spacing: .1em; text-transform: uppercase; }
+.tech-title { font-family: var(--font-body); font-size: .99rem; font-weight: 600; color: var(--ink-soft); line-height: 1.25; }
+.tech-example { font-size: .81rem; color: var(--ink-muted); background: var(--amarillo-pale); border-left: 2px solid var(--amarillo-dk); padding: .2rem .55rem; border-radius: 0 var(--r) var(--r) 0; font-family: var(--font-mono); line-height: 1.5; }
+.tech-epoch-tag { display: inline-block; padding: .1rem .5rem; border-radius: 3px; font-size: .68rem; background: var(--tag-bg); color: var(--azul); border: 1px solid var(--border-soft); font-family: var(--font-mono); letter-spacing: .03em; }
+.tech-actions { display: flex; gap: .4rem; margin-top: .15rem; }
+.icon-btn { background: none; border: 1px solid var(--border); border-radius: var(--r); padding: .2rem .46rem; font-size: .78rem; color: var(--ink-muted); transition: var(--t); font-family: var(--font-mono); }
+.icon-btn:hover { border-color: var(--azul); color: var(--azul); }
+.icon-btn.active-done { border-color: var(--green-check); color: var(--green-check); background: rgba(26,107,58,.08); }
+.icon-btn.active-fav  { border-color: var(--rojo); color: var(--rojo); background: rgba(206,17,38,.08); }
+
+/* ══ MODAL ══ */
+.modal-overlay { position: fixed; inset: 0; z-index: 200; background: rgba(13,18,41,.68); display: flex; align-items: center; justify-content: center; padding: 1rem; opacity: 0; pointer-events: none; transition: opacity .22s; }
+.modal-overlay.open { opacity: 1; pointer-events: all; }
+.modal {
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-top: 5px solid transparent;
+  border-image: linear-gradient(90deg, var(--amarillo) 50%, var(--azul) 50% 75%, var(--rojo) 75%) 1;
+  border-radius: var(--r-lg); padding: 2rem 2.2rem;
+  max-width: 660px; width: 100%; box-shadow: var(--shadow-md);
+  position: relative; transform: translateY(12px); transition: transform .22s;
+  max-height: 90vh; overflow-y: auto;
+}
+.modal-overlay.open .modal { transform: none; }
+.modal-close { position: absolute; top: .85rem; right: 1rem; background: none; border: none; font-size: 1.3rem; color: var(--ink-muted); cursor: pointer; transition: var(--t); font-family: var(--font-mono); }
+.modal-close:hover { color: var(--azul); }
+.modal-num { font-family: var(--font-mono); font-size: .7rem; color: var(--azul); letter-spacing: .12em; text-transform: uppercase; }
+.modal-title { font-family: var(--font-head); font-size: 1.55rem; font-style: italic; color: var(--ink); line-height: 1.2; margin: .25rem 0 .65rem; }
+.modal-section { margin-top: 1rem; }
+.modal-section-label { font-family: var(--font-mono); font-size: .7rem; color: var(--ink-muted); letter-spacing: .12em; text-transform: uppercase; margin-bottom: .3rem; border-bottom: 1px solid var(--border-soft); padding-bottom: .2rem; }
+.modal-example { font-family: var(--font-mono); font-size: .86rem; background: var(--code-bg); color: var(--code-fg); padding: .75rem 1rem; border-radius: var(--r); line-height: 1.65; white-space: pre-wrap; }
+.modal-bad  { background: rgba(206,17,38,.09); border: 1px solid rgba(206,17,38,.35); border-radius: var(--r); padding: .5rem .9rem; margin-bottom: .4rem; font-size: .88rem; color: var(--rojo-lt); font-family: var(--font-mono); }
+.modal-good { background: rgba(26,107,58,.09); border: 1px solid rgba(26,107,58,.35); border-radius: var(--r); padding: .5rem .9rem; font-size: .88rem; color: var(--green-check); font-family: var(--font-mono); }
+.modal-explanation { font-size: .95rem; color: var(--ink-soft); line-height: 1.8; }
+.modal-actions { display: flex; gap: .65rem; margin-top: 1.4rem; flex-wrap: wrap; }
+.modal-ref { font-family: var(--font-mono); font-size: .74rem; color: var(--azul-lt); margin-top: .75rem; }
+
+/* ══ PRÁCTICA ══ */
+.practice-layout { display: grid; grid-template-columns: 260px 1fr; gap: 1.3rem; align-items: start; }
+@media(max-width:760px) { .practice-layout { grid-template-columns: 1fr; } }
+.practice-sidebar { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--r-lg); padding: 1.1rem; box-shadow: var(--shadow); position: sticky; top: 5.5rem; }
+.sidebar-title { font-family: var(--font-mono); font-size: .72rem; color: var(--azul); letter-spacing: .12em; text-transform: uppercase; margin-bottom: .8rem; border-bottom: 1px solid var(--border-soft); padding-bottom: .4rem; }
+.mode-btn { display: flex; align-items: center; gap: .5rem; width: 100%; text-align: left; padding: .5rem .7rem; border: 1px solid var(--border-soft); border-radius: var(--r); background: transparent; color: var(--ink-soft); font-size: .87rem; margin-bottom: .4rem; transition: var(--t); font-family: var(--font-mono); }
+.mode-btn:hover, .mode-btn.active { background: var(--azul); border-color: var(--azul); color: #fff; }
+
+.score-bar { display: flex; gap: .8rem; align-items: center; background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--r); padding: .6rem 1rem; margin-bottom: .85rem; font-size: .84rem; color: var(--ink-soft); font-family: var(--font-mono); }
+.score-num { font-size: 1.15rem; font-weight: 500; color: var(--azul); }
+.score-divider { color: var(--border); }
+
+.exercise-card {
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: var(--r-lg); padding: 1.8rem 2rem;
+  box-shadow: var(--shadow-md); margin-bottom: 1.1rem;
+  border-top: 4px solid transparent;
+  border-image: linear-gradient(90deg, var(--amarillo) 50%, var(--azul) 50% 75%, var(--rojo) 75%) 1;
+}
+.ex-question { font-family: var(--font-head); font-size: 1.2rem; font-style: italic; color: var(--ink); margin-bottom: 1rem; line-height: 1.45; }
+.ex-snippet { font-family: var(--font-mono); font-size: .82rem; background: var(--code-bg); color: var(--code-fg); padding: .65rem .9rem; border-radius: var(--r); margin-bottom: 1rem; line-height: 1.65; white-space: pre-wrap; }
+.ex-options { display: flex; flex-direction: column; gap: .55rem; margin-bottom: 1rem; }
+.ex-option { display: flex; align-items: flex-start; gap: .65rem; padding: .6rem .85rem; border: 1px solid var(--border); border-radius: var(--r); background: var(--bg); cursor: pointer; transition: var(--t); font-size: .9rem; color: var(--ink-soft); }
+.ex-option:hover:not(.disabled) { background: var(--bg-hover); border-color: var(--azul); }
+.ex-option.correct { border-color: var(--green-check); background: rgba(26,107,58,.08); color: var(--green-check); }
+.ex-option.wrong   { border-color: var(--rojo); background: rgba(206,17,38,.07); color: var(--rojo-lt); }
+.ex-option.disabled { cursor: default; }
+.ex-opt-letter { font-family: var(--font-mono); font-size: .74rem; color: var(--ink-muted); min-width: 1rem; padding-top: .1rem; }
+.ex-feedback { padding: .7rem .95rem; border-radius: var(--r); font-size: .9rem; margin-bottom: .85rem; display: none; font-family: var(--font-mono); }
+.ex-feedback.show { display: block; }
+.ex-feedback.ok { background: rgba(26,107,58,.1); color: var(--green-check); border: 1px solid rgba(26,107,58,.3); }
+.ex-feedback.ko { background: rgba(206,17,38,.09); color: var(--rojo-lt); border: 1px solid rgba(206,17,38,.3); }
+
+.ex-blank-wrap { display: flex; gap: .65rem; flex-wrap: wrap; align-items: center; margin-bottom: .85rem; }
+.ex-blank-input { padding: .46rem .8rem; border: 1px solid var(--border); border-radius: var(--r); background: var(--bg); color: var(--ink); font-size: .9rem; flex: 1; min-width: 180px; transition: var(--t); font-family: var(--font-mono); }
+.ex-blank-input:focus { outline: none; border-color: var(--azul); box-shadow: 0 0 0 3px rgba(0,48,135,.1); }
+.ex-blank-input.correct-input { border-color: var(--green-check); }
+.ex-blank-input.wrong-input   { border-color: var(--rojo); }
+
+.flashcard { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--r-lg); padding: 2.4rem 2rem; text-align: center; cursor: pointer; transition: var(--t); min-height: 235px; display: flex; flex-direction: column; justify-content: center; align-items: center; gap: .85rem; box-shadow: var(--shadow-md); }
+.flashcard:hover { box-shadow: 0 6px 28px rgba(13,18,41,.16); }
+.flashcard-front { font-family: var(--font-head); font-size: 1.5rem; font-style: italic; color: var(--ink); }
+.flashcard-back  { display: none; font-size: .92rem; color: var(--ink-soft); line-height: 1.75; max-width: 500px; }
+.flashcard.flipped .flashcard-front { display: none; }
+.flashcard.flipped .flashcard-back  { display: block; }
+.flashcard-hint { font-size: .76rem; color: var(--ink-muted); font-family: var(--font-mono); letter-spacing: .04em; }
+.fc-nav { display: flex; gap: .85rem; justify-content: center; margin-top: 1rem; }
+
+.empty { text-align: center; padding: 3rem 1rem; font-family: var(--font-head); font-size: 1.1rem; font-style: italic; color: var(--ink-muted); }
+
+/* RESPONSIVE */
+@media(max-width:720px) {
+  .nav-btn:not(.nav-burger) { display: none; }
+  .nav-btn.active { display: none; }
+  .nav-burger { display: block; }
+  .nav-inner.open .nav-btn { display: block; width: 100%; text-align: left; margin: .15rem 0; }
+  .nav-inner { flex-wrap: wrap; }
+  .techniques-grid { grid-template-columns: 1fr; }
+  .modal { padding: 1.3rem 1.1rem; }
+  .exercise-card { padding: 1.2rem 1.1rem; }
+  .stats-grid { grid-template-columns: repeat(2,1fr); }
+  .dash-hero { grid-template-columns: 1fr; }
+  .dash-hero-glyph { display: none; }
+  .profile-bar { flex-direction: column; align-items: flex-start; }
+}
+@media(max-width:400px) { .stats-grid { grid-template-columns: 1fr; } }
+
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 99px; }
+::-webkit-scrollbar-thumb:hover { background: var(--azul); }
+
+.toast { position: fixed; bottom: 1.5rem; right: 1.5rem; z-index: 500; background: var(--bg-dark); color: var(--amarillo); padding: .6rem 1.1rem; border-radius: var(--r); font-size: .82rem; opacity: 0; transform: translateY(8px); transition: all .28s; pointer-events: none; max-width: 270px; font-family: var(--font-mono); border: 1px solid var(--amarillo-dk); }
+.toast.show { opacity: 1; transform: none; }
+</style>
+</head>
+<body>
+<div class="app">
+
+<!-- NAV con franja tricolor -->
+<nav id="mainNav">
+  <div class="nav-tricolor"><span></span><span></span><span></span></div>
+  <div class="nav-inner" id="navInner">
+    <div class="nav-logo">Redacción · Lic. en Lengua Castellana <span>· Colombia</span></div>
+    <button class="nav-btn active" data-page="dashboard">⊞ INICIO</button>
+    <button class="nav-btn" data-page="lista">⊟ TÉCNICAS</button>
+    <button class="nav-btn" data-page="practica">✎ PRÁCTICA</button>
+    <button class="nav-burger" id="burgerBtn" aria-label="Menú">☰</button>
+  </div>
+</nav>
+
+<!-- DASHBOARD -->
+<div class="page active" id="page-dashboard">
+<div class="container">
+
+  <div class="dash-hero">
+    <div class="dash-hero-text">
+      <h1>100 Técnicas de Redacción para Licenciatura en Lengua Castellana</h1>
+      <p>Para estudiantes de Lic. en Español y Literatura · Colombia · Instrucciones en español</p>
+      <div class="hero-badges">
+        <span class="hero-badge">MEN · EBC Lengua Castellana</span>
+        <span class="hero-badge">Lineamientos Curriculares</span>
+        <span class="hero-badge azul">RAE · Caro y Cuervo</span>
+        <span class="hero-badge rojo">Saber Pro · ICFES</span>
+      </div>
+    </div>
+    <div class="dash-hero-glyph">L</div>
+  </div>
+
+  <!-- PERFIL EDITABLE -->
+  <div class="profile-bar">
+    <div class="profile-avatar" id="profileAvatar">E</div>
+    <div class="profile-info">
+      <div class="profile-name">
+        <input type="text" id="profileNameInput" placeholder="Tu nombre" maxlength="40" value="Estudiante">
+        <span style="font-size:.74rem;color:var(--ink-muted);font-family:var(--font-mono)">← editable</span>
+      </div>
+      <div class="profile-meta" id="profileMeta">Lic. Lengua Castellana · Semestre 1 · Colombia</div>
+    </div>
+    <div class="profile-semestre" id="profileSemestre" onclick="cycleSemestre()">Semestre 1</div>
+  </div>
+
+  <div class="stats-grid" id="statsGrid"></div>
+
+  <div class="progress-wrap">
+    <div class="progress-label">Progreso global</div>
+    <div class="progress-bar-outer"><div class="progress-bar-inner" id="progressBar" style="width:0%"></div></div>
+    <div class="progress-pct" id="progressPct">0 %</div>
+  </div>
+
+  <div class="dash-actions">
+    <button class="btn btn-amarillo" onclick="navigate('practica')">✎ Practicar ahora</button>
+    <button class="btn btn-azul"     onclick="navigate('lista')">⊟ Ver catálogo</button>
+    <button class="btn btn-ghost"    id="resetBtn">↺ Reiniciar</button>
+  </div>
+
+  <div class="section-label">Bloques temáticos</div>
+  <div class="epoch-grid" id="epochGrid"></div>
+
+</div>
+</div>
+
+<!-- LISTA -->
+<div class="page" id="page-lista">
+<div class="container">
+  <div class="section-label" style="margin-bottom:.4rem">Catálogo</div>
+  <h1 style="font-family:var(--font-head);font-size:1.95rem;font-style:italic;color:var(--ink);margin-bottom:1.4rem">100 Técnicas de Redacción</h1>
+  <div class="list-toolbar">
+    <div class="search-wrap">
+      <span class="search-icon">🔍</span>
+      <input type="search" id="searchInput" placeholder="buscar técnica, concepto, norma…" autocomplete="off">
+    </div>
+    <select class="filter-select" id="epochFilter"><option value="">Todos los bloques</option></select>
+    <select class="filter-select" id="statusFilter">
+      <option value="">Todos</option>
+      <option value="done">✓ Completadas</option>
+      <option value="fav">★ Favoritas</option>
+      <option value="pending">○ Pendientes</option>
+    </select>
+    <select class="filter-select" id="sortFilter">
+      <option value="num">N.° numérico</option>
+      <option value="alpha">A → Z</option>
+      <option value="epoch">Por bloque</option>
+    </select>
+  </div>
+  <div class="techniques-grid" id="techniquesGrid"></div>
+</div>
+</div>
+
+<!-- PRÁCTICA -->
+<div class="page" id="page-practica">
+<div class="container">
+  <div class="section-label" style="margin-bottom:.4rem">Práctica</div>
+  <h1 style="font-family:var(--font-head);font-size:1.95rem;font-style:italic;color:var(--ink);margin-bottom:1.4rem">Zona de práctica</h1>
+  <div class="practice-layout">
+    <aside class="practice-sidebar">
+      <div class="sidebar-title">Modo</div>
+      <button class="mode-btn active" onclick="setPracticeMode('multiple',this)"><span>◉</span> Opción múltiple</button>
+      <button class="mode-btn" onclick="setPracticeMode('blank',this)"><span>✏</span> Completar frase</button>
+      <button class="mode-btn" onclick="setPracticeMode('flashcard',this)"><span>⟳</span> Tarjetas flash</button>
+      <div style="margin-top:1.2rem;border-top:1px solid var(--border-soft);padding-top:.85rem">
+        <div class="sidebar-title">Filtrar</div>
+        <select class="filter-select" id="practiceEpochFilter" style="width:100%;margin-bottom:.6rem" onchange="resetExercise()"><option value="">Todos los bloques</option></select>
+        <label style="display:flex;align-items:center;gap:.4rem;font-size:.84rem;color:var(--ink-muted);cursor:pointer;font-family:var(--font-mono)">
+          <input type="checkbox" id="onlyPending" onchange="resetExercise()"> Solo pendientes
+        </label>
+      </div>
+      <div style="margin-top:1.2rem;border-top:1px solid var(--border-soft);padding-top:.85rem">
+        <div class="sidebar-title">Sesión</div>
+        <div id="sessionScore" style="font-family:var(--font-mono);font-size:.84rem;color:var(--ink-muted)">—</div>
+      </div>
+    </aside>
+    <main id="practiceMain"></main>
+  </div>
+</div>
+</div>
+</div>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modalOverlay" onclick="closeModal(event)">
+  <div class="modal" id="modalContent" role="dialog" aria-modal="true"></div>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+/* ══════════════════════════════════════
+   ÉPOCAS
+══════════════════════════════════════ */
+const EPOCHS = [
+  {id:'I',   name:'Escritura académica y norma culta del español',            range:[1,10]  },
+  {id:'II',  name:'Lingüística I y II: fonología, morfología y sintaxis',     range:[11,20] },
+  {id:'III', name:'Lingüística III y IV: semántica y pragmática',             range:[21,30] },
+  {id:'IV',  name:'Lingüística textual y análisis del discurso',              range:[31,40] },
+  {id:'V',   name:'Literatura colombiana e hispanoamericana',                  range:[41,50] },
+  {id:'VI',  name:'Literatura universal: períodos, géneros y análisis',       range:[51,60] },
+  {id:'VII', name:'Didáctica de la lengua castellana en Colombia',            range:[61,70] },
+  {id:'VIII','name':'Metodología de investigación en lengua y literatura',    range:[71,80] },
+  {id:'IX',  name:'Normas académicas: ICONTEC, APA y estilo',                 range:[81,90] },
+  {id:'X',   name:'Ética docente, contexto colombiano y comunicación oral',   range:[91,100]},
+];
+
+/* ══════════════════════════════════════
+   100 TÉCNICAS
+══════════════════════════════════════ */
+const PHENOMENA = [
+
+/* ── BLOQUE I: Escritura académica y norma culta ── */
+{id:1,epoch:'I',
+ title:'Registro académico: características y diferencias con el coloquial',
+ example:'✗ «En este trabajo vamos a hablar de García Márquez que es muy bacano.\"\n✓ «El presente ensayo examina la función del realismo mágico en la narrativa de Gabriel García Márquez como recurso de crítica social.»',
+ explanation:'El registro académico en los trabajos de la Licenciatura en Lengua Castellana exige vocabulario técnico preciso, voz formal (no coloquial), oraciones complejas bien estructuradas y respaldo en fuentes. El MEN evalúa la competencia comunicativa escrita en el Saber Pro mediante el componente de Lectura Crítica y el módulo de Escritura.',
+ blank:'El uso de términos coloquiales como «bacano» o «chévere» en un trabajo académico viola el criterio de _____',
+ blank_answer:'registro académico',
+ options:['Norma gramatical','Registro académico','Ortografía','Puntuación'],answer_idx:1,
+ ref:'CNA — Lineamientos Licenciatura en Español · MEN — Saber Pro'},
+
+{id:2,epoch:'I',
+ title:'La norma culta del español colombiano: RAE y ASALE',
+ example:'La norma del español culto colombiano sigue la RAE (Real Academia Española) y la Academia Colombiana de la Lengua (miembro de la ASALE).\nEjemplo: «hubiera» (no «hubiera» en Colombia aún se usa «hubiese» en textos formales).',
+ explanation:'La Academia Colombiana de la Lengua, fundada en 1871 (segunda de América), es miembro de la Asociación de Academias de la Lengua Española (ASALE) y colabora con la RAE en el Diccionario Panhispánico. El Instituto Caro y Cuervo (Bogotá) es el principal centro de investigación lingüística del país y referencia de la norma culta colombiana.',
+ blank:'El principal centro de investigación lingüística de Colombia, que toma su nombre de dos grandes humanistas colombianos, es el Instituto _____',
+ blank_answer:'Caro y Cuervo',
+ options:['García Márquez','Caro y Cuervo','Colombia de la Lengua','Nacional de Letras'],answer_idx:1,
+ ref:'Instituto Caro y Cuervo — caroycuervo.gov.co · Academia Colombiana de la Lengua'},
+
+{id:3,epoch:'I',
+ title:'Estructura del párrafo argumentativo colombiano',
+ example:'[Oración temática] La didáctica de la lectura en Colombia enfrenta un déficit de comprensión crítica. [Desarrollo] Según el ICFES (2022), el 67 % de los estudiantes de grado 11.° no alcanza el nivel satisfactorio en lectura. [Cierre] Esta cifra revela la urgencia de fortalecer la enseñanza de estrategias lectoras.',
+ explanation:'El párrafo argumentativo bien construido es evaluado en los trabajos de grado de las Licenciaturas colombianas y en el Saber Pro. Debe tener oración temática (la tesis del párrafo), desarrollo con evidencia citada y cierre que conecta con el argumento global. El Instituto Caro y Cuervo publica guías de escritura académica en español colombiano.',
+ blank:'La primera oración del párrafo que enuncia la idea principal que se va a desarrollar se denomina oración _____',
+ blank_answer:'temática',
+ options:['Final','Temática','De apoyo','Transitoria'],answer_idx:1,
+ ref:'Cassany, D. — La cocina de la escritura · ICFES — Saber Pro'},
+
+{id:4,epoch:'I',
+ title:'Uso correcto de la tilde: reglas generales y casos especiales',
+ example:'Agudas con tilde: café, canción, también.\nLlanas sin tilde: mesa, libro, árbol (con tilde si termina en consonante ≠ n/s).\nEsdrújulas: siempre: lingüística, análisis, métodos.',
+ explanation:'El dominio de las reglas de tildación es competencia básica del licenciado en Lengua Castellana colombiano. Los errores más frecuentes son la ausencia de tilde en esdrújulas del metalenguaje (lingüistica, fonologia, semantica) y la tilde diacrítica (sólo/solo, éste/este según la norma de 2010). El Saber Pro evalúa la corrección ortográfica.',
+ blank:'Según la Ortografía de la RAE de 2010, el adverbio «solo» (equivalente a «solamente») lleva tilde _____',
+ blank_answer:'nunca (la norma de 2010 eliminó su tilde)',
+ options:['Siempre','Solo cuando hay ambigüedad','Nunca (la norma de 2010 eliminó su tilde)','Solo en poesía'],answer_idx:2,
+ ref:'RAE — Ortografía de la lengua española (2010) · Instituto Caro y Cuervo'},
+
+{id:5,epoch:'I',
+ title:'Conectores discursivos en el texto académico en español',
+ example:'Adición: asimismo, adicionalmente, por otro lado.\nContraste: sin embargo, no obstante, a pesar de que.\nConclusión: en consecuencia, por lo tanto, de ahí que.',
+ explanation:'Los conectores articulan la coherencia y cohesión del texto académico. Son evaluados en el componente de Lectura Crítica del Saber Pro como indicadores de competencia textual. El Manual de Escritura Académica de la Universidad de los Andes y el Manual del Instituto Caro y Cuervo son referencias estándar en las licenciaturas colombianas.',
+ blank:'El conector «no obstante» establece una relación de _____ entre dos proposiciones',
+ blank_answer:'contraste',
+ options:['Adición','Causa','Contraste','Finalidad'],answer_idx:2,
+ ref:'Montolío, E. — Manual de escritura académica · Instituto Caro y Cuervo'},
+
+{id:6,epoch:'I',
+ title:'Puntuación avanzada: punto y coma, dos puntos, raya',
+ example:'Punto y coma: «Los alumnos leyeron novelas; los docentes, poesía; los padres, teatro.»\nDos puntos (enumeración): «Las figuras retóricas son: metáfora, metonimia, hipérbole.»\nRaya (inciso): «García Márquez —el más Nobel de los colombianos— nació en Aracataca.»',
+ explanation:'El dominio de la puntuación compleja diferencia al licenciado en Lengua Castellana de cualquier otro profesional. La raya (—), el punto y coma y los dos puntos son los signos más frecuentemente mal usados en los trabajos de grado colombianos. La RAE (Ortografía 2010) es la norma de referencia en Colombia.',
+ blank:'La raya (—) se usa para introducir un _____ o una aclaración dentro de una oración',
+ blank_answer:'inciso',
+ options:['Paréntesis obligatorio','Inciso','Enumeración','Cita textual'],answer_idx:1,
+ ref:'RAE — Ortografía (2010) § 4.9 · Manual del Instituto Caro y Cuervo'},
+
+{id:7,epoch:'I',
+ title:'Voz activa, voz pasiva e impersonal en el ensayo académico',
+ example:'Activa: «García Márquez critica el poder en Cien años de soledad.»\nPasiva: «El poder es criticado por García Márquez en…»\nImpersonal: «Se critica el poder en la obra…»',
+ explanation:'El ensayo académico en las licenciaturas colombianas puede usar cualquiera de las tres voces, pero con criterio retórico. La voz activa es más directa; la pasiva aporta objetividad; la impersonal elimina el agente. El uso indiscriminado de la pasiva (calco del inglés academic writing) produce textos pesados y es señalado por los docentes colombianos.',
+ blank:'El uso excesivo de la voz pasiva en español académico se considera un calco indeseable del _____',
+ blank_answer:'inglés (academic English)',
+ options:['Latín','Inglés (academic English)','Francés','Portugués'],answer_idx:1,
+ ref:'Montolío — Manual de escritura académica · RAE — Nueva Gramática (2009)'},
+
+{id:8,epoch:'I',
+ title:'Escribir el objetivo general y los específicos con verbos de Bloom',
+ example:'General (verbos: analizar, examinar, determinar): «Analizar las estrategias narrativas en la obra de Tomás González.»\nEspecífico (verbos: identificar, describir, comparar): «Identificar los recursos de tiempo narrativo en la novela.»',
+ explanation:'Los objetivos de los trabajos de grado de las Licenciaturas en Lengua Castellana en Colombia se formulan con verbos de la Taxonomía de Bloom revisada (Anderson & Krathwohl 2001). Los verbos de nivel superior (analizar, evaluar, crear) van en el objetivo general; los de menor nivel (identificar, describir) en los específicos.',
+ blank:'Los verbos «identificar» y «describir» corresponden a los niveles _____ de la Taxonomía de Bloom revisada',
+ blank_answer:'inferiores (recordar, comprender, aplicar)',
+ options:['Superiores','Inferiores (recordar, comprender, aplicar)','Metacognitivos','Afectivos'],answer_idx:1,
+ ref:'Anderson & Krathwohl — A Taxonomy for Learning (2001) · MEN — Lineamientos curriculares'},
+
+{id:9,epoch:'I',
+ title:'El ensayo académico: tesis, argumentos y conclusión',
+ example:'Tesis: «El realismo mágico de García Márquez no es escapismo sino denuncia histórica.»\nArgumento 1: La masacre de las bananeras en Cien años de soledad.\nArgumento 2: La violencia velada en El coronel no tiene quien le escriba.',
+ explanation:'El ensayo académico es el género más evaluado en las licenciaturas colombianas. La tesis debe ser argumentativa (no descriptiva), debatible y demostrable con evidencia textual. Los trabajos de grado de Licenciatura en Lengua Castellana de la UPN, la UPTC y la UdeA evalúan la calidad argumentativa del ensayo literario o lingüístico.',
+ blank:'Una tesis argumentativa debe ser debatible, demostrable con evidencia y no meramente _____',
+ blank_answer:'descriptiva',
+ options:['Citada','Extensa','Descriptiva','Bilingüe'],answer_idx:2,
+ ref:'UPN — Guía de trabajos de grado · Perelman, C. — Tratado de la argumentación'},
+
+{id:10,epoch:'I',
+ title:'El resumen académico (abstract) en trabajos de grado colombianos',
+ example:'Objetivo + Metodología + Resultado principal + Conclusión + Palabras clave (DeCS o tesauro) (150–250 palabras)',
+ explanation:'El resumen de los trabajos de grado en las Licenciaturas en Lengua Castellana colombianas sigue la NTC 1487 (ICONTEC). No puede incluir citas bibliográficas, abreviaturas sin definir ni información que no esté en el cuerpo del trabajo. Debe contener las 5 palabras clave en español para facilitar su indexación en los repositorios universitarios.',
+ blank:'La norma ICONTEC que regula específicamente la elaboración de resúmenes académicos es la _____',
+ blank_answer:'NTC 1487',
+ options:['NTC 1486','NTC 1487','NTC 5613','NTC 3393'],answer_idx:1,
+ ref:'ICONTEC NTC 1487 — Resúmenes para publicaciones y documentación'},
+
+/* ── BLOQUE II: Lingüística I y II ── */
+{id:11,epoch:'II',
+ title:'El signo lingüístico: significante, significado y arbitrariedad',
+ example:'Signo: «perro» = significante /pé.ro/ (imagen acústica) + significado [concepto de can doméstico].\nArbitrariedad: no hay relación natural entre el sonido y el concepto.\nIconicidad: las onomatopeyas son parcialmente motivadas.',
+ explanation:'El signo lingüístico de Saussure (Cours de Linguistique Générale, 1916) es el concepto fundador de la Lingüística I en todas las licenciaturas colombianas. La distinción entre langue (sistema) y parole (uso) es base del estructuralismo y se aplica en los análisis dialectales del español colombiano.',
+ blank:'La propiedad del signo lingüístico que establece que la relación entre significante y significado no es natural sino convencional se llama _____',
+ blank_answer:'arbitrariedad',
+ options:['Linealidad','Arbitrariedad','Doble articulación','Desplazamiento'],answer_idx:1,
+ ref:'Saussure, F. — Curso de Lingüística General (1916) · Lyons, J. — Introducción a la lingüística teórica'},
+
+{id:12,epoch:'II',
+ title:'Fonemas del español colombiano: rasgos y pares mínimos',
+ example:'/p/-/b/: «pala»/«bala» — el rasgo diferencial es [±sonoro]\n/s/-/x/: «casa»/«caja» — punto de articulación\nEspañol colombiano: seseo generalizado (no distinción /s/–/θ/).',
+ explanation:'Los pares mínimos demuestran el carácter fonémico de los contrastes sonoros. El español colombiano tiene 24 fonemas en la variedad bogotana estándar. El seseo (realización de /s/ donde en España se usa /θ/ o /s/) es rasgo panhispánico del español americano. Los trabajos de Lingüística I deben contextualizar en la variedad colombiana.',
+ blank:'Dos palabras que difieren solo en un fonema y que sirven para probar el carácter contrastivo de ese fonema se denominan _____',
+ blank_answer:'pares mínimos',
+ options:['Homófonos','Pares mínimos','Alófonos','Grafemas'],answer_idx:1,
+ ref:'Quilis, A. — Principios de fonología y fonética españolas · Montes Giraldo — El español de Colombia'},
+
+{id:13,epoch:'II',
+ title:'Morfemas del español: libres, ligados, lexicales y gramaticales',
+ example:'«desamores» = des- (prefijo, ligado) + amor (raíz, libre, lexical) + -es (desinencia, ligado, gramatical)\n«bailaríamos» = bail- + -ar + -ía + -mos',
+ explanation:'El análisis morfológico es piedra angular de Lingüística II. Los morfemas se clasifican según su distribución (libres vs. ligados) y su función (lexicales vs. gramaticales). El español colombiano tiene particularidades morfológicas: el diminutivo -ico (Colombia y Costa Rica) y el voseo parcial en algunas regiones.',
+ blank:'El morfema «-ico» en palabras como «chiquitico» o «perrico» es un morfema _____ con valor diminutivo típico del español colombiano',
+ blank_answer:'derivativo ligado',
+ options:['Flexivo libre','Derivativo ligado','Lexical libre','Gramatical libre'],answer_idx:1,
+ ref:'Varela Ortega, S. — Morfología léxica · Montes Giraldo — El español hablado en Colombia'},
+
+{id:14,epoch:'II',
+ title:'Sintaxis: sintagmas, funciones y estructura oracional en español',
+ example:'Los estudiantes de la licenciatura [SN-Sujeto] leen [V] novelas colombianas [SN-OD] con entusiasmo [SAdv-CC].\nOración bimembre · predicación verbal · sujeto elíptico posible en español',
+ explanation:'El español colombiano permite el sujeto elíptico (pro-drop), a diferencia del inglés. Los análisis sintácticos en Lingüística II deben usar la terminología de la Nueva Gramática de la Lengua Española (RAE, 2009), referencia normativa y descriptiva del español colombiano.',
+ blank:'La propiedad del español por la que el sujeto puede omitirse porque la desinencia verbal lo indica se denomina _____',
+ blank_answer:'pro-drop (sujeto nulo o elíptico)',
+ options:['Inversión','Pro-drop (sujeto nulo o elíptico)','Dislocación','Topicalización'],answer_idx:1,
+ ref:'RAE — Nueva Gramática de la Lengua Española (2009) · Real Academia Española'},
+
+{id:15,epoch:'II',
+ title:'Variación lingüística del español colombiano: dialectos y sociolectos',
+ example:'Dialectos colombianos: costeño (caribeño) · paisa · cachaco (bogotano) · valluno (caleño) · llanero · nariñense.\nVoseo en Antioquia, Eje Cafetero, Chocó y partes de Colombia.',
+ explanation:'Colombia es uno de los países con mayor diversidad dialectal del español. José Joaquín Montes Giraldo (Instituto Caro y Cuervo) clasificó los dialectos colombianos en su obra fundamental. Los licenciados en Lengua Castellana deben conocer la variación dialectal para enseñar la norma culta sin estigmatizar los dialectos de sus estudiantes.',
+ blank:'El investigador del Instituto Caro y Cuervo que clasificó los dialectos del español colombiano fue _____',
+ blank_answer:'José Joaquín Montes Giraldo',
+ options:['Rafael Pombo','Jorge Isaacs','José Joaquín Montes Giraldo','Rufino J. Cuervo'],answer_idx:2,
+ ref:'Montes Giraldo — El español de Colombia (1982) · Instituto Caro y Cuervo'},
+
+{id:16,epoch:'II',
+ title:'El voseo colombiano: formas y distribución regional',
+ example:'Voseo en Colombia (Antioquia y Eje Cafetero): «vos sabés», «vos tenés», «vos sos».\nTuteo (Bogotá y zonas andinas): «tú sabes», «tú tienes».\nUstedeo (algunos contextos formales e informales): «usted sabe».',
+ explanation:'Colombia es notable por la coexistencia de tres formas de segunda persona singular: tuteo, voseo y ustedeo. El ustedeo informal (usar «usted» en conversaciones íntimas de pareja o entre amigos en algunas regiones) es un fenómeno único de Colombia y Ecuador. Los licenciados deben poder explicar esta variación sin juzgarla.',
+ blank:'El uso del pronombre «usted» en contextos íntimos y afectivos (parejas, amigos cercanos) en algunas regiones colombianas se denomina _____',
+ blank_answer:'ustedeo',
+ options:['Voseo','Tuteo','Ustedeo','Distanciamiento'],answer_idx:2,
+ ref:'Montes Giraldo · Carricaburo — Las fórmulas de tratamiento en el español actual'},
+
+{id:17,epoch:'II',
+ title:'Morfología del español: derivación, composición y parasíntesis',
+ example:'Derivación: «des-amor-ado» (prefijo + raíz + sufijo)\nComposición: «bocacalle», «sacacorchos», «vaivén»\nParasíntesis: «en-rich-ecer» (prefijo + raíz + sufijo simultáneos)',
+ explanation:'Los tres procesos de formación de palabras en español son centrales en Lingüística II. La parasíntesis (prefijo + raíz + sufijo añadidos simultáneamente) solo es posible cuando ni el prefijo solo ni el sufijo solo pueden combinarse con la raíz. Es proceso activo en el español colombiano (empapelar, engordar, aterrizar).',
+ blank:'El proceso de formación de palabras en que prefijo y sufijo se añaden simultáneamente a la raíz se denomina _____',
+ blank_answer:'parasíntesis',
+ options:['Derivación','Composición','Parasíntesis','Conversión'],answer_idx:2,
+ ref:'Varela Ortega — Morfología léxica · RAE — Nueva Gramática (2009)'},
+
+{id:18,epoch:'II',
+ title:'La sílaba en español colombiano: reglas de silabación',
+ example:'li-bro · a-bril · trans-por-te · cons-truc-ción · ex-tra-ño\nRegla básica: nunca separar diptongo · grupo consonántico pl, pr, bl, br, cl, cr, fl, fr, gl, gr, dr, tr son inseparables.',
+ explanation:'Las reglas de silabación del español son fundamentales para la división de palabras al final de línea y para el análisis métrico de la poesía. El licenciado en Lengua Castellana colombiano debe dominarlas para enseñar correctamente la versificación y la pronunciación de la norma culta.',
+ blank:'En la silabación del español, los grupos consonánticos bl, br, cl, cr, fl, fr, gl, gr, pl, pr, dr y tr son _____',
+ blank_answer:'inseparables (van juntos en la misma sílaba)',
+ options:['Siempre separables','Inseparables (van juntos en la misma sílaba)','Opcionales','Solo en palabras cultas'],answer_idx:1,
+ ref:'RAE — Ortografía (2010) § 3 · Quilis — Principios de fonología'},
+
+{id:19,epoch:'II',
+ title:'Funciones del lenguaje: Jakobson y el circuito comunicativo',
+ example:'Referencial: «Hoy llueve en Bogotá.» (función primaria, denotativa)\nPoética: «La lluvia bogotana teje hilos de plata en el cielo gris.»\nFática: «¿Aló?» (verificar el canal)',
+ explanation:'Las seis funciones del lenguaje de Jakobson (1960) son referencial, expresiva, conativa, fática, metalingüística y poética. En Colombia, son marco de análisis de textos literarios y publicitarios en los Lineamientos Curriculares de Lengua Castellana (MEN 1998). El licenciado los usa para analizar tanto textos literarios como cotidianos.',
+ blank:'La función del lenguaje que se centra en el mensaje mismo, en la forma del enunciado, se denomina función _____',
+ blank_answer:'poética',
+ options:['Referencial','Expresiva','Fática','Poética'],answer_idx:3,
+ ref:'Jakobson, R. — Lingüística y poética (1960) · MEN — Lineamientos Curriculares Lengua Castellana'},
+
+{id:20,epoch:'II',
+ title:'La oración compuesta: subordinación y coordinación en español',
+ example:'Coordinación (copulativa): «El docente explicó y los estudiantes escucharon.»\nSubordinación sustantiva: «Es importante que los docentes lean.»\nSubordinación adverbial causal: «Llegó tarde porque el tráfico en Bogotá era intenso.»',
+ explanation:'La distinción entre coordinación (unión de proposiciones independientes) y subordinación (dependencia jerárquica) es central en Lingüística II y en la didáctica de la escritura. El español colombiano tiene tendencia al uso de construcciones con «que» sin verbo conjugado en el habla popular (queísmo y dequeísmo), que el licenciado debe reconocer y enseñar a evitar.',
+ blank:'El error de usar «de que» donde no corresponde (ej. «Pienso de que es importante») se denomina _____',
+ blank_answer:'dequeísmo',
+ options:['Queísmo','Dequeísmo','Laísmo','Leísmo'],answer_idx:1,
+ ref:'RAE — Nueva Gramática (2009) § 43 · RAE, Diccionario Panhispánico de Dudas'},
+
+/* ── BLOQUE III: Lingüística III y IV ── */
+{id:21,epoch:'III',
+ title:'Sinonimia, antonimia e hiperonimia en español',
+ example:'Sinónimos no absolutos: «comenzar» ≈ «iniciar» ≈ «empezar» (matices diferentes según contexto)\nAntonimia gradual: «caliente» ↔ «frío» (hay temperatura media)\nHiperónimo: «flor» → hipónimos: «rosa», «clavel», «orquídea» (símbolo nacional de Colombia)',
+ explanation:'Las relaciones semánticas son herramientas para el análisis lexicológico y para la enseñanza del vocabulario. La orquídea Cattleya trianae es la flor nacional de Colombia y ejemplo recurrente en los ejemplos de hiponimia en los libros de texto colombianos. Los trabajos de Lingüística III deben usar ejemplos del léxico colombiano.',
+ blank:'La orquídea que es símbolo nacional de Colombia se llama Cattleya _____',
+ blank_answer:'trianae (flor de mayo o lirio de mayo)',
+ options:['bogotensis','caucana','trianae (flor de mayo o lirio de mayo)','colombiana'],answer_idx:2,
+ ref:'Academia Colombiana de la Lengua · Instituto Caro y Cuervo — Léxico colombiano'},
+
+{id:22,epoch:'III',
+ title:'La metáfora conceptual en el español colombiano',
+ example:'«EL TIEMPO ES ORO»: «No pierdas el tiempo.» / «Vale su tiempo.» / «Invierta su tiempo.\"\n«LA MENTE ES UN RECIPIENTE»: «Tengo la cabeza llena.» / «No me entra más información.»',
+ explanation:'La teoría de la metáfora conceptual (Lakoff & Johnson 1980) ha influido en la lingüística cognitiva colombiana. Los coloquialismos colombianos están llenos de metáforas: «dar papaya» (metáfora de vulnerabilidad), «estar en las nubes» (metáfora del pensamiento como espacio). Los trabajos de Lingüística IV analizan estas metáforas culturalmente específicas.',
+ blank:'La expresión colombiana «dar papaya» (exponerse innecesariamente a un peligro) es un ejemplo de metáfora _____',
+ blank_answer:'conceptual (culturalmente específica)',
+ options:['Gramatical','Conceptual (culturalmente específica)','Morfológica','Universal'],answer_idx:1,
+ ref:'Lakoff & Johnson — Metáforas de la vida cotidiana (1980/1998)'},
+
+{id:23,epoch:'III',
+ title:'Deixis en el español colombiano: personal, espacial y temporal',
+ example:'Personal: yo/tú/vos/usted/él/ella → dependen del hablante\nEspacial (colombiano): «aquí» (cerca del hablante), «allá» (lejos) — Colombia tiende a usar «allá» más que «allí»\nTemporal: «ahora» vs. «ahorita» (diminutivo de significado temporal ambiguo en Colombia)',
+ explanation:'El diminutivo «ahorita» es un ejemplo clásico de deixis temporal ambigua en el español colombiano: puede significar «en este momento», «muy pronto», «hace poco» o incluso «nunca» según el contexto. Este fenómeno es objeto de investigación en sociolingüística y pragmática del español colombiano.',
+ blank:'El uso de «ahorita» en Colombia es un ejemplo de deixis temporal con significado _____ según el contexto',
+ blank_answer:'ambiguo',
+ options:['Preciso','Literal','Ambiguo','Negativo'],answer_idx:2,
+ ref:'Montes Giraldo — Estudios del español colombiano · Levinson — Pragmatics'},
+
+{id:24,epoch:'III',
+ title:'Los actos de habla en el aula colombiana de lengua castellana',
+ example:'Declarativo: «El examen queda para el viernes.» (crea un estado de cosas)\nDirectivo: «Lean el capítulo 3 para la próxima clase.» (petición/orden)\nExpresivo: «¡Felicitaciones por su ensayo!» (expresión de actitud)',
+ explanation:'La teoría de los actos de habla (Austin/Searle) se aplica en los talleres de comprensión y producción oral de la Licenciatura en Lengua Castellana colombiana. En el aula, el docente realiza múltiples actos de habla distintos. Analizarlos ayuda al licenciado a diseñar mejores interacciones pedagógicas y a enseñar pragmática a sus estudiantes.',
+ blank:'La clasificación de los actos de habla en asertivos, directivos, compromisorios, expresivos y declarativos fue desarrollada por _____',
+ blank_answer:'Searle',
+ options:['Grice','Austin','Searle','Habermas'],answer_idx:2,
+ ref:'Searle, J. — Speech Acts (1969) · Austin — How to Do Things with Words (1962)'},
+
+{id:25,epoch:'III',
+ title:'Presuposición e implicatura en textos colombianos',
+ example:'Presuposición: «¿Cuándo dejó de hacer trampa Colombia en los torneos?» → presupone que Colombia hacía trampa.\nImplicatura: A: «¿Ganó el equipo?» B: «Bueno, jugaron muy bien.» → implic.: no ganaron.',
+ explanation:'La presuposición y la implicatura son herramientas fundamentales para el análisis del discurso político y mediático colombiano. En Colombia, los titulares de periódicos como El Tiempo o El Espectador, los discursos presidenciales y la publicidad usan presuposiciones estratégicamente. El análisis crítico del discurso colombiano (Pardo Abril) los estudia.',
+ blank:'El análisis de las presuposiciones en el discurso político colombiano hace parte del Análisis _____ del Discurso (ACD)',
+ blank_answer:'Crítico',
+ options:['Narrativo','Crítico','Literario','Formal'],answer_idx:1,
+ ref:'Pardo Abril, N. — Cómo hacer Análisis Crítico del Discurso (2013) · Levinson — Pragmatics'},
+
+{id:26,epoch:'III',
+ title:'La cortesía lingüística en el español colombiano: Brown y Levinson',
+ example:'Cortesía positiva (Colombia): «Míster, ¿me regala una información?» (acortar distancia)\nCortesía negativa: «¿Sería tan amable de…?» (fórmula de distancia)\nFen. colombiano: uso del condicional en peticiones: «¿Me daría la hora?»',
+ explanation:'La teoría de la cortesía de Brown & Levinson (1987) analiza cómo los hablantes protegen la «imagen» (face) del interlocutor. El español colombiano tiene rasgos de cortesía muy elaborados: el uso del condicional en peticiones, el «sumercé» en algunas regiones y las fórmulas de tratamiento respetuosas como «doctor/a» para cualquier profesional.',
+ blank:'En Colombia, el tratamiento de «doctor/a» se usa informalmente para dirigirse a cualquier _____',
+ blank_answer:'profesional o persona de respeto (incluso sin título universitario)',
+ options:['Médico','Político','Profesional o persona de respeto (incluso sin título universitario)','Abogado'],answer_idx:2,
+ ref:'Brown, P. & Levinson, S. — Politeness (1987) · Haverkate — La cortesía verbal'},
+
+{id:27,epoch:'III',
+ title:'El campo semántico del conflicto en Colombia: análisis lexicológico',
+ example:'Campo semántico de «víctima» en Colombia: desplazado, afectado, sobreviviente, damnificado, testigo.\nCada término tiene implicaciones jurídicas, políticas y emocionales distintas.',
+ explanation:'El análisis de los campos semánticos relacionados con el conflicto armado colombiano es objeto de investigación en el Instituto Caro y Cuervo y en los grupos de lingüística de las universidades públicas colombianas. El licenciado en Lengua Castellana tiene la responsabilidad de analizar y enseñar críticamente el léxico del conflicto y la paz.',
+ blank:'El análisis del vocabulario específico de un campo de experiencia o conocimiento se denomina análisis del _____',
+ blank_answer:'campo semántico',
+ options:['Discurso','Campo semántico','Registro','Estilo'],answer_idx:1,
+ ref:'Instituto Caro y Cuervo · Pardo Abril — Discursos sobre el conflicto armado'},
+
+{id:28,epoch:'III',
+ title:'Polisemia y homonimia en el léxico colombiano',
+ example:'Polisemia: «banco» (institución financiera / asiento / banco de peces) — una sola palabra, varios significados relacionados.\nHomonimia: «vino» (bebida) / «vino» (pretérito de venir) — misma forma, significados no relacionados.',
+ explanation:'La distinción entre polisemia (misma palabra, significados relacionados) y homonimia (palabras distintas con la misma forma) es fundamental en lexicología. Los diccionarios del español colombiano (Nuevo Diccionario de Colombianismos, Instituto Caro y Cuervo) registran términos polisémicos propios del uso colombiano.',
+ blank:'La diferencia entre polisemia y homonimia radica en si los significados están _____ entre sí o no',
+ blank_answer:'relacionados semánticamente',
+ options:['Relacionados semánticamente','Escritos igualmente','Pronunciados igual','Conjugados igual'],answer_idx:0,
+ ref:'Ullmann, S. — Semántica · Instituto Caro y Cuervo — Diccionario de Colombianismos'},
+
+{id:29,epoch:'III',
+ title:'El lenguaje inclusivo en el español colombiano: norma y uso',
+ example:'Genérico masculino: «Los colombianos eligieron a su presidente.»\nDesdoblamiento: «Los colombianos y las colombianas eligieron…»\nForma -e: «Les colombianes» (uso en registros activistas; no normativizado por la RAE).',
+ explanation:'El debate sobre el lenguaje inclusivo en Colombia refleja tensiones entre la norma académica (RAE/Academia Colombiana) y usos sociales emergentes. El MEN ha publicado orientaciones sobre lenguaje inclusivo en documentos oficiales. El licenciado en Lengua Castellana debe conocer la norma vigente y los debates actuales para orientar a sus estudiantes.',
+ blank:'La forma de lenguaje inclusivo consistente en nombrar explícitamente los dos géneros gramaticales (los colombianos y las colombianas) se llama _____',
+ blank_answer:'desdoblamiento',
+ options:['Morfema -e','Desdoblamiento','Arroba','Neologismo'],answer_idx:1,
+ ref:'RAE — Informe sobre lenguaje inclusivo (2020) · MEN — Orientaciones de política'},
+
+{id:30,epoch:'III',
+ title:'Pragmática del humor: ironía y sarcasmo en el español colombiano',
+ example:'Ironía: «¡Qué bonita Bogotá con este tráfico!» (el hablante dice lo contrario de lo que piensa)\nSarcasmo: ironía con intención crítica o hiriente.\nHumor costeño vs. cachaco: estilos retóricos distintos en Colombia.',
+ explanation:'La ironía y el sarcasmo son actos de habla indirectos que violan la máxima de calidad de Grice. El humor colombiano tiene características regionales: el costeño tiende al hipérbaton y la exageración; el cachaco (bogotano) al doble sentido y la ironía sutil. Los licenciados en Lengua Castellana colombiana analizan el humor como fenómeno pragmático y cultural.',
+ blank:'La ironía viola la máxima de _____ de Grice porque el hablante dice algo que no cree ser verdad',
+ blank_answer:'calidad',
+ options:['Cantidad','Calidad','Relación','Modo'],answer_idx:1,
+ ref:'Grice, H.P. — Logic and Conversation (1975) · Vigara Tauste — El chiste y la comunicación lúdica'},
+
+/* ── BLOQUE IV: Lingüística textual y análisis del discurso ── */
+{id:31,epoch:'IV',
+ title:'Coherencia y cohesión: diferencia y mecanismos',
+ example:'Cohesión (referencia): «García Márquez publicó su primera novela. El escritor tenía 25 años.» (él → referencia)\nCoherencia: el texto tiene sentido global: las partes se relacionan conceptualmente.',
+ explanation:'La distinción entre cohesión (mecanismos gramaticales y léxicos de conexión) y coherencia (organización conceptual global) es tema central en Lingüística Textual. Halliday & Hasan (1976) clasificaron los cinco mecanismos de cohesión. En Colombia, los Lineamientos Curriculares del MEN adoptan este modelo para la enseñanza de la comprensión y producción textual.',
+ blank:'El mecanismo de cohesión que reemplaza un elemento mencionado previamente por un pronombre o sintagma se denomina _____',
+ blank_answer:'referencia (anáfora o catáfora)',
+ options:['Elipsis','Conjunción','Referencia (anáfora o catáfora)','Cohesión léxica'],answer_idx:2,
+ ref:'Halliday & Hasan — Cohesion in English (1976) · MEN — Lineamientos Curriculares'},
+
+{id:32,epoch:'IV',
+ title:'Tipos de texto según su propósito: narrativo, argumentativo, expositivo, descriptivo',
+ example:'Narrativo: cuento, novela, crónica (secuencia temporal de eventos)\nArgumentativo: ensayo, editorial, debate (defender una tesis)\nExpositivo: informe, artículo enciclopédico (informar objetivamente)\nDescriptivo: descripción de lugares, personas, objetos',
+ explanation:'La clasificación de tipos textuales (Werlich 1975, Adam 1992) es el fundamento de la didáctica de la producción escrita en Colombia. Los Estándares Básicos de Competencias en Lengua Castellana (MEN 2003) organizan los logros de aprendizaje por tipo de texto y nivel escolar.',
+ blank:'El tipo de texto cuyo propósito es defender una tesis mediante argumentos se denomina texto _____',
+ blank_answer:'argumentativo',
+ options:['Narrativo','Descriptivo','Argumentativo','Expositivo'],answer_idx:2,
+ ref:'MEN — Estándares Básicos de Competencias en Lenguaje (2003) · Adam, J.M. — Les textes'},
+
+{id:33,epoch:'IV',
+ title:'El análisis crítico del discurso (ACD) en Colombia: Pardo Abril',
+ example:'ACD examina: ¿quién habla? ¿desde qué posición de poder? ¿qué voces se silencian?\nAplicación colombiana: análisis de discursos sobre el conflicto, las FARC, la paz y las comunidades étnicas.',
+ explanation:'Neyla Graciela Pardo Abril (Universidad Nacional de Colombia) es la investigadora colombiana de ACD más reconocida internacionalmente. Su libro «Cómo hacer Análisis Crítico del Discurso» (2013) es referencia obligatoria en los programas de Licenciatura en Lengua Castellana. El ACD se usa para analizar el discurso político, mediático y educativo colombiano.',
+ blank:'La investigadora colombiana de la UNAL más reconocida internacionalmente en Análisis Crítico del Discurso es _____',
+ blank_answer:'Neyla Graciela Pardo Abril',
+ options:['Luz Ángela Martínez','Neyla Graciela Pardo Abril','Patricia Bustamante','Rosa Ludy Arias'],answer_idx:1,
+ ref:'Pardo Abril, N. — Cómo hacer Análisis Crítico del Discurso (2013) · UNAL'},
+
+{id:34,epoch:'IV',
+ title:'Géneros discursivos y géneros literarios: Bajtín',
+ example:'Géneros primarios (Bajtín): conversación, carta, diálogo espontáneo.\nGéneros secundarios: novela, ensayo, artículo científico (más complejos, elaborados).\nColombia: la cumbia, la vallenata y la crónica como géneros culturalmente situados.',
+ explanation:'El concepto de género discursivo de Bajtín (Estética de la creación verbal, 1979) es clave en los programas de Lingüística Textual colombianos. Los géneros son relativamente estables: tienen contenido temático, estilo y estructura composicional. El género de la crónica urbana colombiana (Óscar Collazos, Juan Gossaín) es ejemplo de género secundario culturalmente situado.',
+ blank:'Según Bajtín, los géneros discursivos tienen tres elementos: contenido temático, estructura composicional y _____',
+ blank_answer:'estilo',
+ options:['Longitud','Estilo','Autor','Periodo histórico'],answer_idx:1,
+ ref:'Bajtín, M. — Estética de la creación verbal (1979) · Pardo Abril — ACD'},
+
+{id:35,epoch:'IV',
+ title:'Intertextualidad en la literatura colombiana: «Cien años de soledad»',
+ example:'Intertextualidad en García Márquez:\n— Referencia al Génesis bíblico (creación de Macondo)\n— Ecos de las Mil y una Noches\n— Alusiones a la historia colombiana (la masacre de las bananeras, 1928)',
+ explanation:'La intertextualidad (Kristeva 1969, Genette 1982) es herramienta fundamental para el análisis literario en las licenciaturas colombianas. «Cien años de soledad» es el texto más analizado en los programas de Literatura colombiana. Gérard Genette sistematizó los tipos de relaciones transtextuales: intertextualidad, paratextualidad, metatextualidad, hipertextualidad y architextualidad.',
+ blank:'El término «transtextualidad» para denominar las relaciones de un texto con otros textos fue sistematizado por _____',
+ blank_answer:'Gérard Genette',
+ options:['Kristeva','Todorov','Gérard Genette','Bajtín'],answer_idx:2,
+ ref:'Genette, G. — Palimpsestos (1982) · García Márquez — Cien años de soledad'},
+
+{id:36,epoch:'IV',
+ title:'La progresión temática en el texto: tema y rema',
+ example:'[Tema-conocido] La novela «El coronel no tiene quien le escriba» [Rema-nuevo] fue publicada en 1961 y narra la espera silenciosa de un veterano de la guerra.\n[Tema-retomado] Este veterano [Rema-nuevo] simboliza la dignidad en la pobreza.',
+ explanation:'La progresión temática (Daneš 1974, Halliday) organiza el flujo de información en el texto: el tema retoma información conocida; el rema añade información nueva. En los textos académicos colombianos, la progresión temática deficiente (repetición constante del mismo tema sin avance) produce textos monótonos e incoherentes.',
+ blank:'La información nueva que avanza el texto y que completa al tema en cada oración se denomina _____',
+ blank_answer:'rema',
+ options:['Tema','Rema','Presuposición','Coherencia'],answer_idx:1,
+ ref:'Halliday — An Introduction to Functional Grammar · Daneš — Functional Sentence Perspective (1974)'},
+
+{id:37,epoch:'IV',
+ title:'La crónica periodística colombiana como género textual',
+ example:'Cronistas colombianos: García Márquez (El Espectador, El Herald) · Daniel Samper Pizano · Juan Gossaín · Piedad Bonnett (crónica literaria).\nCaracterísticas: narración + datos + subjetividad del cronista + temporalidad.',
+ explanation:'La crónica periodística es un género híbrido entre el periodismo y la literatura, con una tradición muy rica en Colombia. García Márquez la practicó antes de escribir sus novelas. El estudio de la crónica colombiana es obligatorio en las asignaturas de Lingüística Textual y Literatura de las licenciaturas. Es puente entre la escritura literaria y la periodística.',
+ blank:'El escritor colombiano que practicó la crónica periodística en El Heraldo y El Espectador antes de ser novelista fue _____',
+ blank_answer:'Gabriel García Márquez',
+ options:['Tomás Carrasquilla','Gabriel García Márquez','Eduardo Zalamea','Germán Arciniegas'],answer_idx:1,
+ ref:'García Márquez — Textos costeños (obra periodística) · Alvarez, J. — La crónica, el esplendor de la narrativa'},
+
+{id:38,epoch:'IV',
+ title:'El discurso referido: estilo directo, indirecto y libre indirecto',
+ example:'Directo: «"Macondo era entonces una aldea de veinte casas", dijo el narrador.»\nIndirecto: «El narrador dijo que Macondo era entonces una aldea de veinte casas.»\nLibre indirecto: «Macondo era una aldea de veinte casas. ¡Qué lejos estaban de saber lo que les esperaba!»',
+ explanation:'El discurso referido es tema de Lingüística Textual y de análisis literario. El estilo indirecto libre (característica del modernismo y realismo) mezcla la voz del narrador y del personaje. García Márquez lo usa magistralmente en sus cuentos y novelas. Los trabajos de análisis narratológico en las licenciaturas colombianas deben identificar y analizar el estilo indirecto libre.',
+ blank:'La técnica narrativa que mezcla la voz del narrador y la conciencia del personaje sin marcas tipográficas se llama estilo _____ libre',
+ blank_answer:'indirecto',
+ options:['Directo','Indirecto','Épico','Lírico'],answer_idx:1,
+ ref:'Genette — Discours du récit · Reyes, G. — Polifonía textual'},
+
+{id:39,epoch:'IV',
+ title:'El texto multimodal en la clase de lengua castellana',
+ example:'Multimodalidad: texto verbal + imagen + diseño gráfico + color + música (en medios digitales).\nEjemplo: la historieta colombiana de Quino adaptada al aula.',
+ explanation:'La lingüística multimodal (Kress & van Leeuwen 1996) estudia cómo se construye el significado con múltiples modos semióticos (texto, imagen, diseño, color). En Colombia, los medios digitales, la publicidad y los textos escolares son multimodales. Los Estándares Básicos de Competencias en Lenguaje del MEN incluyen la comprensión de textos no verbales y multimodales.',
+ blank:'La disciplina que estudia cómo se construye significado combinando texto, imagen, diseño y otros modos semióticos se denomina _____',
+ blank_answer:'lingüística multimodal (semiótica social)',
+ options:['Pragmática','Lingüística multimodal (semiótica social)','Fonología','Morfología'],answer_idx:1,
+ ref:'Kress & van Leeuwen — Reading Images (1996) · MEN — EBC Lenguaje (2003)'},
+
+{id:40,epoch:'IV',
+ title:'Análisis del discurso oral colombiano: marcadores discursivos',
+ example:'Marcadores colombianos: «o sea» (reformulación) · «entonces» (consecuencia o continuación) · «¿cierto?» / «¿verdad?» (control fático) · «pues» (introductorio o fático) · «mire que» (atenuador).',
+ explanation:'Los marcadores discursivos del español colombiano oral son objeto de investigación en las universidades colombianas (Grupo GITECLE de la UPTC, grupo de Pragmática de la UNAL). El licenciado en Lengua Castellana debe conocer estos marcadores para analizar el discurso oral de sus estudiantes y para diseñar actividades de oralidad en el aula.',
+ blank:'El uso frecuente de «o sea» en el discurso oral para explicar o reformular lo dicho lo convierte en un marcador de _____',
+ blank_answer:'reformulación',
+ options:['Argumentación','Reformulación','Negación','Coherencia textual'],answer_idx:1,
+ ref:'Martín Zorraquino & Portolés — Los marcadores del discurso (1999) · GITECLE — UPTC'},
+
+/* ── BLOQUE V: Literatura colombiana e hispanoamericana ── */
+{id:41,epoch:'V',
+ title:'La novela colombiana: del costumbrismo al realismo mágico',
+ example:'Costumbrismo: «María» (Isaacs, 1867) · Cuadros de costumbres (Carrasquilla).\nViolencia: «El Cristo de espaldas» (Caballero Calderón) · «La hojarasca» (García Márquez, 1955).\nRealismo mágico: «Cien años de soledad» (García Márquez, 1967).',
+ explanation:'La historia de la novela colombiana tiene hitos fundamentales que el licenciado debe conocer: «María» de Jorge Isaacs (1867, Cali) como la novela romántica más leída del s. XIX en América Latina; «La vorágine» de José Eustasio Rivera (1924) como novela de la selva; y «Cien años de soledad» (1967) como novela cumbre del Boom latinoamericano.',
+ blank:'La novela romántica colombiana publicada en 1867 por Jorge Isaacs y considerada la más leída del siglo XIX en América Latina es _____',
+ blank_answer:'María',
+ options:['La vorágine','María','Cóndores no entierran todos los días','El coronel no tiene quien le escriba'],answer_idx:1,
+ ref:'Isaacs, J. — María (1867) · Pineda Botero — La fábula y el desastre (novela colombiana)'},
+
+{id:42,epoch:'V',
+ title:'El realismo mágico: definición, orígenes y contexto colombiano',
+ example:'Características: lo extraordinario narrado con naturalidad · mezcla de realidad histórica y elementos maravillosos · recuperación de la cosmovisión indígena y afro · espacio mítico (Macondo).',
+ explanation:'El término «realismo mágico» fue aplicado primero a la pintura (Roh 1925) y luego a la literatura. En el contexto latinoamericano, Alejo Carpentier propuso «lo real maravilloso» (1949). En Colombia, García Márquez lo llevó a su máxima expresión, pero otros autores como Álvaro Mutis también lo cultivan. Los trabajos de literatura colombiana deben distinguir realismo mágico de fantasía.',
+ blank:'El concepto alternativo al realismo mágico propuesto por el cubano Alejo Carpentier para la literatura latinoamericana es «lo real _____»',
+ blank_answer:'maravilloso',
+ options:['Mítico','Maravilloso','Mágico','Invisible'],answer_idx:1,
+ ref:'Carpentier, A. — El reino de este mundo, Prólogo (1949) · Menton — Historia verdadera del realismo mágico'},
+
+{id:43,epoch:'V',
+ title:'El Boom latinoamericano: autores, obras y contexto histórico',
+ example:'Colombia: Gabriel García Márquez (Nobel 1982, «Cien años de soledad»)\nArgentina: Julio Cortázar («Rayuela», 1963)\nMéxico: Carlos Fuentes («La región más transparente», 1958)\nPerú: Mario Vargas Llosa («La ciudad y los perros», 1963)',
+ explanation:'El Boom latinoamericano (1960-1975) fue el fenómeno editorial y literario que dio proyección internacional a la narrativa latinoamericana. García Márquez fue su figura más reconocida y el único colombiano del grupo nuclear. Los trabajos de Licenciatura en Lengua Castellana colombianos deben contextualizar históricamente el Boom con la Revolución Cubana, el antiimperialismo y el compromiso político.',
+ blank:'El año en que García Márquez publicó «Cien años de soledad», obra central del Boom latinoamericano, fue _____',
+ blank_answer:'1967',
+ options:['1955','1962','1967','1972'],answer_idx:2,
+ ref:'García Márquez — Cien años de soledad (1967) · Donoso — Historia personal del Boom'},
+
+{id:44,epoch:'V',
+ title:'La poesía colombiana: Silva, Barba Jacob y Aurelio Arturo',
+ example:'Silva (1865–1896): «Nocturno» (modernismo)\nBarba Jacob (1883–1942): «Canción de la vida profunda»\nAurelio Arturo (1906–1974): «Morada al sur» (poesía de la naturaleza nariñense)',
+ explanation:'La poesía colombiana tiene figuras de primera línea que el licenciado debe conocer: José Asunción Silva (precursor del modernismo), Porfirio Barba Jacob (poeta errante del romanticismo tardío), Aurelio Arturo (poeta de la naturaleza caucana y nariñense), Álvaro Mutis y más recientemente Piedad Bonnett. «Morada al sur» de Arturo es considerada la cumbre de la poesía colombiana del siglo XX.',
+ blank:'El poeta colombiano nariñense cuya obra «Morada al sur» es considerada la cumbre de la poesía colombiana del siglo XX fue _____',
+ blank_answer:'Aurelio Arturo',
+ options:['José Asunción Silva','Porfirio Barba Jacob','Aurelio Arturo','León de Greiff'],answer_idx:2,
+ ref:'Cobo Borda — Historia de la poesía colombiana · Arturo, A. — Morada al sur (1963)'},
+
+{id:45,epoch:'V',
+ title:'La narrativa de la violencia colombiana: «La Violencia» y la literatura',
+ example:'«El Cristo de espaldas» (Caballero Calderón, 1952)\n«Cóndores no entierran todos los días» (Gustavo Álvarez Gardeazábal, 1971)\n«Los ejércitos» (Evelio Rosero, 2007 — Premio Tusquets)',
+ explanation:'La llamada «literatura de la Violencia» es un corpus fundamental de la narrativa colombiana que narra el conflicto bipartidista de mediados del siglo XX. Los trabajos de Licenciatura en Lengua Castellana colombianos la analizan desde el ACD y la narratología. Evelio Rosero representa la nueva generación que narra el conflicto armado reciente.',
+ blank:'La obra de Evelio Rosero que ganó el Premio Tusquets en 2007 y narra la violencia en un pueblo colombiano se titula _____',
+ blank_answer:'Los ejércitos',
+ options:['El coronel no tiene quien le escriba','Los ejércitos','La hojarasca','El olvido que seremos'],answer_idx:1,
+ ref:'Rosero, E. — Los ejércitos (2007) · Pécaut — Orden y violencia en Colombia'},
+
+{id:46,epoch:'V',
+ title:'El cuento colombiano: Tomás González, Piedad Bonnett, Triunfo Arciniegas',
+ example:'Tomás González: «El rey del Honka-Monka» (humor negro)\nTriunfo Arciniegas: cuentos para niños y jóvenes\nPiedad Bonnett: poesía y drama, «Lo que no tiene nombre» (testimonio sobre salud mental)',
+ explanation:'El cuento colombiano tiene una tradición rica pero menos estudiada que la novela. Tomás González, escritor antioqueño, es reconocido internacionalmente. Piedad Bonnett, poeta bogotana, escribió «Lo que no tiene nombre» (2013) como testimonio sobre el suicidio de su hijo, obra que abrió debates sobre salud mental y escritura en Colombia.',
+ blank:'La escritura de testimonio personal sobre el suicidio de su hijo en «Lo que no tiene nombre» (2013) fue realizada por la escritora colombiana _____',
+ blank_answer:'Piedad Bonnett',
+ options:['Marvel Moreno','Piedad Bonnett','Marvel Luz Moreno','Fanny Buitrago'],answer_idx:1,
+ ref:'Bonnett, P. — Lo que no tiene nombre (2013) · González, T. — Primero estaba el mar'},
+
+{id:47,epoch:'V',
+ title:'Literatura afrocolombiana y de comunidades étnicas',
+ example:'Literatura palenquera: tradición oral de San Basilio de Palenque (UNESCO).\nLiteratura wayuunaiki: Miguelángel López (Vito Apüshana) — poesía en wayuunaiki y español.\nCrónica costera: Candelario Obeso (primer poeta negro colombiano).',
+ explanation:'Colombia tiene ricas tradiciones literarias de comunidades étnicas que el licenciado en Lengua Castellana debe conocer y enseñar. La Cátedra de Estudios Afrocolombianos (Ley 70 de 1993 y Decreto 1122 de 1998) obliga a incluir estas literaturas en el currículo escolar. Candelario Obeso (1849–1884) fue el primer poeta negro colombiano reconocido.',
+ blank:'La legislación colombiana que obliga a incluir la cultura afrocolombiana en el currículo escolar es la Cátedra de Estudios Afrocolombianos, establecida por la Ley _____ de 1993',
+ blank_answer:'70',
+ options:['99','70','115','1437'],answer_idx:1,
+ ref:'Ley 70 de 1993 · Decreto 1122 de 1998 — Cátedra Afrocolombiana · Obeso, C. — Cantos populares de mi tierra'},
+
+{id:48,epoch:'V',
+ title:'García Márquez periodista: el origen de su escritura',
+ example:'Cronista en El Universal (Cartagena, 1948), El Heraldo (Barranquilla, 1950), El Espectador (Bogotá, 1954).\nNovela-testimonio: «Relato de un náufrago» (1970, publicado en libro; antes fue crónica periodística).',
+ explanation:'El periodismo de García Márquez es inseparable de su narrativa. Sus crónicas en El Heraldo de Barranquilla (como Maestro Zarate y luego como Septimus) perfeccionaron su estilo. «Relato de un náufrago» (1955 en El Espectador) fue un hito del nuevo periodismo latinoamericano. Los licenciados colombianos deben conocer esta doble faceta del Nobel colombiano.',
+ blank:'El género periodístico-literario que García Márquez perfeccionó en sus años como reportero en Barranquilla y Bogotá fue la _____',
+ blank_answer:'crónica',
+ options:['Editorial','Entrevista','Crónica','Nota informativa'],answer_idx:2,
+ ref:'García Márquez — Textos costeños (1981) · Relato de un náufrago (1970)'},
+
+{id:49,epoch:'V',
+ title:'La novela gráfica y el cómic colombiano como literatura',
+ example:'«Niño de las estrellas» (Triunfo Arciniegas)\n«Rapsodia en azul» (novela gráfica colombiana)\nTalleristas de cómic colombiano: Premio Internacional de Historieta de Bogotá.',
+ explanation:'El cómic y la novela gráfica son géneros literarios reconocidos en los Estándares Básicos de Competencias en Lenguaje del MEN colombiano como textos narrativos visuales. Bogotá tiene una tradición de cómic que incluye el Festival Internacional de Historieta. El licenciado en Lengua Castellana debe incluir estos géneros en la enseñanza de la literatura.',
+ blank:'La inclusión del cómic y la novela gráfica en la enseñanza de la literatura en Colombia está respaldada por los _____ Básicos de Competencias en Lenguaje del MEN',
+ blank_answer:'Estándares',
+ options:['Lineamientos','Estándares','Decretos','Protocolos'],answer_idx:1,
+ ref:'MEN — EBC Lenguaje (2003) · Barbieri — El universo del cómic'},
+
+{id:50,epoch:'V',
+ title:'El ensayo colombiano: Baldomero Sanín Cano y Eduardo Caballero Calderón',
+ example:'Baldomero Sanín Cano (1861–1957): ensayista, crítico, periodista cultural — «el intelectual colombiano más cosmopolita del s. XX».\nGermán Arciniegas: «América, tierra firme» (1937).\nEstanislao Zuleta: «Elogio de la dificultad» (ensayo filosófico-pedagógico).',
+ explanation:'El ensayo es el género más importante de la prosa no ficcional colombiana. Estanislao Zuleta (1935–1990) es el pensador colombiano más citado en los programas de Licenciatura en Lengua Castellana por su obra sobre pedagogía, marxismo y psicoanálisis. «Elogio de la dificultad» es lectura obligatoria en muchos programas de licenciatura.',
+ blank:'El ensayo de Estanislao Zuleta que argumenta que la dificultad y el error son esenciales para el aprendizaje se titula «Elogio de la _____»',
+ blank_answer:'dificultad',
+ options:['Lectura','Escritura','Dificultad','Tolerancia'],answer_idx:2,
+ ref:'Zuleta, E. — Elogio de la dificultad y otros ensayos (1994) · Arciniegas, G. — América, tierra firme'},
+
+/* ── BLOQUE VI: Literatura universal ── */
+{id:51,epoch:'VI',
+ title:'El ensayo literario sobre obras clásicas: estructura y convenciones',
+ example:'Tesis sobre «Don Quijote»: «Cervantes critica en el Quijote la confusión entre la ficción literaria y la realidad, anticipando el metaficcionalismo posmoderno.»\nEvidencia: «Cuando el protagonista confunde los molinos con gigantes, Cervantes expone el poder distorsionador de la lectura irresponsable (Cervantes, 1605/1978, parte I, cap. VIII).»',
+ explanation:'El ensayo sobre obras clásicas en las licenciaturas colombianas debe tener tesis argumentativa, evidencia textual citada con formato MLA o APA, análisis interpretativo (no resumen) y conclusión que conecta el texto con su contexto histórico y literario. Las asignaturas de Literatura Universal de la UPTC, UPN y UdeA evalúan estos criterios con rúbricas específicas.',
+ blank:'El personaje que confunde molinos con gigantes en la obra de Cervantes (1605) se llama _____',
+ blank_answer:'Don Quijote (Alonso Quijano)',
+ options:['Sancho Panza','Dulcinea','Don Quijote (Alonso Quijano)','El Lazarillo'],answer_idx:2,
+ ref:'Cervantes — Don Quijote de la Mancha (1605/1615) · MLA Handbook (9.ª ed.)'},
+
+{id:52,epoch:'VI',
+ title:'Períodos de la literatura en lengua española: cronología',
+ example:'Edad Media: «Poema de Mío Cid» (s. XII) · Arcipreste de Hita\nRenacimiento: Garcilaso, Lazarillo de Tormes (1554), Cervantes\nBarroco: Góngora, Quevedo, Sor Juana\nRomantismo: Bécquer, Espronceda\nModernismo: Rubén Darío\nVanguardias: Neruda, Vallejo, García Lorca',
+ explanation:'El conocimiento cronológico de los períodos literarios en español es competencia fundamental del licenciado en Lengua Castellana colombiano. Los trabajos de Historia de la Literatura deben contextualizar las obras en su período, movimiento y condiciones socio-históricas. La Universidad Externado y la UPTC tienen tradición de rigor en la enseñanza de Historia de la Literatura Universal.',
+ blank:'El primer texto épico en lengua castellana, compuesto alrededor del siglo XII, es el «Poema de _____»',
+ blank_answer:'Mío Cid',
+ options:['Rolando','Gilgamesh','Mío Cid','Beowulf'],answer_idx:2,
+ ref:'Blecua — Historia de la literatura española · Bustos Tovar — Estudios de historia lingüística española'},
+
+{id:53,epoch:'VI',
+ title:'La novela corta (novella) y el cuento: diferencias teóricas',
+ example:'Cuento: brevedad, economía narrativa, final sorpresivo, unidad de efecto (Poe).\nNovela corta: mayor extensión, complejidad psicológica, subtrama, personajes secundarios desarrollados.\nEjemplo colombiano: «El alférez real» (Palacios) vs. un cuento de Tomás González.',
+ explanation:'La distinción entre cuento, novela corta y novela es tema de Teoría Literaria en las licenciaturas colombianas. Edgar Allan Poe definió la «unidad de efecto» del cuento en su reseña de «Twice-Told Tales» de Hawthorne (1842). Los trabajos de análisis literario deben justificar la clasificación genérica con criterios teóricos, no solo con la extensión.',
+ blank:'El concepto de «unidad de efecto» como característica definitoria del cuento fue propuesto por _____',
+ blank_answer:'Edgar Allan Poe',
+ options:['Chéjov','Hemingway','Edgar Allan Poe','Borges'],answer_idx:2,
+ ref:'Poe, E.A. — Reseña de Twice-Told Tales (1842) · Piglia — Formas breves'},
+
+{id:54,epoch:'VI',
+ title:'La narratología: narrador, focalización y tiempo en la novela hispánica',
+ example:'Narrador homodiegético: participa en la historia («El lazarillo de Tormes»).\nFocalización interna: vemos solo lo que sabe el personaje («La vorágine», Rivera).\nAnacronía (analepsis): flashback en «Crónica de una muerte anunciada».',
+ explanation:'La narratología (Genette 1972, Bal 1985) es herramienta central para el análisis literario en las licenciaturas colombianas. «Crónica de una muerte anunciada» (García Márquez, 1981) es un caso paradigmático de juego con el tiempo narrativo: la historia se cuenta regresivamente, pero todos saben el final desde el principio.',
+ blank:'En «Crónica de una muerte anunciada», el recurso narrativo que permite saber el final desde el principio mientras se narra el pasado se denomina _____',
+ blank_answer:'prolepsis (anticipación o flashforward)',
+ options:['Analepsis','Prolepsis (anticipación o flashforward)','Elipsis','Paralepsis'],answer_idx:1,
+ ref:'Genette, G. — Figuras III (1972) · García Márquez — Crónica de una muerte anunciada (1981)'},
+
+{id:55,epoch:'VI',
+ title:'El teatro colombiano y latinoamericano: Enrique Buenaventura',
+ example:'Enrique Buenaventura (1925–2003, Cali): fundador del Teatro Experimental de Cali (TEC).\nCarlos José Reyes: dramaturgo e historiador del teatro colombiano.\nTeatro del Oprimido de Augusto Boal (Brasil): muy influyente en Colombia.',
+ explanation:'Enrique Buenaventura es la figura más importante del teatro colombiano del siglo XX. El Teatro Experimental de Cali (TEC) fue un laboratorio de creación colectiva. El Teatro del Oprimido de Augusto Boal, aunque brasileño, ha tenido gran influencia en el teatro pedagógico colombiano y en los trabajos de grado de licenciaturas que tratan el teatro como herramienta educativa.',
+ blank:'El creador del Teatro Experimental de Cali (TEC) y figura central del teatro colombiano del siglo XX fue _____',
+ blank_answer:'Enrique Buenaventura',
+ options:['Carlos José Reyes','Santiago García','Enrique Buenaventura','Augusto Boal'],answer_idx:2,
+ ref:'Buenaventura, E. — Obra dramática · Reyes, C.J. — Historia del teatro colombiano'},
+
+{id:56,epoch:'VI',
+ title:'El teatro del absurdo: Beckett, Ionesco y su recepción en Colombia',
+ example:'«Esperando a Godot» (Beckett, 1953): dos personajes esperan a alguien que nunca llega → absurdo de la existencia.\nRecepción colombiana: influencia en el teatro del TEC y en dramaturgos como Santiago García.',
+ explanation:'El teatro del absurdo (Esslin 1961) rompe con la lógica causal y el realismo en el drama. Beckett y Ionesco representan la angustia existencial de la posguerra. En Colombia, el Teatro La Candelaria de Bogotá (Santiago García) integró estas influencias con la historia colombiana y la tradición del teatro político latinoamericano.',
+ blank:'La obra de Samuel Beckett que plantea la espera indefinida de dos personajes como metáfora de la existencia se llama _____',
+ blank_answer:'Esperando a Godot',
+ options:['Las sillas','El rey se muere','Esperando a Godot','Final de partida'],answer_idx:2,
+ ref:'Beckett, S. — Esperando a Godot (1953) · Esslin, M. — El teatro del absurdo (1961)'},
+
+{id:57,epoch:'VI',
+ title:'La poesía hispanoamericana: Neruda, Vallejo, Mistral',
+ example:'Neruda: «Veinte poemas de amor y una canción desesperada» (1924) — Amor y sensorialidad.\nVallejo: «Trilce» (1922) — Vanguardia y dolor existencial.\nMistral: «Desolación» (1922) — Primera Nobel latinoamericana (1945).',
+ explanation:'Los tres grandes poetas hispanoamericanos del siglo XX son fundamentales en las asignaturas de Literatura de la Licenciatura en Lengua Castellana colombiana. Gabriela Mistral (Chile, 1945) fue la primera latinoamericana en ganar el Premio Nobel de Literatura. Sus poemas de maternidad y dolor son obligatorios en los planes de aula colombianos de secundaria.',
+ blank:'La primera latinoamericana en ganar el Premio Nobel de Literatura fue la poeta chilena _____',
+ blank_answer:'Gabriela Mistral',
+ options:['Alfonsina Storni','Juana de Ibarbourou','Gabriela Mistral','Rosario Castellanos'],answer_idx:2,
+ ref:'Mistral, G. — Desolación (1922) · Neruda, P. — Veinte poemas de amor (1924)'},
+
+{id:58,epoch:'VI',
+ title:'La estilística en el análisis literario: lengua y estilo',
+ example:'Análisis estilístico de García Márquez:\n— Oraciones largas y acumulativas (herencia bíblica)\n— Hipérbole como figura central del humor\n— Oxímoron: «muchos años después, frente al pelotón de fusilamiento, el coronel Aureliano Buendía había de recordar aquella tarde remota»',
+ explanation:'La estilística (Spitzer 1948, Riffaterre 1971) estudia los rasgos formales y expresivos del lenguaje literario. En Colombia, el análisis estilístico de García Márquez es ejercicio canónico en las asignaturas de Literatura de la Licenciatura. La primera oración de «Cien años de soledad» es el ejemplo más analizado de la narrativa colombiana.',
+ blank:'La figura retórica que combina términos contradictorios (ej. «silencio ensordecedor») se denomina _____',
+ blank_answer:'oxímoron',
+ options:['Metáfora','Hipérbole','Oxímoron','Anáfora'],answer_idx:2,
+ ref:'Spitzer, L. — Lingüística e historia literaria (1948) · Carballo Picazo — Estilística'},
+
+{id:59,epoch:'VI',
+ title:'Literatura y memoria: el testimonio como género en Colombia',
+ example:'«El olvido que seremos» (Héctor Abad Faciolince, 2006) — El asesinato del padre.\n«Gabo: memorias de una vida mágica» (documentales) · Las Memorias de los Paramilitares.\nTestimonio: veracidad + subjetividad + función política.',
+ explanation:'El género testimonial en Colombia está vinculado al conflicto armado y a la búsqueda de la verdad. «El olvido que seremos» de Héctor Abad Faciolince (2006) es la obra testimonial más importante de la literatura colombiana reciente. La Comisión de la Verdad de Colombia (2022) produjo informes que son a la vez documentos históricos y textos literarios.',
+ blank:'La obra testimonial de Héctor Abad Faciolince sobre el asesinato de su padre, médico y activista, se titula _____',
+ blank_answer:'El olvido que seremos',
+ options:['Lo que no tiene nombre','Los ejércitos','El olvido que seremos','Satanás'],answer_idx:2,
+ ref:'Abad Faciolince, H. — El olvido que seremos (2006) · Comisión de la Verdad Colombia'},
+
+{id:60,epoch:'VI',
+ title:'Las vanguardias literarias y su influencia en la poesía colombiana',
+ example:'Ultraísmo · Creacionismo (Huidobro) · Surrealismo (Breton) · Nadaísmo colombiano (1960): Gonzalo Arango, Jota Mario Arbeláez, Eduardo Escobar.',
+ explanation:'El Nadaísmo colombiano (fundado por Gonzalo Arango en Medellín, 1958) fue el movimiento de vanguardia más importante de Colombia. Influenciado por el existencialismo y el surrealismo, el Nadaísmo rechazó la moral burguesa y los valores conservadores de la sociedad colombiana. Sus poetas, novelas y manifiestos son objeto de estudio en los programas de Literatura Colombiana.',
+ blank:'El fundador del Nadaísmo colombiano, movimiento de vanguardia surgido en Medellín a fines de los años 50, fue _____',
+ blank_answer:'Gonzalo Arango',
+ options:['Eduardo Escobar','Jota Mario Arbeláez','Gonzalo Arango','León de Greiff'],answer_idx:2,
+ ref:'Arango, G. — Manifiesto Nadaísta (1958) · Escobar, E. — Historia del Nadaísmo'},
+
+/* ── BLOQUE VII: Didáctica de la lengua castellana ── */
+{id:61,epoch:'VII',
+ title:'Los Estándares Básicos de Competencias en Lenguaje del MEN (2003)',
+ example:'Cinco dimensiones: producción textual · comprensión e interpretación · literatura · sistemas simbólicos · ética de la comunicación.\nOrganizados por conjuntos de grados: 1-3 · 4-5 · 6-7 · 8-9 · 10-11.',
+ explanation:'Los EBC en Lenguaje (MEN 2003) son el documento curricular de referencia para la enseñanza del español en Colombia. Están organizados en cinco factores y agrupados por conjuntos de grados. El factor de «literatura» incluye la lectura, el análisis y la escritura literaria. Los planes de clase del licenciado en Lengua Castellana deben articularse con estos estándares.',
+ blank:'El número de factores en que están organizados los Estándares Básicos de Competencias en Lenguaje del MEN colombiano es _____',
+ blank_answer:'cinco',
+ options:['Tres','Cuatro','Cinco','Seis'],answer_idx:2,
+ ref:'MEN — Estándares Básicos de Competencias en Lenguaje (2003) · Revolución Educativa'},
+
+{id:62,epoch:'VII',
+ title:'La planeación de clase de Lengua Castellana: componentes obligatorios',
+ example:'Datos: IED · Grado · Estándar MEN · DBA · Tiempo\nFases: exploración → estructuración → transferencia\nLogros: «El estudiante será capaz de…» + verbo de Bloom',
+ explanation:'El plan de clase de Lengua Castellana en Colombia articula el Estándar Básico de Competencias (MEN 2003) con los Derechos Básicos de Aprendizaje (DBA v.2, MEN 2016). Los DBA especifican con más detalle qué debe aprender el estudiante en cada grado. Los licenciados en práctica docente son evaluados con rúbricas que verifican esta articulación.',
+ blank:'Los Derechos Básicos de Aprendizaje (DBA) fueron publicados por el MEN colombiano en su versión 2 en el año _____',
+ blank_answer:'2016',
+ options:['2003','2010','2016','2020'],answer_idx:2,
+ ref:'MEN — Derechos Básicos de Aprendizaje en Lenguaje v.2 (2016)'},
+
+{id:63,epoch:'VII',
+ title:'Pedagogía de la lectura: niveles de comprensión lectora en Colombia',
+ example:'Nivel literal: ¿qué dice el texto? (información explícita)\nNivel inferencial: ¿qué implica el texto? (información implícita)\nNivel crítico-intertextual: ¿qué relaciones establece el texto con otros textos y contextos?',
+ explanation:'Los tres niveles de comprensión lectora son referente del ICFES (Saber 3.°, 5.°, 9.°, 11.° y Pro) y de los Lineamientos Curriculares del MEN. Los resultados colombianos en pruebas internacionales (PISA) muestran debilidades en el nivel crítico-intertextual. El licenciado en Lengua Castellana debe diseñar estrategias pedagógicas específicas para cada nivel.',
+ blank:'El nivel de comprensión lectora en que el lector evalúa el texto y lo relaciona con otros discursos se denomina nivel _____',
+ blank_answer:'crítico-intertextual',
+ options:['Literal','Inferencial','Crítico-intertextual','Metacognitivo'],answer_idx:2,
+ ref:'Jurado Valencia & Bustamante Zamudio — Los procesos de lectura (1995) · ICFES'},
+
+{id:64,epoch:'VII',
+ title:'La escritura en el aula colombiana: talleres y secuencias didácticas',
+ example:'Secuencia didáctica (Camps 2003): preparación → producción → evaluación.\nTaller de escritura (Cassany): borrador → revisión entre pares → versión final.',
+ explanation:'La secuencia didáctica de escritura (Camps & Zayas 2006) organiza la enseñanza de la producción textual en fases: la preparación (definir el género y el propósito), la producción (escritura en etapas con retroalimentación) y la evaluación (coevaluación y autoevaluación). Es el modelo más usado en los programas de formación docente colombianos.',
+ blank:'El modelo de secuencia didáctica de escritura que organiza la producción en preparación, producción y evaluación fue desarrollado por _____',
+ blank_answer:'Anna Camps',
+ options:['Cassany','Flower & Hayes','Anna Camps','Vygotsky'],answer_idx:2,
+ ref:'Camps, A. — Secuencias didácticas para aprender a escribir (2003) · Cassany — La cocina de la escritura'},
+
+{id:65,epoch:'VII',
+ title:'La oralidad en el aula: debate, tertulia y exposición',
+ example:'Debate formal: proposición → argumentos a favor → argumentos en contra → rebatir → conclusión.\nTertulia literaria dialógica (Flecha): todos leen el mismo texto, diálogo igualitario.\nExposición oral: estructura, recursos visuales, contacto visual, gestualidad.',
+ explanation:'Los Estándares Básicos de Competencias en Lenguaje del MEN incluyen la oralidad como competencia central. La tertulia literaria dialógica, basada en la teoría del aprendizaje dialógico de Ramón Flecha, es una metodología validada internacionalmente que se usa cada vez más en escuelas colombianas. El licenciado debe saber diseñar y evaluar actividades de oralidad formal.',
+ blank:'La metodología de lectura grupal basada en el aprendizaje dialógico en la que todos leen el mismo texto y reflexionan juntos se llama _____',
+ blank_answer:'tertulia literaria dialógica',
+ options:['Círculo de lectura','Tertulia literaria dialógica','Debate socrático','Lectura en voz alta'],answer_idx:1,
+ ref:'Flecha, R. — Compartiendo palabras (1997) · MEN — EBC Lenguaje'},
+
+{id:66,epoch:'VII',
+ title:'Evaluación de la comprensión lectora: rúbricas y pruebas',
+ example:'Rúbrica analítica para ensayo literario: niveles (1–4) × criterios (tesis, evidencia textual, análisis, coherencia, ortografía).\nPrueba Saber 11 — Lectura Crítica: preguntas de selección múltiple con justificación.',
+ explanation:'El Decreto 1290 de 2009 del MEN estableció que la evaluación en Colombia debe ser integral, continua y formativa. Las rúbricas analíticas permiten evaluar la comprensión lectora y la escritura de manera transparente y reproducible. El ICFES publica cada año las especificaciones de las pruebas Saber para que los docentes las usen como referente.',
+ blank:'El decreto colombiano que estableció la evaluación formativa, integral y continua en la educación básica y media es el Decreto _____ de 2009',
+ blank_answer:'1290',
+ options:['1075','1290','8430','115'],answer_idx:1,
+ ref:'MEN — Decreto 1290 de 2009 · ICFES — Especificaciones Saber 11 Lectura Crítica'},
+
+{id:67,epoch:'VII',
+ title:'El Plan Lector colombiano: selección y mediación de textos',
+ example:'Criterios de selección para el Plan Lector: nivel lector del grado · relevancia cultural colombiana · representatividad de géneros · interés del estudiante · disponibilidad.',
+ explanation:'El Plan Lector es la estrategia de lectura institucional que cada escuela colombiana debe desarrollar conforme a los EBC y los DBA. Los licenciados en Lengua Castellana son los responsables de su diseño y coordinación. La selección de textos debe incluir literatura colombiana, hispanoamericana y universal, con representación de autoras mujeres y de comunidades étnicas.',
+ blank:'El licenciado en Lengua Castellana es el principal responsable de diseñar y coordinar el _____ institucional de lectura en la escuela colombiana',
+ blank_answer:'Plan Lector',
+ options:['Currículo','Plan Lector','Proyecto educativo','PEI'],answer_idx:1,
+ ref:'MEN — EBC Lenguaje · Plan Lector · Fundalectura Colombia'},
+
+{id:68,epoch:'VII',
+ title:'La educación literaria: del texto al contexto en el aula colombiana',
+ example:'Enfoque comunicativo de la literatura: leer para disfrutar + leer para comprender el mundo.\nLiteratura como ventana a la experiencia humana, a la historia colombiana y al lenguaje artístico.',
+ explanation:'La educación literaria (Colomer 2005, Chambers 2007) busca formar lectores autónomos y críticos, no memorizar autores y fechas. En Colombia, los Lineamientos Curriculares de Lengua Castellana (MEN 1998) proponen un enfoque semántico-comunicativo que valora la experiencia estética del texto literario sobre la erudición histórica.',
+ blank:'El enfoque de la didáctica de la literatura que prioriza la experiencia estética del lector sobre la memorización de datos histórico-literarios se denomina educación _____',
+ blank_answer:'literaria',
+ options:['Historicista','Biográfica','Literaria','Estructural'],answer_idx:2,
+ ref:'Colomer, T. — Andar entre libros (2005) · MEN — Lineamientos Curriculares (1998)'},
+
+{id:69,epoch:'VII',
+ title:'El uso del cine y los medios en la clase de lengua castellana',
+ example:'Cine colombiano en el aula: «La estrategia del caracol» (Cabrera), «El abrazo de la serpiente» (Guerra), «Rodrigo D: No futuro» (Gaviria).\nAnálisis: guión (lenguaje escrito) + imagen + sonido + montaje.',
+ explanation:'El cine colombiano es recurso didáctico de primer orden en las clases de Lengua Castellana y Literatura. Permite trabajar la narrativa, el análisis del discurso y el contexto cultural colombiano simultáneamente. El cine de Víctor Gaviria («Rodrigo D», «La vendedora de rosas») usa actores naturales y habla «parche» (jerga paisa), lo que permite trabajar sociolingüística.',
+ blank:'La película de Víctor Gaviria que usa actores no profesionales de las comunas de Medellín y habla «parche» como fenómeno sociolingüístico se llama _____',
+ blank_answer:'Rodrigo D: No futuro',
+ options:['La estrategia del caracol','El abrazo de la serpiente','Rodrigo D: No futuro','Porfirio'],answer_idx:2,
+ ref:'Gaviria, V. — Rodrigo D: No futuro (1990) · Proimágenes Colombia'},
+
+{id:70,epoch:'VII',
+ title:'El proyecto de aula en lengua castellana: fundamentos y diseño',
+ example:'Proyecto de aula: propósito comunicativo real → actividades integradas → producto final auténtico.\nEjemplo: «Creamos un periódico mural sobre el conflicto en nuestra región» (integra escritura + lectura + oralidad + investigación).',
+ explanation:'El proyecto de aula (Jolibert 1992, Hernández & Ventura 1992) organiza la enseñanza de la lengua alrededor de un propósito comunicativo auténtico y un producto final concreto. Es coherente con el enfoque comunicativo de los EBC del MEN. Los trabajos de práctica docente en las licenciaturas colombianas frecuentemente adoptan la estructura del proyecto de aula.',
+ blank:'El enfoque de enseñanza que organiza la clase alrededor de un propósito comunicativo real y un producto final auténtico se denomina proyecto de _____',
+ blank_answer:'aula',
+ options:['Investigación','Vida','Aula','Grado'],answer_idx:2,
+ ref:'Jolibert, J. — Formar niños productores de textos (1992) · MEN — EBC Lenguaje'},
+
+/* ── BLOQUE VIII: Metodología de investigación ── */
+{id:71,epoch:'VIII',
+ title:'Paradigmas de investigación en lengua y literatura colombiana',
+ example:'Cuantitativo: medición de competencias lectoras (ICFES, PISA).\nCualitativo: etnografía del aula, análisis del discurso, investigación-acción.\nMixto: estudio de la comprensión lectora con pre/postest + entrevistas.',
+ explanation:'Los trabajos de grado de las Licenciaturas en Lengua Castellana colombianas son predominantemente cualitativos o mixtos. La investigación-acción es la metodología más frecuente porque permite al docente en formación investigar su propia práctica pedagógica. Los grupos de investigación en didáctica del lenguaje de la UPN, UPTC y UdeA son referentes nacionales.',
+ blank:'La metodología de investigación que permite al docente en formación investigar y transformar su propia práctica pedagógica se denomina _____',
+ blank_answer:'investigación-acción',
+ options:['Estudio de caso','Etnografía','Investigación-acción','Survey'],answer_idx:2,
+ ref:'Kemmis & McTaggart — The Action Research Planner (1988) · Burns — Doing Action Research'},
+
+{id:72,epoch:'VIII',
+ title:'La investigación sobre lectura en Colombia: referentes nacionales',
+ example:'PISA 2022 Colombia: 409 puntos en lectura (promedio OCDE: 476).\nFundalectura: promueve la lectura y la investigación bibliométrica sobre hábitos lectores en Colombia.\nEncuesta Nacional de Lectura (ENLEC, DANE): datos sobre hábitos lectores colombianos.',
+ explanation:'La Encuesta Nacional de Lectura (ENLEC 2022, DANE) muestra que el colombiano promedio lee 2,9 libros al año. Fundalectura y el CERLALC (Centro Regional para el Fomento del Libro en América Latina) son las instituciones de referencia en fomento lector en Colombia. Los trabajos de investigación sobre lectura deben citar estos datos contextuales.',
+ blank:'El centro regional para el fomento del libro en América Latina, con sede en Bogotá, se llama _____',
+ blank_answer:'CERLALC',
+ options:['Fundalectura','CERLALC','Biblored','Filbo'],answer_idx:1,
+ ref:'CERLALC — cerlalc.org · DANE — ENLEC 2022 · Fundalectura Colombia'},
+
+{id:73,epoch:'VIII',
+ title:'El diseño de instrumentos de investigación en lengua: entrevistas y observación',
+ example:'Entrevista semiestructurada: preguntas abiertas + guía flexible → grabación + transcripción.\nObservación participante: el investigador como docente y observador → diario de campo.\nAnálisis de corpus de producciones escritas de estudiantes.',
+ explanation:'Los instrumentos de investigación cualitativa en Lengua Castellana colombiana deben diseñarse con precisión: la entrevista semiestructurada permite explorar sin cerrar; la observación sistemática registra lo que realmente pasa en el aula (no lo que el docente cree que pasa). Los trabajos de grado deben incluir los instrumentos como anexos y explicar su proceso de diseño y validación.',
+ blank:'El instrumento de recolección de datos que registra las reflexiones del investigador sobre lo observado en el aula se denomina _____',
+ blank_answer:'diario de campo',
+ options:['Cuestionario','Entrevista','Diario de campo','Rúbrica'],answer_idx:2,
+ ref:'Creswell, J. — Research Design · Elliot — La investigación-acción en educación'},
+
+{id:74,epoch:'VIII',
+ title:'Ética en investigación con estudiantes menores de edad en Colombia',
+ example:'Permisos necesarios: rector/a de la institución + padre/madre o tutor + asentimiento del estudiante.\nMarco legal: Resolución 8430/1993 + Código de Infancia y Adolescencia (Ley 1098/2006).',
+ explanation:'La investigación con niños y jóvenes en instituciones educativas colombianas requiere tres niveles de consentimiento. El Código de Infancia y Adolescencia (Ley 1098 de 2006) protege los derechos de los menores, incluido el derecho a la privacidad y al anonimato en investigaciones. Los trabajos de grado deben incluir las cartas de consentimiento como anexo obligatorio.',
+ blank:'La ley colombiana que establece los derechos de los niños y adolescentes y que aplica en la investigación con menores es la Ley _____ de 2006',
+ blank_answer:'1098',
+ options:['23','99','1290','1098'],answer_idx:3,
+ ref:'Ley 1098 de 2006 — Código de Infancia y Adolescencia · Resolución 8430/1993'},
+
+{id:75,epoch:'VIII',
+ title:'La investigación sobre escritura académica en Colombia',
+ example:'Grupos de referencia: GITECLE (UPTC), Grupo de Investigación en Enseñanza de la Lengua (UNAL), GEAL (UniAndes).\nRevistas: «Enunciación» (UD), «Lenguaje» (UV), «Folios» (UPN).',
+ explanation:'Las revistas especializadas en Lengua Castellana colombianas de referencia son: Enunciación (Universidad Distrital Francisco José de Caldas), Lenguaje (Universidad del Valle, Cali) y Folios (Universidad Pedagógica Nacional, Bogotá). Los trabajos de grado colombianos de Licenciatura en Lengua Castellana deben citar investigaciones publicadas en estas revistas.',
+ blank:'La revista de lingüística y didáctica de la lengua publicada por la Universidad Pedagógica Nacional de Colombia se llama _____',
+ blank_answer:'Folios',
+ options:['Enunciación','Lenguaje','Folios','Íkala'],answer_idx:2,
+ ref:'UPN — Folios · UD — Enunciación · Universidad del Valle — Lenguaje'},
+
+{id:76,epoch:'VIII',
+ title:'El estado del arte en investigación de lengua y literatura',
+ example:'Organizar por temas (no por autores):\n«Los estudios sobre comprensión lectora en Colombia (González 2018, Pérez 2020, Torres 2022) muestran que…»',
+ explanation:'El estado del arte en los trabajos de Licenciatura en Lengua Castellana colombianos debe ser analítico y temático, no una lista de trabajos. Las bases de datos relevantes son: Dialnet, Redalyc, SciELO Colombia, Repositorio UNAL (Bdigital) y el Portal del CERLALC. La brecha del conocimiento justifica el trabajo de grado.',
+ blank:'La base de datos de acceso abierto que indexa revistas científicas latinoamericanas como Enunciación y Folios es _____',
+ blank_answer:'Redalyc',
+ options:['PubMed','ERIC','Redalyc','JSTOR'],answer_idx:2,
+ ref:'Redalyc — redalyc.org · SciELO Colombia · Dialnet'},
+
+{id:77,epoch:'VIII',
+ title:'El análisis de corpus en investigación lingüística colombiana',
+ example:'Corpus colombianos: CREA (Real Academia) con textos colombianos · PRESEEA Colombia (habla culta de Bogotá, Medellín, Cali) · Corpus del español colombiano (UC Davis).',
+ explanation:'El proyecto PRESEEA (Proyecto para el Estudio Sociolingüístico del Español de España y América) tiene componentes colombianos en Bogotá, Medellín y Cali. Es el corpus sociolingüístico de referencia para estudios del habla colombiana. Los trabajos de Lingüística que analicen el español colombiano deben referenciarlo.',
+ blank:'El proyecto sociolingüístico que recopila corpus del habla culta de ciudades como Bogotá, Medellín y Cali se llama _____',
+ blank_answer:'PRESEEA (Proyecto para el Estudio Sociolingüístico del Español de España y América)',
+ options:['CREA','CORPES','PRESEEA (Proyecto para el Estudio Sociolingüístico del Español de España y América)','BNC'],answer_idx:2,
+ ref:'PRESEEA — preseea.es · Real Academia Española — CREA, CORPES XXI'},
+
+{id:78,epoch:'VIII',
+ title:'Investigación basada en diseño (DBR) en didáctica del lenguaje',
+ example:'DBR (Design-Based Research): diseño → implementación → análisis → rediseño (ciclos iterativos).\nAplicación: diseñar y probar una secuencia didáctica de escritura en un aula colombiana.',
+ explanation:'La investigación basada en diseño (Brown 1992, Cobb 2003) es metodología adecuada para trabajos de grado que diseñan e implementan propuestas pedagógicas. Combina el rigor de la investigación educativa con la aplicabilidad práctica. Es metodología creciente en los programas de Licenciatura en Lengua Castellana colombianos.',
+ blank:'La metodología de investigación educativa que incluye ciclos de diseño, implementación, análisis y rediseño se llama _____',
+ blank_answer:'DBR (Design-Based Research o Investigación Basada en Diseño)',
+ options:['Investigación-acción','Etnografía','DBR (Design-Based Research o Investigación Basada en Diseño)','Survey'],answer_idx:2,
+ ref:'Cobb, P. et al. — Design Experiments in Educational Research (2003)'},
+
+{id:79,epoch:'VIII',
+ title:'Validez y confiabilidad en investigación educativa en lengua',
+ example:'Validez cualitativa: triangulación de fuentes (entrevista + observación + documentos).\nConfiabilidad cualitativa: auditoría externa de los datos.\nCuantitativa: alfa de Cronbach ≥ 0,70 para encuestas.',
+ explanation:'La triangulación es el criterio de rigor fundamental en la investigación cualitativa en Lengua Castellana colombiana. Combinar al menos tres fuentes de datos (ej. diario de campo + entrevista + producciones escritas de los estudiantes) fortalece la credibilidad de los hallazgos. Los trabajos de grado colombianos deben justificar explícitamente sus criterios de rigor.',
+ blank:'La estrategia de rigor en investigación cualitativa que combina múltiples fuentes de datos para aumentar la credibilidad se denomina _____',
+ blank_answer:'triangulación',
+ options:['Validez interna','Triangulación','Confiabilidad','Saturación'],answer_idx:1,
+ ref:'Denzin & Lincoln — Handbook of Qualitative Research · Creswell — Research Design'},
+
+{id:80,epoch:'VIII',
+ title:'Publicar investigación en didáctica del lenguaje: revistas colombianas',
+ example:'Folios (UPN, Bogotá) · Enunciación (UD, Bogotá) · Lenguaje (UV, Cali) · Cuadernos de Lingüística Hispánica (UPTC, Tunja) · Visitas al Patio (U. de Cartagena).',
+ explanation:'Los trabajos de grado de alta calidad de las Licenciaturas en Lengua Castellana colombianas se publican en las revistas especializadas mencionadas. «Cuadernos de Lingüística Hispánica» de la UPTC (Tunja) está indexada en Scopus. El docente en formación debe conocer estas revistas para identificar referentes investigativos y para publicar sus propios hallazgos.',
+ blank:'La revista de lingüística de la UPTC (Tunja) indexada en Scopus se llama _____',
+ blank_answer:'Cuadernos de Lingüística Hispánica',
+ options:['Folios','Enunciación','Cuadernos de Lingüística Hispánica','Íkala'],answer_idx:2,
+ ref:'UPTC — Cuadernos de Lingüística Hispánica (Scopus) · Tunja, Boyacá'},
+
+/* ── BLOQUE IX: Normas académicas ── */
+{id:81,epoch:'IX',
+ title:'ICONTEC NTC 1486: presentación formal de trabajos de grado',
+ example:'Márgenes: izq. 4 cm · sup./inf./der. 3 cm · Fuente: Times New Roman 12 o Arial 12 · Interlineado 1,5 · Numeración: arábigos desde introducción · Portada: datos institucionales.',
+ explanation:'La NTC 1486 de ICONTEC es la norma de presentación formal de los trabajos de grado en Colombia. Regula márgenes, tipografía, interlineado, paginación, portada y tabla de contenido. La mayoría de las facultades de Licenciatura en Lengua Castellana colombianas la combinan con APA 7 (para citas y referencias). El estudiante debe verificar si su facultad tiene normas adicionales propias.',
+ blank:'Según la NTC 1486, el margen izquierdo de los trabajos de grado colombianos es de _____ cm',
+ blank_answer:'4',
+ options:['2','3','4','5'],answer_idx:2,
+ ref:'ICONTEC NTC 1486 — Documentación. Presentación de tesis y trabajos de grado'},
+
+{id:82,epoch:'IX',
+ title:'APA 7: citar autores colombianos en los trabajos de grado',
+ example:'García Márquez, G. (1967). Cien años de soledad. Editorial Sudamericana.\nPardo Abril, N. (2013). Cómo hacer análisis crítico del discurso. Universidad Nacional de Colombia.\nMEN. (2003). Estándares Básicos de Competencias en Lenguaje. Ministerio de Educación Nacional.',
+ explanation:'APA 7 es el sistema de citas más usado en las Licenciaturas en Lengua Castellana colombianas para los trabajos de grado con componente investigativo. Los documentos del MEN se citan como documentos gubernamentales: entidad, año, título en cursiva, editorial institucional. Los textos literarios deben citarse con el año de la edición usada (y el original entre corchetes).',
+ blank:'En APA 7, el título del libro va en _____',
+ blank_answer:'cursiva',
+ options:['Negrita','Comillas','Cursiva','Versalita'],answer_idx:2,
+ ref:'APA Publication Manual (7.ª ed.) · Universidades colombianas de Licenciatura'},
+
+{id:83,epoch:'IX',
+ title:'La cita textual en trabajos de lingüística y literatura',
+ example:'Cita corta (< 40 palabras): «El signo lingüístico une no una cosa y un nombre, sino un concepto y una imagen acústica» (Saussure, 1916/1969, p. 102).\nCita larga (≥ 40 palabras): sangría izquierda de 1,25 cm, sin comillas.',
+ explanation:'Las citas textuales en los trabajos de Lingüística y Literatura colombianos deben seguir el formato APA 7 con precisión: las cortas van entre comillas con número de página; las largas van en bloque con sangría. Los trabajos que mezclan paráfrasis y cita textual sin distinguirlos claramente son señalados por los docentes como plagio involuntario.',
+ blank:'En APA 7, una cita textual de 40 o más palabras se presenta en bloque con sangría izquierda y _____',
+ blank_answer:'sin comillas',
+ options:['Con comillas dobles','Sin comillas','Con comillas simples','En negrita'],answer_idx:1,
+ ref:'APA Manual (7.ª ed.) § 8.25–8.27 · Instituto Caro y Cuervo'},
+
+{id:84,epoch:'IX',
+ title:'Citar obras literarias: ediciones, traducciones y obras clásicas',
+ example:'Obra colombiana: García Márquez, G. (1967/2007). Cien años de soledad. DeBolsillo.\nClásico: Cervantes, M. de (1605/1998). Don Quijote de la Mancha (F. Rico, Ed.). Instituto Cervantes-Crítica.\nBiblia: Biblia (1960). Reina-Valera. Sociedades Bíblicas Unidas.',
+ explanation:'Las obras literarias clásicas tienen convenciones especiales en APA 7: se cita el año original entre corchetes cuando se usa una edición moderna. Las traducciones incluyen el nombre del traductor. Los trabajos de Literatura de las licenciaturas colombianas deben ser rigurosos con la identificación de la edición usada, pues distintas ediciones tienen paginación diferente.',
+ blank:'Al citar una obra clásica en APA 7, el año de la edición original se indica entre _____ junto al año de la edición consultada',
+ blank_answer:'corchetes',
+ options:['Paréntesis','Corchetes','Comillas','Cursiva'],answer_idx:1,
+ ref:'APA Manual (7.ª ed.) § 9.44 — Trabajos sin fecha/clásicos'},
+
+{id:85,epoch:'IX',
+ title:'Uso de notas al pie en textos de humanidades colombianos',
+ example:'Nota al pie (sistema Chicago/ICONTEC en humanidades):\n¹ Caro y Cuervo (1955) sistematizan la ortografía colombiana en su obra fundamental «Rufino José Cuervo y la lengua castellana».',
+ explanation:'Las disciplinas humanísticas (lingüística, literatura) usan en ocasiones notas al pie (sistema Chicago) en lugar de las citas en el texto (sistema APA). En Colombia, algunas revistas de literatura y humanidades (como la Revista Iberoamericana) usan el sistema de notas al pie. El licenciado debe conocer ambos sistemas y usar el que exija su facultad.',
+ blank:'El sistema de citas que usa notas al pie con referencia completa en la primera mención es el sistema _____',
+ blank_answer:'Chicago',
+ options:['APA','Vancouver','Chicago','MLA'],answer_idx:2,
+ ref:'Chicago Manual of Style (17.ª ed.) · Revista Iberoamericana'},
+
+{id:86,epoch:'IX',
+ title:'La bibliografía anotada en trabajos de Lingüística y Literatura',
+ example:'García Márquez, G. (1967). Cien años de soledad. Editorial Sudamericana.\n[Anotación] Novela fundacional del realismo mágico colombiano. Analiza el ciclo histórico de la familia Buendía como alegoría de la historia latinoamericana. Fuente primaria esencial para el estudio del realismo mágico.',
+ explanation:'La bibliografía anotada es ejercicio frecuente en los seminarios de investigación de las Licenciaturas en Lengua Castellana colombianas. Cada entrada incluye la referencia APA + una anotación de 50–150 palabras que resume, evalúa y justifica la relevancia de la fuente para el trabajo de investigación. Desarrolla competencias críticas de síntesis.',
+ blank:'La bibliografía anotada añade a cada referencia una nota que _____ y evalúa la pertinencia de la fuente para la investigación',
+ blank_answer:'resume',
+ options:['Traduce','Resume','Extiende','Parafrasea completa'],answer_idx:1,
+ ref:'Purdue OWL — Annotated Bibliography · APA 7'},
+
+{id:87,epoch:'IX',
+ title:'El plagio académico y la propiedad intelectual en Colombia',
+ example:'Plagio textual: copiar sin citar.\nPlagio de ideas: parafrasear sin atribuir.\nAutoplagio: reutilizar trabajo propio sin indicarlo.\nHerramientas antiplagio: Turnitin, Unicheck (UPN, UPTC, UNAL).',
+ explanation:'El plagio en los trabajos de Licenciatura en Lengua Castellana colombianos es sancionado por los reglamentos estudiantiles universitarios y por el Decreto 1295 de 2010 del MEN. Paradójicamente, son los licenciados en Lengua Castellana quienes deben enseñar a sus propios estudiantes la integridad académica. El dominio de las normas de citación es competencia fundamental.',
+ blank:'La reutilización de un trabajo propio previamente entregado sin indicarlo se denomina _____',
+ blank_answer:'autoplagio',
+ options:['Plagio textual','Cita implícita','Autoplagio','Paráfrasis'],answer_idx:2,
+ ref:'Decreto 1295 de 2010 — MEN · Turnitin · Reglamentos estudiantiles'},
+
+{id:88,epoch:'IX',
+ title:'Las palabras clave en trabajos de Lengua Castellana: tesauros',
+ example:'Tesauros: Tesauro Europeo de la Educación (EET/ERIC) · Tesauro UNESCO · Tesauro de la Lengua Española (RAE) · DeCS (para temas de comunicación y salud).',
+ explanation:'Las palabras clave de los trabajos de grado de Lengua Castellana colombianos deben extraerse de tesauros controlados para facilitar la indexación en los repositorios. El Tesauro Europeo de la Educación (usado en ERIC) y el Tesauro UNESCO (Ciencias Sociales) son los más utilizados. El repositorio de la UNAL (Bdigital) exige palabras clave controladas.',
+ blank:'La base de datos de investigación en educación que usa el Tesauro Europeo de la Educación (EET) como vocabulario controlado es _____',
+ blank_answer:'ERIC (Education Resources Information Center)',
+ options:['PubMed','LILACS','ERIC (Education Resources Information Center)','Embase'],answer_idx:2,
+ ref:'ERIC — eric.ed.gov · Tesauro UNESCO · Bdigital UNAL'},
+
+{id:89,epoch:'IX',
+ title:'Escritura académica en español: verbos para parafrasear y citar',
+ example:'Verbos de reporte: argumenta · sostiene · afirma · plantea · señala · analiza · explica · critica · propone · cuestiona.\nVerbos epistémicos fuertes: demuestra · prueba · comprueba.\nVerbos débiles: sugiere · indica · apunta.',
+ explanation:'La elección del verbo de reporte en las citas comunica el grado de compromiso del autor con la afirmación citada. Los trabajos de Lingüística colombianos deben usar una variedad de verbos para evitar la monotonía («dice», «dice», «dice») y para expresar matices: «García Márquez construye» (activo, agentivo) vs. «se plantea» (impersonal, distante).',
+ blank:'El verbo de reporte que indica que el autor tiene una posición fuerte y comprometida con su argumento es _____',
+ blank_answer:'argumenta (o demuestra)',
+ options:['Menciona','Sugiere','Argumenta (o demuestra)','Señala'],answer_idx:2,
+ ref:'Swales & Feak — Academic Writing for Graduate Students · Montolío — Manual'},
+
+{id:90,epoch:'IX',
+ title:'Diferencia entre la norma ICONTEC y APA en Colombia',
+ example:'ICONTEC: regula la forma del documento (márgenes, portada, tabla de contenido, listas).\nAPA 7: regula las citas en el texto y la lista de referencias.\nEn Colombia: ambas se usan juntas para trabajos de grado.',
+ explanation:'La combinación ICONTEC + APA es el estándar en las Licenciaturas en Lengua Castellana colombianas: ICONTEC para la presentación formal del documento y APA 7 para las citas y referencias bibliográficas. Algunas facultades permiten usar solo APA 7 (que también regula la presentación del documento). El estudiante debe verificar las normas específicas de su programa.',
+ blank:'En Colombia, la norma ICONTEC se ocupa de la presentación formal del documento, mientras que APA 7 regula las _____ y la lista de referencias',
+ blank_answer:'citas en el texto',
+ options:['Márgenes','Portadas','Citas en el texto','Imágenes'],answer_idx:2,
+ ref:'ICONTEC NTC 1486 · APA Manual (7.ª ed.) · Normas de las facultades colombianas'},
+
+/* ── BLOQUE X: Ética docente y contexto colombiano ── */
+{id:91,epoch:'X',
+ title:'El perfil del docente de Lengua Castellana: Decreto 1075 de 2015',
+ example:'Decreto 1075/2015 (Único Reglamentario de Educación):\nCompetencias del licenciado: comunicativa · pedagógica · investigativa · ciudadana · interacción.',
+ explanation:'El Decreto 1075 de 2015 y la Resolución 18583 de 2017 establecen los componentes curriculares de todas las licenciaturas en Colombia. Los egresados de Licenciatura en Lengua Castellana deben demostrar competencia comunicativa avanzada en español, competencia pedagógica para la enseñanza de la lengua y la literatura, y competencia investigativa.',
+ blank:'El decreto colombiano que establece los componentes curriculares de los programas de Licenciatura y las condiciones de calidad es el Decreto _____ de 2015',
+ blank_answer:'1075',
+ options:['1290','8430','1075','1098'],answer_idx:2,
+ ref:'Decreto 1075 de 2015 — MEN · Resolución 18583 de 2017'},
+
+{id:92,epoch:'X',
+ title:'La Ley General de Educación (Ley 115 de 1994) y la enseñanza del español',
+ example:'Ley 115/1994, Art. 23 — Áreas obligatorias: «Humanidades, lengua castellana e idiomas extranjeros» es área fundamental y obligatoria.\nArt. 20: los fines de la educación incluyen «fomentar el deseo de saber, de investigar y de aprender».',
+ explanation:'La Ley 115 de 1994 (Ley General de Educación) es la norma fundamental del sistema educativo colombiano. Declara la Lengua Castellana como área obligatoria y fundamental en todos los niveles de educación básica y media. El licenciado en Lengua Castellana debe conocer esta ley para argumentar la importancia de su área ante las directivas y la comunidad educativa.',
+ blank:'La ley colombiana que establece la Lengua Castellana como área fundamental y obligatoria en la educación es la Ley _____ de 1994',
+ blank_answer:'115',
+ options:['100','70','115','1437'],answer_idx:2,
+ ref:'Ley 115 de 1994 — Ley General de Educación de Colombia'},
+
+{id:93,epoch:'X',
+ title:'Ética docente: el respeto por los dialectos y variedades del español colombiano',
+ example:'Error ético: estigmatizar el acento costeño, paisa o llanero en el aula.\nAprendizaje dialectal: ampliar el repertorio lingüístico del estudiante, no reemplazar su dialecto.\nNorma culta como herramienta de acceso al poder (Bourdieu).',
+ explanation:'El licenciado en Lengua Castellana colombiano tiene la responsabilidad ética de enseñar la norma culta sin estigmatizar los dialectos de sus estudiantes. Pierre Bourdieu (El mercado lingüístico, 1977) analizó cómo el capital lingüístico (dominio de la norma culta) otorga acceso a oportunidades sociales. Enseñar la norma culta como herramienta de movilidad social, sin depreciar el dialecto propio, es pedagogía lingüística crítica.',
+ blank:'El sociólogo francés que analizó el lenguaje como forma de capital social fue _____',
+ blank_answer:'Pierre Bourdieu',
+ options:['Michel Foucault','Pierre Bourdieu','Jürgen Habermas','Louis Althusser'],answer_idx:1,
+ ref:'Bourdieu, P. — El mercado lingüístico (1977) · Ce qui parler veut dire (1982)'},
+
+{id:94,epoch:'X',
+ title:'El docente reflexivo de Lengua Castellana: Schön y Freire',
+ example:'Schön: reflexión-en-la-acción (durante la clase) y reflexión-sobre-la-acción (después).\nFreire: el docente de lengua como facilitador del pensamiento crítico y la concienciación (conscientização).',
+ explanation:'Paulo Freire (1921–1997, brasileño) es el pedagogo latinoamericano más influyente en los programas de Licenciatura en Lengua Castellana colombianos. Su «Pedagogía del oprimido» (1968) plantea la educación como práctica de libertad. La «palabra generadora» de Freire tiene especial resonancia en la enseñanza de la lectura y la escritura en zonas rurales colombianas.',
+ blank:'El concepto de Paulo Freire que plantea la educación como proceso de toma de conciencia política y cultural se denomina _____',
+ blank_answer:'conscientização (concientización)',
+ options:['Scaffolding','Habitus','Conscientização (concientización)','Praxis'],answer_idx:2,
+ ref:'Freire, P. — Pedagogía del oprimido (1968) · Schön, D. — The Reflective Practitioner (1983)'},
+
+{id:95,epoch:'X',
+ title:'La práctica pedagógica en IED colombianas: informe y reflexión',
+ example:'Informe de práctica: descripción del contexto → justificación de las intervenciones → sistematización → reflexión crítica → conclusiones.',
+ explanation:'La práctica pedagógica de los licenciados en Lengua Castellana colombianos se realiza en Instituciones Educativas Distritales (IED) o municipales de educación básica y media. El informe de práctica debe articular la reflexión teórica (¿qué fundamentos pedagógicos guiaron mis decisiones?) con la práctica concreta (¿qué pasó realmente en el aula?).',
+ blank:'El documento que sistematiza y reflexiona críticamente sobre la práctica pedagógica del licenciado en formación se denomina _____',
+ blank_answer:'informe de práctica pedagógica',
+ options:['Portafolio','Plan de clase','Informe de práctica pedagógica','Diario de campo'],answer_idx:2,
+ ref:'UPN — Programa de Práctica Pedagógica · Decree 1075 of 2015'},
+
+{id:96,epoch:'X',
+ title:'Comunicación oral académica: la sustentación del trabajo de grado',
+ example:'Estructura: contexto y problema → metodología → hallazgos principales → conclusiones → preguntas del jurado.\nConvención: hablar con fluidez sin leer la presentación · contacto visual · manejo del tiempo (15 min).',
+ explanation:'La sustentación oral del trabajo de grado en las Licenciaturas en Lengua Castellana colombianas es evaluada con rúbricas que valoran: dominio temático, claridad expositiva, calidad argumentativa, manejo del lenguaje oral académico y respuesta a las preguntas del jurado. El licenciado en Lengua Castellana tiene la responsabilidad de modelar el buen uso del español oral.',
+ blank:'La competencia oral más valorada en una sustentación académica es la capacidad de _____ los argumentos con claridad y responder preguntas críticas',
+ blank_answer:'exponer',
+ options:['Leer','Exponer','Memorizar','Resumir'],answer_idx:1,
+ ref:'UPN, UPTC, UdeA — Formatos de sustentación de trabajo de grado'},
+
+{id:97,epoch:'X',
+ title:'El licenciado en Lengua Castellana y la paz en Colombia',
+ example:'Informe de la Comisión de la Verdad (2022): «Hay futuro si hay verdad» — texto fundamental para trabajar en el aula.\nLiteratura testimonial: base para la pedagogía de la memoria.\nLengua castellana: instrumento de narración y sanación del trauma colectivo.',
+ explanation:'El Informe Final de la Comisión de la Verdad (2022) es un documento histórico que los licenciados en Lengua Castellana tienen la responsabilidad de llevar al aula. La pedagogía de la memoria (enseñar el conflicto colombiano a través de la literatura y los testimonios) es una competencia específica del licenciado colombiano. La lengua es el instrumento de la verdad, la justicia y la reparación.',
+ blank:'El informe de la Comisión de la Verdad de Colombia publicado en 2022 se titula «Hay futuro si hay _____»',
+ blank_answer:'verdad',
+ options:['Paz','Justicia','Verdad','Memoria'],answer_idx:2,
+ ref:'Comisión de la Verdad de Colombia — comisiondelaverdad.co (2022)'},
+
+{id:98,epoch:'X',
+ title:'Uso de IA en la clase de Lengua Castellana: oportunidades y riesgos',
+ example:'ChatGPT como herramienta de generación de borradores → el docente desarrolla la capacidad crítica del estudiante para evaluar y mejorar los textos generados.\nRiesgo: sustitución del pensamiento propio, homogeneización del estilo.',
+ explanation:'El uso de IA generativa en la enseñanza de Lengua Castellana plantea el reto de redefinir qué significa «escribir». El licenciado colombiano debe desarrollar estrategias pedagógicas que usen la IA como herramienta de reflexión crítica, no como sustituto del pensamiento. Enseñar a evaluar los textos generados por IA es competencia nueva del licenciado en Lengua Castellana.',
+ blank:'El principal riesgo pedagógico del uso no crítico de IA generativa en la enseñanza de escritura es la _____ del pensamiento propio',
+ blank_answer:'sustitución',
+ options:['Amplificación','Sustitución','Aceleración','Corrección'],answer_idx:1,
+ ref:'UNESCO — AI Competency Framework for Teachers (2022) · MEN Colombia'},
+
+{id:99,epoch:'X',
+ title:'La didáctica de la lengua castellana en contextos rurales colombianos',
+ example:'Escuela Nueva: pedagogía para escuelas multigrado rurales colombianas (UNESCO reconocida).\nPost-primaria rural · Sistema de Aprendizaje Tutorial (SAT) · ZDP y contexto rural.',
+ explanation:'La Escuela Nueva es un modelo pedagógico colombiano creado en los años 70 para escuelas rurales multigrado. Es reconocida por UNESCO y ha sido adoptada por más de 40 países. El licenciado en Lengua Castellana que trabaja en contextos rurales debe conocer este modelo, que usa guías de aprendizaje activo y tutoreo entre pares.',
+ blank:'El modelo pedagógico colombiano para escuelas rurales multigrado, reconocido por la UNESCO y adoptado en más de 40 países, se llama _____',
+ blank_answer:'Escuela Nueva',
+ options:['Post-primaria','Aprendizaje significativo','Escuela Nueva','Modelo flexible'],answer_idx:2,
+ ref:'MEN Colombia — Escuela Nueva · UNESCO — escuelanueva.org'},
+
+{id:100,epoch:'X',
+ title:'El licenciado en Lengua Castellana como ciudadano cultural colombiano',
+ example:'Colombia: país de Gabriel García Márquez, Rafael Pombo, Silva, Aurelio Arturo.\nBogotá: primera Ciudad de la Lectura (UNESCO, 2022).\nEl licenciado: guardián del patrimonio lingüístico y literario de Colombia.',
+ explanation:'Colombia fue declarada primera Ciudad de la Lectura por la UNESCO (Bogotá, 2022) y es el país de los dos únicos Premio Nobel latinoamericanos de Literatura del siglo XX (García Márquez, 1982, y posiblemente Álvaro Mutis en el futuro). El licenciado en Lengua Castellana colombiano no solo enseña gramática y literatura: es un guardián del patrimonio cultural lingüístico y literario de una de las naciones más ricas en expresión verbal del mundo.',
+ blank:'La primera ciudad latinoamericana declarada Ciudad de la Lectura por la UNESCO fue _____',
+ blank_answer:'Bogotá (2022)',
+ options:['Medellín','Cartagena','México D.F.','Bogotá (2022)'],answer_idx:3,
+ ref:'UNESCO — Ciudad Creativa de la Lectura · Bogotá 2022 · García Márquez — Nobel 1982'},
+
+];
+
+/* ══════════════════════════════════════
+   STORAGE y PERFIL
+══════════════════════════════════════ */
+const LS_D='lc_done', LS_F='lc_fav', LS_P='lc_profile';
+function loadSet(k){try{return new Set(JSON.parse(localStorage.getItem(k)||'[]'))}catch{return new Set()}}
+function saveSet(k,s){try{localStorage.setItem(k,JSON.stringify([...s]))}catch{}}
+let DONE=loadSet(LS_D), FAV=loadSet(LS_F);
+function toggleDone(id){id=+id;DONE.has(id)?DONE.delete(id):DONE.add(id);saveSet(LS_D,DONE)}
+function toggleFav(id){id=+id;FAV.has(id)?FAV.delete(id):FAV.add(id);saveSet(LS_F,FAV)}
+
+const SEMESTRES = ['Semestre 1','Semestre 2','Semestre 3','Semestre 4','Semestre 5','Semestre 6','Semestre 7','Semestre 8','Egresado/a'];
+let profileData = {name:'Estudiante', semestre:'Semestre 1'};
+try { const s=localStorage.getItem(LS_P); if(s) profileData=JSON.parse(s); } catch{}
+function saveProfile(){try{localStorage.setItem(LS_P,JSON.stringify(profileData))}catch{}}
+
+function initProfile(){
+  const inp = document.getElementById('profileNameInput');
+  if(inp){ inp.value=profileData.name; inp.addEventListener('input',()=>{profileData.name=inp.value;saveProfile();updateAvatar();}); }
+  updateAvatar();
+  document.getElementById('profileSemestre').textContent = profileData.semestre;
+}
+function updateAvatar(){
+  const av=document.getElementById('profileAvatar');
+  const meta=document.getElementById('profileMeta');
+  if(av) av.textContent=(profileData.name||'E')[0].toUpperCase();
+  if(meta) meta.textContent='Lic. Lengua Castellana · '+profileData.semestre+' · Colombia';
+}
+function cycleSemestre(){
+  const idx=SEMESTRES.indexOf(profileData.semestre);
+  profileData.semestre=SEMESTRES[(idx+1)%SEMESTRES.length];
+  saveProfile();
+  document.getElementById('profileSemestre').textContent=profileData.semestre;
+  updateAvatar();
+  showToast('📖 '+profileData.semestre);
+}
+
+/* NAVIGATION */
+function navigate(p){
+  document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));
+  document.querySelectorAll('.nav-btn[data-page]').forEach(x=>x.classList.remove('active'));
+  document.getElementById('page-'+p)?.classList.add('active');
+  document.querySelector(`.nav-btn[data-page="${p}"]`)?.classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+  if(p==='dashboard')renderDashboard();
+  if(p==='lista')renderList();
+  if(p==='practica')renderPractice();
+}
+document.querySelectorAll('.nav-btn[data-page]').forEach(b=>b.addEventListener('click',()=>{navigate(b.dataset.page);document.getElementById('navInner').classList.remove('open')}));
+document.getElementById('burgerBtn').addEventListener('click',()=>document.getElementById('navInner').classList.toggle('open'));
+
+/* DASHBOARD */
+function renderDashboard(){
+  const done=DONE.size,fav=FAV.size,total=PHENOMENA.length;
+  const pct=Math.round(done/total*100);
+  document.getElementById('statsGrid').innerHTML=`
+    <div class="stat-card"><div class="stat-num">${total}</div><div class="stat-label">Técnicas totales</div></div>
+    <div class="stat-card"><div class="stat-num" style="color:var(--green-check)">${done}</div><div class="stat-label">Completadas</div></div>
+    <div class="stat-card"><div class="stat-num" style="color:var(--amarillo-dk)">${fav}</div><div class="stat-label">Favoritas</div></div>
+    <div class="stat-card"><div class="stat-num" style="color:var(--rojo)">${total-done}</div><div class="stat-label">Pendientes</div></div>`;
+  document.getElementById('progressBar').style.width=pct+'%';
+  document.getElementById('progressPct').textContent=pct+' %';
+  document.getElementById('epochGrid').innerHTML=EPOCHS.map(ep=>{
+    const items=PHENOMENA.filter(p=>p.epoch===ep.id);
+    const dc=items.filter(p=>DONE.has(p.id)).length;
+    const pp=Math.round(dc/items.length*100);
+    return `<div class="epoch-card" onclick="goToEpoch('${ep.id}')">
+      <div class="epoch-num">Bloque ${ep.id}</div>
+      <div class="epoch-name">${ep.name}</div>
+      <div class="epoch-meta">${dc}/${items.length} · ${pp} %</div>
+      <div class="mini-bar"><div class="mini-bar-fill" style="width:${pp}%"></div></div>
+    </div>`;
+  }).join('');
+}
+function goToEpoch(id){navigate('lista');setTimeout(()=>{const s=document.getElementById('epochFilter');if(s){s.value=id;filterAndRender();}},120);}
+document.getElementById('resetBtn').addEventListener('click',()=>{
+  if(!confirm('¿Reiniciar todo el progreso?'))return;
+  DONE=new Set();FAV=new Set();saveSet(LS_D,DONE);saveSet(LS_F,FAV);
+  renderDashboard();showToast('↺ Progreso reiniciado');
+});
+
+/* LISTA */
+function populateFilters(){
+  const opts=EPOCHS.map(e=>`<option value="${e.id}">Bloque ${e.id} — ${e.name.substring(0,38)}…</option>`).join('');
+  ['epochFilter','practiceEpochFilter'].forEach(id=>{const s=document.getElementById(id);if(s&&s.children.length<=1)s.innerHTML+=opts;});
+}
+function getFiltered(){
+  const q=(document.getElementById('searchInput')?.value||'').toLowerCase();
+  const ep=document.getElementById('epochFilter')?.value||'';
+  const st=document.getElementById('statusFilter')?.value||'';
+  const so=document.getElementById('sortFilter')?.value||'num';
+  let list=PHENOMENA.filter(p=>{
+    if(q&&!(p.title.toLowerCase().includes(q)||p.example.toLowerCase().includes(q)||p.explanation.toLowerCase().includes(q)))return false;
+    if(ep&&p.epoch!==ep)return false;
+    if(st==='done'&&!DONE.has(p.id))return false;
+    if(st==='fav'&&!FAV.has(p.id))return false;
+    if(st==='pending'&&(DONE.has(p.id)||FAV.has(p.id)))return false;
+    return true;
+  });
+  if(so==='alpha')list.sort((a,b)=>a.title.localeCompare(b.title,'es'));
+  else if(so==='epoch')list.sort((a,b)=>a.epoch.localeCompare(b.epoch)||a.id-b.id);
+  else list.sort((a,b)=>a.id-b.id);
+  return list;
+}
+function renderList(){
+  const list=getFiltered();
+  const grid=document.getElementById('techniquesGrid');
+  if(!list.length){grid.innerHTML='<div class="empty">Ninguna técnica coincide con los filtros.</div>';return;}
+  grid.innerHTML=list.map(p=>{
+    const isDone=DONE.has(p.id),isFav=FAV.has(p.id);
+    const ep=EPOCHS.find(e=>e.id===p.epoch);
+    const ex=p.example.replace(/\n/g,' · ').substring(0,80)+'…';
+    return `<article class="tech-card ${isDone?'done':''} ${isFav?'fav':''}" onclick="openModal(${p.id})">
+      <div class="tech-num">N.º ${p.id} · BLOQUE ${p.epoch}</div>
+      <div class="tech-title">${p.title}</div>
+      <div class="tech-example">${ex}</div>
+      <div><span class="tech-epoch-tag">${ep?ep.name.substring(0,36)+'…':p.epoch}</span></div>
+      <div class="tech-actions" onclick="event.stopPropagation()">
+        <button class="icon-btn ${isDone?'active-done':''}" onclick="hDone(${p.id})">${isDone?'✓':'○'} hecha</button>
+        <button class="icon-btn ${isFav?'active-fav':''}" onclick="hFav(${p.id})">${isFav?'★':'☆'} fav.</button>
+      </div>
+    </article>`;
+  }).join('');
+}
+function hDone(id){toggleDone(id);renderList();renderDashboard();showToast(DONE.has(id)?'✓ marcada':'desmarcada');}
+function hFav(id){toggleFav(id);renderList();renderDashboard();showToast(FAV.has(id)?'★ favorita':'eliminada de favoritas');}
+function filterAndRender(){renderList();}
+['searchInput','epochFilter','statusFilter','sortFilter'].forEach(id=>{
+  const el=document.getElementById(id);if(el)el.addEventListener('input',filterAndRender),el.addEventListener('change',filterAndRender);
+});
+
+/* MODAL */
+function openModal(id){
+  const p=PHENOMENA.find(x=>x.id===+id);if(!p)return;
+  const ep=EPOCHS.find(e=>e.id===p.epoch);
+  const isDone=DONE.has(p.id),isFav=FAV.has(p.id);
+  const exLines=p.example.split('\n');
+  const badLine=exLines.find(l=>l.startsWith('✗'));
+  const goodLine=exLines.find(l=>l.startsWith('✓'));
+  const rest=exLines.filter(l=>!l.startsWith('✗')&&!l.startsWith('✓')).join('\n');
+  let exHtml='';
+  if(badLine)exHtml+=`<div class="modal-bad">${badLine}</div>`;
+  if(goodLine)exHtml+=`<div class="modal-good">${goodLine}</div>`;
+  if(rest.trim())exHtml+=`<div class="modal-example">${rest.trim()}</div>`;
+  if(!badLine&&!goodLine)exHtml=`<div class="modal-example">${p.example}</div>`;
+  document.getElementById('modalContent').innerHTML=`
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    <div class="modal-num">Técnica N.º ${p.id} · Bloque ${p.epoch}</div>
+    <div class="modal-title">${p.title}</div>
+    <span class="tech-epoch-tag">${ep?ep.name:p.epoch}</span>
+    <div class="modal-section"><div class="modal-section-label">Ejemplo</div>${exHtml}</div>
+    <div class="modal-section"><div class="modal-section-label">Explicación</div><div class="modal-explanation">${p.explanation}</div></div>
+    ${p.ref?`<div class="modal-ref">↗ Referencia: ${p.ref}</div>`:''}
+    <div class="modal-actions">
+      <button class="btn ${isDone?'btn-azul':'btn-secondary'}" onclick="hDone(${p.id});openModal(${p.id})">${isDone?'✓ Completada':'○ Marcar hecha'}</button>
+      <button class="btn ${isFav?'btn-rojo':'btn-secondary'}" onclick="hFav(${p.id});openModal(${p.id})">${isFav?'★ Favorita':'☆ Favorita'}</button>
+      <button class="btn btn-amarillo" onclick="closeModal();setTimeout(()=>practiceOne(${p.id}),200)">✎ Practicar</button>
+    </div>`;
+  document.getElementById('modalOverlay').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+function closeModal(e){
+  if(e&&e.target!==document.getElementById('modalOverlay'))return;
+  document.getElementById('modalOverlay').classList.remove('open');
+  document.body.style.overflow='';
+}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal();});
+
+/* PRÁCTICA */
+let practiceMode='multiple',practiceQueue=[],practiceIdx=0;
+let sessionCorrect=0,sessionTotal=0,fcFlipped=false;
+function setPracticeMode(m,btn){practiceMode=m;document.querySelectorAll('.mode-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');resetExercise();}
+function getPracticePool(){
+  const ep=document.getElementById('practiceEpochFilter')?.value||'';
+  const pnd=document.getElementById('onlyPending')?.checked||false;
+  return PHENOMENA.filter(p=>{if(ep&&p.epoch!==ep)return false;if(pnd&&DONE.has(p.id))return false;return true;});
+}
+function shuffle(a){return[...a].sort(()=>Math.random()-.5)}
+function resetExercise(){
+  sessionCorrect=0;sessionTotal=0;
+  practiceQueue=shuffle(getPracticePool());practiceIdx=0;fcFlipped=false;
+  updateSessionScore();renderPractice();
+}
+function renderPractice(){
+  const main=document.getElementById('practiceMain');if(!main)return;
+  if(!practiceQueue.length){main.innerHTML='<div class="empty">No hay técnicas con los filtros seleccionados.</div>';return;}
+  if(practiceIdx>=practiceQueue.length){
+    const pct=sessionTotal?Math.round(sessionCorrect/sessionTotal*100):0;
+    main.innerHTML=`<div class="exercise-card" style="text-align:center">
+      <div style="font-family:var(--font-head);font-size:1.9rem;font-style:italic;color:var(--azul);margin-bottom:.5rem">¡Sesión completa!</div>
+      <div style="font-size:.95rem;color:var(--ink-muted);font-family:var(--font-mono);margin-bottom:1.4rem">${sessionCorrect} / ${sessionTotal} correctas · ${pct} %</div>
+      <button class="btn btn-amarillo" onclick="resetExercise()">↺ Nueva sesión</button>
+    </div>`;return;
+  }
+  const p=practiceQueue[practiceIdx];
+  if(practiceMode==='multiple')renderMultiple(p,main);
+  else if(practiceMode==='blank')renderBlank(p,main);
+  else renderFlashcard(p,main);
+}
+function updateSessionScore(){const el=document.getElementById('sessionScore');if(el)el.textContent=sessionTotal?`${sessionCorrect} correctas / ${sessionTotal}`:'—';}
+function renderMultiple(p,c){
+  const letters=['A','B','C','D'];
+  const hasSnippet=p.example&&p.example.length<200;
+  c.innerHTML=`
+    <div class="score-bar"><span>Progreso:</span><span class="score-num">${practiceIdx+1}/${practiceQueue.length}</span><span class="score-divider">|</span><span>Correctas: <strong>${sessionCorrect}</strong></span></div>
+    <div class="exercise-card">
+      <div class="ex-question">${p.title}</div>
+      ${hasSnippet?`<div class="ex-snippet">${p.example}</div>`:''}
+      <div style="font-size:.83rem;color:var(--ink-muted);font-family:var(--font-mono);margin-bottom:.85rem;letter-spacing:.04em">¿CUÁL ES LA RESPUESTA CORRECTA?</div>
+      <div class="ex-options">${p.options.map((o,i)=>`<div class="ex-option" data-idx="${i}" onclick="checkMultiple(${i},${p.answer_idx},${p.id})"><span class="ex-opt-letter">${letters[i]}</span>${o}</div>`).join('')}</div>
+      <div class="ex-feedback" id="exFeedback"></div>
+      <div id="exNext" style="display:none"><button class="btn btn-azul" onclick="nextExercise()">Siguiente →</button></div>
+    </div>`;
+}
+function checkMultiple(chosen,correct,pid){
+  const opts=document.querySelectorAll('.ex-option');
+  opts.forEach(o=>o.classList.add('disabled'));
+  opts[correct].classList.add('correct');
+  const fb=document.getElementById('exFeedback');fb.classList.add('show');
+  sessionTotal++;
+  if(chosen===correct){opts[chosen].classList.add('correct');fb.className='ex-feedback show ok';fb.innerHTML='✓ ¡Correcto!';sessionCorrect++;if(!DONE.has(pid))toggleDone(pid);}
+  else{opts[chosen].classList.add('wrong');const ph=PHENOMENA.find(x=>x.id===pid);fb.className='ex-feedback show ko';fb.innerHTML=`✗ La respuesta correcta es: <strong>${ph.options[correct]}</strong>`;}
+  document.getElementById('exNext').style.display='block';updateSessionScore();
+}
+function renderBlank(p,c){
+  c.innerHTML=`
+    <div class="score-bar"><span>Progreso:</span><span class="score-num">${practiceIdx+1}/${practiceQueue.length}</span><span class="score-divider">|</span><span>Correctas: <strong>${sessionCorrect}</strong></span></div>
+    <div class="exercise-card">
+      <div class="ex-question">${p.blank}</div>
+      <div class="ex-blank-wrap">
+        <input class="ex-blank-input" id="blankInput" placeholder="escribe la respuesta…" autocomplete="off">
+        <button class="btn btn-azul" onclick="checkBlank(${p.id})">Comprobar</button>
+      </div>
+      <div class="ex-feedback" id="exFeedback"></div>
+      <div id="exNext" style="display:none"><button class="btn btn-azul" onclick="nextExercise()">Siguiente →</button></div>
+    </div>`;
+  const inp=document.getElementById('blankInput');inp.addEventListener('keydown',e=>{if(e.key==='Enter')checkBlank(p.id)});inp.focus();
+}
+function checkBlank(pid){
+  const p=PHENOMENA.find(x=>x.id===+pid);
+  const inp=document.getElementById('blankInput');
+  const val=inp.value.trim().toLowerCase();
+  const exp=p.blank_answer.toLowerCase();
+  const ok=val===exp||exp.includes(val)||(val.length>3&&exp.split(' ').some(w=>w.length>3&&val.includes(w)));
+  inp.disabled=true;
+  const fb=document.getElementById('exFeedback');fb.classList.add('show');sessionTotal++;
+  if(ok){inp.classList.add('correct-input');fb.className='ex-feedback show ok';fb.innerHTML=`✓ Correcto. Respuesta: <strong>${p.blank_answer}</strong>`;sessionCorrect++;if(!DONE.has(p.id))toggleDone(p.id);}
+  else{inp.classList.add('wrong-input');fb.className='ex-feedback show ko';fb.innerHTML=`✗ La respuesta era: <strong>${p.blank_answer}</strong>`;}
+  document.getElementById('exNext').style.display='block';updateSessionScore();
+}
+function renderFlashcard(p,c){
+  fcFlipped=false;
+  c.innerHTML=`
+    <div class="score-bar"><span>Tarjeta:</span><span class="score-num">${practiceIdx+1}/${practiceQueue.length}</span></div>
+    <div class="flashcard" id="flashcard" onclick="flipCard()">
+      <div class="flashcard-front"><div>${p.title}</div><div class="flashcard-hint">— pulsar para ver —</div></div>
+      <div class="flashcard-back">
+        <div style="font-family:var(--font-mono);font-size:.82rem;color:var(--azul-lt);margin-bottom:.6rem">${p.example.replace(/\n/g,' · ').substring(0,200)}</div>
+        <div>${p.explanation.substring(0,280)}…</div>
+      </div>
+    </div>
+    <div class="fc-nav">
+      <button class="btn btn-secondary" onclick="fcAnswer(false,${p.id})">✗ No la sabía</button>
+      <button class="btn btn-azul"      onclick="fcAnswer(true,${p.id})">✓ La sabía</button>
+    </div>`;
+}
+function flipCard(){fcFlipped=!fcFlipped;document.getElementById('flashcard')?.classList.toggle('flipped',fcFlipped);}
+function fcAnswer(ok,pid){sessionTotal++;if(ok){sessionCorrect++;if(!DONE.has(pid))toggleDone(pid);}updateSessionScore();nextExercise();}
+function nextExercise(){practiceIdx++;fcFlipped=false;renderPractice();}
+function practiceOne(id){
+  navigate('practica');
+  setTimeout(()=>{practiceQueue=[PHENOMENA.find(p=>p.id===+id),...shuffle(PHENOMENA.filter(p=>p.id!==+id))];practiceIdx=0;renderPractice();},160);
+}
+
+let toastTimer=null;
+function showToast(msg){
+  const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');
+  if(toastTimer)clearTimeout(toastTimer);
+  toastTimer=setTimeout(()=>t.classList.remove('show'),2400);
+}
+
+(function(){populateFilters();renderDashboard();renderList();resetExercise();initProfile();})();
+</script>
+</body>
+</html>

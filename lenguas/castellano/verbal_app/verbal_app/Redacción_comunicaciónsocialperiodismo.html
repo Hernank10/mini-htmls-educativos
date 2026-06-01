@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>Comunicación Social Colombia · 100 conceptos clave</title>
+  <style>
+    /* ----- VARIABLES CSS: tonos comunicación (azul, gris, papel) ----- */
+    :root {
+      --fondo-papel: #fefcf5;
+      --texto-profundo: #1e2a3e;
+      --azul-comunicacion: #2c5f8a;
+      --gris-noticia: #6c757d;
+      --acento-coral: #d97a5c;
+      --verde-ok: #2c6e49;
+      --rojo-error: #bc4a2c;
+      --sombra-suave: rgba(0, 20, 40, 0.08);
+      --border-card: #e2dccd;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: var(--fondo-papel);
+      color: var(--texto-profundo);
+      font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
+      line-height: 1.5;
+      padding: 1rem;
+    }
+
+    .app-container {
+      max-width: 1300px;
+      margin: 0 auto;
+      background: white;
+      border-radius: 2rem;
+      box-shadow: 0 12px 30px var(--sombra-suave);
+      overflow: hidden;
+      border: 1px solid var(--border-card);
+    }
+
+    header {
+      background: #f2f5f9;
+      padding: 1.2rem 2rem;
+      border-bottom: 3px solid var(--azul-comunicacion);
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 1rem;
+    }
+    h1 {
+      font-size: 1.7rem;
+      font-weight: 600;
+      color: #1c3f5c;
+      letter-spacing: -0.2px;
+    }
+    h1 small {
+      font-size: 0.7rem;
+      font-weight: normal;
+      color: #5e7a97;
+    }
+
+    nav {
+      display: flex;
+      gap: 0.5rem;
+      background: #e9edf2;
+      padding: 0.6rem 2rem;
+      border-bottom: 1px solid #d6dee8;
+      flex-wrap: wrap;
+    }
+    .nav-btn {
+      background: transparent;
+      border: none;
+      font-size: 0.95rem;
+      padding: 0.5rem 1.2rem;
+      border-radius: 40px;
+      cursor: pointer;
+      font-weight: 500;
+      transition: all 0.2s;
+      color: #2c5f8a;
+    }
+    .nav-btn.active {
+      background-color: var(--azul-comunicacion);
+      color: white;
+    }
+    .nav-btn:hover:not(.active) {
+      background-color: #d4dee8;
+    }
+
+    .view {
+      display: none;
+      padding: 2rem;
+      animation: fade 0.2s ease;
+    }
+    .active-view { display: block; }
+    @keyframes fade { from { opacity: 0; transform: translateY(5px);} to { opacity: 1; transform: translateY(0);} }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+    .stat-card {
+      background: var(--fondo-papel);
+      border-radius: 1.5rem;
+      padding: 1rem;
+      text-align: center;
+      border-left: 6px solid var(--azul-comunicacion);
+      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    }
+    .stat-number {
+      font-size: 2.2rem;
+      font-weight: 700;
+      color: var(--azul-comunicacion);
+    }
+    .progress-bar-bg {
+      background: #e2e8f0;
+      border-radius: 40px;
+      height: 12px;
+      overflow: hidden;
+      margin: 0.8rem 0;
+    }
+    .progress-fill {
+      background: var(--azul-comunicacion);
+      width: 0%;
+      height: 100%;
+      transition: width 0.2s;
+    }
+
+    .conceptos-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+      gap: 1rem;
+      max-height: 65vh;
+      overflow-y: auto;
+      padding-right: 0.3rem;
+    }
+    .concepto-item {
+      background: white;
+      border-radius: 1.2rem;
+      padding: 0.8rem 1rem;
+      border-left: 5px solid var(--acento-coral);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+    .concepto-titulo {
+      font-weight: 700;
+      color: #1e3a5f;
+    }
+    .concepto-desc {
+      font-size: 0.85rem;
+      color: #4a5b6e;
+      margin-top: 6px;
+      border-top: 1px solid #eee6d8;
+      padding-top: 6px;
+    }
+    .badge-progreso {
+      font-size: 0.7rem;
+      background: #e9ecf0;
+      border-radius: 20px;
+      padding: 2px 10px;
+      display: inline-block;
+      margin-top: 8px;
+    }
+
+    /* Estilos para práctica normal (flashcards) */
+    .flashcard {
+      background: #fffdf7;
+      border-radius: 2rem;
+      padding: 1.8rem;
+      text-align: center;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+      border: 1px solid #e0d6c5;
+      max-width: 750px;
+      margin: 0 auto;
+    }
+    .pregunta {
+      font-size: 1.4rem;
+      font-weight: 500;
+      margin-bottom: 1.8rem;
+      background: #f2f6fc;
+      padding: 1.2rem;
+      border-radius: 1.5rem;
+    }
+    .respuesta-oculta {
+      background: #e8edf4;
+      border-radius: 1.2rem;
+      padding: 1rem;
+      margin: 1rem 0;
+      display: none;
+    }
+    /* Juego de ordenar definición */
+    .palabras-baraja {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 0.6rem;
+      margin: 1.5rem 0;
+    }
+    .palabra-btn {
+      background: var(--azul-comunicacion);
+      color: white;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 2rem;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: 0.1s;
+    }
+    .palabra-btn:active { transform: scale(0.97); }
+    .palabra-usada {
+      background: #9aaebf;
+      cursor: not-allowed;
+      opacity: 0.6;
+    }
+    .orden-actual {
+      background: #f0f3f8;
+      border-radius: 1rem;
+      padding: 1rem;
+      min-height: 80px;
+      margin: 1rem 0;
+      text-align: left;
+      font-size: 1rem;
+      border: 1px dashed #cbd5e1;
+    }
+    .btn-reset-palabras {
+      background: var(--gris-noticia);
+      color: white;
+      margin-right: 0.5rem;
+    }
+    .btn {
+      background: #e2e8f0;
+      border: none;
+      padding: 0.6rem 1.5rem;
+      border-radius: 3rem;
+      font-weight: 600;
+      margin: 0.3rem;
+      cursor: pointer;
+      font-family: inherit;
+    }
+    .btn-primary { background: var(--azul-comunicacion); color: white; }
+    .btn-acierto { background: var(--verde-ok); color: white; }
+    .btn-fallo { background: var(--rojo-error); color: white; }
+    .modo-selector { display: flex; justify-content: center; gap: 0.8rem; margin-bottom: 1.5rem; flex-wrap: wrap; }
+    footer {
+      text-align: center;
+      padding: 1rem;
+      font-size: 0.75rem;
+      border-top: 1px solid #e2dccd;
+      background: #faf9f5;
+    }
+    @media (max-width: 680px) {
+      .view { padding: 1rem; }
+      .pregunta { font-size: 1rem; }
+    }
+  </style>
+</head>
+<body>
+<div class="app-container">
+  <header>
+    <h1>📡 Comunicación Social Colombia <small>100 conceptos esenciales</small></h1>
+    <div style="font-size:0.8rem;">🎓 Teoría · Periodismo · Semiótica · Medios · Colombia</div>
+  </header>
+  <nav>
+    <button class="nav-btn active" data-view="dashboard">📊 Panel</button>
+    <button class="nav-btn" data-view="listado">📚 Compendio</button>
+    <button class="nav-btn" data-view="practica">🃏 Práctica</button>
+  </nav>
+
+  <section id="dashboard" class="view active-view">
+    <div class="stats-grid" id="statsContainer"></div>
+    <div class="card" style="background:white; border-radius:1.6rem; padding:1.2rem;">
+      <h3>📈 Progreso general</h3>
+      <div class="progress-bar-bg"><div class="progress-fill" id="globalProgressFill"></div></div>
+      <p id="globalProgressText"></p>
+      <button id="resetProgresoBtn" class="btn" style="background:#d9c7a7;">🔄 Reiniciar progreso</button>
+    </div>
+  </section>
+
+  <section id="listado" class="view">
+    <input type="text" id="filtroListado" placeholder="🔍 Buscar concepto o definición..." style="width:100%; padding:10px; margin-bottom:15px; border-radius:40px; border:1px solid #ddd2bc;">
+    <div id="conceptosListadoContainer" class="conceptos-grid"></div>
+  </section>
+
+  <section id="practica" class="view">
+    <div class="modo-selector">
+      <button id="modoConceptoDef" class="btn btn-primary">📖 Concepto → Definición</button>
+      <button id="modoDefConcepto" class="btn">🔄 Definición → Concepto</button>
+      <button id="modoOrdenar" class="btn">🧩 Ordenar definición</button>
+    </div>
+    <!-- Contenedor dinámico según modo -->
+    <div id="practicaContainer"></div>
+  </section>
+  <footer>Progreso guardado localmente · Incluye ejercicio interactivo de ordenar definición (arrastra/ordena las palabras)</footer>
+</div>
+
+<script>
+  // --------------------------------------------------------------
+  // 100 CONCEPTOS PARA COMUNICACIÓN SOCIAL (Colombia)
+  // (número, concepto, definición)
+  // --------------------------------------------------------------
+  const conceptosData = [
+    [1, "Comunicación", "Proceso de intercambio de información entre emisor y receptor mediante códigos compartidos."],
+    [2, "Semiótica", "Estudio de los signos y su significado en la comunicación."],
+    [3, "Signo lingüístico", "Unidad compuesta por significante (imagen acústica) y significado (concepto), según Saussure."],
+    [4, "Comunicación masiva", "Transmisión de mensajes a grandes audiencias a través de medios como TV, radio, prensa e internet."],
+    [5, "Feedback", "Respuesta del receptor que permite al emisor ajustar el mensaje."],
+    [6, "Ruido comunicativo", "Cualquier interferencia que distorsiona el mensaje durante la transmisión."],
+    [7, "Medios de comunicación", "Canales institucionalizados para difundir información: prensa, radio, TV, digitales."],
+    [8, "Agenda setting", "Teoría que sostiene que los medios no dicen qué pensar, sino sobre qué pensar."],
+    [9, "Gatekeeper", "Persona o filtro que decide qué información pasa al público."],
+    [10, "Espiral del silencio", "Teoría de Noelle‑Neumann: el miedo al aislamiento lleva a ocultar opiniones minoritarias."],
+    [11, "Framing", "Enfoque o encuadre desde el cual se presenta una noticia, influyendo en su interpretación."],
+    [12, "Industria cultural", "Concepto de Adorno y Horkheimer: producción estandarizada de bienes culturales."],
+    [13, "Medios públicos", "Canales financiados por el Estado con misión de servicio público (RTVC, Señal Colombia)."],
+    [14, "Comunicación digital", "Intercambio de información mediado por tecnologías digitales e internet."],
+    [15, "Periodismo", "Actividad de recopilar, verificar y difundir información de interés público."],
+    [16, "Fuente informativa", "Origen de la información (persona, documento, entidad)."],
+    [17, "Pirámide invertida", "Estructura periodística que coloca los datos más importantes al inicio."],
+    [18, "Lead", "Primer párrafo de una noticia que resume lo esencial."],
+    [19, "Libelo", "Escrito difamatorio sin fundamento; delito contra el honor en Colombia."],
+    [20, "Derecho de rectificación", "Facultad de una persona para solicitar corrección de información inexacta en su contra."],
+    [21, "Código de ética periodística", "Normas de conducta profesional: veracidad, independencia, respeto."],
+    [22, "Posverdad", "Circunstancia en que los hechos objetivos influyen menos que las emociones y creencias."],
+    [23, "Fake news", "Noticias falsas creadas intencionalmente para desinformar."],
+    [24, "Verificación de hechos", "Fact‑checking: proceso de corroborar la veracidad de afirmaciones."],
+    [25, "Comunicación organizacional", "Flujo de mensajes dentro de una empresa o institución."],
+    [26, "Relaciones públicas", "Gestión estratégica de la comunicación entre una organización y sus públicos."],
+    [27, "Crisis comunicacional", "Situación que amenaza la reputación y requiere respuesta inmediata."],
+    [28, "Branding", "Construcción y gestión de una marca."],
+    [29, "Publicidad", "Comunicación pagada para promocionar productos, servicios o ideas."],
+    [30, "Persuasión", "Acto de influir en actitudes o comportamientos mediante mensajes."],
+    [31, "Retórica", "Arte del buen decir y de la argumentación persuasiva."],
+    [32, "Discurso", "Enunciado o conjunto de enunciados con intención comunicativa y contexto social."],
+    [33, "Análisis del discurso", "Estudio de cómo se construyen significados en textos y conversaciones."],
+    [34, "Semiótica de la cultura", "Escuela de Tartu que estudia los sistemas de signos en las culturas."],
+    [35, "Icono", "Signo que se asemeja a su referente (fotografía, dibujo)."],
+    [36, "Índice", "Signo que tiene conexión física con el objeto (humo indicio de fuego)."],
+    [37, "Símbolo", "Signo arbitrario, basado en convención (bandera, palabra)."],
+    [38, "Denotación", "Significado objetivo y literal de un signo."],
+    [39, "Connotación", "Significados subjetivos y culturales asociados a un signo."],
+    [40, "Medios comunitarios", "Emisoras, canales o periódicos gestionados por comunidades, sin ánimo de lucro."],
+    [41, "RTVC Sistema de Medios Públicos", "Entidad que opera Señal Colombia, Radio Nacional, Canal Institucional."],
+    [42, "El Tiempo (periódico)", "Principal diario de circulación nacional en Colombia, fundado en 1911."],
+    [43, "Caracol Radio", "Cadena radial colombiana, una de las más antiguas e influyentes."],
+    [44, "RCN Televisión", "Canal privado colombiano fundado en 1967, competidor de Caracol TV."],
+    [45, "Comisión de Regulación de Comunicaciones (CRC)", "Entidad que regula los servicios de comunicaciones en Colombia."],
+    [46, "Libertad de expresión", "Derecho fundamental a buscar, recibir y difundir información sin censura previa."],
+    [47, "Censura", "Prohibición o limitación de la difusión de contenidos por autoridades o grupos de poder."],
+    [48, "Responsabilidad social de los medios", "Obligación ética de informar con verdad y contribuir al bien común."],
+    [49, "Teoría hipodérmica", "Modelo temprano que suponía efectos directos y uniformes de los medios en la audiencia."],
+    [50, "Two‑step flow", "Flujo de dos pasos: líderes de opinión interpretan y transmiten mensajes mediáticos."],
+    [51, "Usos y gratificaciones", "Enfoque que estudia cómo las audiencias usan los medios para satisfacer necesidades."],
+    [52, "Cultivation theory", "Teoría de Gerbner: la televisión moldea la percepción de la realidad social."],
+    [53, "Medios alternativos", "Plataformas informativas independientes que cuestionan el discurso dominante."],
+    [54, "Comunicación para el desarrollo", "Estrategias comunicativas para impulsar cambios sociales y comunitarios."],
+    [55, "Alfabetización mediática", "Capacidad para acceder, analizar, evaluar y crear contenidos mediáticos."],
+    [56, "Discurso político", "Intercambio verbal en el ámbito político, con estrategias de persuasión."],
+    [57, "Propaganda", "Comunicación intencional para promover una ideología o causa, a menudo con sesgo."],
+    [58, "Marketing político", "Aplicación de técnicas de mercadeo a campañas electorales."],
+    [59, "Spin doctor", "Asesor que reinterpreta eventos para favorecer a una figura política."],
+    [60, "Entrevista periodística", "Técnica de obtención de información mediante preguntas a una fuente."],
+    [61, "Crónica", "Género narrativo que relata hechos noticiosos con estilo literario y secuencia temporal."],
+    [62, "Reportaje", "Investigación profunda sobre un tema, con contexto y múltiples fuentes."],
+    [63, "Opinión pública", "Conjunto de actitudes y creencias de la sociedad sobre temas de interés."],
+    [64, "Encuesta", "Método cuantitativo para medir opiniones mediante cuestionarios representativos."],
+    [65, "Grupo focal", "Técnica cualitativa de discusión grupal moderada."],
+    [66, "Storytelling", "Arte de narrar historias para conectar emocionalmente con la audiencia."],
+    [67, "Transmedia", "Narrativa que se expande a través de múltiples plataformas."],
+    [68, "Comunicación no verbal", "Mensajes emitidos sin palabras: gestos, posturas, miradas, proxemia."],
+    [69, "Empatía comunicativa", "Capacidad de comprender las emociones del otro en un diálogo."],
+    [70, "Barrio TV", "Canal comunitario de Bogotá, ejemplo de televisión local participativa."],
+    [71, "Prensa amarillista", "Estilo sensacionalista que exagera o dramatiza las noticias."],
+    [72, "Cláusula de conciencia", "Derecho del periodista a negarse a redactar algo contrario a su ética."],
+    [73, "Secreto profesional", "Protección de la identidad de fuentes confidenciales."],
+    [74, "Círculo virtuoso de la comunicación", "Modelo de interacción entre medios, políticos y ciudadanía."],
+    [75, "Hegemonía comunicativa", "Dominio cultural ejercido por grupos de poder a través de los medios."],
+    [76, "Decolonialidad comunicativa", "Perspectiva que cuestiona los cánones occidentales en la comunicación."],
+    [77, "Medios indígenas", "Emisoras y canales gestionados por comunidades étnicas en lenguas nativas."],
+    [78, "Comunicación popular", "Prácticas comunicativas de movimientos sociales y organizaciones de base."],
+    [79, "Prosumidor", "Usuario que consume y produce contenido (ej. creadores de redes sociales)."],
+    [80, "Algoritmo", "Conjunto de reglas que determinan qué contenido ven los usuarios en plataformas digitales."],
+    [81, "Burbuja de filtros", "Aislamiento cognitivo por algoritmos que muestran solo información afín."],
+    [82, "Cámara de eco", "Entorno donde solo se exponen opiniones que refuerzan las propias."],
+    [83, "Comunicación intercultural", "Intercambio entre personas de diferentes culturas, clave en Colombia pluricultural."],
+    [84, "Literacidad crítica", "Capacidad de interpretar mensajes considerando intenciones y contextos de poder."],
+    [85, "Producción audiovisual", "Proceso de crear contenido visual y sonoro (guion, rodaje, edición)."],
+    [86, "Plan de medios", "Estrategia de inversión publicitaria en diferentes canales."],
+    [87, "Métrica de audiencia", "Indicadores cuantitativos de consumo mediático (rating, visitas, engagement)."],
+    [88, "Community manager", "Profesional que gestiona la presencia de una marca en redes sociales."],
+    [89, "SEO", "Optimización para motores de búsqueda, mejora del posicionamiento web."],
+    [90, "Comunicación interna", "Flujo de información dentro de una organización hacia empleados."],
+    [91, "Protocolo comunicacional", "Conjunto de normas formales para eventos institucionales."],
+    [92, "Discurso de odio", "Expresiones que atacan o incitan a la discriminación por raza, religión, orientación."],
+    [93, "Mojigato (término colombiano)", "Persona que se ofende fácilmente por temas morales; usado en crítica social."],
+    [94, "Radio Sutatenza", "Experiencia histórica de radio educativa en Colombia (1947-1989)."],
+    [95, "Revista Semana", "Semanario de análisis político y actualidad colombiano."],
+    [96, "Noticias Uno", "Noticiero independiente colombiano con enfoque crítico."],
+    [97, "Canal Zoom", "Canal de televisión por suscripción colombiano especializado en documentales."],
+    [98, "FLIP (Fundación para la Libertad de Prensa)", "Organización que defiende a periodistas en Colombia."],
+    [99, "Autorregulación publicitaria", "Sistema de códigos deontológicos manejados por gremios (ej. ANDA)."],
+    [100, "Comunicólogo", "Profesional en comunicación social, capaz de diseñar estrategias en diversos contextos."]
+  ];
+
+  // --------------------- LOCALSTORAGE Y PROGRESO -------------------------
+  let progreso = {};
+  const STORAGE_KEY = "comunicacionSocialProgreso";
+
+  function cargarProgreso() {
+    const guardado = localStorage.getItem(STORAGE_KEY);
+    if (guardado) progreso = JSON.parse(guardado);
+    else {
+      progreso = {};
+      for (let i = 1; i <= 100; i++) progreso[i] = { aciertos: 0, fallos: 0 };
+    }
+  }
+  function guardarProgreso() { localStorage.setItem(STORAGE_KEY, JSON.stringify(progreso)); }
+  function registrarResultado(id, acierto) {
+    if (!progreso[id]) progreso[id] = { aciertos: 0, fallos: 0 };
+    if (acierto) progreso[id].aciertos += 1;
+    else progreso[id].fallos += 1;
+    guardarProgreso();
+    renderDashboard();
+    renderListado(document.getElementById("filtroListado")?.value || "");
+    // Si estamos en práctica, actualizar info de tarjeta si coincide
+    if (window.currentMode && window.currentCardId === id) {
+      const infoDiv = document.getElementById("infoProgresoCard");
+      if (infoDiv) infoDiv.innerHTML = `📊 Concepto ${id} · ✅ ${progreso[id].aciertos} aciertos · ❌ ${progreso[id].fallos} fallos`;
+    }
+  }
+
+  // Funciones de renderizado
+  function renderDashboard() {
+    let totalAciertos = 0, totalFallos = 0, conceptosConAcierto = 0;
+    for (let i = 1; i <= 100; i++) {
+      const p = progreso[i] || { aciertos: 0, fallos: 0 };
+      totalAciertos += p.aciertos;
+      totalFallos += p.fallos;
+      if (p.aciertos > 0) conceptosConAcierto++;
+    }
+    const porcentaje = (conceptosConAcierto / 100) * 100;
+    document.getElementById("globalProgressFill").style.width = `${porcentaje}%`;
+    document.getElementById("globalProgressText").innerHTML = `${conceptosConAcierto} de 100 conceptos con al menos 1 acierto (${Math.round(porcentaje)}%).`;
+    document.getElementById("statsContainer").innerHTML = `
+      <div class="stat-card"><div class="stat-number">${totalAciertos}</div>✅ Aciertos totales</div>
+      <div class="stat-card"><div class="stat-number">${totalFallos}</div>❌ Fallos</div>
+      <div class="stat-card"><div class="stat-number">${conceptosConAcierto}</div>📘 Conceptos con acierto</div>
+      <div class="stat-card"><div class="stat-number">${Math.round((totalAciertos/(totalAciertos+totalFallos+0.001))*100)}%</div>📊 Efectividad</div>
+    `;
+  }
+
+  function renderListado(filtro = "") {
+    const container = document.getElementById("conceptosListadoContainer");
+    container.innerHTML = "";
+    const filtroLower = filtro.toLowerCase();
+    for (let c of conceptosData) {
+      const [id, nombre, definicion] = c;
+      const prog = progreso[id] || { aciertos: 0, fallos: 0 };
+      if (filtro && !nombre.toLowerCase().includes(filtroLower) && !definicion.toLowerCase().includes(filtroLower)) continue;
+      const div = document.createElement("div");
+      div.className = "concepto-item";
+      div.innerHTML = `<div class="concepto-titulo">${id}. ${nombre}</div>
+                       <div class="concepto-desc">📡 ${definicion.substring(0, 150)}${definicion.length > 150 ? '…' : ''}</div>
+                       <span class="badge-progreso">✅ ${prog.aciertos} aciertos · ❌ ${prog.fallos} fallos</span>`;
+      container.appendChild(div);
+    }
+  }
+
+  // --------------------- PRÁCTICA: tres modos -------------------------
+  let currentMode = "concepto_def"; // 'concepto_def', 'def_concepto', 'ordenar'
+  let cardsArray = [];
+  let currentCardIndex = 0;
+  let currentCardId = null;
+  let respuestaRevelada = false;
+  // variables para modo ordenar
+  let currentOrdenarPalabras = []; // array de palabras originales divididas
+  let shuffledPalabras = [];
+  let selectedOrder = [];
+  let ordenarRespuestaCorrecta = "";
+
+  const practicaDiv = document.getElementById("practicaContainer");
+
+  function construirCards() {
+    cardsArray = conceptosData.map(item => {
+      const [id, concepto, definicion] = item;
+      if (currentMode === "concepto_def") {
+        return { id, pregunta: `📖 Concepto: ${concepto}`, respuestaCorrecta: definicion };
+      } else if (currentMode === "def_concepto") {
+        let defCorta = definicion.length > 130 ? definicion.substring(0, 127) + "…" : definicion;
+        return { id, pregunta: `✍️ Definición: "${defCorta}"`, respuestaCorrecta: concepto };
+      } else {
+        // modo ordenar: guardamos definición original y concepto
+        return { id, concepto, definicion };
+      }
+    });
+  }
+
+  // Modo flashcards normal (concepto->def y def->concepto)
+  function renderFlashcardNormal() {
+    if (!cardsArray.length) return;
+    const card = cardsArray[currentCardIndex];
+    currentCardId = card.id;
+    let questionText = card.pregunta;
+    let answerText = card.respuestaCorrecta;
+    practicaDiv.innerHTML = `
+      <div class="flashcard">
+        <div class="pregunta">${questionText}</div>
+        <button id="mostrarRespuestaBtn" class="btn">📖 Mostrar respuesta</button>
+        <div id="respuestaDiv" class="respuesta-oculta"><strong>Respuesta:</strong><br>${answerText}</div>
+        <div style="margin-top:1rem;">
+          <button id="aciertoBtn" class="btn btn-acierto" disabled>✅ Acierto</button>
+          <button id="falloBtn" class="btn btn-fallo" disabled>❌ Fallo</button>
+        </div>
+        <button id="siguienteCardBtn" class="btn" style="margin-top:1rem;">⏩ Siguiente</button>
+        <p id="infoProgresoCard" style="margin-top:0.8rem; font-size:0.8rem;">📊 ${currentMode === "concepto_def" ? "Concepto" : "Definición"} ${card.id} · ✅ ${progreso[card.id]?.aciertos||0} aciertos · ❌ ${progreso[card.id]?.fallos||0} fallos</p>
+      </div>
+    `;
+    document.getElementById("mostrarRespuestaBtn").onclick = () => {
+      const respDiv = document.getElementById("respuestaDiv");
+      if (respDiv.style.display !== "block") {
+        respDiv.style.display = "block";
+        document.getElementById("aciertoBtn").disabled = false;
+        document.getElementById("falloBtn").disabled = false;
+      }
+    };
+    document.getElementById("aciertoBtn").onclick = () => {
+      if (currentCardId) { registrarResultado(currentCardId, true); siguienteNormal(); }
+    };
+    document.getElementById("falloBtn").onclick = () => {
+      if (currentCardId) { registrarResultado(currentCardId, false); siguienteNormal(); }
+    };
+    document.getElementById("siguienteCardBtn").onclick = () => siguienteNormal();
+  }
+
+  function siguienteNormal() {
+    currentCardIndex = (currentCardIndex + 1) % cardsArray.length;
+    renderFlashcardNormal();
+  }
+
+  // Modo ordenar definición: juego de ordenar palabras
+  function inicializarOrdenar() {
+    const card = cardsArray[currentCardIndex];
+    currentCardId = card.id;
+    const definicionOriginal = card.definicion;
+    ordenarRespuestaCorrecta = definicionOriginal;
+    // Dividir en palabras (limpia espacios múltiples)
+    let palabras = definicionOriginal.split(/\s+/).filter(p => p.length > 0);
+    currentOrdenarPalabras = [...palabras];
+    // Barajar
+    shuffledPalabras = [...palabras];
+    for (let i = shuffledPalabras.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [shuffledPalabras[i], shuffledPalabras[j]] = [shuffledPalabras[j], shuffledPalabras[i]];
+    }
+    selectedOrder = [];
+    renderOrdenarUI();
+  }
+
+  function renderOrdenarUI() {
+    const card = cardsArray[currentCardIndex];
+    const concepto = card.concepto;
+    const prog = progreso[currentCardId] || { aciertos:0, fallos:0 };
+    let palabrasDisponiblesHTML = shuffledPalabras.map((pal, idx) => `<button class="palabra-btn" data-palabra="${pal.replace(/"/g, '&quot;')}">${pal}</button>`).join('');
+    let ordenActualHTML = selectedOrder.map(p => `<span style="background:#e9ecef; padding:0.2rem 0.6rem; margin:0.2rem; border-radius:1rem;">${p}</span>`).join(' ');
+    if (ordenActualHTML === "") ordenActualHTML = "<em>Haz clic en las palabras en el orden correcto...</em>";
+    practicaDiv.innerHTML = `
+      <div class="flashcard">
+        <h3>🧩 Ordena la definición de:</h3>
+        <div class="pregunta" style="background:#fff0e0;">📌 ${concepto}</div>
+        <div class="orden-actual"><strong>Tu orden:</strong><br> ${ordenActualHTML}</div>
+        <div class="palabras-baraja" id="palabrasBaraja">${palabrasDisponiblesHTML}</div>
+        <div>
+          <button id="resetOrdenBtn" class="btn btn-reset-palabras">🔁 Reiniciar orden</button>
+          <button id="comprobarOrdenBtn" class="btn btn-primary">✓ Comprobar</button>
+        </div>
+        <button id="siguienteOrdenBtn" class="btn" style="margin-top:1rem;">⏩ Siguiente concepto</button>
+        <p id="infoProgresoCard" style="margin-top:0.8rem;">✅ ${prog.aciertos} aciertos · ❌ ${prog.fallos} fallos</p>
+        <div id="feedbackOrden" style="margin-top:0.8rem; font-weight:bold;"></div>
+      </div>
+    `;
+    // Eventos para cada palabra
+    document.querySelectorAll(".palabra-btn").forEach(btn => {
+      btn.addEventListener("click", (e) => {
+        const palabra = btn.getAttribute("data-palabra");
+        if (!palabra) return;
+        // Remover de shuffledPalabras y agregar a selectedOrder
+        const idx = shuffledPalabras.indexOf(palabra);
+        if (idx !== -1) {
+          shuffledPalabras.splice(idx, 1);
+          selectedOrder.push(palabra);
+          renderOrdenarUI(); // re-renderizar
+        }
+      });
+    });
+    document.getElementById("resetOrdenBtn").onclick = () => {
+      // reiniciar: restaurar palabras originales barajadas
+      shuffledPalabras = [...currentOrdenarPalabras];
+      for (let i = shuffledPalabras.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [shuffledPalabras[i], shuffledPalabras[j]] = [shuffledPalabras[j], shuffledPalabras[i]];
+      }
+      selectedOrder = [];
+      renderOrdenarUI();
+    };
+    document.getElementById("comprobarOrdenBtn").onclick = () => {
+      const ordenUsuario = selectedOrder.join(" ");
+      const correcta = ordenarRespuestaCorrecta;
+      if (ordenUsuario === correcta) {
+        document.getElementById("feedbackOrden").innerHTML = "<span style='color:green'>✅ ¡Correcto! Has ordenado bien la definición.</span>";
+        registrarResultado(currentCardId, true);
+        // Avanzar automáticamente luego de 1 segundo
+        setTimeout(() => { siguienteOrdenar(); }, 1200);
+      } else {
+        document.getElementById("feedbackOrden").innerHTML = `<span style='color:#bc4a2c'>❌ Incorrecto. La definición correcta es: "${correcta}"</span>`;
+        registrarResultado(currentCardId, false);
+        setTimeout(() => { siguienteOrdenar(); }, 2000);
+      }
+      // Deshabilitar botones temporalmente
+      document.getElementById("comprobarOrdenBtn").disabled = true;
+      document.querySelectorAll(".palabra-btn").forEach(b => b.style.pointerEvents = "none");
+      setTimeout(() => {
+        if (document.getElementById("comprobarOrdenBtn")) document.getElementById("comprobarOrdenBtn").disabled = false;
+        document.querySelectorAll(".palabra-btn").forEach(b => b.style.pointerEvents = "auto");
+      }, 2000);
+    };
+    document.getElementById("siguienteOrdenBtn").onclick = () => siguienteOrdenar();
+  }
+
+  function siguienteOrdenar() {
+    currentCardIndex = (currentCardIndex + 1) % cardsArray.length;
+    inicializarOrdenar();
+  }
+
+  // Cambio de modo
+  function setMode(mode) {
+    currentMode = mode;
+    construirCards();
+    currentCardIndex = 0;
+    if (mode === "ordenar") {
+      if (cardsArray.length) inicializarOrdenar();
+      else practicaDiv.innerHTML = "<p>Cargando...</p>";
+    } else {
+      renderFlashcardNormal();
+    }
+  }
+
+  // Navegación y eventos
+  function initNavigation() {
+    document.querySelectorAll(".nav-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const viewId = btn.getAttribute("data-view");
+        document.querySelectorAll(".view").forEach(v => v.classList.remove("active-view"));
+        document.getElementById(viewId).classList.add("active-view");
+        document.querySelectorAll(".nav-btn").forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+        if (viewId === "listado") renderListado(document.getElementById("filtroListado").value);
+        if (viewId === "dashboard") renderDashboard();
+        if (viewId === "practica") setMode(currentMode);
+      });
+    });
+    document.getElementById("modoConceptoDef").addEventListener("click", () => {
+      currentMode = "concepto_def";
+      setMode("concepto_def");
+      document.getElementById("modoConceptoDef").classList.add("btn-primary");
+      document.getElementById("modoDefConcepto").classList.remove("btn-primary");
+      document.getElementById("modoOrdenar").classList.remove("btn-primary");
+    });
+    document.getElementById("modoDefConcepto").addEventListener("click", () => {
+      currentMode = "def_concepto";
+      setMode("def_concepto");
+      document.getElementById("modoDefConcepto").classList.add("btn-primary");
+      document.getElementById("modoConceptoDef").classList.remove("btn-primary");
+      document.getElementById("modoOrdenar").classList.remove("btn-primary");
+    });
+    document.getElementById("modoOrdenar").addEventListener("click", () => {
+      currentMode = "ordenar";
+      setMode("ordenar");
+      document.getElementById("modoOrdenar").classList.add("btn-primary");
+      document.getElementById("modoConceptoDef").classList.remove("btn-primary");
+      document.getElementById("modoDefConcepto").classList.remove("btn-primary");
+    });
+    document.getElementById("resetProgresoBtn").addEventListener("click", () => {
+      if (confirm("¿Reiniciar todo el progreso? Se perderán aciertos y fallos.")) {
+        for (let i = 1; i <= 100; i++) progreso[i] = { aciertos: 0, fallos: 0 };
+        guardarProgreso();
+        renderDashboard();
+        renderListado(document.getElementById("filtroListado")?.value || "");
+        if (currentMode === "ordenar") inicializarOrdenar();
+        else if (currentMode !== "ordenar" && practicaDiv) renderFlashcardNormal();
+      }
+    });
+    const filtro = document.getElementById("filtroListado");
+    if (filtro) filtro.addEventListener("input", (e) => renderListado(e.target.value));
+  }
+
+  window.addEventListener("DOMContentLoaded", () => {
+    cargarProgreso();
+    construirCards();
+    setMode("concepto_def");
+    renderDashboard();
+    renderListado();
+    initNavigation();
+  });
+</script>
+</body>
+</html>

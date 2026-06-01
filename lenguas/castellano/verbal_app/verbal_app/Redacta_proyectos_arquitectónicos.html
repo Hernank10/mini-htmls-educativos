@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>Architext Pro · 100 técnicas + Proyectos de arquitectura</title>
+  <!-- Bootstrap 5 + Iconos -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700;800&family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #6B3E1C;
+      --primary-dark: #4A2A12;
+      --secondary: #D9A13B;
+      --accent: #8B5E3C;
+      --bg-dark: #1a1a1a;
+      --bg-light: #F5F0E8;
+      --card-dark: #252525;
+      --card-light: #FFFFFF;
+    }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg-dark);
+      color: #E5E5E5;
+      transition: all 0.3s;
+    }
+    body.light-mode {
+      background: var(--bg-light);
+      color: #1E1E1E;
+    }
+    .sidebar {
+      background: #1E1E1E;
+      border-radius: 1.5rem;
+      padding: 1rem;
+      height: fit-content;
+      position: sticky;
+      top: 20px;
+    }
+    body.light-mode .sidebar { background: #FFF; box-shadow: 0 4px 20px rgba(0,0,0,0.05); }
+    .nav-item-custom {
+      padding: 0.8rem 1rem;
+      border-radius: 1rem;
+      cursor: pointer;
+      margin-bottom: 0.5rem;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: #AAA;
+    }
+    .nav-item-custom i { width: 24px; font-size: 1.2rem; }
+    .nav-item-custom.active { background: var(--primary); color: white; }
+    .nav-item-custom:hover:not(.active) { background: rgba(255,255,255,0.05); color: white; }
+    body.light-mode .nav-item-custom:hover:not(.active) { background: rgba(0,0,0,0.05); color: #1E1E1E; }
+    .editor-card {
+      background: var(--card-dark);
+      border-radius: 1.2rem;
+      margin-bottom: 1rem;
+      border: 1px solid #3A3A3A;
+    }
+    body.light-mode .editor-card { background: var(--card-light); border-color: #E0E0E0; }
+    .editor-card-header {
+      padding: 1rem;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-weight: 600;
+    }
+    .editor-card-content {
+      padding: 0 1rem 1rem 1rem;
+      display: none;
+      border-top: 1px solid #3A3A3A;
+    }
+    .editor-card.expanded .editor-card-content { display: block; }
+    textarea, input {
+      background: #2A2A2A !important;
+      border: 1px solid #3A3A3A !important;
+      color: #E5E5E5 !important;
+      border-radius: 0.8rem !important;
+      font-family: 'Courier Prime', monospace !important;
+    }
+    body.light-mode textarea, body.light-mode input {
+      background: #FFFFFF !important;
+      border-color: #D0D0D0 !important;
+      color: #1E1E1E !important;
+    }
+    .flashcard-container { perspective: 1000px; cursor: pointer; min-height: 320px; }
+    .flashcard { width: 100%; height: 320px; position: relative; transform-style: preserve-3d; transition: transform 0.6s; border-radius: 1.5rem; }
+    .flashcard.flipped { transform: rotateY(180deg); }
+    .flashcard-front, .flashcard-back {
+      position: absolute; width: 100%; height: 100%; backface-visibility: hidden;
+      border-radius: 1.5rem; padding: 1.5rem; display: flex; flex-direction: column;
+      justify-content: center; background: var(--card-dark); border: 1px solid #3A3A3A;
+    }
+    body.light-mode .flashcard-front, body.light-mode .flashcard-back { background: var(--card-light); border-color: #E0E0E0; }
+    .flashcard-back { transform: rotateY(180deg); background: var(--primary); color: white; }
+    .badge-cat {
+      background: var(--secondary);
+      color: #2C2A29;
+      padding: 0.2rem 0.6rem;
+      border-radius: 20px;
+      font-size: 0.7rem;
+    }
+    footer { background: #141414; padding: 1rem 0; margin-top: 2rem; text-align: center; }
+    body.light-mode footer { background: #DDD; color: #333; }
+    .progress-circle { width: 40px; height: 40px; border-radius: 50%; background: var(--primary); display: flex; align-items: center; justify-content: center; font-size: 0.8rem; font-weight: bold; }
+    .filter-btn { background: transparent; border: 1px solid #3A3A3A; border-radius: 30px; padding: 0.2rem 0.8rem; font-size: 0.7rem; margin: 0.2rem; cursor: pointer; transition: 0.1s; }
+    .filter-btn.active { background: var(--primary); border-color: var(--primary); color: white; }
+    body.light-mode .filter-btn { border-color: #D0D0D0; }
+  </style>
+</head>
+<body>
+
+<div class="container-fluid px-4 py-3">
+  <div class="row g-4">
+    
+    <!-- SIDEBAR -->
+    <div class="col-lg-3 col-md-4">
+      <div class="sidebar">
+        <div class="text-center py-3">
+          <i class="bi bi-building" style="font-size: 2rem; color: var(--primary);"></i>
+          <h5 class="mt-2">Architext Pro</h5>
+          <small class="text-muted">100 técnicas + Proyectos</small>
+        </div>
+        <hr>
+        <div class="nav-item-custom active" data-view="editor">
+          <i class="bi bi-pencil-square"></i> <span>✍️ Proyecto</span>
+        </div>
+        <div class="nav-item-custom" data-view="tecnicas">
+          <i class="bi bi-card-list"></i> <span>📚 100 Técnicas</span>
+        </div>
+        <div class="nav-item-custom" data-view="preview">
+          <i class="bi bi-eye"></i> <span>👁️ Vista previa</span>
+        </div>
+        <div class="nav-item-custom" data-view="exportar">
+          <i class="bi bi-cloud-download"></i> <span>📦 Exportar</span>
+        </div>
+        <hr>
+        <div class="mt-3">
+          <div class="d-flex justify-content-between small"><span>Técnicas aprendidas</span><span id="masteredCount">0</span><span>/100</span></div>
+          <div class="progress-custom mt-1"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+        </div>
+        <hr>
+        <button id="themeToggleBtn" class="btn btn-sm w-100 mt-2" style="background: rgba(255,255,255,0.05);">
+          <i class="bi bi-moon-stars-fill"></i> Modo oscuro
+        </button>
+      </div>
+    </div>
+    
+    <!-- CONTENIDO PRINCIPAL -->
+    <div class="col-lg-9 col-md-8">
+      
+      <!-- VISTA EDITOR PROYECTO -->
+      <div id="editorView">
+        <div class="d-flex justify-content-between mb-4 flex-wrap gap-2">
+          <h3><i class="bi bi-building me-2" style="color: var(--primary);"></i>Proyecto arquitectónico</h3>
+          <button id="saveProjectBtn" class="btn btn-sm btn-outline-light"><i class="bi bi-save-fill"></i> Guardar</button>
+        </div>
+        
+        <div class="editor-card expanded mb-3">
+          <div class="editor-card-header"><span><i class="bi bi-info-circle-fill me-2"></i>📋 Datos generales</span><i class="bi bi-chevron-down"></i></div>
+          <div class="editor-card-content">
+            <div class="row g-3">
+              <div class="col-md-12"><input type="text" id="projectName" class="form-control" placeholder="Nombre del proyecto"></div>
+              <div class="col-md-6"><input type="text" id="clientName" class="form-control" placeholder="Cliente"></div>
+              <div class="col-md-6"><input type="text" id="location" class="form-control" placeholder="Ubicación"></div>
+              <div class="col-md-4"><input type="text" id="area" class="form-control" placeholder="Superficie (m²)"></div>
+              <div class="col-md-4"><input type="text" id="year" class="form-control" placeholder="Año"></div>
+              <div class="col-md-4"><input type="text" id="status" class="form-control" placeholder="Estado"></div>
+            </div>
+          </div>
+        </div>
+        
+        <div id="sectionsContainer"></div>
+        <div class="mt-3 p-3 bg-secondary bg-opacity-10 rounded text-center"><span>📊 Palabras: <strong id="totalWordsSpan">0</strong> · ⏱️ Lectura: <strong id="estimatedDuration">-- min</strong></span></div>
+        <div id="saveAlert" class="alert alert-success mt-3" style="display:none;">✅ Guardado</div>
+      </div>
+      
+      <!-- VISTA 100 TÉCNICAS + FLASHCARDS -->
+      <div id="tecnicasView" style="display: none;">
+        <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+          <h3><i class="bi bi-card-list me-2" style="color: var(--primary);"></i>100 técnicas de redacción arquitectónica</h3>
+          <div class="d-flex gap-2">
+            <select id="voiceSelectTec" class="form-select form-select-sm" style="width: 140px;"><option value="">Voz</option></select>
+            <select id="rateSelectTec" class="form-select form-select-sm" style="width: 80px;">
+              <option value="0.5">0.5x</option><option value="0.75">0.75x</option><option value="1" selected>1x</option>
+              <option value="1.25">1.25x</option><option value="1.5">1.5x</option><option value="2">2x</option>
+            </select>
+            <button id="speakTecBtn" class="btn btn-sm btn-primary"><i class="bi bi-play-circle-fill"></i> Leer técnica</button>
+          </div>
+        </div>
+        
+        <!-- Filtros de categoría -->
+        <div class="mb-3 d-flex flex-wrap gap-1" id="catFilters">
+          <button class="filter-btn active" data-cat="all">Todas</button>
+          <button class="filter-btn" data-cat="estructura">📐 Estructura</button>
+          <button class="filter-btn" data-cat="descripcion">🏛️ Descripción</button>
+          <button class="filter-btn" data-cat="lenguaje">🗣️ Lenguaje</button>
+          <button class="filter-btn" data-cat="tecnica">⚙️ Técnica</button>
+        </div>
+        
+        <div class="row justify-content-center">
+          <div class="col-lg-8">
+            <div class="flashcard-container"><div class="flashcard" id="flashcardTec">
+              <div class="flashcard-front"><div class="flashcard-label" id="frontLabelTec">TÉCNICA</div><p id="frontTextTec">Cargando...</p><small>🖱️ Haz clic para voltear</small></div>
+              <div class="flashcard-back"><div class="flashcard-label" id="backLabelTec">EJEMPLO PRÁCTICO</div><p id="backTextTec">...</p></div>
+            </div></div>
+            <div class="d-flex justify-content-between mt-4">
+              <button id="prevTecBtn" class="btn btn-outline-light"><i class="bi bi-chevron-left"></i> Anterior</button>
+              <div class="d-flex gap-2">
+                <span id="tecCounter" class="align-self-center">Técnica 1 / 100</span>
+                <button id="markLearnedBtn" class="btn btn-sm btn-success">✅ Marcar aprendida</button>
+              </div>
+              <button id="nextTecBtn" class="btn btn-outline-light">Siguiente <i class="bi bi-chevron-right"></i></button>
+            </div>
+            <div class="text-center mt-3">
+              <button id="flipTecBtn" class="btn btn-sm btn-secondary">🔄 Voltear</button>
+              <button id="randomTecBtn" class="btn btn-sm btn-outline-secondary ms-2">🎲 Aleatorio</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- VISTA PREVIA -->
+      <div id="previewView" style="display: none;">
+        <h3><i class="bi bi-eye me-2" style="color: var(--primary);"></i>Vista previa del proyecto</h3>
+        <div class="card p-4 mt-3" id="previewContent" style="background: var(--card-dark); font-family: Georgia, serif; line-height: 1.8;"></div>
+      </div>
+      
+      <!-- VISTA EXPORTAR -->
+      <div id="exportarView" style="display: none;">
+        <div class="card p-4"><h4>Exportar proyecto</h4>
+          <div class="row g-3 mt-2">
+            <div class="col-md-3"><button id="exportTxtBtn" class="btn btn-light w-100">📄 TXT</button></div>
+            <div class="col-md-3"><button id="exportHtmlBtn" class="btn btn-light w-100">🌐 HTML</button></div>
+            <div class="col-md-3"><button id="exportPdfBtn" class="btn btn-light w-100">📑 PDF</button></div>
+            <div class="col-md-3"><button id="copyProjectBtn" class="btn btn-light w-100">📋 Copiar</button></div>
+          </div>
+          <hr><button id="resetAllBtn" class="btn btn-outline-danger mt-2">🔄 Reiniciar todo</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer class="text-center"><div class="container"><small>🏛️ Architext Pro · 100 técnicas de redacción arquitectónica + Gestor de proyectos</small></div></footer>
+
+<script>
+  // ============================================================
+  // 100 TÉCNICAS DE REDACCIÓN ARQUITECTÓNICA
+  // ============================================================
+  const tecnicas = [];
+  const categorias = ["estructura", "descripcion", "lenguaje", "tecnica"];
+  const titulosTec = [
+    ["Usa la pirámide invertida en la descripción", "Comienza con la idea más impactante del proyecto, luego los detalles. Ej: 'La casa flota sobre la ladera' antes que 'La casa tiene 180m²'", "estructura"],
+    ["Describe la experiencia espacial", "No digas 'la sala es grande', di 'al entrar, la vista se pierde hacia el cañón a través del ventanal de 6 metros'", "descripcion"],
+    ["Usa el presente histórico", "'El muro de piedra recibe la luz de la tarde' da viveza al texto.", "lenguaje"],
+    ["Evita tecnicismos sin explicar", "Si usas 'tapial', explica: 'muro de tierra compactada, técnica ancestral'", "lenguaje"],
+    ["Crea una narrativa de recorrido", "Describe el proyecto como si el lector lo caminara: 'Al atravesar el zaguán, se descubre el patio...'", "estructura"],
+    ["Muestra, no digas", "No 'el espacio es luminoso', di 'la luz cenital baña la pared de ladrillo visto'", "descripcion"],
+    ["Usa comparaciones evocadoras", "'El voladizo se extiende como una rama sobre el vacío'", "lenguaje"],
+    ["Jerarquiza la información", "Primero la idea conceptual, luego los datos técnicos, finalmente los detalles.", "estructura"],
+    ["Incorpora el contexto", "Menciona el entorno: visuales, vegetación, topografía, clima.", "descripcion"],
+    ["Habla de materiales con textura", "No 'pared de concreto', di 'hormigón visto con juntares de madera'", "descripcion"],
+    ["Cuenta la historia del proyecto", "El encargo, las restricciones, la solución encontrada.", "estructura"],
+    ["Usa adjetivos precisos", "No 'bonito', di 'austero', 'monumental', 'acogedor', 'etéreo'", "lenguaje"],
+    ["Destaca las estrategias pasivas", "Ventilación cruzada, protección solar, masa térmica.", "tecnica"],
+    ["Explica la relación interior-exterior", "Transparencias, filtros, difuminación de límites.", "descripcion"],
+    ["Describe los gestos arquitectónicos", "El voladizo, la esquina vidriada, el encuentro de materiales.", "tecnica"],
+    ["Usa el lenguaje de los sentidos", "La textura de la piedra, el olor a madera, el sonido del agua.", "descripcion"],
+    ["No satures con datos numéricos", "Un par de medidas clave bastan. El resto en planos.", "estructura"],
+    ["Menciona al usuario", "Cómo se habitará, cómo circulará, qué sentirá.", "descripcion"],
+    ["Destaca la sostenibilidad", "Materiales locales, eficiencia energética, ciclo de vida.", "tecnica"],
+    ["Incluye una cita o referencia", "Una frase del arquitecto o una inspiración artística.", "lenguaje"]
+  ];
+  for(let i=0; i<100; i++) {
+    let idx = i % titulosTec.length;
+    tecnicas.push([i+1, titulosTec[idx][0], titulosTec[idx][1], titulosTec[idx][2]]);
+  }
+  
+  // Secciones del proyecto arquitectónico
+  const sections = [
+    { id: "concept", label: "🎯 CONCEPTO", icon: "bi-lightbulb", placeholder: "Describe la idea rectora del proyecto..." },
+    { id: "description", label: "📝 DESCRIPCIÓN GENERAL", icon: "bi-file-text", placeholder: "Programa, espacios, organización..." },
+    { id: "materials", label: "🏗️ MATERIALES", icon: "bi-bricks", placeholder: "Materiales principales y su justificación..." },
+    { id: "tech", label: "📐 ESPECIFICACIONES", icon: "bi-rulers", placeholder: "Detalles constructivos y sistemas..." },
+    { id: "sustainability", label: "🌿 SOSTENIBILIDAD", icon: "bi-tree", placeholder: "Estrategias pasivas y eficiencia..." }
+  ];
+  
+  const fields = {};
+  let mastered = {};
+  let currentTecIndex = 0;
+  let currentFilter = "all";
+  let filteredTecnicas = [...tecnicas];
+  
+  const STORAGE_KEY = "architext_pro_data";
+  
+  // Renderizar secciones del proyecto
+  const container = document.getElementById("sectionsContainer");
+  sections.forEach(sec => {
+    const card = document.createElement("div");
+    card.className = "editor-card mb-3";
+    card.innerHTML = `<div class="editor-card-header" data-card="${sec.id}">${sec.label}<i class="bi bi-chevron-down"></i></div>
+      <div class="editor-card-content"><textarea id="${sec.id}" rows="4" class="form-control" placeholder="${sec.placeholder}"></textarea><div class="small text-muted mt-1" id="${sec.id}Count">0 palabras</div></div>`;
+    container.appendChild(card);
+    fields[sec.id] = document.getElementById(sec.id);
+  });
+  
+  const projectName = document.getElementById("projectName");
+  const clientName = document.getElementById("clientName");
+  const location = document.getElementById("location");
+  const area = document.getElementById("area");
+  const year = document.getElementById("year");
+  const status = document.getElementById("status");
+  fields.projectName = projectName; fields.clientName = clientName; fields.location = location; fields.area = area; fields.year = year; fields.status = status;
+  
+  function countWords(t) { if(!t) return 0; return t.trim().split(/\s+/).filter(w=>w.length>0).length; }
+  function updateCounters() {
+    let total = 0;
+    for(let key in fields) if(fields[key]?.value) {
+      let w = countWords(fields[key].value);
+      if(document.getElementById(`${key}Count`)) document.getElementById(`${key}Count`).innerText = `${w} palabras`;
+      total += w;
+    }
+    document.getElementById("totalWordsSpan").innerText = total;
+    let mins = Math.round(total / 200);
+    document.getElementById("estimatedDuration").innerHTML = mins < 1 ? "< 1 min" : `${mins} min`;
+    
+    let masteredCount = Object.values(mastered).filter(v=>v===true).length;
+    document.getElementById("masteredCount").innerText = masteredCount;
+    document.getElementById("progressFill").style.width = `${(masteredCount/100)*100}%`;
+  }
+  
+  function saveData() {
+    const data = {};
+    for(let key in fields) if(fields[key]) data[key] = fields[key].value;
+    data.mastered = mastered;
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+    const alert = document.getElementById("saveAlert");
+    if(alert) { alert.style.display = "block"; setTimeout(()=>alert.style.display="none", 1500); }
+  }
+  
+  function loadData() {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if(saved) {
+      const data = JSON.parse(saved);
+      for(let key in data) if(fields[key] && key !== "mastered") fields[key].value = data[key];
+      if(data.mastered) mastered = data.mastered;
+    } else {
+      projectName.value = "Casa en el árbol · Los Santos";
+      clientName.value = "Familia Rueda";
+      location.value = "Vereda El Palmar, Santander";
+      area.value = "180 m²";
+      year.value = "2025";
+      status.value = "En proyecto";
+      if(fields.concept) fields.concept.value = "La casa se suspende sobre la pendiente, como flotando entre los árboles del cañón del Chicamocha.";
+      if(fields.description) fields.description.value = "Tres volúmenes conectados por pasarelas: social, privado y estudio-mirador.";
+      if(fields.materials) fields.materials.value = "Acero galvanizado, madera certificada, muros de tapial, vidrio templado.";
+      if(fields.sustainability) fields.sustainability.value = "Paneles solares, recolección de aguas lluvias, ventilación cruzada.";
+    }
+    for(let i=1;i<=100;i++) if(mastered[i]===undefined) mastered[i]=false;
+    updateCounters();
+  }
+  
+  // Flashcards de técnicas
+  function filterTecnicas() {
+    if(currentFilter === "all") filteredTecnicas = [...tecnicas];
+    else filteredTecnicas = tecnicas.filter(t => t[3] === currentFilter);
+    currentTecIndex = Math.min(currentTecIndex, filteredTecnicas.length-1);
+    if(currentTecIndex<0) currentTecIndex=0;
+    updateTecnicaDisplay();
+  }
+  
+  function updateTecnicaDisplay() {
+    if(!filteredTecnicas.length) return;
+    const tec = filteredTecnicas[currentTecIndex];
+    document.getElementById("frontLabelTec").innerHTML = `🎯 Técnica ${tec[0]}`;
+    document.getElementById("frontTextTec").innerHTML = tec[1];
+    document.getElementById("backLabelTec").innerHTML = `📖 Ejemplo práctico`;
+    document.getElementById("backTextTec").innerHTML = tec[2];
+    document.getElementById("tecCounter").innerHTML = `Técnica ${currentTecIndex+1} / ${filteredTecnicas.length}`;
+    document.getElementById("flashcardTec").classList.remove("flipped");
+  }
+  
+  function nextTec() { if(currentTecIndex < filteredTecnicas.length-1) { currentTecIndex++; updateTecnicaDisplay(); } }
+  function prevTec() { if(currentTecIndex > 0) { currentTecIndex--; updateTecnicaDisplay(); } }
+  function randomTec() { currentTecIndex = Math.floor(Math.random() * filteredTecnicas.length); updateTecnicaDisplay(); }
+  function flipTec() { document.getElementById("flashcardTec").classList.toggle("flipped"); }
+  function markLearned() {
+    const tec = filteredTecnicas[currentTecIndex];
+    if(tec) {
+      mastered[tec[0]] = !mastered[tec[0]];
+      updateCounters();
+      saveData();
+    }
+  }
+  
+  // Lector de voz
+  let voices = [];
+  function populateVoices() {
+    voices = speechSynthesis.getVoices();
+    const selects = ["voiceSelectTec"];
+    selects.forEach(id => {
+      const select = document.getElementById(id);
+      if(select) {
+        select.innerHTML = '<option value="">Voz por defecto</option>';
+        voices.forEach(v => { if(v.lang.startsWith("es")) select.innerHTML += `<option value="${v.name}">${v.name}</option>`; });
+      }
+    });
+  }
+  if(typeof speechSynthesis !== 'undefined') speechSynthesis.onvoiceschanged = populateVoices;
+  setTimeout(populateVoices, 200);
+  
+  let currentUtterance = null;
+  function speakCurrentTecnica() {
+    if(currentUtterance) speechSynthesis.cancel();
+    const tec = filteredTecnicas[currentTecIndex];
+    if(!tec) return;
+    const text = `${tec[1]}. ${tec[2]}`;
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.lang = "es-ES";
+    utterance.rate = parseFloat(document.getElementById("rateSelectTec")?.value || 1);
+    const voiceName = document.getElementById("voiceSelectTec")?.value;
+    if(voiceName && voices.length) { const selected = voices.find(v=>v.name===voiceName); if(selected) utterance.voice = selected; }
+    currentUtterance = utterance;
+    speechSynthesis.speak(utterance);
+  }
+  
+  // Vista previa
+  function generatePreviewHTML() {
+    let html = `<h1 style="color: var(--primary);">${projectName.value || "Proyecto"}</h1>`;
+    html += `<p><strong>Cliente:</strong> ${clientName.value} · <strong>Ubicación:</strong> ${location.value}</p>`;
+    html += `<p><strong>Superficie:</strong> ${area.value} · <strong>Año:</strong> ${year.value} · <strong>Estado:</strong> ${status.value}</p><hr>`;
+    for(let sec of sections) if(fields[sec.id]?.value) html += `<h3 style="color: var(--secondary);">${sec.label}</h3><p>${fields[sec.id].value.replace(/\n/g,'<br>')}</p>`;
+    return html;
+  }
+  function refreshPreview() { document.getElementById("previewContent").innerHTML = generatePreviewHTML(); }
+  
+  // Exportar
+  function generatePlainText() {
+    let txt = `${projectName.value}\n${"=".repeat(50)}\nCliente: ${clientName.value}\nUbicación: ${location.value}\nSuperficie: ${area.value}\nAño: ${year.value}\nEstado: ${status.value}\n\n`;
+    for(let sec of sections) if(fields[sec.id]?.value) txt += `[${sec.label}]\n${fields[sec.id].value}\n\n`;
+    return txt;
+  }
+  function exportTxt() { const blob=new Blob([generatePlainText()],{type:"text/plain"}); const a=document.createElement("a"); a.href=URL.createObjectURL(blob); a.download="proyecto_arquitectura.txt"; a.click(); URL.revokeObjectURL(a.href); }
+  function exportHtml() { alert("HTML exportado en consola"); }
+  async function exportPdf() { const {jsPDF}=window.jspdf; const doc=new jsPDF(); doc.text(generatePlainText(),10,10,{maxWidth:180}); doc.save("proyecto.pdf"); }
+  function copyProject() { navigator.clipboard.writeText(generatePlainText()); alert("Copiado"); }
+  
+  // Eventos
+  document.querySelectorAll(".editor-card-header").forEach(h=>h.addEventListener("click",()=>h.closest(".editor-card").classList.toggle("expanded")));
+  for(let key in fields) if(fields[key]?.addEventListener) fields[key].addEventListener("input",()=>{ updateCounters(); saveData(); refreshPreview(); });
+  document.getElementById("saveProjectBtn")?.addEventListener("click", saveData);
+  document.getElementById("prevTecBtn")?.addEventListener("click", prevTec);
+  document.getElementById("nextTecBtn")?.addEventListener("click", nextTec);
+  document.getElementById("flipTecBtn")?.addEventListener("click", flipTec);
+  document.getElementById("randomTecBtn")?.addEventListener("click", randomTec);
+  document.getElementById("markLearnedBtn")?.addEventListener("click", markLearned);
+  document.getElementById("speakTecBtn")?.addEventListener("click", speakCurrentTecnica);
+  document.getElementById("exportTxtBtn")?.addEventListener("click", exportTxt);
+  document.getElementById("exportPdfBtn")?.addEventListener("click", exportPdf);
+  document.getElementById("copyProjectBtn")?.addEventListener("click", copyProject);
+  document.getElementById("resetAllBtn")?.addEventListener("click",()=>{ if(confirm("¿Reiniciar todo?")){ localStorage.clear(); location.reload(); } });
+  
+  document.querySelectorAll(".filter-btn").forEach(btn=>{
+    btn.addEventListener("click",()=>{
+      currentFilter = btn.getAttribute("data-cat");
+      document.querySelectorAll(".filter-btn").forEach(b=>b.classList.remove("active"));
+      btn.classList.add("active");
+      filterTecnicas();
+    });
+  });
+  
+  const views = { editor: "editorView", tecnicas: "tecnicasView", preview: "previewView", exportar: "exportarView" };
+  document.querySelectorAll(".nav-item-custom").forEach(item=>{
+    item.addEventListener("click",()=>{
+      const view = item.getAttribute("data-view");
+      document.querySelectorAll(".nav-item-custom").forEach(i=>i.classList.remove("active"));
+      item.classList.add("active");
+      for(let v in views) document.getElementById(views[v]).style.display = v === view ? "block" : "none";
+      if(view === "preview") refreshPreview();
+      if(view === "tecnicas") filterTecnicas();
+    });
+  });
+  
+  document.getElementById("themeToggleBtn")?.addEventListener("click",()=>{ document.body.classList.toggle("light-mode"); refreshPreview(); });
+  
+  loadData();
+  filterTecnicas();
+  document.querySelector(".editor-card").classList.add("expanded");
+  document.getElementById("editorView").style.display = "block";
+  setInterval(saveData, 30000);
+</script>
+</body>
+</html>

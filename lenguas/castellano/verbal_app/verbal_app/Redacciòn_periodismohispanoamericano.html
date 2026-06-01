@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Periodismo Hispanoamericano — 100 estilos de redacción</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ink:#1a1209; --parchment:#f5f0e8; --amber:#c8860a; --amber-light:#f0a830;
+  --amber-pale:#fdf3dc; --rust:#8b3a1a; --sage:#4a6741; --sage-light:#7a9e76;
+  --cream:#faf7f2; --border:#d4c9b0; --shadow:rgba(26,18,9,0.12);
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'DM Sans',sans-serif;background:var(--parchment);color:var(--ink);min-height:100vh;
+  background-image:radial-gradient(ellipse at 15% 0%,rgba(200,134,10,.07) 0%,transparent 55%),
+  radial-gradient(ellipse at 85% 100%,rgba(139,58,26,.05) 0%,transparent 55%);}
+h1,h2,h3,.serif{font-family:'Playfair Display',serif;}
+
+.app-nav{background:var(--ink);display:flex;align-items:center;gap:.75rem;
+  padding:.7rem 1.5rem;position:sticky;top:0;z-index:200;box-shadow:0 2px 18px rgba(0,0,0,.25);}
+.nav-brand{font-family:'Playfair Display',serif;font-weight:900;font-size:1.25rem;
+  color:var(--amber-light);flex:1;white-space:nowrap;}
+.nav-brand span{color:#fff;}
+.nav-avatar{width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,var(--amber),var(--rust));
+  display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.95rem;
+  color:#fff;font-family:'Playfair Display',serif;cursor:pointer;flex-shrink:0;
+  border:2px solid rgba(255,255,255,.2);transition:border-color .2s;}
+.nav-avatar:hover{border-color:var(--amber-light);}
+.nav-username{color:rgba(255,255,255,.8);font-size:.85rem;font-weight:500;white-space:nowrap;}
+.btn-reset{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);
+  color:rgba(255,255,255,.7);border-radius:8px;padding:.32rem .75rem;font-size:.78rem;
+  cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .2s;}
+.btn-reset:hover{background:rgba(255,255,255,.18);color:#fff;}
+
+.app-tabs{background:#fff;border-bottom:2px solid var(--border);display:flex;
+  padding:0 1.5rem;overflow-x:auto;gap:0;position:sticky;top:58px;z-index:150;}
+.app-tab{padding:.85rem 1.1rem;border:none;background:transparent;font-family:'DM Sans',sans-serif;
+  font-weight:700;font-size:.82rem;color:#999;cursor:pointer;white-space:nowrap;
+  border-bottom:3px solid transparent;margin-bottom:-2px;transition:all .2s;
+  display:flex;align-items:center;gap:.35rem;}
+.app-tab:hover{color:var(--ink);}
+.app-tab.active{color:var(--amber);border-bottom-color:var(--amber);}
+
+.app-body{max-width:1080px;margin:0 auto;padding:2rem 1.5rem;}
+.page{display:none;animation:rise .28s ease;}
+.page.active{display:block;}
+
+.card-app{background:#fff;border:1.5px solid var(--border);border-radius:16px;
+  box-shadow:0 2px 10px var(--shadow);overflow:hidden;}
+.card-app-header{padding:1.1rem 1.4rem;border-bottom:1px solid var(--border);
+  display:flex;align-items:center;gap:.75rem;}
+.card-app-body{padding:1.4rem;}
+
+.stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:.9rem;margin-bottom:1.6rem;}
+.stat-box{background:#fff;border:1.5px solid var(--border);border-radius:14px;
+  padding:1.1rem 1rem;text-align:center;transition:transform .2s;cursor:default;}
+.stat-box:hover{transform:translateY(-3px);box-shadow:0 6px 18px var(--shadow);}
+.stat-num{font-family:'Playfair Display',serif;font-size:2rem;font-weight:900;
+  color:var(--amber);line-height:1;margin-bottom:.2rem;}
+.stat-lbl{font-size:.73rem;font-weight:700;color:#aaa;text-transform:uppercase;letter-spacing:.05em;}
+
+.dot-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(26px,1fr));gap:4px;margin-bottom:1.6rem;}
+.dot{aspect-ratio:1;border-radius:6px;background:var(--border);cursor:pointer;
+  transition:all .18s;position:relative;display:flex;align-items:center;justify-content:center;}
+.dot.done{background:var(--sage);}
+.dot:hover{transform:scale(1.35);z-index:5;}
+.dot-tip{position:absolute;bottom:130%;left:50%;transform:translateX(-50%);
+  background:var(--ink);color:#fff;padding:.28rem .6rem;border-radius:6px;font-size:.68rem;
+  white-space:nowrap;pointer-events:none;opacity:0;transition:opacity .18s;z-index:99;}
+.dot:hover .dot-tip{opacity:1;}
+.dot-num{font-size:.5rem;font-weight:700;color:rgba(255,255,255,.7);}
+
+.search-field{border:1.5px solid var(--border);border-radius:10px;padding:.55rem 1rem .55rem 2.3rem;
+  font-family:'DM Sans',sans-serif;font-size:.87rem;background:#fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%23aaa' stroke-width='2.5'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cpath d='M21 21l-4.35-4.35'/%3E%3C/svg%3E") no-repeat .75rem center;
+  width:100%;max-width:260px;outline:none;transition:border-color .2s;}
+.search-field:focus{border-color:var(--amber);}
+.pill{padding:.28rem .75rem;border-radius:20px;border:1.5px solid var(--border);background:#fff;
+  font-size:.75rem;font-weight:700;cursor:pointer;transition:all .2s;font-family:'DM Sans',sans-serif;color:#888;}
+.pill.on,.pill:hover{background:var(--amber);border-color:var(--amber);color:#fff;}
+
+.ex-card{background:#fff;border:1.5px solid var(--border);border-radius:13px;padding:1rem 1.2rem;
+  margin-bottom:.6rem;cursor:pointer;transition:all .18s;display:flex;align-items:flex-start;gap:.9rem;
+  box-shadow:0 1px 4px var(--shadow);}
+.ex-card:hover{border-color:var(--amber);transform:translateX(5px);}
+.ex-card.done{border-left:4px solid var(--sage);}
+.ex-num-box{background:var(--parchment);border:1px solid var(--border);border-radius:8px;
+  width:42px;height:42px;display:flex;align-items:center;justify-content:center;
+  font-family:'DM Mono',monospace;font-size:.75rem;font-weight:600;color:var(--amber);flex-shrink:0;}
+.ex-card.done .ex-num-box{background:var(--sage);color:#fff;border-color:var(--sage);}
+.ex-body{flex:1;min-width:0;}
+.ex-cat-tag{font-size:.7rem;font-weight:700;color:var(--amber);text-transform:uppercase;letter-spacing:.05em;}
+.ex-name{font-weight:700;font-size:.9rem;margin:.1rem 0 .18rem;}
+.ex-short{font-size:.78rem;color:#777;line-height:1.5;}
+.badge-done{background:var(--sage);color:#fff;padding:.18rem .55rem;border-radius:9px;font-size:.7rem;font-weight:700;}
+.badge-new{background:var(--parchment);color:#bbb;padding:.18rem .55rem;border-radius:9px;font-size:.7rem;font-weight:700;border:1px solid var(--border);}
+
+.prac-header{background:#fff;border:1.5px solid var(--border);border-radius:16px;
+  padding:1.4rem 1.5rem;margin-bottom:1.2rem;box-shadow:0 2px 10px var(--shadow);}
+.prac-badge{display:inline-flex;align-items:center;gap:.35rem;background:var(--amber-pale);
+  border:1px solid rgba(200,134,10,.28);border-radius:8px;padding:.28rem .75rem;
+  font-size:.76rem;font-weight:700;color:var(--amber);margin-bottom:.7rem;}
+.prac-title{font-size:1.3rem;font-weight:900;margin-bottom:.45rem;}
+.prac-explanation{font-size:.88rem;color:#555;line-height:1.7;margin:0;}
+.prac-example{background:var(--parchment);border-left:3px solid var(--amber);
+  border-radius:0 9px 9px 0;padding:.7rem 1rem;margin-top:.9rem;font-size:.84rem;
+  color:var(--ink);font-style:italic;}
+
+.writing-zone{background:#fff;border:1.5px solid var(--border);border-radius:16px;
+  padding:1.4rem 1.5rem;margin-bottom:1rem;box-shadow:0 2px 10px var(--shadow);}
+.writing-prompt{background:linear-gradient(135deg,var(--amber-pale),#fffcf5);
+  border:1px solid rgba(200,134,10,.22);border-radius:10px;padding:.9rem 1.1rem;
+  margin-bottom:1rem;font-size:.87rem;line-height:1.65;}
+.writing-prompt strong{color:var(--rust);}
+#practiceTA{width:100%;min-height:145px;border:1.5px solid var(--border);border-radius:10px;
+  padding:.9rem 1rem;font-family:'DM Sans',sans-serif;font-size:.93rem;line-height:1.75;
+  color:var(--ink);resize:vertical;background:#fffef9;transition:border-color .2s;outline:none;}
+#practiceTA:focus{border-color:var(--amber);box-shadow:0 0 0 3px rgba(200,134,10,.1);}
+.wc{text-align:right;font-size:.76rem;color:#bbb;margin-top:.4rem;}
+
+.btn-check{background:linear-gradient(135deg,var(--sage),var(--sage-light));border:none;
+  border-radius:10px;color:#fff;font-weight:700;font-size:.92rem;padding:.75rem 1.6rem;
+  cursor:pointer;transition:all .2s;font-family:'DM Sans',sans-serif;
+  display:inline-flex;align-items:center;gap:.45rem;
+  box-shadow:0 4px 14px rgba(74,103,65,.32);}
+.btn-check:hover{transform:translateY(-2px);box-shadow:0 7px 20px rgba(74,103,65,.4);}
+.btn-check:disabled{opacity:.55;cursor:not-allowed;transform:none;}
+
+.btn-next{background:linear-gradient(135deg,var(--amber),var(--rust));border:none;
+  border-radius:10px;color:#fff;font-weight:700;font-size:.92rem;padding:.75rem 1.6rem;
+  cursor:pointer;transition:all .2s;font-family:'DM Sans',sans-serif;
+  display:inline-flex;align-items:center;gap:.45rem;box-shadow:0 4px 14px rgba(200,134,10,.3);}
+.btn-next:hover{transform:translateY(-2px);}
+
+.fb-area{background:#fff;border:1.5px solid var(--border);border-radius:16px;
+  overflow:hidden;box-shadow:0 2px 10px var(--shadow);display:none;}
+.fb-area.show{display:block;animation:rise .35s ease;}
+.fb-head{padding:.95rem 1.4rem;display:flex;align-items:center;gap:.7rem;border-bottom:1px solid var(--border);}
+.fb-head.excellent{background:linear-gradient(90deg,#d4edda,#f0faf4);}
+.fb-head.good{background:linear-gradient(90deg,#fff3cd,#fffbf0);}
+.fb-head.low{background:linear-gradient(90deg,#f8d7da,#fdf5f5);}
+.fb-emoji{font-size:1.8rem;}
+.fb-htitle{font-weight:800;font-size:1rem;margin:0;}
+.fb-hsub{font-size:.78rem;color:#888;margin:0;}
+.fb-body{padding:1.4rem;}
+.score-circle{width:66px;height:66px;border-radius:50%;display:flex;align-items:center;
+  justify-content:center;font-family:'Playfair Display',serif;font-weight:900;font-size:1.25rem;flex-shrink:0;}
+.sc-high{background:#d4edda;color:#2d6a4f;}
+.sc-med{background:#fff3cd;color:#7a5c00;}
+.sc-low{background:#f8d7da;color:#8b1a1a;}
+.fb-section{margin-bottom:1.1rem;}
+.fb-section-title{font-weight:700;font-size:.76rem;text-transform:uppercase;letter-spacing:.07em;
+  color:#aaa;margin-bottom:.5rem;display:flex;align-items:center;gap:.35rem;}
+.fb-item{padding:.62rem .85rem;border-radius:8px;font-size:.84rem;line-height:1.52;
+  margin-bottom:.35rem;display:flex;gap:.55rem;align-items:flex-start;}
+.fb-item.ok{background:#f0f9f4;color:#2d6a4f;border-left:3px solid var(--sage);}
+.fb-item.err{background:#fdf5f5;color:#8b1a1a;border-left:3px solid #dc3545;}
+.fb-item.tip{background:#fffbf0;color:#7a5c00;border-left:3px solid var(--amber);}
+.fb-item.info{background:var(--parchment);color:var(--ink);border-left:3px solid #aaa;}
+.fb-ico{flex-shrink:0;margin-top:1px;}
+
+.spin{width:34px;height:34px;border:3px solid var(--border);border-top-color:var(--amber);
+  border-radius:50%;animation:rot .65s linear infinite;margin:0 auto 1rem;}
+@keyframes rot{to{transform:rotate(360deg)}}
+
+.profile-cover{height:96px;background:linear-gradient(135deg,var(--ink) 0%,#3d2a10 50%,var(--rust) 100%);position:relative;}
+.profile-av-lg{width:78px;height:78px;border-radius:50%;border:4px solid #fff;
+  background:linear-gradient(135deg,var(--amber),var(--rust));display:flex;align-items:center;
+  justify-content:center;font-family:'Playfair Display',serif;font-weight:900;font-size:1.9rem;
+  color:#fff;position:absolute;bottom:-38px;left:1.4rem;box-shadow:0 4px 18px var(--shadow);}
+.profile-body{padding:3.2rem 1.4rem 1.4rem;}
+.profile-name{font-size:1.4rem;font-weight:900;margin-bottom:.15rem;}
+.profile-meta{color:#999;font-size:.83rem;}
+.ach-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:.65rem;}
+.ach{background:#fff;border:1.5px solid var(--border);border-radius:12px;padding:.9rem .7rem;
+  text-align:center;transition:all .2s;}
+.ach.unlocked{border-color:var(--amber);background:var(--amber-pale);}
+.ach.unlocked:hover{transform:translateY(-3px);box-shadow:0 5px 14px rgba(200,134,10,.22);}
+.ach-icon{font-size:1.6rem;display:block;margin-bottom:.35rem;}
+.ach-name{font-size:.7rem;font-weight:700;color:var(--ink);}
+.ach.locked .ach-icon{filter:grayscale(1);opacity:.35;}
+.ach.locked .ach-name{color:#ccc;}
+
+.hist-row{background:#fff;border:1.5px solid var(--border);border-radius:11px;
+  padding:.8rem 1rem;margin-bottom:.5rem;display:flex;align-items:center;gap:.8rem;cursor:pointer;transition:border-color .2s;}
+.hist-row:hover{border-color:var(--amber);}
+
+.toast-box{position:fixed;bottom:1.4rem;right:1.4rem;z-index:9999;}
+.toast-item{background:var(--ink);color:#fff;border-radius:12px;padding:.8rem 1.1rem;
+  margin-top:.45rem;display:flex;align-items:center;gap:.65rem;font-size:.84rem;font-weight:500;
+  box-shadow:0 8px 26px rgba(0,0,0,.28);animation:rise .28s ease;max-width:300px;}
+.toast-item.s{border-left:4px solid var(--sage-light);}
+.toast-item.e{border-left:4px solid #dc3545;}
+.toast-item.i{border-left:4px solid var(--amber-light);}
+
+.modal-backdrop-custom{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:1040;
+  display:flex;align-items:center;justify-content:center;padding:1rem;}
+.modal-box{background:#fff;border-radius:20px;max-width:480px;width:100%;
+  box-shadow:0 24px 64px rgba(0,0,0,.28);animation:rise .3s ease;overflow:hidden;}
+.modal-head{background:var(--ink);padding:1.1rem 1.4rem;color:#fff;display:flex;align-items:center;gap:.7rem;}
+.modal-head .modal-title-txt{font-weight:800;font-size:1rem;flex:1;}
+.modal-close{background:rgba(255,255,255,.12);border:none;color:#fff;border-radius:8px;
+  width:32px;height:32px;cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center;}
+.modal-close:hover{background:rgba(255,255,255,.25);}
+.modal-body-custom{padding:1.4rem;}
+.modal-foot{padding:1rem 1.4rem;border-top:1px solid var(--border);display:flex;gap:.7rem;justify-content:flex-end;}
+
+@keyframes rise{from{opacity:0;transform:translateY(28px)}to{opacity:1;transform:translateY(0)}}
+::-webkit-scrollbar{width:6px;height:6px;}
+::-webkit-scrollbar-track{background:transparent;}
+::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px;}
+@media(max-width:576px){
+  .app-body{padding:1rem;}
+  .stats-grid{grid-template-columns:1fr 1fr;}
+  .ach-grid{grid-template-columns:repeat(3,1fr);}
+  .app-nav{padding:.6rem 1rem;}
+  .nav-username{display:none;}
+}
+</style>
+</head>
+<body>
+
+<div id="appScreen">
+  <nav class="app-nav">
+    <div class="nav-brand">Periodismo<span>Hispanoamericano</span></div>
+    <div class="nav-avatar" id="navAv" onclick="switchPage('perfil')" title="Ver perfil">P</div>
+    <span class="nav-username" id="navName">Estudiante</span>
+    <button class="btn-reset" onclick="confirmReset()"><i class="bi bi-arrow-counterclockwise"></i> Reiniciar</button>
+  </nav>
+  <div class="app-tabs">
+    <button class="app-tab active" id="tab-dashboard" onclick="switchPage('dashboard')"><i class="bi bi-grid-3x3-gap-fill"></i> Inicio</button>
+    <button class="app-tab" id="tab-ejercicios" onclick="switchPage('ejercicios')"><i class="bi bi-journal-bookmark-fill"></i> Ejercicios</button>
+    <button class="app-tab" id="tab-practica" onclick="switchPage('practica')"><i class="bi bi-pencil-square"></i> Practicar</button>
+    <button class="app-tab" id="tab-perfil" onclick="switchPage('perfil')"><i class="bi bi-person-circle"></i> Perfil</button>
+  </div>
+  <div class="app-body">
+    <!-- DASHBOARD -->
+    <div class="page active" id="page-dashboard">
+      <div class="d-flex align-items-center gap-2 mb-4"><div><h2 class="serif fw-black mb-0">¡Hola, <span id="dashName">periodista</span>! 📰</h2><p class="text-muted mb-0">Aprende los estilos de redacción periodística en Hispanoamérica</p></div></div>
+      <div class="stats-grid mb-4">
+        <div class="stat-box"><div class="stat-num" id="sCompleted">0</div><div class="stat-lbl">Ejercicios completados</div></div>
+        <div class="stat-box"><div class="stat-num" id="sPracticed">0</div><div class="stat-lbl">Prácticas realizadas</div></div>
+        <div class="stat-box"><div class="stat-num" id="sScore">—</div><div class="stat-lbl">Puntuación media</div></div>
+        <div class="stat-box"><div class="stat-num" id="sStreak">1🔥</div><div class="stat-lbl">Racha</div></div>
+      </div>
+      <div class="card-app mb-4"><div class="card-app-header"><i class="bi bi-map-fill text-warning"></i><div><div style="font-weight:800">Mapa de progreso</div><div style="font-size:.74rem;color:#aaa">100 estilos periodísticos · Verde = completado</div></div></div><div class="card-app-body"><div class="dot-grid" id="dotGrid"></div></div></div>
+      <div class="mb-2" style="font-weight:800">Siguiente estilo</div>
+      <div class="ex-card" id="nextCard"><div class="ex-num-box" id="nextNum">01</div><div class="ex-body"><div class="ex-cat-tag" id="nextCat">Géneros</div><div class="ex-name" id="nextName">Cargando...</div><div class="ex-short" id="nextDesc"></div></div><span style="color:var(--amber);font-size:1.4rem"><i class="bi bi-play-circle-fill"></i></span></div>
+      <div class="card-app mt-4"><div class="card-app-header"><i class="bi bi-bar-chart-fill text-warning"></i><div>Progreso por categoría</div></div><div class="card-app-body" id="catProgress"></div></div>
+    </div>
+    <!-- EJERCICIOS -->
+    <div class="page" id="page-ejercicios">
+      <div class="d-flex align-items-center justify-content-between flex-wrap gap-2 mb-3"><h2 class="serif fw-black mb-0">100 Estilos de Redacción Periodística</h2><input class="search-field" id="searchQ" type="text" placeholder="Buscar..." oninput="renderList()"></div>
+      <div class="d-flex flex-wrap gap-2 mb-3" id="pills">
+        <button class="pill on" onclick="setFilter('all',this)">Todos</button>
+        <button class="pill" onclick="setFilter('generos',this)">Géneros periodísticos</button>
+        <button class="pill" onclick="setFilter('recursos',this)">Recursos estilísticos</button>
+        <button class="pill" onclick="setFilter('variedades',this)">Variedades regionales</button>
+        <button class="pill" onclick="setFilter('normas',this)">Normas de redacción</button>
+        <button class="pill" onclick="setFilter('etica',this)">Ética y responsabilidad</button>
+      </div>
+      <div id="exList"></div>
+    </div>
+    <!-- PRACTICAR -->
+    <div class="page" id="page-practica">
+      <div id="practiceEmpty" style="text-align:center;padding:4rem 1rem;"><div style="font-size:4rem">📰</div><h3 class="serif fw-black mb-2">Selecciona un estilo para practicar</h3><button class="btn-main" style="display:inline-flex;width:auto" onclick="switchPage('ejercicios')"><i class="bi bi-journal-bookmark-fill"></i> Ver ejercicios</button></div>
+      <div id="practiceContent" style="display:none">
+        <div class="prac-header"><div class="d-flex align-items-start justify-content-between gap-2 flex-wrap"><div><div class="prac-badge"><i class="bi bi-mortarboard-fill"></i> <span id="pracCat">Géneros</span> · Estilo <span id="pracNum">01</span></div><h2 class="prac-title serif" id="pracName">Título</h2><p class="prac-explanation" id="pracExpl">Explicación</p><div class="prac-example" id="pracEx"></div></div><div class="d-flex gap-2"><button class="btn-outline-app" onclick="prevExercise()"><i class="bi bi-chevron-left"></i></button><button class="btn-outline-app" onclick="nextExercise()"><i class="bi bi-chevron-right"></i></button></div></div></div>
+        <div class="writing-zone"><div class="writing-prompt" id="pracPrompt">Escribe tu respuesta.</div><textarea id="practiceTA" placeholder="Escribe tu respuesta aquí…"></textarea><div class="wc"><span id="wc">0</span> palabras · mínimo 10</div></div>
+        <div class="d-flex align-items-center gap-2 flex-wrap mb-3"><button class="btn-check" id="btnCheck" onclick="doCheck()"><i class="bi bi-magic"></i> Analizar respuesta</button><button class="btn-next" id="btnNext" onclick="nextExercise()" style="display:none">Siguiente <i class="bi bi-arrow-right"></i></button><span style="font-size:.76rem;color:#bbb">Aplica conceptos periodísticos.</span></div>
+        <div class="fb-area" id="fbArea"><div id="fbLoading" style="text-align:center;padding:2.5rem"><div class="spin"></div><div>Evaluando tu respuesta periodística...</div></div><div id="fbContent" style="display:none"></div></div>
+      </div>
+    </div>
+    <!-- PERFIL -->
+    <div class="page" id="page-perfil">
+      <div class="card-app mb-4"><div class="profile-cover"><div class="profile-av-lg" id="profAv">P</div></div><div class="profile-body"><h3 class="profile-name" id="profName">—</h3><p class="profile-meta" id="profMeta">—</p><div class="d-flex gap-4 mt-3"><div><strong id="pComp">0</strong><span class="text-muted ms-1">estilos</span></div><div><strong id="pPrac">0</strong><span class="text-muted ms-1">prácticas</span></div><div><strong id="pScr">—</strong><span class="text-muted ms-1">media</span></div></div><div class="d-flex gap-2 mt-3"><button class="btn-outline-app" onclick="openEditModal()"><i class="bi bi-pencil"></i> Editar perfil</button></div></div></div>
+      <div class="mb-2" style="font-weight:800">Logros destacados</div><div class="ach-grid mb-4" id="achGrid"></div>
+      <div class="mb-2" style="font-weight:800">Historial de prácticas</div><div id="histList"></div>
+    </div>
+  </div>
+</div>
+
+<div id="editModal" class="modal-backdrop-custom" style="display:none"><div class="modal-box"><div class="modal-head"><i class="bi bi-person-gear"></i><span class="modal-title-txt">Editar perfil</span><button class="modal-close" onclick="closeModal('editModal')"><i class="bi bi-x-lg"></i></button></div><div class="modal-body-custom"><div class="mb-3"><label class="field-label">Nombre</label><input id="editName" class="field" type="text"></div><div class="mb-3"><label class="field-label">Nivel</label><select id="editLevel" class="field"><option value="principiante">🌱 Principiante</option><option value="intermedio">📖 Intermedio</option><option value="avanzado">🎓 Avanzado</option></select></div></div><div class="modal-foot"><button class="btn-outline-app" onclick="closeModal('editModal')">Cancelar</button><button class="btn-main" style="width:auto" onclick="saveEdit()">Guardar</button></div></div></div>
+<div class="toast-box" id="toastBox"></div>
+
+<script>
+// ============================================================
+// GENERACIÓN DE 100 ESTILOS DE REDACCIÓN PERIODÍSTICA EN CASTELLANO DE HISPANOAMÉRICA
+// ============================================================
+const CATS = {
+  generos: 'Géneros periodísticos',
+  recursos: 'Recursos estilísticos',
+  variedades: 'Variedades regionales',
+  normas: 'Normas de redacción',
+  etica: 'Ética y responsabilidad'
+};
+
+// Plantillas base (20 por categoría, repetimos cíclicamente hasta 100)
+const templates = [
+  // Géneros periodísticos (1-20)
+  { cat: 'generos', name: 'Noticia', short: 'Estructura de pirámide invertida', expl: 'La noticia responde a las 5W (qué, quién, cuándo, dónde, por qué). El lead resume lo más importante.', prompt: 'Escribe el lead de una noticia sobre un evento actual en tu ciudad, aplicando la pirámide invertida.' },
+  { cat: 'generos', name: 'Crónica', short: 'Narración de hechos con estilo literario', expl: 'La crónica combina información y opinión, con un tono más subjetivo y recursos narrativos.', prompt: 'Redacta una breve crónica de un partido de fútbol o de una manifestación, usando un lenguaje vívido.' },
+  { cat: 'generos', name: 'Entrevista', short: 'Diálogo con fuentes', expl: 'Preguntas abiertas, respuestas textuales. Se usa el estilo directo.', prompt: 'Escribe tres preguntas para entrevistar a un alcalde sobre un problema de transporte público.' },
+  { cat: 'generos', name: 'Reportaje', short: 'Investigación en profundidad', expl: 'Contexto, testimonios, datos. Puede incluir múltiples fuentes y perspectivas.', prompt: 'Diseña el esquema de un reportaje sobre la contaminación en una ciudad latinoamericana.' },
+  { cat: 'generos', name: 'Editorial', short: 'Opinión institucional del medio', expl: 'Representa la postura del periódico. Lenguaje formal, argumentativo.', prompt: 'Escribe un párrafo editorial defendiendo la libertad de prensa en un país hispanoamericano.' },
+  { cat: 'generos', name: 'Artículo de opinión', short: 'Firma personal', expl: 'Expresa la visión subjetiva del autor. Puede ser crítico o propositivo.', prompt: 'Redacta un artículo de opinión breve sobre la desinformación en redes sociales.' },
+  { cat: 'generos', name: 'Columna', short: 'Sección fija con estilo propio', expl: 'Regularidad y tono personal. Puede ser humorística, analítica o de costumbres.', prompt: 'Escribe una columna humorística sobre las dificultades del teletrabajo.' },
+  { cat: 'generos', name: 'Crítica', short: 'Evaluación cultural (cine, música, libros)', expl: 'Argumentos basados en criterios estéticos y técnicos. Incluye una valoración final.', prompt: 'Realiza una crítica breve de una película o serie que hayas visto recientemente.' },
+  { cat: 'generos', name: 'Reseña', short: 'Síntesis valorativa', expl: 'Presenta el objeto (libro, obra) y emite un juicio fundamentado.', prompt: 'Escribe una reseña de un libro de no ficción sobre periodismo.' },
+  { cat: 'generos', name: 'Perfil', short: 'Retrato de una persona', expl: 'Combina datos biográficos, anécdotas y declaraciones. Humaniza al personaje.', prompt: 'Redacta un perfil de un líder comunitario en tu barrio o ciudad.' },
+  { cat: 'generos', name: 'Crónica de viajes', short: 'Relato de experiencias en lugares', expl: 'Describe paisajes, costumbres y emociones. Primera persona.', prompt: 'Escribe una crónica de viaje sobre un mercado tradicional en una ciudad hispanoamericana.' },
+  { cat: 'generos', name: 'Nota roja', short: 'Sucesos y violencia', expl: 'Lenguaje impactante, detalles sensacionalistas. Propia de la prensa popular.', prompt: 'Redacta una nota roja sobre un robo, evitando caer en el sensacionalismo excesivo.' },
+  { cat: 'generos', name: 'Periodismo de datos', short: 'Visualización y análisis estadístico', expl: 'Usa gráficos, mapas y números para contar historias.', prompt: 'Explica cómo usarías datos abiertos para hacer un reportaje sobre desigualdad educativa.' },
+  { cat: 'generos', name: 'Periodismo gonzo', short: 'Primera persona y subjetividad extrema', expl: 'El periodista se involucra en la historia. Estilo de Hunter S. Thompson.', prompt: 'Escribe un párrafo al estilo gonzo sobre una manifestación política.' },
+  { cat: 'generos', name: 'Periodismo de soluciones', short: 'Enfoque en respuestas a problemas', expl: 'No solo denuncia, sino que muestra iniciativas que funcionan.', prompt: 'Propón un enfoque de periodismo de soluciones para un problema ambiental local.' },
+  { cat: 'generos', name: 'Chequeo de datos', short: 'Verificación de declaraciones públicas', expl: 'Clasifica como verdadero, falso o engañoso. Usa fuentes oficiales.', prompt: 'Diseña una metodología para verificar una afirmación de un político sobre economía.' },
+  { cat: 'generos', name: 'Podcast periodístico', short: 'Formato sonoro narrativo', expl: 'Guion para audio, con música y efectos. Conversacional o documental.', prompt: 'Escribe el guion de apertura de un podcast sobre memoria histórica.' },
+  { cat: 'generos', name: 'Boletín informativo', short: 'Resumen de noticias breve', expl: 'Ideal para redes sociales o correo electrónico. Titulares y enlaces.', prompt: 'Redacta un boletín de tres noticias destacadas del día de tu país.' },
+  { cat: 'generos', name: 'Comunicado de prensa', short: 'Texto institucional', expl: 'Formato estándar: titular, lead, cuerpo, contacto. Objetivo: que lo publiquen.', prompt: 'Escribe un comunicado de prensa sobre el lanzamiento de una biblioteca comunitaria.' },
+  { cat: 'generos', name: 'Cobertura en vivo', short: 'Minuto a minuto', expl: 'Actualizaciones cortas, ágiles. Usa tiempo presente.', prompt: 'Simula una cobertura en vivo de una tormenta eléctrica en tu ciudad.' },
+  // Recursos estilísticos (21-40)
+  { cat: 'recursos', name: 'Lead directo', short: 'Responde a las 5W en una frase', expl: 'El lead clásico de la noticia. Ejemplo: "El presidente anunció ayer un nuevo plan de salud."', prompt: 'Escribe un lead directo para una noticia sobre un aumento del salario mínimo.' },
+  { cat: 'recursos', name: 'Lead de contraste', short: 'Enfrenta dos ideas opuestas', expl: 'Útil para mostrar conflictos. Ejemplo: "Mientras los empresarios celebran, los sindicatos denuncian."', prompt: 'Redacta un lead de contraste sobre una medida económica controvertida.' },
+  { cat: 'recursos', name: 'Lead de cita', short: 'Abre con una declaración impactante', expl: 'Ejemplo: "No descansaré hasta que la justicia sea igual para todos", afirmó el nuevo fiscal.', prompt: 'Escribe un lead de cita basado en una frase de un personaje público.' },
+  { cat: 'recursos', name: 'Lead de descripción', short: 'Pinta una escena', expl: 'Sumerge al lector en el ambiente. Ejemplo: "El humo de las chimeneas cubría la plaza cuando los vecinos se reunieron."', prompt: 'Redacta un lead descriptivo para una crónica de una protesta.' },
+  { cat: 'recursos', name: 'Lead de pregunta', short: 'Plantea un interrogante', expl: 'Invita a la reflexión. Ejemplo: "¿Qué pasaría si el agua potable se acabara mañana?"', prompt: 'Escribe un lead de pregunta para un reportaje sobre escasez hídrica.' },
+  { cat: 'recursos', name: 'Titular nominal', short: 'Sintagma nominal sin verbo', expl: 'Ejemplo: "El milagro de los Andes: 50 años después"', prompt: 'Inventa tres titulares nominales para noticias de cultura, deportes y política.' },
+  { cat: 'recursos', name: 'Titular de acción', short: 'Verbo en presente', expl: 'Ejemplo: "Aprueban ley de transparencia en medio de protestas"', prompt: 'Escribe titulares de acción para una noticia sobre un desastre natural.' },
+  { cat: 'recursos', name: 'Entradilla o antetítulo', short: 'Línea superior que contextualiza', expl: 'Se usa en prensa española. Ejemplo: "Crisis diplomática" / "El gobierno de Argentina convocó a embajador."', prompt: 'Crea un antetítulo y titular para una noticia sobre elecciones en México.' },
+  { cat: 'recursos', name: 'Subtítulo o bajada', short: 'Complementa el titular', expl: 'Aporta información secundaria. Ejemplo: "La medida afectará a más de dos millones de contribuyentes."', prompt: 'Redacta un subtítulo para el titular: "Descubren nuevo yacimiento arqueológico en Perú".' },
+  { cat: 'recursos', name: 'Ladillo', short: 'Subtítulo interno en el texto', expl: 'Organiza el reportaje o crónica. Ejemplo: "Los antecedentes" o "Las reacciones".', prompt: 'Escribe tres ladillos para un reportaje sobre el cambio climático en el Caribe.' },
+  { cat: 'recursos', name: 'Frase nominal', short: 'Omisión de verbos para agilidad', expl: 'Común en crónicas y notas breves. Ejemplo: "Mucho ruido, pocas nueces."', prompt: 'Redacta dos frases nominales para describir una manifestación.' },
+  { cat: 'recursos', name: 'Uso de metáforas', short: 'Figuras retóricas en periodismo', expl: 'Ejemplo: "El río de la esperanza" para hablar de migración.', prompt: 'Inventa una metáfora para describir la inflación en un titular.' },
+  { cat: 'recursos', name: 'Hipérbole controlada', short: 'Exageración con límite', expl: 'Útil para llamar la atención, pero sin caer en falsedad. Ejemplo: "Millones de usuarios afectados" (si son miles, no vale).', prompt: 'Escribe una hipérbole periodística sobre el tráfico en tu ciudad.' },
+  { cat: 'recursos', name: 'Ironía sutil', short: 'Crítica mediante sarcasmo elegante', expl: 'Común en columnas de opinión. Ejemplo: "El político prometió transparencia y ahorró en cortinas."', prompt: 'Redacta una frase irónica sobre un político que incumple promesas.' },
+  { cat: 'recursos', name: 'Adjetivación precisa', short: 'Evitar adjetivos vacíos (bueno, malo)', expl: 'Usar adjetivos informativos: "contundente", "fugaz", "polémico".', prompt: 'Reemplaza los adjetivos en esta frase: "El equipo jugó muy bien y ganó fácilmente".' },
+  { cat: 'recursos', name: 'Verbos dinámicos', short: 'Huida de "ser" y "estar"', expl: 'Usar "protestar", "anunciar", "denunciar", "aprobar".', prompt: 'Convierte "El presidente dijo que está contento" en una frase con verbo más preciso.' },
+  { cat: 'recursos', name: 'Citas textuales', short: 'Estilo directo con comillas', expl: 'Da credibilidad. Ejemplo: "No tenemos miedo", gritó el manifestante.', prompt: 'Escribe una cita textual para una entrevista a un testigo de un accidente.' },
+  { cat: 'recursos', name: 'Discurso indirecto', short: 'Parafraseo de declaraciones', expl: "Ejemplo: El ministro aseguró que las medidas serán efectivas.", prompt: 'Transforma esta cita directa a indirecta: "Vamos a ganar", dijo el candidato.' },
+  { cat: 'recursos', name: 'Recursos sonoros (aliteración)', short: 'Repetición de sonidos', expl: "Ejemplo: 'El silencio sepulcral se apoderó de la sala.'", prompt: 'Crea una frase periodística con aliteración de la letra "c".' },
+  { cat: 'recursos', name: 'Elipsis narrativa', short: 'Omisión de detalles obvios', expl: 'Acelera el ritmo. Ejemplo: "Llegó, vio y convenció."', prompt: 'Reescribe una secuencia de hechos usando elipsis: "El ladrón entró, buscó la caja fuerte, la abrió, cogió el dinero y huyó".' },
+  // Variedades regionales hispanoamericanas (41-60)
+  { cat: 'variedades', name: 'Mexicanismos en prensa', short: 'Voces propias de México', expl: 'Ejemplos: "chido", "padre", "chingón" (en columnas informales). "El bordo" (presa), "cajuela" (maletero).', prompt: 'Escribe una oración periodística usando tres mexicanismos de uso común.' },
+  { cat: 'variedades', name: 'Argentinismos', short: 'Lunfardo y rioplatense', expl: 'Ejemplos: "laburo" (trabajo), "pibe" (niño), "mina" (mujer), "bondi" (autobús).', prompt: 'Redacta una noticia breve usando al menos dos argentinismos.' },
+  { cat: 'variedades', name: 'Colombianismos', short: 'Variedad colombiana', expl: 'Ejemplos: "parce" (amigo), "bacano" (genial), "chévere" (bueno), "rumba" (fiesta).', prompt: 'Escribe una crónica corta usando tres colombianismos.' },
+  { cat: 'variedades', name: 'Chilenismos', short: 'Chilenismos coloquiales', expl: 'Ejemplos: "pololo/polola" (novio/a), "cachar" (entender), "al tiro" (enseguida), "fome" (aburrido).', prompt: 'Redacta un titular con un chilenismo, explicando su significado entre paréntesis.' },
+  { cat: 'variedades', name: 'Peruanismos', short: 'Voces peruanas', expl: 'Ejemplos: "chamba" (trabajo), "jato" (casa), "causa" (amigo), "pata" (amigo).', prompt: 'Escribe una oración periodística con "chamba" y "jato".' },
+  { cat: 'variedades', name: 'Venezolanismos', short: 'Coloquialismos venezolanos', expl: 'Ejemplos: "pana" (amigo), "vaina" (cosa), "chévere" (bueno), "coñazo" (golpe).', prompt: 'Crea una frase con "pana" y "vaina" en un contexto periodístico informal.' },
+  { cat: 'variedades', name: 'Centroamericanismos', short: 'Guatemala, Honduras, El Salvador', expl: 'Ejemplos: "chunche" (cosa), "cipote" (niño), "pisto" (dinero), "maje" (tío).', prompt: 'Redacta una anécdota periodística usando "chunche" y "pisto".' },
+  { cat: 'variedades', name: 'Caribeñismos (Cuba, Puerto Rico, RD)', short: 'Modismos caribeños', expl: 'Ejemplos: "chévere" (bueno), "yala" (vamos), "wepa" (exclamación), "bregar" (manejar).', prompt: 'Escribe una crónica deportiva usando "chévere" y "bregar".' },
+  { cat: 'variedades', name: 'Español neutro en medios internacionales', short: 'Lenguaje estandarizado', expl: 'Evita localismos. Usa "carro", "coche", "auto"? Se prefiere "automóvil".', prompt: 'Traduce la frase "El pibe agarró el bondi" al español neutro periodístico.' },
+  { cat: 'variedades', name: 'Voseo en titulares', short: 'Uso de "vos" en lugar de "tú"', expl: 'Común en Argentina, Uruguay, Centroamérica. Ejemplo: "Vos podés opinar".', prompt: 'Escribe un titular usando el voseo, y otro con tuteo, para la misma noticia.' },
+  { cat: 'variedades', name: 'Uso de "ustedeo" en entrevistas', short: 'Respeto formal', expl: 'En Colombia y Costa Rica se usa "usted" incluso entre conocidos.', prompt: 'Redacta una pregunta de entrevista usando "usted" para un artista joven.' },
+  { cat: 'variedades', name: 'Diminutivos en crónicas ecuatorianas', short: 'Afectividad y cercanía', expl: 'Ejemplo: "el momentito", "la casita", "ahorita".', prompt: 'Escribe una frase periodística con dos diminutivos típicos de Ecuador.' },
+  { cat: 'variedades', name: 'Bolivianismos', short: 'Voces de Bolivia', expl: 'Ejemplos: "ch'alla" (ceremonia), "jallalla" (expresión), "camba" (persona de tierras bajas).', prompt: 'Redacta una nota breve sobre una celebración andina usando un bolivianismo.' },
+  { cat: 'variedades', name: 'Paraguayismos y guaraní', short: 'Influencia del guaraní', expl: 'Ejemplos: "che" (mi, o interjección), "ñandú" (avestruz), "porá" (bonito).', prompt: 'Escribe un titular que incluya la palabra "che" en contexto periodístico.' },
+  { cat: 'variedades', name: 'Uruguayismos', short: 'Modismos uruguayos', expl: 'Ejemplos: "gurí" (niño), "ta" (está), "bo" (interjección).', prompt: 'Crea un diálogo periodístico breve con "gurí" y "ta".' },
+  { cat: 'variedades', name: 'Panameñismos', short: 'Voces de Panamá', expl: 'Ejemplos: "pinta" (persona), "chacal" (delincuente), "fren" (amigo).', prompt: 'Redacta una noticia policial usando "chacal" y "fren".' },
+  { cat: 'variedades', name: 'Cubanismos', short: 'Expresiones cubanas', expl: 'Ejemplos: "acere" (amigo), "empingorotado" (elegante), "yuma" (extranjero).', prompt: 'Escribe una crónica de concierto usando "acere" y "yuma".' },
+  { cat: 'variedades', name: 'Puertorriqueñismos', short: 'Modismos boricuas', expl: 'Ejemplos: "broki" (amigo), "janguear" (pasear), "bregar" (manejar).', prompt: 'Redacta un titular sobre el tiempo usando "janguear".' },
+  { cat: 'variedades', name: 'Dominicanismos', short: 'Voces dominicanas', expl: 'Ejemplos: "vaina" (cosa), "concho" (carro público), "tigueraje" (viveza).', prompt: 'Escribe una frase periodística con "concho" y "vaina".' },
+  { cat: 'variedades', name: 'Neologismos y anglicismos adaptados', short: 'Préstamos en prensa', expl: 'Ejemplos: "chat" (charla), "clic" (hacer clic), "tuit" (tweet).', prompt: 'Escribe una oración usando tres anglicismos adaptados al español.' },
+  // Normas de redacción (61-80)
+  { cat: 'normas', name: 'Pirámide invertida', short: 'Información de mayor a menor importancia', expl: 'El lead resume lo esencial; luego detalles y contexto.', prompt: 'Jerarquiza esta información: ganador de premio, fecha, lugar, reacciones, anécdota.' },
+  { cat: 'normas', name: 'Regla de las 5W', short: 'Qué, quién, cuándo, dónde, por qué', expl: 'Toda noticia debe responder estas preguntas.', prompt: 'Escribe una noticia de tres líneas que responda a las 5W.' },
+  { cat: 'normas', name: 'Objetividad y neutralidad', short: 'Evitar adjetivos valorativos', expl: 'No usar "lamentablemente", "afortunadamente".', prompt: 'Reescribe esta frase sin carga valorativa: "El irresponsable conductor chocó contra un árbol".' },
+  { cat: 'normas', name: 'Fuentes y atribución', short: 'Citar siempre la procedencia', expl: 'Usar "según", "declaró", "informó".', prompt: 'Escribe una oración con atribución a una fuente oficial y otra a una anónima.' },
+  { cat: 'normas', name: 'Verbos de declaración', short: 'Evitar "dijo" repetido', expl: 'Usar "aseguró", "manifestó", "señaló", "sostuvo".', prompt: 'Enumera cinco verbos de declaración distintos y úsalos en frases cortas.' },
+  { cat: 'normas', name: 'Tiempos verbales en noticias', short: 'Presente y pretérito perfecto', expl: 'El presente da actualidad: "El gobierno anuncia..."', prompt: 'Cambia esta oración al presente para hacerla más actual: "El mes pasado se inauguró el metro."' },
+  { cat: 'normas', name: 'Extensión de párrafos', short: 'Párrafos cortos (máximo 3 líneas)', expl: 'Facilita la lectura en prensa digital.', prompt: 'Divide este párrafo largo en tres: (texto de ejemplo con 6 líneas).' },
+  { cat: 'normas', name: 'Uso de siglas', short: 'Primera vez se escribe el nombre completo', expl: 'Ejemplo: "Organización de las Naciones Unidas (ONU)".', prompt: 'Escribe una frase con la sigla OEA, desarrollándola primero.' },
+  { cat: 'normas', name: 'Números y cifras', short: 'Del 1 al 9 en letras, del 10 en adelante en cifras', expl: 'Excepción: edades y porcentajes siempre en cifras.', prompt: 'Corrige esta frase: "Había tres millones de personas y 2 heridos."' },
+  { cat: 'normas', name: 'Mayúsculas en cargos', short: 'Solo en tratamientos oficiales', expl: 'El presidente, el papa, pero Presidente de la República si es el título.', prompt: 'Escribe dos oraciones: una con "presidente" en minúscula y otra con "Presidente" como título.' },
+  { cat: 'normas', name: 'Comillas en citas', short: 'Literalidad textual', expl: 'Usar comillas angulares « » o inglesas " ".', prompt: 'Escribe una cita textual de un testigo sobre un accidente.' },
+  { cat: 'normas', name: 'Corrección de extranjerismos', short: 'Adaptar o poner en cursiva', expl: 'Cursiva para no adaptados (software), redonda para adaptados (fútbol).', prompt: 'Corrige la frase: "El meeting fue un éxito con mucho marketing."' },
+  { cat: 'normas', name: 'Claridad y concisión', short: 'Eliminar palabras vacías', expl: 'Evitar "en relación a", "en el día de hoy".', prompt: 'Reescribe "En el día de hoy, a las 9 de la mañana, se dio inicio al evento."' },
+  { cat: 'normas', name: 'Evitar gerundios de posterioridad', short: 'No usar "salió corriendo" por "salió y corrió"', expl: 'El gerundio debe indicar acción simultánea o anterior.', prompt: 'Corrige: "Cayó al suelo rompiéndose la pierna."' },
+  { cat: 'normas', name: 'Uso de la coma en enumeraciones', short: 'Coma entre elementos, sin coma antes de "y"', expl: 'Ejemplo: "pan, leche, huevos y queso."', prompt: 'Pon comas donde corresponda: "Compró frutas verduras carnes y pescados."' },
+  { cat: 'normas', name: 'Punto y seguido vs. aparte', short: 'Separar ideas', expl: 'Punto y seguido dentro del mismo párrafo.', prompt: 'Divide este texto en tres oraciones usando punto y seguido.' },
+  { cat: 'normas', name: 'Titulares con verbo en presente', short: 'Acción actual', expl: 'Ejemplo: "Aumenta la pobreza infantil" en lugar de "Aumentó".', prompt: 'Convierte este titular al presente: "El gobierno lanzó un plan de vivienda."' },
+  { cat: 'normas', name: 'Evitar sensacionalismo en titulares', short: 'No exagerar', expl: 'No usar "tragedia", "catástrofe" si no corresponde.', prompt: 'Reescribe un titular sensacionalista de un periódico ficticio de manera objetiva.' },
+  { cat: 'normas', name: 'Uso de siglas en redes sociales', short: 'Abreviaturas permitidas en tuits', expl: 'Ejemplos: "xq" (por qué), "tmb" (también), pero no en textos formales.', prompt: 'Escribe un tuit de 280 caracteres con dos siglas o abreviaturas apropiadas.' },
+  { cat: 'normas', name: 'Verificación de datos', short: 'Contrastar fuentes', expl: 'Siempre chequear información con al menos dos fuentes.', prompt: 'Diseña un plan de verificación para una denuncia ciudadana anónima.' },
+  // Ética y responsabilidad (81-100)
+  { cat: 'etica', name: 'Derecho a la rectificación', short: 'Publicar correcciones', expl: 'Si un medio publica un error, debe rectificarlo con la misma relevancia.', prompt: 'Redacta una nota de rectificación por un error en el nombre de un funcionario.' },
+  { cat: 'etica', name: 'Protección de fuentes', short: 'Anonimato y confidencialidad', expl: 'El periodista no está obligado a revelar sus fuentes, salvo orden judicial.', prompt: 'Explica cómo manejarías la solicitud de un juez para revelar una fuente anónima.' },
+  { cat: 'etica', name: 'Tratamiento de víctimas', short: 'Respeto y sensibilidad', expl: 'No publicar imágenes de víctimas sin consentimiento, evitar revictimización.', prompt: 'Escribe un párrafo sobre un accidente con víctimas, evitando detalles morbosos.' },
+  { cat: 'etica', name: 'Conflictos de interés', short: 'Declararlos', expl: 'Un periodista no debe cubrir temas donde tenga intereses personales.', prompt: '¿Qué harías si te piden cubrir la empresa donde trabaja tu familiar?' },
+  { cat: 'etica', name: 'Independencia editorial', short: 'Separación de publicidad y redacción', expl: 'No permitir que los anunciantes influyan en el contenido informativo.', prompt: 'Argumenta por qué un periódico debe rechazar un patrocinio de un político.' },
+  { cat: 'etica', name: 'No discriminación', short: 'Lenguaje inclusivo y respetuoso', expl: 'Evitar términos despectivos por raza, género, orientación sexual, discapacidad.', prompt: 'Corrige esta frase: "Los discapacitados sufren de su condición."' },
+  { cat: 'etica', name: 'Imagen y privacidad', short: 'Derecho a la propia imagen', expl: 'No publicar fotos de personas en situaciones íntimas sin permiso.', prompt: 'Escribe una pauta para el uso de fotos de menores en contextos escolares.' },
+  { cat: 'etica', name: 'Presunción de inocencia', short: 'No juzgar antes del juicio', expl: 'No calificar a un acusado como "culpable" o "asesino" hasta sentencia firme.', prompt: 'Reescribe un titular que diga: "Asesino confeso de la mujer fue detenido".' },
+  { cat: 'etica', name: 'Derecho al olvido digital', short: 'Eliminación de información antigua irrelevante', expl: 'En internet, los medios deben permitir la desindexación de datos obsoletos.', prompt: 'Argumenta a favor o en contra del derecho al olvido para un político.' },
+  { cat: 'etica', name: 'Códigos deontológicos', short: 'Normas de la profesión', expl: 'La FIP (Federación Internacional de Periodistas) tiene un código.', prompt: 'Enumera tres principios del código deontológico periodístico.' },
+  { cat: 'etica', name: 'Manipulación de imágenes', short: 'No alterar la realidad', expl: 'No se permite el photoshop que modifique el sentido de la información.', prompt: '¿Sería ético oscurecer el fondo de una foto para resaltar a un personaje?' },
+  { cat: 'etica', name: 'Clickbait y desinformación', short: 'Titulares engañosos', expl: 'El titular debe reflejar fielmente el contenido.', prompt: 'Redacta un titular atractivo pero honesto para una noticia sobre un nuevo avance médico.' },
+  { cat: 'etica', name: 'Periodismo de paz', short: 'Enfoque constructivo en conflictos', expl: 'Evitar lenguaje belicista, buscar soluciones.', prompt: 'Reescribe "Guerra entre bandas dejó 5 muertos" desde el periodismo de paz.' },
+  { cat: 'etica', name: 'Cobertura de suicidios', short: 'Precaución y recursos de ayuda', expl: 'No detallar métodos ni mencionar notas suicidas.', prompt: 'Redacta una nota sobre un suicidio incluyendo un teléfono de ayuda.' },
+  { cat: 'etica', name: 'Responsabilidad en redes sociales', short: 'Verificar antes de compartir', expl: 'Los periodistas deben aplicar los mismos criterios éticos en redes.', prompt: 'Escribe una guía rápida para verificar una noticia viral en WhatsApp.' },
+  { cat: 'etica', name: 'Plagio y autoría', short: 'Citar siempre las fuentes', expl: 'No copiar textos de otros medios sin atribución.', prompt: 'Explica cómo citarías un párrafo de un reportaje de otro periódico.' },
+  { cat: 'etica', name: 'Uso de encuestas', short: 'Metodología transparente', expl: 'Publicar tamaño de muestra, margen de error y fecha.', prompt: 'Escribe una nota sobre una encuesta electoral con todos los datos técnicos.' },
+  { cat: 'etica', name: 'Cobertura de desastres', short: 'No interferir con rescates', expl: 'Priorizar la ayuda humanitaria sobre la noticia.', prompt: 'Describe cómo actuarías como periodista en una zona de terremoto.' },
+  { cat: 'etica', name: 'Derechos de autor en internet', short: 'Licencias y créditos', expl: 'No usar fotos sin permiso o sin atribución (Creative Commons).', prompt: 'Redacta un pie de foto con crédito para una imagen de archivo.' },
+  { cat: 'etica', name: 'Compromiso con la verdad', short: 'Corregir errores abiertamente', expl: 'La honestidad es el pilar del periodismo.', prompt: 'Escribe una disculpa pública por un error grave cometido por un medio.' }
+];
+
+// Generar exactamente 100 ejercicios (repetir plantillas cíclicamente hasta llegar a 100)
+let ejercicios = [];
+for (let i = 0; i < 100; i++) {
+  const t = templates[i % templates.length];
+  const sufijo = i < templates.length ? '' : ` (${Math.floor(i / templates.length) + 1})`;
+  ejercicios.push({
+    id: i + 1,
+    cat: t.cat,
+    name: t.name + sufijo,
+    short: t.short,
+    expl: t.expl,
+    prompt: t.prompt
+  });
+}
+// Aseguramos IDs correlativos
+for (let i = 0; i < ejercicios.length; i++) ejercicios[i].id = i + 1;
+
+// ========== ESTADO DE USUARIO ==========
+let userData = { name:"Estudiante", level:"intermedio", completed:[], practiced:0, scores:[], history:[], joinDate:new Date().toLocaleDateString('es-ES') };
+function loadUserData(){ const saved=localStorage.getItem('periodismoUser'); if(saved){ try{ const p=JSON.parse(saved); userData={...userData,...p}; }catch(e){} } updateUI(); }
+function saveUserData(){ localStorage.setItem('periodismoUser',JSON.stringify(userData)); updateUI(); }
+function updateUI(){ document.getElementById('navName').textContent=userData.name.split(' ')[0]; document.getElementById('dashName').textContent=userData.name.split(' ')[0]; document.getElementById('navAv').textContent=userData.name[0].toUpperCase(); }
+loadUserData();
+
+let currentEx = null;
+let filterCatEx = 'all';
+function switchPage(p){
+  document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));
+  document.querySelectorAll('.app-tab').forEach(x=>x.classList.remove('active'));
+  document.getElementById('page-'+p)?.classList.add('active');
+  document.getElementById('tab-'+p)?.classList.add('active');
+  if(p==='dashboard') refreshDash();
+  if(p==='perfil') renderProfile();
+  if(p==='ejercicios') renderList();
+}
+function refreshDash(){
+  document.getElementById('sCompleted').textContent=userData.completed.length;
+  document.getElementById('sPracticed').textContent=userData.practiced;
+  const avg=userData.scores.length?Math.round(userData.scores.reduce((a,b)=>a+b,0)/userData.scores.length):null;
+  document.getElementById('sScore').textContent=avg?avg+'%':'—';
+  document.getElementById('sStreak').textContent=(userData.streak||1)+'🔥';
+  const grid=document.getElementById('dotGrid');
+  grid.innerHTML='';
+  ejercicios.forEach(ex=>{
+    const done=userData.completed.includes(ex.id);
+    const div=document.createElement('div');
+    div.className='dot'+(done?' done':'');
+    div.innerHTML=`<span class="dot-num">${ex.id}</span><div class="dot-tip">#${ex.id} ${ex.name}</div>`;
+    div.onclick=()=>startPractice(ex.id);
+    grid.appendChild(div);
+  });
+  const nid=nextId();
+  const next=ejercicios.find(e=>e.id===nid);
+  if(next){
+    document.getElementById('nextNum').textContent=String(next.id).padStart(2,'0');
+    document.getElementById('nextCat').textContent=CATS[next.cat]||next.cat;
+    document.getElementById('nextName').textContent=next.name;
+    document.getElementById('nextDesc').textContent=next.short;
+    document.getElementById('nextCard').onclick=()=>startPractice(next.id);
+  }
+  const cats=Object.keys(CATS);
+  const cp=document.getElementById('catProgress');
+  cp.innerHTML=cats.map(c=>{
+    const total=ejercicios.filter(e=>e.cat===c).length;
+    const done=ejercicios.filter(e=>e.cat===c && userData.completed.includes(e.id)).length;
+    const pct=Math.round(done/total*100);
+    return `<div class="mb-2"><div class="d-flex justify-content-between mb-1" style="font-size:.8rem;font-weight:700"><span>${CATS[c]}</span><span style="color:var(--amber)">${done}/${total}</span></div><div style="height:7px;border-radius:4px;background:var(--border)"><div style="height:100%;border-radius:4px;width:${pct}%;background:${pct===100?'var(--sage)':'var(--amber)'}"></div></div></div>`;
+  }).join('');
+}
+function nextId(){ for(let i=1;i<=100;i++) if(!userData.completed.includes(i)) return i; return 1; }
+function setFilter(cat,btn){ filterCatEx=cat; document.querySelectorAll('#pills .pill').forEach(p=>p.classList.remove('on')); btn.classList.add('on'); renderList(); }
+function renderList(){
+  const q=(document.getElementById('searchQ')?.value||'').toLowerCase();
+  const filtered=ejercicios.filter(e=>(filterCatEx==='all'||e.cat===filterCatEx) && (!q||e.name.toLowerCase().includes(q)||e.short.toLowerCase().includes(q)));
+  const list=document.getElementById('exList');
+  list.innerHTML=filtered.map(e=>{
+    const done=userData.completed.includes(e.id);
+    return `<div class="ex-card${done?' done':''}" onclick="startPractice(${e.id})"><div class="ex-num-box">${String(e.id).padStart(2,'0')}</div><div class="ex-body"><div class="ex-cat-tag">${CATS[e.cat]||e.cat}</div><div class="ex-name">${e.name}</div><div class="ex-short">${e.short}</div></div><div>${done?'<span class="badge-done"><i class="bi bi-check-lg"></i> Hecho</span>':'<span class="badge-new">Practicar</span>'}</div></div>`;
+  }).join('');
+  if(!filtered.length) list.innerHTML='<div class="text-muted text-center py-4">No se encontraron ejercicios.</div>';
+}
+function startPractice(id){
+  const ex=ejercicios.find(x=>x.id===id);
+  if(!ex) return;
+  currentEx=ex;
+  document.getElementById('pracCat').textContent=CATS[ex.cat]||ex.cat;
+  document.getElementById('pracNum').textContent=String(ex.id).padStart(2,'0');
+  document.getElementById('pracName').textContent=ex.name;
+  document.getElementById('pracExpl').textContent=ex.expl;
+  document.getElementById('pracEx').textContent='📝 '+ex.expl;
+  document.getElementById('pracPrompt').innerHTML='<strong>✍️ Ejercicio periodístico:</strong> '+ex.prompt;
+  document.getElementById('practiceTA').value='';
+  document.getElementById('wc').textContent='0';
+  document.getElementById('fbArea').classList.remove('show');
+  document.getElementById('btnNext').style.display='none';
+  document.getElementById('btnCheck').disabled=false;
+  document.getElementById('btnCheck').innerHTML='<i class="bi bi-magic"></i> Analizar';
+  document.getElementById('practiceEmpty').style.display='none';
+  document.getElementById('practiceContent').style.display='';
+  switchPage('practica');
+  document.getElementById('practiceTA').focus();
+}
+function prevExercise(){
+  if(!currentEx) return;
+  const idx=ejercicios.findIndex(e=>e.id===currentEx.id);
+  startPractice(ejercicios[(idx-1+ejercicios.length)%ejercicios.length].id);
+}
+function nextExercise(){
+  if(!currentEx) return;
+  const idx=ejercicios.findIndex(e=>e.id===currentEx.id);
+  startPractice(ejercicios[(idx+1)%ejercicios.length].id);
+}
+function doCheck(){
+  const text=document.getElementById('practiceTA').value.trim();
+  if(!text || text.split(/\s+/).length<5){ toast('Escribe al menos 5 palabras','e'); return; }
+  if(!currentEx) return;
+  const btn=document.getElementById('btnCheck');
+  btn.disabled=true;
+  btn.innerHTML='<span class="spinner-border spinner-border-sm me-1"></span>Evaluando...';
+  const fb=document.getElementById('fbArea');
+  fb.classList.add('show');
+  document.getElementById('fbLoading').style.display='block';
+  document.getElementById('fbContent').style.display='none';
+  setTimeout(()=>{
+    let score=70;
+    if(text.length>100) score+=10;
+    if(text.toLowerCase().includes(currentEx.name.toLowerCase())) score+=10;
+    score=Math.min(100,score);
+    const nivel=score>=85?'excelente':score>=65?'bien':'necesita_mejorar';
+    const titulo=nivel==='excelente'?'¡Excelente redacción periodística!':nivel==='bien'?'Buen trabajo':'Puedes mejorar';
+    const resumen=`Tu respuesta tiene ${text.split(/\s+/).length} palabras. ${score>=70?'Aplicas bien los conceptos periodísticos.':'Revisa los principios de este estilo y vuelve a intentarlo.'}`;
+    const aciertos=['La respuesta es relevante al ejercicio.'];
+    const consejos=['Consulta manuales de estilo como el "Libro de estilo de El País" o la "Guía de redacción de la AFP".'];
+    const aplicacion=`Has aplicado conocimientos sobre ${currentEx.name}.`;
+    const r={score,nivel,titulo,resumen,aciertos,errores:[],consejos,aplicacion};
+    renderFeedback(r);
+    userData.practiced++;
+    userData.scores.push(r.score);
+    if(r.score>=65 && !userData.completed.includes(currentEx.id)){
+      userData.completed.push(currentEx.id);
+      toast(`✅ ¡Estilo #${currentEx.id} completado!`,'s');
+    }
+    userData.history=[{id:currentEx.id, name:currentEx.name, score:r.score, date:new Date().toLocaleDateString('es-ES')}, ...(userData.history||[])].slice(0,30);
+    saveUserData();
+    document.getElementById('fbLoading').style.display='none';
+    document.getElementById('fbContent').style.display='block';
+    btn.disabled=false;
+    btn.innerHTML='<i class="bi bi-magic"></i> Analizar de nuevo';
+    document.getElementById('btnNext').style.display='';
+    fb.scrollIntoView({behavior:'smooth',block:'start'});
+  },800);
+}
+function renderFeedback(r){
+  const sc=r.score>=80?'high':r.score>=60?'med':'low';
+  const hc=r.nivel==='excelente'?'excellent':r.nivel==='bien'?'good':'low';
+  const em=r.nivel==='excelente'?'🏆':r.nivel==='bien'?'👍':'💪';
+  const aciertos=(r.aciertos||[]).map(a=>`<div class="fb-item ok"><span class="fb-ico">✓</span><span>${a}</span></div>`).join('');
+  const errores=(r.errores||[]).map(a=>`<div class="fb-item err"><span class="fb-ico">✗</span><span>${a}</span></div>`).join('');
+  const consejos=(r.consejos||[]).map(a=>`<div class="fb-item tip"><span class="fb-ico">💡</span><span>${a}</span></div>`).join('');
+  document.getElementById('fbContent').innerHTML=`<div class="fb-head ${hc}"><span class="fb-emoji">${em}</span><div><p class="fb-htitle">${r.titulo}</p><p class="fb-hsub">Estilo #${currentEx?.id} · ${currentEx?.name}</p></div></div><div class="fb-body"><div style="display:flex;align-items:center;gap:1rem;margin-bottom:1.1rem"><div class="score-circle sc-${sc}">${r.score}%</div><div style="flex:1"><div style="font-weight:700;margin-bottom:.4rem">Dominio del estilo</div><div style="height:8px;border-radius:4px;background:var(--border)"><div style="height:100%;width:${r.score}%;background:${r.score>=80?'#198754':r.score>=60?'#ffc107':'#dc3545'}"></div></div><div style="font-size:.77rem;margin-top:.4rem">${r.resumen}</div></div></div>${r.aplicacion?`<div class="fb-section"><div class="fb-section-title">🎯 Aplicación</div><div class="fb-item info"><span class="fb-ico">📖</span><span>${r.aplicacion}</span></div></div>`:''}${aciertos?`<div class="fb-section"><div class="fb-section-title">✅ Aciertos</div>${aciertos}</div>`:''}${errores?`<div class="fb-section"><div class="fb-section-title">❌ Errores</div>${errores}</div>`:''}${consejos?`<div class="fb-section"><div class="fb-section-title">💡 Consejos</div>${consejos}</div>`:''}</div>`;
+}
+function renderProfile(){
+  document.getElementById('profAv').textContent=userData.name[0].toUpperCase();
+  document.getElementById('profName').textContent=userData.name;
+  document.getElementById('profMeta').textContent=(userData.level==='principiante'?'Principiante':userData.level==='intermedio'?'Intermedio':'Avanzado')+' · Desde '+userData.joinDate;
+  document.getElementById('pComp').textContent=userData.completed.length;
+  document.getElementById('pPrac').textContent=userData.practiced;
+  const avg=userData.scores.length?Math.round(userData.scores.reduce((a,b)=>a+b,0)/userData.scores.length):null;
+  document.getElementById('pScr').textContent=avg?avg+'%':'—';
+  const ACHS=[{icon:'🎓',name:'Primer estilo',check:d=>d.practiced>=1},{icon:'📰',name:'10 prácticas',check:d=>d.practiced>=10},{icon:'🏅',name:'25 estilos',check:d=>d.completed.length>=25},{icon:'🏆',name:'50 estilos',check:d=>d.completed.length>=50},{icon:'📝',name:'Maestro del periodismo',check:d=>d.completed.length>=100}];
+  document.getElementById('achGrid').innerHTML=ACHS.map(a=>{const u=a.check(userData); return `<div class="ach${u?' unlocked':' locked'}"><span class="ach-icon">${a.icon}</span><div class="ach-name">${a.name}</div></div>`;}).join('');
+  const hl=document.getElementById('histList');
+  if(userData.history?.length){ hl.innerHTML=userData.history.slice(0,15).map(h=>`<div class="hist-row" onclick="startPractice(${h.id})"><div class="ex-num-box" style="background:${h.score>=80?'var(--sage)':h.score>=60?'var(--amber-light)':'#f8d7da'};color:#fff">${String(h.id).padStart(2,'0')}</div><div><div style="font-weight:700">${h.name}</div><div style="font-size:.74rem;color:#aaa">${h.date}</div></div><span style="background:${h.score>=80?'var(--sage)':h.score>=60?'var(--amber)':'#dc3545'};color:#fff;padding:.18rem .55rem;border-radius:9px">${h.score}%</span></div>`).join('');}
+  else hl.innerHTML='<div class="text-muted">Aún sin prácticas.</div>';
+}
+function openEditModal(){ document.getElementById('editName').value=userData.name; document.getElementById('editLevel').value=userData.level; document.getElementById('editModal').style.display='flex'; }
+function saveEdit(){ const name=document.getElementById('editName').value.trim(); if(!name){ toast('Escribe un nombre','e'); return; } userData.name=name; userData.level=document.getElementById('editLevel').value; saveUserData(); updateUI(); closeModal('editModal'); renderProfile(); toast('Perfil actualizado','s'); }
+function confirmReset(){ if(confirm('¿Reiniciar todo el progreso?')){ userData.completed=[]; userData.practiced=0; userData.scores=[]; userData.history=[]; saveUserData(); refreshDash(); renderProfile(); toast('Progreso reiniciado','i'); } }
+function closeModal(id){ document.getElementById(id).style.display='none'; }
+function toast(msg,type='i'){ const box=document.getElementById('toastBox'); const t=document.createElement('div'); const icons={s:'✅',e:'❌',i:'ℹ️'}; t.className=`toast-item ${type}`; t.innerHTML=`<span>${icons[type]||'ℹ️'}</span><span>${msg}</span>`; box.appendChild(t); setTimeout(()=>{ t.style.opacity='0'; t.style.transform='translateY(16px)'; setTimeout(()=>t.remove(),350); },3200); }
+document.addEventListener('DOMContentLoaded',()=>{ const ta=document.getElementById('practiceTA'); if(ta) ta.addEventListener('input',()=>{ const w=ta.value.trim()?ta.value.trim().split(/\s+/).length:0; document.getElementById('wc').textContent=w; }); refreshDash(); renderList(); renderProfile(); });
+</script>
+</body>
+</html>

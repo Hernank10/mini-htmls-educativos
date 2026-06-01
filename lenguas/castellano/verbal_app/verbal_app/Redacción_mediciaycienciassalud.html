@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>Medicina y Ciencias de la Salud · Colombia · 100 conceptos esenciales</title>
+  <style>
+    /* ----- VARIABLES CSS: paleta médica (azul salud, verde, gris) ----- */
+    :root {
+      --fondo: #f0f7f4;
+      --texto: #1e3a3a;
+      --azul-salud: #1a6d8f;
+      --verde-medicina: #3b8c5e;
+      --gris-clinico: #6c7a7a;
+      --acierto: #2c7a4d;
+      --fallo: #c0392b;
+      --sombra: rgba(30, 60, 60, 0.06);
+      --card-bg: #ffffff;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: var(--fondo);
+      color: var(--texto);
+      font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
+      line-height: 1.5;
+      padding: 1rem;
+    }
+
+    .app-container {
+      max-width: 1300px;
+      margin: 0 auto;
+      background: var(--card-bg);
+      border-radius: 2rem;
+      box-shadow: 0 12px 28px var(--sombra);
+      overflow: hidden;
+      border: 1px solid #d4e2da;
+    }
+
+    header {
+      background: #eaf4f0;
+      padding: 1.2rem 2rem;
+      border-bottom: 3px solid var(--azul-salud);
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 1rem;
+    }
+    h1 {
+      font-size: 1.7rem;
+      font-weight: 600;
+      color: #1a6d8f;
+      letter-spacing: -0.2px;
+    }
+    h1 small {
+      font-size: 0.7rem;
+      font-weight: normal;
+      color: #578c7a;
+    }
+
+    nav {
+      display: flex;
+      gap: 0.5rem;
+      background: #e0ece6;
+      padding: 0.6rem 2rem;
+      border-bottom: 1px solid #cbdcd4;
+      flex-wrap: wrap;
+    }
+    .nav-btn {
+      background: transparent;
+      border: none;
+      font-size: 0.95rem;
+      padding: 0.5rem 1.2rem;
+      border-radius: 40px;
+      cursor: pointer;
+      font-weight: 500;
+      transition: all 0.2s;
+      color: #1a6d8f;
+    }
+    .nav-btn.active {
+      background-color: var(--azul-salud);
+      color: white;
+    }
+    .nav-btn:hover:not(.active) {
+      background-color: #d0e0d8;
+    }
+
+    .view {
+      display: none;
+      padding: 2rem;
+      animation: fade 0.2s ease;
+    }
+    .active-view { display: block; }
+    @keyframes fade { from { opacity: 0; transform: translateY(5px);} to { opacity: 1; transform: translateY(0);} }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+    .stat-card {
+      background: var(--fondo);
+      border-radius: 1.5rem;
+      padding: 1rem;
+      text-align: center;
+      border-left: 6px solid var(--verde-medicina);
+      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    }
+    .stat-number {
+      font-size: 2.2rem;
+      font-weight: 700;
+      color: var(--azul-salud);
+    }
+    .progress-bar-bg {
+      background: #dfece6;
+      border-radius: 40px;
+      height: 12px;
+      overflow: hidden;
+      margin: 0.8rem 0;
+    }
+    .progress-fill {
+      background: var(--azul-salud);
+      width: 0%;
+      height: 100%;
+      transition: width 0.2s;
+    }
+
+    .conceptos-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+      gap: 1rem;
+      max-height: 65vh;
+      overflow-y: auto;
+      padding-right: 0.3rem;
+    }
+    .concepto-item {
+      background: white;
+      border-radius: 1.2rem;
+      padding: 0.8rem 1rem;
+      border-left: 5px solid var(--gris-clinico);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+    .concepto-titulo {
+      font-weight: 700;
+      color: #1a6d8f;
+    }
+    .concepto-desc {
+      font-size: 0.85rem;
+      color: #3a5e5e;
+      margin-top: 6px;
+      border-top: 1px solid #e0ece6;
+      padding-top: 6px;
+    }
+    .badge-progreso {
+      font-size: 0.7rem;
+      background: #e8f0ed;
+      border-radius: 20px;
+      padding: 2px 10px;
+      display: inline-block;
+      margin-top: 8px;
+    }
+
+    /* práctica */
+    .flashcard {
+      background: #ffffff;
+      border-radius: 2rem;
+      padding: 1.8rem;
+      text-align: center;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+      border: 1px solid #d4e2da;
+      max-width: 750px;
+      margin: 0 auto;
+    }
+    .pregunta {
+      font-size: 1.4rem;
+      font-weight: 500;
+      margin-bottom: 1.8rem;
+      background: #ecf6f2;
+      padding: 1.2rem;
+      border-radius: 1.5rem;
+    }
+    .respuesta-oculta {
+      background: #f4f9f6;
+      border-radius: 1.2rem;
+      padding: 1rem;
+      margin: 1rem 0;
+      display: none;
+    }
+    .palabras-baraja {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 0.6rem;
+      margin: 1.5rem 0;
+    }
+    .palabra-btn {
+      background: var(--azul-salud);
+      color: white;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 2rem;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: 0.1s;
+    }
+    .orden-actual {
+      background: #f8fcf9;
+      border-radius: 1rem;
+      padding: 1rem;
+      min-height: 80px;
+      margin: 1rem 0;
+      text-align: left;
+      border: 1px dashed #cbdcd4;
+    }
+    .btn {
+      background: #e2e8f0;
+      border: none;
+      padding: 0.6rem 1.5rem;
+      border-radius: 3rem;
+      font-weight: 600;
+      margin: 0.3rem;
+      cursor: pointer;
+      font-family: inherit;
+    }
+    .btn-primary { background: var(--azul-salud); color: white; }
+    .btn-acierto { background: var(--acierto); color: white; }
+    .btn-fallo { background: var(--fallo); color: white; }
+    .modo-selector { display: flex; justify-content: center; gap: 0.8rem; margin-bottom: 1.5rem; flex-wrap: wrap; }
+    footer {
+      text-align: center;
+      padding: 1rem;
+      font-size: 0.75rem;
+      border-top: 1px solid #d4e2da;
+      background: #f9fdfb;
+    }
+    @media (max-width: 680px) {
+      .view { padding: 1rem; }
+      .pregunta { font-size: 1rem; }
+    }
+  </style>
+</head>
+<body>
+<div class="app-container">
+  <header>
+    <h1>⚕️ Medicina y Ciencias de la Salud <small>100 conceptos esenciales - Colombia</small></h1>
+    <div style="font-size:0.8rem;">🩺 Anatomía · Fisiología · Farmacología · Patología · Salud Pública · Semiología</div>
+  </header>
+  <nav>
+    <button class="nav-btn active" data-view="dashboard">📊 Panel</button>
+    <button class="nav-btn" data-view="listado">📚 Compendio</button>
+    <button class="nav-btn" data-view="practica">🃏 Práctica</button>
+  </nav>
+
+  <section id="dashboard" class="view active-view">
+    <div class="stats-grid" id="statsContainer"></div>
+    <div class="card" style="background:white; border-radius:1.6rem; padding:1.2rem;">
+      <h3>📈 Progreso en conceptos médicos</h3>
+      <div class="progress-bar-bg"><div class="progress-fill" id="globalProgressFill"></div></div>
+      <p id="globalProgressText"></p>
+      <button id="resetProgresoBtn" class="btn" style="background:#cbdcd4;">🔄 Reiniciar progreso</button>
+    </div>
+  </section>
+
+  <section id="listado" class="view">
+    <input type="text" id="filtroListado" placeholder="🔍 Buscar concepto o definición..." style="width:100%; padding:10px; margin-bottom:15px; border-radius:40px; border:1px solid #cbdcd4;">
+    <div id="conceptosListadoContainer" class="conceptos-grid"></div>
+  </section>
+
+  <section id="practica" class="view">
+    <div class="modo-selector">
+      <button id="modoConceptoDef" class="btn btn-primary">📖 Concepto → Definición</button>
+      <button id="modoDefConcepto" class="btn">🔄 Definición → Concepto</button>
+      <button id="modoOrdenar" class="btn">🧩 Ordenar definición</button>
+    </div>
+    <div id="practicaContainer"></div>
+  </section>
+  <footer>Progreso guardado localmente · Ejercicio interactivo de ordenar definición · Alineado con estándares de educación médica en Colombia</footer>
+</div>
+
+<script>
+  // --------------------------------------------------------------
+  // 100 CONCEPTOS DE MEDICINA Y CIENCIAS DE LA SALUD (enfoque Colombia)
+  // Incluye anatomía, fisiología, farmacología, patología, semiología, salud pública
+  // --------------------------------------------------------------
+  const conceptosData = [
+    [1, "Anatomía", "Ciencia que estudia la estructura y organización de los seres vivos, especialmente el cuerpo humano."],
+    [2, "Fisiología", "Estudio de las funciones y mecanismos que mantienen vivo a un organismo."],
+    [3, "Homeostasis", "Capacidad del organismo para mantener un ambiente interno estable a pesar de cambios externos."],
+    [4, "Célula", "Unidad básica estructural y funcional de todos los seres vivos."],
+    [5, "Tejido", "Conjunto de células con estructura y función similares (epitelial, conectivo, muscular, nervioso)."],
+    [6, "Órgano", "Estructura compuesta por varios tejidos que realiza una función específica (corazón, hígado)."],
+    [7, "Sistema", "Conjunto de órganos que trabajan coordinadamente para una función mayor (sistema cardiovascular)."],
+    [8, "Sangre", "Tejido líquido compuesto por plasma, glóbulos rojos, leucocitos y plaquetas."],
+    [9, "Corazón", "Órgano muscular que bombea sangre a través del sistema circulatorio."],
+    [10, "Pulmón", "Órgano del sistema respiratorio donde ocurre el intercambio gaseoso (oxígeno y dióxido de carbono)."],
+    [11, "Cerebro", "Órgano central del sistema nervioso; controla funciones cognitivas, motoras y sensoriales."],
+    [12, "Riñón", "Órgano excretor que filtra la sangre para producir orina y regular electrolitos."],
+    [13, "Hígado", "Órgano metabólico que produce bilis, almacena nutrientes y detoxifica sustancias."],
+    [14, "Estómago", "Órgano del sistema digestivo donde los alimentos se mezclan con jugos gástricos."],
+    [15, "Intestino delgado", "Porción del tubo digestivo donde ocurre la absorción de nutrientes."],
+    [16, "Piel", "Mayor órgano del cuerpo; barrera protectora, sensorial y termorreguladora."],
+    [17, "Hueso", "Tejido conectivo duro que forma el esqueleto, sostén y protección."],
+    [18, "Músculo esquelético", "Tejido contráctil voluntario unido a los huesos, responsable del movimiento."],
+    [19, "Neurona", "Célula especializada del sistema nervioso que transmite impulsos eléctricos."],
+    [20, "Sistema nervioso central", "Compuesto por encéfalo y médula espinal; procesa información."],
+    [21, "Sistema endocrino", "Red de glándulas que secretan hormonas regulando metabolismo, crecimiento y estado de ánimo."],
+    [22, "Hormona", "Mensajero químico liberado al torrente sanguíneo que actúa sobre órganos diana."],
+    [23, "Enzima", "Proteína que acelera reacciones bioquímicas; actúa como catalizador biológico."],
+    [24, "Metabolismo", "Conjunto de reacciones químicas que ocurren en el organismo para mantener la vida."],
+    [25, "Catabolismo", "Fase del metabolismo que degrada moléculas complejas liberando energía."],
+    [26, "Anabolismo", "Fase del metabolismo que construye moléculas complejas a partir de simples, consumiendo energía."],
+    [27, "Glucólisis", "Vía metabólica que degrada glucosa a piruvato, produciendo ATP y NADH."],
+    [28, "Ciclo de Krebs", "Vía aeróbica que oxida acetil-CoA para producir energía y precursores metabólicos."],
+    [29, "Fosforilación oxidativa", "Proceso en la mitocondria que produce ATP usando la cadena transportadora de electrones."],
+    [30, "Termorregulación", "Mecanismo que mantiene la temperatura corporal dentro de límites normales (~36.5-37.5°C)."],
+    [31, "Inmunidad", "Capacidad del organismo para resistir infecciones y daños mediante respuestas innata y adaptativa."],
+    [32, "Anticuerpo", "Proteína producida por linfocitos B que neutraliza patógenos."],
+    [33, "Vacuna", "Preparación biológica que induce inmunidad adquirida contra una enfermedad específica."],
+    [34, "Farmacocinética", "Estudio del movimiento de medicamentos en el cuerpo: absorción, distribución, metabolismo y excreción (ADME)."],
+    [35, "Farmacodinamia", "Estudio de los efectos bioquímicos y fisiológicos de los fármacos y sus mecanismos de acción."],
+    [36, "Dosis", "Cantidad de fármaco administrada para obtener un efecto terapéutico."],
+    [37, "Vida media", "Tiempo necesario para que la concentración de un fármaco en plasma se reduzca a la mitad."],
+    [38, "Efecto adverso", "Respuesta nociva no intencionada a un fármaco a dosis normales."],
+    [39, "Vía de administración", "Forma de introducir un fármaco al cuerpo (oral, intravenosa, intramuscular, tópica)."],
+    [40, "Antibiótico", "Sustancia que mata o inhibe el crecimiento de bacterias."],
+    [41, "Analgésico", "Medicamento que alivia el dolor sin causar pérdida de conciencia."],
+    [42, "Antiinflamatorio", "Fármaco que reduce la inflamación (esteroideo o no esteroideo)."],
+    [43, "Patología", "Estudio de las causas, mecanismos y efectos de las enfermedades."],
+    [44, "Infección", "Invasión y multiplicación de microorganismos patógenos en los tejidos del huésped."],
+    [45, "Inflamación", "Respuesta del sistema inmunológico a agentes dañinos, caracterizada por calor, rubor, tumor, dolor y pérdida de función."],
+    [46, "Fiebre", "Elevación de la temperatura corporal por encima de lo normal, usualmente como respuesta inmune."],
+    [47, "Edema", "Acumulación anormal de líquido en los espacios intersticiales."],
+    [48, "Isquemia", "Disminución del flujo sanguíneo a un tejido, causando hipoxia y posible daño."],
+    [49, "Infarto", "Muerte de tejido por falta de riego sanguíneo (ej. infarto de miocardio)."],
+    [50, "Hipertensión arterial", "Elevación persistente de la presión arterial (≥140/90 mmHg)."],
+    [51, "Diabetes mellitus", "Trastorno metabólico caracterizado por hiperglucemia debido a deficiencia de insulina o resistencia a ella."],
+    [52, "Aterosclerosis", "Endurecimiento y estrechamiento de las arterias por acumulación de placa de ateroma."],
+    [53, "Cáncer", "Enfermedad caracterizada por proliferación descontrolada de células anormales capaces de invadir tejidos."],
+    [54, "Metástasis", "Diseminación de células cancerosas desde el tumor primario a otros órganos."],
+    [55, "Virus", "Agente infeccioso microscópico no celular que requiere una célula huésped para replicarse."],
+    [56, "Bacteria", "Microorganismo unicelular procariota, algunos patógenos y otros benéficos."],
+    [57, "Parásito", "Organismo que vive a expensas de otro (huésped) causándole daño."],
+    [58, "Semiología", "Rama de la medicina que estudia los signos y síntomas de las enfermedades."],
+    [59, "Signo", "Manifestación objetiva de enfermedad detectable por el médico (fiebre, rash, presión alta)."],
+    [60, "Síntoma", "Manifestación subjetiva referida por el paciente (dolor, mareo, fatiga)."],
+    [61, "Diagnóstico", "Proceso de identificación de una enfermedad mediante signos, síntomas y exámenes."],
+    [62, "Pronóstico", "Predicción del curso probable y desenlace de una enfermedad."],
+    [63, "Tratamiento", "Intervención médica para curar o aliviar una enfermedad."],
+    [64, "Prevención primaria", "Acciones para evitar la aparición de enfermedad (vacunación, promoción salud)."],
+    [65, "Prevención secundaria", "Detección temprana y tratamiento para detener progresión de enfermedad."],
+    [66, "Prevención terciaria", "Rehabilitación y cuidado para reducir impacto de enfermedad establecida."],
+    [67, "Epidemiología", "Estudio de la distribución y determinantes de enfermedades en poblaciones."],
+    [68, "Incidencia", "Número de casos nuevos de una enfermedad en una población durante un período."],
+    [69, "Prevalencia", "Proporción de individuos con una enfermedad en un momento dado."],
+    [70, "Morbilidad", "Estado de enfermedad; tasa de enfermedad en una población."],
+    [71, "Mortalidad", "Número de muertes en una población por causa específica."],
+    [72, "Sistema General de Seguridad Social en Salud (SGSSS)", "Sistema de salud colombiano que integra regímenes contributivo y subsidiado."],
+    [73, "EPS (Entidad Promotora de Salud)", "Entidad aseguradora que garantiza atención en salud a afiliados en Colombia."],
+    [74, "IPS (Institución Prestadora de Servicios de Salud)", "Centro donde se prestan servicios de salud (hospitales, clínicas)."],
+    [75, "Historia clínica", "Documento que registra la información médica y legal de un paciente."],
+    [76, "Examen físico", "Evaluación del paciente mediante inspección, palpación, percusión y auscultación."],
+    [77, "Auscultación", "Técnica de escuchar sonidos internos del cuerpo con estetoscopio."],
+    [78, "Electrocardiograma (ECG)", "Registro gráfico de la actividad eléctrica del corazón."],
+    [79, "Radiografía", "Imagen diagnóstica que usa radiación X para visualizar estructuras internas."],
+    [80, "Ecografía", "Imagen médica mediante ondas de ultrasonido, útil en embarazo y órganos blandos."],
+    [81, "Tomografía computarizada (TC)", "Técnica que combina múltiples radiografías para obtener imágenes transversales."],
+    [82, "Resonancia magnética (RM)", "Imagen basada en campos magnéticos y ondas de radio para visualizar tejidos blandos."],
+    [83, "Cirugía", "Especialidad que trata enfermedades mediante procedimientos invasivos (operaciones)."],
+    [84, "Anestesia", "Estado de pérdida de sensibilidad, inducido farmacológicamente para permitir procedimientos."],
+    [85, "Reanimación cardiopulmonar (RCP)", "Maniobras de emergencia para restaurar circulación y respiración en paro cardiorrespiratorio."],
+    [86, "Signos vitales", "Mediciones fisiológicas: temperatura, pulso, frecuencia respiratoria, presión arterial."],
+    [87, "Dolor", "Experiencia sensorial y emocional desagradable asociada a daño tisular real o potencial."],
+    [88, "Farmacorresistencia", "Capacidad de un microorganismo de resistir el efecto de un antibiótico o fármaco."],
+    [89, "Medicina basada en evidencia", "Práctica médica que integra mejor evidencia científica con experiencia clínica y valores del paciente."],
+    [90, "Bioética", "Estudio de los problemas éticos derivados de la práctica médica y las ciencias biológicas."],
+    [91, "Consentimiento informado", "Documento donde el paciente autoriza un procedimiento tras recibir información clara."],
+    [92, "Salud pública", "Disciplina que promueve salud, previene enfermedades y prolonga vida en comunidades."],
+    [93, "Promoción de la salud", "Estrategias para empoderar a las personas a mejorar su salud (educación, entornos saludables)."],
+    [94, "Determinantes sociales de la salud", "Condiciones en que las personas nacen, crecen, viven y trabajan, que afectan su salud."],
+    [95, "Emergencia sanitaria", "Situación que amenaza la salud pública y requiere respuesta inmediata (pandemia, desastre)."],
+    [96, "COVID-19", "Enfermedad infecciosa causada por el virus SARS-CoV-2, pandemia declarada en 2020."],
+    [97, "Insuficiencia respiratoria", "Incapacidad del sistema respiratorio para mantener niveles adecuados de oxígeno o eliminar CO₂."],
+    [98, "Shock", "Falla circulatoria aguda que produce hipoperfusión tisular y disfunción orgánica."],
+    [99, "Sepsis", "Respuesta inflamatoria desregulada a una infección que puede causar disfunción orgánica."],
+    [100, "Cuidados paliativos", "Enfoque multidisciplinario para mejorar calidad de vida de pacientes con enfermedades avanzadas."]
+  ];
+
+  // --------------------- LOCALSTORAGE Y PROGRESO -------------------------
+  let progreso = {};
+  const STORAGE_KEY = "medicinaSaludColombiaProgreso";
+
+  function cargarProgreso() {
+    const guardado = localStorage.getItem(STORAGE_KEY);
+    if (guardado) progreso = JSON.parse(guardado);
+    else {
+      progreso = {};
+      for (let i = 1; i <= 100; i++) progreso[i] = { aciertos: 0, fallos: 0 };
+    }
+  }
+  function guardarProgreso() { localStorage.setItem(STORAGE_KEY, JSON.stringify(progreso)); }
+  function registrarResultado(id, acierto) {
+    if (!progreso[id]) progreso[id] = { aciertos: 0, fallos: 0 };
+    if (acierto) progreso[id].aciertos += 1;
+    else progreso[id].fallos += 1;
+    guardarProgreso();
+    renderDashboard();
+    renderListado(document.getElementById("filtroListado")?.value || "");
+    if (window.currentCardId === id && document.getElementById("infoProgresoCard")) {
+      document.getElementById("infoProgresoCard").innerHTML = `📊 Concepto ${id} · ✅ ${progreso[id].aciertos} aciertos · ❌ ${progreso[id].fallos} fallos`;
+    }
+  }
+
+  function renderDashboard() {
+    let totalAciertos = 0, totalFallos = 0, conceptosConAcierto = 0;
+    for (let i = 1; i <= 100; i++) {
+      const p = progreso[i] || { aciertos: 0, fallos: 0 };
+      totalAciertos += p.aciertos;
+      totalFallos += p.fallos;
+      if (p.aciertos > 0) conceptosConAcierto++;
+    }
+    const porcentaje = (conceptosConAcierto / 100) * 100;
+    document.getElementById("globalProgressFill").style.width = `${porcentaje}%`;
+    document.getElementById("globalProgressText").innerHTML = `${conceptosConAcierto} de 100 conceptos con al menos 1 acierto (${Math.round(porcentaje)}%).`;
+    document.getElementById("statsContainer").innerHTML = `
+      <div class="stat-card"><div class="stat-number">${totalAciertos}</div>✅ Aciertos totales</div>
+      <div class="stat-card"><div class="stat-number">${totalFallos}</div>❌ Fallos</div>
+      <div class="stat-card"><div class="stat-number">${conceptosConAcierto}</div>📘 Conceptos dominados</div>
+      <div class="stat-card"><div class="stat-number">${Math.round((totalAciertos/(totalAciertos+totalFallos+0.001))*100)}%</div>📊 Tasa éxito</div>
+    `;
+  }
+
+  function renderListado(filtro = "") {
+    const container = document.getElementById("conceptosListadoContainer");
+    container.innerHTML = "";
+    const filtroLower = filtro.toLowerCase();
+    for (let c of conceptosData) {
+      const [id, nombre, definicion] = c;
+      const prog = progreso[id] || { aciertos: 0, fallos: 0 };
+      if (filtro && !nombre.toLowerCase().includes(filtroLower) && !definicion.toLowerCase().includes(filtroLower)) continue;
+      const div = document.createElement("div");
+      div.className = "concepto-item";
+      div.innerHTML = `<div class="concepto-titulo">${id}. ${nombre}</div>
+                       <div class="concepto-desc">🩺 ${definicion.substring(0, 150)}${definicion.length > 150 ? '…' : ''}</div>
+                       <span class="badge-progreso">✅ ${prog.aciertos} aciertos · ❌ ${prog.fallos} fallos</span>`;
+      container.appendChild(div);
+    }
+  }
+
+  // --------------------- PRÁCTICA: TRES MODOS -------------------------
+  let currentMode = "concepto_def";
+  let cardsArray = [];
+  let currentCardIndex = 0;
+  let currentCardId = null;
+  // variables modo ordenar
+  let currentOrdenarPalabras = [];
+  let shuffledPalabras = [];
+  let selectedOrder = [];
+  let ordenarRespuestaCorrecta = "";
+
+  const practicaDiv = document.getElementById("practicaContainer");
+
+  function construirCards() {
+    cardsArray = conceptosData.map(item => {
+      const [id, concepto, definicion] = item;
+      if (currentMode === "concepto_def") {
+        return { id, pregunta: `🩺 Concepto: ${concepto}`, respuestaCorrecta: definicion };
+      } else if (currentMode === "def_concepto") {
+        let defCorta = definicion.length > 130 ? definicion.substring(0, 127) + "…" : definicion;
+        return { id, pregunta: `✍️ Definición: "${defCorta}"`, respuestaCorrecta: concepto };
+      } else {
+        return { id, concepto, definicion };
+      }
+    });
+  }
+
+  // Flashcard normal
+  function renderFlashcardNormal() {
+    if (!cardsArray.length) return;
+    const card = cardsArray[currentCardIndex];
+    currentCardId = card.id;
+    practicaDiv.innerHTML = `
+      <div class="flashcard">
+        <div class="pregunta">${card.pregunta}</div>
+        <button id="mostrarRespuestaBtn" class="btn">📖 Mostrar respuesta</button>
+        <div id="respuestaDiv" class="respuesta-oculta"><strong>Respuesta:</strong><br>${card.respuestaCorrecta}</div>
+        <div style="margin-top:1rem;">
+          <button id="aciertoBtn" class="btn btn-acierto" disabled>✅ Acierto</button>
+          <button id="falloBtn" class="btn btn-fallo" disabled>❌ Fallo</button>
+        </div>
+        <button id="siguienteCardBtn" class="btn" style="margin-top:1rem;">⏩ Siguiente</button>
+        <p id="infoProgresoCard" style="margin-top:0.8rem;">📊 ${currentMode === "concepto_def" ? "Concepto" : "Definición"} ${card.id} · ✅ ${progreso[card.id]?.aciertos||0} aciertos · ❌ ${progreso[card.id]?.fallos||0} fallos</p>
+      </div>
+    `;
+    document.getElementById("mostrarRespuestaBtn").onclick = () => {
+      const respDiv = document.getElementById("respuestaDiv");
+      if (respDiv.style.display !== "block") {
+        respDiv.style.display = "block";
+        document.getElementById("aciertoBtn").disabled = false;
+        document.getElementById("falloBtn").disabled = false;
+      }
+    };
+    document.getElementById("aciertoBtn").onclick = () => { registrarResultado(currentCardId, true); siguienteNormal(); };
+    document.getElementById("falloBtn").onclick = () => { registrarResultado(currentCardId, false); siguienteNormal(); };
+    document.getElementById("siguienteCardBtn").onclick = () => siguienteNormal();
+  }
+
+  function siguienteNormal() {
+    currentCardIndex = (currentCardIndex + 1) % cardsArray.length;
+    renderFlashcardNormal();
+  }
+
+  // Modo ordenar
+  function inicializarOrdenar() {
+    const card = cardsArray[currentCardIndex];
+    currentCardId = card.id;
+    const definicionOriginal = card.definicion;
+    ordenarRespuestaCorrecta = definicionOriginal;
+    let palabras = definicionOriginal.split(/\s+/).filter(p => p.length > 0);
+    currentOrdenarPalabras = [...palabras];
+    shuffledPalabras = [...palabras];
+    for (let i = shuffledPalabras.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [shuffledPalabras[i], shuffledPalabras[j]] = [shuffledPalabras[j], shuffledPalabras[i]];
+    }
+    selectedOrder = [];
+    renderOrdenarUI();
+  }
+
+  function renderOrdenarUI() {
+    const card = cardsArray[currentCardIndex];
+    const prog = progreso[currentCardId] || { aciertos:0, fallos:0 };
+    let palabrasHTML = shuffledPalabras.map(p => `<button class="palabra-btn" data-palabra="${p.replace(/"/g, '&quot;')}">${p}</button>`).join('');
+    let ordenHTML = selectedOrder.map(p => `<span style="background:#ecf6f2; padding:0.2rem 0.6rem; margin:0.2rem; border-radius:1rem;">${p}</span>`).join(' ');
+    if (ordenHTML === "") ordenHTML = "<em>Haz clic en las palabras en el orden correcto...</em>";
+    practicaDiv.innerHTML = `
+      <div class="flashcard">
+        <h3>🧩 Ordena la definición de:</h3>
+        <div class="pregunta" style="background:#ecf6f2;">📌 ${card.concepto}</div>
+        <div class="orden-actual"><strong>Tu orden actual:</strong><br> ${ordenHTML}</div>
+        <div class="palabras-baraja" id="palabrasBaraja">${palabrasHTML}</div>
+        <div>
+          <button id="resetOrdenBtn" class="btn" style="background:#cbdcd4;">🔁 Reiniciar orden</button>
+          <button id="comprobarOrdenBtn" class="btn btn-primary">✓ Comprobar</button>
+        </div>
+        <button id="siguienteOrdenBtn" class="btn" style="margin-top:1rem;">⏩ Siguiente concepto</button>
+        <p id="infoProgresoCard">✅ ${prog.aciertos} aciertos · ❌ ${prog.fallos} fallos</p>
+        <div id="feedbackOrden" style="margin-top:0.8rem; font-weight:bold;"></div>
+      </div>
+    `;
+    document.querySelectorAll(".palabra-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const palabra = btn.getAttribute("data-palabra");
+        const idx = shuffledPalabras.indexOf(palabra);
+        if (idx !== -1) {
+          shuffledPalabras.splice(idx, 1);
+          selectedOrder.push(palabra);
+          renderOrdenarUI();
+        }
+      });
+    });
+    document.getElementById("resetOrdenBtn").onclick = () => {
+      shuffledPalabras = [...currentOrdenarPalabras];
+      for (let i = shuffledPalabras.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [shuffledPalabras[i], shuffledPalabras[j]] = [shuffledPalabras[j], shuffledPalabras[i]];
+      }
+      selectedOrder = [];
+      renderOrdenarUI();
+    };
+    document.getElementById("comprobarOrdenBtn").onclick = () => {
+      const ordenUsuario = selectedOrder.join(" ");
+      if (ordenUsuario === ordenarRespuestaCorrecta) {
+        document.getElementById("feedbackOrden").innerHTML = "<span style='color:#2c7a4d'>✅ ¡Correcto! Definición ordenada correctamente.</span>";
+        registrarResultado(currentCardId, true);
+        setTimeout(() => siguienteOrdenar(), 1200);
+      } else {
+        document.getElementById("feedbackOrden").innerHTML = `<span style='color:#c0392b'>❌ Incorrecto. La definición correcta es: "${ordenarRespuestaCorrecta}"</span>`;
+        registrarResultado(currentCardId, false);
+        setTimeout(() => siguienteOrdenar(), 2000);
+      }
+      document.getElementById("comprobarOrdenBtn").disabled = true;
+      document.querySelectorAll(".palabra-btn").forEach(b => b.style.pointerEvents = "none");
+      setTimeout(() => {
+        if (document.getElementById("comprobarOrdenBtn")) document.getElementById("comprobarOrdenBtn").disabled = false;
+        document.querySelectorAll(".palabra-btn").forEach(b => b.style.pointerEvents = "auto");
+      }, 2000);
+    };
+    document.getElementById("siguienteOrdenBtn").onclick = () => siguienteOrdenar();
+  }
+
+  function siguienteOrdenar() {
+    currentCardIndex = (currentCardIndex + 1) % cardsArray.length;
+    inicializarOrdenar();
+  }
+
+  function setMode(mode) {
+    currentMode = mode;
+    construirCards();
+    currentCardIndex = 0;
+    if (mode === "ordenar") inicializarOrdenar();
+    else renderFlashcardNormal();
+  }
+
+  // Navegación y eventos
+  function initUI() {
+    document.querySelectorAll(".nav-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const viewId = btn.getAttribute("data-view");
+        document.querySelectorAll(".view").forEach(v => v.classList.remove("active-view"));
+        document.getElementById(viewId).classList.add("active-view");
+        document.querySelectorAll(".nav-btn").forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+        if (viewId === "listado") renderListado(document.getElementById("filtroListado").value);
+        if (viewId === "dashboard") renderDashboard();
+        if (viewId === "practica") setMode(currentMode);
+      });
+    });
+    document.getElementById("modoConceptoDef").addEventListener("click", () => {
+      currentMode = "concepto_def";
+      setMode("concepto_def");
+      document.getElementById("modoConceptoDef").classList.add("btn-primary");
+      document.getElementById("modoDefConcepto").classList.remove("btn-primary");
+      document.getElementById("modoOrdenar").classList.remove("btn-primary");
+    });
+    document.getElementById("modoDefConcepto").addEventListener("click", () => {
+      currentMode = "def_concepto";
+      setMode("def_concepto");
+      document.getElementById("modoDefConcepto").classList.add("btn-primary");
+      document.getElementById("modoConceptoDef").classList.remove("btn-primary");
+      document.getElementById("modoOrdenar").classList.remove("btn-primary");
+    });
+    document.getElementById("modoOrdenar").addEventListener("click", () => {
+      currentMode = "ordenar";
+      setMode("ordenar");
+      document.getElementById("modoOrdenar").classList.add("btn-primary");
+      document.getElementById("modoConceptoDef").classList.remove("btn-primary");
+      document.getElementById("modoDefConcepto").classList.remove("btn-primary");
+    });
+    document.getElementById("resetProgresoBtn").addEventListener("click", () => {
+      if (confirm("¿Reiniciar todo el progreso? Se perderán aciertos y fallos.")) {
+        for (let i = 1; i <= 100; i++) progreso[i] = { aciertos: 0, fallos: 0 };
+        guardarProgreso();
+        renderDashboard();
+        renderListado(document.getElementById("filtroListado")?.value || "");
+        if (currentMode === "ordenar") inicializarOrdenar();
+        else if (currentMode !== "ordenar") renderFlashcardNormal();
+      }
+    });
+    document.getElementById("filtroListado").addEventListener("input", (e) => renderListado(e.target.value));
+  }
+
+  window.addEventListener("DOMContentLoaded", () => {
+    cargarProgreso();
+    construirCards();
+    setMode("concepto_def");
+    renderDashboard();
+    renderListado();
+    initUI();
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,1116 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LMS · Ortografía Avanzada del Castellano</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #0f0e0b;
+    --cream: #f5f0e8;
+    --amber: #c8832a;
+    --amber-light: #f0c070;
+    --rust: #9b3a1a;
+    --sage: #4a6741;
+    --paper: #faf7f0;
+    --line: #e0d8c8;
+    --sidebar-w: 280px;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--cream);
+    color: var(--ink);
+    display: flex;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ── SIDEBAR ── */
+  .sidebar {
+    width: var(--sidebar-w);
+    min-height: 100vh;
+    background: var(--ink);
+    color: var(--cream);
+    position: fixed;
+    left: 0; top: 0;
+    display: flex;
+    flex-direction: column;
+    z-index: 100;
+    overflow-y: auto;
+  }
+
+  .sidebar-brand {
+    padding: 28px 24px 20px;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+  }
+  .sidebar-brand .label {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--amber-light);
+    display: block;
+    margin-bottom: 6px;
+  }
+  .sidebar-brand h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px;
+    font-weight: 700;
+    line-height: 1.2;
+    color: #fff;
+  }
+
+  .sidebar-progress {
+    padding: 16px 24px;
+    background: rgba(200,131,42,0.15);
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+  }
+  .progress-label {
+    font-size: 11px;
+    color: var(--amber-light);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+  .progress-bar-bg {
+    background: rgba(255,255,255,0.1);
+    border-radius: 20px;
+    height: 5px;
+    overflow: hidden;
+  }
+  .progress-bar-fill {
+    background: linear-gradient(90deg, var(--amber), var(--amber-light));
+    height: 100%;
+    border-radius: 20px;
+    width: 0%;
+    transition: width 0.6s ease;
+  }
+  .progress-text {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: rgba(255,255,255,0.5);
+    margin-top: 6px;
+  }
+
+  .sidebar-nav { padding: 12px 0; flex: 1; }
+
+  .nav-section-title {
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.3);
+    padding: 16px 24px 6px;
+  }
+
+  .nav-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 24px;
+    cursor: pointer;
+    transition: background 0.2s;
+    border-left: 3px solid transparent;
+    font-size: 13.5px;
+    color: rgba(255,255,255,0.65);
+    position: relative;
+  }
+  .nav-item:hover { background: rgba(255,255,255,0.05); color: #fff; }
+  .nav-item.active {
+    background: rgba(200,131,42,0.15);
+    border-left-color: var(--amber);
+    color: #fff;
+  }
+  .nav-item.completed .nav-check { opacity: 1; }
+  .nav-check {
+    width: 16px; height: 16px;
+    border-radius: 50%;
+    background: var(--sage);
+    display: flex; align-items: center; justify-content: center;
+    opacity: 0;
+    transition: opacity 0.3s;
+    flex-shrink: 0;
+  }
+  .nav-check svg { width: 9px; height: 9px; }
+  .nav-num {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    color: var(--amber);
+    width: 20px;
+    flex-shrink: 0;
+  }
+
+  /* ── MAIN ── */
+  .main {
+    margin-left: var(--sidebar-w);
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+  }
+
+  /* ── TOPBAR ── */
+  .topbar {
+    background: var(--paper);
+    border-bottom: 1px solid var(--line);
+    padding: 14px 48px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky; top: 0;
+    z-index: 50;
+  }
+  .topbar-breadcrumb {
+    font-size: 12px;
+    color: rgba(0,0,0,0.4);
+    display: flex; align-items: center; gap: 8px;
+  }
+  .topbar-breadcrumb span { color: var(--amber); font-weight: 500; }
+  .topbar-actions { display: flex; gap: 10px; }
+  .btn {
+    padding: 8px 18px;
+    border-radius: 6px;
+    font-size: 13px;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 500;
+    cursor: pointer;
+    border: none;
+    transition: all 0.2s;
+  }
+  .btn-ghost {
+    background: transparent;
+    border: 1px solid var(--line);
+    color: var(--ink);
+  }
+  .btn-ghost:hover { background: var(--line); }
+  .btn-primary {
+    background: var(--amber);
+    color: #fff;
+  }
+  .btn-primary:hover { background: var(--rust); }
+
+  /* ── CONTENT ── */
+  .content {
+    flex: 1;
+    padding: 48px;
+    max-width: 820px;
+  }
+
+  .lesson-header {
+    margin-bottom: 36px;
+    animation: fadeUp 0.5s ease both;
+  }
+  .lesson-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(200,131,42,0.12);
+    color: var(--amber);
+    border: 1px solid rgba(200,131,42,0.3);
+    border-radius: 20px;
+    padding: 4px 12px;
+    font-size: 11px;
+    font-family: 'DM Mono', monospace;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 14px;
+  }
+  .lesson-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 38px;
+    font-weight: 900;
+    line-height: 1.15;
+    margin-bottom: 10px;
+    color: var(--ink);
+  }
+  .lesson-meta {
+    display: flex; gap: 20px;
+    font-size: 12px; color: rgba(0,0,0,0.45);
+  }
+  .lesson-meta span { display: flex; align-items: center; gap: 5px; }
+
+  /* ── CARDS ── */
+  .card {
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 28px;
+    margin-bottom: 24px;
+    animation: fadeUp 0.5s ease both;
+  }
+  .card-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 14px;
+    color: var(--ink);
+    display: flex; align-items: center; gap: 10px;
+  }
+  .card-icon {
+    width: 32px; height: 32px;
+    background: var(--amber);
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    color: #fff; font-size: 16px; flex-shrink: 0;
+  }
+  .card p { font-size: 14.5px; line-height: 1.75; color: rgba(0,0,0,0.75); margin-bottom: 12px; }
+  .card p:last-child { margin-bottom: 0; }
+
+  /* ── TECHNIQUE LIST ── */
+  .technique-grid {
+    display: grid;
+    gap: 14px;
+    margin: 20px 0;
+  }
+  .technique {
+    background: #fff;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 18px 20px;
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    cursor: default;
+  }
+  .technique:hover {
+    border-color: var(--amber);
+    box-shadow: 0 4px 16px rgba(200,131,42,0.1);
+  }
+  .technique-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 28px;
+    font-weight: 900;
+    color: var(--amber-light);
+    line-height: 1;
+    min-width: 40px;
+  }
+  .technique-body h4 {
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 5px;
+    color: var(--ink);
+  }
+  .technique-body p { font-size: 13px; line-height: 1.6; color: rgba(0,0,0,0.6); margin: 0; }
+  .technique-body .example {
+    margin-top: 8px;
+    background: var(--cream);
+    border-left: 3px solid var(--amber);
+    padding: 6px 10px;
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    color: var(--rust);
+    border-radius: 0 6px 6px 0;
+  }
+
+  /* ── QUIZ ── */
+  .quiz-card {
+    background: var(--ink);
+    color: var(--cream);
+    border-radius: 14px;
+    padding: 32px;
+    margin-bottom: 24px;
+    animation: fadeUp 0.5s ease both;
+  }
+  .quiz-card h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px;
+    margin-bottom: 8px;
+    color: #fff;
+  }
+  .quiz-card .subtitle { font-size: 13px; color: rgba(255,255,255,0.5); margin-bottom: 24px; }
+  .quiz-question {
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 16px;
+  }
+  .quiz-question p { font-size: 15px; font-weight: 500; margin-bottom: 14px; color: #fff; }
+  .quiz-options { display: grid; gap: 8px; }
+  .quiz-option {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 8px;
+    padding: 11px 16px;
+    font-size: 13.5px;
+    cursor: pointer;
+    transition: all 0.2s;
+    color: rgba(255,255,255,0.8);
+  }
+  .quiz-option:hover { background: rgba(200,131,42,0.2); border-color: var(--amber); color: #fff; }
+  .quiz-option.correct { background: rgba(74,103,65,0.4); border-color: var(--sage); color: #fff; }
+  .quiz-option.wrong { background: rgba(155,58,26,0.3); border-color: var(--rust); color: #fff; }
+  .quiz-feedback {
+    margin-top: 10px;
+    font-size: 13px;
+    padding: 10px 14px;
+    border-radius: 8px;
+    display: none;
+  }
+  .quiz-feedback.show { display: block; }
+  .quiz-feedback.ok { background: rgba(74,103,65,0.3); color: #a8d5a2; }
+  .quiz-feedback.fail { background: rgba(155,58,26,0.3); color: #f0a080; }
+
+  /* ── HIGHLIGHT BOX ── */
+  .highlight {
+    border-left: 4px solid var(--amber);
+    background: rgba(200,131,42,0.06);
+    border-radius: 0 10px 10px 0;
+    padding: 16px 20px;
+    margin: 16px 0;
+    font-size: 14px;
+    color: rgba(0,0,0,0.75);
+    line-height: 1.7;
+  }
+  .highlight strong { color: var(--rust); }
+
+  /* ── LESSON FOOTER ── */
+  .lesson-footer {
+    margin-top: 40px;
+    padding-top: 28px;
+    border-top: 1px solid var(--line);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  /* ── SCREEN MANAGEMENT ── */
+  .screen { display: none; }
+  .screen.active { display: block; }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── DASHBOARD ── */
+  .stats-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin-bottom: 28px;
+  }
+  .stat-card {
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 22px;
+    text-align: center;
+  }
+  .stat-card .num {
+    font-family: 'Playfair Display', serif;
+    font-size: 40px;
+    font-weight: 900;
+    color: var(--amber);
+    line-height: 1;
+    margin-bottom: 6px;
+  }
+  .stat-card .lbl { font-size: 12px; color: rgba(0,0,0,0.45); letter-spacing: 0.5px; }
+
+  .modules-list { display: grid; gap: 12px; }
+  .module-row {
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 18px 22px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .module-row:hover { border-color: var(--amber); transform: translateX(4px); }
+  .module-icon {
+    width: 44px; height: 44px;
+    background: var(--ink);
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px; flex-shrink: 0;
+  }
+  .module-info { flex: 1; }
+  .module-info h4 { font-size: 15px; font-weight: 600; margin-bottom: 3px; }
+  .module-info p { font-size: 12px; color: rgba(0,0,0,0.45); }
+  .module-badge {
+    background: rgba(200,131,42,0.12);
+    color: var(--amber);
+    border-radius: 20px;
+    padding: 4px 12px;
+    font-size: 11px;
+    font-family: 'DM Mono', monospace;
+  }
+
+  .welcome-hero {
+    background: var(--ink);
+    border-radius: 16px;
+    padding: 40px;
+    margin-bottom: 28px;
+    position: relative;
+    overflow: hidden;
+    color: #fff;
+  }
+  .welcome-hero::before {
+    content: '✒';
+    position: absolute;
+    right: 30px; bottom: -10px;
+    font-size: 120px;
+    opacity: 0.06;
+  }
+  .welcome-hero h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 30px;
+    font-weight: 900;
+    margin-bottom: 10px;
+  }
+  .welcome-hero p { font-size: 14px; color: rgba(255,255,255,0.6); max-width: 480px; line-height: 1.7; }
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="sidebar-brand">
+    <span class="label">Plataforma · LMS</span>
+    <h1>Ortografía<br>Avanzada</h1>
+  </div>
+  <div class="sidebar-progress">
+    <div class="progress-label">Tu progreso</div>
+    <div class="progress-bar-bg"><div class="progress-bar-fill" id="progressBar"></div></div>
+    <div class="progress-text" id="progressText">0 / 6 lecciones completadas</div>
+  </div>
+  <nav class="sidebar-nav">
+    <div class="nav-section-title">Inicio</div>
+    <div class="nav-item active" data-screen="dashboard" onclick="navigate(this)">
+      <span class="nav-num">⌂</span> Panel principal
+    </div>
+
+    <div class="nav-section-title">Módulo I · Letras</div>
+    <div class="nav-item" data-screen="leccion1" onclick="navigate(this)">
+      <div class="nav-check"><svg viewBox="0 0 10 10" fill="none"><polyline points="1.5,5 4,7.5 8.5,2.5" stroke="#fff" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+      <span class="nav-num">01</span> B, V y W
+    </div>
+    <div class="nav-item" data-screen="leccion2" onclick="navigate(this)">
+      <div class="nav-check"><svg viewBox="0 0 10 10" fill="none"><polyline points="1.5,5 4,7.5 8.5,2.5" stroke="#fff" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+      <span class="nav-num">02</span> G, J y H muda
+    </div>
+    <div class="nav-item" data-screen="leccion3" onclick="navigate(this)">
+      <div class="nav-check"><svg viewBox="0 0 10 10" fill="none"><polyline points="1.5,5 4,7.5 8.5,2.5" stroke="#fff" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+      <span class="nav-num">03</span> C, S, Z y X
+    </div>
+
+    <div class="nav-section-title">Módulo II · Acentuación</div>
+    <div class="nav-item" data-screen="leccion4" onclick="navigate(this)">
+      <div class="nav-check"><svg viewBox="0 0 10 10" fill="none"><polyline points="1.5,5 4,7.5 8.5,2.5" stroke="#fff" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+      <span class="nav-num">04</span> Tilde diacrítica
+    </div>
+    <div class="nav-item" data-screen="leccion5" onclick="navigate(this)">
+      <div class="nav-check"><svg viewBox="0 0 10 10" fill="none"><polyline points="1.5,5 4,7.5 8.5,2.5" stroke="#fff" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+      <span class="nav-num">05</span> Hiatos y diptongos
+    </div>
+
+    <div class="nav-section-title">Módulo III · Puntuación</div>
+    <div class="nav-item" data-screen="leccion6" onclick="navigate(this)">
+      <div class="nav-check"><svg viewBox="0 0 10 10" fill="none"><polyline points="1.5,5 4,7.5 8.5,2.5" stroke="#fff" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+      <span class="nav-num">06</span> Signos y estilo
+    </div>
+  </nav>
+</aside>
+
+<!-- MAIN -->
+<div class="main">
+  <!-- TOPBAR -->
+  <div class="topbar">
+    <div class="topbar-breadcrumb">
+      LMS Ortografía <span id="breadcrumbCurrent">· Panel principal</span>
+    </div>
+    <div class="topbar-actions">
+      <button class="btn btn-ghost" onclick="prevLesson()">← Anterior</button>
+      <button class="btn btn-primary" onclick="nextLesson()">Siguiente →</button>
+    </div>
+  </div>
+
+  <!-- CONTENT -->
+  <div class="content">
+
+    <!-- ══════════════════════════════════════════════ -->
+    <!-- SCREEN: DASHBOARD -->
+    <!-- ══════════════════════════════════════════════ -->
+    <div class="screen active" id="screen-dashboard">
+      <div class="welcome-hero" style="animation: fadeUp 0.5s ease both;">
+        <h2>Bienvenido al curso de Ortografía Avanzada del Castellano</h2>
+        <p>Domina las 100 técnicas fundamentales de redacción y ortografía. Seis módulos, ejercicios prácticos y evaluaciones para perfeccionar tu escritura.</p>
+        <div style="margin-top: 20px; display: flex; gap: 10px;">
+          <button class="btn btn-primary" onclick="navigate(document.querySelector('[data-screen=leccion1]'))">Comenzar Lección 1 →</button>
+        </div>
+      </div>
+
+      <div class="stats-row">
+        <div class="stat-card"><div class="num" id="statDone">0</div><div class="lbl">Lecciones completadas</div></div>
+        <div class="stat-card"><div class="num">6</div><div class="lbl">Módulos totales</div></div>
+        <div class="stat-card"><div class="num">100</div><div class="lbl">Técnicas cubiertas</div></div>
+      </div>
+
+      <h3 style="font-family:'Playfair Display',serif; font-size:20px; margin-bottom:16px;">Módulos del curso</h3>
+      <div class="modules-list">
+        <div class="module-row" onclick="navigate(document.querySelector('[data-screen=leccion1]'))">
+          <div class="module-icon">🅱</div>
+          <div class="module-info"><h4>Módulo I · B, V y W · G, J, H · C, S, Z, X</h4><p>Reglas de escritura de consonantes confundibles</p></div>
+          <span class="module-badge">18 técnicas</span>
+        </div>
+        <div class="module-row" onclick="navigate(document.querySelector('[data-screen=leccion4]'))">
+          <div class="module-icon">á</div>
+          <div class="module-info"><h4>Módulo II · Acentuación y prosodia avanzada</h4><p>Tilde diacrítica, hiatos, diptongos y triptongos</p></div>
+          <span class="module-badge">22 técnicas</span>
+        </div>
+        <div class="module-row" onclick="navigate(document.querySelector('[data-screen=leccion6]'))">
+          <div class="module-icon">¡</div>
+          <div class="module-info"><h4>Módulo III · Puntuación y estilo</h4><p>Coma, punto y coma, guiones, comillas y más</p></div>
+          <span class="module-badge">60 técnicas</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════════ -->
+    <!-- SCREEN: LECCIÓN 1 -->
+    <!-- ══════════════════════════════════════════════ -->
+    <div class="screen" id="screen-leccion1">
+      <div class="lesson-header">
+        <div class="lesson-tag">📖 Módulo I · Lección 01</div>
+        <h2 class="lesson-title">Uso de B, V y W</h2>
+        <div class="lesson-meta">
+          <span>⏱ 15 min</span><span>📚 6 técnicas</span><span>🎯 Nivel avanzado</span>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title"><div class="card-icon">📝</div> Introducción</div>
+        <p>La confusión entre <strong>b</strong> y <strong>v</strong> es uno de los errores más frecuentes del castellano escrito, ya que ambas letras representan el mismo fonema /b/. El dominio de sus reglas de escritura exige conocer la morfología y etimología de las palabras.</p>
+        <div class="highlight"><strong>Principio rector:</strong> En castellano, <em>b</em> y <em>v</em> suenan igual. Su distinción es puramente ortográfica y se basa en el origen histórico de las palabras y en reglas morfológicas.</div>
+      </div>
+
+      <div class="technique-grid">
+        <div class="technique">
+          <div class="technique-num">01</div>
+          <div class="technique-body">
+            <h4>Pretérito imperfecto de indicativo en -ar</h4>
+            <p>Todos los verbos de la primera conjugación (-ar) llevan <strong>b</strong> en el pretérito imperfecto de indicativo.</p>
+            <div class="example">amaba · cantaba · saltaba · trabajaba · hablaba</div>
+          </div>
+        </div>
+        <div class="technique">
+          <div class="technique-num">02</div>
+          <div class="technique-body">
+            <h4>El verbo IR en imperfecto</h4>
+            <p>El verbo <em>ir</em>, aunque no es de la primera conjugación, también forma su imperfecto con <strong>b</strong>.</p>
+            <div class="example">iba · ibas · iba · íbamos · ibais · iban</div>
+          </div>
+        </div>
+        <div class="technique">
+          <div class="technique-num">03</div>
+          <div class="technique-body">
+            <h4>Prefijos BIS-, BI-, BIZ-</h4>
+            <p>Las palabras formadas con los prefijos que significan "dos" o "doble" se escriben con <strong>b</strong>.</p>
+            <div class="example">bisabuelo · bilingüe · biznieto · bilateral</div>
+          </div>
+        </div>
+        <div class="technique">
+          <div class="technique-num">04</div>
+          <div class="technique-body">
+            <h4>Palabras con el grupo -BL- y -BR-</h4>
+            <p>Las combinaciones consonánticas <em>bl</em> y <em>br</em> siempre se escriben con <strong>b</strong>.</p>
+            <div class="example">blanco · bravo · hablar · cobrar · tabla · brazo</div>
+          </div>
+        </div>
+        <div class="technique">
+          <div class="technique-num">05</div>
+          <div class="technique-body">
+            <h4>Verbos terminados en -OLVER</h4>
+            <p>Los verbos acabados en <em>-olver</em> y sus derivados se escriben con <strong>v</strong>.</p>
+            <div class="example">volver · resolver · devolver · absolver · envolver</div>
+          </div>
+        </div>
+        <div class="technique">
+          <div class="technique-num">06</div>
+          <div class="technique-body">
+            <h4>Adjetivos terminados en -AVE, -EVE, -IVE, -OVE</h4>
+            <p>Las terminaciones adjetivales con estos diptongos se escriben con <strong>v</strong>.</p>
+            <div class="example">suave · leve · activo · nocivo · breve · festivo</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="lesson-footer">
+        <button class="btn btn-ghost" onclick="navigate(document.querySelector('[data-screen=dashboard]'))">← Volver al panel</button>
+        <button class="btn btn-primary" onclick="completeAndNext('leccion1','leccion2')">Completar y continuar →</button>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════════ -->
+    <!-- SCREEN: LECCIÓN 2 -->
+    <!-- ══════════════════════════════════════════════ -->
+    <div class="screen" id="screen-leccion2">
+      <div class="lesson-header">
+        <div class="lesson-tag">📖 Módulo I · Lección 02</div>
+        <h2 class="lesson-title">G, J y la H muda</h2>
+        <div class="lesson-meta"><span>⏱ 15 min</span><span>📚 6 técnicas</span></div>
+      </div>
+
+      <div class="card">
+        <div class="card-title"><div class="card-icon">📝</div> Introducción</div>
+        <p>La <strong>g</strong> ante <em>e</em> e <em>i</em> y la <strong>j</strong> representan el mismo sonido /x/, creando confusión. La <strong>h</strong> es una letra muda sin valor fonético en castellano, pero de uso obligatorio en ciertas palabras.</p>
+      </div>
+
+      <div class="technique-grid">
+        <div class="technique">
+          <div class="technique-num">07</div>
+          <div class="technique-body">
+            <h4>Verbos terminados en -GER y -GIR</h4>
+            <p>Se escriben con <strong>g</strong> los verbos en -ger/-gir (excepto tejer y crujir).</p>
+            <div class="example">coger · dirigir · surgir · exigir · proteger · elegir</div>
+          </div>
+        </div>
+        <div class="technique">
+          <div class="technique-num">08</div>
+          <div class="technique-body">
+            <h4>Palabras con GEN</h4>
+            <p>Se escriben con <strong>g</strong> las palabras que contienen la sílaba <em>gen</em>.</p>
+            <div class="example">origen · margen · imagen · aborigen · urgent e · virgen</div>
+          </div>
+        </div>
+        <div class="technique">
+          <div class="technique-num">09</div>
+          <div class="technique-body">
+            <h4>J ante A, O, U</h4>
+            <p>El sonido /x/ ante <em>a</em>, <em>o</em>, <em>u</em> siempre se escribe con <strong>j</strong>.</p>
+            <div class="example">jamás · joven · juicio · trabajo · ojo · ceja</div>
+          </div>
+        </div>
+        <div class="technique">
+          <div class="technique-num">10</div>
+          <div class="technique-body">
+            <h4>H en palabras con diptongo inicial IE, UE</h4>
+            <p>Cuando una palabra empieza con diptongo <em>ie-</em> o <em>ue-</em>, siempre lleva <strong>h</strong>.</p>
+            <div class="example">hielo · hierba · hueso · huevo · huérfano · hierro</div>
+          </div>
+        </div>
+        <div class="technique">
+          <div class="technique-num">11</div>
+          <div class="technique-body">
+            <h4>Familia léxica con H</h4>
+            <p>Si la raíz de una palabra lleva <strong>h</strong>, toda su familia léxica la conserva.</p>
+            <div class="example">honor → honrar · honesto · honorable · deshonra</div>
+          </div>
+        </div>
+        <div class="technique">
+          <div class="technique-num">12</div>
+          <div class="technique-body">
+            <h4>Interjecciones siempre con H</h4>
+            <p>Las interjecciones exclamativas o apelativas llevan <strong>h</strong> inicial o final.</p>
+            <div class="example">¡Hola! · ¡Eh! · ¡Ah! · ¡Oh! · ¡Bah! · ¡Huy!</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="lesson-footer">
+        <button class="btn btn-ghost" onclick="navigate(document.querySelector('[data-screen=leccion1]'))">← Anterior</button>
+        <button class="btn btn-primary" onclick="completeAndNext('leccion2','leccion3')">Completar y continuar →</button>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════════ -->
+    <!-- SCREEN: LECCIÓN 3 -->
+    <!-- ══════════════════════════════════════════════ -->
+    <div class="screen" id="screen-leccion3">
+      <div class="lesson-header">
+        <div class="lesson-tag">📖 Módulo I · Lección 03</div>
+        <h2 class="lesson-title">C, S, Z y X: el seseo y ceceo</h2>
+        <div class="lesson-meta"><span>⏱ 18 min</span><span>📚 6 técnicas</span></div>
+      </div>
+
+      <div class="card">
+        <div class="card-title"><div class="card-icon">📝</div> Introducción</div>
+        <p>En el español peninsular estándar existen dos fonemas, /s/ y /θ/, mientras que en América Latina, Canarias y parte de Andalucía ambos se pronuncian /s/ (seseo). La norma ortográfica es única para todas las variedades.</p>
+        <div class="highlight"><strong>Dato clave:</strong> La <em>x</em> puede representar los sonidos /ks/, /gs/ o incluso /s/ (en xenofobia, Xochimilco) según el contexto y la región.</div>
+      </div>
+
+      <div class="technique-grid">
+        <div class="technique">
+          <div class="technique-num">13</div>
+          <div class="technique-body">
+            <h4>C ante E e I para el sonido /θ/</h4>
+            <p>En el español peninsular, <strong>c</strong> ante <em>e</em> e <em>i</em> representa el sonido interdental /θ/.</p>
+            <div class="example">cero · ciudad · cielo · circo · cena · cimiento</div>
+          </div>
+        </div>
+        <div class="technique">
+          <div class="technique-num">14</div>
+          <div class="technique-body">
+            <h4>Z ante A, O, U</h4>
+            <p>El fonema /θ/ ante <em>a</em>, <em>o</em>, <em>u</em> se escribe siempre con <strong>z</strong>.</p>
+            <div class="example">zapato · zona · zurdo · brazo · pozo · fuerza</div>
+          </div>
+        </div>
+        <div class="technique">
+          <div class="technique-num">15</div>
+          <div class="technique-body">
+            <h4>Plurales: Z → C</h4>
+            <p>Las palabras que terminan en <strong>z</strong> forman el plural cambiando z por <strong>c</strong> antes de añadir <em>-es</em>.</p>
+            <div class="example">luz → luces · voz → voces · pez → peces · nariz → narices</div>
+          </div>
+        </div>
+        <div class="technique">
+          <div class="technique-num">16</div>
+          <div class="technique-body">
+            <h4>S en sufijos -ÍSIMO, -ÍSIMA</h4>
+            <p>El superlativo absoluto se escribe siempre con <strong>s</strong>.</p>
+            <div class="example">bellísimo · rapidísimo · clarísima · grandísimo</div>
+          </div>
+        </div>
+        <div class="technique">
+          <div class="technique-num">17</div>
+          <div class="technique-body">
+            <h4>X entre vocales o ante consonante</h4>
+            <p>La <strong>x</strong> representa el grupo consonántico /ks/ entre vocales o ante consonante.</p>
+            <div class="example">éxito · examen · externo · texto · flexible · boxeo</div>
+          </div>
+        </div>
+        <div class="technique">
+          <div class="technique-num">18</div>
+          <div class="technique-body">
+            <h4>X en el prefijo EX- (cargo o estado)</h4>
+            <p>Cuando <em>ex-</em> significa "antiguo" o "que fue", se escribe con <strong>x</strong> y separado si va ante sustantivo.</p>
+            <div class="example">ex presidente · exdirector · ex ministro · expatriado</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- MINI QUIZ -->
+      <div class="quiz-card">
+        <h3>✏️ Práctica rápida</h3>
+        <p class="subtitle">Pon a prueba lo aprendido en este módulo</p>
+        <div class="quiz-question" id="q1">
+          <p>¿Cuál de estas palabras está correctamente escrita?</p>
+          <div class="quiz-options">
+            <div class="quiz-option" onclick="answer(this,'wrong','q1','La forma correcta es <em>éxito</em>, con x entre vocales.')">exito</div>
+            <div class="quiz-option" onclick="answer(this,'correct','q1','¡Correcto! <em>éxito</em> se escribe con x, que representa el grupo /ks/ entre vocales.')">éxito</div>
+            <div class="quiz-option" onclick="answer(this,'wrong','q1','No. <em>écsito</em> no existe en castellano.')">écsito</div>
+          </div>
+          <div class="quiz-feedback" id="fb-q1"></div>
+        </div>
+      </div>
+
+      <div class="lesson-footer">
+        <button class="btn btn-ghost" onclick="navigate(document.querySelector('[data-screen=leccion2]'))">← Anterior</button>
+        <button class="btn btn-primary" onclick="completeAndNext('leccion3','leccion4')">Completar y continuar →</button>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════════ -->
+    <!-- SCREEN: LECCIÓN 4 -->
+    <!-- ══════════════════════════════════════════════ -->
+    <div class="screen" id="screen-leccion4">
+      <div class="lesson-header">
+        <div class="lesson-tag">📖 Módulo II · Lección 04</div>
+        <h2 class="lesson-title">Tilde diacrítica avanzada</h2>
+        <div class="lesson-meta"><span>⏱ 20 min</span><span>📚 12 técnicas</span></div>
+      </div>
+
+      <div class="card">
+        <div class="card-title"><div class="card-icon">á</div> ¿Qué es la tilde diacrítica?</div>
+        <p>La <strong>tilde diacrítica</strong> no se usa para indicar pronunciación tónica, sino para distinguir dos palabras que se escriben igual pero tienen distinto significado y función gramatical. La RAE revisó sus normas en 2010, eliminando algunas tildes diacríticas anteriormente obligatorias.</p>
+        <div class="highlight"><strong>Reforma de 2010:</strong> Las palabras <em>solo</em> (adverbio), los demostrativos (<em>este, ese, aquel</em>) y <em>o</em> entre cifras ya <strong>no</strong> llevan tilde obligatoria según la norma actual.</div>
+      </div>
+
+      <div class="technique-grid">
+        <div class="technique">
+          <div class="technique-num">19</div>
+          <div class="technique-body">
+            <h4>TÚ (pronombre) / TU (posesivo)</h4>
+            <p><strong>Tú</strong> con tilde es el pronombre personal de segunda persona. <strong>Tu</strong> sin tilde es el adjetivo posesivo.</p>
+            <div class="example">Tú sabes la verdad. · Tu libro está aquí.</div>
+          </div>
+        </div>
+        <div class="technique">
+          <div class="technique-num">20</div>
+          <div class="technique-body">
+            <h4>ÉL (pronombre) / EL (artículo)</h4>
+            <p><strong>Él</strong> con tilde es el pronombre personal masculino. <strong>El</strong> sin tilde es el artículo determinado.</p>
+            <div class="example">Él llegó tarde. · El perro ladró.</div>
+          </div>
+        </div>
+        <div class="technique">
+          <div class="technique-num">21</div>
+          <div class="technique-body">
+            <h4>MÍ (pronombre) / MI (posesivo o nota musical)</h4>
+            <p><strong>Mí</strong> con tilde es pronombre personal. <strong>Mi</strong> sin tilde es posesivo o la nota musical.</p>
+            <div class="example">Eso es para mí. · Mi casa · Toca en mi menor.</div>
+          </div>
+        </div>
+        <div class="technique">
+          <div class="technique-num">22</div>
+          <div class="technique-body">
+            <h4>SÉ (verbo saber/ser) / SE (pronombre)</h4>
+            <p><strong>Sé</strong> con tilde corresponde al presente de <em>saber</em> (yo sé) o al imperativo de <em>ser</em> (sé bueno). <strong>Se</strong> sin tilde es pronombre.</p>
+            <div class="example">Yo sé la respuesta. · Sé valiente. · Se lo di.</div>
+          </div>
+        </div>
+        <div class="technique">
+          <div class="technique-num">23</div>
+          <div class="technique-body">
+            <h4>MÁS (adverbio) / MAS (conjunción)</h4>
+            <p><strong>Más</strong> con tilde es adverbio de cantidad. <strong>Mas</strong> sin tilde es conjunción adversativa equivalente a "pero" (uso literario).</p>
+            <div class="example">Quiero más agua. · Lo intentó, mas no pudo.</div>
+          </div>
+        </div>
+        <div class="technique">
+          <div class="technique-num">24</div>
+          <div class="technique-body">
+            <h4>QUÉ, CÓMO, CUÁNDO, DÓNDE interrogativos y exclamativos</h4>
+            <p>Llevan tilde cuando introducen oraciones interrogativas o exclamativas, directas o indirectas.</p>
+            <div class="example">¿Qué dices? · No sé cómo llegó. · ¡Qué bien!</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="lesson-footer">
+        <button class="btn btn-ghost" onclick="navigate(document.querySelector('[data-screen=leccion3]'))">← Anterior</button>
+        <button class="btn btn-primary" onclick="completeAndNext('leccion4','leccion5')">Completar y continuar →</button>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════════ -->
+    <!-- SCREEN: LECCIÓN 5 -->
+    <!-- ══════════════════════════════════════════════ -->
+    <div class="screen" id="screen-leccion5">
+      <div class="lesson-header">
+        <div class="lesson-tag">📖 Módulo II · Lección 05</div>
+        <h2 class="lesson-title">Hiatos, diptongos y triptongos</h2>
+        <div class="lesson-meta"><span>⏱ 20 min</span><span>📚 10 técnicas</span></div>
+      </div>
+
+      <div class="card">
+        <div class="card-title"><div class="card-icon">📝</div> Concepto clave</div>
+        <p>La interacción entre vocales determina si forman una sola sílaba (diptongo o triptongo) o sílabas distintas (hiato). Este fenómeno afecta directamente a la acentuación gráfica.</p>
+        <div class="highlight">
+          <strong>Regla maestra del hiato acentuado:</strong> Cuando una vocal cerrada tónica (<em>i</em>, <em>u</em>) va junto a una vocal abierta (<em>a</em>, <em>e</em>, <em>o</em>), se produce hiato y la cerrada <strong>siempre lleva tilde</strong>, independientemente de las reglas generales de acentuación.
+        </div>
+      </div>
+
+      <div class="technique-grid">
+        <div class="technique">
+          <div class="technique-num">25</div>
+          <div class="technique-body">
+            <h4>Diptongo creciente</h4>
+            <p>Vocal cerrada átona + vocal abierta forman diptongo en una sola sílaba.</p>
+            <div class="example">pie · fue · bien · ciudad · suave</div>
+          </div>
+        </div>
+        <div class="technique">
+          <div class="technique-num">26</div>
+          <div class="technique-body">
+            <h4>Diptongo decreciente</h4>
+            <p>Vocal abierta + vocal cerrada átona forman diptongo en una sola sílaba.</p>
+            <div class="example">aire · peine · boina · deuda · causa</div>
+          </div>
+        </div>
+        <div class="technique">
+          <div class="technique-num">27</div>
+          <div class="technique-body">
+            <h4>Hiato por vocal cerrada tónica</h4>
+            <p>Cuando la vocal cerrada es tónica y va junto a abierta, se produce hiato y lleva tilde obligatoria.</p>
+            <div class="example">ma·íz · pa·ís · dí·a · frí·o · rí·o · ba·úl</div>
+          </div>
+        </div>
+        <div class="technique">
+          <div class="technique-num">28</div>
+          <div class="technique-body">
+            <h4>Hiato entre vocales abiertas</h4>
+            <p>Dos vocales abiertas contiguas siempre forman hiato (sílabas distintas). Se acentúan según reglas generales.</p>
+            <div class="example">te·a·tro · po·e·ma · ca·os · a·e·ro·puer·to</div>
+          </div>
+        </div>
+        <div class="technique">
+          <div class="technique-num">29</div>
+          <div class="technique-body">
+            <h4>Triptongo</h4>
+            <p>Secuencia de tres vocales en una sola sílaba: cerrada + abierta + cerrada. Se acentúan por reglas generales sobre la vocal abierta.</p>
+            <div class="example">buey · miau · guiais · apreciéis · averiguáis</div>
+          </div>
+        </div>
+        <div class="technique">
+          <div class="technique-num">30</div>
+          <div class="technique-body">
+            <h4>Hiato en formas verbales</h4>
+            <p>Las terminaciones verbales en <em>-ía</em> siempre forman hiato: la <em>i</em> tónica lleva tilde obligatoria.</p>
+            <div class="example">comía · vivía · hacía · tendría · podría · vendría</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="lesson-footer">
+        <button class="btn btn-ghost" onclick="navigate(document.querySelector('[data-screen=leccion4]'))">← Anterior</button>
+        <button class="btn btn-primary" onclick="completeAndNext('leccion5','leccion6')">Completar y continuar →</button>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════════ -->
+    <!-- SCREEN: LECCIÓN 6 -->
+    <!-- ══════════════════════════════════════════════ -->
+    <div class="screen" id="screen-leccion6">
+      <div class="lesson-header">
+        <div class="lesson-tag">📖 Módulo III · Lección 06</div>
+        <h2 class="lesson-title">Signos de puntuación y estilo avanzado</h2>
+        <div class="lesson-meta"><span>⏱ 25 min</span><span>📚 12 técnicas</span></div>
+      </div>
+
+      <div class="card">
+        <div class="card-title"><div class="card-icon">¡</div> La puntuación como arquitectura del texto</div>
+        <p>Los signos de puntuación no son ornamentos opcionales: son la arquitectura que da ritmo, jerarquía y claridad al texto. Su uso incorrecto puede cambiar radicalmente el significado de un enunciado.</p>
+        <div class="highlight"><strong>Ejemplo clásico:</strong> «No quiero que vengas» ≠ «No, quiero que vengas» — Una sola coma lo cambia todo.</div>
+      </div>
+
+      <div class="technique-grid">
+        <div class="technique">
+          <div class="technique-num">31</div>
+          <div class="technique-body">
+            <h4>Coma vocativa</h4>
+            <p>El vocativo (nombre del interlocutor) siempre va separado del resto por coma(s).</p>
+            <div class="example">María, ven aquí. · No sé, doctor, si podré. · Pasa, amigo.</div>
+          </div>
+        </div>
+        <div class="technique">
+          <div class="technique-num">32</div>
+          <div class="technique-body">
+            <h4>Coma en aposición explicativa</h4>
+            <p>Las aposiciones explicativas (que añaden información no esencial) van entre comas.</p>
+            <div class="example">Madrid, capital de España, tiene millones de habitantes.</div>
+          </div>
+        </div>
+        <div class="technique">
+          <div class="technique-num">33</div>
+          <div class="technique-body">
+            <h4>Punto y coma en enumeraciones complejas</h4>
+            <p>Se usa punto y coma para separar elementos de una enumeración cuando alguno de ellos ya contiene comas.</p>
+            <div class="example">Vinieron Pedro, el médico; Ana, la abogada; y Luis, el chef.</div>
+          </div>
+        </div>
+        <div class="technique">
+          <div class="technique-num">34</div>
+          <div class="technique-body">
+            <h4>Dos puntos antes de enumeración</h4>
+            <p>Los dos puntos anuncian una enumeración, una cita textual, o una explicación de lo anterior.</p>
+            <div class="example">Necesitas tres cosas: disciplina, tiempo y método.</div>
+          </div>
+        </div>
+        <div class="technique">
+          <div class="technique-num">35</div>
+          <div class="technique-body">
+            <h4>Raya (—) para el inciso</h4>
+            <p>La raya —más larga que el guion— enmarca incisos con mayor énfasis que los paréntesis.</p>
+            <div class="example">El resultado —inesperado para todos— cambió el rumbo.</div>
+          </div>
+        </div>
+        <div class="technique">
+          <div class="technique-num">36</div>
+          <div class="technique-body">
+            <h4>Comillas en el castellano: tipología</h4>
+            <p>El español prefiere las comillas angulares «» (españolas), reservando las inglesas "" para citas dentro de citas y las simples '' para uso muy específico.</p>
+            <div class="example">Dijo: «Ven», y yo respondí "ya voy".</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- QUIZ FINAL -->
+      <div class="quiz-card">
+        <h3>🏆 Evaluación final del módulo</h3>
+        <p class="subtitle">Demuestra tu dominio de los signos de puntuación</p>
+        <div class="quiz-question" id="q2">
+          <p>¿Cuál es el uso correcto de las comillas en español?</p>
+          <div class="quiz-options">
+            <div class="quiz-option" onclick="answer(this,'correct','q2','¡Correcto! En español se prefieren las comillas angulares «» y se reservan las inglesas para citas dentro de citas.')">«texto» para citas principales, "texto" para citas dentro de citas</div>
+            <div class="quiz-option" onclick="answer(this,'wrong','q2','No. Las comillas angulares «» son las preferidas en el español estándar, no al revés.')">Las comillas inglesas "" son las preferidas en español</div>
+            <div class="quiz-option" onclick="answer(this,'wrong','q2','No. No son equivalentes: existen diferencias estilísticas y tipográficas entre ellas.')">Todas las comillas son equivalentes y se pueden usar indistintamente</div>
+          </div>
+          <div class="quiz-feedback" id="fb-q2"></div>
+        </div>
+      </div>
+
+      <div class="lesson-footer">
+        <button class="btn btn-ghost" onclick="navigate(document.querySelector('[data-screen=leccion5]'))">← Anterior</button>
+        <button class="btn btn-primary" onclick="completeAndNext('leccion6','dashboard')">🎓 Finalizar curso</button>
+      </div>
+    </div>
+
+  </div><!-- /content -->
+</div><!-- /main -->
+
+<script>
+  const order = ['dashboard','leccion1','leccion2','leccion3','leccion4','leccion5','leccion6'];
+  const labels = {
+    dashboard: '· Panel principal',
+    leccion1: '· B, V y W',
+    leccion2: '· G, J y H muda',
+    leccion3: '· C, S, Z y X',
+    leccion4: '· Tilde diacrítica',
+    leccion5: '· Hiatos y diptongos',
+    leccion6: '· Signos de puntuación'
+  };
+  const completed = new Set();
+  let current = 'dashboard';
+
+  function navigate(el) {
+    const screen = el.dataset.screen;
+    current = screen;
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    document.getElementById('screen-' + screen).classList.add('active');
+    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+    el.classList.add('active');
+    document.getElementById('breadcrumbCurrent').textContent = labels[screen] || '';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function completeAndNext(done, next) {
+    completed.add(done);
+    // Mark nav
+    document.querySelectorAll('.nav-item').forEach(n => {
+      if (n.dataset.screen === done) n.classList.add('completed');
+    });
+    updateProgress();
+    navigate(document.querySelector('[data-screen=' + next + ']'));
+  }
+
+  function updateProgress() {
+    const total = 6;
+    const done = completed.size;
+    const pct = Math.round((done / total) * 100);
+    document.getElementById('progressBar').style.width = pct + '%';
+    document.getElementById('progressText').textContent = done + ' / ' + total + ' lecciones completadas';
+    document.getElementById('statDone').textContent = done;
+  }
+
+  function prevLesson() {
+    const idx = order.indexOf(current);
+    if (idx > 0) navigate(document.querySelector('[data-screen=' + order[idx - 1] + ']'));
+  }
+  function nextLesson() {
+    const idx = order.indexOf(current);
+    if (idx < order.length - 1) navigate(document.querySelector('[data-screen=' + order[idx + 1] + ']'));
+  }
+
+  function answer(el, result, qid, msg) {
+    const qEl = document.getElementById(qid);
+    if (qEl.dataset.answered) return;
+    qEl.dataset.answered = '1';
+    el.classList.add(result);
+    const fb = document.getElementById('fb-' + qid);
+    fb.innerHTML = (result === 'correct' ? '✅ ' : '❌ ') + msg;
+    fb.className = 'quiz-feedback show ' + (result === 'correct' ? 'ok' : 'fail');
+    qEl.querySelectorAll('.quiz-option').forEach(o => o.style.pointerEvents = 'none');
+  }
+</script>
+</body>
+</html>

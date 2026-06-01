@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>Architext · 100 técnicas de redacción para Arquitectura</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #8B5E3C;
+      --primary-dark: #6B3E1C;
+      --secondary: #D9A13B;
+      --bg-dark: #1a1a1a;
+      --bg-light: #FDF8F0;
+      --card-dark: #252525;
+      --card-light: #FFFFFF;
+    }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg-dark);
+      color: #E5E5E5;
+      transition: all 0.3s;
+    }
+    body.light-mode {
+      background: var(--bg-light);
+      color: #1E1E1E;
+    }
+    .sidebar {
+      background: #1E1E1E;
+      border-radius: 1.5rem;
+      padding: 1rem;
+      height: fit-content;
+      position: sticky;
+      top: 20px;
+    }
+    body.light-mode .sidebar { background: #FFF; }
+    .nav-item-custom {
+      padding: 0.8rem 1rem;
+      border-radius: 1rem;
+      cursor: pointer;
+      margin-bottom: 0.5rem;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: #AAA;
+    }
+    .nav-item-custom i { width: 24px; }
+    .nav-item-custom.active { background: var(--primary); color: white; }
+    .cat-filter {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+    }
+    .filter-btn {
+      background: transparent;
+      border: 1px solid #3A3A3A;
+      border-radius: 30px;
+      padding: 0.2rem 0.8rem;
+      font-size: 0.7rem;
+      cursor: pointer;
+    }
+    .filter-btn.active { background: var(--primary); border-color: var(--primary); color: white; }
+    body.light-mode .filter-btn { border-color: #D0D0D0; }
+    .tecnica-card {
+      background: var(--card-dark);
+      border-radius: 1rem;
+      padding: 1rem;
+      margin-bottom: 0.8rem;
+      border: 1px solid #3A3A3A;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+    body.light-mode .tecnica-card { background: var(--card-light); border-color: #E0E0E0; }
+    .tecnica-card.completed { border-left: 4px solid var(--primary); background: rgba(139,94,60,0.15); }
+    .flashcard-container { perspective: 1000px; min-height: 520px; cursor: pointer; }
+    .flashcard { width: 100%; height: 580px; position: relative; transform-style: preserve-3d; transition: transform 0.6s; border-radius: 1.5rem; }
+    .flashcard.flipped { transform: rotateY(180deg); }
+    .flashcard-front, .flashcard-back {
+      position: absolute; width: 100%; height: 100%; backface-visibility: hidden;
+      border-radius: 1.5rem; padding: 1.5rem; display: flex; flex-direction: column;
+      background: var(--card-dark); border: 1px solid #3A3A3A; overflow-y: auto;
+    }
+    body.light-mode .flashcard-front, body.light-mode .flashcard-back { background: var(--card-light); }
+    .flashcard-back { transform: rotateY(180deg); background: var(--primary); color: white; }
+    .option-btn { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); padding: 0.5rem 1rem; border-radius: 2rem; margin: 0.3rem; cursor: pointer; }
+    .option-btn:hover { background: rgba(255,255,255,0.2); }
+    .option-btn.correct { background: #27ae60; }
+    .option-btn.incorrect { background: #e74c3c; }
+    .progress-custom { height: 4px; background: #3A3A3A; border-radius: 2px; }
+    .progress-fill-custom { height: 100%; background: var(--primary); width: 0%; transition: width 0.3s; }
+    footer { background: #141414; padding: 1rem 0; margin-top: 2rem; text-align: center; }
+    .badge-cat { background: var(--secondary); color: #2C2A29; padding: 0.2rem 0.6rem; border-radius: 20px; font-size: 0.7rem; }
+    .search-box { width: 100%; padding: 0.5rem; border-radius: 2rem; border: 1px solid #3A3A3A; background: var(--card-dark); color: #E5E5E5; }
+    body.light-mode .search-box { background: var(--card-light); color: #1E1E1E; border-color: #D0D0D0; }
+  </style>
+</head>
+<body>
+
+<div class="container-fluid px-4 py-3">
+  <div class="row g-4">
+    
+    <!-- SIDEBAR -->
+    <div class="col-lg-3 col-md-4">
+      <div class="sidebar">
+        <div class="text-center py-3">
+          <i class="bi bi-building" style="font-size: 2rem; color: var(--primary);"></i>
+          <h5 class="mt-2">Architext</h5>
+          <small class="text-muted">100 técnicas · Arquitectura</small>
+        </div>
+        <hr>
+        <div class="nav-item-custom active" data-view="lista">
+          <i class="bi bi-list-ul"></i> <span>📋 Técnicas</span>
+        </div>
+        <div class="nav-item-custom" data-view="flashcards">
+          <i class="bi bi-stack"></i> <span>🃏 Flashcards</span>
+        </div>
+        <hr>
+        <div class="mt-3">
+          <div class="d-flex justify-content-between small"><span>Técnicas completadas</span><span id="completedCount">0</span><span>/100</span></div>
+          <div class="progress-custom mt-1"><div class="progress-fill-custom" id="progressFill"></div></div>
+        </div>
+        <hr>
+        <button id="themeToggleBtn" class="btn btn-sm w-100 mt-2"><i class="bi bi-moon-stars-fill"></i> Modo oscuro</button>
+      </div>
+    </div>
+    
+    <!-- CONTENIDO PRINCIPAL -->
+    <div class="col-lg-9 col-md-8">
+      
+      <!-- VISTA LISTA DE TÉCNICAS -->
+      <div id="listaView">
+        <h3><i class="bi bi-building me-2"></i>100 técnicas de redacción para Arquitectura</h3>
+        <p class="text-muted small">Memoria descriptiva · Especificaciones técnicas · Artículos · Presentación de proyectos · Normativa colombiana</p>
+        <div class="d-flex gap-2 my-3 flex-wrap">
+          <input type="text" id="searchInput" class="search-box" placeholder="🔍 Buscar técnica..." style="width: 200px;">
+          <select id="catFilter" class="form-select form-select-sm" style="width: 200px;">
+            <option value="all">Todas las categorías</option>
+            <option value="Memoria descriptiva">📋 Memoria descriptiva</option>
+            <option value="Especificaciones técnicas">📐 Especificaciones técnicas</option>
+            <option value="Artículos académicos">📄 Artículos académicos</option>
+            <option value="Presentación de proyectos">🎨 Presentación de proyectos</option>
+            <option value="Normativa colombiana">⚖️ Normativa colombiana</option>
+          </select>
+        </div>
+        <div id="tecnicasList" style="max-height: 70vh; overflow-y: auto;"></div>
+        <div class="d-flex justify-content-center mt-4"><ul class="pagination" id="pagination"></ul></div>
+      </div>
+      
+      <!-- VISTA FLASHCARDS -->
+      <div id="flashcardsView" style="display: none;">
+        <div class="d-flex justify-content-between mb-3">
+          <h3><i class="bi bi-stack me-2"></i>Flashcards · Aprende redacción arquitectónica</h3>
+        </div>
+        <div class="flashcard-container"><div class="flashcard" id="flashcard">
+          <div class="flashcard-front">
+            <div class="d-flex justify-content-between"><span class="badge-cat" id="frontCat">Categoría</span><span id="frontNum">#1</span></div>
+            <h5 id="frontTitle" class="mt-2">Técnica</h5>
+            <p id="frontConcept" class="mt-3" style="flex:1;">Concepto</p>
+            <small>🖱️ Haz clic para ver el ejemplo arquitectónico</small>
+          </div>
+          <div class="flashcard-back">
+            <div class="d-flex justify-content-between"><span class="badge-cat">📖 Ejemplo en arquitectura</span><span id="backNum">#1</span></div>
+            <h5 id="backTitle" class="mt-2">Ejemplo práctico</h5>
+            <p id="backExample" class="mt-2" style="flex:1;"></p>
+            <div id="exerciseArea" class="mt-3"></div>
+          </div>
+        </div></div>
+        <div class="d-flex justify-content-between mt-4">
+          <button id="prevCardBtn" class="btn btn-outline-light">◀ Anterior</button>
+          <div><span id="cardCounter">1 / 100</span><button id="markCompleteBtn" class="btn btn-sm btn-success ms-2">✅ Aprendida</button></div>
+          <button id="nextCardBtn" class="btn btn-outline-light">Siguiente ▶</button>
+        </div>
+        <div class="text-center mt-3"><button id="randomCardBtn" class="btn btn-sm btn-secondary me-2">🎲 Aleatorio</button><button id="flipCardBtn" class="btn btn-sm btn-secondary">🔄 Voltear</button></div>
+      </div>
+    </div>
+  </div>
+</div>
+<footer><div class="container"><small>🏛️ Architext · 100 técnicas de redacción para Arquitectura · Colombia</small></div></footer>
+
+<script>
+  // ============================================================
+  // 100 TÉCNICAS DE REDACCIÓN PARA ARQUITECTURA (Colombia)
+  // ============================================================
+  
+  const tecnicas = [];
+  
+  const tecnicasPorCategoria = {
+    "Memoria descriptiva": [
+      [1, "Redacta la idea conceptual al inicio", "Define el concepto generador del proyecto.", "Ejemplo: 'El proyecto se concibe como un gran balcón hacia el cañón del Chicamocha, integrando el paisaje como protagonista.'"],
+      [2, "Describe la implantación en el terreno", "Relación del edificio con el sitio.", "Ejemplo: 'La edificación se implanta en la ladera oeste, respetando la topografía natural con terrazas escalonadas.'"],
+      [3, "Explica la organización funcional", "Circulaciones, zonas, programa arquitectónico.", "Ejemplo: 'El primer nivel alberga el área social; el segundo, los dormitorios; el sótano, parqueaderos y cuartos técnicos.'"],
+      [4, "Usa vocabulario arquitectónico preciso", "Losa, viga, columna, muro cortina, etc.", "Ejemplo: 'La cubierta es una losa aligerada de 0,30 m de espesor con voladizo de 2,50 m.'"],
+      [5, "Incluye criterios de sostenibilidad", "Eficiencia energética, materiales locales.", "Ejemplo: 'Se implementan paneles solares en la cubierta y recolección de aguas lluvias para riego.'"],
+      [6, "Describe la materialidad y texturas", "Materiales, acabados, colores.", "Ejemplo: 'La fachada combina concreto a la vista, piedra caliza local y vidrio templado.'"],
+      [7, "Redacta la iluminación natural y artificial", "Estrategias lumínicas.", "Ejemplo: 'Los patios interiores permiten iluminación cenital, complementada con luminarias LED tipo downlight.'"],
+      [8, "Explica la ventilación", "Estrategias pasivas o mecánicas.", "Ejemplo: 'La ventilación cruzada se logra mediante vanos opuestos en orientación norte-sur.'"],
+      [9, "Incluye dimensiones y áreas clave", "Metros cuadrados, alturas, luces.", "Ejemplo: 'El área construida es de 450 m² distribuidos en dos niveles; altura libre de 2,60 m.'"],
+      [10, "Redacta la accesibilidad universal", "Rampas, ascensores, anchos de paso.", "Ejemplo: 'La rampa de acceso tiene pendiente del 6% y ancho de 1,50 m.; se incluye ascensor para 6 personas.'"],
+      [11, "Describe el sistema estructural", "Tipo de estructura, materiales, luces.", "Ejemplo: 'La estructura es de pórticos de concreto armado con una luz máxima de 7,50 m.'"],
+      [12, "Incluye detalles constructivos relevantes", "Juntas, anclajes, sellados.", "Ejemplo: 'Las juntas de dilatación se ubican cada 15 m y se sellan con perfil de neopreno.'"],
+      [13, "Redacta el paisajismo", "Vegetación, mobiliario urbano, zonas verdes.", "Ejemplo: 'El jardín incluye especies nativas como sietecueros, heliconias y palmas de cera.'"],
+      [14, "Describe la integración con el entorno", "Relación visual, respeto por escala vecinal.", "Ejemplo: 'El proyecto respeta la altura de las edificaciones vecinas (máximo 2 pisos) y se retira 5 m de la vía principal.'"],
+      [15, "Incluye normas de habitabilidad", "Confort térmico, acústico, lumínico.", "Ejemplo: 'Los cerramientos tienen transmitancia térmica U=2,5 W/m²K y aislamiento acústico de 50 dB.'"],
+      [16, "Redacta el plan de manejo de residuos", "Durante construcción y operación.", "Ejemplo: 'Se dispondrán contenedores diferenciados para reciclaje (plástico, papel, vidrio) y escombros.'"],
+      [17, "Explica el ciclo de vida del proyecto", "Mantenimiento, durabilidad, adaptabilidad.", "Ejemplo: 'La fachada ventilada permite fácil reemplazo de piezas; se prevé un mantenimiento anual de cubiertas.'"],
+      [18, "Incluye análisis de asoleamiento", "Estudio de sombras.", "Ejemplo: 'Las visuales se orientan al este para captar el sol de la mañana y evitar el sobrecalentamiento del oeste.'"],
+      [19, "Describe espacios flexibles", "Adaptabilidad a usos cambiantes.", "Ejemplo: 'La planta libre permite subdivisiones con tabiquería seca para futuros cambios de programa.'"],
+      [20, "Redacta conclusiones de la memoria", "Resumen de valores del proyecto.", "Ejemplo: 'Se concluye que el proyecto responde a las necesidades del usuario, respeta el entorno y utiliza tecnologías sostenibles.'"]
+    ],
+    "Especificaciones técnicas": [
+      [21, "Estructura especificaciones por capítulos", "Según clasificación estándar (CSI MasterFormat).", "Ejemplo: 'Capítulo 03: Concreto; Capítulo 05: Metales; Capítulo 08: Aberturas.'"],
+      [22, "Define estándares de calidad", "NTC, ASTM, ISO.", "Ejemplo: 'El concreto debe cumplir NTC 118 (resistencia a compresión) y ASTM C39.'"],
+      [23, "Redacta tolerancias de construcción", "Desviaciones permitidas.", "Ejemplo: 'Tolerancia en nivel de pisos: ±5 mm; en plomo de muros: ±10 mm en 3 m.'"],
+      [24, "Describe procedimientos de instalación", "Paso a paso.", "Ejemplo: 'Las tuberías hidrosanitarias se instalarán después de la losa de contrapiso y antes del pañete.'"],
+      [25, "Incluye pruebas y ensayos", "Para verificar calidad.", "Ejemplo: 'Se realizarán ensayos de compresión cada 50 m³ de concreto y pruebas hidrostáticas a la red de agua potable.'"],
+      [26, "Define criterios de aceptación y rechazo", "Qué se acepta o no.", "Ejemplo: 'Se rechazarán los materiales que presenten grietas, deformaciones o humedad visible.'"],
+      [27, "Usa verbos modales claros", "Debe, puede, no debe.", "Ejemplo: 'El contratista debe suministrar el cemento con certificado de origen; el interventor puede solicitar pruebas adicionales.'"],
+      [28, "Redacta fichas técnicas de materiales", "Resistencia, densidad, conductividad, etc.", "Ejemplo: 'Panel de yeso: densidad 850 kg/m³, conductividad térmica 0,25 W/mK.'"],
+      [29, "Incluye garantías", "Plazo y cobertura.", "Ejemplo: 'El proveedor garantiza la impermeabilización por 10 años contra filtraciones.'"],
+      [30, "Documenta el mantenimiento preventivo", "Frecuencia, actividades.", "Ejemplo: 'Lubricación de bisagras y cerraduras cada 6 meses; limpieza de canaletas cada fin de año.'"],
+      [31, "Define la vida útil de los elementos", "Durabilidad esperada.", "Ejemplo: 'La vida útil de la cubierta asfáltica es de 15 años; de la estructura metálica, 40 años con mantenimiento.'"],
+      [32, "Redacta anexos con planos de detalle", "Referencia a planos específicos.", "Ejemplo: 'Ver plano A-22 para detalle de junta de dilatación; A-23 para anclaje de barandas.'"],
+      [33, "Incluye lista de verificación de instalación", "Checklist.", "Ejemplo: 'Antes de vaciar el concreto, verificar: nivelación de formaletas, ubicación de refuerzo, pases de tuberías.'"],
+      [34, "Describe el control de calidad", "Muestreo, frecuencias, laboratorios.", "Ejemplo: 'Se enviarán 2 probetas por cada 30 m³ de concreto al laboratorio acreditado por el ONAC.'"],
+      [35, "Redacta especificaciones de soldadura", "Tipo, proceso, certificación.", "Ejemplo: 'Soldadura eléctrica tipo E-6010 para raíz y E-7018 para relleno, por soldador certificado AWS D1.1.'"],
+      [36, "Incluye cifras y unidades claras", "Métricas y dimensiones.", "Ejemplo: 'El acero de refuerzo debe tener límite de fluencia fy=420 MPa y diámetros de 3/8″, 1/2″ y 5/8″.'"],
+      [37, "Define colores y acabados", "Códigos RAL o referencias.", "Ejemplo: 'Pintura esmalte color RAL 9010 (blanco puro) para interiores; RAL 7035 (gris claro) para exteriores.'"],
+      [38, "Redacta cláusulas de seguridad", "Protección durante la obra.", "Ejemplo: 'El contratista debe proveer barandas perimetrales en huecos de ascensor y señalización de riesgos.'"],
+      [39, "Incluye planos de acabados", "Cuadro de áreas y materiales por ambiente.", "Ejemplo: 'Cuadro de acabados: sala (piso porcelanato, muro pintura látex); cocina (piso baldosa antideslizante).'"],
+      [40, "Documenta las cantidades de obra", "M3, m2, kg, unidades.", "Ejemplo: 'Concreto: 120 m³; Acero: 8.500 kg; Ladrillo: 5.000 unidades; Pintura: 1.200 m².'"]
+    ],
+    "Artículos académicos": [
+      [41, "Estructura IMRyD para investigaciones", "Introducción, Métodos, Resultados, Discusión.", "Ejemplo: 'Introducción: problemática de vivienda en Bogotá; Métodos: diseño paramétrico; Resultados: optimización del 20% en áreas; Discusión: comparación con estudios previos.'"],
+      [42, "Redacta título preciso y atractivo", "Incluye palabras clave.", "Ejemplo: 'Vivienda de interés social: optimización espacial mediante diseño paramétrico en Bogotá'."],
+      [43, "Define objetivos y alcances", "Propósito del estudio.", "Ejemplo: 'Objetivo: evaluar la eficiencia del diseño paramétrico en la reducción de áreas no utilizadas.'"],
+      [44, "Cita estudios precedentes", "Estado del arte.", "Ejemplo: 'Estudios previos (Gómez, 2019; Pérez, 2020) han aplicado diseño paramétrico en proyectos de gran escala.'"],
+      [45, "Describe la metodología replicable", "Software, parámetros, variables.", "Ejemplo: 'Se utilizó Rhino + Grasshopper; las variables fueron: área de circulación, número de unidades, orientación solar.'"],
+      [46, "Presenta resultados con gráficos", "Diagramas, tablas, renders.", "Ejemplo: 'Figura 3: Comparación de áreas óptimas por escenario paramétrico (n=15 iteraciones).'"],
+      [47, "Discute limitaciones del estudio", "Bias, alcance, generalización.", "Ejemplo: 'Limitación: solo se consideraron viviendas de hasta 70 m²; no se incluyeron aspectos estructurales.'"],
+      [48, "Concluye con aportes y futuras líneas", "Contribución del estudio.", "Ejemplo: 'Se concluye que el método reduce áreas muertas en 15%; futuras investigaciones deberían incorporar variables climáticas.'"],
+      [49, "Cita normas arquitectónicas relevantes", "Referencia a estándares.", "Ejemplo: 'Los diseños cumplen la NSR-10 para cargas vivas y la NTC 4595 para accesibilidad.'"],
+      [50, "Usa imágenes con leyendas descriptivas", "Explica qué muestra cada figura.", "Ejemplo: 'Figura 4. Axonometría del sistema estructural propuesto (vigas de acero y losas colaborantes).'"],
+      [51, "Incluye referencias en formato estándar", "ACM, APA, IEEE según publicación.", "Ejemplo: '[1] Sánchez, L. y Martínez, R. (2023). Diseño paramétrico en arquitectura. Bogotá: Uniandes.'"],
+      [52, "Diferencia entre análisis cualitativo y cuantitativo", "Según los datos.", "Ejemplo: 'El análisis cualitativo incluye entrevistas a usuarios; el cuantitativo, mediciones de áreas y costos.'"],
+      [53, "Redacta resumen ejecutivo", "En inglés y español (bilingüe).", "Ejemplo: 'Resumen: este estudio evalúa... Palabras clave: vivienda, optimización, diseño paramétrico.'"],
+      [54, "Explica herramientas digitales utilizadas", "Software, plugins, versiones.", "Ejemplo: 'Se utilizó Revit 2024 para modelado BIM y Lumion 12 para renders.'"],
+      [55, "Incluye cronograma del estudio", "Para artículos que reportan investigación.", "Ejemplo: 'El estudio se desarrolló en 6 meses: 2 meses de diseño paramétrico, 2 de simulación, 2 de análisis.'"],
+      [56, "Describe la muestra o casos de estudio", "Proyectos reales.", "Ejemplo: 'Se analizaron 5 proyectos de vivienda de interés social en las ciudades de Bogotá, Medellín y Cali.'"],
+      [57, "Redacta la discusión con comparación", "Contrasta hallazgos.", "Ejemplo: 'A diferencia del estudio de Pérez (2021), nuestro diseño alcanzó ahorros de material superiores, probablemente por el uso de algoritmos genéticos.'"],
+      [58, "Declara conflictos de interés", "Transparencia.", "Ejemplo: 'Los autores declaran que no existen conflictos de interés en la realización de esta investigación.'"],
+      [59, "Incluye agradecimientos institucionales", "Financiación, laboratorios.", "Ejemplo: 'Agradecemos a la Universidad Nacional de Colombia por el acceso a los laboratorios de fabricación digital.'"],
+      [60, "Revisa la gramática y ortografía especializada", "Cuida términos técnicos.", "Ejemplo: 'No confundir 'voladizo' (elemento en voladizo) con 'vuelo' (distancia al borde del terreno).'"]
+    ],
+    "Presentación de proyectos": [
+      [61, "Redacta un resumen ejecutivo atractivo", "Pitch del proyecto en 100 palabras.", "Ejemplo: 'Una vivienda que se funde con el paisaje del cañón del Chicamocha, usando materiales locales y estrategias pasivas.'"],
+      [62, "Explica la idea conceptual en una frase", "Eslogan del proyecto.", "Ejemplo: 'El proyecto es un 'puente habitable entre la montaña y el valle.'"],
+      [63, "Describe el sitio con imágenes y texto", "Contexto geográfico, fotos, planos.", "Ejemplo: 'Terreno con pendiente del 25%, orientado al oriente, con vista dominante al cañón.'"],
+      [64, "Usa diagramas conceptuales", "Esquemas, croquis, partido arquitectónico.", "Ejemplo: 'Figura 5: Diagrama de flujo de usuarios y zonificación propuesta.'"],
+      [65, "Redacta fichas de cada espacio", "Nombre, área, acabados, equipamiento.", "Ejemplo: 'Sala-comedor: 35 m², piso madera, muros pintura blanca, iluminación LED.'"],
+      [66, "Incluye cortes y fachadas anotadas", "Explica decisiones con texto.", "Ejemplo: 'El corte A-A muestra el voladizo de 3 m que protege la terraza del sol de la tarde.'"],
+      [67, "Redacta la memoria estructural resumida", "Sistema, luces, materiales.", "Ejemplo: 'Pórticos de concreto armado con luces de hasta 7,5 m; muros de contención en el sótano.'"],
+      [68, "Describe instalaciones hidrosanitarias", "Red de agua, alcantarillado.", "Ejemplo: 'El agua proviene del acueducto municipal; se implementa separador de grasas en la cocina.'"],
+      [69, "Redacta la memoria eléctrica", "Circuitos, iluminación, fuerza.", "Ejemplo: 'El tablero principal alimenta 6 circuitos: 3 de iluminación, 2 de tomacorrientes, 1 especial para equipo de bombeo.'"],
+      [70, "Incluye maqueta virtual o física", "Referencia a imágenes.", "Ejemplo: 'Se anexa maqueta virtual renderizada (Figura 12) y fotos de maqueta física escala 1:100.'"],
+      [71, "Redacta una página de renders comentados", "Explica cada vista.", "Ejemplo: 'Render exterior: se aprecia la integración con el paisaje y la textura del concreto a la vista.'"],
+      [72, "Usa tablas de áreas y programa", "Resumen de metros cuadrados.", "Ejemplo: 'Área construida: 450 m²; área libre: 300 m²; área de circulación: 80 m².'"],
+      [73, "Incluye presupuesto resumido", "Costos por capítulo.", "Ejemplo: 'Estructura: $80.000.000; Acabados: $60.000.000; Instalaciones: $40.000.000; Total obra: $180.000.000.'"],
+      [74, "Redacta cronograma de obra", "Fases y duración.", "Ejemplo: 'Pre-obra: 1 mes; estructura: 3 meses; acabados: 2 meses; entrega: 1 mes.'"],
+      [75, "Explica sostenibilidad en ficha técnica", 'Certificaciones (LEED, EDGE).', "Ejemplo: 'El proyecto aspira a certificación EDGE por ahorros del 30% en energía y 25% en agua.'"],
+      [76, "Incluye panel de materiales", "Muestrario visual.", "Ejemplo: 'Propuesta de paleta: madera de pino, concreto, piedra caliza, acero oxidado, vidrio templado.'"],
+      [77, "Redacta una narrativa de recorrido", "Describe cómo se vive el espacio.", "Ejemplo: 'Al ingresar, se atraviesa un zaguán que conduce a un patio central, desde el cual se distribuyen las estancias.'"],
+      [78, "Usa gráficos de asoleamiento y vientos", "Estrategia bioclimática.", "Ejemplo: 'El louver orientable protege del sol de la tarde y permite la ventilación cruzada.'"],
+      [79, "Incluye normativa de parqueaderos", "Cumplimiento local.", "Ejemplo: 'Según el POT, se requieren 2 parqueaderos para visitantes, provistos en el primer sótano.'"],
+      [80, "Redacta conclusiones destacadas", "Qué hace único el proyecto.", "Ejemplo: 'El proyecto se destaca por su integración topográfica, uso de materiales locales y autosuficiencia energética parcial.'"]
+    ],
+    "Normativa colombiana": [
+      [81, "Cita la NSR-10 correctamente", "Reglamento de construcción sismo resistente.", "Ejemplo: 'Según NSR-10, título A, la edificación está clasificada como A-3 (vivienda de interés social).'"],
+      [82, "Referencia el POT (Plan de Ordenamiento Territorial)", "Normas de uso del suelo.", "Ejemplo: 'El terreno está en suelo urbano, categoría 'residencial de densidad media', según el POT de Bucaramanga.'"],
+      [83, "Incluye definición de índice de ocupación", "IO = área construida / área del lote.", "Ejemplo: 'El lote de 500 m² permite un IO máximo de 0,6, es decir, 300 m² de proyección en planta.'"],
+      [84, "Define el índice de construcción", "IC = área construida total / área del lote.", "Ejemplo: 'El IC máximo permitido es 2,0, lo que da un área construida total de 1.000 m².'"],
+      [85, "Cita la Ley 400 de 1997", "Sobre sismo resistencia.", "Ejemplo: 'La Ley 400 de 1997 establece la NSR-10 como reglamento de obligatorio cumplimiento.'"],
+      [86, "Referencia la Resolución 0549 de 2015", "Licencias de construcción.", "Ejemplo: 'Según la Resolución 0549, se requiere licencia de construcción para obras mayores de 150 m².'"],
+      [87, "Incluye definición de cesiones urbanísticas", "Cesión de áreas para espacio público.", "Ejemplo: 'Se debe ceder el 10% del área del lote para parques y vías locales.'"],
+      [88, "Cita el Decreto 1077 de 2015", "Sector vivienda, ciudad y territorio.", "Ejemplo: 'El Decreto Único Reglamentario 1077 de 2015 compila las normas de vivienda y urbanismo.'"],
+      [89, "Define la VIS y VIP", "Vivienda de Interés Social y Prioritario.", "Ejemplo: 'La VIS tiene valor máximo de 135 SMLMV; la VIP, 70 SMLMV (2024).'"],
+      [90, "Referencia la RETIE", "Instalaciones eléctricas.", "Ejemplo: 'Las instalaciones eléctricas deben cumplir RETIE y NTC 2050.'"],
+      [91, "Cita la RETILAP", "Reglamento de iluminación.", "Ejemplo: 'El alumbrado exterior debe cumplir la RETILAP en niveles de iluminación y eficiencia.'"],
+      [92, "Incluye definición de accesibilidad", "Ley 1287 de 2009.", "Ejemplo: 'Las rampas deben tener pendiente máxima del 6% y ancho mínimo de 1,20 m, según Ley 1287.'"],
+      [93, "Referencia la NTC 4595", "Accesibilidad de personas con discapacidad.", "Ejemplo: 'Los pasillos deben tener ancho mínimo de 1,20 m para dos sillas de ruedas.'"],
+      [94, "Cita la Guía de sostenibilidad del Minvivienda", "Construcción sostenible.", "Ejemplo: 'El proyecto sigue la Guía de Construcción Sostenible del Minvivienda en uso de materiales reciclados.'"],
+      [95, "Define licencia de construcción", "Requisitos y procedimiento.", "Ejemplo: 'La licencia de construcción se tramita ante la Curaduría Urbana con planos aprobados.'"],
+      [96, "Incluye requisitos de parqueaderos", "Según POT local.", "Ejemplo: 'Para uso residencial, se exige 1 parqueadero por cada 10 viviendas o 1 por cada 150 m² de construcción.'"],
+      [97, "Referencia la norma de aislamiento acústico", "NTC 4595 y código de construcción.", "Ejemplo: 'Los cerramientos entre unidades deben tener aislamiento acústico mínimo R'w=50 dB.'"],
+      [98, "Cita la norma de eficiencia energética", "Resolución 549 de 2015.", "Ejemplo: 'Las lámparas deben tener eficiencia mínima de 70 lm/W y balastos electrónicos.'"],
+      [99, "Define el metrado y certificados", "Áreas privadas, comunes, vendibles.", "Ejemplo: 'El metrado se realiza según la NTC 5285 para cálculo de áreas construidas.'"],
+      [100, "Actualiza según nueva reglamentación", "Normas municipales y departamentales.", "Ejemplo: 'Revisar la circular externa 001 de 2024 de la Alcaldía de Bucaramanga sobre alturas máximas.'"]
+    ]
+  };
+  
+  // Construir array de técnicas
+  for(let categoria in tecnicasPorCategoria) {
+    for(let tec of tecnicasPorCategoria[categoria]) {
+      tecnicas.push({
+        id: tec[0],
+        categoria: categoria,
+        titulo: tec[1],
+        concepto: tec[2],
+        ejemplo: tec[3]
+      });
+    }
+  }
+  
+  tecnicas.sort((a,b) => a.id - b.id);
+  
+  let progress = {};
+  let currentCatFilter = "all";
+  let currentSearch = "";
+  let currentPage = 1;
+  let itemsPerPage = 12;
+  let filteredTecnicas = [...tecnicas];
+  let currentCardIndex = 0;
+  let filteredFlashcards = [...tecnicas];
+  const STORAGE_KEY = "architext_100_tecnicas";
+  
+  function loadProgress() {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if(saved) progress = JSON.parse(saved);
+    for(let i=0; i<tecnicas.length; i++) if(progress[tecnicas[i].id]===undefined) progress[tecnicas[i].id] = false;
+    updateStats();
+  }
+  function saveProgress() { localStorage.setItem(STORAGE_KEY, JSON.stringify(progress)); updateStats(); }
+  function updateStats() {
+    let c = Object.values(progress).filter(v=>v===true).length;
+    document.getElementById("completedCount").innerText = c;
+    document.getElementById("progressFill").style.width = `${(c/100)*100}%`;
+  }
+  function markComplete(id, isComplete) {
+    if(isComplete && !progress[id]) { progress[id] = true; saveProgress(); renderLista(); }
+  }
+  
+  function renderLista() {
+    let filtered = tecnicas.filter(t => {
+      if(currentCatFilter !== "all" && t.categoria !== currentCatFilter) return false;
+      if(currentSearch && !t.titulo.toLowerCase().includes(currentSearch) && !t.concepto.toLowerCase().includes(currentSearch)) return false;
+      return true;
+    });
+    filteredTecnicas = filtered;
+    const totalPages = Math.ceil(filtered.length / itemsPerPage);
+    const start = (currentPage-1) * itemsPerPage;
+    const paginated = filtered.slice(start, start+itemsPerPage);
+    
+    const container = document.getElementById("tecnicasList");
+    container.innerHTML = paginated.map(t => `
+      <div class="tecnica-card ${progress[t.id] ? 'completed' : ''}" data-id="${t.id}">
+        <div class="d-flex justify-content-between">
+          <div><span class="badge-cat">${t.categoria}</span><span class="ms-2">#${t.id}</span></div>
+          <input class="form-check-input" type="checkbox" ${progress[t.id] ? 'checked' : ''} onchange="event.stopPropagation(); markComplete(${t.id}, this.checked)">
+        </div>
+        <h6 class="mt-2">${t.titulo}</h6>
+        <p class="small text-muted">${t.concepto.substring(0, 100)}...</p>
+      </div>
+    `).join('');
+    
+    document.querySelectorAll(".tecnica-card").forEach(card => {
+      card.addEventListener("click", (e) => {
+        if(!e.target.classList.contains("form-check-input")) {
+          let id = parseInt(card.dataset.id);
+          let idx = filteredTecnicas.findIndex(t => t.id === id);
+          if(idx !== -1) { currentCardIndex = idx; switchToFlashcards(); updateFlashcard(); }
+        }
+      });
+    });
+    
+    let pagHtml = ''; for(let i=1;i<=totalPages;i++) pagHtml += `<li class="page-item ${i===currentPage?'active':''}"><a class="page-link" href="#" data-page="${i}">${i}</a></li>`;
+    document.getElementById("pagination").innerHTML = pagHtml;
+    document.querySelectorAll("#pagination .page-link").forEach(l=>l.addEventListener("click", e=>{ e.preventDefault(); currentPage=parseInt(l.dataset.page); renderLista(); }));
+  }
+  
+  function filterFlashcards() {
+    if(currentCatFilter === "all") filteredFlashcards = [...tecnicas];
+    else filteredFlashcards = tecnicas.filter(t => t.categoria === currentCatFilter);
+    currentCardIndex = Math.min(currentCardIndex, filteredFlashcards.length-1);
+    if(currentCardIndex < 0) currentCardIndex = 0;
+    updateFlashcard();
+  }
+  
+  function updateFlashcard() {
+    let t = filteredFlashcards[currentCardIndex];
+    if(!t) return;
+    document.getElementById("frontCat").innerHTML = t.categoria;
+    document.getElementById("frontNum").innerHTML = `#${t.id}`;
+    document.getElementById("frontTitle").innerHTML = t.titulo;
+    document.getElementById("frontConcept").innerHTML = t.concepto;
+    document.getElementById("backNum").innerHTML = `#${t.id}`;
+    document.getElementById("backTitle").innerHTML = t.titulo;
+    document.getElementById("backExample").innerHTML = t.ejemplo;
+    document.getElementById("cardCounter").innerHTML = `${currentCardIndex+1}/${filteredFlashcards.length}`;
+    document.getElementById("flashcard").classList.remove("flipped");
+    
+    let qText = t.concepto.split('.')[0] || t.concepto;
+    let ejercicioHtml = `<div class="small fw-bold mb-2">📝 Ejercicio: ¿Cuál es el objetivo de esta técnica?</div>
+      <div class="d-flex flex-wrap gap-2">
+        <button class="option-btn ejercicio-opt" data-value="${qText}">${qText}</button>
+        <button class="option-btn ejercicio-opt" data-value="Escribir sin estructura">Escribir sin estructura</button>
+        <button class="option-btn ejercicio-opt" data-value="Ignorar la normativa">Ignorar la normativa</button>
+      </div>
+      <div id="ejercicioFeedback" class="mt-2 small"></div>`;
+    document.getElementById("exerciseArea").innerHTML = ejercicioHtml;
+    
+    document.querySelectorAll(".ejercicio-opt").forEach(btn => {
+      btn.onclick = () => {
+        let isCorrect = btn.getAttribute("data-value") === qText;
+        let fb = document.getElementById("ejercicioFeedback");
+        if(isCorrect) { fb.innerHTML = "<span class='text-success'>✅ Correcto!</span>"; markComplete(t.id, true); renderLista(); }
+        else { fb.innerHTML = "<span class='text-danger'>❌ Incorrecto. Vuelve a leer la técnica.</span>"; }
+        document.querySelectorAll(".ejercicio-opt").forEach(b=>b.disabled=true);
+      };
+    });
+  }
+  
+  function nextCard(){ if(currentCardIndex<filteredFlashcards.length-1){currentCardIndex++; updateFlashcard();} }
+  function prevCard(){ if(currentCardIndex>0){currentCardIndex--; updateFlashcard();} }
+  function randomCard(){ currentCardIndex=Math.floor(Math.random()*filteredFlashcards.length); updateFlashcard(); }
+  function flipCard(){ document.getElementById("flashcard").classList.toggle("flipped"); }
+  function markCurrentComplete(){
+    let t = filteredFlashcards[currentCardIndex];
+    if(t && !progress[t.id]) { progress[t.id]=true; saveProgress(); renderLista(); updateFlashcard(); }
+  }
+  
+  function switchToLista() {
+    document.getElementById("listaView").style.display = "block";
+    document.getElementById("flashcardsView").style.display = "none";
+    document.querySelectorAll(".nav-item-custom").forEach(i=>i.classList.remove("active"));
+    document.querySelector(".nav-item-custom[data-view='lista']").classList.add("active");
+    renderLista();
+  }
+  function switchToFlashcards() {
+    document.getElementById("listaView").style.display = "none";
+    document.getElementById("flashcardsView").style.display = "block";
+    document.querySelectorAll(".nav-item-custom").forEach(i=>i.classList.remove("active"));
+    document.querySelector(".nav-item-custom[data-view='flashcards']").classList.add("active");
+    filterFlashcards();
+  }
+  
+  document.getElementById("prevCardBtn")?.addEventListener("click", prevCard);
+  document.getElementById("nextCardBtn")?.addEventListener("click", nextCard);
+  document.getElementById("randomCardBtn")?.addEventListener("click", randomCard);
+  document.getElementById("flipCardBtn")?.addEventListener("click", flipCard);
+  document.getElementById("markCompleteBtn")?.addEventListener("click", markCurrentComplete);
+  document.getElementById("themeToggleBtn")?.addEventListener("click", () => document.body.classList.toggle("light-mode"));
+  document.querySelector(".nav-item-custom[data-view='lista']")?.addEventListener("click", switchToLista);
+  document.querySelector(".nav-item-custom[data-view='flashcards']")?.addEventListener("click", switchToFlashcards);
+  
+  document.getElementById("searchInput")?.addEventListener("input", e => { currentSearch = e.target.value.toLowerCase(); currentPage = 1; renderLista(); });
+  document.getElementById("catFilter")?.addEventListener("change", e => { currentCatFilter = e.target.value; currentPage = 1; renderLista(); filterFlashcards(); });
+  
+  loadProgress();
+  renderLista();
+  switchToLista();
+</script>
+</body>
+</html>

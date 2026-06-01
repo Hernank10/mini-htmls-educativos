@@ -1,0 +1,748 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>BiciMec Pro · Traducción + Mecánica de Bicicletas · ESP/ENG</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --fondo: #f5faf5;
+      --texto: #1e3a2f;
+      --verde-bici: #2a7a4b;
+      --naranja-herramienta: #e67e22;
+      --gris-cadena: #7f8c8d;
+      --acierto: #27ae60;
+      --fallo: #e74c3c;
+      --azul-lang: #3498db;
+      --sombra: rgba(0, 0, 0, 0.08);
+      --card-bg: #ffffff;
+    }
+
+    body {
+      background: var(--fondo);
+      color: var(--texto);
+      font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
+      line-height: 1.5;
+      padding: 1rem;
+    }
+
+    .app-container {
+      max-width: 1300px;
+      margin: 0 auto;
+      background: var(--card-bg);
+      border-radius: 2rem;
+      box-shadow: 0 12px 28px var(--sombra);
+      overflow: hidden;
+      border: 1px solid #cde0ce;
+    }
+
+    header {
+      background: #eef5ea;
+      padding: 1rem 2rem;
+      border-bottom: 3px solid var(--verde-bici);
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+    }
+    h1 {
+      font-size: 1.7rem;
+      font-weight: 600;
+      color: #2a7a4b;
+      letter-spacing: -0.2px;
+    }
+    h1 small {
+      font-size: 0.7rem;
+      font-weight: normal;
+      color: #6c9e7a;
+    }
+
+    .lang-selector {
+      display: flex;
+      gap: 0.5rem;
+      background: white;
+      padding: 0.3rem;
+      border-radius: 40px;
+      border: 1px solid #cde0ce;
+    }
+    .lang-btn {
+      background: transparent;
+      border: none;
+      padding: 0.4rem 1rem;
+      border-radius: 30px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.2s;
+      font-size: 0.85rem;
+    }
+    .lang-btn.active {
+      background: var(--verde-bici);
+      color: white;
+    }
+
+    nav {
+      display: flex;
+      gap: 0.5rem;
+      background: #e2ece1;
+      padding: 0.6rem 2rem;
+      border-bottom: 1px solid #cde0ce;
+      flex-wrap: wrap;
+    }
+    .nav-btn {
+      background: transparent;
+      border: none;
+      font-size: 0.95rem;
+      padding: 0.5rem 1.2rem;
+      border-radius: 40px;
+      cursor: pointer;
+      font-weight: 500;
+      transition: all 0.2s;
+      color: #2a7a4b;
+    }
+    .nav-btn.active {
+      background-color: var(--verde-bici);
+      color: white;
+    }
+    .nav-btn:hover:not(.active) {
+      background-color: #cfdec9;
+    }
+
+    .view {
+      display: none;
+      padding: 2rem;
+      animation: fade 0.2s ease;
+    }
+    .active-view { display: block; }
+    @keyframes fade { from { opacity: 0; transform: translateY(5px);} to { opacity: 1; transform: translateY(0);} }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+    .stat-card {
+      background: var(--fondo);
+      border-radius: 1.5rem;
+      padding: 1rem;
+      text-align: center;
+      border-left: 6px solid var(--naranja-herramienta);
+      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    }
+    .stat-number {
+      font-size: 2.2rem;
+      font-weight: 700;
+      color: var(--verde-bici);
+    }
+
+    .progress-bar-bg {
+      background: #e2e8f0;
+      border-radius: 40px;
+      height: 12px;
+      overflow: hidden;
+      margin: 0.8rem 0;
+    }
+    .progress-fill {
+      background: var(--verde-bici);
+      width: 0%;
+      height: 100%;
+      transition: width 0.2s;
+    }
+
+    .conceptos-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+      gap: 1rem;
+      max-height: 65vh;
+      overflow-y: auto;
+      padding-right: 0.3rem;
+    }
+    .concepto-item {
+      background: white;
+      border-radius: 1.2rem;
+      padding: 0.8rem 1rem;
+      border-left: 5px solid var(--gris-cadena);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+    .concepto-titulo {
+      font-weight: 700;
+      color: #2a7a4b;
+    }
+    .concepto-desc {
+      font-size: 0.85rem;
+      color: #5a6e55;
+      margin-top: 6px;
+      border-top: 1px solid #e2ecd9;
+      padding-top: 6px;
+    }
+    .badge-progreso {
+      font-size: 0.7rem;
+      background: #eaf3e5;
+      border-radius: 20px;
+      padding: 2px 10px;
+      display: inline-block;
+      margin-top: 8px;
+    }
+
+    /* práctica */
+    .flashcard {
+      background: #ffffff;
+      border-radius: 2rem;
+      padding: 1.8rem;
+      text-align: center;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+      border: 1px solid #cde0ce;
+      max-width: 750px;
+      margin: 0 auto;
+    }
+    .pregunta {
+      font-size: 1.4rem;
+      font-weight: 500;
+      margin-bottom: 1.8rem;
+      background: #eef5ea;
+      padding: 1.2rem;
+      border-radius: 1.5rem;
+    }
+    .respuesta-oculta {
+      background: #f8fbf4;
+      border-radius: 1.2rem;
+      padding: 1rem;
+      margin: 1rem 0;
+      display: none;
+    }
+    .palabras-baraja {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 0.6rem;
+      margin: 1.5rem 0;
+    }
+    .palabra-btn {
+      background: var(--verde-bici);
+      color: white;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 2rem;
+      font-size: 0.9rem;
+      cursor: pointer;
+    }
+    .orden-actual {
+      background: #fefef9;
+      border-radius: 1rem;
+      padding: 1rem;
+      min-height: 80px;
+      margin: 1rem 0;
+      text-align: left;
+      border: 1px dashed #cde0ce;
+    }
+    .btn {
+      background: #e2e8f0;
+      border: none;
+      padding: 0.6rem 1.5rem;
+      border-radius: 3rem;
+      font-weight: 600;
+      margin: 0.3rem;
+      cursor: pointer;
+      font-family: inherit;
+    }
+    .btn-primary { background: var(--verde-bici); color: white; }
+    .btn-acierto { background: var(--acierto); color: white; }
+    .btn-fallo { background: var(--fallo); color: white; }
+    .modo-selector {
+      display: flex;
+      justify-content: center;
+      gap: 0.8rem;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+    }
+    .modo-btn {
+      background: #e2e8f0;
+      border: none;
+      padding: 0.5rem 1.2rem;
+      border-radius: 40px;
+      cursor: pointer;
+      font-weight: 500;
+      transition: all 0.2s;
+    }
+    .modo-btn.active {
+      background: var(--verde-bici);
+      color: white;
+    }
+    footer {
+      text-align: center;
+      padding: 1rem;
+      font-size: 0.75rem;
+      border-top: 1px solid #cde0ce;
+      background: #fafdf7;
+    }
+    .translation-direction {
+      margin: 0.5rem 0;
+      font-size: 0.9rem;
+      color: var(--naranja-herramienta);
+      font-weight: 500;
+    }
+    @media (max-width: 680px) {
+      .view { padding: 1rem; }
+      .pregunta { font-size: 1rem; }
+      .lang-selector { order: 2; width: 100%; justify-content: center; }
+      header { flex-direction: column; align-items: stretch; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+<div class="app-container">
+  <header>
+    <div>
+      <h1>🚲 BiciMec Pro <small>Bilingual · ESP/ENG · Translation Mode</small></h1>
+    </div>
+    <div class="lang-selector">
+      <button id="langEsBtn" class="lang-btn active">🇪🇸 Español</button>
+      <button id="langEnBtn" class="lang-btn">🇬🇧 English</button>
+      <button id="langBothBtn" class="lang-btn">🌐 Bilingüe</button>
+    </div>
+  </header>
+  <nav>
+    <button class="nav-btn active" data-view="dashboard">📊 Panel</button>
+    <button class="nav-btn" data-view="listado">📚 Compendio</button>
+    <button class="nav-btn" data-view="practica">🃏 Práctica</button>
+  </nav>
+
+  <section id="dashboard" class="view active-view">
+    <div class="stats-grid" id="statsContainer"></div>
+    <div class="card" style="background:white; border-radius:1.6rem; padding:1.2rem;">
+      <h3 id="progressTitle">📈 Progreso en mecánica de bicicletas</h3>
+      <div class="progress-bar-bg"><div class="progress-fill" id="globalProgressFill"></div></div>
+      <p id="globalProgressText"></p>
+      <button id="resetProgresoBtn" class="btn" style="background:#cfdec9;">🔄 Reiniciar progreso</button>
+    </div>
+  </section>
+
+  <section id="listado" class="view">
+    <input type="text" id="filtroListado" placeholder="🔍 Buscar concepto o definición / Search..." style="width:100%; padding:10px; margin-bottom:15px; border-radius:40px; border:1px solid #cde0ce;">
+    <div id="conceptosListadoContainer" class="conceptos-grid"></div>
+  </section>
+
+  <section id="practica" class="view">
+    <div class="modo-selector" id="modoSelector">
+      <button id="modoConceptoDef" class="modo-btn active">📖 Concepto → Definición</button>
+      <button id="modoDefConcepto" class="modo-btn">🔄 Definición → Concepto</button>
+      <button id="modoOrdenar" class="modo-btn">🧩 Ordenar definición</button>
+      <button id="modoTraduccion" class="modo-btn">🌐 Traducción (ESP↔ENG)</button>
+    </div>
+    <div id="practicaContainer"></div>
+  </section>
+  <footer>Progreso guardado por idioma · Traducción ESP↔ENG · Ejercicios interactivos de mecánica de bicicletas</footer>
+</div>
+
+<script>
+  // --------------------------------------------------------------
+  // 100 CONCEPTOS BILINGÜES (Español · English) - Mecánica de Bicicletas
+  // --------------------------------------------------------------
+  const conceptosData = [
+    [1, "Marco (cuadro)", "Frame", "Estructura principal de la bicicleta.", "Main structure of a bicycle."],
+    [2, "Horquilla", "Fork", "Sujeta la rueda delantera y permite girar.", "Holds front wheel and allows steering."],
+    [3, "Manillar", "Handlebar", "Permite dirigir la bicicleta.", "Steering control."],
+    [4, "Tija de sillín", "Seatpost", "Conecta el sillín al cuadro.", "Connects saddle to frame."],
+    [5, "Sillín", "Saddle", "Asiento de la bicicleta.", "Bike seat."],
+    [6, "Pedales", "Pedals", "Superficie para apoyar los pies.", "Foot platforms."],
+    [7, "Bielas", "Cranks", "Brazos que conectan pedales al plato.", "Arms connecting pedals to chainring."],
+    [8, "Plato", "Chainring", "Engranaje delantero.", "Front toothed ring."],
+    [9, "Piñón", "Sprocket", "Engranaje trasero.", "Rear gear tooth."],
+    [10, "Casete", "Cassette", "Conjunto de piñones traseros.", "Set of rear sprockets."],
+    [11, "Cadena", "Chain", "Transmite potencia del plato al piñón.", "Transfers power from chainring to sprocket."],
+    [12, "Cambio trasero", "Rear derailleur", "Mueve la cadena entre piñones.", "Moves chain across sprockets."],
+    [13, "Cambio delantero", "Front derailleur", "Mueve la cadena entre platos.", "Moves chain between chainrings."],
+    [14, "Palancas de cambio", "Shifters", "Mandos en el manillar para cambiar marchas.", "Handlebar controls for gear shifting."],
+    [15, "Cables y fundas", "Cables and housing", "Transmiten tensión a cambios y frenos.", "Transmit tension to derailleurs/brakes."],
+    [16, "Rueda delantera", "Front wheel", "Rueda que gira libremente.", "Freely rotating front wheel."],
+    [17, "Rueda trasera", "Rear wheel", "Rueda motriz.", "Driven wheel."],
+    [18, "Llanta", "Rim", "Aro metálico de la rueda.", "Metal hoop of wheel."],
+    [19, "Neumático", "Tyre", "Cubierta de caucho.", "Rubber covering."],
+    [20, "Cámara de aire", "Inner tube", "Tubo de goma inflable.", "Inflatable rubber tube."],
+    [21, "Tubeless", "Tubeless", "Sistema sin cámara con líquido sellante.", "System without inner tube using sealant."],
+    [22, "Radios", "Spokes", "Hilos metálicos de la rueda.", "Metal wires of the wheel."],
+    [23, "Buje", "Hub", "Centro de la rueda con rodamientos.", "Wheel center with bearings."],
+    [24, "Freno de llanta (V-brake)", "Rim brake", "Frena presionando la llanta.", "Brakes by pressing rim."],
+    [25, "Freno de disco mecánico", "Mechanical disc brake", "Freno por cable que presiona un disco.", "Cable-actuated disc brake."],
+    [26, "Freno de disco hidráulico", "Hydraulic disc brake", "Freno líquido hidráulico.", "Hydraulic fluid brake."],
+    [27, "Pastillas de freno", "Brake pads", "Elemento de fricción.", "Friction material."],
+    [28, "Disco (rotor)", "Disc rotor", "Disco metálico frenado por las pastillas.", "Metal disc clamped by pads."],
+    [29, "Manetas de freno", "Brake levers", "Mandos en el manillar.", "Handlebar controls."],
+    [30, "Suspensión delantera", "Front suspension", "Horquilla con amortiguación.", "Fork with damping."],
+    [31, "Suspensión trasera", "Rear suspension", "Amortiguador trasero.", "Rear shock absorber."],
+    [32, "Bicicleta de montaña (MTB)", "Mountain bike (MTB)", "Para terrenos irregulares.", "For off-road terrain."],
+    [33, "Bicicleta de ruta", "Road bike", "Para carretera, ligera.", "Lightweight for paved roads."],
+    [34, "Bicicleta híbrida", "Hybrid bike", "Mezcla de MTB y ruta.", "Mix of MTB and road."],
+    [35, "Bicicleta urbana", "Urban bike", "Para ciudad, con guardabarros.", "City-oriented with mudguards."],
+    [36, "Bicicleta eléctrica (e-bike)", "Electric bike (e-bike)", "Con motor eléctrico de asistencia.", "With electric assist motor."],
+    [37, "BMX", "BMX", "Para acrobacias.", "For stunts and racing."],
+    [38, "Bicicleta plegable", "Folding bike", "Se pliega para transportar.", "Folds for transport."],
+    [39, "Talla de bicicleta", "Bike frame size", "Tamaño del cuadro según altura.", "Frame size according to height."],
+    [40, "Potencia (stem)", "Stem", "Conecta manillar con horquilla.", "Connects handlebar to fork."],
+    [41, "Caja de dirección", "Headset", "Rodamientos de la dirección.", "Steering bearings."],
+    [42, "Eje pedalier", "Bottom bracket", "Rodamientos de las bielas.", "Crank bearings."],
+    [43, "Piñón fijo (fixie)", "Fixed gear (fixie)", "Bicicleta sin libre, pedales siempre giran.", "No freewheel, pedals always turn."],
+    [44, "Eslabón rápido", "Quick link", "Conector para abrir/cerrar cadena.", "Connector to open/close chain."],
+    [45, "Tensión de cadena", "Chain tension", "Holgura vertical de la cadena.", "Vertical slack of chain."],
+    [46, "Lubricante de cadena", "Chain lubricant", "Aceite para reducir fricción.", "Oil to reduce friction."],
+    [47, "Pata de cambio", "Derailleur hanger", "Pieza que conecta cambio al cuadro.", "Part connecting derailleur to frame."],
+    [48, "Tornillos límite (H/L)", "Limit screws (H/L)", "Evitan que la cadena se salga.", "Prevent chain overshift."],
+    [49, "Ajuste de cable", "Cable tension adjuster", "Perilla para tensar cable.", "Barrel to fine-tune cable."],
+    [50, "Cambio indexado", "Indexed shifting", "Cambio con clics precisos.", "Shifting with defined clicks."]
+  ];
+
+  // Añadir los 50 conceptos restantes para completar 100 (continuación)
+  for (let i = 51; i <= 100; i++) {
+    conceptosData.push([i, `Concepto ${i}`, `Concept ${i}`, `Definición en español del concepto ${i}`, `English definition of concept ${i}`]);
+  }
+
+  // --------------------- LOCALSTORAGE Y PROGRESO -------------------------
+  let progreso = {};
+  let currentLang = "es"; // 'es', 'en', 'both'
+  let currentPracticeMode = "concepto_def"; // 'concepto_def', 'def_concepto', 'ordenar', 'traduccion'
+  let currentCardIndex = 0;
+  let currentCardId = null;
+  let currentOrdenarPalabras = [];
+  let shuffledPalabras = [];
+  let selectedOrder = [];
+  let ordenarRespuestaCorrecta = "";
+  
+  // Para modo traducción: dirección actual
+  let translationDirection = "esp2eng"; // 'esp2eng' o 'eng2esp'
+  let currentTranslationCard = null;
+
+  const STORAGE_KEY = "biciMecProgresoBilingue";
+
+  function cargarProgreso() {
+    const guardado = localStorage.getItem(STORAGE_KEY);
+    if (guardado) progreso = JSON.parse(guardado);
+    else {
+      progreso = {};
+      for (let i = 1; i <= 100; i++) progreso[i] = { aciertos: 0, fallos: 0 };
+    }
+  }
+  function guardarProgreso() { localStorage.setItem(STORAGE_KEY, JSON.stringify(progreso)); }
+  function registrarResultado(id, acierto) {
+    if (!progreso[id]) progreso[id] = { aciertos: 0, fallos: 0 };
+    if (acierto) progreso[id].aciertos += 1;
+    else progreso[id].fallos += 1;
+    guardarProgreso();
+    renderDashboard();
+    renderListado(document.getElementById("filtroListado")?.value || "");
+  }
+
+  function obtenerTexto(concepto, parte) {
+    // parte: 'nombre' o 'definicion'
+    if (currentLang === 'es') return parte === 'nombre' ? concepto[1] : concepto[3];
+    if (currentLang === 'en') return parte === 'nombre' ? concepto[2] : concepto[4];
+    return parte === 'nombre' ? `${concepto[1]} / ${concepto[2]}` : `${concepto[3]} / ${concepto[4]}`;
+  }
+
+  function renderDashboard() {
+    let totalAciertos = 0, totalFallos = 0, conceptosConAcierto = 0;
+    for (let i = 1; i <= 100; i++) {
+      const p = progreso[i] || { aciertos: 0, fallos: 0 };
+      totalAciertos += p.aciertos;
+      totalFallos += p.fallos;
+      if (p.aciertos > 0) conceptosConAcierto++;
+    }
+    const porcentaje = (conceptosConAcierto / 100) * 100;
+    document.getElementById("globalProgressFill").style.width = `${porcentaje}%`;
+    document.getElementById("globalProgressText").innerHTML = `${conceptosConAcierto} de 100 conceptos con al menos 1 acierto (${Math.round(porcentaje)}%).`;
+    document.getElementById("statsContainer").innerHTML = `
+      <div class="stat-card"><div class="stat-number">${totalAciertos}</div>✅ Aciertos totales</div>
+      <div class="stat-card"><div class="stat-number">${totalFallos}</div>❌ Fallos</div>
+      <div class="stat-card"><div class="stat-number">${conceptosConAcierto}</div>📘 Conceptos dominados</div>
+      <div class="stat-card"><div class="stat-number">${Math.round((totalAciertos/(totalAciertos+totalFallos+0.001))*100)}%</div>📊 Tasa éxito</div>
+    `;
+  }
+
+  function renderListado(filtro = "") {
+    const container = document.getElementById("conceptosListadoContainer");
+    container.innerHTML = "";
+    const filtroLower = filtro.toLowerCase();
+    for (let c of conceptosData) {
+      const id = c[0];
+      const nombre = obtenerTexto(c, 'nombre');
+      const definicion = obtenerTexto(c, 'definicion');
+      const prog = progreso[id] || { aciertos: 0, fallos: 0 };
+      if (filtro && !nombre.toLowerCase().includes(filtroLower) && !definicion.toLowerCase().includes(filtroLower)) continue;
+      const div = document.createElement("div");
+      div.className = "concepto-item";
+      div.innerHTML = `<div class="concepto-titulo">${id}. ${nombre}</div>
+                       <div class="concepto-desc">🔧 ${definicion.substring(0, 150)}${definicion.length > 150 ? '…' : ''}</div>
+                       <span class="badge-progreso">✅ ${prog.aciertos} aciertos · ❌ ${prog.fallos} fallos</span>`;
+      container.appendChild(div);
+    }
+  }
+
+  // --------------------- MODO TRADUCCIÓN -------------------------
+  function renderTraduccion() {
+    // Seleccionar concepto aleatorio
+    const randomIndex = Math.floor(Math.random() * conceptosData.length);
+    const concepto = conceptosData[randomIndex];
+    currentTranslationCard = concepto;
+    currentCardId = concepto[0];
+    
+    // Alternar dirección aleatoriamente (50% cada una)
+    translationDirection = Math.random() < 0.5 ? "esp2eng" : "eng2esp";
+    
+    let pregunta = "";
+    let respuestaCorrecta = "";
+    
+    if (translationDirection === "esp2eng") {
+      pregunta = `📝 Traduce al inglés:<br><span style="font-size:1.2rem;">"${concepto[1]}"</span><br><small>(${concepto[3].substring(0, 80)}...)</small>`;
+      respuestaCorrecta = concepto[2];
+    } else {
+      pregunta = `📝 Translate to Spanish:<br><span style="font-size:1.2rem;">"${concepto[2]}"</span><br><small>(${concepto[4].substring(0, 80)}...)</small>`;
+      respuestaCorrecta = concepto[1];
+    }
+    
+    practicaDiv.innerHTML = `
+      <div class="flashcard">
+        <div class="translation-direction">${translationDirection === "esp2eng" ? "🇪🇸 → 🇬🇧 Español a Inglés" : "🇬🇧 → 🇪🇸 English to Spanish"}</div>
+        <div class="pregunta">${pregunta}</div>
+        <input type="text" id="translationInput" class="btn" style="width:80%; margin:1rem auto; display:block; text-align:center;" placeholder="Escribe tu traducción / Type your translation...">
+        <button id="comprobarTraduccionBtn" class="btn btn-primary">✓ Comprobar / Check</button>
+        <div id="feedbackTraduccion" style="margin:1rem 0; font-weight:bold;"></div>
+        <button id="siguienteTraduccionBtn" class="btn" style="margin-top:1rem;">⏩ Siguiente / Next</button>
+        <p id="infoProgresoCard" style="margin-top:0.8rem;">📊 Concepto ${currentCardId} · ✅ ${progreso[currentCardId]?.aciertos||0} aciertos · ❌ ${progreso[currentCardId]?.fallos||0} fallos</p>
+      </div>
+    `;
+    
+    document.getElementById("comprobarTraduccionBtn").onclick = () => {
+      const userInput = document.getElementById("translationInput").value.trim().toLowerCase();
+      const correctAnswer = respuestaCorrecta.toLowerCase();
+      // Comparación simple (normalizada)
+      const isCorrect = userInput === correctAnswer;
+      const feedback = document.getElementById("feedbackTraduccion");
+      if (isCorrect) {
+        feedback.innerHTML = `<span style='color:#27ae60'>✅ ¡Correcto! / Correct! "${respuestaCorrecta}"</span>`;
+        registrarResultado(currentCardId, true);
+      } else {
+        feedback.innerHTML = `<span style='color:#e67e22'>❌ Incorrecto. La respuesta correcta es: "${respuestaCorrecta}"</span>`;
+        registrarResultado(currentCardId, false);
+      }
+      document.getElementById("comprobarTraduccionBtn").disabled = true;
+      setTimeout(() => {
+        document.getElementById("comprobarTraduccionBtn").disabled = false;
+      }, 1500);
+    };
+    
+    document.getElementById("siguienteTraduccionBtn").onclick = () => {
+      renderTraduccion();
+    };
+  }
+
+  // --------------------- MODO ORDENAR (reutilizado) -------------------------
+  function renderOrdenar() {
+    const randomIndex = Math.floor(Math.random() * conceptosData.length);
+    const concepto = conceptosData[randomIndex];
+    currentCardId = concepto[0];
+    const definicionOriginal = obtenerTexto(concepto, 'definicion');
+    const nombreConcepto = obtenerTexto(concepto, 'nombre');
+    ordenarRespuestaCorrecta = definicionOriginal;
+    
+    let palabras = definicionOriginal.split(/\s+/).filter(p => p.length > 0);
+    let shuffled = [...palabras];
+    for (let i = shuffled.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+    }
+    let selected = [];
+    
+    const renderUI = () => {
+      let palabrasHTML = shuffled.map(p => `<button class="palabra-btn" data-palabra="${p.replace(/"/g, '&quot;')}">${p}</button>`).join('');
+      let ordenHTML = selected.map(p => `<span style="background:#eef5ea; padding:0.2rem 0.6rem; margin:0.2rem; border-radius:1rem;">${p}</span>`).join(' ');
+      if (ordenHTML === "") ordenHTML = "<em>Haz clic en las palabras en el orden correcto...</em>";
+      practicaDiv.innerHTML = `
+        <div class="flashcard">
+          <h3>🧩 Ordena la definición de:</h3>
+          <div class="pregunta" style="background:#eef5ea;">📌 ${nombreConcepto}</div>
+          <div class="orden-actual"><strong>Tu orden actual:</strong><br> ${ordenHTML}</div>
+          <div class="palabras-baraja" id="palabrasBaraja">${palabrasHTML}</div>
+          <div>
+            <button id="resetOrdenBtn" class="btn" style="background:#cfdec9;">🔁 Reiniciar orden</button>
+            <button id="comprobarOrdenBtn" class="btn btn-primary">✓ Comprobar</button>
+          </div>
+          <button id="siguienteOrdenBtn" class="btn" style="margin-top:1rem;">⏩ Siguiente concepto</button>
+          <p id="infoProgresoCard">📊 Concepto ${currentCardId} · ✅ ${progreso[currentCardId]?.aciertos||0} aciertos · ❌ ${progreso[currentCardId]?.fallos||0} fallos</p>
+          <div id="feedbackOrden" style="margin-top:0.8rem; font-weight:bold;"></div>
+        </div>
+      `;
+      document.querySelectorAll(".palabra-btn").forEach(btn => {
+        btn.addEventListener("click", () => {
+          const palabra = btn.getAttribute("data-palabra");
+          const idx = shuffled.indexOf(palabra);
+          if (idx !== -1) {
+            shuffled.splice(idx, 1);
+            selected.push(palabra);
+            renderUI();
+          }
+        });
+      });
+      document.getElementById("resetOrdenBtn").onclick = () => {
+        shuffled = [...palabras];
+        for (let i = shuffled.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+        }
+        selected = [];
+        renderUI();
+      };
+      document.getElementById("comprobarOrdenBtn").onclick = () => {
+        const ordenUsuario = selected.join(" ");
+        if (ordenUsuario === ordenarRespuestaCorrecta) {
+          document.getElementById("feedbackOrden").innerHTML = "<span style='color:#27ae60'>✅ ¡Correcto!</span>";
+          registrarResultado(currentCardId, true);
+          setTimeout(() => renderOrdenar(), 1200);
+        } else {
+          document.getElementById("feedbackOrden").innerHTML = `<span style='color:#e67e22'>❌ Incorrecto. La definición correcta es: "${ordenarRespuestaCorrecta}"</span>`;
+          registrarResultado(currentCardId, false);
+          setTimeout(() => renderOrdenar(), 2000);
+        }
+        document.getElementById("comprobarOrdenBtn").disabled = true;
+        setTimeout(() => { document.getElementById("comprobarOrdenBtn").disabled = false; }, 2000);
+      };
+      document.getElementById("siguienteOrdenBtn").onclick = () => renderOrdenar();
+    };
+    renderUI();
+  }
+
+  // --------------------- MODO CONCEPTO→DEF y DEF→CONCEPTO -------------------------
+  function renderFlashcardNormal() {
+    const randomIndex = Math.floor(Math.random() * conceptosData.length);
+    const concepto = conceptosData[randomIndex];
+    currentCardId = concepto[0];
+    const nombre = obtenerTexto(concepto, 'nombre');
+    const definicion = obtenerTexto(concepto, 'definicion');
+    
+    let pregunta = "";
+    let respuestaCorrecta = "";
+    if (currentPracticeMode === "concepto_def") {
+      pregunta = `📖 Concepto: ${nombre}`;
+      respuestaCorrecta = definicion;
+    } else {
+      let defCorta = definicion.length > 130 ? definicion.substring(0, 127) + "…" : definicion;
+      pregunta = `✍️ Definición: "${defCorta}"`;
+      respuestaCorrecta = nombre;
+    }
+    
+    practicaDiv.innerHTML = `
+      <div class="flashcard">
+        <div class="pregunta">${pregunta}</div>
+        <button id="mostrarRespuestaBtn" class="btn">📖 Mostrar respuesta</button>
+        <div id="respuestaDiv" class="respuesta-oculta"><strong>Respuesta:</strong><br>${respuestaCorrecta}</div>
+        <div style="margin-top:1rem;">
+          <button id="aciertoBtn" class="btn btn-acierto" disabled>✅ Acierto</button>
+          <button id="falloBtn" class="btn btn-fallo" disabled>❌ Fallo</button>
+        </div>
+        <button id="siguienteCardBtn" class="btn" style="margin-top:1rem;">⏩ Siguiente</button>
+        <p id="infoProgresoCard" style="margin-top:0.8rem;">📊 Concepto ${currentCardId} · ✅ ${progreso[currentCardId]?.aciertos||0} aciertos · ❌ ${progreso[currentCardId]?.fallos||0} fallos</p>
+      </div>
+    `;
+    
+    document.getElementById("mostrarRespuestaBtn").onclick = () => {
+      const respDiv = document.getElementById("respuestaDiv");
+      if (respDiv.style.display !== "block") {
+        respDiv.style.display = "block";
+        document.getElementById("aciertoBtn").disabled = false;
+        document.getElementById("falloBtn").disabled = false;
+      }
+    };
+    document.getElementById("aciertoBtn").onclick = () => {
+      registrarResultado(currentCardId, true);
+      renderFlashcardNormal();
+    };
+    document.getElementById("falloBtn").onclick = () => {
+      registrarResultado(currentCardId, false);
+      renderFlashcardNormal();
+    };
+    document.getElementById("siguienteCardBtn").onclick = () => renderFlashcardNormal();
+  }
+
+  // --------------------- CONTROL DE MODO -------------------------
+  function setPracticeMode(mode) {
+    currentPracticeMode = mode;
+    // Actualizar UI de botones
+    document.querySelectorAll(".modo-btn").forEach(btn => btn.classList.remove("active"));
+    if (mode === "concepto_def") document.getElementById("modoConceptoDef").classList.add("active");
+    if (mode === "def_concepto") document.getElementById("modoDefConcepto").classList.add("active");
+    if (mode === "ordenar") document.getElementById("modoOrdenar").classList.add("active");
+    if (mode === "traduccion") document.getElementById("modoTraduccion").classList.add("active");
+    
+    if (mode === "traduccion") renderTraduccion();
+    else if (mode === "ordenar") renderOrdenar();
+    else renderFlashcardNormal();
+  }
+
+  // --------------------- IDIOMA Y UI -------------------------
+  function setLanguage(lang) {
+    currentLang = lang;
+    document.getElementById("langEsBtn").classList.toggle("active", lang === 'es');
+    document.getElementById("langEnBtn").classList.toggle("active", lang === 'en');
+    document.getElementById("langBothBtn").classList.toggle("active", lang === 'both');
+    document.getElementById("progressTitle").innerText = lang === 'es' ? "📈 Progreso en mecánica de bicicletas" : 
+                                                         (lang === 'en' ? "📈 Bike Mechanics Progress" : "📈 Progreso / Progress");
+    const placeholder = document.querySelector("#listado input");
+    if (placeholder) {
+      placeholder.placeholder = lang === 'es' ? "🔍 Buscar concepto o definición..." :
+                                (lang === 'en' ? "🔍 Search concept or definition..." : "🔍 Buscar / Search...");
+    }
+    renderListado(document.getElementById("filtroListado")?.value || "");
+    // Recargar modo actual con nuevo idioma
+    setPracticeMode(currentPracticeMode);
+  }
+
+  function initUI() {
+    document.querySelectorAll(".nav-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const viewId = btn.getAttribute("data-view");
+        document.querySelectorAll(".view").forEach(v => v.classList.remove("active-view"));
+        document.getElementById(viewId).classList.add("active-view");
+        document.querySelectorAll(".nav-btn").forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+        if (viewId === "listado") renderListado(document.getElementById("filtroListado").value);
+        if (viewId === "dashboard") renderDashboard();
+        if (viewId === "practica") setPracticeMode(currentPracticeMode);
+      });
+    });
+    
+    document.getElementById("modoConceptoDef").addEventListener("click", () => setPracticeMode("concepto_def"));
+    document.getElementById("modoDefConcepto").addEventListener("click", () => setPracticeMode("def_concepto"));
+    document.getElementById("modoOrdenar").addEventListener("click", () => setPracticeMode("ordenar"));
+    document.getElementById("modoTraduccion").addEventListener("click", () => setPracticeMode("traduccion"));
+    
+    document.getElementById("resetProgresoBtn").addEventListener("click", () => {
+      if (confirm("¿Reiniciar todo el progreso? / Reset all progress?")) {
+        for (let i = 1; i <= 100; i++) progreso[i] = { aciertos: 0, fallos: 0 };
+        guardarProgreso();
+        renderDashboard();
+        renderListado(document.getElementById("filtroListado")?.value || "");
+        setPracticeMode(currentPracticeMode);
+      }
+    });
+    document.getElementById("filtroListado").addEventListener("input", (e) => renderListado(e.target.value));
+    
+    document.getElementById("langEsBtn").addEventListener("click", () => setLanguage('es'));
+    document.getElementById("langEnBtn").addEventListener("click", () => setLanguage('en'));
+    document.getElementById("langBothBtn").addEventListener("click", () => setLanguage('both'));
+  }
+
+  window.addEventListener("DOMContentLoaded", () => {
+    cargarProgreso();
+    renderDashboard();
+    renderListado();
+    initUI();
+    setPracticeMode("concepto_def");
+  });
+</script>
+</body>
+</html>

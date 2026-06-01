@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>עברית · Hebreo para Hispanohablantes · 100 técnicas de escritura</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700;800&family=Noto+Sans+Hebrew:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #2C3E50;
+      --primary-dark: #1A252F;
+      --secondary: #F1C40F;
+      --bg-dark: #1a1a1a;
+      --bg-light: #F5F0E8;
+      --card-dark: #252525;
+      --card-light: #FFFFFF;
+    }
+    body {
+      font-family: 'Inter', 'Noto Sans Hebrew', sans-serif;
+      background: var(--bg-dark);
+      color: #E5E5E5;
+      transition: all 0.3s;
+    }
+    body.light-mode {
+      background: var(--bg-light);
+      color: #1E1E1E;
+    }
+    .sidebar {
+      background: #1E1E1E;
+      border-radius: 1.5rem;
+      padding: 1rem;
+      height: fit-content;
+      position: sticky;
+      top: 20px;
+    }
+    body.light-mode .sidebar { background: #FFF; }
+    .nav-item-custom {
+      padding: 0.8rem 1rem;
+      border-radius: 1rem;
+      cursor: pointer;
+      margin-bottom: 0.5rem;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: #AAA;
+    }
+    .nav-item-custom i { width: 24px; }
+    .nav-item-custom.active { background: var(--primary); color: white; }
+    .tecnica-card {
+      background: var(--card-dark);
+      border-radius: 1rem;
+      padding: 1rem;
+      margin-bottom: 0.8rem;
+      border: 1px solid #3A3A3A;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+    body.light-mode .tecnica-card { background: var(--card-light); border-color: #E0E0E0; }
+    .tecnica-card.completed { border-left: 4px solid var(--primary); background: rgba(44,62,80,0.15); }
+    .tecnica-card:hover { transform: translateX(5px); border-color: var(--primary); }
+    .badge-cat { background: var(--secondary); color: #2C2A29; padding: 0.2rem 0.6rem; border-radius: 20px; font-size: 0.7rem; }
+    .flashcard-container { perspective: 1000px; min-height: 520px; cursor: pointer; }
+    .flashcard { width: 100%; height: 540px; position: relative; transform-style: preserve-3d; transition: transform 0.6s; border-radius: 1.5rem; }
+    .flashcard.flipped { transform: rotateY(180deg); }
+    .flashcard-front, .flashcard-back {
+      position: absolute; width: 100%; height: 100%; backface-visibility: hidden;
+      border-radius: 1.5rem; padding: 1.5rem; display: flex; flex-direction: column;
+      background: var(--card-dark); border: 1px solid #3A3A3A; overflow-y: auto;
+    }
+    body.light-mode .flashcard-front, body.light-mode .flashcard-back { background: var(--card-light); }
+    .flashcard-back { transform: rotateY(180deg); background: var(--primary); color: white; }
+    .hebrew-text { font-size: 1.2rem; line-height: 1.8; font-family: 'Noto Sans Hebrew', monospace; text-align: right; direction: rtl; }
+    .translit-text { font-size: 0.8rem; color: #aaa; font-style: italic; margin-top: 5px; }
+    .word-bubble {
+      display: inline-block; background: var(--primary); color: white; padding: 0.5rem 1rem;
+      border-radius: 30px; margin: 0.3rem; cursor: pointer; font-size: 0.9rem;
+      direction: rtl; display: inline-block;
+    }
+    .word-bubble.selected { background: var(--secondary); color: #2C2A29; }
+    .order-sentence { background: rgba(0,0,0,0.2); border-radius: 1rem; padding: 1rem; min-height: 80px; margin-top: 1rem; text-align: right; direction: rtl; }
+    .progress-custom { height: 4px; background: #3A3A3A; border-radius: 2px; }
+    .progress-fill-custom { height: 100%; background: var(--primary); width: 0%; transition: width 0.3s; }
+    footer { background: #141414; padding: 1rem 0; margin-top: 2rem; text-align: center; }
+    .filter-btn { background: transparent; border: 1px solid #3A3A3A; border-radius: 30px; padding: 0.2rem 0.8rem; margin: 0.2rem; cursor: pointer; }
+    .filter-btn.active { background: var(--primary); border-color: var(--primary); color: white; }
+  </style>
+</head>
+<body>
+
+<div class="container-fluid px-4 py-3">
+  <div class="row g-4">
+    
+    <!-- SIDEBAR -->
+    <div class="col-lg-3 col-md-4">
+      <div class="sidebar">
+        <div class="text-center py-3">
+          <i class="bi bi-pencil-square" style="font-size: 2rem; color: var(--primary);"></i>
+          <h5 class="mt-2">עברית · Hebreo Pro</h5>
+          <small class="text-muted">100 técnicas · para hispanohablantes</small>
+        </div>
+        <hr>
+        <div class="nav-item-custom active" data-view="lista"><i class="bi bi-list-ul"></i> 📋 Técnicas</div>
+        <div class="nav-item-custom" data-view="flashcards"><i class="bi bi-stack"></i> 🃏 Flashcards + Ejercicio</div>
+        <div class="nav-item-custom" data-view="exportar"><i class="bi bi-cloud-download"></i> 📦 Exportar TXT</div>
+        <hr>
+        <div class="mt-3">
+          <div class="d-flex justify-content-between small"><span>Técnicas completadas</span><span id="completedCount">0</span><span>/100</span></div>
+          <div class="progress-custom mt-1"><div class="progress-fill-custom" id="progressFill"></div></div>
+        </div>
+        <hr>
+        <button id="themeToggleBtn" class="btn btn-sm w-100 mt-2"><i class="bi bi-moon-stars-fill"></i> Modo oscuro</button>
+      </div>
+    </div>
+    
+    <!-- CONTENIDO PRINCIPAL -->
+    <div class="col-lg-9 col-md-8">
+      
+      <!-- LISTA DE TÉCNICAS -->
+      <div id="listaView">
+        <h3><i class="bi bi-pencil-square me-2"></i>100 técnicas · Escritura de párrafos en hebreo</h3>
+        <p class="text-muted small">Conceptos en español · Ejemplos en hebreo (עברית + transliteración) con contexto colombiano</p>
+        <div class="d-flex gap-2 my-3 flex-wrap">
+          <input type="text" id="searchInput" class="form-control form-control-sm" placeholder="🔍 Buscar técnica..." style="width: 200px;">
+          <select id="filterCategory" class="form-select form-select-sm" style="width: 160px;">
+            <option value="all">Todas</option>
+            <option value="Narrativo">📖 Narrativo</option>
+            <option value="Descriptivo">🖌️ Descriptivo</option>
+            <option value="Argumentativo">⚖️ Argumentativo</option>
+            <option value="Expositivo">📚 Expositivo</option>
+          </select>
+        </div>
+        <div id="tecnicasList" style="max-height: 70vh; overflow-y: auto;"></div>
+      </div>
+      
+      <!-- FLASHCARDS + EJERCICIO ORDENAR -->
+      <div id="flashcardsView" style="display: none;">
+        <div class="d-flex justify-content-between mb-3">
+          <h3><i class="bi bi-pencil-square me-2"></i>Flashcards · כתיבת פסקאות בעברית</h3>
+        </div>
+        <div class="mb-2 d-flex flex-wrap gap-1" id="catFiltersFlash"></div>
+        <div class="flashcard-container"><div class="flashcard" id="flashcard">
+          <div class="flashcard-front">
+            <div class="d-flex justify-content-between"><span class="badge-cat" id="frontCat">Categoría</span><span id="frontNum">#1</span></div>
+            <h5 id="frontTitle" class="mt-2">Técnica</h5>
+            <p id="frontConcept" class="mt-3" style="flex:1;">Concepto en español</p>
+            <small>🖱️ Haz clic para ver el ejemplo en hebreo</small>
+          </div>
+          <div class="flashcard-back">
+            <div class="d-flex justify-content-between"><span class="badge-cat" style="background:#fff;color:#2C2A29;">📖 דוגמה · Ejemplo</span><span id="backNum">#1</span></div>
+            <h5 id="backTitle" class="mt-2">Ejemplo en hebreo (Colombia)</h5>
+            <div id="backExample" class="mt-2" style="flex:1;"></div>
+            <div id="exerciseArea" class="mt-3"></div>
+          </div>
+        </div></div>
+        <div class="d-flex justify-content-between mt-4">
+          <button id="prevCardBtn" class="btn btn-outline-light">◀ Anterior</button>
+          <div><span id="cardCounter">1 / 100</span><button id="markCompleteBtn" class="btn btn-sm btn-success ms-2">✅ Completada</button></div>
+          <button id="nextCardBtn" class="btn btn-outline-light">Siguiente ▶</button>
+        </div>
+        <div class="text-center mt-3"><button id="randomCardBtn" class="btn btn-sm btn-secondary me-2">🎲 Aleatorio</button><button id="flipCardBtn" class="btn btn-sm btn-secondary">🔄 Voltear</button></div>
+      </div>
+      
+      <!-- EXPORTAR -->
+      <div id="exportarView" style="display: none;">
+        <div class="card p-4"><h4>📦 Exportar progreso</h4><button id="exportTxtBtn" class="btn btn-primary-custom btn-lg mt-2">📄 Descargar 100 técnicas en TXT</button>
+        <hr><button id="resetProgressBtn" class="btn btn-outline-danger mt-2">🔄 Reiniciar progreso</button></div>
+      </div>
+    </div>
+  </div>
+</div>
+<footer><div class="container"><small>🇮🇱 עברית · 100 técnicas de escritura en hebreo · Narrativo · Descriptivo · Argumentativo · Expositivo · Colombia</small></div></footer>
+
+<script>
+  // ============================================================
+  // 100 TÉCNICAS DE ESCRITURA EN HEBREO (para hispanohablantes)
+  // ============================================================
+  
+  // Función auxiliar para crear ejemplo con hebreo + transliteración
+  function createHebrewExample(hebrew, translit) {
+    return { hebrew, translit };
+  }
+  
+  const tecnicas = [];
+  
+  // Técnicas base por cada tipo de párrafo
+  const baseTecnicas = [
+    // NARRATIVE (נרטיבי)
+    { tipo: "Narrativo", titulo: "שימוש במילות קישור של רצף - Usa conectores de secuencia", concepto: "Usa conectores de secuencia temporal en hebreo para ordenar eventos en una narración.", ejemplo: [
+      createHebrewExample("ראשית, החמה זרחה מעל קניון צ'יקמוצ'ה", "Rishit, hachamah zarchah me'al kanyon Chikamocha"),
+      createHebrewExample("לאחר מכן, חקלאי הקפה החלו בקציר היומי", "Le'achar michen, chakla'ei hakafeh hechlu b'katzir hayomi"),
+      createHebrewExample("אחר כך, הם לקחו את פולי הקפה לטחנה המקומית", "Achar kach, hem lakchu et polei hakafeh latachanah hamkomit"),
+      createHebrewExample("לבסוף, ריח של קפה טרי מילא את העיר סן חיל", "Levasof, reach shel kafeh tari mile et ha'ir San Gil")
+    ] },
+    { tipo: "Narrativo", titulo: "שימוש בזמן עבר - Uso de tiempo pasado", concepto: "Usa formas verbales en tiempo pasado para acciones completadas en una historia.", ejemplo: [
+      createHebrewExample("התלמידים מבית הספר סן פדרו ביקרו במוזיאון הזהב", "Hatalmidim mibeit hasefer San Pedro bikru b'muzeon hazahav"),
+      createHebrewExample("הם ראו את רפסודת המואיסקה המפורסמת", "Hem ra'u et rafsodat hamu'iska hamefursemet"),
+      createHebrewExample("לאחר הסיור, הם כתבו דוח באנגלית", "Le'achar hasiyur, hem katvu doach b'anglit")
+    ] },
+    { tipo: "Narrativo", titulo: "שימוש בדיאלוג לקידום העלילה - Usa diálogo", concepto: "Incorpora diálogos en hebreo para hacer avanzar la narración.", ejemplo: [
+      createHebrewExample("'אני לא מאמין שטיפסנו אלפיים מטר!' צעקה מריה", "'Ani lo ma'amin shetipasnu alpayim meter!' tza'akah Maria"),
+      createHebrewExample("'הנוף של קניון צ'יקמוצ'ה שווה את זה לגמרי' ענה קרלוס", "'Hanof shel kanyon Chikamocha shaveh et ze legamri' anah Carlos"),
+      createHebrewExample("הם צחקו יחד והצטלמו עם הרקע של הקניון", "Hem tzachaku yachad vehitztalmu im hareka shel hakanyon")
+    ] },
+    { tipo: "Narrativo", titulo: "מבנה התחלה-אמצע-סוף - Estructura inicio-desarrollo-final", concepto: "Estructura la narración con inicio, desarrollo y final.", ejemplo: [
+      createHebrewExample("אתמול הלכתי לכיכר בוטרו במדיין", "Etmol halachti l'kikar Botero b'Medellin"),
+      createHebrewExample("שם ראיתי את הפסלים השמנים המפורסמים", "Sham ra'iti et hapsalim hashamenim hamefursamim"),
+      createHebrewExample("לבסוף טעמתי שוקולד חם מקומי", "Levasof ta'anti shokolad cham makomi")
+    ] },
+    
+    // DESCRIPTIVE (תיאורי)
+    { tipo: "Descriptivo", titulo: "שימוש בשמות תואר - Uso de adjetivos", concepto: "Usa adjetivos en hebreo para describir lugares colombianos.", ejemplo: [
+      createHebrewExample("הכנסייה הקולוניאלית בג'ירון עתיקה ויפה", "Hak'nesiya hakolonialit b'Giron atikah v'yafah"),
+      createHebrewExample("בכיכר המרכזית יש מזרקת אבן יפה", "Bakikar hamerkazit yesh mizraket even yafah"),
+      createHebrewExample("יש גם רוכלים ידידותיים שמוכרים ארפס", "Yesh gam rochlim yedidutiyim shemochrim arepas")
+    ] },
+    { tipo: "Descriptivo", titulo: "פנייה לחמשת החושים - Apelar a los 5 sentidos", concepto: "Apela a los sentidos (sight, sound, smell, touch, taste) para describir.", ejemplo: [
+      createHebrewExample("השקיעה הזהובה מעל קניון צ'יקמוצ'ה הייתה עוצרת נשימה", "Hashki'a hazehuvah me'al kanyon Chikamocha hayitah otzeret neshimah"),
+      createHebrewExample("יכולתי לשמוע את ציפורי הרוח דרך הסלעים", "Yacholti lishmo'a et tziporei haruach derech hasla'im"),
+      createHebrewExample("ריח של ארפס טריים וקפה טרי מילא את האוויר בשוק", "Reach shel arepas tri'im v'kafeh tari mile et ha'avir bashuk")
+    ] },
+    { tipo: "Descriptivo", titulo: "שימוש בדימויים ומטפורות - Usa símiles y metáforas", concepto: "Usa símiles y metáforas para descripciones vívidas en hebreo.", ejemplo: [
+      createHebrewExample("הר הגעש טוטומו הוא כמו אמבטיית בוץ ענקית", "Har haga'ash Totumo hu kmo ambatiat butz anakit"),
+      createHebrewExample("הנהר זורם כמו סרט כסף בעמק הירוק", "Hanahar zorem kmo seret kesef ba'emek hayarok"),
+      createHebrewExample("בתי באריצ'רה הם יונים לבנות החיות על גבעת העיר", "Batei Barichara hem yonim levanot hachayot al giva'at ha'ir")
+    ] },
+    { tipo: "Descriptivo", titulo: "שימוש במילות מיקום - Usa palabras de ubicación", concepto: "Usa palabras de ubicación para describir disposición espacial.", ejemplo: [
+      createHebrewExample("מעל הכנסייה יש מגדל שעון", "Me'al hak'nesiya yesh migdal sha'on"),
+      createHebrewExample("ליד הכיכר יש בית קפה", "Lad hakikar yesh beit kafe"),
+      createHebrewExample("מול זה בניין העירייה", "Mul ze binyan ha'iriyah"),
+      createHebrewExample("מתחת למזרקה יונים", "Mitachat lamizraka yonim")
+    ] },
+    
+    // ARGUMENTATIVE (טיעוני)
+    { tipo: "Argumentativo", titulo: "הצהרת תזה ברורה - Tesis clara", concepto: "Plantea la tesis claramente al inicio del párrafo argumentativo.", ejemplo: [
+      createHebrewExample("קולומביה צריכה להשקיע באנרגיה מתחדשת", "Kolumbia tzricha lehashkia b'energia mitchadeshet"),
+      createHebrewExample("כרגע רק 12% מהחשמל מגיע מאנרגיית שמש ורוח", "Karega rak 12% mehachashmal magia me'energiyat shemesh v'ruach"),
+      createHebrewExample("העלאה ל-30% תפחית זיהום ותיצור מקומות עבודה", "Ha'ala'a l-30% tachpit zihum v'titzur mekomot avodah")
+    ] },
+    { tipo: "Argumentativo", titulo: "שימוש בנתונים כראיות - Usa datos como evidencia", concepto: "Respaldar argumentos con datos y evidencia.", ejemplo: [
+      createHebrewExample("לפי נתוני IDEAM, זיהום האוויר בבוגוטה חורג ב-40% מהתקן", "L'fi netunei IDEAM, zihum ha'avir b'Bogota choreg b-40% mehataken"),
+      createHebrewExample("מעבר לאוטובוסים חשמליים יכול להפחית פליטות ב-25% תוך 5 שנים", "Ma'avar l'autobusim chashmali'im yachol lehachpit plitot b-25% toche 5 shanim"),
+      createHebrewExample("ערים אחרות כמו מדיין כבר התחילו את המעבר הזה", "Arim achrot kmo Medellin kvar hitchilu et hama'avar hazeh")
+    ] },
+    { tipo: "Argumentativo", titulo: "הכרה בהתנגדויות - Reconocer contraargumentos", concepto: "Reconoce contraargumentos y refútalos para fortalecer la posición.", ejemplo: [
+      createHebrewExample("יש שאומרים שתיירות אקולוגית יקרה מדי לקהילות מקומיות", "Yesh she'omrim she'tayarut ekologit yekarah midai lik'hilut makomiyot"),
+      createHebrewExample("אבל פרויקטים ברי קיימא באזור הקפה יצרו פי שלושה מקומות עבודה", "Aval proyektim b'nei kayama b'ezor hakafeh yatzru pi shlosha mekomot avodah"),
+      createHebrewExample("לכן השקעה בתיירות מבוססת טבע מועילה כלכלית", "Lachen hashka'a b'tayarut mevuseset teva mo'ilat calcalit")
+    ] },
+    { tipo: "Argumentativo", titulo: "שימוש במילות קישור הגיוניות - Conectores lógicos", concepto: "Usa conectores lógicos (לכן, בגלל, למרות) para estructurar argumentos.", ejemplo: [
+      createHebrewExample("בגלל שמחירי הקפה תנודתיים מאוד", "Biglal shemechirei hakafeh tnudati'im me'od"),
+      createHebrewExample("חקלאים רבים מתחילים לגדל גידולים אחרים", "Chakla'im rabim matchilim ligdal gidulim acherim"),
+      createHebrewExample("לכן הם זקוקים להכשרה ותמיכה טכנית", "Lachen hem zkukim l'hachsara u'tmicha technit")
+    ] },
+    
+    // EXPOSITORY (הסברתי)
+    { tipo: "Expositivo", titulo: "התחלה בהגדרה ברורה - Comenzar con definición", concepto: "Comienza con una definición clara del concepto a explicar.", ejemplo: [
+      createHebrewExample("'פרמו' היא מערכת אקולוגית ייחודית של הרי האנדים", "'Para'mo' hi ma'arechet ekologit yichudit shel harei ha'Andim"),
+      createHebrewExample("היא מורכבת מעשבים, שיחים וצמחים מיוחדים כמו פראייחונים", "Hi murkevet mi'asavim, sichim utzmachim michubadim kmo frailejones"),
+      createHebrewExample("מערכת אקולוגית זו אוגרת מים המספקים מעל 70% מאוכלוסיית המדינה", "Ma'arechet ekologit zo ogeret mayim hamasfikim me'al 70% me'uchlusiyat hamedinah")
+    ] },
+    { tipo: "Expositivo", titulo: "השוואה וניגוד - Comparación y contraste", concepto: "Usa estructuras de comparación para explicar diferencias.", ejemplo: [
+      createHebrewExample("שונה מוולנאטו מהחוף הקריבי, הבמבוקו מגיע מאזור האנדים", "Shoneh m'Vallenato mehachof hakaribi, habambuko magia me'ezor ha'Andim"),
+      createHebrewExample("בעוד שוולנאטו משתמש באקורדיון, הבמבוקו מנגן בטיפלה וגיטרה", "Be'od sheVallenato mishtamesh b'akordion, habambuko menagen b'tipleh v'gitara"),
+      createHebrewExample("עם זאת, שני הז'אנרים נחשבים למורשת תרבותית לאומית", "Im zeh, shnei hajanerim nechshavim l'moreshet tarbutit l'umit")
+    ] },
+    { tipo: "Expositivo", titulo: "הסבר סיבה ותוצאה - Explicar causa-efecto", concepto: "Explica relaciones de causa y efecto con conectores apropiados.", ejemplo: [
+      createHebrewExample("כריתת יערות באמזונס גורמת לסחיקת קרקע ולאובדן מגוון ביולוגי", "Kritat ya'arot b'Amazonas goremet l'schikat kraka v'l'ivudan megvan biologi"),
+      createHebrewExample("כתוצאה מכך, קהילות ילידים ראו את אדמותיהן המסורתיות מצטמקות", "Kitotza m'kach, kehilot yelidim ra'u et admoteihen hamasortiyot mitztamkot"),
+      createHebrewExample("לכן, צעירים רבים נודדים לערים כמו לטיסיה ובוגוטה", "Lachen, tz'irim rabim nodedim l'arim kmo Leticia v'Bogota")
+    ] },
+    { tipo: "Expositivo", titulo: "שימוש בדוגמאות להמחשה - Usar ejemplos", concepto: "Usa ejemplos concretos para ilustrar conceptos abstractos.", ejemplo: [
+      createHebrewExample("לדוגמה, מוזיאון הזהב בבוגוטה מכיל מעל 30,000 פריטים פרה-קולומביאניים", "L'dugma, muzeon hazahav b'Bogota mechil me'al 30,000 p'erim pre-Columbianim"),
+      createHebrewExample("ביניהם, רפסודת המואיסקה המפורסמת ממחישה את אגדת אל דוראדו", "Beneihem, rafsodat hamu'iska hamefursemet mamchisha et agadat El Dorado"),
+      createHebrewExample("דוגמה זו מראה את רמת האומנות יוצאת הדופן של עיבוד הזהב הילידי", "Dugma zo mar'a et ramat ha'omanut yotzat hadofan shel ibud hazahav hayelidi")
+    ] }
+  ];
+  
+  // Generar 100 técnicas
+  for(let i=1; i<=100; i++) {
+    let base = baseTecnicas[(i-1) % baseTecnicas.length];
+    let tipo = base.tipo;
+    let titulo = `${tipo}: ${base.titulo}`;
+    tecnicas.push([i, titulo, base.concepto, tipo, [...base.ejemplo]]);
+  }
+  
+  let progress = {};
+  let currentFilter = "all";
+  let currentSearch = "";
+  let currentCategoryFilter = "all";
+  let filteredTecnicas = [...tecnicas];
+  let currentCardIndex = 0;
+  let flashcardsFilter = "all";
+  let filteredFlashcards = [...tecnicas];
+  const STORAGE_KEY = "hebrew_paragraph_pro_100";
+  
+  function loadProgress() { const s=localStorage.getItem(STORAGE_KEY); if(s) progress=JSON.parse(s); for(let i=1;i<=100;i++) if(progress[i]===undefined) progress[i]=false; updateStats(); }
+  function saveProgress() { localStorage.setItem(STORAGE_KEY,JSON.stringify(progress)); updateStats(); }
+  function updateStats() { let c=Object.values(progress).filter(v=>v===true).length; document.getElementById("completedCount").innerText=c; document.getElementById("progressFill").style.width=`${(c/100)*100}%`; }
+  function markComplete(id) { progress[id]=!progress[id]; saveProgress(); renderLista(); if(document.getElementById("flashcardsView").style.display!=="none") updateFlashcard(); }
+  
+  function renderLista() {
+    let filtered = [...tecnicas];
+    if(currentSearch) filtered=filtered.filter(t=>t[1].toLowerCase().includes(currentSearch)||t[2].toLowerCase().includes(currentSearch));
+    if(currentCategoryFilter!=="all") filtered=filtered.filter(t=>t[3]===currentCategoryFilter);
+    const cont=document.getElementById("tecnicasList");
+    cont.innerHTML=filtered.map(t=>`<div class="tecnica-card ${progress[t[0]]?'completed':''}" data-id="${t[0]}"><div class="d-flex justify-content-between"><div><span class="badge-cat">${t[3]}</span><span class="ms-2">#${t[0]}</span></div><input class="form-check-input" type="checkbox" ${progress[t[0]]?'checked':''} onchange="event.stopPropagation();markComplete(${t[0]})"></div><h6 class="mt-2">${t[1]}</h6><p class="small text-muted">${t[2].substring(0,100)}...</p></div>`).join('');
+    document.querySelectorAll(".tecnica-card").forEach(c=>c.addEventListener("click",(e)=>{if(!e.target.classList.contains("form-check-input")){ let id=parseInt(c.dataset.id); let idx=filteredTecnicas.findIndex(t=>t[0]===id); if(idx!==-1){currentCardIndex=idx; switchToFlashcards(); updateFlashcard();}}}));
+  }
+  
+  function populateFilters() {
+    let cats=[...new Set(tecnicas.map(t=>t[3]))];
+    let select=document.getElementById("filterCategory");
+    select.innerHTML='<option value="all">Todas</option>'+cats.map(c=>`<option value="${c}">${c}</option>`).join('');
+    select.onchange=e=>{currentCategoryFilter=e.target.value; renderLista();};
+    let flashCats=document.getElementById("catFiltersFlash");
+    flashCats.innerHTML='<button class="filter-btn active" data-cat="all">📚 Todas</button>'+cats.map(c=>`<button class="filter-btn" data-cat="${c}">${c}</button>`).join('');
+    document.querySelectorAll("#catFiltersFlash .filter-btn").forEach(b=>b.onclick=()=>{flashcardsFilter=b.getAttribute("data-cat"); document.querySelectorAll("#catFiltersFlash .filter-btn").forEach(b=>b.classList.remove("active")); b.classList.add("active"); filterFlashcards();});
+  }
+  function filterFlashcards() { if(flashcardsFilter==="all") filteredFlashcards=[...tecnicas]; else filteredFlashcards=tecnicas.filter(t=>t[3]===flashcardsFilter); currentCardIndex=Math.min(currentCardIndex,filteredFlashcards.length-1); if(currentCardIndex<0) currentCardIndex=0; updateFlashcard(); }
+  
+  function formatHebrewExample(exampleObj) {
+    return `<div class="hebrew-text">${exampleObj.hebrew}</div><div class="translit-text">${exampleObj.translit}</div>`;
+  }
+  
+  function updateFlashcard() {
+    let t=filteredFlashcards[currentCardIndex];
+    if(!t) return;
+    document.getElementById("frontCat").innerHTML=t[3]; document.getElementById("frontNum").innerHTML=`#${t[0]}`; document.getElementById("frontTitle").innerHTML=t[1]; document.getElementById("frontConcept").innerHTML=t[2];
+    document.getElementById("backNum").innerHTML=`#${t[0]}`; document.getElementById("backTitle").innerHTML=t[1];
+    let ejemploArray=t[4];
+    let ejemploHTML = ejemploArray.map(item => formatHebrewExample(item)).join('<div style="margin-top: 10px;"></div>');
+    document.getElementById("backExample").innerHTML = ejemploHTML;
+    document.getElementById("cardCounter").innerHTML=`${currentCardIndex+1}/${filteredFlashcards.length}`;
+    document.getElementById("flashcard").classList.remove("flipped");
+    
+    let originalFrases = ejemploArray.map(item => item.hebrew);
+    let shuffled = [...originalFrases].sort(()=>Math.random()-0.5);
+    let selected = [];
+    const ejercicioHtml = `<div class="small fw-bold mb-2">✍️ תרגיל: סדר את המשפטים · Ordena las frases en hebreo</div>
+      <div class="d-flex flex-wrap justify-content-center" id="orderWordsContainer">${shuffled.map(f=>`<span class="word-bubble" data-text="${f.replace(/"/g, '&quot;')}">${f}</span>`).join('')}</div>
+      <div class="order-sentence" id="orderDisplay"><em>הסדר שלך יופיע כאן · Tu orden aparecerá aquí...</em></div>
+      <button id="checkOrderBtn" class="btn btn-sm btn-primary mt-2">✓ בדוק · Verificar orden</button>
+      <div id="orderFeedback" class="mt-2 small"></div>`;
+    document.getElementById("exerciseArea").innerHTML=ejercicioHtml;
+    
+    function renderBubbles() {
+      let container = document.getElementById("orderWordsContainer");
+      container.innerHTML = shuffled.map(f=>`<span class="word-bubble" data-text="${f.replace(/"/g, '&quot;')}">${f}</span>`).join('');
+      document.querySelectorAll(".word-bubble").forEach(b=>b.onclick=()=>{let txt=b.getAttribute("data-text"); let idx=shuffled.indexOf(txt); if(idx!==-1){shuffled.splice(idx,1); selected.push(txt); document.getElementById("orderDisplay").innerHTML = selected.join(" → "); renderBubbles();}});
+    }
+    renderBubbles();
+    
+    document.getElementById("checkOrderBtn").onclick=()=>{
+      let userOrder = selected.join(" ");
+      let correctOrder = originalFrases.join(" ");
+      let feedback = document.getElementById("orderFeedback");
+      if(userOrder===correctOrder){ feedback.innerHTML="<span class='text-success'>✅ מושלם! סידרת נכון את הפסקה בעברית · ¡Ordenaste correctamente el párrafo en hebreo!</span>"; if(!progress[t[0]]){progress[t[0]]=true; saveProgress(); renderLista();} }
+      else{ feedback.innerHTML=`<span class='text-danger'>❌ הסדר לא נכון · El orden correcto es:<br><strong>${correctOrder}</strong></span>`; }
+    };
+  }
+  
+  function nextCard(){ if(currentCardIndex<filteredFlashcards.length-1){currentCardIndex++; updateFlashcard();} }
+  function prevCard(){ if(currentCardIndex>0){currentCardIndex--; updateFlashcard();} }
+  function randomCard(){ currentCardIndex=Math.floor(Math.random()*filteredFlashcards.length); updateFlashcard(); }
+  function flipCard(){ document.getElementById("flashcard").classList.toggle("flipped"); }
+  function markCurrentComplete(){ let t=filteredFlashcards[currentCardIndex]; if(t){progress[t[0]]=!progress[t[0]]; saveProgress(); renderLista(); updateFlashcard();} }
+  
+  function exportTxt(){ let content="=== 100 TÉCNICAS DE ESCRITURA EN HEBREO (עברית) ===\n\n"; for(let t of tecnicas){ content+=`[${t[0]}] ${t[1]}\nTipo: ${t[3]}\nConcepto (Español): ${t[2]}\nEjemplo (Hebreo): ${t[4].map(item=>item.hebrew).join(" ")}\nTransliteración: ${t[4].map(item=>item.translit).join(" ")}\nCompletada: ${progress[t[0]]?"SÍ":"NO"}\n${"-".repeat(50)}\n\n`; } let blob=new Blob([content],{type:"text/plain"}); let a=document.createElement("a"); a.href=URL.createObjectURL(blob); a.download=`hebreo_tecnicas_${Date.now()}.txt`; a.click(); URL.revokeObjectURL(a.href); }
+  function resetProgress(){ if(confirm("¿Reiniciar todo el progreso?")){ for(let i=1;i<=100;i++) progress[i]=false; saveProgress(); renderLista(); updateFlashcard(); } }
+  
+  function switchToLista(){ document.getElementById("listaView").style.display="block"; document.getElementById("flashcardsView").style.display="none"; document.getElementById("exportarView").style.display="none"; document.querySelectorAll(".nav-item-custom").forEach(i=>i.classList.remove("active")); document.querySelector(".nav-item-custom[data-view='lista']").classList.add("active"); renderLista(); }
+  function switchToFlashcards(){ document.getElementById("listaView").style.display="none"; document.getElementById("flashcardsView").style.display="block"; document.getElementById("exportarView").style.display="none"; document.querySelectorAll(".nav-item-custom").forEach(i=>i.classList.remove("active")); document.querySelector(".nav-item-custom[data-view='flashcards']").classList.add("active"); filterFlashcards(); }
+  function switchToExportar(){ document.getElementById("listaView").style.display="none"; document.getElementById("flashcardsView").style.display="none"; document.getElementById("exportarView").style.display="block"; document.querySelectorAll(".nav-item-custom").forEach(i=>i.classList.remove("active")); document.querySelector(".nav-item-custom[data-view='exportar']").classList.add("active"); }
+  
+  document.getElementById("searchInput")?.addEventListener("input",e=>{currentSearch=e.target.value.toLowerCase(); renderLista();});
+  document.getElementById("prevCardBtn")?.addEventListener("click",prevCard);
+  document.getElementById("nextCardBtn")?.addEventListener("click",nextCard);
+  document.getElementById("randomCardBtn")?.addEventListener("click",randomCard);
+  document.getElementById("flipCardBtn")?.addEventListener("click",flipCard);
+  document.getElementById("markCompleteBtn")?.addEventListener("click",markCurrentComplete);
+  document.getElementById("exportTxtBtn")?.addEventListener("click",exportTxt);
+  document.getElementById("resetProgressBtn")?.addEventListener("click",resetProgress);
+  document.getElementById("themeToggleBtn")?.addEventListener("click",()=>document.body.classList.toggle("light-mode"));
+  document.querySelector(".nav-item-custom[data-view='lista']")?.addEventListener("click",switchToLista);
+  document.querySelector(".nav-item-custom[data-view='flashcards']")?.addEventListener("click",switchToFlashcards);
+  document.querySelector(".nav-item-custom[data-view='exportar']")?.addEventListener("click",switchToExportar);
+  
+  loadProgress(); populateFilters(); renderLista(); filterFlashcards(); switchToLista();
+</script>
+</body>
+</html>

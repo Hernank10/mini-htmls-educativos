@@ -1,0 +1,1 @@
+document.getElementById('langSwitch')?.addEventListener('change', (e)=>{ const lang = e.target.value; localStorage.setItem('siteLang', lang); location.reload(); });

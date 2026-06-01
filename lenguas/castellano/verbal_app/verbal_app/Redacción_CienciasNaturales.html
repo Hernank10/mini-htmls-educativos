@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>BioWrite · 100 técnicas de redacción para Biología y Ciencias Naturales</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #1E6B3C;
+      --primary-dark: #145230;
+      --secondary: #D9A13B;
+      --bg-dark: #1a1a1a;
+      --bg-light: #F5F7F0;
+      --card-dark: #252525;
+      --card-light: #FFFFFF;
+    }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg-dark);
+      color: #E5E5E5;
+      transition: all 0.3s;
+    }
+    body.light-mode {
+      background: var(--bg-light);
+      color: #1E1E1E;
+    }
+    .sidebar {
+      background: #1E1E1E;
+      border-radius: 1.5rem;
+      padding: 1rem;
+      height: fit-content;
+      position: sticky;
+      top: 20px;
+    }
+    body.light-mode .sidebar { background: #FFF; }
+    .nav-item-custom {
+      padding: 0.8rem 1rem;
+      border-radius: 1rem;
+      cursor: pointer;
+      margin-bottom: 0.5rem;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: #AAA;
+    }
+    .nav-item-custom i { width: 24px; }
+    .nav-item-custom.active { background: var(--primary); color: white; }
+    .cat-filter {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+    }
+    .filter-btn {
+      background: transparent;
+      border: 1px solid #3A3A3A;
+      border-radius: 30px;
+      padding: 0.2rem 0.8rem;
+      font-size: 0.7rem;
+      cursor: pointer;
+    }
+    .filter-btn.active { background: var(--primary); border-color: var(--primary); color: white; }
+    body.light-mode .filter-btn { border-color: #D0D0D0; }
+    .tecnica-card {
+      background: var(--card-dark);
+      border-radius: 1rem;
+      padding: 1rem;
+      margin-bottom: 0.8rem;
+      border: 1px solid #3A3A3A;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+    body.light-mode .tecnica-card { background: var(--card-light); border-color: #E0E0E0; }
+    .tecnica-card.completed { border-left: 4px solid var(--primary); background: rgba(30,107,60,0.15); }
+    .flashcard-container { perspective: 1000px; min-height: 520px; cursor: pointer; }
+    .flashcard { width: 100%; height: 560px; position: relative; transform-style: preserve-3d; transition: transform 0.6s; border-radius: 1.5rem; }
+    .flashcard.flipped { transform: rotateY(180deg); }
+    .flashcard-front, .flashcard-back {
+      position: absolute; width: 100%; height: 100%; backface-visibility: hidden;
+      border-radius: 1.5rem; padding: 1.5rem; display: flex; flex-direction: column;
+      background: var(--card-dark); border: 1px solid #3A3A3A; overflow-y: auto;
+    }
+    body.light-mode .flashcard-front, body.light-mode .flashcard-back { background: var(--card-light); }
+    .flashcard-back { transform: rotateY(180deg); background: var(--primary); color: white; }
+    .option-btn { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); padding: 0.5rem 1rem; border-radius: 2rem; margin: 0.3rem; cursor: pointer; }
+    .option-btn:hover { background: rgba(255,255,255,0.2); }
+    .option-btn.correct { background: #27ae60; }
+    .option-btn.incorrect { background: #e74c3c; }
+    .progress-custom { height: 4px; background: #3A3A3A; border-radius: 2px; }
+    .progress-fill-custom { height: 100%; background: var(--primary); width: 0%; transition: width 0.3s; }
+    footer { background: #141414; padding: 1rem 0; margin-top: 2rem; text-align: center; }
+    .badge-cat { background: var(--secondary); color: #2C2A29; padding: 0.2rem 0.6rem; border-radius: 20px; font-size: 0.7rem; }
+    .search-box { width: 100%; padding: 0.5rem; border-radius: 2rem; border: 1px solid #3A3A3A; background: var(--card-dark); color: #E5E5E5; }
+    body.light-mode .search-box { background: var(--card-light); color: #1E1E1E; border-color: #D0D0D0; }
+  </style>
+</head>
+<body>
+
+<div class="container-fluid px-4 py-3">
+  <div class="row g-4">
+    
+    <!-- SIDEBAR -->
+    <div class="col-lg-3 col-md-4">
+      <div class="sidebar">
+        <div class="text-center py-3">
+          <i class="bi bi-tree" style="font-size: 2rem; color: var(--primary);"></i>
+          <h5 class="mt-2">BioWrite</h5>
+          <small class="text-muted">100 técnicas · Biología y Ciencias Naturales</small>
+        </div>
+        <hr>
+        <div class="nav-item-custom active" data-view="lista">
+          <i class="bi bi-list-ul"></i> <span>📋 Técnicas</span>
+        </div>
+        <div class="nav-item-custom" data-view="flashcards">
+          <i class="bi bi-stack"></i> <span>🃏 Flashcards</span>
+        </div>
+        <hr>
+        <div class="mt-3">
+          <div class="d-flex justify-content-between small"><span>Técnicas completadas</span><span id="completedCount">0</span><span>/100</span></div>
+          <div class="progress-custom mt-1"><div class="progress-fill-custom" id="progressFill"></div></div>
+        </div>
+        <hr>
+        <button id="themeToggleBtn" class="btn btn-sm w-100 mt-2"><i class="bi bi-moon-stars-fill"></i> Modo oscuro</button>
+      </div>
+    </div>
+    
+    <!-- CONTENIDO PRINCIPAL -->
+    <div class="col-lg-9 col-md-8">
+      
+      <!-- VISTA LISTA DE TÉCNICAS -->
+      <div id="listaView">
+        <h3><i class="bi bi-tree me-2"></i>100 técnicas de redacción para Biología y Ciencias Naturales</h3>
+        <p class="text-muted small">Informes de laboratorio · Artículos científicos · Descripción de especies · Normativa ambiental · Divulgación</p>
+        <div class="d-flex gap-2 my-3 flex-wrap">
+          <input type="text" id="searchInput" class="search-box" placeholder="🔍 Buscar técnica..." style="width: 200px;">
+          <select id="catFilter" class="form-select form-select-sm" style="width: 200px;">
+            <option value="all">Todas las categorías</option>
+            <option value="Informes de laboratorio">🔬 Informes de laboratorio</option>
+            <option value="Artículos científicos">📄 Artículos científicos</option>
+            <option value="Descripción de especies">🦋 Descripción de especies</option>
+            <option value="Normativa ambiental">🌿 Normativa ambiental</option>
+            <option value="Divulgación científica">📢 Divulgación científica</option>
+          </select>
+        </div>
+        <div id="tecnicasList" style="max-height: 70vh; overflow-y: auto;"></div>
+        <div class="d-flex justify-content-center mt-4"><ul class="pagination" id="pagination"></ul></div>
+      </div>
+      
+      <!-- VISTA FLASHCARDS -->
+      <div id="flashcardsView" style="display: none;">
+        <div class="d-flex justify-content-between mb-3">
+          <h3><i class="bi bi-stack me-2"></i>Flashcards · Aprende redacción científica</h3>
+        </div>
+        <div class="flashcard-container"><div class="flashcard" id="flashcard">
+          <div class="flashcard-front">
+            <div class="d-flex justify-content-between"><span class="badge-cat" id="frontCat">Categoría</span><span id="frontNum">#1</span></div>
+            <h5 id="frontTitle" class="mt-2">Técnica</h5>
+            <p id="frontConcept" class="mt-3" style="flex:1;">Concepto</p>
+            <small>🖱️ Haz clic para ver el ejemplo en biología</small>
+          </div>
+          <div class="flashcard-back">
+            <div class="d-flex justify-content-between"><span class="badge-cat">📖 Ejemplo en ciencias naturales</span><span id="backNum">#1</span></div>
+            <h5 id="backTitle" class="mt-2">Ejemplo práctico</h5>
+            <p id="backExample" class="mt-2" style="flex:1;"></p>
+            <div id="exerciseArea" class="mt-3"></div>
+          </div>
+        </div></div>
+        <div class="d-flex justify-content-between mt-4">
+          <button id="prevCardBtn" class="btn btn-outline-light">◀ Anterior</button>
+          <div><span id="cardCounter">1 / 100</span><button id="markCompleteBtn" class="btn btn-sm btn-success ms-2">✅ Aprendida</button></div>
+          <button id="nextCardBtn" class="btn btn-outline-light">Siguiente ▶</button>
+        </div>
+        <div class="text-center mt-3"><button id="randomCardBtn" class="btn btn-sm btn-secondary me-2">🎲 Aleatorio</button><button id="flipCardBtn" class="btn btn-sm btn-secondary">🔄 Voltear</button></div>
+      </div>
+    </div>
+  </div>
+</div>
+<footer><div class="container"><small>🌿 BioWrite · 100 técnicas de redacción para Biología y Ciencias Naturales · Colombia</small></div></footer>
+
+<script>
+  // ============================================================
+  // 100 TÉCNICAS DE REDACCIÓN PARA BIOLOGÍA Y CIENCIAS NATURALES (Colombia)
+  // ============================================================
+  
+  const tecnicas = [];
+  
+  const tecnicasPorCategoria = {
+    "Informes de laboratorio": [
+      [1, "Estructura el informe con IMRD", "Introducción, Métodos, Resultados, Discusión.", "Ejemplo: 'Introducción: contexto sobre fotosíntesis; Métodos: diseño experimental; Resultados: tasas de oxígeno; Discusión: comparación con literatura'."],
+      [2, "Describe materiales con precisión", "Marcas, modelos, concentraciones.", "Ejemplo: 'Se utilizó un espectrofotómetro Thermo Scientific Genesys 10S y clorofila extraída con acetona al 80%'."],
+      [3, "Redacta procedimientos replicables", "Suficiente detalle para que otro investigador lo repita.", "Ejemplo: 'Las semillas se desinfectaron con hipoclorito de sodio al 1% durante 5 min y se enjuagaron tres veces'."],
+      [4, "Incluye controles y réplicas", "Valida los resultados.", "Ejemplo: 'Se usaron 3 réplicas por tratamiento y un control negativo sin sustrato'."],
+      [5, "Documenta condiciones ambientales", "Temperatura, humedad, luz.", "Ejemplo: 'Los experimentos se realizaron a 25±2°C, 60±5% HR y ciclo 12h luz/12h oscuridad'."],
+      [6, "Usa unidades del Sistema Internacional", "Metros, gramos, segundos, moles.", "Ejemplo: 'La biomasa se expresó en g/m²; la concentración en mol/L'."],
+      [7, "Presenta resultados en tablas y figuras", "Cada tabla debe ser autoexplicativa.", "Ejemplo: 'Tabla 1: Crecimiento de plántulas (cm) a los 7, 14 y 21 días'."],
+      [8, "Acompaña figuras con leyendas descriptivas", "Explica lo que muestra la figura.", "Ejemplo: 'Figura 1. Curva de crecimiento de Escherichia coli en medio LB a 37°C'."],
+      [9, "Incluye análisis estadístico", "Pruebas utilizadas y valores de significancia.", "Ejemplo: 'Se aplicó ANOVA de una vía seguido de Tukey post hoc (p<0.05)'."],
+      [10, "Redacta discusión comparativa", "Compara tus resultados con estudios previos.", "Ejemplo: 'Nuestro resultado (32,5 mg/L) es superior al reportado por Pérez (2020) (28,1 mg/L), posiblemente por la cepa utilizada'."],
+      [11, "Señala limitaciones del estudio", "Factores que pudieron afectar los resultados.", "Ejemplo: 'El tamaño de muestra fue pequeño (n=6); se requieren estudios con mayor número de réplicas'."],
+      [12, "Incluye cálculos de error", "Desviación estándar, error estándar, intervalos de confianza.", "Ejemplo: 'Los valores se presentan como media ± DE (n=3)'."],
+      [13, "Documenta reactivos y su procedencia", "Fabricante, lote, pureza.", "Ejemplo: 'Los anticuerpos se adquirieron de Sigma-Aldrich (lote #123456, pureza >98%)'."],
+      [14, "Redacta conclusiones basadas en datos", "No incluyas información nueva.", "Ejemplo: 'Se concluye que la exposición a 50 mg/L de plomo reduce la germinación en un 40%'."],
+      [15, "Incluye referencias bibliográficas", "Cita los trabajos que sustentan tu metodología.", "Ejemplo: 'El protocolo de extracción de ADN se basó en Sambrook et al. (2001)'."],
+      [16, "Usa formato Vancouver para citas", "Números en superíndice o corchetes.", "Ejemplo: 'La PCR se realizó según [1] con modificaciones en la temperatura de anillamiento'."],
+      [17, "Registra fechas de los experimentos", "Traceabilidad.", "Ejemplo: 'Los experimentos se realizaron entre el 10 y el 20 de mayo de 2024'."],
+      [18, "Documenta desviaciones del protocolo", "Incidentes o cambios.", "Ejemplo: 'Debido a falla en la centrífuga, las muestras se dejaron sedimentar por gravedad durante 30 min'."],
+      [19, "Incluye anexos con datos brutos", "Tablas completas, imágenes, resultados de pruebas estadísticas.", "Ejemplo: 'Anexo A: datos crudos de absorbancia; Anexo B: resultados de la prueba de normalidad'."],
+      [20, "Redacta resumen ejecutivo", "Síntesis de 250-300 palabras.", "Ejemplo: 'Resumen: el objetivo fue evaluar...; los resultados mostraron...; se concluye que...'."]
+    ],
+    "Artículos científicos": [
+      [21, "Escribe título preciso y conciso", "Incluye palabras clave.", "Ejemplo: 'Efecto de la temperatura sobre la tasa metabólica de la rana endémica de Santander'."],
+      [22, "Redacta resumen estructurado", "Objetivo, métodos, resultados, conclusiones.", "Ejemplo: 'Objetivo: determinar... Métodos: se midió... Resultados: se encontró... Conclusiones: la temperatura óptima es...'."],
+      [23, "Define palabras clave (keywords)", "Términos de indexación.", "Ejemplo: 'Palabras clave: anfibios, metabolismo, cambio climático, Santander'."],
+      [24, "Escribe introducción con pirámide invertida", "De lo general a lo específico.", "Ejemplo: 'Los anfibios son sensibles al cambio climático; sin embargo, se conoce poco sobre la respuesta metabólica de especies andinas; este estudio evalúa el efecto de la temperatura en Hyla labialis'."],
+      [25, "Cita estudios previos relevantes", "Contextualiza el estado del arte.", "Ejemplo: 'Estudios previos han mostrado que la temperatura afecta la tasa metabólica en anuros (Pérez, 2018; Gómez, 2020)'."],
+      [26, "Formula hipótesis claras", "Plantea relaciones esperadas.", "Ejemplo: 'Hipótesis: la tasa metabólica aumenta con la temperatura hasta un óptimo de 25°C'."],
+      [27, "Redacta materiales y métodos replicable", "Suficiente detalle para reproducir el estudio.", "Ejemplo: 'Los especímenes se colectaron en la vereda El Palmar (6°50'N, 73°05'O) y se mantuvieron en acuarios con fotoperiodo 12h:12h'."],
+      [28, "Incluye coordenadas geográficas", "Ubicación precisa del sitio de estudio.", "Ejemplo: 'Las muestras de agua se tomaron en la laguna de Ortices (7°05'N, 72°55'O)'."],
+      [29, "Usa nomenclatura binomial correctamente", "Itálica, género con mayúscula, especie con minúscula.", "Ejemplo: 'Escherichia coli', 'Anadara tuberculosa'."],
+      [30, "Presenta resultados de forma objetiva", "Sin interpretación.", "Ejemplo: 'La tasa metabólica fue 0.32 mL O2/g/h a 20°C y 0.58 mL O2/g/h a 25°C (p<0.01)'."],
+      [31, "Usa gráficos de dispersión para relaciones", "Eje X variable independiente, Y dependiente.", "Ejemplo: 'Figura 2: Relación entre temperatura y tasa metabólica (R²=0.89, p<0.001)'."],
+      [32, "Discute limitaciones del estudio", "Menciona sesgos y alcances.", "Ejemplo: 'El número de individuos fue limitado (n=12); se requieren estudios con mayor muestra'."],
+      [33, "Compara hallazgos con literatura", "Señala similitudes y diferencias.", "Ejemplo: 'A diferencia de Pérez (2022), encontramos un umbral térmico más bajo, posiblemente por adaptación local'."],
+      [34, "Sugiere líneas futuras de investigación", "A partir de los resultados.", "Ejemplo: 'Se recomienda evaluar el efecto de la temperatura sobre la reproducción y el desarrollo embrionario'."],
+      [35, "Redacta conclusiones que responden objetivos", "Cada objetivo debe tener respuesta.", "Ejemplo: 'Se confirma la hipótesis: la tasa metabólica aumenta linealmente con la temperatura hasta 25°C'."],
+      [36, "Declara conflictos de interés", "Transparencia.", "Ejemplo: 'Los autores declaran no tener conflictos de interés'."],
+      [37, "Incluye contribución de autores", "CRediT (Conceptualización, metodología, análisis, etc.).", "Ejemplo: 'J. Pérez: diseño experimental, análisis de datos; M. Gómez: recolección de campo'."],
+      [38, "Agradece financiación", "Fuentes de apoyo.", "Ejemplo: 'Este trabajo fue financiado por Colciencias (convocatoria 890-2023)'."],
+      [39, "Cita correctamente según norma de la revista", "Vancouver, APA, Chicago según sea el caso.", "Ejemplo: '[1] Gómez M, Pérez J. Ecología tropical. Bogotá: Uniandes; 2022'."],
+      [40, "Revisa la gramática y ortografía", "Evita errores que resten calidad.", "Ejemplo: 'No confundir 'a través de' con 'a través de'; usar 'porque' (causa) correctamente'."]
+    ],
+    "Descripción de especies": [
+      [41, "Inicia con nombre científico completo", "Autor y año de descripción.", "Ejemplo: 'Espeletia grandiflora (Mutis ex L.f.) Cuatrec., conocida como frailejón, es una planta asterácea endémica de los páramos colombianos'."],
+      [42, "Describe el hábitat con precisión", "Altitud, tipo de vegetación, sustrato.", "Ejemplo: 'Habita en el páramo de Santurbán entre 3200 y 3800 m, en suelos ácidos y turberas'."],
+      [43, "Incluye distribución geográfica", "Departamentos, países, coordenadas.", "Ejemplo: 'Se distribuye en los departamentos de Santander, Boyacá y Norte de Santander'."],
+      [44, "Usa caracteres diagnósticos", "Rasgos que identifican la especie.", "Ejemplo: 'Se diferencia de E. schultzii por sus capítulos más grandes (4-5 cm) y hojas más pubescentes'."],
+      [45, "Describe morfología externa", "Tamaño, color, forma, textura.", "Ejemplo: 'Tallo de 20-40 cm, hojas lanceoladas, inflorescencia en capítulo amarillo'."],
+      [46, "Incluye medidas en milímetros o centímetros", "Sistema métrico.", "Ejemplo: 'Longitud del cuerpo: 45-55 mm, envergadura alar: 30-35 mm'."],
+      [47, "Redacta clave dicotómica", "Para identificar especies.", "Ejemplo: '1a. Hojas opuestas → ir a 2; 1b. Hojas alternas → ir a 3'."],
+      [48, "Describe comportamiento cuando aplica", "Hábitos, alimentación, reproducción.", "Ejemplo: 'Especie diurna, se alimenta de néctar y polen, anida en cavidades de árboles'."],
+      [49, "Incluye imágenes o ilustraciones", "Referencia a figuras.", "Ejemplo: 'Figura 1: detalle de la flor; Figura 2: distribución geográfica'."],
+      [50, "Menciona estado de conservación", "UICN: LC, VU, EN, CR, etc.", "Ejemplo: 'Actualmente clasificada como En Peligro (EN) debido a la pérdida de hábitat'."],
+      [51, "Cita colectores y número de espécimen", "Voucher en colección biológica.", "Ejemplo: 'Holotipo: Colombia, Santander, Páramo de Santurbán, 3400 m, 15.ii.2024, leg. J. Pérez, COL 5678'."],
+      [52, "Usa terminología anatómica precisa", "Términos en latín técnico o español estandarizado.", "Ejemplo: 'Pedicelo, bráctea, sépalo, pétalo, estambre, ovario ínfero'."],
+      [53, "Redacta diagnosis", "Breve descripción que diferencia la especie.", "Ejemplo: 'Diagnosis: especie de tamaño mediano (45 mm), patas amarillas, mancha negra en el pecho'."],
+      [54, "Incluye etimología del nombre", "Significado del epíteto específico.", "Ejemplo: 'El epíteto 'santanderensis' hace referencia al departamento de Santander'."],
+      [55, "Describe variabilidad intraespecífica", "Diferencias entre poblaciones o individuos.", "Ejemplo: 'Las poblaciones del norte presentan tonalidades más oscuras que las del sur'."],
+      [56, "Compara especies similares", "Tabla de caracteres contrastantes.", "Ejemplo: 'A diferencia de E. boyacensis, esta especie tiene hojas sésiles y capítulos solitarios'."],
+      [57, "Incluye fenología", "Época de floración, fructificación, reproducción.", "Ejemplo: 'Florece de enero a marzo; fructifica de abril a junio'."],
+      [58, "Describe ecología", "Interacciones con otras especies.", "Ejemplo: 'Es polinizada por abejas del género Bombus; sus semillas son dispersadas por el viento'."],
+      [59, "Menciona usos tradicionales", "Etnobotánica, etnozoología.", "Ejemplo: 'Las comunidades locales usan las hojas para tratar afecciones respiratorias'."],
+      [60, "Incluye referencias de literatura taxonómica", "Obras de referencia.", "Ejemplo: 'La identificación se basó en la Flora de Colombia (Bernal et al., 2015)'."]
+    ],
+    "Normativa ambiental": [
+      [61, "Cita normas colombianas sobre biodiversidad", "Decretos, resoluciones.", "Ejemplo: 'Según el Decreto 1076 de 2015, la especie está protegida en el territorio nacional'."],
+      [62, "Menciona categorías de amenaza UICN", "Extinto, En Peligro Crítico, Vulnerable, etc.", "Ejemplo: 'El oso de anteojos (Tremarctos ornatus) está catalogado como Vulnerable (VU) en Colombia'."],
+      [63, "Referencia licencias de colecta", "Permisos de autoridad ambiental.", "Ejemplo: 'La colecta de especímenes fue autorizada por la ANLA bajo el permiso 1234 del 10 de mayo de 2024'."],
+      [64, "Documenta procedencia legal de muestras", "No tráfico ilegal.", "Ejemplo: 'Las muestras biológicas provienen de la colección del Instituto Humboldt, registradas en el SiB Colombia'."],
+      [65, "Incluye código de buenas prácticas de campo", "Respeto por la biota.", "Ejemplo: 'Se siguieron los protocolos de mínimo impacto: no remoción de vegetación, devolución de rocas a su posición original'."],
+      [66, "Cita resoluciones sobre áreas protegidas", "Parques Nacionales Naturales.", "Ejemplo: 'El estudio se realizó en el Parque Nacional Natural Chingaza, bajo la resolución 045 de 2022'."],
+      [67, "Menciona el concepto de desarrollo sostenible", "Según la legislación colombiana.", "Ejemplo: 'La Ley 99 de 1993 establece el desarrollo sostenible como principio fundamental'."],
+      [68, "Incluye referencias al Convenio de Diversidad Biológica", "CDB, ratificado por Colombia.", "Ejemplo: 'Colombia es signataria del CDB, que promueve la protección de ecosistemas'."],
+      [69, "Documenta el acceso a recursos genéticos", "Permiso de contratos de acceso.", "Ejemplo: 'El acceso al recurso genético se realizó bajo el contrato 2024-001 del Ministerio de Ambiente'."],
+      [70, "Redacta informes de impacto ambiental", "Estructura según términos de referencia.", "Ejemplo: 'El EIA incluye: descripción del proyecto, línea base ambiental, identificación de impactos y plan de manejo'."],
+      [71, "Define área de influencia", "Directa e indirecta.", "Ejemplo: 'Área de influencia directa: 10 km² alrededor de la mina; indirecta: 50 km²'."],
+      [72, "Describe medidas de mitigación", "Para compensar impactos negativos.", "Ejemplo: 'Se implementará un programa de reforestación con especies nativas en 20 hectáreas'."],
+      [73, "Incluye plan de monitoreo ambiental", "Indicadores, frecuencia, puntos de muestreo.", "Ejemplo: 'Monitoreo trimestral de calidad del agua en 5 estaciones a lo largo del río'."],
+      [74, "Cita decretos sobre fauna y flora silvestre", "Resoluciones del Minambiente.", "Ejemplo: 'La especie está incluida en la Resolución 0192 de 2014 (lista de especies amenazadas)'."],
+      [75, "Documenta comodatos con herbarios", "Préstamo de especímenes.", "Ejemplo: 'Los especímenes fueron depositados en el Herbario Nacional Colombiano (COL) bajo comodato'."],
+      [76, "Incluye código de ética para investigación en especies", "Bienestar animal.", "Ejemplo: 'Los procedimientos con animales siguieron las guías del Comité de Ética de la Universidad'."],
+      [77, "Cita acuerdos internacionales", "CITES, Ramsar, etc.", "Ejemplo: 'La especie está listada en el Apéndice I de CITES, prohibiendo su comercio internacional'."],
+      [78, "Redacta solicitudes de permiso de estudio", "Dirigidas a autoridades ambientales.", "Ejemplo: 'Solicito permiso para colectar 20 individuos de la especie, con fines de investigación no comercial'."],
+      [79, "Documenta socialización con comunidades locales", "Consulta previa.", "Ejemplo: 'Se realizó socialización con la comunidad indígena de la zona, quienes aprobaron el estudio'."],
+      [80, "Incluye referencias a la normativa de páramos", "Ley 1930 de 2018.", "Ejemplo: 'El páramo de Santurbán es un ecosistema estratégico protegido por la Ley 1930'."]
+    ],
+    "Divulgación científica": [
+      [81, "Usa lenguaje claro y accesible", "Evita tecnicismos innecesarios.", "Ejemplo: 'Las mitocondrias son como las baterías de las células' en lugar de 'orgánulo productor de ATP'."],
+      [82, "Empieza con una pregunta o anécdota", "Engancha al lector.", "Ejemplo: '¿Sabías que una ballena azul puede pesar más que 30 elefantes?'."],
+      [83, "Explica conceptos complejos con analogías", "Comparaciones cotidianas.", "Ejemplo: 'La cadena alimenticia es como un juego de dominó: si una pieza falla, todo el sistema colapsa'."],
+      [84, "Usa ejemplos locales y conocidos", "Biodiversidad colombiana.", "Ejemplo: 'El frailejón del páramo de Santurbán almacena agua como una esponja gigante'."],
+      [85, "Incluye datos curiosos y llamativos", 'Datos "wow".', "Ejemplo: 'Las hormigas culonas tienen más proteína que la carne de res (en peso)'."],
+      [86, "Redacta títulos atractivos", "No uses títulos académicos aburridos.", "Ejemplo: 'El secreto de los frailejones para sobrevivir en el frío extremo'."],
+      [87, "Usa subtítulos que organicen la lectura", "Facilita el escaneo.", "Ejemplo: '¿Dónde viven?', '¿Por qué están en peligro?', '¿Qué podemos hacer?'."],
+      [88, "Incorpora imágenes y pies de foto explicativos", "Un mapa, una foto, un gráfico simple.", "Ejemplo: 'Figura 1. Comparación entre el tamaño de una ballena azul y un autobús escolar'."],
+      [89, "Escribe frases cortas y directas", "Oraciones de 15-20 palabras.", "Ejemplo: 'El cóndor andino es el ave voladora más grande del mundo. Mide hasta 1,2 metros.'"],
+      [90, "Hilvana con preguntas al lector", "Mantiene el interés.", "Ejemplo: '¿Te imaginas volar sobre los Andes como un cóndor?'."],
+      [91, "Humaniza los conceptos", "Dale nombre a los animales o personifica.", "Ejemplo: 'José, el frailejón, lleva 50 años en el páramo almacenando agua'."],
+      [92, "Evita el sensacionalismo", "No exageres los riesgos.", "Ejemplo: 'La especie está en peligro, pero aún hay esperanza con programas de conservación'."],
+      [93, "Incluye llamado a la acción", "Qué puede hacer el lector.", "Ejemplo: 'Puedes apoyar la conservación apadrinando un frailejón o reduciendo tu huella de carbono'."],
+      [94, "Menciona fuentes confiables", "Da credibilidad.", "Ejemplo: 'Según el Instituto Humboldt, Colombia es el país con más especies de aves en el mundo'."],
+      [95, "Redacta un resumen al inicio", "En 2-3 líneas lo más importante.", "Ejemplo: 'Resumen: Los frailejones son plantas clave del páramo, pero el cambio climático los amenaza'."],
+      [96, "Incluye datos de los investigadores", "Rostro humano a la ciencia.", "Ejemplo: 'La bióloga María López lleva 15 años estudiando osos de anteojos en la cordillera'."],
+      [97, "Usa comparaciones con objetos familiares", "Facilita la comprensión.", "Ejemplo: 'El ADN de una persona, estirado, mediría 2 metros; el de un ratón también, ¡es similar!'."],
+      [98, "Evita el uso excesivo de cifras", "Cuando uses muchas, resalta la más importante.", "Ejemplo: 'Más de 1.900 especies de aves viven en Colombia; eso es aproximadamente el 20% de todas las aves del mundo'."],
+      [99, "Termina con una reflexión o invitación", "Deja algo en qué pensar.", "Ejemplo: 'Cuidar la biodiversidad colombiana no es un lujo; es una necesidad para nuestra propia supervivencia'."],
+      [100, "Revisa que un adolescente lo entienda", "Prueba de legibilidad.", "Ejemplo: 'Léele tu texto a alguien de 15 años; si no entiende algo, simplifícalo'."]
+    ]
+  };
+  
+  // Construir array de técnicas
+  for(let categoria in tecnicasPorCategoria) {
+    for(let tec of tecnicasPorCategoria[categoria]) {
+      tecnicas.push({
+        id: tec[0],
+        categoria: categoria,
+        titulo: tec[1],
+        concepto: tec[2],
+        ejemplo: tec[3]
+      });
+    }
+  }
+  
+  tecnicas.sort((a,b) => a.id - b.id);
+  
+  let progress = {};
+  let currentCatFilter = "all";
+  let currentSearch = "";
+  let currentPage = 1;
+  let itemsPerPage = 12;
+  let filteredTecnicas = [...tecnicas];
+  let currentCardIndex = 0;
+  let filteredFlashcards = [...tecnicas];
+  const STORAGE_KEY = "biowrite_100_tecnicas";
+  
+  function loadProgress() {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if(saved) progress = JSON.parse(saved);
+    for(let i=0; i<tecnicas.length; i++) if(progress[tecnicas[i].id]===undefined) progress[tecnicas[i].id] = false;
+    updateStats();
+  }
+  function saveProgress() { localStorage.setItem(STORAGE_KEY, JSON.stringify(progress)); updateStats(); }
+  function updateStats() {
+    let c = Object.values(progress).filter(v=>v===true).length;
+    document.getElementById("completedCount").innerText = c;
+    document.getElementById("progressFill").style.width = `${(c/100)*100}%`;
+  }
+  function markComplete(id, isComplete) {
+    if(isComplete && !progress[id]) { progress[id] = true; saveProgress(); renderLista(); }
+  }
+  
+  function renderLista() {
+    let filtered = tecnicas.filter(t => {
+      if(currentCatFilter !== "all" && t.categoria !== currentCatFilter) return false;
+      if(currentSearch && !t.titulo.toLowerCase().includes(currentSearch) && !t.concepto.toLowerCase().includes(currentSearch)) return false;
+      return true;
+    });
+    filteredTecnicas = filtered;
+    const totalPages = Math.ceil(filtered.length / itemsPerPage);
+    const start = (currentPage-1) * itemsPerPage;
+    const paginated = filtered.slice(start, start+itemsPerPage);
+    
+    const container = document.getElementById("tecnicasList");
+    container.innerHTML = paginated.map(t => `
+      <div class="tecnica-card ${progress[t.id] ? 'completed' : ''}" data-id="${t.id}">
+        <div class="d-flex justify-content-between">
+          <div><span class="badge-cat">${t.categoria}</span><span class="ms-2">#${t.id}</span></div>
+          <input class="form-check-input" type="checkbox" ${progress[t.id] ? 'checked' : ''} onchange="event.stopPropagation(); markComplete(${t.id}, this.checked)">
+        </div>
+        <h6 class="mt-2">${t.titulo}</h6>
+        <p class="small text-muted">${t.concepto.substring(0, 100)}...</p>
+      </div>
+    `).join('');
+    
+    document.querySelectorAll(".tecnica-card").forEach(card => {
+      card.addEventListener("click", (e) => {
+        if(!e.target.classList.contains("form-check-input")) {
+          let id = parseInt(card.dataset.id);
+          let idx = filteredTecnicas.findIndex(t => t.id === id);
+          if(idx !== -1) { currentCardIndex = idx; switchToFlashcards(); updateFlashcard(); }
+        }
+      });
+    });
+    
+    let pagHtml = ''; for(let i=1;i<=totalPages;i++) pagHtml += `<li class="page-item ${i===currentPage?'active':''}"><a class="page-link" href="#" data-page="${i}">${i}</a></li>`;
+    document.getElementById("pagination").innerHTML = pagHtml;
+    document.querySelectorAll("#pagination .page-link").forEach(l=>l.addEventListener("click", e=>{ e.preventDefault(); currentPage=parseInt(l.dataset.page); renderLista(); }));
+  }
+  
+  function filterFlashcards() {
+    if(currentCatFilter === "all") filteredFlashcards = [...tecnicas];
+    else filteredFlashcards = tecnicas.filter(t => t.categoria === currentCatFilter);
+    currentCardIndex = Math.min(currentCardIndex, filteredFlashcards.length-1);
+    if(currentCardIndex < 0) currentCardIndex = 0;
+    updateFlashcard();
+  }
+  
+  function updateFlashcard() {
+    let t = filteredFlashcards[currentCardIndex];
+    if(!t) return;
+    document.getElementById("frontCat").innerHTML = t.categoria;
+    document.getElementById("frontNum").innerHTML = `#${t.id}`;
+    document.getElementById("frontTitle").innerHTML = t.titulo;
+    document.getElementById("frontConcept").innerHTML = t.concepto;
+    document.getElementById("backNum").innerHTML = `#${t.id}`;
+    document.getElementById("backTitle").innerHTML = t.titulo;
+    document.getElementById("backExample").innerHTML = t.ejemplo;
+    document.getElementById("cardCounter").innerHTML = `${currentCardIndex+1}/${filteredFlashcards.length}`;
+    document.getElementById("flashcard").classList.remove("flipped");
+    
+    let qText = t.concepto.split('.')[0] || t.concepto;
+    let ejercicioHtml = `<div class="small fw-bold mb-2">📝 Ejercicio: ¿Cuál es el objetivo de esta técnica?</div>
+      <div class="d-flex flex-wrap gap-2">
+        <button class="option-btn ejercicio-opt" data-value="${qText}">${qText}</button>
+        <button class="option-btn ejercicio-opt" data-value="Escribir sin datos">Escribir sin datos</button>
+        <button class="option-btn ejercicio-opt" data-value="Ignorar la metodología">Ignorar la metodología</button>
+      </div>
+      <div id="ejercicioFeedback" class="mt-2 small"></div>`;
+    document.getElementById("exerciseArea").innerHTML = ejercicioHtml;
+    
+    document.querySelectorAll(".ejercicio-opt").forEach(btn => {
+      btn.onclick = () => {
+        let isCorrect = btn.getAttribute("data-value") === qText;
+        let fb = document.getElementById("ejercicioFeedback");
+        if(isCorrect) { fb.innerHTML = "<span class='text-success'>✅ Correcto!</span>"; markComplete(t.id, true); renderLista(); }
+        else { fb.innerHTML = "<span class='text-danger'>❌ Incorrecto. Vuelve a leer la técnica.</span>"; }
+        document.querySelectorAll(".ejercicio-opt").forEach(b=>b.disabled=true);
+      };
+    });
+  }
+  
+  function nextCard(){ if(currentCardIndex<filteredFlashcards.length-1){currentCardIndex++; updateFlashcard();} }
+  function prevCard(){ if(currentCardIndex>0){currentCardIndex--; updateFlashcard();} }
+  function randomCard(){ currentCardIndex=Math.floor(Math.random()*filteredFlashcards.length); updateFlashcard(); }
+  function flipCard(){ document.getElementById("flashcard").classList.toggle("flipped"); }
+  function markCurrentComplete(){
+    let t = filteredFlashcards[currentCardIndex];
+    if(t && !progress[t.id]) { progress[t.id]=true; saveProgress(); renderLista(); updateFlashcard(); }
+  }
+  
+  function switchToLista() {
+    document.getElementById("listaView").style.display = "block";
+    document.getElementById("flashcardsView").style.display = "none";
+    document.querySelectorAll(".nav-item-custom").forEach(i=>i.classList.remove("active"));
+    document.querySelector(".nav-item-custom[data-view='lista']").classList.add("active");
+    renderLista();
+  }
+  function switchToFlashcards() {
+    document.getElementById("listaView").style.display = "none";
+    document.getElementById("flashcardsView").style.display = "block";
+    document.querySelectorAll(".nav-item-custom").forEach(i=>i.classList.remove("active"));
+    document.querySelector(".nav-item-custom[data-view='flashcards']").classList.add("active");
+    filterFlashcards();
+  }
+  
+  document.getElementById("prevCardBtn")?.addEventListener("click", prevCard);
+  document.getElementById("nextCardBtn")?.addEventListener("click", nextCard);
+  document.getElementById("randomCardBtn")?.addEventListener("click", randomCard);
+  document.getElementById("flipCardBtn")?.addEventListener("click", flipCard);
+  document.getElementById("markCompleteBtn")?.addEventListener("click", markCurrentComplete);
+  document.getElementById("themeToggleBtn")?.addEventListener("click", () => document.body.classList.toggle("light-mode"));
+  document.querySelector(".nav-item-custom[data-view='lista']")?.addEventListener("click", switchToLista);
+  document.querySelector(".nav-item-custom[data-view='flashcards']")?.addEventListener("click", switchToFlashcards);
+  
+  document.getElementById("searchInput")?.addEventListener("input", e => { currentSearch = e.target.value.toLowerCase(); currentPage = 1; renderLista(); });
+  document.getElementById("catFilter")?.addEventListener("change", e => { currentCatFilter = e.target.value; currentPage = 1; renderLista(); filterFlashcards(); });
+  
+  loadProgress();
+  renderLista();
+  switchToLista();
+</script>
+</body>
+</html>

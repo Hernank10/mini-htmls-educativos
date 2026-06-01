@@ -1,0 +1,809 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>A1 Bilingual · Español · English · Vocabulary Essentials</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --fondo: #f0f7ff;
+      --texto: #1a2c3e;
+      --azul-idioma: #3498db;
+      --naranja-ejercicio: #e67e22;
+      --gris-ayuda: #7f8c8d;
+      --acierto: #27ae60;
+      --fallo: #e74c3c;
+      --sombra: rgba(0, 0, 0, 0.08);
+      --card-bg: #ffffff;
+    }
+
+    body {
+      background: var(--fondo);
+      color: var(--texto);
+      font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
+      line-height: 1.5;
+      padding: 1rem;
+    }
+
+    .app-container {
+      max-width: 1300px;
+      margin: 0 auto;
+      background: var(--card-bg);
+      border-radius: 2rem;
+      box-shadow: 0 12px 28px var(--sombra);
+      overflow: hidden;
+      border: 1px solid #d6e4f0;
+    }
+
+    header {
+      background: #e8f0f8;
+      padding: 1rem 2rem;
+      border-bottom: 3px solid var(--azul-idioma);
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+    }
+    h1 {
+      font-size: 1.7rem;
+      font-weight: 600;
+      color: #2c7ab1;
+      letter-spacing: -0.2px;
+    }
+    h1 small {
+      font-size: 0.7rem;
+      font-weight: normal;
+      color: #6c9ebf;
+    }
+
+    .lang-selector {
+      display: flex;
+      gap: 0.5rem;
+      background: white;
+      padding: 0.3rem;
+      border-radius: 40px;
+      border: 1px solid #d6e4f0;
+    }
+    .lang-btn {
+      background: transparent;
+      border: none;
+      padding: 0.4rem 1rem;
+      border-radius: 30px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.2s;
+      font-size: 0.85rem;
+    }
+    .lang-btn.active {
+      background: var(--azul-idioma);
+      color: white;
+    }
+
+    nav {
+      display: flex;
+      gap: 0.5rem;
+      background: #e2eaf2;
+      padding: 0.6rem 2rem;
+      border-bottom: 1px solid #d0dfe8;
+      flex-wrap: wrap;
+    }
+    .nav-btn {
+      background: transparent;
+      border: none;
+      font-size: 0.95rem;
+      padding: 0.5rem 1.2rem;
+      border-radius: 40px;
+      cursor: pointer;
+      font-weight: 500;
+      transition: all 0.2s;
+      color: #2c7ab1;
+    }
+    .nav-btn.active {
+      background-color: var(--azul-idioma);
+      color: white;
+    }
+    .nav-btn:hover:not(.active) {
+      background-color: #cfdfea;
+    }
+
+    .view {
+      display: none;
+      padding: 2rem;
+      animation: fade 0.2s ease;
+    }
+    .active-view { display: block; }
+    @keyframes fade { from { opacity: 0; transform: translateY(5px);} to { opacity: 1; transform: translateY(0);} }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+    .stat-card {
+      background: var(--fondo);
+      border-radius: 1.5rem;
+      padding: 1rem;
+      text-align: center;
+      border-left: 6px solid var(--naranja-ejercicio);
+      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    }
+    .stat-number {
+      font-size: 2.2rem;
+      font-weight: 700;
+      color: var(--azul-idioma);
+    }
+
+    .progress-bar-bg {
+      background: #e2e8f0;
+      border-radius: 40px;
+      height: 12px;
+      overflow: hidden;
+      margin: 0.8rem 0;
+    }
+    .progress-fill {
+      background: var(--azul-idioma);
+      width: 0%;
+      height: 100%;
+      transition: width 0.2s;
+    }
+
+    .conceptos-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 1rem;
+      max-height: 65vh;
+      overflow-y: auto;
+      padding-right: 0.3rem;
+    }
+    .concepto-item {
+      background: white;
+      border-radius: 1.2rem;
+      padding: 0.8rem 1rem;
+      border-left: 5px solid var(--gris-ayuda);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+    .concepto-titulo {
+      font-weight: 700;
+      color: #2c7ab1;
+    }
+    .concepto-desc {
+      font-size: 0.85rem;
+      color: #5a6e7c;
+      margin-top: 6px;
+      border-top: 1px solid #eef2f6;
+      padding-top: 6px;
+    }
+    .badge-progreso {
+      font-size: 0.7rem;
+      background: #eef2f6;
+      border-radius: 20px;
+      padding: 2px 10px;
+      display: inline-block;
+      margin-top: 8px;
+    }
+
+    .flashcard {
+      background: #ffffff;
+      border-radius: 2rem;
+      padding: 1.8rem;
+      text-align: center;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+      border: 1px solid #d6e4f0;
+      max-width: 750px;
+      margin: 0 auto;
+    }
+    .pregunta {
+      font-size: 1.4rem;
+      font-weight: 500;
+      margin-bottom: 1.8rem;
+      background: #e8f0f8;
+      padding: 1.2rem;
+      border-radius: 1.5rem;
+    }
+    .respuesta-oculta {
+      background: #f4f8fc;
+      border-radius: 1.2rem;
+      padding: 1rem;
+      margin: 1rem 0;
+      display: none;
+    }
+    .orden-palabras {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 0.6rem;
+      margin: 1.5rem 0;
+    }
+    .letra-btn {
+      background: var(--azul-idioma);
+      color: white;
+      border: none;
+      padding: 0.6rem 1rem;
+      border-radius: 2rem;
+      font-size: 1.1rem;
+      cursor: pointer;
+      transition: 0.1s;
+      min-width: 50px;
+    }
+    .orden-actual {
+      background: #fefef9;
+      border-radius: 1rem;
+      padding: 1rem;
+      min-height: 80px;
+      margin: 1rem 0;
+      text-align: left;
+      border: 1px dashed #bdc3c7;
+      font-size: 1.2rem;
+      letter-spacing: 2px;
+    }
+    .btn {
+      background: #e2e8f0;
+      border: none;
+      padding: 0.6rem 1.5rem;
+      border-radius: 3rem;
+      font-weight: 600;
+      margin: 0.3rem;
+      cursor: pointer;
+      font-family: inherit;
+    }
+    .btn-primary { background: var(--azul-idioma); color: white; }
+    .btn-acierto { background: var(--acierto); color: white; }
+    .btn-fallo { background: var(--fallo); color: white; }
+    .modo-selector {
+      display: flex;
+      justify-content: center;
+      gap: 0.8rem;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+    }
+    .modo-btn {
+      background: #e2e8f0;
+      border: none;
+      padding: 0.5rem 1.2rem;
+      border-radius: 40px;
+      cursor: pointer;
+      font-weight: 500;
+      transition: all 0.2s;
+    }
+    .modo-btn.active {
+      background: var(--azul-idioma);
+      color: white;
+    }
+    footer {
+      text-align: center;
+      padding: 1rem;
+      font-size: 0.75rem;
+      border-top: 1px solid #d6e4f0;
+      background: #f8fbfe;
+    }
+    .translation-direction, .spanish-word {
+      margin: 0.5rem 0;
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: var(--naranja-ejercicio);
+    }
+    input {
+      padding: 0.8rem;
+      border-radius: 2rem;
+      border: 1px solid #cbd5e1;
+      font-size: 1rem;
+      width: 80%;
+      margin: 1rem auto;
+      display: block;
+      text-align: center;
+      font-family: inherit;
+    }
+    @media (max-width: 680px) {
+      .view { padding: 1rem; }
+      .pregunta { font-size: 1rem; }
+      .lang-selector { order: 2; width: 100%; justify-content: center; }
+      header { flex-direction: column; align-items: stretch; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+<div class="app-container">
+  <header>
+    <div>
+      <h1>🗣️ A1 Bilingual <small>Español · English · Vocabulario Esencial</small></h1>
+    </div>
+    <div class="lang-selector">
+      <button id="langEsBtn" class="lang-btn active">🇪🇸 Español</button>
+      <button id="langEnBtn" class="lang-btn">🇬🇧 English</button>
+      <button id="langBothBtn" class="lang-btn">🌐 Bilingüe</button>
+    </div>
+  </header>
+  <nav>
+    <button class="nav-btn active" data-view="dashboard">📊 Panel</button>
+    <button class="nav-btn" data-view="listado">📚 Vocabulario</button>
+    <button class="nav-btn" data-view="practica">🃏 Práctica</button>
+  </nav>
+
+  <section id="dashboard" class="view active-view">
+    <div class="stats-grid" id="statsContainer"></div>
+    <div class="card" style="background:white; border-radius:1.6rem; padding:1.2rem;">
+      <h3 id="progressTitle">📈 Progreso en vocabulario A1</h3>
+      <div class="progress-bar-bg"><div class="progress-fill" id="globalProgressFill"></div></div>
+      <p id="globalProgressText"></p>
+      <button id="resetProgresoBtn" class="btn" style="background:#cfdfea;">🔄 Reiniciar progreso</button>
+    </div>
+  </section>
+
+  <section id="listado" class="view">
+    <input type="text" id="filtroListado" placeholder="🔍 Buscar palabra / Search word..." style="width:100%; padding:10px; margin-bottom:15px; border-radius:40px; border:1px solid #cbd5e1;">
+    <div id="conceptosListadoContainer" class="conceptos-grid"></div>
+  </section>
+
+  <section id="practica" class="view">
+    <div class="modo-selector" id="modoSelector">
+      <button id="modoTraduccionDirecta" class="modo-btn active">📖 Palabra → Traducción</button>
+      <button id="modoTraduccionInversa" class="modo-btn">🔄 Traducción → Palabra</button>
+      <button id="modoOrdenar" class="modo-btn">🔤 Ordenar letras</button>
+      <button id="modoEspEng" class="modo-btn">🌐 ESP ↔ ENG</button>
+    </div>
+    <div id="practicaContainer"></div>
+  </section>
+  <footer>Progreso guardado localmente · Ejercicios interactivos A1 · Aprende español e inglés básico</footer>
+</div>
+
+<script>
+  // --------------------------------------------------------------
+  // 100 palabras y frases A1 (Español - Inglés)
+  // --------------------------------------------------------------
+  const vocabularioData = [
+    [1, "Hola", "Hello", "Saludo básico", "Basic greeting"],
+    [2, "Adiós", "Goodbye", "Despedida", "Farewell"],
+    [3, "Por favor", "Please", "Expresión de cortesía", "Polite expression"],
+    [4, "Gracias", "Thank you", "Agradecimiento", "Gratitude"],
+    [5, "Sí", "Yes", "Afirmación", "Affirmation"],
+    [6, "No", "No", "Negación", "Negation"],
+    [7, "Perdón", "Sorry", "Disculpa", "Apology"],
+    [8, "Buenos días", "Good morning", "Saludo matutino", "Morning greeting"],
+    [9, "Buenas tardes", "Good afternoon", "Saludo vespertino", "Afternoon greeting"],
+    [10, "Buenas noches", "Good night", "Saludo nocturno / despedida", "Night greeting / farewell"],
+    [11, "¿Cómo estás?", "How are you?", "Pregunta sobre estado", "Asking about well-being"],
+    [12, "Bien", "Fine / Well", "Estado positivo", "Positive state"],
+    [13, "Mal", "Bad", "Estado negativo", "Negative state"],
+    [14, "Más o menos", "So-so", "Estado regular", "Regular state"],
+    [15, "Yo", "I", "Primera persona", "First person pronoun"],
+    [16, "Tú", "You (informal)", "Segunda persona singular", "Second person singular informal"],
+    [17, "Él", "He", "Tercera persona masculina", "Third person masculine"],
+    [18, "Ella", "She", "Tercera persona femenina", "Third person feminine"],
+    [19, "Nosotros", "We", "Primera persona plural", "First person plural"],
+    [20, "Ellos", "They", "Tercera persona plural", "Third person plural"],
+    [21, "Uno", "One", "Número 1", "Number 1"],
+    [22, "Dos", "Two", "Número 2", "Number 2"],
+    [23, "Tres", "Three", "Número 3", "Number 3"],
+    [24, "Cuatro", "Four", "Número 4", "Number 4"],
+    [25, "Cinco", "Five", "Número 5", "Number 5"],
+    [26, "Seis", "Six", "Número 6", "Number 6"],
+    [27, "Siete", "Seven", "Número 7", "Number 7"],
+    [28, "Ocho", "Eight", "Número 8", "Number 8"],
+    [29, "Nueve", "Nine", "Número 9", "Number 9"],
+    [30, "Diez", "Ten", "Número 10", "Number 10"],
+    [31, "Rojo", "Red", "Color primario", "Primary color"],
+    [32, "Azul", "Blue", "Color primario", "Primary color"],
+    [33, "Verde", "Green", "Color naturaleza", "Nature color"],
+    [34, "Amarillo", "Yellow", "Color brillante", "Bright color"],
+    [35, "Negro", "Black", "Color oscuro", "Dark color"],
+    [36, "Blanco", "White", "Color claro", "Light color"],
+    [37, "Grande", "Big / Large", "Tamaño superior", "Large size"],
+    [38, "Pequeño", "Small", "Tamaño inferior", "Small size"],
+    [39, "Bonito", "Pretty / Beautiful", "Cualidad estética", "Aesthetic quality"],
+    [40, "Feo", "Ugly", "Cualidad estética negativa", "Negative aesthetic quality"],
+    [41, "Familia", "Family", "Grupo de parentesco", "Kinship group"],
+    [42, "Madre", "Mother", "Progenitora femenina", "Female parent"],
+    [43, "Padre", "Father", "Progenitor masculino", "Male parent"],
+    [44, "Hermano", "Brother", "Varón con mismos padres", "Male sibling"],
+    [45, "Hermana", "Sister", "Mujer con mismos padres", "Female sibling"],
+    [46, "Amigo", "Friend", "Relación de afecto", "Friendship relationship"],
+    [47, "Casa", "House / Home", "Lugar de residencia", "Dwelling place"],
+    [48, "Comida", "Food", "Alimento", "Nourishment"],
+    [49, "Agua", "Water", "Líquido vital", "Vital liquid"],
+    [50, "Pan", "Bread", "Alimento básico", "Basic food"],
+    [51, "Manzana", "Apple", "Fruta", "Fruit"],
+    [52, "Perro", "Dog", "Animal doméstico", "Domestic animal"],
+    [53, "Gato", "Cat", "Animal doméstico", "Domestic animal"],
+    [54, "Coche / Carro", "Car", "Vehículo automóvil", "Automobile vehicle"],
+    [55, "Escuela", "School", "Lugar de aprendizaje", "Learning place"],
+    [56, "Profesor", "Teacher (male)", "Educador", "Educator"],
+    [57, "Estudiante", "Student", "Persona que aprende", "Learner"],
+    [58, "Libro", "Book", "Conjunto de hojas escritas", "Written pages set"],
+    [59, "Lápiz", "Pencil", "Instrumento de escritura", "Writing instrument"],
+    [60, "Mesa", "Table", "Mueble", "Furniture"],
+    [61, "Silla", "Chair", "Mueble para sentarse", "Seating furniture"],
+    [62, "Puerta", "Door", "Abertura de acceso", "Access opening"],
+    [63, "Ventana", "Window", "Abertura con vidrio", "Glass opening"],
+    [64, "Cielo", "Sky", "Parte superior del paisaje", "Upper landscape part"],
+    [65, "Sol", "Sun", "Estrella del día", "Day star"],
+    [66, "Luna", "Moon", "Satélite natural", "Natural satellite"],
+    [67, "Trabajo", "Work / Job", "Actividad laboral", "Employment activity"],
+    [68, "Descanso", "Rest", "Pausa de actividad", "Activity pause"],
+    [69, "Feliz", "Happy", "Emoción positiva", "Positive emotion"],
+    [70, "Triste", "Sad", "Emoción negativa", "Negative emotion"],
+    [71, "Hoy", "Today", "Día presente", "Current day"],
+    [72, "Mañana", "Tomorrow / Morning", "Día siguiente o parte del día", "Next day or early day part"],
+    [73, "Ayer", "Yesterday", "Día anterior", "Previous day"],
+    [74, "Comer", "To eat", "Acción de ingerir alimentos", "Action of ingesting food"],
+    [75, "Beber", "To drink", "Acción de ingerir líquidos", "Action of ingesting liquids"],
+    [76, "Hablar", "To speak", "Acción de comunicar verbalmente", "Action of verbal communication"],
+    [77, "Escuchar", "To listen", "Acción de atender sonidos", "Action of paying attention to sounds"],
+    [78, "Ver", "To see", "Acción de percibir con la vista", "Action of perceiving with sight"],
+    [79, "Ir", "To go", "Acción de desplazarse", "Action of moving"],
+    [80, "Venir", "To come", "Acción de acercarse", "Action of approaching"],
+    [81, "Tener", "To have", "Verbo de posesión", "Possession verb"],
+    [82, "Ser", "To be (permanent)", "Identidad o esencia", "Identity or essence"],
+    [83, "Estar", "To be (temporary)", "Estado o ubicación", "State or location"],
+    [84, "Hacer", "To do / make", "Acción general", "General action"],
+    [85, "Poder", "Can / able to", "Capacidad", "Ability"],
+    [86, "Querer", "To want", "Deseo", "Desire"],
+    [87, "Saber", "To know", "Conocimiento", "Knowledge"],
+    [88, "Creer", "To believe", "Opinión o fe", "Opinion or faith"],
+    [89, "Pensar", "To think", "Proceso mental", "Mental process"],
+    [90, "Sentir", "To feel", "Emoción o sensación", "Emotion or sensation"],
+    [91, "Vivir", "To live", "Estar con vida", "Be alive"],
+    [92, "Música", "Music", "Arte sonoro", "Sound art"],
+    [93, "Película", "Movie", "Producción cinematográfica", "Cinematographic production"],
+    [94, "Deporte", "Sport", "Actividad física competitiva", "Competitive physical activity"],
+    [95, "Viaje", "Trip", "Desplazamiento a otro lugar", "Travel to another place"],
+    [96, "Playa", "Beach", "Orilla del mar", "Seashore"],
+    [97, "Montaña", "Mountain", "Elevación del terreno", "Land elevation"],
+    [98, "Ciudad", "City", "Gran centro poblado", "Large populated center"],
+    [99, "País", "Country", "Nación o territorio", "Nation or territory"],
+    [100, "Idioma", "Language", "Sistema de comunicación", "Communication system"]
+  ];
+
+  // --------------------- LOCALSTORAGE Y PROGRESO -------------------------
+  let progreso = {};
+  let currentLang = "es"; // 'es', 'en', 'both'
+  let currentPracticeMode = "traduccion_directa"; // 'traduccion_directa', 'traduccion_inversa', 'ordenar', 'esp_eng'
+  let currentCardId = null;
+  let currentOrdenarLetras = [];
+  let shuffledLetras = [];
+  let selectedLetters = [];
+  let ordenarRespuestaCorrecta = "";
+  let translationDirection = "esp2eng"; // para modo ESP↔ENG
+
+  const STORAGE_KEY = "a1BilingualProgreso";
+
+  function cargarProgreso() {
+    const guardado = localStorage.getItem(STORAGE_KEY);
+    if (guardado) progreso = JSON.parse(guardado);
+    else {
+      progreso = {};
+      for (let i = 1; i <= 100; i++) progreso[i] = { aciertos: 0, fallos: 0 };
+    }
+  }
+  function guardarProgreso() { localStorage.setItem(STORAGE_KEY, JSON.stringify(progreso)); }
+  function registrarResultado(id, acierto) {
+    if (!progreso[id]) progreso[id] = { aciertos: 0, fallos: 0 };
+    if (acierto) progreso[id].aciertos += 1;
+    else progreso[id].fallos += 1;
+    guardarProgreso();
+    renderDashboard();
+    renderListado(document.getElementById("filtroListado")?.value || "");
+  }
+
+  function obtenerTexto(item, tipo) {
+    // tipo: 'palabra' o 'definicion'
+    if (currentLang === 'es') return tipo === 'palabra' ? item[1] : item[3];
+    if (currentLang === 'en') return tipo === 'palabra' ? item[2] : item[4];
+    return tipo === 'palabra' ? `${item[1]} / ${item[2]}` : `${item[3]} / ${item[4]}`;
+  }
+
+  function obtenerPalabraTraduccion(item, direccion) {
+    // direccion: 'esp2eng' devuelve [palabraEsp, traduccionEng]; 'eng2esp' devuelve [palabraEng, traduccionEsp]
+    if (direccion === 'esp2eng') return [item[1], item[2]];
+    return [item[2], item[1]];
+  }
+
+  function renderDashboard() {
+    let totalAciertos = 0, totalFallos = 0, conceptosConAcierto = 0;
+    for (let i = 1; i <= 100; i++) {
+      const p = progreso[i] || { aciertos: 0, fallos: 0 };
+      totalAciertos += p.aciertos;
+      totalFallos += p.fallos;
+      if (p.aciertos > 0) conceptosConAcierto++;
+    }
+    const porcentaje = (conceptosConAcierto / 100) * 100;
+    document.getElementById("globalProgressFill").style.width = `${porcentaje}%`;
+    document.getElementById("globalProgressText").innerHTML = `${conceptosConAcierto} de 100 palabras con al menos 1 acierto (${Math.round(porcentaje)}%).`;
+    document.getElementById("statsContainer").innerHTML = `
+      <div class="stat-card"><div class="stat-number">${totalAciertos}</div>✅ Aciertos totales</div>
+      <div class="stat-card"><div class="stat-number">${totalFallos}</div>❌ Fallos</div>
+      <div class="stat-card"><div class="stat-number">${conceptosConAcierto}</div>📘 Palabras aprendidas</div>
+      <div class="stat-card"><div class="stat-number">${Math.round((totalAciertos/(totalAciertos+totalFallos+0.001))*100)}%</div>📊 Tasa éxito</div>
+    `;
+  }
+
+  function renderListado(filtro = "") {
+    const container = document.getElementById("conceptosListadoContainer");
+    container.innerHTML = "";
+    const filtroLower = filtro.toLowerCase();
+    for (let c of vocabularioData) {
+      const id = c[0];
+      const palabra = obtenerTexto(c, 'palabra');
+      const definicion = obtenerTexto(c, 'definicion');
+      const prog = progreso[id] || { aciertos: 0, fallos: 0 };
+      if (filtro && !palabra.toLowerCase().includes(filtroLower) && !definicion.toLowerCase().includes(filtroLower)) continue;
+      const div = document.createElement("div");
+      div.className = "concepto-item";
+      div.innerHTML = `<div class="concepto-titulo">${id}. ${palabra}</div>
+                       <div class="concepto-desc">📖 ${definicion}</div>
+                       <span class="badge-progreso">✅ ${prog.aciertos} aciertos · ❌ ${prog.fallos} fallos</span>`;
+      container.appendChild(div);
+    }
+  }
+
+  // --------------------- MODOS DE PRÁCTICA -------------------------
+  let currentItem = null;
+
+  function modoTraduccionDirecta() {
+    const randomIndex = Math.floor(Math.random() * vocabularioData.length);
+    currentItem = vocabularioData[randomIndex];
+    currentCardId = currentItem[0];
+    const pregunta = obtenerTexto(currentItem, 'palabra');
+    const respuestaCorrecta = obtenerTexto(currentItem, 'palabra') === currentItem[1] ? currentItem[2] : currentItem[1];
+    
+    practicaDiv.innerHTML = `
+      <div class="flashcard">
+        <div class="pregunta">📖 Palabra: <strong>${pregunta}</strong></div>
+        <input type="text" id="respuestaInput" placeholder="Escribe la traducción / Type the translation...">
+        <button id="comprobarBtn" class="btn btn-primary">✓ Comprobar</button>
+        <div id="feedbackMsg" style="margin:1rem 0; font-weight:bold;"></div>
+        <button id="siguienteBtn" class="btn">⏩ Siguiente</button>
+        <p id="infoProgresoCard" style="margin-top:0.8rem;">📊 Palabra ${currentCardId} · ✅ ${progreso[currentCardId]?.aciertos||0} aciertos · ❌ ${progreso[currentCardId]?.fallos||0} fallos</p>
+      </div>
+    `;
+    
+    document.getElementById("comprobarBtn").onclick = () => {
+      const userAnswer = document.getElementById("respuestaInput").value.trim().toLowerCase();
+      const correct = respuestaCorrecta.toLowerCase();
+      const isCorrect = userAnswer === correct;
+      const feedback = document.getElementById("feedbackMsg");
+      if (isCorrect) {
+        feedback.innerHTML = `<span style='color:#27ae60'>✅ ¡Correcto! La traducción es "${respuestaCorrecta}"</span>`;
+        registrarResultado(currentCardId, true);
+      } else {
+        feedback.innerHTML = `<span style='color:#e67e22'>❌ Incorrecto. La respuesta correcta es: "${respuestaCorrecta}"</span>`;
+        registrarResultado(currentCardId, false);
+      }
+      document.getElementById("comprobarBtn").disabled = true;
+      setTimeout(() => { document.getElementById("comprobarBtn").disabled = false; }, 1500);
+    };
+    document.getElementById("siguienteBtn").onclick = () => modoTraduccionDirecta();
+  }
+
+  function modoTraduccionInversa() {
+    const randomIndex = Math.floor(Math.random() * vocabularioData.length);
+    currentItem = vocabularioData[randomIndex];
+    currentCardId = currentItem[0];
+    const traduccion = obtenerTexto(currentItem, 'palabra') === currentItem[1] ? currentItem[2] : currentItem[1];
+    const respuestaCorrecta = obtenerTexto(currentItem, 'palabra');
+    
+    practicaDiv.innerHTML = `
+      <div class="flashcard">
+        <div class="pregunta">🔄 Traducción: <strong>${traduccion}</strong></div>
+        <input type="text" id="respuestaInput" placeholder="Escribe la palabra original / Type the original word...">
+        <button id="comprobarBtn" class="btn btn-primary">✓ Comprobar</button>
+        <div id="feedbackMsg" style="margin:1rem 0; font-weight:bold;"></div>
+        <button id="siguienteBtn" class="btn">⏩ Siguiente</button>
+        <p id="infoProgresoCard" style="margin-top:0.8rem;">📊 Palabra ${currentCardId} · ✅ ${progreso[currentCardId]?.aciertos||0} aciertos · ❌ ${progreso[currentCardId]?.fallos||0} fallos</p>
+      </div>
+    `;
+    
+    document.getElementById("comprobarBtn").onclick = () => {
+      const userAnswer = document.getElementById("respuestaInput").value.trim().toLowerCase();
+      const correct = respuestaCorrecta.toLowerCase();
+      const isCorrect = userAnswer === correct;
+      const feedback = document.getElementById("feedbackMsg");
+      if (isCorrect) {
+        feedback.innerHTML = `<span style='color:#27ae60'>✅ ¡Correcto! La palabra es "${respuestaCorrecta}"</span>`;
+        registrarResultado(currentCardId, true);
+      } else {
+        feedback.innerHTML = `<span style='color:#e67e22'>❌ Incorrecto. La respuesta correcta es: "${respuestaCorrecta}"</span>`;
+        registrarResultado(currentCardId, false);
+      }
+      document.getElementById("comprobarBtn").disabled = true;
+      setTimeout(() => { document.getElementById("comprobarBtn").disabled = false; }, 1500);
+    };
+    document.getElementById("siguienteBtn").onclick = () => modoTraduccionInversa();
+  }
+
+  function modoOrdenarLetras() {
+    const randomIndex = Math.floor(Math.random() * vocabularioData.length);
+    currentItem = vocabularioData[randomIndex];
+    currentCardId = currentItem[0];
+    const palabraOriginal = obtenerTexto(currentItem, 'palabra');
+    ordenarRespuestaCorrecta = palabraOriginal.toLowerCase();
+    let letras = palabraOriginal.toLowerCase().split('');
+    shuffledLetras = [...letras];
+    for (let i = shuffledLetras.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [shuffledLetras[i], shuffledLetras[j]] = [shuffledLetras[j], shuffledLetras[i]];
+    }
+    selectedLetters = [];
+    
+    const renderUI = () => {
+      let letrasHTML = shuffledLetras.map(l => `<button class="letra-btn" data-letra="${l}">${l}</button>`).join('');
+      let ordenHTML = selectedLetters.map(l => `<span style="background:#eef5ea; padding:0.2rem 0.6rem; margin:0.2rem; border-radius:0.5rem; font-size:1.2rem;">${l}</span>`).join(' ');
+      if (ordenHTML === "") ordenHTML = "<em>Haz clic en las letras en el orden correcto...</em>";
+      practicaDiv.innerHTML = `
+        <div class="flashcard">
+          <h3>🔤 Ordena las letras:</h3>
+          <div class="pregunta" style="background:#eef5ea;">📌 ${obtenerTexto(currentItem, 'definicion')}</div>
+          <div class="orden-actual"><strong>Tu orden:</strong><br> ${ordenHTML}</div>
+          <div class="orden-palabras" id="letrasContainer">${letrasHTML}</div>
+          <div>
+            <button id="resetBtn" class="btn" style="background:#cfdec9;">🔁 Reiniciar</button>
+            <button id="comprobarBtn" class="btn btn-primary">✓ Comprobar</button>
+          </div>
+          <button id="siguienteBtn" class="btn" style="margin-top:1rem;">⏩ Siguiente palabra</button>
+          <p id="infoProgresoCard">📊 Palabra ${currentCardId} · ✅ ${progreso[currentCardId]?.aciertos||0} aciertos · ❌ ${progreso[currentCardId]?.fallos||0} fallos</p>
+          <div id="feedbackMsg" style="margin-top:0.8rem; font-weight:bold;"></div>
+        </div>
+      `;
+      document.querySelectorAll(".letra-btn").forEach(btn => {
+        btn.addEventListener("click", () => {
+          const letra = btn.getAttribute("data-letra");
+          const idx = shuffledLetras.indexOf(letra);
+          if (idx !== -1) {
+            shuffledLetras.splice(idx, 1);
+            selectedLetters.push(letra);
+            renderUI();
+          }
+        });
+      });
+      document.getElementById("resetBtn").onclick = () => {
+        let letrasOriginal = ordenarRespuestaCorrecta.split('');
+        shuffledLetras = [...letrasOriginal];
+        for (let i = shuffledLetras.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [shuffledLetras[i], shuffledLetras[j]] = [shuffledLetras[j], shuffledLetras[i]];
+        }
+        selectedLetters = [];
+        renderUI();
+      };
+      document.getElementById("comprobarBtn").onclick = () => {
+        const ordenUsuario = selectedLetters.join("");
+        if (ordenUsuario === ordenarRespuestaCorrecta) {
+          document.getElementById("feedbackMsg").innerHTML = "<span style='color:#27ae60'>✅ ¡Correcto! Palabra ordenada correctamente.</span>";
+          registrarResultado(currentCardId, true);
+          setTimeout(() => modoOrdenarLetras(), 1500);
+        } else {
+          document.getElementById("feedbackMsg").innerHTML = `<span style='color:#e67e22'>❌ Incorrecto. La palabra correcta es: "${ordenarRespuestaCorrecta}"</span>`;
+          registrarResultado(currentCardId, false);
+          setTimeout(() => modoOrdenarLetras(), 2000);
+        }
+        document.getElementById("comprobarBtn").disabled = true;
+        setTimeout(() => { if(document.getElementById("comprobarBtn")) document.getElementById("comprobarBtn").disabled = false; }, 2000);
+      };
+      document.getElementById("siguienteBtn").onclick = () => modoOrdenarLetras();
+    };
+    renderUI();
+  }
+
+  function modoEspEng() {
+    const randomIndex = Math.floor(Math.random() * vocabularioData.length);
+    currentItem = vocabularioData[randomIndex];
+    currentCardId = currentItem[0];
+    translationDirection = Math.random() < 0.5 ? "esp2eng" : "eng2esp";
+    const [pregunta, respuestaCorrecta] = obtenerPalabraTraduccion(currentItem, translationDirection);
+    const direccionTexto = translationDirection === "esp2eng" ? "🇪🇸 → 🇬🇧 Español a Inglés" : "🇬🇧 → 🇪🇸 English to Spanish";
+    
+    practicaDiv.innerHTML = `
+      <div class="flashcard">
+        <div class="translation-direction">${direccionTexto}</div>
+        <div class="pregunta">📝 <strong>${pregunta}</strong></div>
+        <input type="text" id="respuestaInput" placeholder="Escribe la traducción / Type the translation...">
+        <button id="comprobarBtn" class="btn btn-primary">✓ Comprobar</button>
+        <div id="feedbackMsg" style="margin:1rem 0; font-weight:bold;"></div>
+        <button id="siguienteBtn" class="btn">⏩ Siguiente</button>
+        <p id="infoProgresoCard" style="margin-top:0.8rem;">📊 Palabra ${currentCardId} · ✅ ${progreso[currentCardId]?.aciertos||0} aciertos · ❌ ${progreso[currentCardId]?.fallos||0} fallos</p>
+      </div>
+    `;
+    
+    document.getElementById("comprobarBtn").onclick = () => {
+      const userAnswer = document.getElementById("respuestaInput").value.trim().toLowerCase();
+      const correct = respuestaCorrecta.toLowerCase();
+      const isCorrect = userAnswer === correct;
+      const feedback = document.getElementById("feedbackMsg");
+      if (isCorrect) {
+        feedback.innerHTML = `<span style='color:#27ae60'>✅ ¡Correcto! "${respuestaCorrecta}"</span>`;
+        registrarResultado(currentCardId, true);
+      } else {
+        feedback.innerHTML = `<span style='color:#e67e22'>❌ Incorrecto. La respuesta correcta es: "${respuestaCorrecta}"</span>`;
+        registrarResultado(currentCardId, false);
+      }
+      document.getElementById("comprobarBtn").disabled = true;
+      setTimeout(() => { document.getElementById("comprobarBtn").disabled = false; }, 1500);
+    };
+    document.getElementById("siguienteBtn").onclick = () => modoEspEng();
+  }
+
+  const practicaDiv = document.getElementById("practicaContainer");
+
+  function setPracticeMode(mode) {
+    currentPracticeMode = mode;
+    document.querySelectorAll(".modo-btn").forEach(btn => btn.classList.remove("active"));
+    if (mode === "traduccion_directa") document.getElementById("modoTraduccionDirecta").classList.add("active");
+    if (mode === "traduccion_inversa") document.getElementById("modoTraduccionInversa").classList.add("active");
+    if (mode === "ordenar") document.getElementById("modoOrdenar").classList.add("active");
+    if (mode === "esp_eng") document.getElementById("modoEspEng").classList.add("active");
+    
+    if (mode === "traduccion_directa") modoTraduccionDirecta();
+    else if (mode === "traduccion_inversa") modoTraduccionInversa();
+    else if (mode === "ordenar") modoOrdenarLetras();
+    else if (mode === "esp_eng") modoEspEng();
+  }
+
+  // --------------------- IDIOMA Y UI -------------------------
+  function setLanguage(lang) {
+    currentLang = lang;
+    document.getElementById("langEsBtn").classList.toggle("active", lang === 'es');
+    document.getElementById("langEnBtn").classList.toggle("active", lang === 'en');
+    document.getElementById("langBothBtn").classList.toggle("active", lang === 'both');
+    document.getElementById("progressTitle").innerText = lang === 'es' ? "📈 Progreso en vocabulario A1" : 
+                                                         (lang === 'en' ? "📈 A1 Vocabulary Progress" : "📈 Progreso / Progress");
+    const placeholder = document.querySelector("#listado input");
+    if (placeholder) {
+      placeholder.placeholder = lang === 'es' ? "🔍 Buscar palabra / definición..." :
+                                (lang === 'en' ? "🔍 Search word / definition..." : "🔍 Buscar / Search...");
+    }
+    renderListado(document.getElementById("filtroListado")?.value || "");
+    setPracticeMode(currentPracticeMode);
+  }
+
+  function initUI() {
+    document.querySelectorAll(".nav-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const viewId = btn.getAttribute("data-view");
+        document.querySelectorAll(".view").forEach(v => v.classList.remove("active-view"));
+        document.getElementById(viewId).classList.add("active-view");
+        document.querySelectorAll(".nav-btn").forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+        if (viewId === "listado") renderListado(document.getElementById("filtroListado").value);
+        if (viewId === "dashboard") renderDashboard();
+        if (viewId === "practica") setPracticeMode(currentPracticeMode);
+      });
+    });
+    
+    document.getElementById("modoTraduccionDirecta").addEventListener("click", () => setPracticeMode("traduccion_directa"));
+    document.getElementById("modoTraduccionInversa").addEventListener("click", () => setPracticeMode("traduccion_inversa"));
+    document.getElementById("modoOrdenar").addEventListener("click", () => setPracticeMode("ordenar"));
+    document.getElementById("modoEspEng").addEventListener("click", () => setPracticeMode("esp_eng"));
+    
+    document.getElementById("resetProgresoBtn").addEventListener("click", () => {
+      if (confirm("¿Reiniciar todo el progreso? Se perderán aciertos y fallos. / Reset all progress?")) {
+        for (let i = 1; i <= 100; i++) progreso[i] = { aciertos: 0, fallos: 0 };
+        guardarProgreso();
+        renderDashboard();
+        renderListado(document.getElementById("filtroListado")?.value || "");
+        setPracticeMode(currentPracticeMode);
+      }
+    });
+    document.getElementById("filtroListado").addEventListener("input", (e) => renderListado(e.target.value));
+    
+    document.getElementById("langEsBtn").addEventListener("click", () => setLanguage('es'));
+    document.getElementById("langEnBtn").addEventListener("click", () => setLanguage('en'));
+    document.getElementById("langBothBtn").addEventListener("click", () => setLanguage('both'));
+  }
+
+  window.addEventListener("DOMContentLoaded", () => {
+    cargarProgreso();
+    renderDashboard();
+    renderListado();
+    initUI();
+    setPracticeMode("traduccion_directa");
+  });
+</script>
+</body>
+</html>

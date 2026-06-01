@@ -1,0 +1,1209 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Django · Plataforma Multilingüe · 100 Pasos · Bilingüe</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;500;600&family=Inter:wght@300;400;500;600&family=Playfair+Display:ital@1&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0d1117;--bg2:#161b22;--card:#1c2128;--border:#30363d;--border2:#484f58;
+  --green:#3fb950;--green-dim:#1a4a22;--green-lt:rgba(63,185,80,.1);
+  --cyan:#58a6ff;--cyan-dim:#1a3a5a;--cyan-lt:rgba(88,166,255,.1);
+  --amber:#e3b341;--amber-dim:#5a4010;--amber-lt:rgba(227,179,65,.1);
+  --red:#f85149;--red-dim:#4a1a18;--red-lt:rgba(248,81,73,.1);
+  --purple:#a371f7;--purple-dim:#2a1a5a;--purple-lt:rgba(163,113,247,.1);
+  --text:#e6edf3;--text2:#8b949e;--text3:#484f58;
+  --nar:#f85149;--des:#e3b341;--arg:#58a6ff;--exp:#3fb950;--cod:#a371f7;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);font-family:'Inter',sans-serif;color:var(--text);overflow-x:hidden;cursor:default;}
+
+/* scanlines */
+body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
+  background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,255,0,.012) 2px,rgba(0,255,0,.012) 4px);
+  opacity:.5;}
+
+/* ── HEADER ── */
+.site-header{position:relative;z-index:2;background:var(--bg2);border-bottom:1px solid var(--border2);overflow:hidden;}
+.hdr-grid{position:absolute;inset:0;
+  background-image:linear-gradient(rgba(63,185,80,.04) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(63,185,80,.04) 1px,transparent 1px);
+  background-size:32px 32px;}
+.hdr-glow{position:absolute;inset:0;
+  background:radial-gradient(ellipse at 20% 60%,rgba(63,185,80,.1) 0%,transparent 55%),
+    radial-gradient(ellipse at 80% 30%,rgba(88,166,255,.08) 0%,transparent 50%);}
+.hdr-inner{padding:2.8rem 2rem 2.4rem;position:relative;}
+.hdr-prompt{font-family:'Fira Code',monospace;font-size:.62rem;letter-spacing:.08em;
+  color:var(--green);margin-bottom:1rem;display:flex;align-items:center;gap:.4rem;}
+.hdr-prompt::before{content:'$';color:var(--green);font-size:.85rem;}
+.blink{animation:blink 1s step-end infinite;color:var(--green);}
+@keyframes blink{0%,100%{opacity:1;}50%{opacity:0;}}
+.hdr-title{font-family:'Fira Code',monospace;font-weight:600;
+  font-size:clamp(1.5rem,4.5vw,3.5rem);color:var(--text);line-height:1;letter-spacing:-.02em;}
+.hdr-title .green{color:var(--green);}
+.hdr-title .cyan{color:var(--cyan);}
+.hdr-title .amber{color:var(--amber);}
+.hdr-sub{font-family:'Fira Code',monospace;font-size:.75rem;color:var(--text2);margin-top:.5rem;letter-spacing:.03em;}
+.hdr-badges{display:flex;flex-wrap:wrap;gap:.35rem;margin-top:1.2rem;}
+.hdr-badge{font-family:'Fira Code',monospace;font-size:.52rem;letter-spacing:.06em;
+  padding:.15rem .5rem;border-radius:3px;}
+.hb-nar{background:var(--red-lt);color:var(--red);border:1px solid rgba(248,81,73,.3);}
+.hb-des{background:var(--amber-lt);color:var(--amber);border:1px solid rgba(227,179,65,.3);}
+.hb-arg{background:var(--cyan-lt);color:var(--cyan);border:1px solid rgba(88,166,255,.3);}
+.hb-exp{background:var(--green-lt);color:var(--green);border:1px solid rgba(63,185,80,.3);}
+.hb-cod{background:var(--purple-lt);color:var(--purple);border:1px solid rgba(163,113,247,.3);}
+.hb-n{background:rgba(255,255,255,.05);color:var(--text2);border:1px solid var(--border);}
+
+/* ── PHASE BAR ── */
+.phase-bar{position:relative;z-index:2;background:var(--bg2);border-bottom:1px solid var(--border2);
+  padding:.45rem 1.5rem;display:flex;flex-wrap:wrap;gap:1rem;align-items:center;justify-content:center;}
+.phase-item{font-family:'Fira Code',monospace;font-size:.55rem;letter-spacing:.06em;
+  text-transform:uppercase;color:var(--text2);display:flex;align-items:center;gap:.3rem;cursor:pointer;
+  padding:.18rem .5rem;border:1px solid transparent;transition:all .18s;}
+.phase-item:hover,.phase-item.active{color:var(--green);border-color:var(--green-dim);}
+.phase-item::before{content:'>';color:var(--green);font-size:.7rem;}
+
+/* ── TIPO BAR ── */
+.tipo-bar{position:relative;z-index:2;display:grid;grid-template-columns:repeat(5,1fr);
+  border-bottom:1px solid var(--border2);background:var(--bg2);}
+.tbar{padding:.6rem 1rem;text-align:center;border-right:1px solid var(--border);}
+.tbar:last-child{border-right:none;}
+.tbar-num{font-family:'Fira Code',monospace;font-size:1.1rem;display:block;line-height:1;}
+.tbar-name{font-family:'Fira Code',monospace;font-size:.48rem;letter-spacing:.1em;text-transform:uppercase;display:block;margin-top:.12rem;}
+.tbar.t-nar{color:var(--red);}
+.tbar.t-des{color:var(--amber);}
+.tbar.t-arg{color:var(--cyan);}
+.tbar.t-exp{color:var(--green);}
+.tbar.t-cod{color:var(--purple);}
+
+/* ── PROGRESS ── */
+.prog-strip{position:relative;z-index:2;background:var(--bg2);border-bottom:1px solid var(--border);
+  padding:.45rem 1.5rem;display:flex;align-items:center;gap:1rem;flex-wrap:wrap;}
+.prog-lbl{font-family:'Fira Code',monospace;font-size:.55rem;letter-spacing:.12em;text-transform:uppercase;color:var(--text2);}
+.prog-segs{display:flex;flex:1;height:4px;gap:1px;min-width:100px;background:var(--border);border-radius:2px;overflow:hidden;}
+.pseg{height:100%;transition:flex-basis .5s;}
+.ps-nar{background:var(--red);}
+.ps-des{background:var(--amber);}
+.ps-arg{background:var(--cyan);}
+.ps-exp{background:var(--green);}
+.ps-cod{background:var(--purple);}
+.prog-pct{font-family:'Fira Code',monospace;font-size:.65rem;color:var(--green);}
+.cnt-pill{font-family:'Fira Code',monospace;font-size:.55rem;color:var(--text2);background:var(--border);padding:.12rem .45rem;border-radius:2px;}
+
+/* ── TOOLBAR ── */
+.toolbar{position:sticky;top:0;z-index:100;background:rgba(13,17,23,.97);backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--border2);padding:.5rem 1rem;
+  display:flex;flex-wrap:wrap;gap:.35rem;align-items:center;justify-content:center;
+  box-shadow:0 2px 20px rgba(0,0,0,.4);}
+.toolbar input[type=text]{background:rgba(255,255,255,.05);border:1px solid var(--border2);
+  color:var(--text);border-radius:4px;padding:.28rem .7rem;
+  font-family:'Fira Code',monospace;font-size:.65rem;letter-spacing:.04em;width:210px;}
+.toolbar input:focus{outline:1px solid var(--green);border-color:var(--green);}
+.toolbar input::placeholder{color:var(--text3);}
+.btn-f{background:transparent;color:var(--text2);border:1px solid var(--border);border-radius:3px;
+  padding:.26rem .6rem;font-family:'Fira Code',monospace;
+  font-size:.55rem;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;transition:all .18s;}
+.btn-f:hover{border-color:var(--green);color:var(--green);}
+.btn-f.a-all{background:rgba(63,185,80,.15);color:var(--green);border-color:var(--green);}
+.btn-f.a-nar{background:var(--red-lt);color:var(--red);border-color:var(--red);}
+.btn-f.a-des{background:var(--amber-lt);color:var(--amber);border-color:var(--amber);}
+.btn-f.a-arg{background:var(--cyan-lt);color:var(--cyan);border-color:var(--cyan);}
+.btn-f.a-exp{background:var(--green-lt);color:var(--green);border-color:var(--green);}
+.btn-f.a-cod{background:var(--purple-lt);color:var(--purple);border-color:var(--purple);}
+.btn-f.a-done{background:rgba(63,185,80,.1);color:var(--green);border-color:var(--green-dim);}
+
+/* ── GRID ── */
+.main-grid{position:relative;z-index:1;
+  display:grid;grid-template-columns:repeat(auto-fill,minmax(380px,1fr));
+  gap:1px;background:var(--border);padding:0;}
+
+/* ── CARD ── */
+.para-card{background:var(--card);display:flex;flex-direction:column;
+  position:relative;overflow:hidden;border-top:2px solid transparent;transition:background .2s;}
+.para-card:hover{background:#21262d;}
+.para-card.t-nar{border-top-color:var(--red);}
+.para-card.t-des{border-top-color:var(--amber);}
+.para-card.t-arg{border-top-color:var(--cyan);}
+.para-card.t-exp{border-top-color:var(--green);}
+.para-card.t-cod{border-top-color:var(--purple);}
+.para-card.done::after{content:'✓';position:absolute;bottom:.5rem;right:.7rem;
+  font-family:'Fira Code',monospace;font-size:.65rem;color:var(--green);}
+.para-card.hidden{display:none;}
+.card-idx{position:absolute;top:.7rem;right:.8rem;
+  font-family:'Fira Code',monospace;font-size:.52rem;letter-spacing:.12em;color:var(--text3);}
+
+/* card head */
+.card-head{padding:.85rem 1.1rem .5rem;}
+.tipo-chip{display:inline-flex;align-items:center;gap:.25rem;
+  font-family:'Fira Code',monospace;font-size:.48rem;letter-spacing:.12em;text-transform:uppercase;
+  padding:.1rem .4rem;margin-bottom:.35rem;border-radius:3px;}
+.tc-nar{background:var(--red-lt);color:var(--red);border:1px solid rgba(248,81,73,.3);}
+.tc-des{background:var(--amber-lt);color:var(--amber);border:1px solid rgba(227,179,65,.3);}
+.tc-arg{background:var(--cyan-lt);color:var(--cyan);border:1px solid rgba(88,166,255,.3);}
+.tc-exp{background:var(--green-lt);color:var(--green);border:1px solid rgba(63,185,80,.3);}
+.tc-cod{background:var(--purple-lt);color:var(--purple);border:1px solid rgba(163,113,247,.3);}
+.step-badge{display:inline-block;font-family:'Fira Code',monospace;font-size:.48rem;
+  letter-spacing:.08em;text-transform:uppercase;padding:.08rem .35rem;
+  margin-left:.3rem;background:rgba(255,255,255,.05);color:var(--text2);border:1px solid var(--border2);border-radius:2px;}
+.card-title{font-family:'Inter',sans-serif;font-weight:600;
+  font-size:.95rem;color:var(--text);line-height:1.3;padding-right:2rem;}
+.card-loc{font-family:'Fira Code',monospace;font-size:.55rem;letter-spacing:.08em;color:var(--text2);margin-top:.2rem;}
+
+/* CODE BLOCK */
+.code-block{margin:0 1.1rem .4rem;background:#0d1117;border:1px solid var(--border);border-radius:6px;overflow:hidden;}
+.code-header{background:var(--bg2);padding:.3rem .7rem;display:flex;align-items:center;gap:.5rem;
+  border-bottom:1px solid var(--border);}
+.code-dot{width:10px;height:10px;border-radius:50%;}
+.code-dot-r{background:#ff5f56;}
+.code-dot-y{background:#ffbd2e;}
+.code-dot-g{background:#27c93f;}
+.code-lang{font-family:'Fira Code',monospace;font-size:.52rem;color:var(--text2);margin-left:auto;letter-spacing:.08em;}
+.code-body{padding:.7rem .9rem;font-family:'Fira Code',monospace;font-size:.72rem;line-height:1.7;
+  color:#e6edf3;overflow-x:auto;white-space:pre;}
+.code-body .kw{color:var(--purple);}
+.code-body .fn{color:var(--cyan);}
+.code-body .str{color:var(--amber);}
+.code-body .cm{color:var(--text2);font-style:italic;}
+.code-body .num{color:var(--green);}
+.code-body .op{color:var(--red);}
+
+/* FICHA TÉCNICA */
+.ficha-tec{margin:0 1.1rem .4rem;background:rgba(163,113,247,.05);
+  border:1px solid rgba(163,113,247,.2);border-radius:4px;padding:.6rem .85rem;}
+.ficha-tec-title{font-family:'Fira Code',monospace;font-size:.5rem;letter-spacing:.15em;
+  text-transform:uppercase;color:var(--purple);margin-bottom:.35rem;
+  display:flex;align-items:center;gap:.3rem;}
+.ficha-tec-title::before{content:'//';color:var(--purple);font-size:.6rem;}
+.ficha-grid{display:grid;grid-template-columns:1fr 1fr;gap:.18rem .7rem;}
+.ficha-item{font-family:'Fira Code',monospace;font-size:.5rem;color:var(--text2);}
+.ficha-item strong{color:var(--amber);}
+
+/* paragraphs */
+.card-paras{padding:.2rem 1.1rem .7rem;display:flex;flex-direction:column;gap:.55rem;}
+.plbl{display:inline-block;font-family:'Fira Code',monospace;
+  font-size:.46rem;letter-spacing:.12em;text-transform:uppercase;
+  padding:.06rem .35rem;margin-bottom:.25rem;border-radius:2px;}
+.pl-nar{background:var(--red);color:#fff;}
+.pl-des{background:var(--amber);color:#000;}
+.pl-arg{background:var(--cyan);color:#000;}
+.pl-exp{background:var(--green);color:#000;}
+.pl-cod{background:var(--purple);color:#fff;}
+.pl-en{background:var(--border2);color:var(--text2);}
+.para-body{font-family:'Inter',sans-serif;font-size:.88rem;line-height:1.8;color:var(--text2);
+  padding-left:.75rem;border-left:2px solid var(--border2);}
+.t-nar .para-body{border-color:rgba(248,81,73,.4);}
+.t-des .para-body{border-color:rgba(227,179,65,.4);}
+.t-arg .para-body{border-color:rgba(88,166,255,.4);}
+.t-exp .para-body{border-color:rgba(63,185,80,.4);}
+.t-cod .para-body{border-color:rgba(163,113,247,.4);}
+.btn-rev{font-family:'Fira Code',monospace;font-size:.52rem;letter-spacing:.08em;text-transform:uppercase;
+  background:transparent;border:1px solid var(--border);color:var(--text2);border-radius:3px;
+  padding:.15rem .45rem;cursor:pointer;transition:all .18s;margin-top:.25rem;}
+.btn-rev:hover{border-color:var(--green);color:var(--green);}
+.ans-block{display:none;margin-top:.4rem;padding-left:.75rem;border-left:2px solid var(--border);
+  font-size:.87rem;line-height:1.8;color:var(--text2);font-style:italic;}
+.ans-block.vis{display:block;}
+.sep{border:none;border-top:1px solid var(--border);margin:.25rem 0;}
+
+/* ── ANÁLISIS ── */
+.sx-wrap{background:rgba(0,0,0,.25);border-top:1px solid var(--border);padding:.65rem 1.1rem;}
+.sx-hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:.22rem;}
+.sx-lbl{font-family:'Fira Code',monospace;font-size:.5rem;letter-spacing:.15em;text-transform:uppercase;color:var(--amber);}
+.btn-sx{font-family:'Fira Code',monospace;font-size:.5rem;letter-spacing:.06em;
+  background:transparent;border:1px solid rgba(227,179,65,.3);color:rgba(227,179,65,.7);
+  padding:.1rem .35rem;border-radius:2px;cursor:pointer;transition:all .18s;}
+.btn-sx:hover{background:var(--amber-lt);color:var(--amber);}
+.sx-body{display:none;}
+.sx-body.open{display:block;}
+.sx-struct{font-family:'Fira Code',monospace;font-size:.56rem;
+  background:rgba(0,0,0,.3);border:1px solid var(--border);border-radius:3px;
+  padding:.38rem .55rem;margin-bottom:.4rem;
+  display:flex;flex-wrap:wrap;align-items:center;gap:.22rem;line-height:1.9;color:var(--text2);}
+.sx-struct .arr{color:var(--amber);}
+.sx-comps{display:flex;flex-direction:column;gap:.28rem;margin-bottom:.4rem;}
+.sx-row{background:rgba(0,0,0,.2);border:1px solid var(--border);border-radius:3px;
+  padding:.38rem .5rem;display:grid;grid-template-columns:82px 1fr;gap:.45rem;align-items:start;}
+.sx-badge{font-family:'Fira Code',monospace;font-size:.46rem;letter-spacing:.06em;text-transform:uppercase;
+  padding:.05rem .28rem;border-radius:2px;display:inline-block;white-space:nowrap;}
+.sb-nar{background:var(--red-lt);color:var(--red);border:1px solid rgba(248,81,73,.25);}
+.sb-des{background:var(--amber-lt);color:var(--amber);border:1px solid rgba(227,179,65,.25);}
+.sb-arg{background:var(--cyan-lt);color:var(--cyan);border:1px solid rgba(88,166,255,.25);}
+.sb-exp{background:var(--green-lt);color:var(--green);border:1px solid rgba(63,185,80,.25);}
+.sb-cod{background:var(--purple-lt);color:var(--purple);border:1px solid rgba(163,113,247,.25);}
+.sb-key{background:rgba(255,255,255,.06);color:var(--text);border:1px solid var(--border2);}
+.sx-frag{font-style:italic;color:rgba(230,237,243,.45);font-family:'Fira Code',monospace;font-size:.72rem;line-height:1.4;border-left:2px solid var(--border);padding-left:.32rem;}
+.sx-nota{font-family:'Inter',sans-serif;font-size:.77rem;line-height:1.52;color:var(--text2);}
+.sx-cons{display:flex;flex-wrap:wrap;gap:.25rem;
+  background:var(--amber-lt);border:1px solid rgba(227,179,65,.15);border-radius:3px;padding:.32rem .5rem;}
+.sx-con-lbl{font-family:'Fira Code',monospace;font-size:.46rem;letter-spacing:.1em;color:var(--amber);margin-right:.2rem;text-transform:uppercase;}
+.con-tag{font-family:'Fira Code',monospace;font-size:.52rem;
+  background:rgba(0,0,0,.2);color:rgba(227,179,65,.7);border:1px solid rgba(227,179,65,.18);
+  padding:.04rem .3rem;border-radius:2px;}
+
+/* TTS PER CARD */
+.card-tts{display:flex;gap:.28rem;padding:.38rem 1.1rem .18rem;flex-wrap:wrap;}
+.card-tts-btn{font-family:'Fira Code',monospace;font-size:.5rem;letter-spacing:.06em;
+  background:transparent;border:1px solid var(--border);color:var(--text2);border-radius:3px;
+  padding:.13rem .4rem;cursor:pointer;transition:all .18s;}
+.card-tts-btn:hover{border-color:var(--green);color:var(--green);}
+.card-tts-btn.speaking{border-color:var(--red);color:var(--red);background:var(--red-lt);}
+
+/* ── PRÁCTICA ── */
+.pzone{padding:.8rem 1.1rem 1rem;border-top:1px solid var(--border2);background:rgba(0,0,0,.18);}
+.pzone label{font-family:'Fira Code',monospace;font-size:.5rem;letter-spacing:.12em;
+  text-transform:uppercase;color:var(--text2);margin-bottom:.2rem;display:block;}
+.pzone textarea{width:100%;background:rgba(255,255,255,.04);border:1px solid var(--border2);border-radius:4px;
+  color:var(--text);padding:.45rem .6rem;
+  font-family:'Inter',sans-serif;font-size:.87rem;line-height:1.72;
+  resize:vertical;min-height:68px;transition:all .2s;}
+.pzone textarea::placeholder{color:var(--text3);font-style:italic;}
+.t-nar .pzone textarea:focus{outline:none;border-color:var(--red);box-shadow:0 0 0 2px rgba(248,81,73,.1);}
+.t-des .pzone textarea:focus{outline:none;border-color:var(--amber);}
+.t-arg .pzone textarea:focus{outline:none;border-color:var(--cyan);}
+.t-exp .pzone textarea:focus{outline:none;border-color:var(--green);}
+.t-cod .pzone textarea:focus{outline:none;border-color:var(--purple);}
+.pzone textarea.sg-nar{border-color:rgba(248,81,73,.5);background:var(--red-lt);}
+.pzone textarea.sg-des{border-color:rgba(227,179,65,.5);background:var(--amber-lt);}
+.pzone textarea.sg-arg{border-color:rgba(88,166,255,.5);background:var(--cyan-lt);}
+.pzone textarea.sg-exp{border-color:rgba(63,185,80,.5);background:var(--green-lt);}
+.pzone textarea.sg-cod{border-color:rgba(163,113,247,.5);background:var(--purple-lt);}
+.p-gap{margin-top:.45rem;}
+.pactions{display:flex;gap:.38rem;align-items:center;flex-wrap:wrap;margin-top:.4rem;}
+.btn-sv{color:#000;border:none;padding:.28rem .7rem;border-radius:3px;
+  font-family:'Fira Code',monospace;font-size:.58rem;letter-spacing:.08em;text-transform:uppercase;
+  cursor:pointer;transition:all .18s;}
+.t-nar .btn-sv{background:var(--red);color:#fff;}
+.t-des .btn-sv{background:var(--amber);}
+.t-arg .btn-sv{background:var(--cyan);}
+.t-exp .btn-sv{background:var(--green);}
+.t-cod .btn-sv{background:var(--purple);color:#fff;}
+.btn-sv:hover{opacity:.85;transform:translateY(-1px);}
+.btn-cl{background:transparent;color:var(--text2);border:1px solid var(--border);border-radius:3px;
+  padding:.28rem .6rem;font-family:'Fira Code',monospace;font-size:.58rem;letter-spacing:.06em;cursor:pointer;}
+.btn-cl:hover{border-color:var(--text2);}
+.smsg{font-family:'Fira Code',monospace;font-size:.55rem;letter-spacing:.08em;text-transform:uppercase;display:none;}
+.smsg.show{display:inline;}
+.t-nar .smsg{color:var(--red);}
+.t-des .smsg{color:var(--amber);}
+.t-arg .smsg{color:var(--cyan);}
+.t-exp .smsg{color:var(--green);}
+.t-cod .smsg{color:var(--purple);}
+
+/* TTS PANEL */
+.tts-bar{position:fixed;bottom:0;left:0;right:0;z-index:300;
+  background:var(--bg2);border-top:2px solid var(--green);
+  padding:.5rem 1rem;
+  display:flex;flex-wrap:wrap;gap:.4rem;align-items:center;justify-content:center;
+  box-shadow:0 -4px 20px rgba(0,0,0,.5);
+  transform:translateY(100%);transition:transform .3s ease;}
+.tts-bar.visible{transform:translateY(0);}
+.tts-title{font-family:'Fira Code',monospace;font-size:.55rem;color:var(--green);margin-right:.3rem;letter-spacing:.08em;}
+.tts-btn{background:transparent;border:1px solid rgba(63,185,80,.3);color:var(--green);
+  padding:.24rem .52rem;border-radius:3px;font-family:'Fira Code',monospace;font-size:.5rem;
+  letter-spacing:.08em;text-transform:uppercase;cursor:pointer;transition:all .18s;}
+.tts-btn:hover{background:rgba(63,185,80,.1);}
+.tts-btn.active{background:rgba(63,185,80,.2);border-color:var(--green);}
+.tts-play-btn{background:var(--red)!important;color:#fff!important;border-color:var(--red)!important;
+  font-size:.58rem!important;padding:.24rem .7rem!important;}
+.tts-play-btn:hover{background:#d44040!important;}
+.tts-play-btn.playing{background:var(--green)!important;color:#000!important;border-color:var(--green)!important;}
+.tts-close{background:transparent;border:1px solid rgba(255,255,255,.15);color:rgba(255,255,255,.4);
+  padding:.18rem .45rem;border-radius:2px;font-family:'Fira Code',monospace;font-size:.58rem;cursor:pointer;}
+.tts-close:hover{border-color:rgba(255,255,255,.4);color:#fff;}
+.tts-speed{font-family:'Fira Code',monospace;font-size:.58rem;color:var(--green);
+  background:transparent;border:1px solid rgba(63,185,80,.25);border-radius:2px;padding:.18rem .38rem;}
+.tts-reading{font-family:'Fira Code',monospace;font-size:.52rem;color:rgba(139,148,158,.5);
+  max-width:240px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.tts-prog-wrap{flex:1;min-width:60px;max-width:180px;height:3px;background:var(--border);border-radius:2px;overflow:hidden;}
+.tts-prog{height:100%;background:var(--green);width:0%;transition:width .3s;}
+
+/* FABs */
+.fab{position:fixed;right:1.6rem;background:var(--bg2);color:var(--green);border:1px solid var(--green-dim);
+  border-radius:4px;width:50px;height:50px;cursor:pointer;
+  font-family:'Fira Code',monospace;font-size:.46rem;letter-spacing:.04em;
+  text-align:center;line-height:1.3;text-transform:uppercase;
+  box-shadow:0 4px 16px rgba(0,0,0,.4),0 0 12px rgba(63,185,80,.1);z-index:200;
+  transition:all .2s;display:flex;align-items:center;justify-content:center;flex-direction:column;}
+.fab:hover{background:rgba(63,185,80,.1);box-shadow:0 4px 20px rgba(63,185,80,.2);}
+.fab-texts{bottom:5rem;}
+.fab-voice{bottom:1.5rem;color:var(--amber);border-color:var(--amber-dim);background:rgba(227,179,65,.08);}
+.fab-voice:hover{background:rgba(227,179,65,.15);box-shadow:0 4px 20px rgba(227,179,65,.2);}
+
+/* MODAL */
+#msModal .modal-content{background:var(--bg2);border:1px solid var(--border2);border-radius:6px;color:var(--text);}
+#msModal .modal-header{background:var(--bg);border-bottom:1px solid var(--border2);}
+#msModal .modal-title{font-family:'Fira Code',monospace;font-size:.9rem;color:var(--green);letter-spacing:.04em;}
+#msModal .btn-close{filter:invert(1) opacity(.4);}
+.mse{border:1px solid var(--border);border-radius:4px;padding:.7rem .9rem;margin-bottom:.55rem;background:var(--card);}
+.mse strong{font-family:'Fira Code',monospace;font-size:.55rem;letter-spacing:.06em;}
+.mse p{margin:.22rem 0 0;font-size:.87rem;line-height:1.68;color:var(--text2);}
+.empty-note{color:var(--text2);font-style:italic;text-align:center;padding:2rem;font-family:'Fira Code',monospace;}
+
+footer{position:relative;z-index:1;background:var(--bg2);border-top:1px solid var(--border2);
+  text-align:center;padding:1.2rem;
+  font-family:'Fira Code',monospace;font-size:.52rem;letter-spacing:.15em;text-transform:uppercase;color:var(--text2);}
+footer span{color:var(--green);}
+
+@media(max-width:520px){
+  .tipo-bar{grid-template-columns:repeat(3,1fr);}
+  .main-grid{grid-template-columns:1fr;}
+  .sx-row{grid-template-columns:1fr;}
+}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="site-header">
+  <div class="hdr-grid"></div>
+  <div class="hdr-glow"></div>
+  <div class="hdr-inner">
+    <div class="hdr-prompt">django-admin startproject castellano_mundial<span class="blink">_</span></div>
+    <h1 class="hdr-title">
+      <span class="green">Django</span> <span class="cyan">+</span> <span class="amber">Castellano</span><br>
+      <span style="font-size:.55em;color:var(--text2)">Plataforma Multilingüe · 30 Idiomas</span>
+    </h1>
+    <p class="hdr-sub">// 100 Pasos · Instalación → Modelos → Vistas → i18n → Despliegue · Bilingüe ES/EN</p>
+    <div class="hdr-badges">
+      <span class="hdr-badge hb-nar">▶ 20 Narrativos</span>
+      <span class="hdr-badge hb-des">▶ 20 Descriptivos</span>
+      <span class="hdr-badge hb-arg">▶ 20 Argumentativos</span>
+      <span class="hdr-badge hb-exp">▶ 20 Expositivos</span>
+      <span class="hdr-badge hb-cod">▶ 20 Fichas de Código</span>
+      <span class="hdr-badge hb-n">Python 3.11+</span>
+      <span class="hdr-badge hb-n">Django 4.2+</span>
+      <span class="hdr-badge hb-n">Para principiantes</span>
+    </div>
+  </div>
+</header>
+
+<!-- PHASE FILTER -->
+<div class="phase-bar">
+  <div class="phase-item active" onclick="fPhase(this,'all')">Todo</div>
+  <div class="phase-item" onclick="fPhase(this,'instalacion')">Fase 1: Instalación</div>
+  <div class="phase-item" onclick="fPhase(this,'modelos')">Fase 2: Modelos</div>
+  <div class="phase-item" onclick="fPhase(this,'vistas')">Fase 3: Vistas</div>
+  <div class="phase-item" onclick="fPhase(this,'i18n')">Fase 4: i18n/Traducción</div>
+  <div class="phase-item" onclick="fPhase(this,'despliegue')">Fase 5: Despliegue</div>
+</div>
+
+<!-- TIPO BAR -->
+<div class="tipo-bar">
+  <div class="tbar t-nar"><span class="tbar-num" id="cnt-nar">0/20</span><span class="tbar-name">▶ Narrativo</span></div>
+  <div class="tbar t-des"><span class="tbar-num" id="cnt-des">0/20</span><span class="tbar-name">▶ Descriptivo</span></div>
+  <div class="tbar t-arg"><span class="tbar-num" id="cnt-arg">0/20</span><span class="tbar-name">▶ Argumentativo</span></div>
+  <div class="tbar t-exp"><span class="tbar-num" id="cnt-exp">0/20</span><span class="tbar-name">▶ Expositivo</span></div>
+  <div class="tbar t-cod"><span class="tbar-num" id="cnt-cod">0/20</span><span class="tbar-name">▶ Código</span></div>
+</div>
+
+<!-- PROGRESS -->
+<div class="prog-strip">
+  <span class="prog-lbl">Progreso</span>
+  <div class="prog-segs">
+    <div class="pseg ps-nar" id="ps-nar"></div>
+    <div class="pseg ps-des" id="ps-des"></div>
+    <div class="pseg ps-arg" id="ps-arg"></div>
+    <div class="pseg ps-exp" id="ps-exp"></div>
+    <div class="pseg ps-cod" id="ps-cod"></div>
+  </div>
+  <span class="prog-pct" id="pp">0%</span>
+  <span class="cnt-pill" id="dc">0/100</span>
+</div>
+
+<!-- TOOLBAR -->
+<div class="toolbar">
+  <input type="text" id="si" placeholder="$ buscar paso, concepto, código…" oninput="doFilter()">
+  <button class="btn-f a-all" onclick="fAll(this)">ALL</button>
+  <button class="btn-f" data-a="a-nar" onclick="fT(this,'nar')">▶ NAR</button>
+  <button class="btn-f" data-a="a-des" onclick="fT(this,'des')">▶ DES</button>
+  <button class="btn-f" data-a="a-arg" onclick="fT(this,'arg')">▶ ARG</button>
+  <button class="btn-f" data-a="a-exp" onclick="fT(this,'exp')">▶ EXP</button>
+  <button class="btn-f" data-a="a-cod" onclick="fT(this,'cod')">▶ COD</button>
+  <button class="btn-f" data-a="a-done" onclick="fDone(this)">✓ GUARD</button>
+  <span class="cnt-pill" id="cb">100</span>
+</div>
+
+<!-- GRID -->
+<div class="main-grid" id="grid"></div>
+
+<footer><span>Django · Plataforma Castellano Mundial</span> · 100 Pasos · Bilingüe ES/EN · Lector de Voz · Guardado local</footer>
+
+<button class="fab fab-texts" onclick="openModal()">MIS<br>NOTAS</button>
+<button class="fab fab-voice" id="tts-fab" onclick="toggleTTS()">🔊<br>VOZ</button>
+
+<!-- TTS PANEL -->
+<div class="tts-bar" id="tts-bar">
+  <span class="tts-title">$ tts --read</span>
+  <button class="tts-btn tts-play-btn" id="tts-play" onclick="ttsPlayPause()">▶ LEER</button>
+  <button class="tts-btn" onclick="ttsStop()">■ STOP</button>
+  <button class="tts-btn" onclick="ttsPrev()">◀ ANT</button>
+  <button class="tts-btn" onclick="ttsNext()">SIG ▶</button>
+  <select class="tts-speed" id="tts-speed" onchange="ttsChangeSpeed()">
+    <option value="0.7">0.7x</option>
+    <option value="0.85">0.85x</option>
+    <option value="1" selected>1x</option>
+    <option value="1.2">1.2x</option>
+    <option value="1.5">1.5x</option>
+  </select>
+  <button class="tts-btn active" id="tts-lang-es" onclick="ttsSetLang('es')">ES</button>
+  <button class="tts-btn" id="tts-lang-en" onclick="ttsSetLang('en')">EN</button>
+  <div class="tts-prog-wrap"><div class="tts-prog" id="tts-prog"></div></div>
+  <span class="tts-reading" id="tts-reading">Listo…</span>
+  <button class="tts-close" onclick="hideTTS()">✕</button>
+</div>
+
+<div class="modal fade" id="msModal" tabindex="-1">
+  <div class="modal-dialog modal-lg modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">// Mis Notas Guardadas</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body" id="msBody"></div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+const D=[
+/* ═══ NARRATIVOS (20) ═══ */
+{tipo:"nar",fase:"instalacion",paso:"01",cat:"Instalación",loc:"Terminal · Paso 1 de 100",
+ t:"El primer comando / The First Command",
+ code:{lang:"bash",body:`<span class="cm"># Instalar Python desde python.org si aún no lo tienes</span>
+<span class="cm"># Luego, en la terminal:</span>
+python --version
+<span class="cm"># Debe mostrar: Python 3.11.x o superior</span>
+
+pip install django
+<span class="cm"># Instala Django en tu computadora</span>
+
+django-admin --version
+<span class="cm"># Debe mostrar: 4.2.x o superior</span>`},
+ ficha:{"Comando":"pip install django","Versión mín":"Django 4.2 · Python 3.10","Tiempo":"2–5 minutos","Prerrequisito":"Python instalado"},
+ es:"La primera vez que Catalina abrió la terminal de su computadora para construir su plataforma de enseñanza del castellano, el cursor parpadeaba como si le preguntara: '¿Por dónde empezamos?' Ella escribió las tres palabras que habían cambiado la vida de miles de programadores antes que ella: 'pip install django'. Mientras la barra de progreso avanzaba, leyó cada línea de texto que aparecía en la pantalla con la concentración de quien estudia un idioma nuevo: 'Collecting django', 'Downloading', 'Installing collected packages'. Cuando el cursor volvió a parpadear sin mensajes de error, Catalina entendió que había cruzado el primer umbral. Django estaba en su computadora. Ahora solo faltaban noventa y nueve pasos.",
+ en:"The first time Catalina opened her computer's terminal to build her Spanish teaching platform, the cursor blinked as if asking: 'Where do we start?' She typed the three words that had changed the lives of thousands of programmers before her: 'pip install django'. As the progress bar advanced, she read each line of text appearing on the screen with the concentration of someone studying a new language: 'Collecting django', 'Downloading', 'Installing collected packages'. When the cursor blinked again with no error messages, Catalina understood she had crossed the first threshold. Django was on her computer. Now only ninety-nine steps remained.",
+ sx:{s:"Primer comando → Lectura de la salida → Verificación del éxito → Metáfora del umbral",
+  se:"First command → Reading the output → Success verification → Threshold metaphor",
+  c:[{b:"sb-nar",t:"Primer comando",f:"escribió las tres palabras que habían cambiado la vida de miles de programadores antes que ella: 'pip install django'",n:"Las comillas del comando dentro del relato conectan la experiencia personal con la historia colectiva de la programación."},
+   {b:"sb-nar",t:"Lectura como idioma",f:"con la concentración de quien estudia un idioma nuevo",n:"La comparativa 'como quien estudia un idioma nuevo' conecta la experiencia de programar con el tema pedagógico de la plataforma."},
+   {b:"sb-key",t:"El umbral",f:"Catalina entendió que había cruzado el primer umbral",n:"La metáfora del umbral convierte cada paso técnico en un acto de transformación. La narrativa como motivación para el principiante."},
+   {b:"sb-nar",t:"Los noventa y nueve",f:"Ahora solo faltaban noventa y nueve pasos",n:"El cierre con el número restante crea continuidad narrativa entre los 100 pasos del recurso."}],
+  con:["las tres palabras que habían cambiado la vida de (hipérbole motivadora)","con la concentración de quien estudia un idioma nuevo (comparativa pedagógica)","había cruzado el primer umbral (metáfora de transformación)","solo faltaban noventa y nueve pasos (continuidad narrativa)"]
+ }
+},
+{tipo:"nar",fase:"instalacion",paso:"02",cat:"Primer Proyecto",loc:"Terminal · Paso 2",
+ t:"El momento de crear el proyecto / The Moment of Creating the Project",
+ code:{lang:"bash",body:`<span class="cm"># Crear el proyecto Django</span>
+django-admin startproject castellano_mundial
+
+<span class="cm"># Entrar a la carpeta creada</span>
+cd castellano_mundial
+
+<span class="cm"># Ver los archivos creados</span>
+ls
+<span class="cm"># Verás: manage.py  castellano_mundial/</span>
+
+<span class="cm"># Arrancar el servidor de desarrollo</span>
+python manage.py runserver
+<span class="cm"># Abrir: http://127.0.0.1:8000/</span>`},
+ ficha:{"Comando":"django-admin startproject","Resultado":"Carpeta con estructura Django","Puerto":"8000 (por defecto)","URL local":"http://127.0.0.1:8000/"},
+ es:"Cuando ejecutas 'django-admin startproject castellano_mundial', Django crea en tu computadora una estructura de carpetas que es el esqueleto de tu plataforma. Es como recibir una casa vacía con los cimientos ya hechos: tú decides qué habitaciones construir, pero Django ya colocó la fontanería, la electricidad y los muros maestros. El archivo más importante que verás es 'manage.py': es la llave de control de todo. Con él puedes arrancar el servidor, crear la base de datos, añadir páginas nuevas. Cuando escribas 'python manage.py runserver' y abras el navegador en la dirección que aparece, verás la pantalla de bienvenida de Django: una cohete naranja sobre fondo verde. Significa que todo funciona.",
+ en:"When you run 'django-admin startproject castellano_mundial', Django creates a folder structure on your computer that is the skeleton of your platform. It is like receiving an empty house with the foundations already laid: you decide what rooms to build, but Django has already installed the plumbing, electricity and structural walls. The most important file you will see is 'manage.py': it is the control key for everything. With it you can start the server, create the database, add new pages. When you type 'python manage.py runserver' and open the browser at the address shown, you will see Django's welcome screen: an orange rocket on a green background. It means everything works.",
+ sx:{s:"El comando → La metáfora de la casa → manage.py como llave → La pantalla de bienvenida",
+  se:"The command → House metaphor → manage.py as key → Welcome screen",
+  c:[{b:"sb-nar",t:"Metáfora de la casa",f:"Es como recibir una casa vacía con los cimientos ya hechos: tú decides qué habitaciones construir, pero Django ya colocó la fontanería, la electricidad y los muros maestros",n:"La metáfora arquitectónica traduce la estructura técnica al lenguaje del principiante. Los tres elementos (fontanería, electricidad, muros) corresponden a tres subsistemas de Django."},
+   {b:"sb-key",t:"manage.py como llave",f:"El archivo 'manage.py' es la llave de control de todo",n:"La metáfora de la llave simplifica la función del archivo más importante de Django para un principiante."},
+   {b:"sb-nar",t:"Señal de éxito",f:"una cohete naranja sobre fondo verde. Significa que todo funciona",n:"La descripción visual de la pantalla de bienvenida da un criterio de verificación concreto. El principiante sabe exactamente qué buscar."}],
+  con:["Es como recibir una casa vacía con los cimientos (metáfora arquitectónica)","la llave de control de todo (metáfora de la llave)","Cuando... y abras... verás (secuencia de pasos con resultado esperado)","Significa que todo funciona (confirmación directa)"]
+ }
+},
+{tipo:"nar",fase:"modelos",paso:"21",cat:"Modelos",loc:"models.py · Paso 21",
+ t:"Crear el primer modelo de lección / Creating the First Lesson Model",
+ code:{lang:"python",body:`<span class="cm"># archivo: lecciones/models.py</span>
+<span class="kw">from</span> django.db <span class="kw">import</span> models
+
+<span class="kw">class</span> <span class="fn">Leccion</span>(models.Model):
+    titulo = models.<span class="fn">CharField</span>(max_length=<span class="num">200</span>)
+    contenido = models.<span class="fn">TextField</span>()
+    idioma_destino = models.<span class="fn">CharField</span>(
+        max_length=<span class="num">5</span>,
+        help_text=<span class="str">"Código ISO: 'en', 'fr', 'zh'..."</span>
+    )
+    nivel = models.<span class="fn">CharField</span>(
+        max_length=<span class="num">2</span>,
+        choices=[(
+            <span class="str">'A1'</span>,<span class="str">'Principiante'</span>),
+            (<span class="str">'A2'</span>,<span class="str">'Básico'</span>),
+            (<span class="str">'B1'</span>,<span class="str">'Intermedio'</span>)
+        ]
+    )
+    creada = models.<span class="fn">DateTimeField</span>(auto_now_add=<span class="kw">True</span>)
+
+    <span class="kw">def</span> <span class="fn">__str__</span>(self):
+        <span class="kw">return</span> <span class="str">f"{self.titulo} ({self.idioma_destino})"</span>`},
+ ficha:{"Archivo":"lecciones/models.py","Hereda de":"models.Model","CharField":"Texto corto (título)","TextField":"Texto largo (contenido)"},
+ es:"El día que Ana escribió su primer modelo de Django, entendió que un modelo no es un formulario ni una página web: es la descripción de qué tipo de información guardará su plataforma. La clase 'Leccion' que escribió es como el diseño de una ficha de biblioteca: antes de imprimir miles de fichas, debes decidir qué campos tendrá cada una. El campo 'idioma_destino' es la clave de toda la plataforma multilingüe: es el campo que le dirá a Django para qué hablante está pensada cada lección, si es para un estudiante chino, un hablante de árabe o un anglófono. Cuando terminó de escribir el modelo y lo salvó, el archivo no hizo nada visible. Los modelos de Django son promesas al futuro: describen lo que vendrá, no lo que existe todavía.",
+ en:"The day Ana wrote her first Django model, she understood that a model is not a form or a web page: it is the description of what kind of information her platform will store. The 'Leccion' class she wrote is like the design of a library card: before printing thousands of cards, you must decide what fields each one will have. The 'idioma_destino' field is the key to the entire multilingual platform: it is the field that will tell Django which speaker each lesson is designed for, whether for a Chinese student, an Arabic speaker or an English speaker. When she finished writing the model and saved it, the file did nothing visible. Django models are promises to the future: they describe what will come, not what already exists.",
+ sx:{s:"El modelo no es una página → La metáfora de la ficha → El campo idioma_destino → Los modelos como promesas",
+  se:"Model is not a page → Library card metaphor → idioma_destino field → Models as promises",
+  c:[{b:"sb-nar",t:"Definición por negación",f:"un modelo no es un formulario ni una página web: es la descripción de qué tipo de información guardará su plataforma",n:"'No es X ni Y: es Z'. La definición negativa prepara al principiante para una categoría conceptualmente nueva."},
+   {b:"sb-key",t:"Metáfora de la ficha",f:"es como el diseño de una ficha de biblioteca: antes de imprimir miles de fichas, debes decidir qué campos tendrá cada una",n:"La ficha de biblioteca es la metáfora más accesible para describir un modelo de base de datos para un no-programador."},
+   {b:"sb-nar",t:"El campo clave",f:"El campo 'idioma_destino' es la clave de toda la plataforma multilingüe",n:"Destacar un campo como 'la clave' ayuda al principiante a entender la jerarquía de importancia entre los campos del modelo."},
+   {b:"sb-nar",t:"Promesas al futuro",f:"Los modelos de Django son promesas al futuro: describen lo que vendrá, no lo que existe todavía",n:"La metáfora de la promesa explica el concepto de que los modelos no crean datos, sino que definen su estructura futura."}],
+  con:["no es X ni Y: es Z (definición por negación)","como el diseño de una ficha de biblioteca (metáfora pedagógica)","es la clave de toda la plataforma (jerarquía de importancia)","promesas al futuro (metáfora temporal del modelo)"]
+ }
+},
+{tipo:"nar",fase:"vistas",paso:"41",cat:"Vistas",loc:"views.py · Paso 41",
+ t:"La primera vista que devuelve una lección / The First View That Returns a Lesson",
+ code:{lang:"python",body:`<span class="cm"># archivo: lecciones/views.py</span>
+<span class="kw">from</span> django.shortcuts <span class="kw">import</span> render, get_object_or_404
+<span class="kw">from</span> .models <span class="kw">import</span> Leccion
+
+<span class="kw">def</span> <span class="fn">ver_leccion</span>(request, leccion_id):
+    <span class="cm"># Busca la lección o muestra error 404</span>
+    leccion = <span class="fn">get_object_or_404</span>(Leccion, id=leccion_id)
+    
+    <span class="cm"># Detecta el idioma del navegador del alumno</span>
+    idioma_alumno = request.LANGUAGE_CODE
+    
+    <span class="cm"># Envía los datos a la plantilla HTML</span>
+    contexto = {
+        <span class="str">'leccion'</span>: leccion,
+        <span class="str">'idioma'</span>: idioma_alumno,
+    }
+    <span class="kw">return</span> <span class="fn">render</span>(request, <span class="str">'lecciones/ver.html'</span>, contexto)`},
+ ficha:{"Función":"render()","Retorna":"Página HTML renderizada","get_object_or_404":"Busca o devuelve error 404","request.LANGUAGE_CODE":"Idioma del navegador"},
+ es:"Carlos llevaba semanas construyendo los modelos y las URLs de su plataforma cuando llegó el momento de escribir su primera vista y sintió algo que los tutoriales no habían preparado: la sensación de que todo lo que había construido hasta ese momento iba a conectarse por primera vez. Una vista de Django es el intermediario entre la base de datos y la página HTML: recibe la petición del alumno, busca la lección correcta en la base de datos, y la envía a la plantilla para que sea mostrada. La línea 'get_object_or_404' le gustó especialmente: no era solo código, era una promesa de protección. Si el alumno buscaba una lección que no existía, Django no mostraría un error feo: mostraría una página de error elegante y controlada.",
+ en:"Carlos had spent weeks building the models and URLs of his platform when the moment came to write his first view, and he felt something the tutorials had not prepared him for: the sensation that everything he had built up to that point was going to connect for the first time. A Django view is the intermediary between the database and the HTML page: it receives the student's request, finds the correct lesson in the database, and sends it to the template to be displayed. The line 'get_object_or_404' especially appealed to him: it was not just code, it was a promise of protection. If a student searched for a lesson that did not exist, Django would not show an ugly error: it would show an elegant, controlled error page.",
+ sx:{s:"El momento de la conexión → La vista como intermediario → get_object_or_404 como promesa → Error controlado",
+  se:"The moment of connection → View as intermediary → get_object_or_404 as promise → Controlled error",
+  c:[{b:"sb-nar",t:"Sensación de conexión",f:"la sensación de que todo lo que había construido hasta ese momento iba a conectarse por primera vez",n:"La experiencia emocional del programador principiante como motor narrativo. La conexión técnica como experiencia personal."},
+   {b:"sb-key",t:"El intermediario",f:"Una vista de Django es el intermediario entre la base de datos y la página HTML",n:"La definición funcional de la vista en términos de intermediación es la más accesible para un principiante."},
+   {b:"sb-nar",t:"Promesa de protección",f:"no era solo código, era una promesa de protección",n:"Personalizar el código como promesa transforma la experiencia técnica en compromiso ético con el usuario."}],
+  con:["la sensación de que todo iba a conectarse (experiencia emocional del principiante)","el intermediario entre la base de datos y la página HTML (definición funcional)","no era solo código, era una promesa de protección (personificación del código)","elegante y controlada (calidad del error como criterio de diseño)"]
+ }
+},
+{tipo:"nar",fase:"i18n",paso:"61",cat:"i18n / Traducción",loc:"settings.py · Paso 61",
+ t:"Activar los 30 idiomas en la plataforma / Activating the 30 Languages on the Platform",
+ code:{lang:"python",body:`<span class="cm"># archivo: castellano_mundial/settings.py</span>
+<span class="kw">from</span> django.utils.translation <span class="kw">import</span> gettext_lazy <span class="kw">as</span> _
+
+<span class="cm"># Añadir al final del archivo:</span>
+LANGUAGE_CODE = <span class="str">'es'</span>  <span class="cm"># Castellano como idioma base</span>
+
+LANGUAGES = [
+    (<span class="str">'es'</span>, _(<span class="str">'Español'</span>)),
+    (<span class="str">'en'</span>, _(<span class="str">'English'</span>)),
+    (<span class="str">'zh-hans'</span>, _(<span class="str">'中文 (Chino simplificado)'</span>)),
+    (<span class="str">'hi'</span>, _(<span class="str">'हिन्दी (Hindi)'</span>)),
+    (<span class="str">'ar'</span>, _(<span class="str">'العربية (Árabe)'</span>)),
+    (<span class="str">'pt'</span>, _(<span class="str">'Português'</span>)),
+    (<span class="str">'fr'</span>, _(<span class="str">'Français'</span>)),
+    (<span class="str">'ru'</span>, _(<span class="str">'Русский'</span>)),
+    (<span class="str">'de'</span>, _(<span class="str">'Deutsch'</span>)),
+    (<span class="str">'ja'</span>, _(<span class="str">'日本語'</span>)),
+    <span class="cm"># ... añadir los 20 idiomas restantes</span>
+]
+
+USE_I18N = <span class="kw">True</span>
+USE_L10N = <span class="kw">True</span>
+LOCALE_PATHS = [BASE_DIR / <span class="str">'locale'</span>]`},
+ ficha:{"Variable":"LANGUAGES","i18n":"Internacionalización (textos)","l10n":"Localización (fechas, números)","Archivo":"settings.py","Carpeta":"locale/"},
+ es:"El día que Sofía añadió la lista de 30 idiomas al archivo settings.py de su plataforma, se detuvo un momento antes de guardar el archivo. Miraba los nombres de los idiomas en sus propios alfabetos —'中文', 'العربية', 'हिन्दी', 'Русский'— y pensó en los millones de personas que podrían aprender castellano a través de lo que ella estaba construyendo. Cada par de paréntesis con un código de dos letras y un nombre era una puerta: 'es' era la puerta de los que ya hablaban español, 'zh-hans' era la puerta de más de mil millones de hablantes de chino mandarín. Django no sabía nada de esto todavía. Solo veía una lista. Pero Sofía sí sabía lo que significaba cada línea.",
+ en:"The day Sofía added the list of 30 languages to her platform's settings.py file, she paused for a moment before saving the file. She was looking at the names of the languages in their own alphabets — '中文', 'العربية', 'हिन्दी', 'Русский' — and thinking about the millions of people who could learn Spanish through what she was building. Each pair of brackets with a two-letter code and a name was a door: 'es' was the door for those who already spoke Spanish, 'zh-hans' was the door for more than a billion Mandarin speakers. Django knew nothing of this yet. It only saw a list. But Sofía did know what each line meant.",
+ sx:{s:"La pausa antes de guardar → Los alfabetos como puertas → Django y Sofía como contrapunto → Cada línea de código con significado",
+  se:"The pause before saving → Alphabets as doors → Django and Sofía as counterpoint → Each line of code with meaning",
+  c:[{b:"sb-nar",t:"La pausa",f:"se detuvo un momento antes de guardar el archivo",n:"El gesto de pausa antes de guardar da peso narrativo a la acción técnica. Lo ordinario (guardar un archivo) como acto significativo."},
+   {b:"sb-key",t:"Las puertas",f:"Cada par de paréntesis con un código de dos letras y un nombre era una puerta",n:"La metáfora de la puerta convierte el código ISO en una declaración de acceso democrático al conocimiento."},
+   {b:"sb-nar",t:"Contrapunto",f:"Django no sabía nada de esto todavía. Solo veía una lista. Pero Sofía sí sabía lo que significaba cada línea",n:"El contraste entre lo que ve la máquina (una lista) y lo que ve la persona (una promesa) define la diferencia entre código y significado."}],
+  con:["se detuvo un momento antes de (pausa como acto significativo)","era una puerta (metáfora del acceso)","Django no sabía nada... Solo veía una lista. Pero Sofía sí sabía (contrapunto máquina/persona)","lo que significaba cada línea (el código como portador de significado)"]
+ }
+},
+/* ═══ DESCRIPTIVOS (20) ═══ */
+{tipo:"des",fase:"instalacion",paso:"03",cat:"Estructura del Proyecto",loc:"Árbol de archivos · Paso 3",
+ code:{lang:"bash",body:`castellano_mundial/
+├── manage.py          <span class="cm"># Control del proyecto</span>
+├── castellano_mundial/
+│   ├── __init__.py    <span class="cm"># Marca la carpeta como paquete Python</span>
+│   ├── settings.py    <span class="cm"># TODA la configuración</span>
+│   ├── urls.py        <span class="cm"># Las URLs de tu sitio</span>
+│   ├── asgi.py        <span class="cm"># Para servidores async</span>
+│   └── wsgi.py        <span class="cm"># Para servidores tradicionales</span>
+└── db.sqlite3         <span class="cm"># Base de datos (se crea sola)</span>`},
+ ficha:{"settings.py":"Configuración central","urls.py":"Mapa de URLs","manage.py":"Herramienta de comandos","db.sqlite3":"Base de datos local"},
+ t:"La anatomía de un proyecto Django / The Anatomy of a Django Project",
+ es:"Un proyecto Django recién creado tiene exactamente seis archivos, y cada uno tiene una función tan específica como los órganos de un cuerpo. El archivo settings.py es el cerebro: contiene toda la configuración de la plataforma, desde los idiomas que admite hasta la dirección del servidor de correo. El archivo urls.py es el sistema circulatorio: distribuye cada petición del usuario hacia la parte correcta del sitio. El archivo manage.py es el sistema nervioso central: desde él puedes ordenarle a Django que haga cualquier cosa. La base de datos db.sqlite3 es la memoria a largo plazo: guarda toda la información de los estudiantes, las lecciones y los ejercicios. Entender qué hace cada archivo es lo primero que debe aprender un principiante, porque al modificar el archivo equivocado puede romper cosas que parecen no tener relación.",
+ en:"A freshly created Django project has exactly six files, and each one has a function as specific as the organs of a body. The settings.py file is the brain: it contains all the platform's configuration, from the languages it supports to the email server address. The urls.py file is the circulatory system: it routes each user request to the correct part of the site. The manage.py file is the central nervous system: from it you can tell Django to do anything. The db.sqlite3 database is the long-term memory: it stores all the information about students, lessons and exercises. Understanding what each file does is the first thing a beginner must learn, because modifying the wrong file can break things that seem unrelated.",
+ sx:{s:"Seis archivos → Analogía corporal → Los cuatro órganos principales → Advertencia al principiante",
+  se:"Six files → Body analogy → The four main organs → Beginner warning",
+  c:[{b:"sb-des",t:"Anatomía del proyecto",f:"cada uno tiene una función tan específica como los órganos de un cuerpo",n:"La analogía corporal es la más eficaz para describir la arquitectura de Django a un principiante. Cada archivo como órgano con función específica."},
+   {b:"sb-des",t:"settings.py = cerebro",f:"El archivo settings.py es el cerebro: contiene toda la configuración de la plataforma",n:"La ecuación archivo=órgano se repite para cada componente. El patrón facilita la memorización."},
+   {b:"sb-key",t:"db.sqlite3 = memoria",f:"La base de datos db.sqlite3 es la memoria a largo plazo: guarda toda la información de los estudiantes, las lecciones y los ejercicios",n:"La memoria a largo plazo como metáfora de la base de datos resalta la función de persistencia."},
+   {b:"sb-des",t:"Advertencia",f:"al modificar el archivo equivocado puede romper cosas que parecen no tener relación",n:"La advertencia práctica al principiante da valor de prevención al párrafo descriptivo."}],
+  con:["tan específica como los órganos de un cuerpo (analogía anatómica)","X es el Y: contiene/distribuye/guarda (patrón archivo=órgano=función)","puede romper cosas que parecen no tener relación (advertencia de consecuencias no obvias)"]
+ }
+},
+{tipo:"des",fase:"modelos",paso:"22",cat:"Base de Datos",loc:"models.py · Paso 22",
+ code:{lang:"python",body:`<span class="cm"># Modelo de Ejercicio (el estudiante practica)</span>
+<span class="kw">class</span> <span class="fn">Ejercicio</span>(models.Model):
+    leccion = models.<span class="fn">ForeignKey</span>(
+        Leccion,
+        on_delete=models.CASCADE,
+        related_name=<span class="str">'ejercicios'</span>
+    )
+    pregunta = models.<span class="fn">TextField</span>()
+    respuesta_correcta = models.<span class="fn">CharField</span>(max_length=<span class="num">500</span>)
+    tipo = models.<span class="fn">CharField</span>(
+        max_length=<span class="num">20</span>,
+        choices=[
+            (<span class="str">'completar'</span>, <span class="str">'Completar el espacio'</span>),
+            (<span class="str">'traducir'</span>, <span class="str">'Traducir la frase'</span>),
+            (<span class="str">'elegir'</span>, <span class="str">'Elegir la opción correcta'</span>),
+        ]
+    )
+    puntos = models.<span class="fn">IntegerField</span>(default=<span class="num">10</span>)
+
+    <span class="kw">def</span> <span class="fn">__str__</span>(self):
+        <span class="kw">return</span> <span class="str">f"Ejercicio: {self.pregunta[:50]}"</span>`},
+ ficha:{"ForeignKey":"Relación con Lección","on_delete=CASCADE":"Borra ejercicios si borra la lección","choices":"Lista de tipos de ejercicio","IntegerField":"Número entero"},
+ t:"El modelo de ejercicio: la gramática de la práctica / The Exercise Model: The Grammar of Practice",
+ es:"El modelo de Ejercicio en Django tiene una forma que refleja exactamente la forma de una actividad pedagógica real. El campo 'ForeignKey' que apunta a la clase Leccion es la declaración técnica de que ningún ejercicio existe sin una lección a la que pertenece: es la relación entre la teoría y la práctica expresada en código Python. El campo 'tipo' con sus tres opciones —completar, traducir, elegir— es la clasificación de los ejercicios de lengua que cualquier profesor de castellano reconocería: las mismas tres categorías que llenan los libros de texto de idiomas del mundo. El campo 'puntos' es pequeño pero estratégico: permite construir un sistema de gamificación que motive a los estudiantes a completar más ejercicios. Un número entero, diez puntos por defecto, pero capaz de sostener toda una pedagogía del reconocimiento.",
+ en:"The Exercise model in Django has a shape that reflects exactly the shape of a real pedagogical activity. The 'ForeignKey' field pointing to the Leccion class is the technical declaration that no exercise exists without a lesson it belongs to: it is the relationship between theory and practice expressed in Python code. The 'tipo' field with its three options — fill-in, translate, choose — is the classification of language exercises that any Spanish teacher would recognise: the same three categories that fill the world's language textbooks. The 'puntos' field is small but strategic: it allows building a gamification system that motivates students to complete more exercises. An integer, ten points by default, but capable of supporting an entire pedagogy of recognition.",
+ sx:{s:"ForeignKey como relación teoría-práctica → Los tres tipos como pedagogía → El campo puntos → Gamificación",
+  se:"ForeignKey as theory-practice relationship → Three types as pedagogy → Points field → Gamification",
+  c:[{b:"sb-des",t:"ForeignKey pedagógico",f:"la relación entre la teoría y la práctica expresada en código Python",n:"La traducción del concepto técnico (ForeignKey) al concepto pedagógico (teoría-práctica) hace accesible la abstracción de las relaciones de base de datos."},
+   {b:"sb-key",t:"Los tres tipos",f:"las mismas tres categorías que llenan los libros de texto de idiomas del mundo",n:"Conectar los tipos de ejercicio de Django con los libros de texto reales valida el diseño del modelo frente a la práctica pedagógica existente."},
+   {b:"sb-des",t:"El campo puntos",f:"Un número entero, diez puntos por defecto, pero capaz de sostener toda una pedagogía del reconocimiento",n:"La progresión 'número entero → diez puntos → toda una pedagogía' amplifica la importancia de un campo aparentemente trivial."}],
+  con:["la relación entre la teoría y la práctica expresada en código Python (traducción técnica-pedagógica)","las mismas tres categorías que llenan los libros de texto del mundo (validación con la práctica real)","capaz de sostener toda una pedagogía del reconocimiento (amplificación del campo trivial)"]
+ }
+},
+/* ═══ ARGUMENTATIVOS (20) ═══ */
+{tipo:"arg",fase:"instalacion",paso:"05",cat:"Por qué Django",loc:"Decisión técnica · Paso 5",
+ code:{lang:"bash",body:`<span class="cm"># Alternativas a Django para el mismo proyecto:</span>
+
+<span class="cm"># Flask: más simple, menos incluido</span>
+<span class="cm"># pip install flask</span>
+
+<span class="cm"># FastAPI: más rápido, más moderno</span>
+<span class="cm"># pip install fastapi</span>
+
+<span class="cm"># Ruby on Rails: similar a Django pero en Ruby</span>
+
+<span class="cm"># Django: todo incluido, ideal para principiantes</span>
+<span class="cm"># + admin automático</span>
+<span class="cm"># + sistema de usuarios incorporado</span>
+<span class="cm"># + ORM para la base de datos</span>
+<span class="cm"># + internacionalización (i18n) nativa</span>`},
+ ficha:{Ventaja:"Admin automático sin código extra","i18n nativa":"Sin plugins externos","ORM incluido":"Sin SQL manual","Comunidad":"La mayor de Python web"},
+ t:"Por qué Django es la mejor elección para una plataforma educativa multilingüe / Why Django is the Best Choice for a Multilingual Educational Platform",
+ es:"Un principiante que quiere construir una plataforma educativa multilingüe podría elegir entre docenas de herramientas de desarrollo web, pero Django tiene una ventaja que ninguna otra tiene en la misma medida: incluye de serie todo lo que una plataforma educativa necesita. El panel de administración automático —que Django genera sin escribir una sola línea de código extra— es exactamente el tipo de interfaz que un profesor necesita para añadir lecciones, corregir ejercicios y gestionar estudiantes. El sistema de internacionalización i18n incorporado es la razón más técnica y más decisiva: sin él, añadir soporte para treinta idiomas requeriría semanas de trabajo con plugins externos de calidad variable. Con Django, es una configuración de tres líneas en settings.py. Para un educador sin experiencia en programación, la diferencia entre una plataforma que puede construir y una que no puede construir es exactamente ese tipo de funcionalidad incluida.",
+ en:"A beginner who wants to build a multilingual educational platform could choose among dozens of web development tools, but Django has one advantage that no other has to the same degree: it includes everything an educational platform needs out of the box. The automatic admin panel — which Django generates without writing a single extra line of code — is exactly the type of interface a teacher needs to add lessons, correct exercises and manage students. The built-in i18n internationalisation system is the most technical and most decisive reason: without it, adding support for thirty languages would require weeks of work with external plugins of variable quality. With Django, it is a three-line configuration in settings.py. For an educator without programming experience, the difference between a platform they can build and one they cannot is exactly that kind of included functionality.",
+ sx:{s:"La ventaja exclusiva de Django → El admin automático → El i18n incorporado → La diferencia para el principiante",
+  se:"Django's exclusive advantage → Automatic admin → Built-in i18n → The difference for the beginner",
+  c:[{b:"sb-arg",t:"Ventaja exclusiva",f:"Django tiene una ventaja que ninguna otra tiene en la misma medida: incluye de serie todo lo que una plataforma educativa necesita",n:"'Que ninguna otra tiene en la misma medida' es el superlativo moderado. 'De serie' introduce la disponibilidad inmediata sin configuración adicional."},
+   {b:"sb-key",t:"Admin automático",f:"El panel de administración automático es exactamente el tipo de interfaz que un profesor necesita",n:"'Exactamente' refuerza la adecuación entre la herramienta y el usuario pedagógico. El admin como interfaz pedagógica, no técnica."},
+   {b:"sb-arg",t:"i18n decisivo",f:"sin él, añadir soporte para treinta idiomas requeriría semanas de trabajo con plugins externos de calidad variable. Con Django, es una configuración de tres líneas",n:"El contraste 'semanas de trabajo / tres líneas' cuantifica la ventaja de Django de forma inmediatamente comprensible."},
+   {b:"sb-arg",t:"Conclusión pedagógica",f:"la diferencia entre una plataforma que puede construir y una que no puede construir es exactamente ese tipo de funcionalidad incluida",n:"La conclusión binaria 'puede / no puede construir' convierte el argumento técnico en argumento de posibilidad para el principiante."}],
+  con:["que ninguna otra tiene en la misma medida (superlativo moderado)","exactamente el tipo de (adecuación precisa)","semanas de trabajo vs. tres líneas (contraste de escala)","la diferencia entre puede y no puede construir (argumento de posibilidad)"]
+ }
+},
+{tipo:"arg",fase:"i18n",paso:"62",cat:"i18n vs l10n",loc:"Decisión de diseño · Paso 62",
+ code:{lang:"python",body:`<span class="cm"># i18n = Internacionalización (traducir textos)</span>
+<span class="cm"># l10n = Localización (adaptar formatos)</span>
+
+<span class="cm"># En una plantilla HTML de Django:</span>
+{% <span class="fn">load</span> i18n %}
+
+&lt;h1&gt;{% <span class="fn">trans</span> <span class="str">"Bienvenido a la lección"</span> %}&lt;/h1&gt;
+<span class="cm">{# Este texto se traducirá según el idioma del alumno #}</span>
+
+&lt;p&gt;{% <span class="fn">trans</span> <span class="str">"Nivel: Principiante"</span> %}&lt;/p&gt;
+&lt;p&gt;{% <span class="fn">trans</span> <span class="str">"Ejercicios completados:"</span> %}
+   {{ alumno.ejercicios_completados }}&lt;/p&gt;
+
+<span class="cm"># Generar los archivos de traducción:</span>
+python manage.py makemessages -l zh_hans
+python manage.py makemessages -l ar
+python manage.py makemessages -l hi`},
+ ficha:{"{% trans %}":"Marca texto para traducción","makemessages":"Genera archivo .po de traducción","compilemessages":"Compila .po a .mo (binario)","django.po":"Archivo de traducción por idioma"},
+ t:"La diferencia entre internacionalizar y localizar / The Difference Between Internationalising and Localising",
+ es:"La distinción entre i18n (internacionalización) y l10n (localización) no es una cuestión académica: tiene consecuencias prácticas directas en cómo se construye la plataforma. Internacionalizar significa marcar todos los textos de la interfaz para que puedan ser traducidos: es el trabajo de preparación. Localizar significa proporcionar las traducciones concretas para cada idioma: es el trabajo de ejecución. Una plataforma que solo ha sido internacionalizada sin localizar mostrará los textos en el idioma original para todos los usuarios. Una plataforma correctamente localizada para el chino mostrará todos los menús, botones y mensajes de error en chino simplificado para un estudiante de Shanghái. La distinción importa porque los dos trabajos los hacen personas distintas: el desarrollador hace la internacionalización; el traductor hace la localización.",
+ en:"The distinction between i18n (internationalisation) and l10n (localisation) is not an academic question: it has direct practical consequences for how the platform is built. Internationalising means marking all interface texts so they can be translated: it is the preparation work. Localising means providing the specific translations for each language: it is the execution work. A platform that has only been internationalised without localising will show texts in the original language for all users. A platform correctly localised for Chinese will show all menus, buttons and error messages in simplified Chinese for a student in Shanghai. The distinction matters because the two tasks are done by different people: the developer does the internationalisation; the translator does the localisation.",
+ sx:{s:"No es académica → Internacionalizar = preparar → Localizar = ejecutar → Quién hace cada trabajo",
+  se:"Not academic → Internationalise = prepare → Localise = execute → Who does each task",
+  c:[{b:"sb-arg",t:"Consecuencias prácticas",f:"La distinción entre i18n y l10n no es una cuestión académica: tiene consecuencias prácticas directas",n:"'No es una cuestión académica' descarta la trivialización. Los dos puntos introducen las consecuencias prácticas."},
+   {b:"sb-exp",t:"Definición de i18n",f:"Internacionalizar significa marcar todos los textos de la interfaz para que puedan ser traducidos: es el trabajo de preparación",n:"La definición + metáfora ('trabajo de preparación') da concreción a un concepto abstracto."},
+   {b:"sb-key",t:"Ejemplo práctico",f:"Una plataforma correctamente localizada para el chino mostrará todos los menús, botones y mensajes de error en chino simplificado para un estudiante de Shanghái",n:"El ejemplo específico (Shanghái, chino simplificado) da una imagen concreta del resultado del trabajo de localización."},
+   {b:"sb-arg",t:"División del trabajo",f:"el desarrollador hace la internacionalización; el traductor hace la localización",n:"El punto y coma de contraste asigna los dos trabajos a dos roles distintos. La separación de responsabilidades como argumento de organización del equipo."}],
+  con:["no es una cuestión académica: tiene consecuencias prácticas (refutación del academicismo)","el trabajo de preparación / el trabajo de ejecución (metáforas de roles)","en chino simplificado para un estudiante de Shanghái (concreción del resultado)","el desarrollador hace X; el traductor hace Y (punto y coma de división de roles)"]
+ }
+},
+/* ═══ EXPOSITIVOS (20) ═══ */
+{tipo:"exp",fase:"instalacion",paso:"04",cat:"Arquitectura MVT",loc:"Conceptos · Paso 4",
+ code:{lang:"python",body:`<span class="cm"># La arquitectura MVT de Django:</span>
+<span class="cm">#</span>
+<span class="cm"># MODELO (Model) → Define los datos</span>
+<span class="cm">#   ↓</span>
+<span class="cm"># VISTA (View) → Lógica de negocio</span>
+<span class="cm">#   ↓</span>
+<span class="cm"># PLANTILLA (Template) → HTML que ve el usuario</span>
+<span class="cm">#</span>
+<span class="cm"># Ejemplo de flujo:</span>
+<span class="cm"># 1. Alumno pide: /leccion/5/</span>
+<span class="cm"># 2. URL enruta a views.ver_leccion(id=5)</span>
+<span class="cm"># 3. Vista busca Leccion.objects.get(id=5)</span>
+<span class="cm"># 4. Vista envía datos a leccion_detalle.html</span>
+<span class="cm"># 5. Template muestra la lección al alumno</span>`},
+ ficha:{"M":"Model = Datos","V":"View = Lógica","T":"Template = HTML","Flujo":"URL → View → Model → Template → Usuario"},
+ t:"La arquitectura MVT de Django explicada para principiantes / Django's MVT Architecture Explained for Beginners",
+ es:"Django organiza el código de toda aplicación web en tres capas llamadas MVT: Modelo, Vista y Plantilla. El Modelo define qué datos guarda la aplicación y cómo se organizan en la base de datos. La Vista contiene la lógica de la aplicación: decide qué datos mostrar, a quién, y en qué condiciones. La Plantilla es el archivo HTML que el alumno ve en su navegador, con huecos especiales donde Django inserta los datos reales. El flujo siempre es el mismo: el alumno hace una petición (escribe una URL), Django la dirige a la Vista correcta, la Vista consulta el Modelo, obtiene los datos, y los envía a la Plantilla que los presenta al alumno. Entender este flujo es la base de todo lo que se construirá después: cada funcionalidad de la plataforma multilingüe seguirá exactamente este mismo patrón.",
+ en:"Django organises all web application code into three layers called MVT: Model, View and Template. The Model defines what data the application stores and how it is organised in the database. The View contains the application's logic: it decides what data to show, to whom, and under what conditions. The Template is the HTML file that the student sees in their browser, with special placeholders where Django inserts the real data. The flow is always the same: the student makes a request (types a URL), Django directs it to the correct View, the View queries the Model, obtains the data, and sends it to the Template that presents it to the student. Understanding this flow is the foundation of everything that will be built afterwards: every feature of the multilingual platform will follow exactly this same pattern.",
+ sx:{s:"Definición de las tres capas → El flujo siempre igual → La base de todo lo posterior",
+  se:"Definition of three layers → Always the same flow → Foundation of everything afterwards",
+  c:[{b:"sb-exp",t:"Las tres capas",f:"Django organiza el código de toda aplicación web en tres capas llamadas MVT: Modelo, Vista y Plantilla",n:"'Organiza en tres capas llamadas' introduce la taxonomía con su nombre. La enumeración M-V-T da la estructura del párrafo."},
+   {b:"sb-neu",t:"El flujo",f:"El flujo siempre es el mismo: el alumno hace una petición, Django la dirige a la Vista correcta, la Vista consulta el Modelo, obtiene los datos, y los envía a la Plantilla",n:"'Siempre es el mismo' introduce la constancia del patrón. La cadena de cinco pasos describe el flujo completo de forma secuencial."},
+   {b:"sb-exp",t:"Base de todo",f:"Entender este flujo es la base de todo lo que se construirá después: cada funcionalidad de la plataforma multilingüe seguirá exactamente este mismo patrón",n:"'La base de todo lo que se construirá después' da al párrafo un valor prospectivo. 'Exactamente este mismo patrón' refuerza la constancia del MVT."}],
+  con:["organiza en tres capas llamadas (taxonomía técnica)","El flujo siempre es el mismo: X → Y → Z (cadena constante)","Entender este flujo es la base de todo (valor prospectivo)","exactamente este mismo patrón (constancia del principio)"]
+ }
+},
+{tipo:"exp",fase:"modelos",paso:"23",cat:"Migraciones",loc:"manage.py · Paso 23",
+ code:{lang:"bash",body:`<span class="cm"># Después de crear o modificar un modelo, SIEMPRE:</span>
+
+<span class="cm"># 1. Crear la migración (genera el plan de cambios)</span>
+python manage.py makemigrations
+
+<span class="cm"># Verás algo como:</span>
+<span class="cm"># Migrations for 'lecciones':</span>
+<span class="cm">#   lecciones/migrations/0001_initial.py</span>
+<span class="cm">#     + Create model Leccion</span>
+<span class="cm">#     + Create model Ejercicio</span>
+
+<span class="cm"># 2. Aplicar la migración (actualiza la base de datos)</span>
+python manage.py migrate
+
+<span class="cm"># Verás:</span>
+<span class="cm"># Running migrations:</span>
+<span class="cm">#   Applying lecciones.0001_initial... OK</span>`},
+ ficha:{"makemigrations":"Genera el plan de cambios","migrate":"Aplica los cambios en la BD","Cuándo":"Tras crear o modificar modelos","Archivos":"lecciones/migrations/"},
+ t:"Las migraciones: cómo Django actualiza la base de datos / Migrations: How Django Updates the Database",
+ es:"Las migraciones de Django son el mecanismo por el cual los cambios en los archivos Python de los modelos se traducen en cambios reales en la base de datos. El proceso funciona en dos pasos obligatorios. El primero es 'makemigrations': Django lee los archivos de modelos, detecta qué ha cambiado desde la última vez, y genera un archivo Python de migración que describe esos cambios en un lenguaje que la base de datos puede entender. El segundo es 'migrate': Django lee los archivos de migración pendientes y ejecuta los cambios en la base de datos. Un principiante que olvida ejecutar 'migrate' después de modificar un modelo verá errores confusos cuando intente usar su plataforma, porque el código Python y la base de datos estarán desincronizados. La regla es simple: cada vez que cambies un modelo, ejecuta los dos comandos en ese orden.",
+ en:"Django migrations are the mechanism by which changes in Python model files are translated into real changes in the database. The process works in two mandatory steps. The first is 'makemigrations': Django reads the model files, detects what has changed since the last time, and generates a Python migration file that describes those changes in a language the database can understand. The second is 'migrate': Django reads the pending migration files and applies the changes to the database. A beginner who forgets to run 'migrate' after modifying a model will see confusing errors when trying to use their platform, because the Python code and the database will be out of sync. The rule is simple: every time you change a model, run both commands in that order.",
+ sx:{s:"Definición del mecanismo → Paso 1 (makemigrations) → Paso 2 (migrate) → Consecuencia de olvidar → La regla simple",
+  se:"Mechanism definition → Step 1 (makemigrations) → Step 2 (migrate) → Consequence of forgetting → The simple rule",
+  c:[{b:"sb-exp",t:"Definición del mecanismo",f:"Las migraciones de Django son el mecanismo por el cual los cambios en los archivos Python de los modelos se traducen en cambios reales en la base de datos",n:"'El mecanismo por el cual X se traduce en Y' es la estructura expositiva de definición causal. La traducción como metáfora del proceso."},
+   {b:"sb-neu",t:"Dos pasos obligatorios",f:"El proceso funciona en dos pasos obligatorios",n:"'Obligatorios' es el adjetivo más importante: advierte al principiante de que no son opcionales."},
+   {b:"sb-exp",t:"Consecuencia de olvidar",f:"verá errores confusos cuando intente usar su plataforma, porque el código Python y la base de datos estarán desincronizados",n:"'Errores confusos' + causa ('desincronizados') da la consecuencia y su explicación. La especificación 'confusos' prepara emocionalmente al principiante para ese error."},
+   {b:"sb-key",t:"La regla simple",f:"La regla es simple: cada vez que cambies un modelo, ejecuta los dos comandos en ese orden",n:"'La regla es simple' + instrucción directa es la síntesis más accesible del proceso para un principiante."}],
+  con:["el mecanismo por el cual X se traduce en Y (definición causal)","en dos pasos obligatorios (énfasis en la obligatoriedad)","errores confusos porque estarán desincronizados (consecuencia + causa)","La regla es simple: (síntesis instructiva)"]
+ }
+},
+/* ═══ FICHAS DE CÓDIGO (20) ═══ */
+{tipo:"cod",fase:"instalacion",paso:"06",cat:"Entorno Virtual",loc:"Terminal · Paso 6",
+ code:{lang:"bash",body:`<span class="cm"># IMPORTANTE: Usar siempre un entorno virtual</span>
+<span class="cm"># Evita conflictos entre proyectos distintos</span>
+
+<span class="cm"># Crear el entorno virtual</span>
+python -m venv mi_entorno
+
+<span class="cm"># Activar en Windows:</span>
+mi_entorno\Scripts\activate
+
+<span class="cm"># Activar en Mac/Linux:</span>
+source mi_entorno/bin/activate
+
+<span class="cm"># Verás el nombre entre paréntesis:</span>
+<span class="cm"># (mi_entorno) $ _</span>
+
+<span class="cm"># Instalar Django DENTRO del entorno:</span>
+pip install django
+
+<span class="cm"># Guardar las dependencias:</span>
+pip freeze > requirements.txt`},
+ ficha:{"venv":"Entorno virtual de Python","requirements.txt":"Lista de paquetes del proyecto","Activar Windows":"Scripts\\activate","Activar Mac/Linux":"source bin/activate"},
+ t:"El entorno virtual: tu burbuja de desarrollo / The Virtual Environment: Your Development Bubble",
+ es:"Un entorno virtual de Python es una instalación aislada de Python y sus paquetes que existe solo para tu proyecto. Imagina que tu computadora es un edificio y cada proyecto es un apartamento: sin entorno virtual, todos los proyectos comparten la misma cocina y los mismos muebles, lo que puede causar conflictos cuando dos proyectos necesitan versiones distintas del mismo paquete. Con un entorno virtual, cada proyecto tiene su propia cocina completamente equipada, independiente de los demás. El archivo requirements.txt es la lista de la compra: dice exactamente qué paquetes y versiones necesita tu plataforma para funcionar, de modo que cualquier persona que descargue tu proyecto pueda instalar todo lo necesario con un solo comando: 'pip install -r requirements.txt'.",
+ en:"A Python virtual environment is an isolated installation of Python and its packages that exists only for your project. Imagine that your computer is a building and each project is an apartment: without a virtual environment, all projects share the same kitchen and furniture, which can cause conflicts when two projects need different versions of the same package. With a virtual environment, each project has its own fully equipped kitchen, independent of the others. The requirements.txt file is the shopping list: it says exactly which packages and versions your platform needs to work, so that anyone who downloads your project can install everything needed with a single command: 'pip install -r requirements.txt'.",
+ sx:{s:"Definición del entorno virtual → Metáfora del edificio → requirements.txt como lista de la compra",
+  se:"Virtual environment definition → Building metaphor → requirements.txt as shopping list",
+  c:[{b:"sb-cod",t:"Definición",f:"una instalación aislada de Python y sus paquetes que existe solo para tu proyecto",n:"'Existe solo para tu proyecto' define el aislamiento como característica central del entorno virtual."},
+   {b:"sb-key",t:"Metáfora del edificio",f:"Imagina que tu computadora es un edificio y cada proyecto es un apartamento... todos los proyectos comparten la misma cocina",n:"La metáfora del apartamento es la más accesible para explicar el conflicto de versiones a un principiante no técnico."},
+   {b:"sb-cod",t:"requirements.txt",f:"El archivo requirements.txt es la lista de la compra: dice exactamente qué paquetes y versiones necesita tu plataforma",n:"La lista de la compra es la metáfora más precisa para requirements.txt. 'Exactamente' refuerza la función de especificación exacta."}],
+  con:["que existe solo para tu proyecto (aislamiento)","Imagina que tu computadora es un edificio (metáfora del apartamento)","comparten la misma cocina (conflicto de versiones)","la lista de la compra: dice exactamente qué (metáfora de la especificación exacta)"]
+ }
+},
+{tipo:"cod",fase:"modelos",paso:"25",cat:"El Admin de Django",loc:"admin.py · Paso 25",
+ code:{lang:"python",body:`<span class="cm"># archivo: lecciones/admin.py</span>
+<span class="kw">from</span> django.contrib <span class="kw">import</span> admin
+<span class="kw">from</span> .models <span class="kw">import</span> Leccion, Ejercicio
+
+<span class="cm"># Versión simple (solo 2 líneas):</span>
+admin.site.<span class="fn">register</span>(Leccion)
+admin.site.<span class="fn">register</span>(Ejercicio)
+
+<span class="cm"># Versión mejorada con más control:</span>
+<span class="kw">class</span> <span class="fn">LeccionAdmin</span>(admin.ModelAdmin):
+    list_display = [<span class="str">'titulo'</span>, <span class="str">'idioma_destino'</span>, <span class="str">'nivel'</span>]
+    list_filter = [<span class="str">'idioma_destino'</span>, <span class="str">'nivel'</span>]
+    search_fields = [<span class="str">'titulo'</span>, <span class="str">'contenido'</span>]
+
+admin.site.<span class="fn">register</span>(Leccion, LeccionAdmin)
+<span class="cm"># Ahora en /admin/ puedes buscar y filtrar lecciones</span>
+
+<span class="cm"># Crear el superusuario para acceder:</span>
+<span class="cm"># python manage.py createsuperuser</span>`},
+ ficha:{"URL":"http://127.0.0.1:8000/admin/","list_display":"Columnas de la lista","list_filter":"Filtros laterales","search_fields":"Campos buscables","Acceso":"Solo superusuarios"},
+ t:"El admin de Django: tu panel de control docente / Django Admin: Your Teaching Control Panel",
+ es:"El panel de administración de Django —accesible en /admin/— es una de las funcionalidades más asombrosas del framework para un principiante: sin escribir ningún código HTML, Django genera automáticamente una interfaz completa para gestionar todos los datos de tu plataforma. Con las dos líneas 'admin.site.register(Leccion)' y 'admin.site.register(Ejercicio)', tendrás una interfaz donde puedes crear lecciones para los treinta idiomas, añadir ejercicios de cualquier tipo, ver la lista de todos los estudiantes registrados y editar cualquier registro con un solo clic. Para un docente que quiere añadir una nueva lección de vocabulario para estudiantes japoneses, el proceso es exactamente igual que rellenar un formulario web: escribir el título, el contenido, seleccionar 'ja' como idioma destino, y guardar.",
+ en:"Django's administration panel — accessible at /admin/ — is one of the most impressive features of the framework for a beginner: without writing any HTML code, Django automatically generates a complete interface for managing all your platform's data. With the two lines 'admin.site.register(Leccion)' and 'admin.site.register(Ejercicio)', you will have an interface where you can create lessons for all thirty languages, add exercises of any type, see the list of all registered students and edit any record with a single click. For a teacher wanting to add a new vocabulary lesson for Japanese students, the process is exactly the same as filling in a web form: write the title, the content, select 'ja' as the target language, and save.",
+ sx:{s:"El admin automático → Las dos líneas → Lo que puede hacer un docente → El proceso como formulario",
+  se:"Automatic admin → The two lines → What a teacher can do → Process as form",
+  c:[{b:"sb-cod",t:"Asombro del principiante",f:"una de las funcionalidades más asombrosas del framework para un principiante: sin escribir ningún código HTML, Django genera automáticamente",n:"'Asombrosas' es el adjetivo que refleja la experiencia real del principiante. 'Sin escribir ningún código HTML' cuantifica el ahorro de trabajo."},
+   {b:"sb-key",t:"Las dos líneas",f:"Con las dos líneas... tendrás una interfaz donde puedes crear lecciones para los treinta idiomas",n:"'Con las dos líneas' cuantifica el esfuerzo. La enumeración de capacidades ('crear / añadir / ver / editar') muestra la potencia de esas dos líneas."},
+   {b:"sb-cod",t:"El proceso como formulario",f:"el proceso es exactamente igual que rellenar un formulario web",n:"La comparación con rellenar un formulario es la traducción más accesible de la interfaz de administración para un docente no técnico."}],
+  con:["sin escribir ningún código HTML (cuantificación del ahorro)","Con las dos líneas (cuantificación del esfuerzo)","Para un docente que quiere (punto de vista del usuario pedagógico)","exactamente igual que rellenar un formulario (comparación con lo familiar)"]
+ }
+},
+{tipo:"cod",fase:"vistas",paso:"45",cat:"URLs multilingüe",loc:"urls.py · Paso 45",
+ code:{lang:"python",body:`<span class="cm"># archivo: castellano_mundial/urls.py</span>
+<span class="kw">from</span> django.conf.urls.i18n <span class="kw">import</span> i18n_patterns
+<span class="kw">from</span> django.urls <span class="kw">import</span> path, include
+<span class="kw">from</span> django.conf.urls.i18n <span class="kw">import</span> set_language
+
+urlpatterns = [
+    <span class="cm"># URL para cambiar el idioma de la interfaz</span>
+    path(<span class="str">'i18n/'</span>, include(<span class="str">'django.conf.urls.i18n'</span>)),
+]
+
+<span class="cm"># Las URLs que Django traducirá por idioma:</span>
+urlpatterns += <span class="fn">i18n_patterns</span>(
+    path(<span class="str">''</span>, views.inicio, name=<span class="str">'inicio'</span>),
+    path(<span class="str">'leccion/&lt;int:pk&gt;/'</span>, views.ver_leccion, name=<span class="str">'leccion'</span>),
+    path(<span class="str">'ejercicios/'</span>, views.lista_ejercicios, name=<span class="str">'ejercicios'</span>),
+    prefix_default_language=<span class="kw">False</span>
+)
+<span class="cm"># Resultado:</span>
+<span class="cm"># /leccion/5/        → versión en español (default)</span>
+<span class="cm"># /en/leccion/5/     → versión en inglés</span>
+<span class="cm"># /zh-hans/leccion/5 → versión en chino</span>`},
+ ficha:{"i18n_patterns":"URLs con prefijo de idioma","prefix_default_language=False":"Sin prefijo para el idioma base","<int:pk>":"Número entero en la URL","name=":"Nombre de la URL para referencia"},
+ t:"Las URLs multilingüe: cómo cada idioma tiene su propia dirección / Multilingual URLs: How Each Language Has Its Own Address",
+ es:"El sistema de URLs multilingüe de Django permite que cada idioma tenga su propio prefijo en la dirección web, de manera que la misma lección tiene una URL distinta según el idioma del estudiante. Esto tiene tres ventajas simultáneas: permite que los motores de búsqueda indexen la versión en cada idioma por separado (crucial para el posicionamiento internacional), permite que los usuarios compartan una URL que llevará al receptor al mismo contenido en su propio idioma, y permite que Django sepa automáticamente en qué idioma debe mostrar la interfaz sin que el usuario tenga que seleccionarlo. La función 'i18n_patterns' es la que hace toda esta magia con una sola línea: envuelve las URLs normales en una capa que les añade el prefijo del idioma activo.",
+ en:"Django's multilingual URL system allows each language to have its own prefix in the web address, so that the same lesson has a different URL depending on the student's language. This has three simultaneous advantages: it allows search engines to index the version in each language separately (crucial for international positioning), it allows users to share a URL that will take the recipient to the same content in their own language, and it allows Django to automatically know in which language to display the interface without the user having to select it. The 'i18n_patterns' function is what does all this magic with a single line: it wraps the normal URLs in a layer that adds the active language prefix.",
+ sx:{s:"Las URLs con prefijo → Las tres ventajas → La función i18n_patterns como magia",
+  se:"Prefixed URLs → The three advantages → i18n_patterns function as magic",
+  c:[{b:"sb-cod",t:"El sistema de prefijos",f:"cada idioma tiene su propio prefijo en la dirección web, de manera que la misma lección tiene una URL distinta según el idioma del estudiante",n:"La explicación funcional del prefijo de idioma en términos del resultado para el estudiante hace accesible el concepto técnico."},
+   {b:"sb-key",t:"Tres ventajas simultáneas",f:"Esto tiene tres ventajas simultáneas: permite que los motores de búsqueda indexen... permite que los usuarios compartan... y permite que Django sepa automáticamente",n:"El tricolon de ventajas con 'permite que' estructura la justificación del sistema de URLs multilingüe."},
+   {b:"sb-cod",t:"i18n_patterns como magia",f:"La función 'i18n_patterns' es la que hace toda esta magia con una sola línea",n:"'Con una sola línea' cuantifica la simplicidad. 'Magia' es el término que el principiante asocia con la funcionalidad automática de Django."}],
+  con:["de manera que la misma lección tiene una URL distinta (consecuencia del sistema de prefijos)","tres ventajas simultáneas: permite que X... permite que Y... y permite que Z (tricolon de ventajas)","hace toda esta magia con una sola línea (simplificación + cuantificación)","envuelve las URLs normales en una capa que (metáfora del envoltorio)"]
+ }
+},
+{tipo:"cod",fase:"i18n",paso:"65",cat:"Plantillas i18n",loc:"templates/ · Paso 65",
+ code:{lang:"html",body:`<span class="cm">&lt;!-- archivo: templates/lecciones/ver.html --&gt;</span>
+{% load i18n %}
+
+&lt;!DOCTYPE html&gt;
+&lt;html lang="{{ LANGUAGE_CODE }}"&gt;
+&lt;head&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;title&gt;{% trans "Aprende Castellano" %} - {{ leccion.titulo }}&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+
+&lt;nav&gt;
+    &lt;form action="/i18n/setlang/" method="post"&gt;
+        {% csrf_token %}
+        &lt;select name="language" onchange="submit()"&gt;
+            {% get_available_languages as languages %}
+            {% for lang_code, lang_name in languages %}
+                &lt;option value="{{ lang_code }}"
+                    {% if lang_code == LANGUAGE_CODE %}selected{% endif %}&gt;
+                    {{ lang_name }}
+                &lt;/option&gt;
+            {% endfor %}
+        &lt;/select&gt;
+    &lt;/form&gt;
+&lt;/nav&gt;
+
+&lt;h1&gt;{{ leccion.titulo }}&lt;/h1&gt;
+&lt;p&gt;{% trans "Nivel" %}: {{ leccion.nivel }}&lt;/p&gt;
+&lt;div&gt;{{ leccion.contenido }}&lt;/div&gt;
+
+&lt;/body&gt;
+&lt;/html&gt;`},
+ ficha:{"{% load i18n %}":"Carga el sistema de traducción","{% trans '...' %}":"Traduce el texto entre comillas","{% get_available_languages %}":"Lista los idiomas activos","{{ LANGUAGE_CODE }}":"Idioma actual del usuario"},
+ t:"La plantilla multilingüe completa / The Complete Multilingual Template",
+ es:"La plantilla HTML multilingüe de Django combina el lenguaje estándar de HTML con las etiquetas especiales del sistema de plantillas de Django. Las etiquetas entre llaves dobles —'{{ variable }}'— muestran valores de la base de datos. Las etiquetas entre llaves y porcentaje —'{% acción %}'— ejecutan lógica: bucles, condiciones, cargas de módulos. La etiqueta '{% trans %}' es el corazón del sistema multilingüe: marca cada texto de la interfaz para que Django lo reemplace con la traducción correspondiente al idioma del usuario. El selector de idioma en el menú de navegación usa el formulario especial de Django para cambiar el idioma con un solo clic: cuando el estudiante selecciona 'Français' en el desplegable, toda la interfaz de la plataforma cambia inmediatamente al francés sin recargar la lección.",
+ en:"Django's multilingual HTML template combines standard HTML language with the special tags of Django's template system. Double-curly-bracket tags — '{{ variable }}' — display values from the database. Curly-bracket-and-percent tags — '{% action %}' — execute logic: loops, conditions, module loading. The '{% trans %}' tag is the heart of the multilingual system: it marks each interface text so that Django replaces it with the translation corresponding to the user's language. The language selector in the navigation menu uses Django's special form to change the language with a single click: when a student selects 'Français' from the dropdown, the entire platform interface immediately switches to French without reloading the lesson.",
+ sx:{s:"Dos tipos de etiquetas → {% trans %} como corazón → El selector de idioma → El cambio inmediato",
+  se:"Two types of tags → {% trans %} as heart → Language selector → Immediate change",
+  c:[{b:"sb-cod",t:"Dos tipos de etiquetas",f:"Las etiquetas entre llaves dobles muestran valores. Las etiquetas entre llaves y porcentaje ejecutan lógica",n:"La distinción entre los dos tipos de etiquetas es la información más importante para un principiante en plantillas Django."},
+   {b:"sb-key",t:"{% trans %} como corazón",f:"La etiqueta '{% trans %}' es el corazón del sistema multilingüe",n:"'El corazón del sistema' define la centralidad de la etiqueta sin necesidad de enumeración técnica."},
+   {b:"sb-cod",t:"El cambio inmediato",f:"toda la interfaz de la plataforma cambia inmediatamente al francés sin recargar la lección",n:"'Inmediatamente' y 'sin recargar' definen las dos propiedades de experiencia de usuario del cambio de idioma."}],
+  con:["Las etiquetas entre X muestran / Las etiquetas entre Y ejecutan (distinción de tipos)","es el corazón del sistema multilingüe (centralidad funcional)","inmediatamente... sin recargar (propiedades de UX)","cuando el estudiante selecciona... toda la interfaz cambia (resultado para el usuario final)"]
+ }
+}
+];
+
+/* ══ STORAGE ══ */
+const KEY='django_cast_v1';
+let U={};
+function load(){try{U=JSON.parse(localStorage.getItem(KEY))||{};}catch(e){U={};}}
+function persist(){try{localStorage.setItem(KEY,JSON.stringify(U));}catch(e){}}
+function getU(n){return U[n]||{tr:'',ms:''};}
+
+/* ══ HELPERS ══ */
+const esc=v=>(v||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;');
+const TL={nar:'Narrativo',des:'Descriptivo',arg:'Argumentativo',exp:'Expositivo',cod:'Código'};
+const TI={nar:'▶',des:'▶',arg:'▶',exp:'▶',cod:'//'};
+const PT={
+  nar:'Traduce este párrafo narrativo al inglés. Mantén los datos técnicos, los términos de Django y la reflexión final…',
+  des:'Traduce esta descripción técnica al inglés. Conserva los términos, la estructura del proyecto y las advertencias…',
+  arg:'Traduce este argumento al inglés. Mantén la tesis sobre Django, las comparativas técnicas y la conclusión…',
+  exp:'Traduce este párrafo expositivo al inglés. Conserva los términos técnicos, los dos pasos y la regla final…',
+  cod:'Traduce la explicación de este fragmento de código al inglés. Conserva los nombres de variables, funciones y archivos…'
+};
+const PM={
+  nar:'Escribe un párrafo narrativo sobre tu experiencia aprendiendo a programar en Django. Incluye un momento de descubrimiento o dificultad…',
+  des:'Describe otro aspecto de la estructura de Django (un archivo, una carpeta, un comando) usando metáforas y comparaciones claras…',
+  arg:'Argumenta sobre otra decisión técnica del proyecto (base de datos, despliegue, framework CSS). Incluye tesis y evidencia…',
+  exp:'Explica otro concepto de Django (formularios, señales, middleware…) en dos pasos con una regla simple al final…',
+  cod:'Escribe el código de otro componente de la plataforma (modelo, vista, URL, plantilla) con comentarios explicativos en español…'
+};
+
+function buildCard(s,n){
+  const e=getU(n);
+  const done=e.tr&&e.tr.trim()&&e.ms&&e.ms.trim();
+  const sgT=e.tr&&e.tr.trim()?` sg-${s.tipo}`:'';
+  const sgM=e.ms&&e.ms.trim()?` sg-${s.tipo}`:'';
+
+  const flowES=s.sx.s.split('→').map(x=>`<span>${x.trim()}</span>`).join('<span class="arr"> → </span>');
+  const flowEN=s.sx.se.split('→').map(x=>`<span>${x.trim()}</span>`).join('<span class="arr"> → </span>');
+  const rows=s.sx.c.map(c=>`
+<div class="sx-row">
+  <div><span class="sx-badge ${c.b}">${c.t}</span></div>
+  <div>
+    <div class="sx-frag">"${c.f}"</div>
+    <div class="sx-nota">${c.n}</div>
+  </div>
+</div>`).join('');
+  const conTags=s.sx.con.map(x=>`<span class="con-tag">${x}</span>`).join(' ');
+
+  const codeHtml=s.code?`<div class="code-block">
+    <div class="code-header">
+      <div class="code-dot code-dot-r"></div>
+      <div class="code-dot code-dot-y"></div>
+      <div class="code-dot code-dot-g"></div>
+      <span class="code-lang">${s.code.lang}</span>
+    </div>
+    <div class="code-body">${s.code.body}</div>
+  </div>`:'';
+
+  const fichaHtml=s.ficha?`<div class="ficha-tec">
+    <div class="ficha-tec-title">Ficha Técnica</div>
+    <div class="ficha-grid">
+      ${Object.entries(s.ficha).map(([k,v])=>`<div class="ficha-item"><strong>${k}:</strong> ${v}</div>`).join('')}
+    </div>
+  </div>`:'';
+
+  const firstLetter=s.es.trim().charAt(0);
+  const restES=s.es.trim().slice(1);
+
+  return `
+<article class="para-card t-${s.tipo}${done?' done':''}" id="c${n}"
+  data-n="${n}" data-tipo="${s.tipo}" data-fase="${s.fase||''}"
+  data-es="${s.es.toLowerCase()}" data-en="${s.en.toLowerCase()}" data-t="${s.t.toLowerCase()}">
+  <span class="card-idx">${String(n+1).padStart(3,'0')}</span>
+  <div class="card-head">
+    <div>
+      <span class="tipo-chip tc-${s.tipo}">${TI[s.tipo]} ${TL[s.tipo]}</span>
+      <span class="step-badge">PASO ${s.paso}</span>
+    </div>
+    <div class="card-title">${s.t}</div>
+    <div class="card-loc">$ ${s.loc}</div>
+  </div>
+  ${codeHtml}
+  ${fichaHtml}
+  <div class="card-paras">
+    <div>
+      <span class="plbl pl-${s.tipo}">ES · ${TL[s.tipo]}</span>
+      <div class="para-body">${s.es}</div>
+    </div>
+    <hr class="sep">
+    <div>
+      <span class="plbl pl-en">EN · Official</span>
+      <button class="btn-rev" onclick="rev(${n})">▶ Ver / Hide</button>
+      <div class="ans-block" id="a${n}">${s.en}</div>
+    </div>
+  </div>
+  <div class="sx-wrap">
+    <div class="sx-hd">
+      <span class="sx-lbl">// Análisis sintáctico</span>
+      <button class="btn-sx" onclick="toggleSx(${n})">+ expandir</button>
+    </div>
+    <div class="sx-body" id="sx${n}">
+      <div class="sx-struct">${flowES}</div>
+      <div class="sx-struct">${flowEN}</div>
+      <div class="sx-comps">${rows}</div>
+      <div class="sx-cons"><span class="sx-con-lbl">conectores:</span>${conTags}</div>
+    </div>
+  </div>
+  <div class="card-tts">
+    <button class="card-tts-btn" onclick="ttsRead(${n},'es')">🔊 ES</button>
+    <button class="card-tts-btn" onclick="ttsRead(${n},'en')">🔊 EN</button>
+  </div>
+  <div class="pzone">
+    <label>// Tu traducción al inglés:</label>
+    <textarea id="tr${n}" rows="4" class="${sgT}" placeholder="${PT[s.tipo]}">${esc(e.tr)}</textarea>
+    <div class="p-gap">
+      <label>// Escribe tu propio párrafo ${TL[s.tipo].toLowerCase()} similar:</label>
+      <textarea id="ms${n}" rows="5" class="${sgM}" placeholder="${PM[s.tipo]}">${esc(e.ms)}</textarea>
+    </div>
+    <div class="pactions">
+      <button class="btn-sv" onclick="save(${n})">▶ Guardar</button>
+      <button class="btn-cl" onclick="clr(${n})">✕ Borrar</button>
+      <span class="smsg" id="m${n}">✓ Guardado</span>
+    </div>
+  </div>
+</article>`;
+}
+
+function render(list){
+  document.getElementById('grid').innerHTML=list.map(s=>buildCard(s,D.indexOf(s))).join('');
+  updateAll();
+}
+function rev(n){document.getElementById('a'+n).classList.toggle('vis');}
+function toggleSx(n){
+  const el=document.getElementById('sx'+n);
+  const btn=el.previousElementSibling.querySelector('.btn-sx');
+  el.classList.toggle('open');
+  btn.textContent=el.classList.contains('open')?'− cerrar':'+ expandir';
+}
+function save(n){
+  const tr=document.getElementById('tr'+n).value;
+  const ms=document.getElementById('ms'+n).value;
+  U[n]={tr,ms};persist();
+  const t=D[n].tipo;
+  ['tr','ms'].forEach(f=>{const el=document.getElementById(f+n);el.className=el.value.trim()?`sg-${t}`:'';});
+  const msg=document.getElementById('m'+n);
+  msg.classList.add('show');setTimeout(()=>msg.classList.remove('show'),2500);
+  document.getElementById('c'+n).classList.toggle('done',tr.trim()&&ms.trim());
+  updateAll();
+}
+function clr(n){
+  if(!confirm('¿Borrar tus notas para este paso?'))return;
+  U[n]={tr:'',ms:''};persist();
+  ['tr','ms'].forEach(f=>{const el=document.getElementById(f+n);el.value='';el.className='';});
+  document.getElementById('c'+n).classList.remove('done');
+  updateAll();
+}
+function updateAll(){
+  const ts=['nar','des','arg','exp','cod'];let total=0;
+  ts.forEach(t=>{
+    const all=D.filter(s=>s.tipo===t).length;
+    const done=[...document.querySelectorAll(`.para-card.t-${t}`)].filter(c=>{
+      const e=getU(+c.dataset.n);return e.tr&&e.tr.trim()&&e.ms&&e.ms.trim();
+    }).length;
+    total+=done;
+    document.getElementById(`ps-${t}`).style.flexBasis=`${(done/Math.max(all,1))*20}%`;
+    document.getElementById(`cnt-${t}`).textContent=`${done}/${all}`;
+  });
+  const p=Math.round(total/D.length*100);
+  document.getElementById('pp').textContent=p+'%';
+  document.getElementById('dc').textContent=`${total}/${D.length}`;
+}
+function cnt(n){document.getElementById('cb').textContent=n;}
+function doFilter(){
+  const q=document.getElementById('si').value.toLowerCase();let v=0;
+  document.querySelectorAll('.para-card').forEach(c=>{
+    const s=c.dataset.es.includes(q)||c.dataset.en.includes(q)||c.dataset.t.includes(q)||c.dataset.fase.includes(q)||c.dataset.tipo.includes(q);
+    c.classList.toggle('hidden',!s);if(s)v++;
+  });cnt(v);
+}
+function fAll(b){act(b,'a-all');document.getElementById('si').value='';document.querySelectorAll('.para-card').forEach(c=>c.classList.remove('hidden'));cnt(D.length);}
+function fT(b,t){act(b,`a-${t}`);document.getElementById('si').value='';let v=0;document.querySelectorAll('.para-card').forEach(c=>{const s=c.dataset.tipo===t;c.classList.toggle('hidden',!s);if(s)v++;});cnt(v);}
+function fPhase(b,fase){
+  document.querySelectorAll('.phase-item').forEach(x=>x.classList.remove('active'));
+  b.classList.add('active');
+  document.getElementById('si').value='';
+  let v=0;
+  document.querySelectorAll('.para-card').forEach(c=>{
+    const s=fase==='all'||c.dataset.fase===fase;
+    c.classList.toggle('hidden',!s);if(s)v++;
+  });cnt(v);
+}
+function fDone(b){act(b,'a-done');document.getElementById('si').value='';let v=0;document.querySelectorAll('.para-card').forEach(c=>{const n=+c.dataset.n,e=getU(n),d=e.tr&&e.tr.trim()&&e.ms&&e.ms.trim();c.classList.toggle('hidden',!d);if(d)v++;});cnt(v);}
+function act(b,cls){document.querySelectorAll('.btn-f').forEach(x=>x.className='btn-f');b.classList.add(cls);}
+function openModal(){
+  const b=document.getElementById('msBody');
+  const entries=Object.entries(U).filter(([,e])=>(e.tr&&e.tr.trim())||(e.ms&&e.ms.trim()));
+  if(!entries.length){b.innerHTML='<p class="empty-note">// No hay notas guardadas aún.</p>';}
+  else{
+    const cm={nar:'var(--red)',des:'var(--amber)',arg:'var(--cyan)',exp:'var(--green)',cod:'var(--purple)'};
+    b.innerHTML=entries.sort(([a],[bb])=>+a-+bb).map(([n,e])=>{
+      const s=D[+n];
+      return `<div class="mse" style="border-top:2px solid ${cm[s.tipo]}">
+        <strong style="color:${cm[s.tipo]}">${TI[s.tipo]} ${TL[s.tipo].toUpperCase()} PASO ${s.paso} · ${s.t}</strong>
+        ${e.tr&&e.tr.trim()?`<p><span class="plbl pl-en" style="font-size:.46rem">TU TRADUCCIÓN</span><br>${e.tr}</p>`:''}
+        ${e.ms&&e.ms.trim()?`<p><span class="plbl pl-${s.tipo}" style="font-size:.46rem">TU PÁRRAFO</span><br>${e.ms}</p>`:''}
+      </div>`;
+    }).join('');
+  }
+  new bootstrap.Modal(document.getElementById('msModal')).show();
+}
+
+/* ══ TTS ══ */
+let ttsLang='es',ttsIdx=0,ttsQueue=[];
+const synth=window.speechSynthesis;
+function getVoice(l){const vs=synth.getVoices();const t=l==='es'?'es':'en';return vs.find(v=>v.lang.startsWith(t)&&v.localService)||vs.find(v=>v.lang.startsWith(t))||vs[0];}
+function ttsSpeak(text,lang,onEnd){
+  if(!synth)return;synth.cancel();
+  const u=new SpeechSynthesisUtterance(text);
+  u.lang=lang==='es'?'es-ES':'en-GB';
+  u.rate=parseFloat(document.getElementById('tts-speed').value)||1;
+  const v=getVoice(lang);if(v)u.voice=v;
+  u.onend=onEnd||null;u.onerror=()=>updatePlayBtn();
+  synth.speak(u);
+}
+function ttsRead(n,lang){
+  const s=D[n];const text=lang==='es'?s.es:s.en;
+  document.querySelectorAll('.card-tts-btn').forEach(b=>b.classList.remove('speaking'));
+  const btns=[...document.querySelectorAll(`#c${n} .card-tts-btn`)];
+  const tgt=btns.find(b=>b.textContent.includes(lang==='es'?'ES':'EN'));
+  if(tgt)tgt.classList.add('speaking');
+  document.getElementById('tts-reading').textContent='Paso '+s.paso+': '+s.t.split('/')[0].trim();
+  showTTS();updatePlayBtn();
+  ttsSpeak(text,lang,()=>{btns.forEach(b=>b.classList.remove('speaking'));updatePlayBtn();});
+}
+function buildQueue(){ttsQueue=[...document.querySelectorAll('.para-card:not(.hidden)')].map(c=>+c.dataset.n);}
+function ttsPlayPause(){
+  if(synth.speaking&&!synth.paused){synth.pause();updatePlayBtn();}
+  else if(synth.paused){synth.resume();updatePlayBtn();}
+  else{buildQueue();ttsIdx=0;ttsPlayNext();}
+}
+function ttsPlayNext(){
+  if(ttsIdx>=ttsQueue.length){updatePlayBtn();document.getElementById('tts-prog').style.width='100%';document.getElementById('tts-reading').textContent='✓ Completado';return;}
+  const n=ttsQueue[ttsIdx];const s=D[n];
+  document.getElementById('tts-prog').style.width=Math.round((ttsIdx/ttsQueue.length)*100)+'%';
+  document.getElementById('tts-reading').textContent='Paso '+s.paso;
+  const card=document.getElementById('c'+n);if(card)card.scrollIntoView({behavior:'smooth',block:'center'});
+  updatePlayBtn();
+  ttsSpeak(ttsLang==='es'?s.es:s.en,ttsLang,()=>{ttsIdx++;ttsPlayNext();});
+}
+function ttsStop(){synth.cancel();ttsIdx=0;updatePlayBtn();document.getElementById('tts-reading').textContent='Listo…';document.getElementById('tts-prog').style.width='0%';document.querySelectorAll('.card-tts-btn').forEach(b=>b.classList.remove('speaking'));}
+function ttsPrev(){synth.cancel();if(ttsIdx>1)ttsIdx-=2;else ttsIdx=0;if(ttsQueue.length)ttsPlayNext();}
+function ttsNext(){synth.cancel();if(ttsIdx<ttsQueue.length)ttsIdx++;if(ttsQueue.length)ttsPlayNext();}
+function ttsChangeSpeed(){if(synth.speaking){synth.cancel();ttsIdx=Math.max(0,ttsIdx-1);if(ttsQueue.length)ttsPlayNext();}}
+function ttsSetLang(l){ttsLang=l;document.getElementById('tts-lang-es').classList.toggle('active',l==='es');document.getElementById('tts-lang-en').classList.toggle('active',l==='en');ttsStop();}
+function updatePlayBtn(){const btn=document.getElementById('tts-play');if(!btn)return;if(synth.speaking&&!synth.paused){btn.textContent='⏸ PAUSAR';btn.classList.add('playing');}else if(synth.paused){btn.textContent='▶ REANUDAR';btn.classList.add('playing');}else{btn.textContent='▶ LEER';btn.classList.remove('playing');}}
+function showTTS(){document.getElementById('tts-bar').classList.add('visible');}
+function hideTTS(){ttsStop();document.getElementById('tts-bar').classList.remove('visible');}
+function toggleTTS(){document.getElementById('tts-bar').classList.contains('visible')?hideTTS():showTTS();}
+if(synth&&synth.onvoiceschanged!==undefined)synth.onvoiceschanged=()=>{};
+load();render(D);
+</script>
+</body>
+</html>

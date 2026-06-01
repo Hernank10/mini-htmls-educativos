@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>CIENCIAS EXACTAS Y NATURALES · Colombia · 100 conceptos clave</title>
+  <style>
+    /* ----- VARIABLES CSS: paleta ciencia (azul profundo, verde, gris) ----- */
+    :root {
+      --fondo: #f5f7fc;
+      --texto: #1e2f3b;
+      --azul-ciencia: #2c6e9e;
+      --verde-natural: #3d8b5c;
+      --gris-laboratorio: #8a9bb5;
+      --acierto: #2c6e49;
+      --fallo: #c9593a;
+      --sombra: rgba(30, 40, 50, 0.08);
+      --card-bg: #ffffff;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: var(--fondo);
+      color: var(--texto);
+      font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
+      line-height: 1.5;
+      padding: 1rem;
+    }
+
+    .app-container {
+      max-width: 1300px;
+      margin: 0 auto;
+      background: var(--card-bg);
+      border-radius: 2rem;
+      box-shadow: 0 12px 28px var(--sombra);
+      overflow: hidden;
+      border: 1px solid #dce3ec;
+    }
+
+    header {
+      background: #f0f4fa;
+      padding: 1.2rem 2rem;
+      border-bottom: 3px solid var(--azul-ciencia);
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 1rem;
+    }
+    h1 {
+      font-size: 1.7rem;
+      font-weight: 600;
+      color: #1f4e6e;
+      letter-spacing: -0.2px;
+    }
+    h1 small {
+      font-size: 0.7rem;
+      font-weight: normal;
+      color: #5f7f9a;
+    }
+
+    nav {
+      display: flex;
+      gap: 0.5rem;
+      background: #e6edf5;
+      padding: 0.6rem 2rem;
+      border-bottom: 1px solid #d0dbe8;
+      flex-wrap: wrap;
+    }
+    .nav-btn {
+      background: transparent;
+      border: none;
+      font-size: 0.95rem;
+      padding: 0.5rem 1.2rem;
+      border-radius: 40px;
+      cursor: pointer;
+      font-weight: 500;
+      transition: all 0.2s;
+      color: #2c6e9e;
+    }
+    .nav-btn.active {
+      background-color: var(--azul-ciencia);
+      color: white;
+    }
+    .nav-btn:hover:not(.active) {
+      background-color: #d4dfed;
+    }
+
+    .view {
+      display: none;
+      padding: 2rem;
+      animation: fade 0.2s ease;
+    }
+    .active-view { display: block; }
+    @keyframes fade { from { opacity: 0; transform: translateY(5px);} to { opacity: 1; transform: translateY(0);} }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+    .stat-card {
+      background: var(--fondo);
+      border-radius: 1.5rem;
+      padding: 1rem;
+      text-align: center;
+      border-left: 6px solid var(--verde-natural);
+      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    }
+    .stat-number {
+      font-size: 2.2rem;
+      font-weight: 700;
+      color: var(--azul-ciencia);
+    }
+    .progress-bar-bg {
+      background: #e2e8f0;
+      border-radius: 40px;
+      height: 12px;
+      overflow: hidden;
+      margin: 0.8rem 0;
+    }
+    .progress-fill {
+      background: var(--azul-ciencia);
+      width: 0%;
+      height: 100%;
+      transition: width 0.2s;
+    }
+
+    .conceptos-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+      gap: 1rem;
+      max-height: 65vh;
+      overflow-y: auto;
+      padding-right: 0.3rem;
+    }
+    .concepto-item {
+      background: white;
+      border-radius: 1.2rem;
+      padding: 0.8rem 1rem;
+      border-left: 5px solid var(--gris-laboratorio);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+    .concepto-titulo {
+      font-weight: 700;
+      color: #1f4e6e;
+    }
+    .concepto-desc {
+      font-size: 0.85rem;
+      color: #4e6b7c;
+      margin-top: 6px;
+      border-top: 1px solid #e9edf2;
+      padding-top: 6px;
+    }
+    .badge-progreso {
+      font-size: 0.7rem;
+      background: #e9edf2;
+      border-radius: 20px;
+      padding: 2px 10px;
+      display: inline-block;
+      margin-top: 8px;
+    }
+
+    /* práctica */
+    .flashcard {
+      background: #ffffff;
+      border-radius: 2rem;
+      padding: 1.8rem;
+      text-align: center;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+      border: 1px solid #dee5ed;
+      max-width: 750px;
+      margin: 0 auto;
+    }
+    .pregunta {
+      font-size: 1.4rem;
+      font-weight: 500;
+      margin-bottom: 1.8rem;
+      background: #f0f6fe;
+      padding: 1.2rem;
+      border-radius: 1.5rem;
+    }
+    .respuesta-oculta {
+      background: #eef2f7;
+      border-radius: 1.2rem;
+      padding: 1rem;
+      margin: 1rem 0;
+      display: none;
+    }
+    .palabras-baraja {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 0.6rem;
+      margin: 1.5rem 0;
+    }
+    .palabra-btn {
+      background: var(--azul-ciencia);
+      color: white;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 2rem;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: 0.1s;
+    }
+    .orden-actual {
+      background: #f8fafd;
+      border-radius: 1rem;
+      padding: 1rem;
+      min-height: 80px;
+      margin: 1rem 0;
+      text-align: left;
+      border: 1px dashed #cbdbe2;
+    }
+    .btn {
+      background: #e2e8f0;
+      border: none;
+      padding: 0.6rem 1.5rem;
+      border-radius: 3rem;
+      font-weight: 600;
+      margin: 0.3rem;
+      cursor: pointer;
+      font-family: inherit;
+    }
+    .btn-primary { background: var(--azul-ciencia); color: white; }
+    .btn-acierto { background: var(--acierto); color: white; }
+    .btn-fallo { background: var(--fallo); color: white; }
+    .modo-selector { display: flex; justify-content: center; gap: 0.8rem; margin-bottom: 1.5rem; flex-wrap: wrap; }
+    footer {
+      text-align: center;
+      padding: 1rem;
+      font-size: 0.75rem;
+      border-top: 1px solid #dee5ed;
+      background: #f9fbfd;
+    }
+    @media (max-width: 680px) {
+      .view { padding: 1rem; }
+      .pregunta { font-size: 1rem; }
+    }
+  </style>
+</head>
+<body>
+<div class="app-container">
+  <header>
+    <h1>🔬 Ciencias Exactas y Naturales <small>100 conceptos para Colombia</small></h1>
+    <div style="font-size:0.8rem;">📐 Matemáticas · ⚛️ Física · 🧪 Química · 🌿 Biología · 🌎 Geociencias</div>
+  </header>
+  <nav>
+    <button class="nav-btn active" data-view="dashboard">📊 Panel</button>
+    <button class="nav-btn" data-view="listado">📚 Compendio</button>
+    <button class="nav-btn" data-view="practica">🃏 Práctica</button>
+  </nav>
+
+  <section id="dashboard" class="view active-view">
+    <div class="stats-grid" id="statsContainer"></div>
+    <div class="card" style="background:white; border-radius:1.6rem; padding:1.2rem;">
+      <h3>📈 Progreso en fundamentos científicos</h3>
+      <div class="progress-bar-bg"><div class="progress-fill" id="globalProgressFill"></div></div>
+      <p id="globalProgressText"></p>
+      <button id="resetProgresoBtn" class="btn" style="background:#cfdfed;">🔄 Reiniciar progreso</button>
+    </div>
+  </section>
+
+  <section id="listado" class="view">
+    <input type="text" id="filtroListado" placeholder="🔍 Buscar concepto o definición..." style="width:100%; padding:10px; margin-bottom:15px; border-radius:40px; border:1px solid #d0dbe8;">
+    <div id="conceptosListadoContainer" class="conceptos-grid"></div>
+  </section>
+
+  <section id="practica" class="view">
+    <div class="modo-selector">
+      <button id="modoConceptoDef" class="btn btn-primary">📖 Concepto → Definición</button>
+      <button id="modoDefConcepto" class="btn">🔄 Definición → Concepto</button>
+      <button id="modoOrdenar" class="btn">🧩 Ordenar definición</button>
+    </div>
+    <div id="practicaContainer"></div>
+  </section>
+  <footer>Progreso guardado localmente · Ejercicio interactivo de ordenar definición · Contenido alineado con estándares colombianos</footer>
+</div>
+
+<script>
+  // --------------------------------------------------------------
+  // 100 CONCEPTOS DE CIENCIAS EXACTAS Y NATURALES (Colombia)
+  // (número, concepto, definición)
+  // --------------------------------------------------------------
+  const conceptosData = [
+    [1, "Método científico", "Observación, hipótesis, experimentación, análisis y conclusión. Pilar de toda investigación."],
+    [2, "Número irracional", "Número que no puede expresarse como fracción exacta (π, √2)."],
+    [3, "Función", "Relación entre dos conjuntos donde cada elemento del dominio corresponde a uno único del codominio."],
+    [4, "Derivada", "Medida de la tasa de cambio instantánea de una función (pendiente de la tangente)."],
+    [5, "Integral", "Área bajo una curva, inversa de la derivada (cálculo integral)."],
+    [6, "Número complejo", "Expresión de la forma a + bi, donde i = √-1."],
+    [7, "Teorema de Pitágoras", "En un triángulo rectángulo, el cuadrado de la hipotenusa es suma de cuadrados de catetos."],
+    [8, "Probabilidad", "Medida de la posibilidad de ocurrencia de un evento, entre 0 y 1."],
+    [9, "Estadística", "Ciencia que recopila, organiza, analiza e interpreta datos."],
+    [10, "Media aritmética", "Suma de valores dividida entre el número total de datos."],
+    [11, "Ley de Coulomb", "Fuerza eléctrica entre dos cargas es directamente proporcional al producto de ellas e inversamente al cuadrado de la distancia."],
+    [12, "Campo eléctrico", "Región del espacio donde una carga experimenta una fuerza eléctrica."],
+    [13, "Ley de Ohm", "La corriente eléctrica es proporcional al voltaje e inversamente proporcional a la resistencia (V = I·R)."],
+    [14, "Circuito eléctrico", "Trayectoria cerrada por donde circula corriente eléctrica."],
+    [15, "Ondas electromagnéticas", "Oscilaciones de campos eléctricos y magnéticos que se propagan a la velocidad de la luz."],
+    [16, "Espectro electromagnético", "Rango de todas las frecuencias de radiación electromagnética (radio, microondas, luz, rayos X)."],
+    [17, "Luz visible", "Porción del espectro electromagnético que el ojo humano puede detectar (400-700 nm)."],
+    [18, "Velocidad de la luz", "Constante universal ~ 3×10⁸ m/s en el vacío."],
+    [19, "Masa", "Propiedad de la materia que mide su inercia y cantidad de sustancia."],
+    [20, "Fuerza", "Interacción que modifica el movimiento o la forma de un cuerpo."],
+    [21, "Leyes de Newton", "Tres principios: inercia, F = m·a, acción-reacción. Base de la mecánica clásica."],
+    [22, "Energía cinética", "Energía asociada al movimiento (½ mv²)."],
+    [23, "Energía potencial gravitatoria", "Energía almacenada por altura (m·g·h)."],
+    [24, "Trabajo mecánico", "Producto de fuerza por desplazamiento en su dirección."],
+    [25, "Potencia", "Trabajo realizado por unidad de tiempo (vatios)."],
+    [26, "Ley de conservación de la energía", "La energía no se crea ni se destruye, solo se transforma."],
+    [27, "Termodinámica", "Rama de la física que estudia el calor, el trabajo y la energía interna."],
+    [28, "Temperatura", "Medida de la energía cinética promedio de las partículas."],
+    [29, "Calor", "Transferencia de energía térmica entre cuerpos con diferente temperatura."],
+    [30, "Presión", "Fuerza ejercida por unidad de superficie (Pascal)."],
+    [31, "Átomo", "Unidad básica de la materia, compuesta de protones, neutrones y electrones."],
+    [32, "Número atómico (Z)", "Cantidad de protones en el núcleo, identifica el elemento."],
+    [33, "Masa atómica", "Suma de protones y neutrones en el núcleo."],
+    [34, "Mol", "Unidad de cantidad de sustancia (6,022 × 10²³ partículas, número de Avogadro)."],
+    [35, "Tabla periódica", "Organización de los elementos químicos según número atómico y propiedades."],
+    [36, "Enlace químico", "Unión entre átomos que forma moléculas o compuestos (iónico, covalente, metálico)."],
+    [37, "Reacción química", "Proceso donde sustancias (reactivos) se transforman en otras (productos)."],
+    [38, "pH", "Medida de acidez (0-6), neutralidad (7) o basicidad (8-14)."],
+    [39, "Ácido", "Sustancia que dona protones (H⁺) en solución (Brønsted-Lowry)."],
+    [40, "Base", "Sustancia que acepta protones o libera OH⁻."],
+    [41, "Oxidación", "Pérdida de electrones por una sustancia en una reacción redox."],
+    [42, "Reducción", "Ganancia de electrones."],
+    [43, "Combustión", "Reacción exotérmica entre un combustible y oxígeno, produce calor y luz."],
+    [44, "Catalizador", "Sustancia que acelera una reacción química sin consumirse."],
+    [45, "Estequiometría", "Cálculo de las proporciones entre reactivos y productos en una reacción química."],
+    [46, "Célula", "Unidad estructural y funcional de todos los seres vivos."],
+    [47, "ADN", "Ácido desoxirribonucleico, molécula portadora de información genética."],
+    [48, "Gen", "Segmento de ADN que codifica una proteína o función."],
+    [49, "Evolución", "Cambio en las frecuencias alélicas de una población a lo largo del tiempo."],
+    [50, "Selección natural", "Mecanismo evolutivo donde individuos mejor adaptados tienen mayor éxito reproductivo."],
+    [51, "Ecosistema", "Conjunto de organismos vivos (biocenosis) y su medio físico (biotopo)."],
+    [52, "Fotosíntesis", "Proceso vegetal que convierte CO₂ y agua en glucosa usando luz solar, liberando O₂."],
+    [53, "Respiración celular", "Proceso aeróbico que libera energía a partir de glucosa, produciendo CO₂ y agua."],
+    [54, "Biodiversidad", "Variedad de seres vivos en la Tierra. Colombia es uno de los países más biodiversos."],
+    [55, "Endemismo", "Especie restringida a un área geográfica (ej. ranas de cristal en Colombia)."],
+    [56, "Páramo", "Ecosistema de alta montaña andino, fuente hídrica clave para Colombia."],
+    [57, "Ciclo del agua", "Proceso de evaporación, condensación, precipitación, infiltración y escorrentía."],
+    [58, "Ciclo del carbono", "Intercambio de carbono entre atmósfera, océanos, vegetación y combustibles fósiles."],
+    [59, "Efecto invernadero", "Atrapamiento de calor por gases (CO₂, CH₄) que mantiene la temperatura terrestre."],
+    [60, "Cambio climático", "Alteración del clima global por actividades humanas, principalmente emisiones de GEI."],
+    [61, "Energía renovable", "Fuentes que se regeneran naturalmente (solar, eólica, hidráulica, biomasa)."],
+    [62, "Fósil", "Resto o traza de organismos antiguos conservados en rocas."],
+    [63, "Tectónica de placas", "Teoría que explica el movimiento de fragmentos de la litosfera, causante de sismos y volcanes."],
+    [64, "Sismo", "Vibración de la corteza terrestre por liberación de energía."],
+    [65, "Volcán", "Estructura geológica por donde sale magma, gases y cenizas."],
+    [66, "Mineral", "Elemento o compuesto inorgánico natural de composición química definida."],
+    [67, "Roca", "Agregado natural de minerales (ígneas, sedimentarias, metamórficas)."],
+    [68, "Suelo", "Capa superficial compuesta de minerales, materia orgánica, agua y aire; esencial para plantas."],
+    [69, "Nutriente", "Sustancia química necesaria para el metabolismo de los seres vivos (NPK, calcio)."],
+    [70, "Eutrofización", "Exceso de nutrientes (nitratos, fosfatos) en cuerpos de agua, causa proliferación de algas."],
+    [71, "Contaminación atmosférica", "Presencia de partículas o gases nocivos en el aire (smog, CO, SO₂)."],
+    [72, "Huella ecológica", "Medida del impacto humano sobre el medio ambiente en área productiva necesaria."],
+    [73, "Desarrollo sostenible", "Satisfacer necesidades actuales sin comprometer las futuras."],
+    [74, "Ecuación cuadrática", "Ecuación de la forma ax² + bx + c = 0, con soluciones mediante la fórmula general."],
+    [75, "Logaritmo", "Exponente al que hay que elevar una base para obtener un número (logₐ b = c → aᶜ = b)."],
+    [76, "Función exponencial", "Función de la forma f(x)=aˣ, donde a>0 y a≠1, crecimiento rápido."],
+    [77, "Trigonometría", "Estudio de las relaciones entre ángulos y lados de triángulos (seno, coseno, tangente)."],
+    [78, "Teorema fundamental del cálculo", "Relaciona la derivada y la integral: son operaciones inversas."],
+    [79, "Números primos", "Números naturales mayores que 1 divisibles solo por 1 y sí mismos (2,3,5,7...)."],
+    [80, "Conjunto", "Colección de elementos definidos por una propiedad común."],
+    [81, "Probabilidad condicional", "Probabilidad de que ocurra un evento dado que otro ya ocurrió (P(A|B))."],
+    [82, "Distribución normal", "Distribución de probabilidad continua en forma de campana, muy común en estadística."],
+    [83, "Energía nuclear", "Energía liberada mediante reacciones de fisión o fusión de núcleos atómicos."],
+    [84, "Radiactividad", "Emisión espontánea de partículas o radiación por núcleos inestables."],
+    [85, "Semiconductor", "Material con conductividad eléctrica intermedia entre conductor y aislante (silicio, germanio)."],
+    [86, "Superconductividad", "Fenómeno de resistencia eléctrica cero en ciertos materiales a bajas temperaturas."],
+    [87, "Biogeografía", "Estudio de la distribución geográfica de las especies; Colombia es país megadiverso."],
+    [88, "Clima", "Patrones meteorológicos a largo plazo en una región; influye en la biodiversidad."],
+    [89, "El Niño", "Fenómeno climático que causa calentamiento anómalo del Pacífico ecuatorial, afectando a Colombia."],
+    [90, "La Niña", "Fase opuesta a El Niño, con enfriamiento del Pacífico y mayores lluvias en Colombia."],
+    [91, "Parque Nacional Natural", "Área protegida de Colombia, ej. Tayrona, Los Nevados, Chiribiquete."],
+    [92, "Especie invasora", "Especie introducida que causa daño ecológico (hipopótamos en Colombia)."],
+    [93, "Ecotono", "Zona de transición entre dos ecosistemas diferentes."],
+    [94, "Teorema de Bayes", "Permite actualizar probabilidades con nueva evidencia: P(A|B)=P(B|A)P(A)/P(B)."],
+    [95, "Análisis dimensional", "Método para verificar consistencia de ecuaciones usando dimensiones físicas."],
+    [96, "Cifras significativas", "Número de dígitos fiables en una medición científica."],
+    [97, "Notación científica", "Expresión de números como producto de un número entre 1 y 10 por una potencia de 10."],
+    [98, "Sistema Internacional (SI)", "Sistema de unidades que define siete magnitudes básicas: m, kg, s, A, K, mol, cd."],
+    [99, "Muestra estadística", "Subconjunto representativo de una población para realizar inferencias."],
+    [100, "Educación científica en Colombia", "Enfoque STEAM (Ciencia, Tecnología, Ingeniería, Arte, Matemáticas) promovido por el MEN."]
+  ];
+
+  // --------------------- LOCALSTORAGE Y PROGRESO -------------------------
+  let progreso = {};
+  const STORAGE_KEY = "cienciasExactasNaturalesProgreso";
+
+  function cargarProgreso() {
+    const guardado = localStorage.getItem(STORAGE_KEY);
+    if (guardado) progreso = JSON.parse(guardado);
+    else {
+      progreso = {};
+      for (let i = 1; i <= 100; i++) progreso[i] = { aciertos: 0, fallos: 0 };
+    }
+  }
+  function guardarProgreso() { localStorage.setItem(STORAGE_KEY, JSON.stringify(progreso)); }
+  function registrarResultado(id, acierto) {
+    if (!progreso[id]) progreso[id] = { aciertos: 0, fallos: 0 };
+    if (acierto) progreso[id].aciertos += 1;
+    else progreso[id].fallos += 1;
+    guardarProgreso();
+    renderDashboard();
+    renderListado(document.getElementById("filtroListado")?.value || "");
+    if (window.currentCardId === id && document.getElementById("infoProgresoCard")) {
+      document.getElementById("infoProgresoCard").innerHTML = `📊 Concepto ${id} · ✅ ${progreso[id].aciertos} aciertos · ❌ ${progreso[id].fallos} fallos`;
+    }
+  }
+
+  function renderDashboard() {
+    let totalAciertos = 0, totalFallos = 0, conceptosConAcierto = 0;
+    for (let i = 1; i <= 100; i++) {
+      const p = progreso[i] || { aciertos: 0, fallos: 0 };
+      totalAciertos += p.aciertos;
+      totalFallos += p.fallos;
+      if (p.aciertos > 0) conceptosConAcierto++;
+    }
+    const porcentaje = (conceptosConAcierto / 100) * 100;
+    document.getElementById("globalProgressFill").style.width = `${porcentaje}%`;
+    document.getElementById("globalProgressText").innerHTML = `${conceptosConAcierto} de 100 conceptos con al menos 1 acierto (${Math.round(porcentaje)}%).`;
+    document.getElementById("statsContainer").innerHTML = `
+      <div class="stat-card"><div class="stat-number">${totalAciertos}</div>✅ Aciertos totales</div>
+      <div class="stat-card"><div class="stat-number">${totalFallos}</div>❌ Fallos</div>
+      <div class="stat-card"><div class="stat-number">${conceptosConAcierto}</div>📘 Conceptos dominados</div>
+      <div class="stat-card"><div class="stat-number">${Math.round((totalAciertos/(totalAciertos+totalFallos+0.001))*100)}%</div>📊 Tasa éxito</div>
+    `;
+  }
+
+  function renderListado(filtro = "") {
+    const container = document.getElementById("conceptosListadoContainer");
+    container.innerHTML = "";
+    const filtroLower = filtro.toLowerCase();
+    for (let c of conceptosData) {
+      const [id, nombre, definicion] = c;
+      const prog = progreso[id] || { aciertos: 0, fallos: 0 };
+      if (filtro && !nombre.toLowerCase().includes(filtroLower) && !definicion.toLowerCase().includes(filtroLower)) continue;
+      const div = document.createElement("div");
+      div.className = "concepto-item";
+      div.innerHTML = `<div class="concepto-titulo">${id}. ${nombre}</div>
+                       <div class="concepto-desc">🔬 ${definicion.substring(0, 150)}${definicion.length > 150 ? '…' : ''}</div>
+                       <span class="badge-progreso">✅ ${prog.aciertos} aciertos · ❌ ${prog.fallos} fallos</span>`;
+      container.appendChild(div);
+    }
+  }
+
+  // --------------------- PRÁCTICA: TRES MODOS -------------------------
+  let currentMode = "concepto_def";
+  let cardsArray = [];
+  let currentCardIndex = 0;
+  let currentCardId = null;
+  // variables modo ordenar
+  let currentOrdenarPalabras = [];
+  let shuffledPalabras = [];
+  let selectedOrder = [];
+  let ordenarRespuestaCorrecta = "";
+
+  const practicaDiv = document.getElementById("practicaContainer");
+
+  function construirCards() {
+    cardsArray = conceptosData.map(item => {
+      const [id, concepto, definicion] = item;
+      if (currentMode === "concepto_def") {
+        return { id, pregunta: `📐 Concepto: ${concepto}`, respuestaCorrecta: definicion };
+      } else if (currentMode === "def_concepto") {
+        let defCorta = definicion.length > 130 ? definicion.substring(0, 127) + "…" : definicion;
+        return { id, pregunta: `✍️ Definición: "${defCorta}"`, respuestaCorrecta: concepto };
+      } else {
+        return { id, concepto, definicion };
+      }
+    });
+  }
+
+  // Flashcard normal
+  function renderFlashcardNormal() {
+    if (!cardsArray.length) return;
+    const card = cardsArray[currentCardIndex];
+    currentCardId = card.id;
+    practicaDiv.innerHTML = `
+      <div class="flashcard">
+        <div class="pregunta">${card.pregunta}</div>
+        <button id="mostrarRespuestaBtn" class="btn">📖 Mostrar respuesta</button>
+        <div id="respuestaDiv" class="respuesta-oculta"><strong>Respuesta:</strong><br>${card.respuestaCorrecta}</div>
+        <div style="margin-top:1rem;">
+          <button id="aciertoBtn" class="btn btn-acierto" disabled>✅ Acierto</button>
+          <button id="falloBtn" class="btn btn-fallo" disabled>❌ Fallo</button>
+        </div>
+        <button id="siguienteCardBtn" class="btn" style="margin-top:1rem;">⏩ Siguiente</button>
+        <p id="infoProgresoCard" style="margin-top:0.8rem;">📊 ${currentMode === "concepto_def" ? "Concepto" : "Definición"} ${card.id} · ✅ ${progreso[card.id]?.aciertos||0} aciertos · ❌ ${progreso[card.id]?.fallos||0} fallos</p>
+      </div>
+    `;
+    document.getElementById("mostrarRespuestaBtn").onclick = () => {
+      const respDiv = document.getElementById("respuestaDiv");
+      if (respDiv.style.display !== "block") {
+        respDiv.style.display = "block";
+        document.getElementById("aciertoBtn").disabled = false;
+        document.getElementById("falloBtn").disabled = false;
+      }
+    };
+    document.getElementById("aciertoBtn").onclick = () => { registrarResultado(currentCardId, true); siguienteNormal(); };
+    document.getElementById("falloBtn").onclick = () => { registrarResultado(currentCardId, false); siguienteNormal(); };
+    document.getElementById("siguienteCardBtn").onclick = () => siguienteNormal();
+  }
+
+  function siguienteNormal() {
+    currentCardIndex = (currentCardIndex + 1) % cardsArray.length;
+    renderFlashcardNormal();
+  }
+
+  // Modo ordenar
+  function inicializarOrdenar() {
+    const card = cardsArray[currentCardIndex];
+    currentCardId = card.id;
+    const definicionOriginal = card.definicion;
+    ordenarRespuestaCorrecta = definicionOriginal;
+    let palabras = definicionOriginal.split(/\s+/).filter(p => p.length > 0);
+    currentOrdenarPalabras = [...palabras];
+    shuffledPalabras = [...palabras];
+    for (let i = shuffledPalabras.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [shuffledPalabras[i], shuffledPalabras[j]] = [shuffledPalabras[j], shuffledPalabras[i]];
+    }
+    selectedOrder = [];
+    renderOrdenarUI();
+  }
+
+  function renderOrdenarUI() {
+    const card = cardsArray[currentCardIndex];
+    const prog = progreso[currentCardId] || { aciertos:0, fallos:0 };
+    let palabrasHTML = shuffledPalabras.map(p => `<button class="palabra-btn" data-palabra="${p.replace(/"/g, '&quot;')}">${p}</button>`).join('');
+    let ordenHTML = selectedOrder.map(p => `<span style="background:#eef2f7; padding:0.2rem 0.6rem; margin:0.2rem; border-radius:1rem;">${p}</span>`).join(' ');
+    if (ordenHTML === "") ordenHTML = "<em>Haz clic en las palabras en el orden correcto...</em>";
+    practicaDiv.innerHTML = `
+      <div class="flashcard">
+        <h3>🧩 Ordena la definición de:</h3>
+        <div class="pregunta" style="background:#eaf3ff;">📌 ${card.concepto}</div>
+        <div class="orden-actual"><strong>Tu orden:</strong><br> ${ordenHTML}</div>
+        <div class="palabras-baraja" id="palabrasBaraja">${palabrasHTML}</div>
+        <div>
+          <button id="resetOrdenBtn" class="btn" style="background:#cfdfed;">🔁 Reiniciar orden</button>
+          <button id="comprobarOrdenBtn" class="btn btn-primary">✓ Comprobar</button>
+        </div>
+        <button id="siguienteOrdenBtn" class="btn" style="margin-top:1rem;">⏩ Siguiente concepto</button>
+        <p id="infoProgresoCard">✅ ${prog.aciertos} aciertos · ❌ ${prog.fallos} fallos</p>
+        <div id="feedbackOrden" style="margin-top:0.8rem; font-weight:bold;"></div>
+      </div>
+    `;
+    document.querySelectorAll(".palabra-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const palabra = btn.getAttribute("data-palabra");
+        const idx = shuffledPalabras.indexOf(palabra);
+        if (idx !== -1) {
+          shuffledPalabras.splice(idx, 1);
+          selectedOrder.push(palabra);
+          renderOrdenarUI();
+        }
+      });
+    });
+    document.getElementById("resetOrdenBtn").onclick = () => {
+      shuffledPalabras = [...currentOrdenarPalabras];
+      for (let i = shuffledPalabras.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [shuffledPalabras[i], shuffledPalabras[j]] = [shuffledPalabras[j], shuffledPalabras[i]];
+      }
+      selectedOrder = [];
+      renderOrdenarUI();
+    };
+    document.getElementById("comprobarOrdenBtn").onclick = () => {
+      const ordenUsuario = selectedOrder.join(" ");
+      if (ordenUsuario === ordenarRespuestaCorrecta) {
+        document.getElementById("feedbackOrden").innerHTML = "<span style='color:#2c6e49'>✅ ¡Correcto! Definición ordenada.</span>";
+        registrarResultado(currentCardId, true);
+        setTimeout(() => siguienteOrdenar(), 1200);
+      } else {
+        document.getElementById("feedbackOrden").innerHTML = `<span style='color:#c9593a'>❌ Incorrecto. La definición correcta es: "${ordenarRespuestaCorrecta}"</span>`;
+        registrarResultado(currentCardId, false);
+        setTimeout(() => siguienteOrdenar(), 2000);
+      }
+      document.getElementById("comprobarOrdenBtn").disabled = true;
+      document.querySelectorAll(".palabra-btn").forEach(b => b.style.pointerEvents = "none");
+      setTimeout(() => {
+        if (document.getElementById("comprobarOrdenBtn")) document.getElementById("comprobarOrdenBtn").disabled = false;
+        document.querySelectorAll(".palabra-btn").forEach(b => b.style.pointerEvents = "auto");
+      }, 2000);
+    };
+    document.getElementById("siguienteOrdenBtn").onclick = () => siguienteOrdenar();
+  }
+
+  function siguienteOrdenar() {
+    currentCardIndex = (currentCardIndex + 1) % cardsArray.length;
+    inicializarOrdenar();
+  }
+
+  function setMode(mode) {
+    currentMode = mode;
+    construirCards();
+    currentCardIndex = 0;
+    if (mode === "ordenar") inicializarOrdenar();
+    else renderFlashcardNormal();
+  }
+
+  // Navegación y eventos
+  function initUI() {
+    document.querySelectorAll(".nav-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const viewId = btn.getAttribute("data-view");
+        document.querySelectorAll(".view").forEach(v => v.classList.remove("active-view"));
+        document.getElementById(viewId).classList.add("active-view");
+        document.querySelectorAll(".nav-btn").forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+        if (viewId === "listado") renderListado(document.getElementById("filtroListado").value);
+        if (viewId === "dashboard") renderDashboard();
+        if (viewId === "practica") setMode(currentMode);
+      });
+    });
+    document.getElementById("modoConceptoDef").addEventListener("click", () => {
+      currentMode = "concepto_def";
+      setMode("concepto_def");
+      document.getElementById("modoConceptoDef").classList.add("btn-primary");
+      document.getElementById("modoDefConcepto").classList.remove("btn-primary");
+      document.getElementById("modoOrdenar").classList.remove("btn-primary");
+    });
+    document.getElementById("modoDefConcepto").addEventListener("click", () => {
+      currentMode = "def_concepto";
+      setMode("def_concepto");
+      document.getElementById("modoDefConcepto").classList.add("btn-primary");
+      document.getElementById("modoConceptoDef").classList.remove("btn-primary");
+      document.getElementById("modoOrdenar").classList.remove("btn-primary");
+    });
+    document.getElementById("modoOrdenar").addEventListener("click", () => {
+      currentMode = "ordenar";
+      setMode("ordenar");
+      document.getElementById("modoOrdenar").classList.add("btn-primary");
+      document.getElementById("modoConceptoDef").classList.remove("btn-primary");
+      document.getElementById("modoDefConcepto").classList.remove("btn-primary");
+    });
+    document.getElementById("resetProgresoBtn").addEventListener("click", () => {
+      if (confirm("¿Reiniciar todo el progreso? Se perderán aciertos y fallos.")) {
+        for (let i = 1; i <= 100; i++) progreso[i] = { aciertos: 0, fallos: 0 };
+        guardarProgreso();
+        renderDashboard();
+        renderListado(document.getElementById("filtroListado")?.value || "");
+        if (currentMode === "ordenar") inicializarOrdenar();
+        else if (currentMode !== "ordenar") renderFlashcardNormal();
+      }
+    });
+    document.getElementById("filtroListado").addEventListener("input", (e) => renderListado(e.target.value));
+  }
+
+  window.addEventListener("DOMContentLoaded", () => {
+    cargarProgreso();
+    construirCards();
+    setMode("concepto_def");
+    renderDashboard();
+    renderListado();
+    initUI();
+  });
+</script>
+</body>
+</html>

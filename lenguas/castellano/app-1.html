@@ -1,0 +1,1972 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>100 Técnicas · Novela Gráfica & Cómic · Colombia</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;1,9..144,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+<style>
+:root {
+  --col-amarillo: #F7C948;
+  --col-azul:     #003087;
+  --col-rojo:     #C8102E;
+  --ink:          #0f0e0c;
+  --cream:        #F9F5EE;
+  --mid:          #6b6050;
+  --card-bg:      #FFFFFF;
+  --shadow:       0 4px 24px rgba(0,0,0,.12);
+  --radius:       12px;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: var(--cream);
+  color: var(--ink);
+  font-family: 'Fraunces', Georgia, serif;
+  min-height: 100vh;
+}
+
+/* ── NAV ── */
+#mainNav {
+  background: var(--ink);
+  border-bottom: 4px solid var(--col-amarillo);
+  position: sticky; top: 0; z-index: 999;
+}
+#mainNav .navbar-brand {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.5rem;
+  color: var(--col-amarillo) !important;
+  letter-spacing: .08em;
+}
+.nav-flag { display:inline-flex; gap:3px; margin-right:.5rem; }
+.nav-flag span { width:10px; height:18px; display:inline-block; border-radius:2px; }
+.flag-y { background: var(--col-amarillo); }
+.flag-b { background: var(--col-azul); }
+.flag-r { background: var(--col-rojo); }
+
+.mode-btn {
+  border: 2px solid var(--col-amarillo);
+  color: var(--col-amarillo);
+  background: transparent;
+  font-family: 'Bebas Neue', sans-serif;
+  letter-spacing: .1em;
+  font-size: .9rem;
+  padding: .35rem 1rem;
+  border-radius: 6px;
+  transition: all .2s;
+}
+.mode-btn:hover, .mode-btn.active {
+  background: var(--col-amarillo);
+  color: var(--ink);
+}
+
+/* ── PROGRESS BAR ── */
+#progressBar {
+  background: #1a1914;
+  padding: .5rem 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+#progressBar .prog-label {
+  font-family: 'Bebas Neue', sans-serif;
+  color: var(--col-amarillo);
+  font-size: .85rem;
+  letter-spacing: .12em;
+  white-space: nowrap;
+}
+#progressTrack {
+  flex: 1;
+  height: 8px;
+  background: #333;
+  border-radius: 4px;
+  min-width: 80px;
+  overflow: hidden;
+}
+#progressFill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--col-amarillo), var(--col-rojo));
+  border-radius: 4px;
+  transition: width .5s ease;
+}
+#progressCount {
+  font-family: 'DM Mono', monospace;
+  color: #aaa;
+  font-size: .8rem;
+  white-space: nowrap;
+}
+#btnReset {
+  background: transparent;
+  border: 1px solid #444;
+  color: #888;
+  font-size: .72rem;
+  padding: .2rem .6rem;
+  border-radius: 4px;
+  cursor: pointer;
+  font-family: 'DM Mono', monospace;
+  transition: all .2s;
+}
+#btnReset:hover { border-color: var(--col-rojo); color: var(--col-rojo); }
+
+/* ── FILTER TABS ── */
+#filterBar {
+  background: #fff;
+  border-bottom: 1px solid #e8e0d0;
+  padding: .6rem 1.5rem;
+  display: flex;
+  gap: .5rem;
+  flex-wrap: wrap;
+  align-items: center;
+}
+#filterBar .filter-label {
+  font-family: 'Bebas Neue', sans-serif;
+  color: var(--mid);
+  font-size: .8rem;
+  letter-spacing: .1em;
+  margin-right: .25rem;
+}
+.cat-btn {
+  border: 1.5px solid #ddd;
+  background: transparent;
+  color: var(--mid);
+  font-size: .75rem;
+  padding: .2rem .7rem;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: all .2s;
+  font-family: 'DM Mono', monospace;
+}
+.cat-btn:hover { border-color: var(--col-azul); color: var(--col-azul); }
+.cat-btn.active { background: var(--col-azul); border-color: var(--col-azul); color: #fff; }
+
+/* ── MAIN VIEWS ── */
+#app { padding: 1.5rem; }
+
+/* ── FLASHCARD MODE ── */
+.fc-wrapper {
+  max-width: 720px;
+  margin: 0 auto;
+}
+.fc-counter {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1rem;
+  color: var(--mid);
+  letter-spacing: .12em;
+  text-align: center;
+  margin-bottom: .5rem;
+}
+.flashcard {
+  background: var(--card-bg);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 2rem;
+  position: relative;
+  min-height: 340px;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  border-top: 6px solid var(--col-amarillo);
+  transition: transform .3s ease, opacity .3s ease;
+}
+.flashcard.flip-out { transform: translateX(-40px); opacity: 0; }
+.flashcard.flip-in  { transform: translateX(40px);  opacity: 0; }
+
+.fc-num {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 3rem;
+  color: var(--col-amarillo);
+  opacity: .18;
+  position: absolute;
+  top: .8rem; right: 1.2rem;
+  line-height: 1;
+}
+.fc-cat-badge {
+  display: inline-block;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: .72rem;
+  letter-spacing: .15em;
+  background: var(--col-azul);
+  color: #fff;
+  padding: .18rem .7rem;
+  border-radius: 20px;
+  margin-bottom: .2rem;
+}
+.fc-title {
+  font-family: 'Fraunces', serif;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--ink);
+  line-height: 1.2;
+}
+.fc-en {
+  font-style: italic;
+  color: var(--mid);
+  font-size: .9rem;
+}
+.fc-def {
+  font-size: 1rem;
+  line-height: 1.65;
+  color: #333;
+}
+.fc-example-label {
+  font-family: 'DM Mono', monospace;
+  font-size: .72rem;
+  color: var(--col-rojo);
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  margin-bottom: .3rem;
+}
+.fc-example {
+  background: #f8f4ed;
+  border-left: 3px solid var(--col-amarillo);
+  padding: .7rem 1rem;
+  font-size: .92rem;
+  border-radius: 0 6px 6px 0;
+  font-style: italic;
+}
+.fc-completed-badge {
+  position: absolute;
+  top: .8rem; left: 1rem;
+  font-size: .7rem;
+  background: #22c55e;
+  color: #fff;
+  padding: .15rem .5rem;
+  border-radius: 20px;
+  font-family: 'DM Mono', monospace;
+  display: none;
+}
+.fc-completed-badge.show { display: block; }
+
+/* FC NAV */
+.fc-nav {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+.fc-nav-btn {
+  background: var(--ink);
+  color: var(--col-amarillo);
+  border: none;
+  padding: .6rem 1.4rem;
+  border-radius: 8px;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1rem;
+  letter-spacing: .1em;
+  cursor: pointer;
+  transition: all .2s;
+  display: flex;
+  align-items: center;
+  gap: .4rem;
+}
+.fc-nav-btn:hover { background: var(--col-amarillo); color: var(--ink); }
+.fc-nav-btn:disabled { opacity: .3; cursor: default; }
+
+.btn-complete {
+  background: transparent;
+  border: 2px solid #22c55e;
+  color: #22c55e;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1rem;
+  letter-spacing: .1em;
+  padding: .5rem 1.2rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all .2s;
+}
+.btn-complete:hover, .btn-complete.done {
+  background: #22c55e;
+  color: #fff;
+}
+
+/* ── EXERCISE ZONE (shared) ── */
+.exercise-zone {
+  background: #f0f8ff;
+  border: 2px dashed #bad4ee;
+  border-radius: 10px;
+  padding: 1rem 1.2rem;
+  margin-top: 1rem;
+}
+.exercise-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: .85rem;
+  letter-spacing: .15em;
+  color: var(--col-azul);
+  margin-bottom: .6rem;
+}
+.words-bank {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .4rem;
+  min-height: 40px;
+  padding: .5rem;
+  background: #fff;
+  border-radius: 8px;
+  border: 1.5px solid #c9dff0;
+  margin-bottom: .5rem;
+}
+.word-token {
+  background: var(--col-azul);
+  color: #fff;
+  padding: .28rem .7rem;
+  border-radius: 6px;
+  font-family: 'DM Mono', monospace;
+  font-size: .82rem;
+  cursor: grab;
+  user-select: none;
+  transition: transform .15s, box-shadow .15s;
+  touch-action: none;
+}
+.word-token:active { cursor: grabbing; transform: scale(1.08); }
+.word-token.dragging { opacity: .5; }
+.word-token.placed { background: var(--col-rojo); }
+
+.answer-zone {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .4rem;
+  min-height: 44px;
+  padding: .5rem;
+  background: #e8f4fe;
+  border-radius: 8px;
+  border: 2px solid #93c5fd;
+  margin-bottom: .6rem;
+}
+.answer-zone.drag-over { background: #dbeafe; border-color: var(--col-azul); }
+.answer-slot {
+  background: #fff;
+  border: 1.5px dashed #93c5fd;
+  border-radius: 6px;
+  min-width: 50px;
+  padding: .28rem .7rem;
+  font-family: 'DM Mono', monospace;
+  font-size: .82rem;
+  color: #555;
+  cursor: pointer;
+}
+
+.ex-btn {
+  font-family: 'Bebas Neue', sans-serif;
+  letter-spacing: .1em;
+  font-size: .85rem;
+  padding: .35rem 1rem;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  transition: all .2s;
+}
+.ex-btn-check  { background: var(--col-azul); color: #fff; }
+.ex-btn-reset  { background: #e5e0d5; color: var(--ink); }
+.ex-btn-check:hover { background: #001f5c; }
+.ex-btn-reset:hover { background: #ccc; }
+
+.ex-feedback {
+  font-family: 'DM Mono', monospace;
+  font-size: .82rem;
+  margin-top: .4rem;
+  padding: .4rem .8rem;
+  border-radius: 6px;
+  display: none;
+}
+.ex-feedback.correct {
+  background: #dcfce7; color: #166534; display: block;
+}
+.ex-feedback.wrong {
+  background: #fee2e2; color: #991b1b; display: block;
+}
+
+/* ── LIST MODE ── */
+
+.list-search-bar {
+  display: flex;
+  gap: .7rem;
+  margin-bottom: 1.5rem;
+  align-items: center;
+}
+.list-search-bar input {
+  flex: 1;
+  border: 2px solid #ddd;
+  border-radius: 8px;
+  padding: .55rem 1rem;
+  font-family: 'DM Mono', monospace;
+  font-size: .9rem;
+  outline: none;
+  transition: border .2s;
+}
+.list-search-bar input:focus { border-color: var(--col-azul); }
+
+.tech-card {
+  background: var(--card-bg);
+  border-radius: var(--radius);
+  box-shadow: 0 2px 12px rgba(0,0,0,.07);
+  border-left: 5px solid var(--col-amarillo);
+  margin-bottom: 1.1rem;
+  overflow: hidden;
+  transition: box-shadow .2s;
+}
+.tech-card:hover { box-shadow: 0 4px 20px rgba(0,0,0,.12); }
+.tech-card.completed { border-left-color: #22c55e; }
+
+.tech-card-header {
+  padding: .9rem 1.2rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: .8rem;
+  user-select: none;
+}
+.tech-card-num {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.3rem;
+  color: var(--col-amarillo);
+  min-width: 2.5rem;
+  line-height: 1;
+}
+.tech-card.completed .tech-card-num { color: #22c55e; }
+.tech-card-title-group { flex: 1; }
+.tech-card-title {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--ink);
+}
+.tech-card-en {
+  font-size: .8rem;
+  font-style: italic;
+  color: var(--mid);
+}
+.tech-card-badges { display: flex; gap: .3rem; align-items: center; flex-wrap: wrap; }
+.badge-cat {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: .65rem;
+  letter-spacing: .12em;
+  padding: .1rem .5rem;
+  border-radius: 20px;
+  background: var(--col-azul);
+  color: #fff;
+}
+.badge-done {
+  font-family: 'DM Mono', monospace;
+  font-size: .65rem;
+  padding: .1rem .5rem;
+  border-radius: 20px;
+  background: #22c55e;
+  color: #fff;
+}
+.tech-card-chevron {
+  color: var(--mid);
+  transition: transform .3s;
+  font-size: 1.1rem;
+}
+.tech-card-header.open .tech-card-chevron { transform: rotate(180deg); }
+
+.tech-card-body {
+  display: none;
+  padding: 0 1.2rem 1.2rem;
+  border-top: 1px solid #f0ece4;
+}
+.tech-card-body.show { display: block; }
+
+.tech-def { font-size: .95rem; line-height: 1.65; color: #333; margin-bottom: .7rem; }
+.tech-example-block {
+  background: #f8f4ed;
+  border-left: 3px solid var(--col-amarillo);
+  padding: .6rem .9rem;
+  border-radius: 0 6px 6px 0;
+  font-style: italic;
+  font-size: .9rem;
+  margin-bottom: .8rem;
+}
+
+/* ── STATS VIEW ── */
+.stat-box {
+  background: var(--card-bg);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+  text-align: center;
+  box-shadow: var(--shadow);
+}
+.stat-num {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 3rem;
+  color: var(--col-amarillo);
+  line-height: 1;
+}
+.stat-label {
+  font-family: 'DM Mono', monospace;
+  font-size: .8rem;
+  color: var(--mid);
+  margin-top: .3rem;
+}
+.cat-progress-row {
+  display: flex;
+  align-items: center;
+  gap: .8rem;
+  margin-bottom: .7rem;
+}
+.cat-progress-label {
+  font-family: 'DM Mono', monospace;
+  font-size: .78rem;
+  color: var(--ink);
+  min-width: 140px;
+}
+.cat-progress-track {
+  flex: 1;
+  height: 8px;
+  background: #e5e0d5;
+  border-radius: 4px;
+  overflow: hidden;
+}
+.cat-progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--col-azul), var(--col-amarillo));
+  border-radius: 4px;
+  transition: width .6s ease;
+}
+.cat-progress-pct {
+  font-family: 'DM Mono', monospace;
+  font-size: .78rem;
+  color: var(--mid);
+  min-width: 2.5rem;
+  text-align: right;
+}
+
+/* ── HERO BANNER ── */
+.hero-banner {
+  background: var(--ink);
+  color: var(--col-amarillo);
+  padding: 2rem 1.5rem 1.5rem;
+  position: relative;
+  overflow: hidden;
+}
+.hero-banner::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    -45deg,
+    rgba(247,201,72,.04) 0 2px,
+    transparent 2px 18px
+  );
+}
+.hero-banner h1 {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(1.8rem, 5vw, 3rem);
+  letter-spacing: .06em;
+  line-height: 1.1;
+}
+.hero-banner p {
+  font-family: 'Fraunces', serif;
+  font-style: italic;
+  color: #a89870;
+  font-size: .95rem;
+  margin-top: .4rem;
+}
+.hero-banner .col-ribbon {
+  display: flex;
+  gap: 5px;
+  margin-bottom: .8rem;
+}
+.hero-banner .col-ribbon div {
+  height: 5px;
+  border-radius: 2px;
+}
+
+/* ── MISC ── */
+#flashcardView,
+#listView,
+#statsView { display: none !important; }
+
+#flashcardView.active,
+#listView.active,
+#statsView.active { display: block !important; }
+
+@media (max-width: 576px) {
+  .flashcard { padding: 1.3rem; }
+  .fc-title { font-size: 1.2rem; }
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="mainNav" class="navbar navbar-expand-lg">
+  <div class="container-fluid px-3">
+    <a class="navbar-brand" href="#">
+      <span class="nav-flag">
+        <span class="flag-y"></span><span class="flag-b"></span><span class="flag-r"></span>
+      </span>
+      100 TÉCNICAS · CÓMIC COLOMBIA
+    </a>
+    <div class="d-flex gap-2 flex-wrap">
+      <button class="mode-btn active" onclick="setMode('flashcard')" id="btnModeFC">
+        <i class="bi bi-card-text"></i> Flashcards
+      </button>
+      <button class="mode-btn" onclick="setMode('list')" id="btnModeList">
+        <i class="bi bi-list-ul"></i> Lista
+      </button>
+      <button class="mode-btn" onclick="setMode('stats')" id="btnModeStats">
+        <i class="bi bi-bar-chart"></i> Progreso
+      </button>
+    </div>
+  </div>
+</nav>
+
+<!-- PROGRESS -->
+<div id="progressBar">
+  <span class="prog-label">PROGRESO GENERAL</span>
+  <div id="progressTrack"><div id="progressFill" style="width:0%"></div></div>
+  <span id="progressCount">0 / 100</span>
+  <button id="btnReset" onclick="resetProgress()">↺ Reiniciar</button>
+</div>
+
+<!-- FILTER BAR -->
+<div id="filterBar">
+  <span class="filter-label">BLOQUE:</span>
+  <button class="cat-btn active" onclick="setFilter('all',this)">Todos</button>
+  <button class="cat-btn" onclick="setFilter('Guión',this)">I · Guión</button>
+  <button class="cat-btn" onclick="setFilter('Diálogo',this)">II · Diálogo</button>
+  <button class="cat-btn" onclick="setFilter('Estructura',this)">III · Estructura</button>
+  <button class="cat-btn" onclick="setFilter('Personaje',this)">IV · Personaje</button>
+  <button class="cat-btn" onclick="setFilter('Narración',this)">V · Narración</button>
+  <button class="cat-btn" onclick="setFilter('Género',this)">VI · Género</button>
+  <button class="cat-btn" onclick="setFilter('Visual',this)">VII · Visual</button>
+  <button class="cat-btn" onclick="setFilter('Adaptación',this)">VIII · Adaptación</button>
+  <button class="cat-btn" onclick="setFilter('Colaboración',this)">IX · Colaboración</button>
+  <button class="cat-btn" onclick="setFilter('Experimental',this)">X · Experimental</button>
+</div>
+
+<!-- HERO -->
+<div class="hero-banner">
+  <div class="col-ribbon">
+    <div style="width:40px;background:#F7C948"></div>
+    <div style="width:20px;background:#003087"></div>
+    <div style="width:20px;background:#C8102E"></div>
+  </div>
+  <h1>100 TÉCNICAS DE REDACCIÓN<br>PARA NOVELA GRÁFICA Y CÓMIC</h1>
+  <p>Para estudiantes de bachillerato en Colombia · Ejemplos del contexto colombiano</p>
+</div>
+
+<!-- APP CONTAINER -->
+<div id="app">
+
+  <!-- FLASHCARD VIEW -->
+  <div id="flashcardView" class="view-section active">
+    <div class="fc-wrapper">
+      <div class="fc-counter" id="fcCounter">1 / 100</div>
+      <div class="flashcard" id="flashcard">
+        <span class="fc-completed-badge" id="fcDoneBadge">✓ Completada</span>
+        <span class="fc-num" id="fcNum">01</span>
+        <div>
+          <span class="fc-cat-badge" id="fcCat">—</span>
+        </div>
+        <div class="fc-title" id="fcTitle">—</div>
+        <div class="fc-en" id="fcEn">—</div>
+        <div class="fc-def" id="fcDef">—</div>
+        <div>
+          <div class="fc-example-label">EJEMPLO COLOMBIANO</div>
+          <div class="fc-example" id="fcExample">—</div>
+        </div>
+        <!-- EXERCISE -->
+        <div class="exercise-zone" id="fcExercise">
+          <div class="exercise-title">✏️ EJERCICIO: ORDENA LAS PALABRAS</div>
+          <div class="words-bank" id="fcWordsBank"></div>
+          <div class="answer-zone" id="fcAnswerZone"></div>
+          <div class="d-flex gap-2 mt-1">
+            <button class="ex-btn ex-btn-check" onclick="checkExercise('fc')">VERIFICAR</button>
+            <button class="ex-btn ex-btn-reset" onclick="resetExercise('fc')">REINICIAR</button>
+          </div>
+          <div class="ex-feedback" id="fcFeedback"></div>
+        </div>
+      </div>
+
+      <div class="fc-nav mt-3">
+        <button class="fc-nav-btn" id="fcPrev" onclick="fcNavigate(-1)" title="Anterior (← tecla izquierda)">
+          <i class="bi bi-arrow-left"></i> ANTERIOR
+        </button>
+        <button class="btn-complete" id="fcCompleteBtn" onclick="toggleComplete()" title="Marcar completa (Espacio)">
+          ✓ MARCAR COMPLETA
+        </button>
+        <button class="fc-nav-btn" id="fcNext" onclick="fcNavigate(1)" title="Siguiente (→ tecla derecha)">
+          SIGUIENTE <i class="bi bi-arrow-right"></i>
+        </button>
+      </div>
+      <div style="text-align:center;margin-top:.5rem;font-family:'DM Mono',monospace;font-size:.72rem;color:#999;">
+        ← → teclas · deslizar en móvil · Espacio = completar
+      </div>
+    </div>
+  </div>
+
+  <!-- LIST VIEW -->
+  <div id="listView" class="view-section">
+    <div class="list-search-bar">
+      <input type="text" id="searchInput" placeholder="🔍 Buscar técnica..." oninput="renderList()">
+    </div>
+    <div id="techList"></div>
+  </div>
+
+  <!-- STATS VIEW -->
+  <div id="statsView" class="view-section">
+    <div class="row g-3 mb-4">
+      <div class="col-6 col-md-3">
+        <div class="stat-box">
+          <div class="stat-num" id="statCompleted">0</div>
+          <div class="stat-label">COMPLETADAS</div>
+        </div>
+      </div>
+      <div class="col-6 col-md-3">
+        <div class="stat-box">
+          <div class="stat-num" id="statRemaining">100</div>
+          <div class="stat-label">RESTANTES</div>
+        </div>
+      </div>
+      <div class="col-6 col-md-3">
+        <div class="stat-box">
+          <div class="stat-num" id="statPct">0%</div>
+          <div class="stat-label">PORCENTAJE</div>
+        </div>
+      </div>
+      <div class="col-6 col-md-3">
+        <div class="stat-box">
+          <div class="stat-num" id="statEx">0</div>
+          <div class="stat-label">EJERCICIOS OK</div>
+        </div>
+      </div>
+    </div>
+    <div class="tech-card p-3 mb-4">
+      <h5 class="mb-3" style="font-family:'Bebas Neue';letter-spacing:.1em;color:var(--col-azul)">PROGRESO POR BLOQUE</h5>
+      <div id="catProgressList"></div>
+    </div>
+    <div class="text-center mt-3">
+      <button class="fc-nav-btn" onclick="setMode('flashcard')">
+        <i class="bi bi-play-fill"></i> CONTINUAR ESTUDIANDO
+      </button>
+    </div>
+  </div>
+
+</div><!-- /app -->
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+// ════════════════════════════════════════════════
+// DATA: 100 TÉCNICAS
+// ════════════════════════════════════════════════
+const TECHNIQUES = [
+// ── BLOQUE I: GUIÓN ──
+{id:1,cat:"Guión",title:"La Descripción Activa",en:"Active Description",
+def:"Describe acciones concretas y observables, nunca estados internos abstractos. El guionista escribe lo que el dibujante puede representar visualmente.",
+example:"Uriel aprieta el escapulario de su abuela hasta que la cadena deja una marca roja en la palma.",
+exercise:["Uriel","aprieta","el","escapulario","de","su","abuela","hasta","que","la","cadena","deja","una","marca","roja"]},
+
+{id:2,cat:"Guión",title:"El Panel como Haiku Visual",en:"Panel as Visual Haiku",
+def:"Cada panel contiene una sola idea dominante. Incluir múltiples acciones principales en un mismo panel confunde al ojo del lector colombiano.",
+example:"En el panel: solo la mano de Camila sosteniendo una ruana vieja frente a la ventana lluviosa de Bogotá.",
+exercise:["la","mano","de","Camila","sosteniendo","una","ruana","vieja","frente","a","la","ventana","lluviosa"]},
+
+{id:3,cat:"Guión",title:"La Jerarquía de Página",en:"Page Hierarchy",
+def:"Antes de describir cualquier panel, decide cuál es el más importante de la página. Ese panel recibirá el mayor espacio visual.",
+example:"El panel central ocupa dos tercios de la página: muestra la plaza de Bolívar inundada de manifestantes.",
+exercise:["El","panel","central","ocupa","dos","tercios","de","la","página","muestra","la","plaza","de","Bolívar","inundada"]},
+
+{id:4,cat:"Guión",title:"El Principio de Economía",en:"Economy Principle",
+def:"Elimina toda descripción que el dibujante pueda inferir por contexto. Cada palabra sobrante en el guión es una restricción innecesaria al artista.",
+example:"Panel 4: Sebastián llega a su tienda en el barrio Getsemaní. (No describir el color de la ropa ni el clima).",
+exercise:["Sebastián","llega","a","su","tienda","en","el","barrio","Getsemaní","sin","describir","detalles","innecesarios"]},
+
+{id:5,cat:"Guión",title:"La Sinécdoque Visual",en:"Visual Synecdoche",
+def:"Una parte representa el todo. Un machete oxidado evoca toda la historia del campo colombiano sin mostrarla explícitamente.",
+example:"Solo las manos callosas de don Efraín, sosteniendo una cédula raída, representan décadas de desplazamiento.",
+exercise:["Solo","las","manos","callosas","de","don","Efraín","sosteniendo","una","cédula","raída","representan","décadas","de","desplazamiento"]},
+
+{id:6,cat:"Guión",title:"El Encuadre como Argumento",en:"Framing as Argument",
+def:"El ángulo de un panel es ya una posición moral. El contrapicado hace poderoso al personaje; el picado lo aplasta y lo vulnerabiliza.",
+example:"Vemos al alcalde corrupto en contrapicado desde el nivel del suelo, mientras los campesinos desplazados aparecen en picado.",
+exercise:["El","alcalde","corrupto","aparece","en","contrapicado","mientras","los","campesinos","están","en","picado","revelando","el","poder"]},
+
+{id:7,cat:"Guión",title:"La Continuidad Gestual",en:"Gestural Continuity",
+def:"Los gestos de un personaje evolucionan orgánicamente entre paneles. Un puño que se cierra en el panel 3 debió empezar a cerrarse en los paneles anteriores.",
+example:"Panel 1: mano abierta de Isabel. Panel 2: dedos que se curvan. Panel 3: puño cerrado frente al retén ilegal.",
+exercise:["mano","abierta","dedos","que","se","curvan","puño","cerrado","frente","al","retén","ilegal","continuidad","gestual"]},
+
+{id:8,cat:"Guión",title:"La Descripción de Temperatura Emocional",en:"Emotional Temperature",
+def:"La primera línea de cada descripción de panel indica la temperatura emocional: fría, tensa, festiva, melancólica.",
+example:"Panel 6 [TEMPERATURA: FESTIVA/NOSTÁLGICA]: La familia Morales celebra el cumpleaños en la cocina del barrio Manga.",
+exercise:["Panel","seis","temperatura","festiva","nostálgica","la","familia","Morales","celebra","en","la","cocina","del","barrio","Manga"]},
+
+{id:9,cat:"Guión",title:"El Panel Vacío como Pausa",en:"Empty Panel as Pause",
+def:"Un panel de color sólido sin figuras equivale a una pausa musical. Indica silencio dramático y da al lector espacio para procesar lo anterior.",
+example:"Tras el disparo, un panel negro completo. Solo en el siguiente vemos a la madre de Jhon corriendo.",
+exercise:["Tras","el","disparo","un","panel","negro","completo","solo","en","el","siguiente","vemos","a","la","madre","corriendo"]},
+
+{id:10,cat:"Guión",title:"La Descripción de Sonido Ausente",en:"Sound Description",
+def:"Incluye referencias sonoras aunque el cómic sea visual: 'el silencio después de la explosión' orienta al artista sobre la atmósfera exacta.",
+example:"Panel 8 [SONIDO: el silencio denso de la selva chocoana justo antes de que empiece a llover].",
+exercise:["el","silencio","denso","de","la","selva","chocoana","justo","antes","de","que","empiece","a","llover"]},
+
+// ── BLOQUE II: DIÁLOGO ──
+{id:11,cat:"Diálogo",title:"La Regla de las Veinte Palabras",en:"Twenty-Word Rule",
+def:"Ningún globo de diálogo debe superar las veinte palabras. Si el personaje necesita más, divide el pensamiento entre dos paneles consecutivos.",
+example:"«¿Y entonces, qué? ¿Nos quedamos aquí esperando que el río vuelva a crecer?» —máximo dieciséis palabras.",
+exercise:["¿Y","entonces","qué","nos","quedamos","aquí","esperando","que","el","río","vuelva","a","crecer","máximo","dieciséis","palabras"]},
+
+{id:12,cat:"Diálogo",title:"El Subtexto Dominante",en:"Dominant Subtext",
+def:"El personaje dice una cosa pero quiere decir otra. El dibujante ilustra la diferencia entre palabra y verdad a través del lenguaje corporal.",
+example:"«Todo está bien, mamá», dice Diego mientras esconde el telegrama de reclutamiento detrás de la espalda.",
+exercise:["Todo","está","bien","mamá","dice","Diego","mientras","esconde","el","telegrama","de","reclutamiento","detrás","de","la","espalda"]},
+
+{id:13,cat:"Diálogo",title:"La Interrupción como Ritmo",en:"Interruption as Rhythm",
+def:"Los guiones dobles (—) y los puntos suspensivos (...) son instrumentos de tempo narrativo, no de duda o torpeza.",
+example:"«Yo solo quería decirle que su hijo —» / «No me nombre a ese muchacho en esta casa, ¿oyó?»",
+exercise:["Yo","solo","quería","decirle","que","su","hijo","—","No","me","nombre","a","ese","muchacho","en","esta","casa"]},
+
+{id:14,cat:"Diálogo",title:"El Diálogo Anclado",en:"Anchored Dialogue",
+def:"Cada línea de diálogo se ancla en una acción física simultánea. El personaje nunca 'solo habla'; siempre hace algo mientras habla.",
+example:"«Esta tierra es nuestra desde el bisabuelo», dice Rosa mientras clava un palo de guadua en el borde del potrero.",
+exercise:["Esta","tierra","es","nuestra","desde","el","bisabuelo","dice","Rosa","mientras","clava","un","palo","de","guadua"]},
+
+{id:15,cat:"Diálogo",title:"La Voz como Identidad",en:"Voice as Identity",
+def:"Cada personaje tiene un vocabulario propio y restringido. Crea listas de palabras que ese personaje nunca diría para mantener la autenticidad.",
+example:"El viejo pescador de Barranquilla dice 'marica' y 'mano', nunca 'colega'. Su registro nunca varía.",
+exercise:["El","viejo","pescador","de","Barranquilla","dice","marica","y","mano","nunca","colega","su","registro","nunca","varía"]},
+
+{id:16,cat:"Diálogo",title:"El Eco Dialogal",en:"Dialogue Echo",
+def:"Un personaje repite una palabra del interlocutor, transformando su significado. Esta técnica crea resonancia dramática profunda.",
+example:"«Es solo política.» / «¿Política? Mi hermano lleva tres años desaparecido por esa política.»",
+exercise:["Es","solo","política","Mi","hermano","lleva","tres","años","desaparecido","por","esa","política"]},
+
+{id:17,cat:"Diálogo",title:"El Monólogo Fracturado",en:"Fractured Monologue",
+def:"El pensamiento interno del protagonista se reparte entre varios paneles, creando la sensación de una mente que procesa en tiempo real.",
+example:"Panel 1: «Debí quedarme...» / Panel 3: «...pero el miedo...» / Panel 5: «...es más rápido que cualquier tren.»",
+exercise:["Debí","quedarme","pero","el","miedo","es","más","rápido","que","cualquier","tren","pensamiento","fracturado","en","paneles"]},
+
+{id:18,cat:"Diálogo",title:"El Diálogo en Paralelo",en:"Parallel Dialogue",
+def:"Dos conversaciones distintas se alternan en paneles consecutivos. Sus temas se iluminan mutuamente sin que los personajes se conozcan.",
+example:"Conversación A: negociación de paz en la capital. Conversación B: madre e hijo que discuten a quién le toca ir al río.",
+exercise:["negociación","de","paz","en","la","capital","alterna","con","madre","e","hijo","discutiendo","quién","va","al","río"]},
+
+{id:19,cat:"Diálogo",title:"El Silencio Significativo",en:"Meaningful Silence",
+def:"Un personaje que no responde comunica tanto como uno que habla. Describe el silencio explícitamente: 'tres paneles sin globo de diálogo'.",
+example:"Tres paneles sin globo: Valentina mirando la cédula del esposo muerto. Cuarto panel: dobla la cédula en silencio.",
+exercise:["Tres","paneles","sin","globo","Valentina","mirando","la","cédula","del","esposo","muerto","dobla","la","cédula","en","silencio"]},
+
+{id:20,cat:"Diálogo",title:"La Pregunta sin Respuesta",en:"Unanswered Question",
+def:"Termina una escena con una pregunta que no se responde en esa página. El lector lleva la pregunta consigo al pasar la hoja.",
+example:"Última viñeta de la página 14: «Entonces, ¿quién mató a Salcedo?» La página se voltea sin respuesta.",
+exercise:["Última","viñeta","de","la","página","catorce","¿quién","mató","a","Salcedo","la","página","se","voltea","sin","respuesta"]},
+
+// ── BLOQUE III: ESTRUCTURA ──
+{id:21,cat:"Estructura",title:"La Página como Acto Dramático",en:"Page as Dramatic Act",
+def:"Cada página doble es un acto completo con introducción, desarrollo y giro o cierre. El lector debe sentir satisfacción al terminar cada página.",
+example:"Página 7: 1° panel introduce el mercado de Paloquemao; 5° panel revela que hay un cadáver entre los costales de papa.",
+exercise:["Página","siete","introduce","el","mercado","de","Paloquemao","y","en","el","quinto","panel","revela","un","cadáver","entre","los","costales"]},
+
+{id:22,cat:"Estructura",title:"El Cliffhanger de Página",en:"Page Cliffhanger",
+def:"El último panel de cada página derecha genera tensión suficiente para obligar al lector a pasar la hoja inmediatamente.",
+example:"Último panel de la página derecha: el machete de Aurelio aparece reflejado en el agua del estanque.",
+exercise:["el","machete","de","Aurelio","aparece","reflejado","en","el","agua","del","estanque","último","panel","de","la","página"]},
+
+{id:23,cat:"Estructura",title:"La Elipsis Controlada",en:"Controlled Ellipsis",
+def:"Entre paneles existe tiempo que no se muestra. Define exactamente cuánto tiempo omites para que el lector lo infiera con precisión.",
+example:"Panel 4: Natalia sale de la embajada. Panel 5 [ELIPSIS: 6 horas]: Natalia llega al aeropuerto con una maleta distinta.",
+exercise:["Natalia","sale","de","la","embajada","elipsis","seis","horas","Natalia","llega","al","aeropuerto","con","una","maleta","distinta"]},
+
+{id:24,cat:"Estructura",title:"La Transición por Tema",en:"Thematic Transition",
+def:"Dos paneles consecutivos no se conectan por acción continua sino por un tema o imagen compartida que crea una asociación poética.",
+example:"Panel A: niña teje una mochila wayuu. Panel B (sin conexión temporal): abuela cierra los ojos. Tema: manos que crean.",
+exercise:["niña","teje","una","mochila","wayuu","abuela","cierra","los","ojos","tema","compartido","manos","que","crean"]},
+
+{id:25,cat:"Estructura",title:"El Flashback Integrado",en:"Integrated Flashback",
+def:"El pasado no interrumpe el presente: se superpone a él mediante cambios de paleta de color descritos en el guión.",
+example:"Panel actual: paleta cálida naranja. Superposición de memoria: paleta desaturada azul-gris. La guerra aparece sobre la fiesta.",
+exercise:["paleta","cálida","naranja","en","el","presente","paleta","desaturada","azul","gris","en","la","memoria","de","la","guerra"]},
+
+{id:26,cat:"Estructura",title:"La Estructura Especular",en:"Mirror Structure",
+def:"La segunda mitad de la obra repite los elementos formales de la primera, pero en contexto transformado, revelando el cambio del personaje.",
+example:"La obra abre con Hernán cruzando el río Magdalena de norte a sur. Cierra con el mismo río cruzado de sur a norte.",
+exercise:["La","obra","abre","con","Hernán","cruzando","el","río","Magdalena","de","norte","a","sur","y","cierra","al","revés"]},
+
+{id:27,cat:"Estructura",title:"El Tiempo Expandido",en:"Expanded Time",
+def:"Un segundo se divide en múltiples paneles. El cómic puede dilatar el tiempo de un modo que ningún otro medio puede igualar.",
+example:"Doce paneles muestran el segundo exacto en que la paloma de paz escapa de las manos del senador.",
+exercise:["Doce","paneles","muestran","el","segundo","en","que","la","paloma","de","paz","escapa","de","las","manos","del","senador"]},
+
+{id:28,cat:"Estructura",title:"El Tiempo Comprimido",en:"Compressed Time",
+def:"Años de historia caben en una sola página de seis paneles. La elipsis brutal funciona como instrumento épico de máximo poder.",
+example:"Seis paneles: 1° niño en uniforme. 2° adolescente en protesta. 3° adulto en juzgado. 4° anciano en silla de ruedas.",
+exercise:["niño","en","uniforme","adolescente","en","protesta","adulto","en","juzgado","anciano","en","silla","de","ruedas","compresión","épica"]},
+
+{id:29,cat:"Estructura",title:"El Arco de Objeto",en:"Object Arc",
+def:"Un objeto insignificante aparece en la primera página y en la última. Su significado ha cambiado radicalmente por todo lo vivido.",
+example:"Primera página: un casete de vallenato en las manos de un niño. Última página: el mismo casete, partido en dos.",
+exercise:["un","casete","de","vallenato","en","las","manos","de","un","niño","al","inicio","y","partido","en","dos","al","final"]},
+
+{id:30,cat:"Estructura",title:"La Narración en Capas",en:"Layered Narration",
+def:"Tres líneas temporales se entrelazan: el pasado histórico, el presente narrativo y las proyecciones mentales del personaje sobre el futuro.",
+example:"1990 (masacre): sepia. 2010 (juicio): color neutro. 2030 (visión utópica del personaje): paleta vibrante.",
+exercise:["1990","masacre","en","sepia","2010","juicio","en","color","neutro","2030","visión","utópica","en","paleta","vibrante"]},
+
+// ── BLOQUE IV: PERSONAJE ──
+{id:31,cat:"Personaje",title:"La Contradicción Nuclear",en:"Nuclear Contradiction",
+def:"Todo personaje memorable alberga una contradicción esencial que lo hace humano y complejo, nunca un símbolo plano.",
+example:"El comandante guerrillero que colecciona secretamente mariposas en cajitas de cigarrillos Pielroja.",
+exercise:["El","comandante","guerrillero","colecciona","secretamente","mariposas","en","cajitas","de","cigarrillos","Pielroja","contradicción"]},
+
+{id:32,cat:"Personaje",title:"El Emblema Visual",en:"Visual Emblem",
+def:"Diseña con el artista un detalle visual único que aparezca siempre que el personaje está bajo presión máxima.",
+example:"Cada vez que Luz Marina teme, toca el diente de oro que le quedó de su madre. El artista lo muestra en primer plano.",
+exercise:["Cada","vez","que","Luz","Marina","teme","toca","el","diente","de","oro","que","le","quedó","de","su","madre"]},
+
+{id:33,cat:"Personaje",title:"La Backstory Implícita",en:"Implicit Backstory",
+def:"Nunca cuentes el pasado del personaje directamente. Hazlo visible en sus reacciones desproporcionadas al presente.",
+example:"Cuando alguien menciona Trujillo, Gustavo interrumpe la conversación y sale de la habitación sin decir nada.",
+exercise:["Cuando","alguien","menciona","Trujillo","Gustavo","interrumpe","la","conversación","y","sale","de","la","habitación"]},
+
+{id:34,cat:"Personaje",title:"El Arco Moral",en:"Moral Arc",
+def:"Define en qué principio ético comienza el personaje y en cuál termina. Toda la obra es la distancia entre esos dos puntos morales.",
+example:"Inicio: Andrés cree que la violencia es la única respuesta. Final: Andrés abre una escuela en el mismo lugar donde mató.",
+exercise:["Andrés","cree","que","la","violencia","es","la","única","respuesta","y","termina","abriendo","una","escuela","donde","mató"]},
+
+{id:35,cat:"Personaje",title:"El Antagonista Espejo",en:"Mirror Antagonist",
+def:"El antagonista es el protagonista si hubiera tomado decisiones diferentes. Sus historias de origen deben poder superponerse perfectamente.",
+example:"Pedro y Mauricio nacieron en el mismo barrio de Cali. Uno se convirtió en juez; el otro, en lo que el juez persigue.",
+exercise:["Pedro","y","Mauricio","nacieron","en","el","mismo","barrio","de","Cali","uno","juez","el","otro","lo","que","el","juez","persigue"]},
+
+{id:36,cat:"Personaje",title:"El Lenguaje Corporal Codificado",en:"Encoded Body Language",
+def:"Crea un diccionario de posturas para cada personaje antes de escribir el guión. Este diccionario se comparte con el artista.",
+example:"Yolanda: cuando miente, siempre orienta los pies hacia la salida aunque su cuerpo mire al interlocutor.",
+exercise:["Yolanda","cuando","miente","orienta","los","pies","hacia","la","salida","aunque","su","cuerpo","mire","al","interlocutor"]},
+
+{id:37,cat:"Personaje",title:"La Herida Original",en:"Original Wound",
+def:"Identifica el momento formativo de trauma o revelación que explica todos los comportamientos posteriores del personaje.",
+example:"A los nueve años, Mario vio cómo quemaban la biblioteca de su pueblo. Desde entonces colecciona libros compulsivamente.",
+exercise:["A","los","nueve","años","Mario","vio","cómo","quemaban","la","biblioteca","de","su","pueblo","y","desde","entonces","colecciona","libros"]},
+
+{id:38,cat:"Personaje",title:"El Deseo vs. la Necesidad",en:"Desire vs. Need",
+def:"El personaje quiere una cosa (deseo superficial) pero necesita otra completamente distinta (necesidad profunda). La obra es el proceso de descubrirlo.",
+example:"Sofía cree que quiere venganza por la muerte de su hermano; lo que en realidad necesita es ser perdonada por haber sobrevivido.",
+exercise:["Sofía","cree","que","quiere","venganza","pero","lo","que","necesita","es","ser","perdonada","por","haber","sobrevivido"]},
+
+{id:39,cat:"Personaje",title:"La Máscara Social",en:"Social Mask",
+def:"Diferencia entre cómo se muestra el personaje ante el mundo y cómo es cuando está completamente solo. Ambas versiones son reales.",
+example:"En público: el inspector Barrera ríe y saluda. Solo en su oficina, mira el expediente de los desaparecidos sin reír.",
+exercise:["En","público","el","inspector","Barrera","ríe","y","saluda","solo","en","su","oficina","mira","el","expediente","sin","reír"]},
+
+{id:40,cat:"Personaje",title:"La Evolución No Lineal",en:"Non-Linear Evolution",
+def:"Los personajes no mejoran ni empeoran de manera continua. Retroceden, se estancan, dan saltos. Imita el ritmo de la vida real.",
+example:"En el capítulo 3, Clara ya había logrado perdonar. En el capítulo 5, después del nuevo ataque, vuelve a odiar.",
+exercise:["En","el","capítulo","tres","Clara","había","perdonado","en","el","capítulo","cinco","después","del","ataque","vuelve","a","odiar"]},
+
+// ── BLOQUE V: NARRACIÓN ──
+{id:41,cat:"Narración",title:"La Voz en Off Retrospectiva",en:"Retrospective Voice-Over",
+def:"El protagonista adulto narra su infancia mientras vemos los paneles del pasado. La distancia temporal genera ironía y ternura simultáneas.",
+example:"«Yo creía que Medellín era el centro del universo», narra el adulto, mientras vemos al niño de 8 años en la Estrella.",
+exercise:["Yo","creía","que","Medellín","era","el","centro","del","universo","narra","el","adulto","mientras","vemos","al","niño"]},
+
+{id:42,cat:"Narración",title:"El Narrador No Fiable",en:"Unreliable Narrator",
+def:"Lo que dice la caja de narración contradice sutilmente lo que muestra la imagen. El lector debe elegir a quién creer: a la voz o al dibujo.",
+example:"Caja: «Siempre fui honesto en los negocios». Imagen: el personaje firma un contrato con letra diminuta oculta en el pliegue.",
+exercise:["Siempre","fui","honesto","en","los","negocios","dice","la","caja","pero","la","imagen","muestra","el","contrato","con","letra","oculta"]},
+
+{id:43,cat:"Narración",title:"La Cita Apócrifa",en:"Apocryphal Quote",
+def:"La caja de narración atribuye una cita a un personaje histórico real colombiano. Crea un anclaje cultural poderoso con el lector.",
+example:"«La violencia es la partera de la historia», dice una caja atribuida a Gaitán, sobre paneles de 1948.",
+exercise:["La","violencia","es","la","partera","de","la","historia","cita","atribuida","a","Gaitán","sobre","paneles","de","1948"]},
+
+{id:44,cat:"Narración",title:"El Texto como Textura",en:"Text as Texture",
+def:"En escenas de acción intensa, elimina todas las cajas de narración. Su ausencia habla tan fuerte como su presencia.",
+example:"Cuatro páginas del enfrentamiento en Urabá: cero cajas de texto, cero globos. Solo imagen pura y acción.",
+exercise:["Cuatro","páginas","del","enfrentamiento","en","Urabá","cero","cajas","de","texto","cero","globos","solo","imagen","pura"]},
+
+{id:45,cat:"Narración",title:"La Narración en Segunda Persona",en:"Second-Person Narration",
+def:"«Entras al pueblo. No reconoces el olor.» La segunda persona implica al lector corporalmente en la experiencia del personaje.",
+example:"«Cruzas el puente sobre el Cauca. El agua huele a hierro. No sabes aún que es sangre.»",
+exercise:["Cruzas","el","puente","sobre","el","Cauca","el","agua","huele","a","hierro","no","sabes","aún","que","es","sangre"]},
+
+{id:46,cat:"Narración",title:"El Fragmento Documental",en:"Documentary Fragment",
+def:"Cartas, fragmentos de periódico, informes oficiales integrados como cajas de narración. Anclan la ficción en lo real histórico.",
+example:"Caja-periódico: «EL TIEMPO, 9 de abril de 1948: Asesinado el caudillo liberal Jorge Eliécer Gaitán.»",
+exercise:["EL","TIEMPO","nueve","de","abril","de","1948","Asesinado","el","caudillo","liberal","Jorge","Eliécer","Gaitán","fragmento","documental"]},
+
+{id:47,cat:"Narración",title:"La Caja de Narración Visual",en:"Visual Caption Box",
+def:"Indica al artista que el diseño gráfico de la caja forme parte del significado: una caja rasgada, manchada, quemada cambia la lectura.",
+example:"La caja de narración del capítulo de la masacre aparece con manchas de agua y el papel doblado, como si fuera un acta real.",
+exercise:["La","caja","del","capítulo","de","la","masacre","aparece","con","manchas","de","agua","y","papel","doblado","como","acta","real"]},
+
+{id:48,cat:"Narración",title:"La Voz Múltiple",en:"Multiple Voices",
+def:"Dos o más personajes comparten la función narradora. Sus voces se alternan en cajas de distinto color o tipografía.",
+example:"Caja amarilla: voz de la madre. Caja azul: voz del hijo adulto. Nunca se encuentran pero describen los mismos eventos.",
+exercise:["Caja","amarilla","voz","de","la","madre","caja","azul","voz","del","hijo","adulto","nunca","se","encuentran","mismos","eventos"]},
+
+{id:49,cat:"Narración",title:"El Comentario Irónico",en:"Ironic Commentary",
+def:"La caja de narración ofrece un comentario opuesto en tono a la acción representada. Herramienta habitual de la sátira política.",
+example:"Caja: «El ministro anunció que la situación estaba bajo control.» Panel: ciudad en llamas, bomberos desbordados.",
+exercise:["El","ministro","anunció","que","la","situación","estaba","bajo","control","panel","ciudad","en","llamas","bomberos","desbordados"]},
+
+{id:50,cat:"Narración",title:"El Silencio Narrativo",en:"Narrative Silence",
+def:"Páginas enteras sin caja de narración alguna. La imagen habla sola. El guionista debe confiar completamente en la fuerza del dibujo.",
+example:"Las páginas 40 a 45 muestran el amanecer en el páramo de Sumapaz sin una sola palabra. Solo color y forma.",
+exercise:["Las","páginas","40","a","45","muestran","el","amanecer","en","el","páramo","de","Sumapaz","sin","una","sola","palabra"]},
+
+// ── BLOQUE VI: GÉNERO ──
+{id:51,cat:"Género",title:"La Mezcla de Géneros",en:"Genre Hybridization",
+def:"Combina dos géneros incompatibles en apariencia. La fricción entre géneros genera originalidad y sorprende al lector.",
+example:"Cómic de terror gótico situado en el Festival Vallenato: los fantasmas bailan con los vivos en el Parque Simón Bolívar de Valledupar.",
+exercise:["terror","gótico","situado","en","el","Festival","Vallenato","los","fantasmas","bailan","con","los","vivos","en","Valledupar"]},
+
+{id:52,cat:"Género",title:"El Tono como Personaje",en:"Tone as Character",
+def:"El tono narrativo es una presencia activa que el lector siente, no un telón de fondo. Define su 'voz' con la misma precisión que defines un personaje.",
+example:"El tono de la obra es el de una confesión íntima en una iglesia de barrio: susurrado, urgente y cargado de culpa.",
+exercise:["El","tono","es","el","de","una","confesión","íntima","en","una","iglesia","de","barrio","susurrado","urgente","y","cargado","de","culpa"]},
+
+{id:53,cat:"Género",title:"La Ironía Estructural",en:"Structural Irony",
+def:"El lector sabe algo que el personaje ignora. Esta asimetría de información sostiene la tensión sin necesidad de acción externa.",
+example:"El lector sabe que el 'benefactor' de los huérfanos es quien ordenó el ataque. Los niños lo abrazan sonriendo.",
+exercise:["El","lector","sabe","que","el","benefactor","es","quien","ordenó","el","ataque","los","niños","lo","abrazan","sonriendo"]},
+
+{id:54,cat:"Género",title:"El Humor como Alivio y Crítica",en:"Humor as Relief and Critique",
+def:"El chiste no interrumpe el drama: lo profundiza al revelar la absurdidad de la situación desde adentro.",
+example:"En medio del velorio, el tío que nunca aparecía pregunta si todavía hay sancocho. El resto de la familia lo fulmina con la mirada.",
+exercise:["En","medio","del","velorio","el","tío","que","nunca","aparecía","pregunta","si","todavía","hay","sancocho"]},
+
+{id:55,cat:"Género",title:"El Horror Cotidiano",en:"Everyday Horror",
+def:"Lo más aterrador no son los monstruos sino el comportamiento normal de personas normales que revela algo monstruoso dentro de lo ordinario.",
+example:"La maestra de escuela que registra meticulosamente las ausencias de niños que todos saben que ya no volverán.",
+exercise:["La","maestra","registra","meticulosamente","las","ausencias","de","niños","que","todos","saben","que","ya","no","volverán"]},
+
+{id:56,cat:"Género",title:"El Realismo Mágico Visual",en:"Visual Magical Realism",
+def:"Lo sobrenatural se integra sin explicación en el mundo cotidiano. El estilo del dibujo no cambia para distinguir ambos planos.",
+example:"La abuela de Remedios habla con el espíritu del río Atrato como si fuera un vecino más del pueblo. El artista lo dibuja igual.",
+exercise:["La","abuela","habla","con","el","espíritu","del","río","Atrato","como","si","fuera","un","vecino","más","el","artista","lo","dibuja","igual"]},
+
+{id:57,cat:"Género",title:"La Épica Íntima",en:"Intimate Epic",
+def:"Los grandes eventos históricos vistos desde la perspectiva de un personaje sin relevancia histórica. Lo pequeño dentro de lo grande.",
+example:"La firma del proceso de paz en La Habana, contada desde el comedor de una familia en Apartadó viendo la televisión.",
+exercise:["La","firma","del","proceso","de","paz","en","La","Habana","contada","desde","el","comedor","de","una","familia","en","Apartadó"]},
+
+{id:58,cat:"Género",title:"El Registro del Testimonio",en:"Testimonial Register",
+def:"La primera persona habla directamente al lector como si fuera un testigo declarando ante una comisión de verdad.",
+example:"«Yo estaba ahí. Puedo decirle a este tribunal exactamente lo que pasó esa noche en Mapiripán.»",
+exercise:["Yo","estaba","ahí","puedo","decirle","a","este","tribunal","exactamente","lo","que","pasó","esa","noche","en","Mapiripán"]},
+
+{id:59,cat:"Género",title:"El Pastiche Intencional",en:"Intentional Pastiche",
+def:"Imitar deliberadamente el estilo de una obra preexistente para crear distancia crítica o rendir un homenaje consciente.",
+example:"El cómic imita el estilo de Quino (Mafalda) pero sus personajes son niños del barrio Las Cruces de Bogotá en 2023.",
+exercise:["El","cómic","imita","el","estilo","de","Quino","pero","los","personajes","son","niños","del","barrio","Las","Cruces","de","Bogotá"]},
+
+{id:60,cat:"Género",title:"La Fábula Contemporánea",en:"Contemporary Fable",
+def:"Usar la estructura de la fábula clásica (animales que hablan, moraleja visible) para narrar conflictos colombianos actuales.",
+example:"Un cóndor y un chigüiro debaten sobre quién tiene derecho al páramo. Al final, llega una excavadora y ninguno gana.",
+exercise:["Un","cóndor","y","un","chigüiro","debaten","sobre","el","páramo","llega","una","excavadora","y","ninguno","gana","moraleja"]},
+
+// ── BLOQUE VII: VISUAL ──
+{id:61,cat:"Visual",title:"El Leitmotif Visual",en:"Visual Leitmotif",
+def:"Una imagen recurrente (color, forma, objeto) que aparece en momentos clave y acumula significado a lo largo de la obra.",
+example:"El color amarillo del maíz aparece en la ropa de la protagonista cada vez que está a punto de tomar una decisión valiente.",
+exercise:["El","color","amarillo","del","maíz","aparece","en","la","ropa","de","la","protagonista","cada","vez","que","toma","una","decisión","valiente"]},
+
+{id:62,cat:"Visual",title:"El Color Narrativo",en:"Narrative Color",
+def:"Describe en el guión la temperatura de color de cada estado emocional. El artista convierte esa temperatura en paleta.",
+example:"Capítulo de la violencia: paleta ocre-marrón. Capítulo de la reconciliación: paleta verde-esmeralda de los Andes.",
+exercise:["Capítulo","de","la","violencia","paleta","ocre","marrón","capítulo","de","la","reconciliación","paleta","verde","esmeralda","de","los","Andes"]},
+
+{id:63,cat:"Visual",title:"La Metáfora Visual Directa",en:"Direct Visual Metaphor",
+def:"La imagen ilustra literalmente una metáfora verbal. El peso metafórico se convierte en peso visual real dentro del panel.",
+example:"El político carga literalmente sobre sus hombros un saco de tierra con la silueta del mapa de Colombia.",
+exercise:["El","político","carga","literalmente","sobre","sus","hombros","un","saco","de","tierra","con","la","silueta","del","mapa","de","Colombia"]},
+
+{id:64,cat:"Visual",title:"El Panel Sangrado",en:"Bleed Panel",
+def:"Un panel que llega hasta los bordes de la página sin márgenes indica explosión emocional, libertad o ruptura de límites.",
+example:"El momento en que Margarita ve por primera vez el mar Caribe ocupa una doble página sangrada: sin márgenes, sin palabras.",
+exercise:["El","momento","en","que","Margarita","ve","por","primera","vez","el","mar","Caribe","ocupa","una","doble","página","sangrada","sin","márgenes"]},
+
+{id:65,cat:"Visual",title:"La Línea del Horizonte como Argumento",en:"Horizon as Argument",
+def:"Una línea de horizonte muy alta aplasta al personaje contra la tierra. Una muy baja lo hace flotar, libre, en el cielo.",
+example:"Horizonte altísimo: el minero en el socavón de Marmato, aplastado por la montaña. Horizonte bajísimo: el niño que sueña.",
+exercise:["Horizonte","altísimo","el","minero","en","el","socavón","de","Marmato","aplastado","por","la","montaña","horizonte","bajísimo","el","niño"]},
+
+{id:66,cat:"Visual",title:"La Asimetría Compositiva",en:"Compositional Asymmetry",
+def:"Indica al artista que el personaje principal no esté centrado en el panel. Su posición excéntrica revela desequilibrio interno.",
+example:"La defensora de derechos humanos aparece siempre en el extremo derecho del panel, como si fuera a salir de cuadro.",
+exercise:["La","defensora","de","derechos","humanos","aparece","siempre","en","el","extremo","derecho","como","si","fuera","a","salir","de","cuadro"]},
+
+{id:67,cat:"Visual",title:"El Espacio Negativo Hablante",en:"Speaking Negative Space",
+def:"El espacio vacío alrededor de un personaje comunica su aislamiento con mayor eficacia que cualquier línea de diálogo.",
+example:"El sobreviviente de la masacre sentado en el centro de un panel inmenso. El vacío blanco lo rodea completamente.",
+exercise:["El","sobreviviente","sentado","en","el","centro","de","un","panel","inmenso","el","vacío","blanco","lo","rodea","completamente"]},
+
+{id:68,cat:"Visual",title:"La Página sin Palabras",en:"Wordless Page",
+def:"Diseña al menos una secuencia completa sin texto alguno. Cada página muda es una declaración de confianza en la imagen.",
+example:"Las seis páginas del carnaval de Barranquilla: sin una sola palabra. Solo el ritmo visual de máscaras y movimiento.",
+exercise:["Las","seis","páginas","del","carnaval","de","Barranquilla","sin","una","sola","palabra","solo","el","ritmo","visual","de","máscaras"]},
+
+{id:69,cat:"Visual",title:"La Onomatopeya como Diseño",en:"Onomatopoeia as Design",
+def:"La onomatopeya forma parte del diseño visual del panel, integrada en la composición, no flotando sobre ella como una etiqueta.",
+example:"El BOOM de la explosión en el oleoducto del Catatumbo está integrado en el panel: sus letras son el humo negro.",
+exercise:["El","BOOM","de","la","explosión","en","el","oleoducto","del","Catatumbo","está","integrado","sus","letras","son","el","humo","negro"]},
+
+{id:70,cat:"Visual",title:"La Sinestesia Dirigida",en:"Directed Synesthesia",
+def:"Describe el panel en términos de sensaciones no visuales. El artista encontrará el equivalente visual exacto.",
+example:"Panel 22 [SINESTESIA: este panel debe oler a aguapanela con limón y a madera mojada de una tienda de pueblo].",
+exercise:["este","panel","debe","oler","a","aguapanela","con","limón","y","a","madera","mojada","de","una","tienda","de","pueblo","sinestesia"]},
+
+// ── BLOQUE VIII: ADAPTACIÓN ──
+{id:71,cat:"Adaptación",title:"La Traición Productiva",en:"Productive Betrayal",
+def:"Adaptar una obra literaria al cómic significa encontrar lo que el texto no puede mostrar y que la imagen sí puede revelar.",
+example:"Al adaptar 'Cien años de soledad', el guionista no ilustra el texto: inventa los paneles que García Márquez no escribió.",
+exercise:["Al","adaptar","Cien","años","de","soledad","el","guionista","no","ilustra","el","texto","inventa","los","paneles","que","García","Márquez","no","escribió"]},
+
+{id:72,cat:"Adaptación",title:"La Escena que Falta",en:"The Missing Scene",
+def:"En toda gran novela existe una escena que el autor decidió no escribir. El adaptador puede escribirla con plena legitimidad.",
+example:"En la adaptación de 'El coronel no tiene quien le escriba', el adaptador añade la escena del coronel llorando solo en el gallinero.",
+exercise:["En","la","adaptación","de","El","coronel","no","tiene","quien","le","escriba","el","adaptador","añade","el","coronel","llorando","en","el","gallinero"]},
+
+{id:73,cat:"Adaptación",title:"La Perspectiva Desplazada",en:"Shifted Perspective",
+def:"Contar la misma historia desde el punto de vista de un personaje secundario de la obra original que antes permanecía en silencio.",
+example:"La historia de Macondo narrada desde el punto de vista de Pilar Ternera, la única testigo de todos los Buendía.",
+exercise:["La","historia","de","Macondo","narrada","desde","el","punto","de","vista","de","Pilar","Ternera","testigo","de","todos","los","Buendía"]},
+
+{id:74,cat:"Adaptación",title:"La Actualización Anacrónica",en:"Anachronistic Update",
+def:"Trasladar la trama a una época distinta. Los conflictos fundamentales sobreviven; los superficiales quedan expuestos como accesorios.",
+example:"'La Vorágine' de Rivera trasladada al año 2024: la selva amazónica sigue devorando, pero ahora también devora los teléfonos.",
+exercise:["La","Vorágine","trasladada","al","año","2024","la","selva","amazónica","sigue","devorando","pero","ahora","también","devora","los","teléfonos"]},
+
+{id:75,cat:"Adaptación",title:"La Contracción Épica",en:"Epic Contraction",
+def:"Condensar una novela larga identificando los tres o cuatro momentos que son la esencia de la obra entera.",
+example:"'El otoño del patriarca' en 80 páginas de cómic: solo cuatro momentos, separados por décadas de elipsis.",
+exercise:["El","otoño","del","patriarca","en","80","páginas","solo","cuatro","momentos","separados","por","décadas","de","elipsis","contracción"]},
+
+{id:76,cat:"Adaptación",title:"La Expansión del Instante",en:"Instant Expansion",
+def:"Un momento que el texto describe en una frase se convierte en diez páginas de cómic. La microhistoria dentro de la historia.",
+example:"La frase 'El niño miró el río por última vez': diez páginas de cómic que muestran ese último segundo.",
+exercise:["La","frase","El","niño","miró","el","río","por","última","vez","se","expande","en","diez","páginas","de","cómic"]},
+
+{id:77,cat:"Adaptación",title:"El Subtexto Liberado",en:"Liberated Subtext",
+def:"Lo que el texto literario sugería entre líneas, el cómic lo muestra directamente. La imagen puede decir lo que la novela callaba.",
+example:"En la adaptación de 'La marquesa de Yolombó', la imagen muestra el racismo que el texto de Carrasquilla solo insinuaba.",
+exercise:["En","la","adaptación","de","La","marquesa","de","Yolombó","la","imagen","muestra","el","racismo","que","el","texto","solo","insinuaba"]},
+
+{id:78,cat:"Adaptación",title:"El Narrador Encarnado",en:"Embodied Narrator",
+def:"El narrador omnisciente de la novela se convierte en un personaje visible dentro de las viñetas: alguien que cuenta y que también existe.",
+example:"El narrador de 'Respirando el verano' de Rojas Herazo aparece como un anciano que camina entre los paneles del pasado.",
+exercise:["El","narrador","de","Respirando","el","verano","aparece","como","un","anciano","que","camina","entre","los","paneles","del","pasado"]},
+
+{id:79,cat:"Adaptación",title:"La Geografía Narrativa",en:"Narrative Geography",
+def:"Usar los mapas reales de Colombia como elemento gráfico dentro de la narración. El espacio real se convierte en personaje.",
+example:"El mapa del departamento del Chocó aparece como panel completo cada vez que la protagonista toma una decisión de viaje.",
+exercise:["El","mapa","del","departamento","del","Chocó","aparece","como","panel","completo","cada","vez","que","la","protagonista","decide","viajar"]},
+
+{id:80,cat:"Adaptación",title:"El Anacronismo Crítico",en:"Critical Anachronism",
+def:"Insertar deliberadamente elementos contemporáneos en períodos históricos para revelar que los problemas no han cambiado.",
+example:"Un personaje de la época de la Violencia (1950) usa el mismo vocabulario que los políticos colombianos de 2024.",
+exercise:["Un","personaje","de","la","época","de","la","Violencia","usa","el","mismo","vocabulario","que","los","políticos","colombianos","de","2024"]},
+
+// ── BLOQUE IX: COLABORACIÓN ──
+{id:81,cat:"Colaboración",title:"El Método Marvel",en:"Marvel Method",
+def:"El guionista describe la acción general; el artista dibuja libremente; luego el guionista añade los diálogos. Mayor libertad visual.",
+example:"Guionista: 'Página de persecución por las calles de Pasto durante el Carnaval de Negros y Blancos.' Artista interpreta libremente.",
+exercise:["Página","de","persecución","por","las","calles","de","Pasto","durante","el","Carnaval","de","Negros","y","Blancos","artista","interpreta","libremente"]},
+
+{id:82,cat:"Colaboración",title:"El Guión Completo",en:"Full Script",
+def:"Cada panel está descrito en detalle preciso. Más control del guionista. Requiere mayor flexibilidad interpretativa del artista.",
+example:"Panel 3 [ENCUADRE: plano medio] [PERSONAJES: Dolores, de pie, espalda a la cámara] [ACCIÓN: toca la pared del cementerio].",
+exercise:["Panel","tres","plano","medio","Dolores","de","pie","espalda","a","la","cámara","toca","la","pared","del","cementerio"]},
+
+{id:83,cat:"Colaboración",title:"El Documento de Biblia",en:"Bible Document",
+def:"Antes de empezar, guionista y artista crean juntos un documento de reglas visuales y narrativas que gobernará toda la obra.",
+example:"Biblia de 'Cauca Negro': paleta acordada, diccionario de gestos de los 5 personajes principales, mapa del pueblo ficticio.",
+exercise:["Biblia","de","Cauca","Negro","paleta","acordada","diccionario","de","gestos","de","los","cinco","personajes","y","mapa","del","pueblo"]},
+
+{id:84,cat:"Colaboración",title:"La Revisión Visual",en:"Visual Revision",
+def:"El guionista revisa su texto después de ver los bocetos. La imagen puede revelar que ciertas palabras son redundantes o falsas.",
+example:"Al ver el boceto, el guionista borra el globo que decía '¡Estoy furioso!': la cara del artista lo dice sin palabras.",
+exercise:["Al","ver","el","boceto","el","guionista","borra","el","globo","que","decía","Estoy","furioso","la","cara","del","artista","lo","dice","solo"]},
+
+{id:85,cat:"Colaboración",title:"La Cesión de Páginas",en:"Page Surrender",
+def:"El guionista indica al artista que ciertas páginas son completamente suyas: sin instrucciones, sin texto. Un acto de confianza.",
+example:"Guionista a artista: 'Las páginas 33 a 36, el velorio en la costa, son tuyas. Yo no escribo nada. Tú decides todo.'",
+exercise:["Las","páginas","33","a","36","el","velorio","en","la","costa","son","tuyas","yo","no","escribo","nada","tú","decides","todo"]},
+
+{id:86,cat:"Colaboración",title:"El Storyboard Dialogado",en:"Dialogue Storyboard",
+def:"El guionista y el artista crean juntos un storyboard rápido antes de que el guión esté terminado. El dibujo guía al texto.",
+example:"Sesión de trabajo en Medellín: artista esboza escenas clave del barrio; guionista escribe el diálogo que el dibujo sugiere.",
+exercise:["artista","esboza","escenas","clave","del","barrio","en","Medellín","y","guionista","escribe","el","diálogo","que","el","dibujo","sugiere"]},
+
+{id:87,cat:"Colaboración",title:"El Personaje Negociado",en:"Negotiated Character",
+def:"El diseño visual del personaje principal es una negociación entre la visión del guionista y la interpretación del artista.",
+example:"El guionista describió a Yerlan como 'corpulento y triste'. El artista lo dibujó flaco y tenso. Ambos tenían razón.",
+exercise:["El","guionista","describió","a","Yerlan","como","corpulento","y","triste","el","artista","lo","dibujó","flaco","y","tenso","ambos","tenían","razón"]},
+
+{id:88,cat:"Colaboración",title:"La Paleta Emocional Compartida",en:"Shared Emotional Palette",
+def:"Antes de comenzar, guionista y artista acuerdan el significado emocional de cada color. Este código rige toda la obra.",
+example:"Acuerdo: rojo = peligro político; amarillo = infancia; azul = esperanza. Cada color carga su significado durante toda la novela.",
+exercise:["rojo","peligro","político","amarillo","infancia","azul","esperanza","cada","color","carga","su","significado","durante","toda","la","novela"]},
+
+{id:89,cat:"Colaboración",title:"El Guionista que Dibuja",en:"Drawing Writer",
+def:"El guionista aprende técnicas básicas de dibujo para comunicarse mejor con el artista. No para dibujar, sino para hablar el mismo idioma.",
+example:"El guionista hace bocetos toscos de la composición deseada, no para imponer, sino para comunicar la emoción espacial.",
+exercise:["El","guionista","hace","bocetos","toscos","de","la","composición","deseada","no","para","imponer","sino","para","comunicar","la","emoción","espacial"]},
+
+{id:90,cat:"Colaboración",title:"La Lectura Inversa",en:"Reverse Reading",
+def:"El artista envía las páginas terminadas al guionista antes de añadir texto. El guionista lee el dibujo puro y escribe desde allí.",
+example:"El artista termina 20 páginas de Cartagena sin texto. El guionista las lee en silencio y luego escribe los diálogos desde la imagen.",
+exercise:["El","artista","termina","20","páginas","de","Cartagena","sin","texto","el","guionista","las","lee","en","silencio","y","escribe","desde","la","imagen"]},
+
+// ── BLOQUE X: EXPERIMENTAL ──
+{id:91,cat:"Experimental",title:"La Metaficción Gráfica",en:"Graphic Metafiction",
+def:"Los personajes son conscientes de que existen en un cómic. Interactúan con los márgenes, los globos y la estructura del medio.",
+example:"El personaje rompe el borde del panel y le habla directamente al lector: «Tú también eres parte de esta historia, ¿no?»",
+exercise:["El","personaje","rompe","el","borde","del","panel","y","le","habla","al","lector","Tú","también","eres","parte","de","esta","historia"]},
+
+{id:92,cat:"Experimental",title:"El Cómic dentro del Cómic",en:"Comic within a Comic",
+def:"Un personaje lee un cómic cuya trama comenta o predice la trama principal. Estructura de abismo especular narrativo.",
+example:"El niño lee un cómic de superhéroes donde el héroe salva un pueblo inundado; afuera, el río Sinú se está desbordando.",
+exercise:["El","niño","lee","un","cómic","donde","el","héroe","salva","un","pueblo","inundado","afuera","el","río","Sinú","se","está","desbordando"]},
+
+{id:93,cat:"Experimental",title:"La Página Palimpsesto",en:"Palimpsest Page",
+def:"Una escena se superpone a otra anterior. El pasado transparente sangra sobre el presente, creando una imagen doble.",
+example:"La Plaza de Bolívar de hoy se superpone semitransparente a la misma plaza el 9 de abril de 1948.",
+exercise:["La","Plaza","de","Bolívar","de","hoy","se","superpone","semitransparente","a","la","misma","plaza","el","nueve","de","abril","de","1948"]},
+
+{id:94,cat:"Experimental",title:"La Lectura Bifurcada",en:"Bifurcated Reading",
+def:"La página puede leerse de dos maneras: de arriba abajo cuenta una historia; de abajo arriba, otra historia completamente distinta.",
+example:"Leído de arriba abajo: fuga del pueblo. Leído de abajo arriba: regreso al mismo pueblo veinte años después.",
+exercise:["Leído","de","arriba","abajo","fuga","del","pueblo","leído","de","abajo","arriba","regreso","al","mismo","pueblo","veinte","años","después"]},
+
+{id:95,cat:"Experimental",title:"El Color como Narrador",en:"Color as Narrator",
+def:"Un color específico aparece siempre que un personaje miente. El lector aprende a leerlo antes de ser consciente de que lo está haciendo.",
+example:"Cada vez que el alcalde miente, los fondos se tiñen de un naranja sutil. El lector lo detecta antes de entenderlo.",
+exercise:["Cada","vez","que","el","alcalde","miente","los","fondos","se","tiñen","de","un","naranja","sutil","el","lector","lo","detecta","primero"]},
+
+{id:96,cat:"Experimental",title:"La Tipografía como Emoción",en:"Typography as Emotion",
+def:"El tamaño, estilo y distorsión de las letras en los globos comunica el estado emocional sin necesidad de adjetivos.",
+example:"El grito de Esperanza en el río Magdalena: letras enormes, inclinadas, que ocupan medio panel y sangran por los bordes.",
+exercise:["El","grito","de","Esperanza","en","el","río","Magdalena","letras","enormes","inclinadas","que","ocupan","medio","panel","y","sangran"]},
+
+{id:97,cat:"Experimental",title:"El Panel Invisible",en:"Invisible Panel",
+def:"El espacio entre paneles es en sí mismo un panel. El guionista lo describe como si existiera: qué ocurre en ese espacio blanco.",
+example:"Entre los paneles 4 y 5 [PANEL INVISIBLE: aquí ocurre la muerte que no podemos mostrar. El lector la imagina].",
+exercise:["Entre","los","paneles","cuatro","y","cinco","aquí","ocurre","la","muerte","que","no","podemos","mostrar","el","lector","la","imagina"]},
+
+{id:98,cat:"Experimental",title:"La Desestructuración de Página",en:"Page Deconstruction",
+def:"Los paneles se rompen, se superponen, se inclinan. La composición de la página refleja el estado mental fragmentado del personaje.",
+example:"Durante la crisis de pánico de Tomás en el metro de Medellín, los paneles se fragmentan y se inclinan hasta 45 grados.",
+exercise:["Durante","la","crisis","de","pánico","de","Tomás","en","el","metro","de","Medellín","los","paneles","se","fragmentan","e","inclinan"]},
+
+{id:99,cat:"Experimental",title:"El Cómic sin Dibujo",en:"Textual Comic",
+def:"Solo texto, solo globos, solo cajas de narración sobre fondo negro. El lector crea la imagen completa en su propia mente.",
+example:"Cuatro páginas completamente negras con solo globos de texto: la conversación que ocurrió en el calabozo sin luz.",
+exercise:["Cuatro","páginas","completamente","negras","con","solo","globos","de","texto","la","conversación","que","ocurrió","en","el","calabozo","sin","luz"]},
+
+{id:100,cat:"Experimental",title:"La Obra en Expansión",en:"Expanding Work",
+def:"El cómic incluye elementos que remiten a materiales externos (sitios web, grabaciones, objetos físicos). La obra existe más allá de la página.",
+example:"El cómic incluye un código QR que lleva a una grabación real de testimonios de desplazados del Urabá antioqueño.",
+exercise:["El","cómic","incluye","un","código","QR","que","lleva","a","grabaciones","reales","de","testimonios","de","desplazados","del","Urabá"]}
+];
+
+// ════════════════════════════════════════════════
+// STATE
+// ════════════════════════════════════════════════
+let state = {
+  completed: [],      // ids de técnicas completadas
+  exerciseDone: [],   // ids con ejercicio correcto
+  currentFilter: 'all',
+  currentFcIndex: 0,  // índice en filteredList
+};
+
+let filteredList = [...TECHNIQUES];
+
+// ── PERSISTENCE ──
+function saveState(){
+  localStorage.setItem('comicTech100', JSON.stringify({
+    completed: state.completed,
+    exerciseDone: state.exerciseDone
+  }));
+}
+function loadState(){
+  try {
+    const raw = localStorage.getItem('comicTech100');
+    if(raw){
+      const s = JSON.parse(raw);
+      state.completed = s.completed || [];
+      state.exerciseDone = s.exerciseDone || [];
+    }
+  } catch(e){}
+}
+function resetProgress(){
+  if(!confirm('¿Reiniciar todo el progreso? Esta acción no se puede deshacer.')) return;
+  state.completed = [];
+  state.exerciseDone = [];
+  saveState();
+  renderAll();
+}
+
+// ════════════════════════════════════════════════
+// FILTER
+// ════════════════════════════════════════════════
+function setFilter(cat, btn){
+  state.currentFilter = cat;
+  state.currentFcIndex = 0;
+  document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  filteredList = cat === 'all' ? [...TECHNIQUES] : TECHNIQUES.filter(t => t.cat === cat);
+  renderAll();
+}
+
+// ════════════════════════════════════════════════
+// MODE
+// ════════════════════════════════════════════════
+let currentMode = 'flashcard';
+
+const VIEW_MAP = {
+  flashcard: { view: 'flashcardView', btn: 'btnModeFC',    render: () => renderFlashcard() },
+  list:      { view: 'listView',      btn: 'btnModeList',  render: () => renderList()      },
+  stats:     { view: 'statsView',     btn: 'btnModeStats', render: () => renderStats()     }
+};
+
+function setMode(mode){
+  if(!VIEW_MAP[mode]) return;
+  currentMode = mode;
+
+  // Hide all views
+  ['flashcardView','listView','statsView'].forEach(id => {
+    const el = document.getElementById(id);
+    if(el){ el.classList.remove('active'); }
+  });
+
+  // Deactivate all mode buttons
+  document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
+
+  // Activate target
+  const cfg = VIEW_MAP[mode];
+  document.getElementById(cfg.view).classList.add('active');
+  document.getElementById(cfg.btn).classList.add('active');
+  cfg.render();
+}
+
+// ════════════════════════════════════════════════
+// PROGRESS BAR
+// ════════════════════════════════════════════════
+function updateProgressBar(){
+  const done = state.completed.length;
+  const total = 100;
+  const pct = Math.round(done/total*100);
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('progressCount').textContent = done + ' / ' + total;
+}
+
+// ════════════════════════════════════════════════
+// FLASHCARD RENDER
+// ════════════════════════════════════════════════
+function renderFlashcard(){
+  if(filteredList.length === 0) return;
+  const tech = filteredList[state.currentFcIndex];
+  const total = filteredList.length;
+  const idx   = state.currentFcIndex;
+
+  document.getElementById('fcCounter').textContent = (idx+1) + ' / ' + total;
+  document.getElementById('fcNum').textContent = String(tech.id).padStart(2,'0');
+  document.getElementById('fcCat').textContent = tech.cat;
+  document.getElementById('fcTitle').textContent = tech.title;
+  document.getElementById('fcEn').textContent = tech.en;
+  document.getElementById('fcDef').textContent = tech.def;
+  document.getElementById('fcExample').textContent = tech.example;
+
+  // completed badge
+  const isDone = state.completed.includes(tech.id);
+  document.getElementById('fcDoneBadge').classList.toggle('show', isDone);
+  const cBtn = document.getElementById('fcCompleteBtn');
+  cBtn.classList.toggle('done', isDone);
+  cBtn.textContent = isDone ? '✓ COMPLETADA' : '✓ MARCAR COMPLETA';
+
+  // nav buttons
+  document.getElementById('fcPrev').disabled = idx === 0;
+  document.getElementById('fcNext').disabled = idx === total - 1;
+
+  // exercise
+  buildExercise('fc', tech);
+}
+
+function fcNavigate(dir){
+  const card = document.getElementById('flashcard');
+  const newIdx = state.currentFcIndex + dir;
+  if(newIdx < 0 || newIdx >= filteredList.length) return;
+
+  card.classList.add(dir > 0 ? 'flip-out' : 'flip-in');
+  setTimeout(() => {
+    state.currentFcIndex = newIdx;
+    renderFlashcard();
+    card.classList.remove('flip-out','flip-in');
+  }, 280);
+}
+
+function toggleComplete(){
+  const tech = filteredList[state.currentFcIndex];
+  const idx = state.completed.indexOf(tech.id);
+  if(idx === -1) state.completed.push(tech.id);
+  else state.completed.splice(idx,1);
+  saveState();
+  updateProgressBar();
+  renderFlashcard();
+  if(currentMode === 'list') renderList();
+}
+
+// ════════════════════════════════════════════════
+// EXERCISE ENGINE
+// ════════════════════════════════════════════════
+// Stores per-tech exercise state in memory
+const exerciseStates = {}; // techId => { shuffled, answer }
+
+function getExState(tech){
+  if(!exerciseStates[tech.id]){
+    exerciseStates[tech.id] = {
+      shuffled: shuffle([...tech.exercise]),
+      answer: [],
+      verified: false,
+      correct: false
+    };
+  }
+  return exerciseStates[tech.id];
+}
+
+function shuffle(arr){
+  for(let i = arr.length-1; i > 0; i--){
+    const j = Math.floor(Math.random()*(i+1));
+    [arr[i],arr[j]] = [arr[j],arr[i]];
+  }
+  return arr;
+}
+
+function buildExercise(prefix, tech){
+  const exState = getExState(tech);
+  renderExercise(prefix, tech, exState);
+}
+
+function renderExercise(prefix, tech, exState){
+  const bank = document.getElementById(prefix+'WordsBank');
+  const zone = document.getElementById(prefix+'AnswerZone');
+  const fb   = document.getElementById(prefix+'Feedback');
+
+  bank.innerHTML = '';
+  zone.innerHTML = '';
+  if(fb) fb.className = 'ex-feedback';
+
+  // Bank: words not yet in answer
+  const usedIndices = new Set(exState.answer.map(a => a.idx));
+  exState.shuffled.forEach((word, i) => {
+    if(usedIndices.has(i)) return;
+    const tok = makeToken(word, i, prefix, tech);
+    bank.appendChild(tok);
+  });
+
+  // Answer zone
+  exState.answer.forEach(({word, idx}) => {
+    const tok = makePlacedToken(word, idx, prefix, tech);
+    zone.appendChild(tok);
+  });
+
+  setupDropZone(zone, prefix, tech);
+
+  if(exState.verified){
+    if(fb){
+      fb.className = 'ex-feedback ' + (exState.correct ? 'correct' : 'wrong');
+      fb.textContent = exState.correct
+        ? '✓ ¡Correcto! El orden es exacto.'
+        : '✗ No es correcto. Revisa el orden e intenta de nuevo.';
+    }
+  }
+}
+
+function makeToken(word, idx, prefix, tech){
+  const tok = document.createElement('div');
+  tok.className = 'word-token';
+  tok.textContent = word;
+  tok.draggable = true;
+  tok.dataset.idx = idx;
+  tok.dataset.word = word;
+
+  tok.addEventListener('dragstart', e => {
+    e.dataTransfer.setData('text/plain', JSON.stringify({idx, word, from:'bank'}));
+    tok.classList.add('dragging');
+  });
+  tok.addEventListener('dragend', () => tok.classList.remove('dragging'));
+
+  // Touch drag
+  addTouchDrag(tok, {idx, word, from:'bank'}, prefix, tech);
+  return tok;
+}
+
+function makePlacedToken(word, idx, prefix, tech){
+  const tok = document.createElement('div');
+  tok.className = 'word-token placed';
+  tok.textContent = word;
+  tok.draggable = true;
+  tok.dataset.idx = idx;
+
+  // Click to return to bank
+  tok.addEventListener('click', () => {
+    const exState = getExState(tech);
+    exState.answer = exState.answer.filter(a => a.idx !== idx);
+    exState.verified = false;
+    renderExercise(prefix, tech, exState);
+  });
+
+  tok.addEventListener('dragstart', e => {
+    e.dataTransfer.setData('text/plain', JSON.stringify({idx, word, from:'placed'}));
+    tok.classList.add('dragging');
+  });
+  tok.addEventListener('dragend', () => tok.classList.remove('dragging'));
+
+  return tok;
+}
+
+function setupDropZone(zone, prefix, tech){
+  zone.addEventListener('dragover', e => {
+    e.preventDefault();
+    zone.classList.add('drag-over');
+  });
+  zone.addEventListener('dragleave', () => zone.classList.remove('drag-over'));
+  zone.addEventListener('drop', e => {
+    e.preventDefault();
+    zone.classList.remove('drag-over');
+    const data = JSON.parse(e.dataTransfer.getData('text/plain'));
+    const exState = getExState(tech);
+    if(!exState.answer.find(a => a.idx === data.idx)){
+      exState.answer.push({idx: data.idx, word: data.word});
+      exState.verified = false;
+      renderExercise(prefix, tech, exState);
+    }
+  });
+}
+
+// Touch drag implementation
+function addTouchDrag(tok, data, prefix, tech){
+  let ghost = null;
+  let startX, startY;
+
+  tok.addEventListener('touchstart', e => {
+    startX = e.touches[0].clientX;
+    startY = e.touches[0].clientY;
+    ghost = tok.cloneNode(true);
+    ghost.style.position = 'fixed';
+    ghost.style.opacity = '0.7';
+    ghost.style.pointerEvents = 'none';
+    ghost.style.zIndex = '9999';
+    ghost.style.top = startY + 'px';
+    ghost.style.left = startX + 'px';
+    document.body.appendChild(ghost);
+    tok.classList.add('dragging');
+  }, {passive: true});
+
+  tok.addEventListener('touchmove', e => {
+    if(!ghost) return;
+    e.preventDefault();
+    const t = e.touches[0];
+    ghost.style.top  = (t.clientY - 20) + 'px';
+    ghost.style.left = (t.clientX - 30) + 'px';
+  }, {passive: false});
+
+  tok.addEventListener('touchend', e => {
+    if(!ghost) return;
+    const t = e.changedTouches[0];
+    ghost.remove();
+    ghost = null;
+    tok.classList.remove('dragging');
+
+    const zone = document.getElementById(prefix+'AnswerZone');
+    const rect = zone.getBoundingClientRect();
+    if(t.clientX >= rect.left && t.clientX <= rect.right &&
+       t.clientY >= rect.top  && t.clientY <= rect.bottom){
+      const exState = getExState(tech);
+      if(!exState.answer.find(a => a.idx === data.idx)){
+        exState.answer.push({idx: data.idx, word: data.word});
+        exState.verified = false;
+        renderExercise(prefix, tech, exState);
+      }
+    }
+  });
+}
+
+function checkExercise(prefix){
+  const tech = (prefix === 'fc')
+    ? filteredList[state.currentFcIndex]
+    : null; // list mode passes tech directly via closure
+
+  if(!tech) return;
+  const exState = getExState(tech);
+  const correct = tech.exercise.map((w,i) => w);
+  const given   = exState.answer.map(a => a.word);
+
+  exState.verified = true;
+  exState.correct  = JSON.stringify(correct) === JSON.stringify(given);
+
+  if(exState.correct && !state.exerciseDone.includes(tech.id)){
+    state.exerciseDone.push(tech.id);
+    saveState();
+  }
+
+  const fb = document.getElementById(prefix+'Feedback');
+  if(fb){
+    fb.className = 'ex-feedback ' + (exState.correct ? 'correct' : 'wrong');
+    fb.textContent = exState.correct
+      ? '✓ ¡Correcto! Has ordenado el ejemplo perfectamente.'
+      : '✗ No es correcto. El ejemplo original es: "' + tech.exercise.join(' ') + '"';
+  }
+  updateProgressBar();
+}
+
+function resetExercise(prefix){
+  const tech = (prefix === 'fc')
+    ? filteredList[state.currentFcIndex]
+    : null;
+  if(!tech) return;
+  delete exerciseStates[tech.id];
+  buildExercise(prefix, tech);
+}
+
+// ════════════════════════════════════════════════
+// LIST VIEW RENDER
+// ════════════════════════════════════════════════
+function renderList(){
+  const search = (document.getElementById('searchInput')?.value || '').toLowerCase();
+  const list = filteredList.filter(t =>
+    !search ||
+    t.title.toLowerCase().includes(search) ||
+    t.en.toLowerCase().includes(search) ||
+    t.def.toLowerCase().includes(search) ||
+    t.cat.toLowerCase().includes(search)
+  );
+
+  const container = document.getElementById('techList');
+  container.innerHTML = '';
+
+  list.forEach(tech => {
+    const isDone = state.completed.includes(tech.id);
+    const exDone = state.exerciseDone.includes(tech.id);
+
+    const card = document.createElement('div');
+    card.className = 'tech-card' + (isDone ? ' completed' : '');
+    card.id = 'listCard_' + tech.id;
+
+    card.innerHTML = `
+      <div class="tech-card-header" onclick="toggleListCard(${tech.id}, this)">
+        <div class="tech-card-num">${String(tech.id).padStart(2,'0')}</div>
+        <div class="tech-card-title-group">
+          <div class="tech-card-title">${tech.title}</div>
+          <div class="tech-card-en">${tech.en}</div>
+        </div>
+        <div class="tech-card-badges">
+          <span class="badge-cat">${tech.cat}</span>
+          ${isDone ? '<span class="badge-done">✓</span>' : ''}
+          ${exDone ? '<span class="badge-done" style="background:#3b82f6">📝</span>' : ''}
+        </div>
+        <i class="bi bi-chevron-down tech-card-chevron"></i>
+      </div>
+      <div class="tech-card-body" id="listBody_${tech.id}">
+        <p class="tech-def">${tech.def}</p>
+        <div class="fc-example-label">EJEMPLO COLOMBIANO</div>
+        <div class="tech-example-block">${tech.example}</div>
+        <div class="exercise-zone">
+          <div class="exercise-title">✏️ EJERCICIO: ORDENA LAS PALABRAS</div>
+          <div class="words-bank" id="list${tech.id}WordsBank"></div>
+          <div class="answer-zone" id="list${tech.id}AnswerZone"></div>
+          <div class="d-flex gap-2 mt-1 flex-wrap">
+            <button class="ex-btn ex-btn-check" onclick="checkListExercise(${tech.id})">VERIFICAR</button>
+            <button class="ex-btn ex-btn-reset" onclick="resetListExercise(${tech.id})">REINICIAR</button>
+            <button class="ex-btn" style="background:${isDone?'#22c55e':'transparent'};border:2px solid #22c55e;color:${isDone?'#fff':'#22c55e'}"
+              onclick="toggleListComplete(${tech.id})">
+              ${isDone ? '✓ COMPLETADA' : '✓ MARCAR COMPLETA'}
+            </button>
+          </div>
+          <div class="ex-feedback" id="list${tech.id}Feedback"></div>
+        </div>
+      </div>
+    `;
+    container.appendChild(card);
+  });
+
+  if(list.length === 0){
+    container.innerHTML = '<div class="text-center p-4 text-muted" style="font-family:DM Mono,monospace">No se encontraron técnicas con ese término.</div>';
+  }
+}
+
+function toggleListCard(techId, header){
+  const body = document.getElementById('listBody_'+techId);
+  const isOpen = body.classList.contains('show');
+  body.classList.toggle('show', !isOpen);
+  header.classList.toggle('open', !isOpen);
+
+  if(!isOpen){
+    const tech = TECHNIQUES.find(t => t.id === techId);
+    const exState = getExState(tech);
+    renderExercise('list'+techId, tech, exState);
+    setupListDropZone(techId, tech);
+  }
+}
+
+function setupListDropZone(techId, tech){
+  const zone = document.getElementById('list'+techId+'AnswerZone');
+  if(!zone || zone._hasListener) return;
+  zone._hasListener = true;
+  zone.addEventListener('dragover', e => { e.preventDefault(); zone.classList.add('drag-over'); });
+  zone.addEventListener('dragleave', () => zone.classList.remove('drag-over'));
+  zone.addEventListener('drop', e => {
+    e.preventDefault();
+    zone.classList.remove('drag-over');
+    const data = JSON.parse(e.dataTransfer.getData('text/plain'));
+    const exState = getExState(tech);
+    if(!exState.answer.find(a => a.idx === data.idx)){
+      exState.answer.push({idx: data.idx, word: data.word});
+      exState.verified = false;
+      renderListExercise(techId, tech);
+    }
+  });
+}
+
+function renderListExercise(techId, tech){
+  const exState = getExState(tech);
+  const prefix = 'list'+techId;
+  const bank = document.getElementById(prefix+'WordsBank');
+  const zone = document.getElementById(prefix+'AnswerZone');
+  const fb   = document.getElementById(prefix+'Feedback');
+  if(!bank) return;
+
+  bank.innerHTML = '';
+  zone.innerHTML = '';
+  if(fb) fb.className = 'ex-feedback';
+
+  const usedIdxs = new Set(exState.answer.map(a => a.idx));
+  exState.shuffled.forEach((word, i) => {
+    if(usedIdxs.has(i)) return;
+    const tok = document.createElement('div');
+    tok.className = 'word-token';
+    tok.textContent = word;
+    tok.draggable = true;
+    tok.addEventListener('dragstart', e => {
+      e.dataTransfer.setData('text/plain', JSON.stringify({idx:i,word,from:'bank'}));
+    });
+    addTouchDragList(tok, {idx:i,word}, techId, tech);
+    bank.appendChild(tok);
+  });
+
+  exState.answer.forEach(({word, idx}) => {
+    const tok = document.createElement('div');
+    tok.className = 'word-token placed';
+    tok.textContent = word;
+    tok.draggable = true;
+    tok.addEventListener('click', () => {
+      exState.answer = exState.answer.filter(a => a.idx !== idx);
+      exState.verified = false;
+      renderListExercise(techId, tech);
+    });
+    tok.addEventListener('dragstart', e => {
+      e.dataTransfer.setData('text/plain', JSON.stringify({idx,word,from:'placed'}));
+    });
+    zone.appendChild(tok);
+  });
+
+  setupListDropZone(techId, tech);
+
+  if(exState.verified && fb){
+    fb.className = 'ex-feedback ' + (exState.correct ? 'correct' : 'wrong');
+    fb.textContent = exState.correct
+      ? '✓ ¡Correcto! Has ordenado el ejemplo perfectamente.'
+      : '✗ No es correcto. El ejemplo es: "' + tech.exercise.join(' ') + '"';
+  }
+}
+
+function addTouchDragList(tok, data, techId, tech){
+  let ghost = null;
+  tok.addEventListener('touchstart', e => {
+    ghost = tok.cloneNode(true);
+    ghost.style.cssText = 'position:fixed;opacity:.7;pointer-events:none;z-index:9999;';
+    ghost.style.top  = e.touches[0].clientY + 'px';
+    ghost.style.left = e.touches[0].clientX + 'px';
+    document.body.appendChild(ghost);
+  }, {passive:true});
+  tok.addEventListener('touchmove', e => {
+    if(!ghost) return;
+    e.preventDefault();
+    ghost.style.top  = (e.touches[0].clientY-20)+'px';
+    ghost.style.left = (e.touches[0].clientX-30)+'px';
+  }, {passive:false});
+  tok.addEventListener('touchend', e => {
+    if(!ghost) return;
+    const t = e.changedTouches[0];
+    ghost.remove(); ghost = null;
+    const zone = document.getElementById('list'+techId+'AnswerZone');
+    if(!zone) return;
+    const rect = zone.getBoundingClientRect();
+    if(t.clientX>=rect.left&&t.clientX<=rect.right&&t.clientY>=rect.top&&t.clientY<=rect.bottom){
+      const exState = getExState(tech);
+      if(!exState.answer.find(a => a.idx === data.idx)){
+        exState.answer.push({idx:data.idx,word:data.word});
+        exState.verified = false;
+        renderListExercise(techId, tech);
+      }
+    }
+  });
+}
+
+function checkListExercise(techId){
+  const tech = TECHNIQUES.find(t => t.id === techId);
+  const exState = getExState(tech);
+  const given = exState.answer.map(a => a.word);
+  exState.verified = true;
+  exState.correct  = JSON.stringify(tech.exercise) === JSON.stringify(given);
+  if(exState.correct && !state.exerciseDone.includes(tech.id)){
+    state.exerciseDone.push(tech.id);
+    saveState();
+  }
+  renderListExercise(techId, tech);
+  updateProgressBar();
+}
+
+function resetListExercise(techId){
+  const tech = TECHNIQUES.find(t => t.id === techId);
+  delete exerciseStates[tech.id];
+  renderListExercise(techId, tech);
+  setupListDropZone(techId, tech);
+}
+
+function toggleListComplete(techId){
+  const idx = state.completed.indexOf(techId);
+  if(idx === -1) state.completed.push(techId);
+  else state.completed.splice(idx,1);
+  saveState();
+  updateProgressBar();
+  renderList();
+}
+
+// ════════════════════════════════════════════════
+// STATS VIEW
+// ════════════════════════════════════════════════
+function renderStats(){
+  const done = state.completed.length;
+  const exDone = state.exerciseDone.length;
+  document.getElementById('statCompleted').textContent = done;
+  document.getElementById('statRemaining').textContent = 100 - done;
+  document.getElementById('statPct').textContent = Math.round(done/100*100) + '%';
+  document.getElementById('statEx').textContent = exDone;
+
+  const cats = ['Guión','Diálogo','Estructura','Personaje','Narración','Género','Visual','Adaptación','Colaboración','Experimental'];
+  const catList = document.getElementById('catProgressList');
+  catList.innerHTML = '';
+
+  cats.forEach(cat => {
+    const total = TECHNIQUES.filter(t => t.cat === cat).length;
+    const comp  = state.completed.filter(id => {
+      const t = TECHNIQUES.find(x => x.id === id);
+      return t && t.cat === cat;
+    }).length;
+    const pct = Math.round(comp/total*100);
+
+    catList.innerHTML += `
+      <div class="cat-progress-row">
+        <div class="cat-progress-label">${cat} (${comp}/${total})</div>
+        <div class="cat-progress-track"><div class="cat-progress-fill" style="width:${pct}%"></div></div>
+        <div class="cat-progress-pct">${pct}%</div>
+      </div>
+    `;
+  });
+}
+
+// ════════════════════════════════════════════════
+// CHECK EXERCISE (FC MODE — uses closure properly)
+// ════════════════════════════════════════════════
+// Override global checkExercise to handle both modes
+window.checkExercise = function(prefix){
+  if(prefix === 'fc'){
+    const tech = filteredList[state.currentFcIndex];
+    if(!tech) return;
+    const exState = getExState(tech);
+    const given = exState.answer.map(a => a.word);
+    exState.verified = true;
+    exState.correct  = JSON.stringify(tech.exercise) === JSON.stringify(given);
+    if(exState.correct && !state.exerciseDone.includes(tech.id)){
+      state.exerciseDone.push(tech.id);
+      saveState();
+    }
+    const fb = document.getElementById('fcFeedback');
+    fb.className = 'ex-feedback ' + (exState.correct ? 'correct' : 'wrong');
+    fb.textContent = exState.correct
+      ? '✓ ¡Correcto! Has ordenado el ejemplo perfectamente.'
+      : '✗ No es correcto. El ejemplo original es: "' + tech.exercise.join(' ') + '"';
+    updateProgressBar();
+  }
+};
+
+window.resetExercise = function(prefix){
+  if(prefix === 'fc'){
+    const tech = filteredList[state.currentFcIndex];
+    if(!tech) return;
+    delete exerciseStates[tech.id];
+    buildExercise('fc', tech);
+  }
+};
+
+// ════════════════════════════════════════════════
+// RENDER ALL
+// ════════════════════════════════════════════════
+function renderAll(){
+  updateProgressBar();
+  if(currentMode === 'flashcard') renderFlashcard();
+  else if(currentMode === 'list') renderList();
+  else renderStats();
+}
+
+// ════════════════════════════════════════════════
+// INIT
+// ════════════════════════════════════════════════
+loadState();
+renderAll();
+
+// ════════════════════════════════════════════════
+// KEYBOARD NAVIGATION
+// ════════════════════════════════════════════════
+document.addEventListener('keydown', e => {
+  if(currentMode !== 'flashcard') return;
+  // Don't fire when typing in search input
+  if(document.activeElement && document.activeElement.tagName === 'INPUT') return;
+  if(e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+    e.preventDefault();
+    fcNavigate(1);
+  } else if(e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+    e.preventDefault();
+    fcNavigate(-1);
+  } else if(e.key === ' ' || e.key === 'Enter') {
+    if(document.activeElement.classList.contains('ex-btn')) return;
+    e.preventDefault();
+    toggleComplete();
+  }
+});
+
+// ════════════════════════════════════════════════
+// SWIPE NAVIGATION (touch)
+// ════════════════════════════════════════════════
+(function(){
+  let touchStartX = 0, touchStartY = 0;
+  const card = document.getElementById('flashcard');
+  if(!card) return;
+
+  card.addEventListener('touchstart', e => {
+    touchStartX = e.touches[0].clientX;
+    touchStartY = e.touches[0].clientY;
+  }, { passive: true });
+
+  card.addEventListener('touchend', e => {
+    if(currentMode !== 'flashcard') return;
+    const dx = e.changedTouches[0].clientX - touchStartX;
+    const dy = e.changedTouches[0].clientY - touchStartY;
+    // Only horizontal swipes wider than 60px and not too vertical
+    if(Math.abs(dx) < 60 || Math.abs(dy) > 80) return;
+    if(dx < 0) fcNavigate(1);   // swipe left → next
+    else        fcNavigate(-1); // swipe right → prev
+  }, { passive: true });
+})();
+</script>
+</body>
+</html>
